@@ -45,7 +45,7 @@ class Admin {
      * @return bool
      */
     static function theme_widget_exists($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php")) ? TRUE : FALSE;
+        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php"));
     }
 
     /**
@@ -147,7 +147,7 @@ class Admin {
      * @return bool
      */
     public static function verify_theme($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name) ? TRUE : FALSE;
+        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name);
     }
 
     public static function display_theme_list() {
@@ -266,7 +266,7 @@ class Admin {
      * @return bool
      */
     static function theme_installable($theme_name) {
-        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name) ? TRUE : FALSE;
+        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') !== $theme_name);
     }
 
     public static function theme_uploader() {

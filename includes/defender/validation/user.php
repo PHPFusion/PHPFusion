@@ -33,8 +33,7 @@ class User extends \Defender\Validation {
             \defender::setInputError($name.'-lastname');
         }
         if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+            return Text::verify_text();
         }
     }
 
@@ -62,9 +61,10 @@ class User extends \Defender\Validation {
             \defender::setInputError($name.'-postcode');
         }
         if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+            return Text::verify_text();
         }
+
+        return NULL;
     }
 
     public function verify_document() {
@@ -90,8 +90,9 @@ class User extends \Defender\Validation {
             \defender::setInputError($name.'-doc-5');
         }
         if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+            return Text::verify_text();
         }
+
+        return NULL;
     }
 }

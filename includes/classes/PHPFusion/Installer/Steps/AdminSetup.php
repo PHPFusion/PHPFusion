@@ -544,15 +544,12 @@ class InstallerAdminSetup extends Install_Core {
     }
 
     private function validate_SiteData() {
-        $array = [
+        return [
             'sitename'          => stripinput($_POST['sitename']),
             'siteemail'         => stripinput($_POST['siteemail']),
             'enabled_languages' => stripinput((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : '')),
             'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername')),
             'default_timezone'  => stripinput(filter_input(INPUT_POST, 'default_timezone'))
         ];
-
-        return $array;
     }
-
 }

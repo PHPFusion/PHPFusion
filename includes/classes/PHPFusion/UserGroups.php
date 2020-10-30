@@ -26,8 +26,6 @@ class UserGroups {
 
     private static $instance = NULL;
 
-    private $groupID = 0;
-
     private $info = [
         'total_rows'    => 0,
         'rows'          => 0,
@@ -107,8 +105,8 @@ class UserGroups {
      * @return null|UserGroups|static
      */
     public function setGroup($group_id, $set_info = TRUE) {
-        $this->groupID = $group_id;
-        if ($this->groupID && isnum($this->groupID) && $set_info === TRUE) {
+        $groupID = $group_id;
+        if ($groupID && isnum($groupID) && $set_info === TRUE) {
             $this->info = $this->setGroupInfo($group_id);
         }
         return $this->getInstance();

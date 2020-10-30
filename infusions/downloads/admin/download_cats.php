@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale();
 pageAccess('D');
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
     if (dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."'")
@@ -165,7 +166,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     ], DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
     if (multilang_table("DL")) {
         echo form_select('download_cat_language[]', $locale['global_ML100'], $data['download_cat_language'], [
-            'options'     => $language_opts,
+            'options'     => fusion_get_enabled_languages(),
             'placeholder' => $locale['choose'],
             'width'       => '100%',
             'multiple'    => TRUE

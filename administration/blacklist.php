@@ -102,11 +102,6 @@ class BlacklistAdministration {
         return FALSE;
     }
 
-    public function _countBlist($opt) {
-        $DBc = dbcount("(blacklist_id)", DB_BLACKLIST, $opt);
-        return $DBc;
-    }
-
     private static function delete_blacklist($id) {
         if (self::verify_blacklist($id)) {
             dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".intval($id)."'");
@@ -131,19 +126,18 @@ class BlacklistAdministration {
     }
 
     public function _selectDB($rows) {
-        $result = dbquery("SELECT b.blacklist_id, b.blacklist_ip, b.blacklist_email, b.blacklist_reason, b.blacklist_datestamp, u.user_id, u.user_name, u.user_status
+        return dbquery("SELECT b.blacklist_id, b.blacklist_ip, b.blacklist_email, b.blacklist_reason, b.blacklist_datestamp, u.user_id, u.user_name, u.user_status
             FROM ".DB_BLACKLIST." b
             LEFT JOIN ".DB_USERS." u ON u.user_id=b.blacklist_user_id
             ORDER BY blacklist_datestamp DESC
             LIMIT ".intval($rows).", ".self::$limit
         );
-        return $result;
     }
 
     public function display_admin() {
         $allowed_section = ['blacklist', 'blacklist_form'];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'blacklist';
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['blacklist_id']) ? TRUE : FALSE;
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['blacklist_id']);
         $_GET['blacklist_id'] = isset($_GET['blacklist_id']) && isnum($_GET['blacklist_id']) ? $_GET['blacklist_id'] : 0;
         $title = !empty($edit) ? self::$locale['BLS_021'] : self::$locale['BLS_022'];
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'blacklist.php'.fusion_get_aidlink(), 'title' => self::$locale['BLS_000']]);
@@ -196,7 +190,7 @@ class BlacklistAdministration {
         }
 
         $aidlink = fusion_get_aidlink();
-        $total_rows = $this->_countBlist("");
+        $total_rows = dbcount("(blacklist_id)", DB_BLACKLIST);
         $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart);
         $rows = dbrows($result);

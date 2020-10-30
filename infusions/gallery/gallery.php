@@ -136,7 +136,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
         $info += [
             'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
-            'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : filesize(IMAGES_G.$data['photo_filename'])),
+            'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : ''),
             'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['count_comment']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
         ];

@@ -85,7 +85,7 @@ class NewsAdminView extends NewsAdminModel {
                 default:
             }
         }
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) ? TRUE : FALSE;
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id']));
 
         if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
             addNotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));

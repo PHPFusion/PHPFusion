@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 $inf_version = '1.11';
 require_once INCLUDES."infusions_include.php";
+$locale = fusion_get_locale();
 
 $check_array = [
     // Add support for keywords in news items

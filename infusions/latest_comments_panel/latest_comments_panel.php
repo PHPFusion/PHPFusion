@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$locale = fusion_get_locale();
+
 include_once INFUSIONS.'latest_comments_panel/templates.php';
 $displayComments = 10;
 $comments_per_page = fusion_get_settings('comments_per_page');

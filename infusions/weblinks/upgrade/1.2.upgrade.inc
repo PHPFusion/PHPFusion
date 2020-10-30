@@ -18,6 +18,8 @@
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
+$locale = fusion_get_locale();
+
 $check_wbl12 = [
     'weblink_language'   => " ADD weblink_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER weblink_count",
     'weblink_visibility' => " ADD weblink_visibility CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."' AFTER weblink_datestamp",

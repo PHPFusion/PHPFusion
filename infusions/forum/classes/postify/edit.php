@@ -18,7 +18,6 @@
 namespace PHPFusion\Forums\Postify;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Forums\Threads;
 
 /**
  * Forum Edit Reply

@@ -52,6 +52,8 @@ if (db_exists(DB_PREFIX.'custom_pages')) {
     }
 }
 
+$new_icon_array = [];
+
 if (db_exists(DB_PREFIX.'faqs')) {
     $new_icon_array = ['FQ' => '../infusions/faq/faq.svg'];
 }

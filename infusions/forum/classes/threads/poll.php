@@ -228,7 +228,7 @@ class Poll {
                                     'max_length'  => 255,
                                     'placeholder' => $locale['forum_0605'],
                                     'inline'      => TRUE,
-                                    'required'    => $i <= 2 ? TRUE : FALSE
+                                    'required'    => $i <= 2
                                 ]
                             );
                         }
@@ -246,7 +246,7 @@ class Poll {
                                     'max_length'  => 255,
                                     'placeholder' => 'Poll Options',
                                     'inline'      => 1,
-                                    'required'    => $i <= 2 or $_pData['forum_poll_option_votes'] ? TRUE : FALSE
+                                    'required'    => $i <= 2 or $_pData['forum_poll_option_votes']
                                 ]
                             );
                             $i++;
@@ -307,7 +307,7 @@ class Poll {
                             'max_length'  => 255,
                             'placeholder' => $locale['forum_0605'],
                             'inline'      => 1,
-                            'required'    => $i <= 2 ? TRUE : FALSE
+                            'required'    => $i <= 2
                         ]
                     );
                 }

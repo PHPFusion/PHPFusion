@@ -970,7 +970,8 @@ class Atom {
     /* parse font-weight */
 
     static function google_font() {
-        $google_font = [
+        //api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
+        return [
             "ABeeZee"                  => "ABeeZee",
             "Abel"                     => "Abel",
             "Abril Fatface"            => "Abril+Fatface",
@@ -1617,9 +1618,6 @@ class Atom {
             "Yesteryear"               => "Yesteryear",
             "Zeyada"                   => "Zeyada"
         ];
-
-        //api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
-        return $google_font;
     }
 
     /* parse text-decoration */

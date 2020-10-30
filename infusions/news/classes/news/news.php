@@ -172,7 +172,7 @@ abstract class News extends NewsServer {
         $pattern = "SELECT %s(nr.rating_vote) FROM ".DB_RATINGS." AS nr WHERE nr.rating_item_id = n.news_id AND nr.rating_type = 'N'";
         $sql_count = sprintf($pattern, 'COUNT');
         $sql_sum = sprintf($pattern, 'SUM');
-        $query = "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined,
+        return "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined,
             ($sql_sum) AS news_sum_rating,
             ($sql_count) AS news_count_votes,
             (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." AS ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N' AND ncc.comment_hidden = '0') AS count_comment,
@@ -186,9 +186,8 @@ abstract class News extends NewsServer {
             ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
             GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
             ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
-            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12));
-
-        return $query;
+            LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12)
+        );
     }
 
     public static function getNewsURL($news_id) {

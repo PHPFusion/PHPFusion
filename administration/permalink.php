@@ -23,6 +23,8 @@ $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.L
 $settings = fusion_get_settings();
 $aidlink = fusion_get_aidlink();
 
+$data = [];
+
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_428']]);
 
 // Check if mod_rewrite is enabled

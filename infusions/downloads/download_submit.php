@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$dl_settings = get_settings("downloads");
-
 $locale = fusion_get_locale('', DOWNLOAD_ADMIN_LOCALE);
+$dl_settings = get_settings("downloads");
+$userdata = fusion_get_userdata();
 
 add_to_title($locale['global_200'].$locale['download_0041']);
 

@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$locale = fusion_get_locale();
+
 if (defined('ARTICLES_EXIST')) {
     include_once INFUSIONS."latest_articles_panel/templates.php";
 

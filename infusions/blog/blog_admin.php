@@ -79,7 +79,7 @@ $allowed_pages = [
     "blog", "blog_category", "blog_form", "submissions", "settings"
 ];
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : "blog";
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id'])) ? TRUE : FALSE;
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['blog_id']) && isnum($_GET['blog_id']));
 $tab['title'][] = $locale['blog_0400'];
 $tab['id'][] = 'blog';
 $tab['icon'][] = 'fa fa-graduation-cap';
@@ -177,7 +177,7 @@ function blog_listing() {
         echo " <span class='caret'></span></strong>\n</a>\n";
         echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
         foreach ($catOpts as $catID => $catName) {
-            $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
+            $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
                     ["section", "rowstart", "aid"],
                     TRUE)."'>\n";

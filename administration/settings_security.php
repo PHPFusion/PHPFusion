@@ -32,7 +32,7 @@ if ($temp = opendir(INCLUDES."captchas/")) {
 
 $settings = fusion_get_settings();
 
-$is_multilang = count(fusion_get_enabled_languages()) > 1 ? TRUE : FALSE;
+$is_multilang = count(fusion_get_enabled_languages()) > 1;
 
 if (isset($_POST['clear_cache'])) {
     if ($settings['database_sessions']) {
@@ -144,21 +144,21 @@ echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
-echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE, 'form_name' => 'settingsform']);
+echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled'), 'form_name' => 'settingsform']);
 closeside();
 openside('');
 if ($is_multilang == TRUE) {
     echo \PHPFusion\QuantumFields::quantum_multilocale_fields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
-        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE,
+        'html'      => !fusion_get_settings('tinymce_enabled'),
         'function'  => 'form_textarea'
     ]);
 } else {
     echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
-        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+        'html'      => !fusion_get_settings('tinymce_enabled')
     ]);
 }
 closeside();

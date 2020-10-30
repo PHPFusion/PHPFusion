@@ -86,7 +86,7 @@ if (!function_exists('display_main_news')) {
                         if ($x > 6) {
                             $x = 1;
                         }
-                        $x_logic = (empty($x % 3) or empty($x % 4) ? TRUE : FALSE);
+                        $x_logic = (empty($x % 3) or empty($x % 4));
                         if ($x === 6) {
                             $x_logic = FALSE;
                         }

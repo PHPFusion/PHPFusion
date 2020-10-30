@@ -22,16 +22,6 @@ require_once THEMES.'templates/admin_header.php';
 class AdminPasswordResetAdministration {
     private static $locale = [];
 
-    private $data = [
-        'reset_id'        => 0,
-        'reset_admin_id'  => '',
-        'reset_timestamp' => '',
-        'reset_sucess'    => '',
-        'reset_failed'    => '',
-        'reset_admins'    => '',
-        'reset_reason'    => ''
-    ];
-
     public function __construct() {
         self::$locale = fusion_get_locale("", LOCALE.LOCALESET."admin/admin_reset.php");
         $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
@@ -90,7 +80,7 @@ class AdminPasswordResetAdministration {
                     $newAdminPass = $adminPass->getNewPassword(12);
                     $adminPass->inputNewPassword = $newAdminPass;
                     $adminPass->inputNewPassword2 = $newAdminPass;
-                    $adminPassIsReset = ($adminPass->isValidNewPassword() === 0 ? TRUE : FALSE);
+                    $adminPassIsReset = ($adminPass->isValidNewPassword() === 0);
                     $newAdminAlgo = $adminPass->getNewAlgo();
                     $newAdminSalt = $adminPass->getNewSalt();
                     $newAdminPassword = $adminPass->getNewHash();
@@ -102,7 +92,7 @@ class AdminPasswordResetAdministration {
                         $loginPass->inputPassword = $data['user_password'];
                         $loginPass->inputNewPassword = $newLoginPass;
                         $loginPass->inputNewPassword2 = $newLoginPass;
-                        $loginPassIsReset = ($loginPass->isValidNewPassword() === 0 ? TRUE : FALSE);
+                        $loginPassIsReset = ($loginPass->isValidNewPassword() === 0);
                         $new_admin_algo = $loginPass->getNewAlgo();
                         $new_admin_salt = $loginPass->getNewSalt();
                         $new_admin_password = $loginPass->getNewHash();
@@ -186,7 +176,7 @@ class AdminPasswordResetAdministration {
                 $preview_html .= closemodal();
                 add_to_footer($preview_html);
 
-                $this->data = [
+                $data1 = [
                     'reset_id'        => 0,
                     'reset_admin_id'  => fusion_get_userdata('user_id'),
                     'reset_timestamp' => time(),
@@ -196,7 +186,7 @@ class AdminPasswordResetAdministration {
                     'reset_reason'    => $reset_message
                 ];
 
-                dbquery_insert(DB_ADMIN_RESETLOG, $this->data, 'save');
+                dbquery_insert(DB_ADMIN_RESETLOG, $data1, 'save');
                 addNotice('success', self::$locale['apw_411']);
             }
         }

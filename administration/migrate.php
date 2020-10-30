@@ -140,47 +140,47 @@ function user_posts_migrate_console() {
         'forum'      => [
             'value'  => !empty($_POST['forum']) ? $_POST['forum'] : 0,
             'text'   => $locale['MIG_154'],
-            'active' => defined('FORUM_EXIST') ? TRUE : FALSE
+            'active' => defined('FORUM_EXIST')
         ],
         'articles'   => [
             'value'  => !empty($_POST['articles']) ? $_POST['articles'] : 0,
             'text'   => $locale['MIG_155'],
-            'active' => defined('ARTICLES_EXIST') ? TRUE : FALSE
+            'active' => defined('ARTICLES_EXIST')
         ],
         'faq'        => [
             'value'  => !empty($_POST['faq']) ? $_POST['faq'] : 0,
             'text'   => $locale['MIG_156'],
-            'active' => defined('FAQ_EXIST') ? TRUE : FALSE
+            'active' => defined('FAQ_EXIST')
         ],
         'polls'      => [
             'value'  => !empty($_POST['polls']) ? $_POST['polls'] : 0,
             'text'   => $locale['MIG_157'],
-            'active' => defined('MEMBER_POLL_PANEL_EXIST') ? TRUE : FALSE
+            'active' => defined('MEMBER_POLL_PANEL_EXIST')
         ],
         'news'       => [
             'value'  => !empty($_POST['news']) ? $_POST['news'] : 0,
             'text'   => $locale['MIG_158'],
-            'active' => defined('NEWS_EXIST') ? TRUE : FALSE
+            'active' => defined('NEWS_EXIST')
         ],
         'blog'       => [
             'value'  => !empty($_POST['blog']) ? $_POST['blog'] : 0,
             'text'   => $locale['MIG_159'],
-            'active' => defined('BLOG_EXIST') ? TRUE : FALSE
+            'active' => defined('BLOG_EXIST')
         ],
         'downloads'  => [
             'value'  => !empty($_POST['downloads']) ? $_POST['downloads'] : 0,
             'text'   => $locale['MIG_160'],
-            'active' => defined('DOWNLOADS_EXIST') ? TRUE : FALSE
+            'active' => defined('DOWNLOADS_EXIST')
         ],
         'photos'     => [
             'value'  => !empty($_POST['photos']) ? $_POST['photos'] : 0,
             'text'   => $locale['MIG_161'],
-            'active' => defined('GALLERY_EXIST') ? TRUE : FALSE
+            'active' => defined('GALLERY_EXIST')
         ],
         'shoutbox'   => [
             'value'  => !empty($_POST['shoutbox']) ? $_POST['shoutbox'] : 0,
             'text'   => $locale['MIG_162'],
-            'active' => defined('SHOUTBOX_PANEL_EXIST') ? TRUE : FALSE
+            'active' => defined('SHOUTBOX_PANEL_EXIST')
         ],
     ];
 

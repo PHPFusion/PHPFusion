@@ -102,8 +102,6 @@ abstract class ForumServer {
 
     /**
      * @param string $type
-     *
-     * @return array
      */
     public static function get_ForumIcons($type = '') {
         if (isset(self::$forum_icons[$type])) {
@@ -140,12 +138,10 @@ abstract class ForumServer {
      * Verify Forum ID
      *
      * @param $forum_id
-     *
-     * @return bool|string
      */
     public static function verify_forum($forum_id) {
         if (isnum($forum_id)) {
-            return (bool)dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ") ? TRUE : FALSE;
+            return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
         }
 
         return FALSE;
@@ -211,9 +207,9 @@ abstract class ForumServer {
     /**
      * Get HTML source of forum rank images of a member
      *
-     * @param int   $posts The number of posts of the member
-     * @param int   $level The level of the member
-     * @param array $groups The groups of the member
+     * @param int    $posts  The number of posts of the member
+     * @param int    $level  The level of the member
+     * @param string $groups The groups of the member
      *
      * @return string HTML source of forum rank images
      */
@@ -374,7 +370,7 @@ abstract class ForumServer {
      */
     public static function verify_thread($thread_id) {
         if (isnum($thread_id)) {
-            return (bool)dbcount("('forum_id')", DB_FORUM_THREADS, "thread_id='".$thread_id."'") ? TRUE : FALSE;
+            return (bool)dbcount("('forum_id')", DB_FORUM_THREADS, "thread_id='".$thread_id."'");
         }
 
         return FALSE;
@@ -389,7 +385,7 @@ abstract class ForumServer {
      */
     public static function verify_post($post_id) {
         if (isnum($post_id)) {
-            return (bool)dbcount("('post_id')", DB_FORUM_POSTS, "post_id='".$post_id."'") ? TRUE : FALSE;
+            return (bool)dbcount("('post_id')", DB_FORUM_POSTS, "post_id='".$post_id."'");
         }
 
         return FALSE;

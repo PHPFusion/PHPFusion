@@ -39,7 +39,6 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
     }
 
     public function validate_input() {
-
         self::$widget_data = [
             'block_title'       => form_sanitizer($_POST['block_title'], '', 'block_title'),
             'block_description' => form_sanitizer($_POST['block_description'], '', 'block_description'),
@@ -51,6 +50,8 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         if (\defender::safe()) {
             return \defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
     public function validate_delete() {

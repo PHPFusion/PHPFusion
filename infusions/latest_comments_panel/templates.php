@@ -28,7 +28,7 @@ if (!function_exists('render_latest_comments')) {
 
         if (!empty($info['item'])) {
             foreach ($info['item'] as $id => $data) {
-                $link = !empty($data['data']['user_id']) ? TRUE : FALSE;
+                $link = !empty($data['data']['user_id']);
                 $html->set_block('comment', [
                     'comment_user_avatar' => display_avatar($data['data'], '35px', '', $link, 'img-circle m-r-10 m-t-5'),
                     'comment_subject'     => trim_text($data['title'], 40),

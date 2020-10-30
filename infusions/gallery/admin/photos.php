@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
+
+$locale = fusion_get_locale();
+
 $tab_photo['title'][] = $locale['gallery_0009'];
 $tab_photo['id'][] = "single_photo";
 $tab_photo['icon'][] = "";
@@ -33,7 +36,7 @@ echo closetabbody();
 echo closetab();
 // done.
 function photo_form() {
-    $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
+    $photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']);
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
@@ -66,8 +69,8 @@ function photo_form() {
                 'photo_order'          => form_sanitizer($_POST['photo_order'], '', 'photo_order'),
                 'photo_datestamp'      => form_sanitizer($_POST['photo_datestamp'], '', 'photo_datestamp'),
                 'photo_user'           => form_sanitizer($_POST['photo_user'], '', 'photo_user'),
-                'photo_allow_comments' => isset($_POST['photo_allow_comments']) ? TRUE : FALSE,
-                'photo_allow_ratings'  => isset($_POST['photo_allow_ratings']) ? TRUE : FALSE,
+                'photo_allow_comments' => isset($_POST['photo_allow_comments']),
+                'photo_allow_ratings'  => isset($_POST['photo_allow_ratings']),
                 'photo_views'          => 0,
                 'photo_filename'       => '',
                 'photo_thumb1'         => '',

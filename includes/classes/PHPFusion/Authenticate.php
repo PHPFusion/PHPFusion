@@ -445,11 +445,9 @@ class Authenticate {
     }
 
     public static function setLastVisitCookie() {
-
         $guest_lastvisit = time() - 3600;
-        $update_threads = FALSE;
         $set_cookie = TRUE;
-        $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]) ? TRUE : FALSE;
+        $cookie_exists = isset($_COOKIE[COOKIE_LASTVISIT]) && isnum($_COOKIE[COOKIE_LASTVISIT]);
         if (iMEMBER) {
             $last_visited = fusion_get_userdata("user_lastvisit");
             $id = fusion_get_userdata("user_id");
@@ -460,6 +458,7 @@ class Authenticate {
                     $update_threads = TRUE;
                     $lastvisit = $last_visited;
                 } else {
+                    $update_threads = FALSE;
                     $set_cookie = FALSE;
                     $lastvisit = $_COOKIE[COOKIE_LASTVISIT];
                 }
@@ -488,7 +487,7 @@ class Authenticate {
 
     public static function setVisitorCounter() {
         if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
-            $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
             setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
         }
     }

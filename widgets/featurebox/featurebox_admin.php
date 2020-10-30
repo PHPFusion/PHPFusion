@@ -88,6 +88,8 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
         if (\defender::safe()) {
             return \defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
     public function validate_delete() {

@@ -74,7 +74,7 @@ class InstallerInfusions extends Install_Core {
                     }
                 }
                 // Check if definitions have been set, if not set the default language to system language
-                if (!defined("LANGUAGE")) {
+                if (!defined("LANGUAGE") && !defined('LOCALESET')) {
                     define("LANGUAGE", $settings['locale']);
                     define("LOCALESET", $settings['locale']."/");
                 }

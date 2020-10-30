@@ -18,6 +18,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'../../../maincore.php';
 
+$states = [];
 include INCLUDES."geomap/geomap.inc.php";
 
 $q = isset($_GET['q']) ? $_GET['q'] : '';

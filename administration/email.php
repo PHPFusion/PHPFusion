@@ -87,6 +87,8 @@ $html_text = "";
 $html_helper = "";
 $text_helper = "";
 
+$data = [];
+
 if (dbrows($result)) {
     $data = dbarray($result);
 
@@ -238,8 +240,8 @@ echo form_textarea('template_content', $locale['MAIL_040'], $data['template_cont
     'required'   => TRUE,
     'error_text' => $locale['MAIL_041'],
     'autosize'   => TRUE,
-    'preview'    => $data['template_format'] == 'html' ? TRUE : FALSE,
-    'html'       => $data['template_format'] == 'html' ? TRUE : FALSE,
+    'preview'    => $data['template_format'] == 'html',
+    'html'       => $data['template_format'] == 'html',
     'inputform'  => 'emailtemplateform'
 ]);
 echo "<div class='btn-group'>\n";

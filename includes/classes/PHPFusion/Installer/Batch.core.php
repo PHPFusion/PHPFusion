@@ -530,7 +530,6 @@ class Batch_Core extends Install_Core {
     }
 
     public function ProgressHasError() {
-        return (!empty($this->js['error'])) ? TRUE : FALSE;
+        return (!empty($this->js['error']));
     }
-
 }

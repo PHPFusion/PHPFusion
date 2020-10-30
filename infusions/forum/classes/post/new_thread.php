@@ -138,7 +138,7 @@ class NewThread extends ForumServer {
                                     'max_length'  => 255,
                                     'placeholder' => self::$locale['forum_0605'],
                                     'inline'      => TRUE,
-                                    //'required'    => $i <= 2 ? TRUE : FALSE
+                                    //'required'    => $i <= 2
                                 ]);
                         }
                         $poll_field['poll_field'] .= "<div class='col-xs-12 col-sm-offset-3'>\n";
@@ -150,7 +150,7 @@ class NewThread extends ForumServer {
                             'description' => self::$locale['forum_0630'],
                             'field'       => $poll_field
                         ];
-                        $poll_form = form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']) ? TRUE : FALSE, ['reverse_label' => TRUE]);
+                        $poll_form = form_checkbox("add_poll", self::$locale['forum_0366'], isset($_POST['add_poll']), ['reverse_label' => TRUE]);
                         $poll_form .= "<div id='poll_form' class='poll-form' style='display:none;'>\n";
                         $poll_form .= "<div class='well clearfix'>\n";
                         $poll_form .= "<!--pre_form-->\n";
@@ -430,8 +430,8 @@ class NewThread extends ForumServer {
                     'thread_lastuser'   => $userdata['user_id'],
                     'thread_postcount'  => 1, // already insert 1 postcount.
                     'thread_poll'       => 0,
-                    'thread_sticky'     => isset($_POST['thread_sticky']) ? TRUE : FALSE,
-                    'thread_locked'     => isset($_POST['thread_sticky']) ? TRUE : FALSE,
+                    'thread_sticky'     => isset($_POST['thread_sticky']),
+                    'thread_locked'     => isset($_POST['thread_sticky']),
                     'thread_hidden'     => 0,
                 ];
 
@@ -441,7 +441,7 @@ class NewThread extends ForumServer {
                     'thread_id'       => 0, // required lastid
                     'post_id'         => 0, // auto insertion
                     'post_message'    => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
-                    'post_showsig'    => isset($_POST['post_showsig']) ? TRUE : FALSE,
+                    'post_showsig'    => isset($_POST['post_showsig']),
                     'post_smileys'    => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? FALSE : TRUE,
                     'post_author'     => $userdata['user_id'],
                     'post_datestamp'  => time(),
@@ -451,7 +451,7 @@ class NewThread extends ForumServer {
                     'post_edittime'   => 0,
                     'post_editreason' => '',
                     'post_hidden'     => 0,
-                    'notify_me'       => isset($_POST['notify_me']) ? TRUE : FALSE,
+                    'notify_me'       => isset($_POST['notify_me']),
                     'post_locked'     => 0,
                 ];
 
@@ -683,13 +683,13 @@ class NewThread extends ForumServer {
         $mods::define_forum_mods($forum_data);
         unset($mods);
         // Access the forum
-        self::$permissions['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access'])) ? TRUE : FALSE;
+        self::$permissions['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access']));
         // Create new thread -- whether user has permission to create a thread
-        self::$permissions['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
+        self::$permissions['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE));
         // Poll creation -- thread has not exist, therefore cannot be locked.
-        self::$permissions['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE)) ? TRUE : FALSE;
-        self::$permissions['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach'])) ? TRUE : FALSE;
-        self::$permissions['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download'])) ? TRUE : FALSE;
+        self::$permissions['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE));
+        self::$permissions['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach']));
+        self::$permissions['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download']));
     }
 
     private static function getPermission($key) {

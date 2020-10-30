@@ -353,20 +353,13 @@ class Install_Core extends Infusion_Core {
             case self::STEP_PERMISSIONS:
                 return InstallerPermissions::servePage()->__view();
                 break;
+            case self::STEP_DB_SETTINGS_SAVE:
             case self::STEP_DB_SETTINGS_FORM:
                 return InstallerDbSetup::servePage()->__view();
                 break;
-            case self::STEP_DB_SETTINGS_SAVE:
-                return InstallerDbSetup::servePage()->__view();
-                break;
-            case self::STEP_PRIMARY_ADMIN_FORM:
-                return InstallerAdminSetup::servePage()->__view();
-                break;
             case self::STEP_TRANSFER:
-                return InstallerAdminSetup::servePage()->__view();
-                break;
-            case
-            self::STEP_PRIMARY_ADMIN_SAVE:
+            case self::STEP_PRIMARY_ADMIN_SAVE:
+            case self::STEP_PRIMARY_ADMIN_FORM:
                 return InstallerAdminSetup::servePage()->__view();
                 break;
             case self::STEP_INFUSIONS:

@@ -17,12 +17,14 @@
 +--------------------------------------------------------*/
 $formaction = FUSION_REQUEST;
 $locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
 $userdata = fusion_get_userdata();
+$blog_settings = get_settings("blog");
 
 // use the select
 $blog_cat_opts[0] = $locale['blog_0424'];
 $cat_result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")." ORDER BY blog_cat_name ASC");
-if (dbrows($result) > 0) {
+if (dbrows($cat_result) > 0) {
     while ($bcData = dbarray($cat_result)) {
         $blog_cat_opts[$bcData['blog_cat_id']] = $bcData['blog_cat_name'];
     }

@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$locale = fusion_get_locale();
+
 if (defined('DOWNLOADS_EXIST')) {
     include_once INFUSIONS."latest_downloads_panel/templates.php";
 

@@ -45,19 +45,19 @@ $inf_mlt[] = [
  * Forum Upgrades covering PHP-Fusion 7 to PHP-Fusion 9 RC4
  */
 // Forum tables renaming
-if (db_exists($db_prefix."posts")) {
-    dbquery("RENAME TABLE `".$db_prefix."posts` TO `".$db_prefix."forum_posts`");
+if (db_exists(DB_PREFIX."posts")) {
+    dbquery("RENAME TABLE `".DB_PREFIX."posts` TO `".DB_PREFIX."forum_posts`");
 }
-if (db_exists($db_prefix."threads")) {
-    dbquery("RENAME TABLE `".$db_prefix."threads` TO `".$db_prefix."forum_threads`");
+if (db_exists(DB_PREFIX."threads")) {
+    dbquery("RENAME TABLE `".DB_PREFIX."threads` TO `".DB_PREFIX."forum_threads`");
 }
-if (db_exists($db_prefix."thread_notify")) {
-    dbquery("RENAME TABLE `".$db_prefix."thread_notify` TO `".$db_prefix."forum_thread_notify`");
+if (db_exists(DB_PREFIX."thread_notify")) {
+    dbquery("RENAME TABLE `".DB_PREFIX."thread_notify` TO `".DB_PREFIX."forum_thread_notify`");
 }
 
 // Install a forum voting table
-if (!db_exists($db_prefix.'forum_votes')) {
-    $table_query = $db_prefix."forum_votes (
+if (!db_exists(DB_PREFIX.'forum_votes')) {
+    $table_query = DB_PREFIX."forum_votes (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     thread_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
@@ -68,8 +68,8 @@ if (!db_exists($db_prefix.'forum_votes')) {
     dbquery("CREATE TABLE ".$table_query);
 }
 // Install a new thread tags table
-if (!db_exists($db_prefix.'forum_thread_tags')) {
-    $table_query = $db_prefix."forum_thread_tags (
+if (!db_exists(DB_PREFIX.'forum_thread_tags')) {
+    $table_query = DB_PREFIX."forum_thread_tags (
     tag_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     tag_title VARCHAR(100) NOT NULL DEFAULT '',
     tag_description VARCHAR(250) NOT NULL DEFAULT '',
@@ -82,8 +82,8 @@ if (!db_exists($db_prefix.'forum_thread_tags')) {
 }
 
 // Install a new mood table
-if (!db_exists($db_prefix."forum_post_mood")) {
-    $table_query = $db_prefix."forum_post_mood (
+if (!db_exists(DB_PREFIX."forum_post_mood")) {
+    $table_query = DB_PREFIX."forum_post_mood (
     mood_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     mood_name TEXT NOT NULL,
     mood_description TEXT NOT NULL,
@@ -97,8 +97,8 @@ if (!db_exists($db_prefix."forum_post_mood")) {
 }
 
 // Install a new post notification table
-if (!db_exists($db_prefix."forum_post_notify")) {
-    $table_query = $db_prefix."forum_post_notify (
+if (!db_exists(DB_PREFIX."forum_post_notify")) {
+    $table_query = DB_PREFIX."forum_post_notify (
     post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -154,44 +154,44 @@ foreach ($change_forums as $key => $value) {
 }
 
 // Update existing records and change level accesses to new user groups values
-$forum_index = dbquery_tree($db_prefix.'forums', 'forum_id', 'forum_cat');
-$result = dbquery("SELECT * FROM ".$db_prefix."forums");
+$forum_index = dbquery_tree(DB_PREFIX.'forums', 'forum_id', 'forum_cat');
+$result = dbquery("SELECT * FROM ".DB_PREFIX."forums");
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
         // Update new access levels for forum_post
         if ($data['forum_post']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_post ='-".$data['forum_post']."' WHERE forum_id='".$data['forum_id']."' AND forum_post != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_post ='-".$data['forum_post']."' WHERE forum_id='".$data['forum_id']."' AND forum_post != 0";
         }
         // Update new access levels for forum_access
         if ($data['forum_access']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_access ='-".$data['forum_access']."' WHERE forum_id='".$data['forum_id']."' AND forum_access != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_access ='-".$data['forum_access']."' WHERE forum_id='".$data['forum_id']."' AND forum_access != 0";
         }
         // Update new access levels for forum reply
         if ($data['forum_reply']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_reply ='-".$data['forum_reply']."' WHERE forum_id='".$data['forum_id']."' AND forum_reply != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_reply ='-".$data['forum_reply']."' WHERE forum_id='".$data['forum_id']."' AND forum_reply != 0";
         }
         // Update new access levels for forum vote
         if ($data['forum_vote']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_vote ='-".$data['forum_vote']."' WHERE forum_id='".$data['forum_id']."' AND forum_vote != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_vote ='-".$data['forum_vote']."' WHERE forum_id='".$data['forum_id']."' AND forum_vote != 0";
         }
         // Update new access levels for forum poll
         if ($data['forum_poll']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_poll ='-".$data['forum_poll']."' WHERE forum_id='".$data['forum_id']."' AND forum_poll != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_poll ='-".$data['forum_poll']."' WHERE forum_id='".$data['forum_id']."' AND forum_poll != 0";
         }
         // Update new access levels for forum attach
         if ($data['forum_attach']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach ='-".$data['forum_attach']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_attach ='-".$data['forum_attach']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach != 0";
         }
         // Update new access levels for forum attach
         if ($data['forum_attach_download']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach_download != 0";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_attach_download ='-".$data['forum_attach_download']."' WHERE forum_id='".$data['forum_id']."' AND forum_attach_download != 0";
         }
         // Update forum_branch as base branch if forum_cat is 0
         if (!$data['forum_cat']) {
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_branch='".$data['forum_id']."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_branch='".$data['forum_id']."' WHERE forum_id='".$data['forum_id']."'";
         } else {
             $root = get_root($forum_index, $data['forum_id']);
-            $inf_updatedbrow[] = $db_prefix."forums SET forum_branch='".$root."' WHERE forum_id='".$data['forum_id']."'";
+            $inf_updatedbrow[] = DB_PREFIX."forums SET forum_branch='".$root."' WHERE forum_id='".$data['forum_id']."'";
         }
 
         // Update new access levels for forum moderators
@@ -202,18 +202,18 @@ if (dbrows($result)) {
      * Change old forums already inside a group to be a forum containing threads
      * This makes all existing threads accessible both in forums and in panels after upgrade
      */
-    $inf_updatedbrow[] = $db_prefix."forums SET forum_type='1' WHERE forum_cat='0'";
-    $inf_updatedbrow[] = $db_prefix."forums SET forum_type='2' WHERE forum_cat>'0'";
+    $inf_updatedbrow[] = DB_PREFIX."forums SET forum_type='1' WHERE forum_cat='0'";
+    $inf_updatedbrow[] = DB_PREFIX."forums SET forum_type='2' WHERE forum_cat>'0'";
 }
 
 // Update the forums with lastpost information
-$select = dbquery("SELECT * FROM ".$db_prefix."forums ORDER BY forum_id ASC");
+$select = dbquery("SELECT * FROM ".DB_PREFIX."forums ORDER BY forum_id ASC");
 if (dbrows($select) > 0) {
     while ($data = dbarray($select)) {
-        $select2 = dbquery("SELECT * FROM ".$db_prefix."forum_threads WHERE forum_id='".$data['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 1");
+        $select2 = dbquery("SELECT * FROM ".DB_PREFIX."forum_threads WHERE forum_id='".$data['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 1");
         if (dbrows($select2)) {
             while ($subData = dbarray($select2)) {
-                $inf_updatedbrow[] = $db_prefix."forums SET forum_lastpost='".$subData['thread_lastpost']."', forum_lastpostid='".$subData['thread_lastpostid']."', forum_lastuser='".$subData['thread_lastuser']."' WHERE forum_id='".$subData['forum_id']."'";
+                $inf_updatedbrow[] = DB_PREFIX."forums SET forum_lastpost='".$subData['thread_lastpost']."', forum_lastpostid='".$subData['thread_lastpostid']."', forum_lastuser='".$subData['thread_lastuser']."' WHERE forum_id='".$subData['forum_id']."'";
             }
         }
     }
@@ -223,17 +223,17 @@ if (dbrows($select) > 0) {
  * Modify Forum Ranks Table
  */
 if (column_exists('forum_ranks', 'rank_apply')) {
-    $inf_altertable[] = $db_prefix."forum_ranks CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
+    $inf_altertable[] = DB_PREFIX."forum_ranks CHANGE rank_apply rank_apply TINYINT(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
 }
 // Add multilingual support to ranks
 if (!column_exists('forum_ranks', 'rank_language')) {
-    $inf_altertable[] = $db_prefix."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER rank_apply";
+    $inf_altertable[] = DB_PREFIX."forum_ranks ADD rank_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER rank_apply";
 }
 // Modify All Rank Levels
-$result = dbquery("SELECT rank_id, rank_apply FROM ".$db_prefix."forum_ranks");
+$result = dbquery("SELECT rank_id, rank_apply FROM ".DB_PREFIX."forum_ranks");
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
-        $inf_updatedbrow[] = $db_prefix."forum_ranks SET rank_apply ='-".$data['rank_apply']."' WHERE rank_id='".$data['rank_id']."'";
+        $inf_updatedbrow[] = DB_PREFIX."forum_ranks SET rank_apply ='-".$data['rank_apply']."' WHERE rank_id='".$data['rank_id']."'";
     }
 }
 /*
@@ -255,7 +255,7 @@ foreach ($forum_threads as $key => $value) {
  * Modify Forum Attachment Table
  */
 if (!column_exists('forum_attachments', 'attach_mime') && column_exists('forum_attachments', 'attach_ext')) {
-    $inf_altertable[] = $db_prefix."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
+    $inf_altertable[] = DB_PREFIX."forum_attachments CHANGE attach_ext attach_mime VARCHAR(20) NOT NULL DEFAULT ''";
 }
 // Clear old core settings if they are there regardless of current state
 $settings = fusion_get_settings();
@@ -280,7 +280,7 @@ $del_forumsettings = [
 
 foreach ($del_forumsettings as $key => $value) {
     if (isset($settings[$value])) {
-        $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";;
+        $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";
     }
 }
 

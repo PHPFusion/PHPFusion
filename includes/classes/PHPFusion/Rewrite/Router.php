@@ -204,6 +204,8 @@ class Router extends RewriteDriver {
 
             return FALSE;
         }
+
+        return NULL;
     }
 
     /**

@@ -23,7 +23,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 
 $settings = fusion_get_settings();
 
-$is_multilang = count(fusion_get_enabled_languages()) > 1 ? TRUE : FALSE;
+$is_multilang = count(fusion_get_enabled_languages()) > 1;
 
 if (isset($_POST['savesettings'])) {
     $inputData = [
@@ -70,7 +70,7 @@ if ($is_multilang == TRUE) {
     echo form_textarea('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
-        'html'      => !fusion_get_settings('tinymce_enabled') ? TRUE : FALSE
+        'html'      => !fusion_get_settings('tinymce_enabled')
     ]);
 }
 closeside();

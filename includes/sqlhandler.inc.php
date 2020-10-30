@@ -352,6 +352,8 @@ function get_parent_array($data, $child_id) {
             return (array)$value[$child_id];
         }
     }
+
+    return NULL;
 }
 
 /**
@@ -379,6 +381,8 @@ function get_all_parent($index, $child_id, $list = []) {
             }
         }
     }
+
+    return NULL;
 }
 
 /**

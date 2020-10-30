@@ -18,6 +18,8 @@
 $inf_version = '1.1';
 require_once INCLUDES.'infusions_include.php';
 
+$locale = fusion_get_locale();
+
 // Add multilingual support
 if (!column_exists(DB_FAQ_CATS, 'faq_cat_language', FALSE)) {
     $inf_altertable[] = DB_FAQ_CATS." ADD faq_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER faq_cat_description";
@@ -50,7 +52,7 @@ if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         // Add
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3303']."', 'infusions/".$inf_folder."/faq.php', '0', '2', '0', '2', '1', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3303']."', 'infusions/faq/faq.php', '0', '2', '0', '2', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3327']."', 'submit.php?stype=q', ".USER_LEVEL_MEMBER.", '1', '0', '23', '1', '".$language."')";
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/faq/faq.php' AND link_language='".$language."'";

@@ -105,7 +105,7 @@ if (iGUEST) {
     ];
 
     $info['captcha'] = display_captcha($captcha_settings);
-    if (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT)) {
+    if (!isset($_CAPTCHA_HIDE_INPUT) || (!$_CAPTCHA_HIDE_INPUT)) {
         $info['captcha_code'] = form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
     }
 }

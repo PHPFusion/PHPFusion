@@ -24,7 +24,6 @@ class UserFields extends QuantumFields {
 
     public $displayTerms = 0;
     public $displayValidation = 0;
-    public $errorsArray = [];
     public $formaction = FUSION_REQUEST; // changed in API 1.02
     public $formname = "userfieldsform";
     public $postName;
@@ -89,7 +88,7 @@ class UserFields extends QuantumFields {
             }
         }
 
-        return in_array($field_name, $list) ? TRUE : FALSE;
+        return in_array($field_name, $list);
     }
 
     /* Page Navigation with UF Cats */
@@ -371,7 +370,7 @@ class UserFields extends QuantumFields {
             'register'  => $this->registration,
             'pages'     => ($this->paginate && !$this->registration) ? $_GET['section'] : '',
             'openform'  => openform($this->formname, 'post', FUSION_REQUEST, [
-                'enctype' => $this->showAvatarInput ? TRUE : FALSE,
+                'enctype' => $this->showAvatarInput,
             ]),
             'closeform' => closeform(),
             'button'    => $this->renderButton(),
@@ -533,7 +532,7 @@ class UserFields extends QuantumFields {
     }
 
     private function renderButton() {
-        $disabled = $this->displayTerms == 1 ? TRUE : FALSE;
+        $disabled = $this->displayTerms == 1;
         $this->options += $this->default_options;
         $html = (!$this->skipCurrentPass) ? form_hidden('user_hash', '', $this->userData['user_password']) : '';
         $html .= form_button($this->postName, $this->postValue, $this->postValue,

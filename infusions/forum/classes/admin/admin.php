@@ -91,8 +91,6 @@ abstract class ForumAdminInterface extends ForumServer {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
         dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$forum_id."' ".($time ? "AND post_datestamp < '".$time."'" : '')."");
@@ -158,8 +156,6 @@ abstract class ForumAdminInterface extends ForumServer {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     protected static function prune_attachment($forum_id, $time = FALSE) {
 
@@ -205,8 +201,6 @@ abstract class ForumAdminInterface extends ForumServer {
      * Recalculate a forum post count
      *
      * @param $forum_id
-     *
-     * @return string
      */
     protected static function recalculate_post($forum_id) {
 

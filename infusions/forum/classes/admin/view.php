@@ -24,8 +24,8 @@ class ForumAdminView extends ForumAdminInterface {
     /**
      * todo: forum answering via ranks.. assign groups points.
      * */
-    private $ext = '';
-    private $forum_index = [];
+    private $ext;
+    private $forum_index;
     private $level = [];
     private $data = [
         'forum_id'                 => 0,
@@ -102,10 +102,8 @@ class ForumAdminView extends ForumAdminInterface {
             case 'prune':
                 self::prune_forum_view();
                 break;
-            case 'edit':
-                $this->data = self::get_forum($_GET['forum_id']);
-                break;
             case 'p_edit':
+            case 'edit':
                 $this->data = self::get_forum($_GET['forum_id']);
                 break;
         }
@@ -598,8 +596,8 @@ class ForumAdminView extends ForumAdminInterface {
                 }
 
                 // delete posts.
-                dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
-                echo self::$locale['609'].mysql_affected_rows()."<br />";
+                $result = dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' AND post_datestamp < '".$prune_time."'");
+                echo self::$locale['609'].$result->affected_rows."<br />";
                 echo self::$locale['610'].$delattach."<br />";
 
                 // delete follows on threads
@@ -616,11 +614,11 @@ class ForumAdminView extends ForumAdminInterface {
                 $result = dbquery("SELECT thread_lastpost, thread_lastuser FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' ORDER BY thread_lastpost DESC LIMIT 0,1"); // get last thread_lastpost.
                 if (dbrows($result)) {
                     $data = dbarray($result);
-                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
+                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".$data['thread_lastpost']."', forum_lastuser='".$data['thread_lastuser']."' WHERE forum_id='".$_GET['forum_id']."'");
                 } else {
-                    dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
+                    $result = dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='0', forum_lastuser='0' WHERE forum_id='".$_GET['forum_id']."'");
                 }
-                echo self::$locale['611'].mysql_affected_rows()."\n</div>";
+                echo self::$locale['611'].$result->affected_rows."\n</div>";
 
                 // calculate and update postcount on each specific threads -  this is the remaining.
                 $result = dbquery("SELECT COUNT(post_id) AS postcount, thread_id FROM ".DB_FORUM_POSTS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY thread_id");

@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 require_once INCLUDES."mimetypes_include.php";
 $locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
+$dl_settings = get_settings("downloads");
+
 if (isset($_POST['savesettings'])) {
     // redo this part
     $StoreArray = [

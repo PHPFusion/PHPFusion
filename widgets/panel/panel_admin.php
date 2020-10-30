@@ -46,6 +46,8 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         if (\defender::safe()) {
             return \defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
     public function validate_delete() {

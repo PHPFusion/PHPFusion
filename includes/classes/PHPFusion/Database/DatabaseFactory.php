@@ -22,7 +22,7 @@ use PHPFusion\Database\Exception\UndefinedConfigurationException;
 class DatabaseFactory {
 
     /**
-     * use mysql_* functions
+     * use mysqli_* functions
      */
     const DRIVER_MYSQLi = 'mysqli';
 

@@ -27,7 +27,6 @@ namespace PHPFusion\Rewrite;
 class Permalinks extends RewriteDriver {
 
     private static $permalink_instance = NULL;
-    public $debug_regex = TRUE;
 
     /**
      * Get the instance of the class

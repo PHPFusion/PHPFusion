@@ -136,9 +136,9 @@ class Search_Engine extends Search_Model {
 
         $disabled_status = FALSE;
         if (isset($form_elements[self::get_param('stype')]['disabled'])) {
-            $disabled_status = !empty($form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
+            $disabled_status = !empty($form_elements[self::get_param('stype')]['disabled']);
             if (self::get_param('stype') != 'all') {
-                $disabled_status = in_array("datelimit", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE;
+                $disabled_status = in_array("datelimit", $form_elements[self::get_param('stype')]['disabled']);
             }
         }
 
@@ -162,7 +162,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields1',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $search_areas .= form_checkbox('fields', $locale['431'], self::get_param('fields'),
@@ -172,7 +172,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields2',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $search_areas .= form_checkbox('fields', $locale['432'], self::get_param('fields'),
@@ -182,8 +182,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields3',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3",
-                    $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $search_areas .= "</div></div>";
@@ -203,8 +202,7 @@ class Search_Engine extends Search_Model {
         $sort .= form_select('sort', '', self::get_param('sort'), [
             'inner_width' => '150px',
             'options'     => $sort_opts,
-            'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort",
-                $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+            'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
         ]);
         $sort .= form_checkbox('order', $locale['450'], self::get_param('order'),
             [
@@ -213,8 +211,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'order1',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1",
-                    $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $sort .= form_checkbox('order', $locale['451'], self::get_param('order'),
@@ -224,7 +221,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'order2',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $sort .= "</div></div>";
@@ -245,8 +242,7 @@ class Search_Engine extends Search_Model {
         $char_areas .= form_select('chars', '', self::get_param('chars'), [
                 'inner_width' => '150px',
                 'options'     => $char_opts,
-                'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("chars",
-                    $form_elements[self::get_param('stype')]['disabled']) ? TRUE : FALSE) : FALSE)
+                'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("chars", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
             ]
         );
         $char_areas .= "</div></div>";

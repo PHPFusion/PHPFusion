@@ -20,8 +20,10 @@ defined('IN_FUSION') || exit;
 require_once INFUSIONS.'blog/templates/blog.php';
 $blog_settings = get_settings("blog");
 $locale = fusion_get_locale('', BLOG_ADMIN_LOCALE);
-add_to_title($locale['global_200'].$locale['blog_0700']);
+$userdata = fusion_get_userdata();
 
+add_to_title($locale['global_200'].$locale['blog_0700']);
+$criteriaArray = [];
 if (iMEMBER && $blog_settings['blog_allow_submission']) {
     $criteriaArray = [
         "blog_subject"  => "",

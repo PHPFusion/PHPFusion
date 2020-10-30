@@ -162,7 +162,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     // Format disabled or enabled dates as JS array
     $dateFilter = [];
     if (!empty($options['filtered_dates']) && is_array($options['filtered_dates'])) {
-        $date_filtered = "";
+        $date_filtered = [];
         $dateFilter[0] = "disabledDates: ";
         if ($options['include_filtered_dates'] == TRUE) {
             $dateFilter[0] = "enabledDates: ";

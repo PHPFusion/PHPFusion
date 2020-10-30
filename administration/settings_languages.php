@@ -19,6 +19,7 @@ require_once __DIR__.'/../maincore.php';
 pageAccess("LANG");
 require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
+$aidlink = fusion_get_aidlink();
 
 // Just follow the display of the current admin language.
 if (!empty($locale['setup_3007'])) {
@@ -383,17 +384,15 @@ function form_lang_checkbox(array $language_list) {
     $enabled_languages = fusion_get_enabled_languages();
     $res = "";
     foreach ($language_list as $language) {
-        $deactivate = fusion_get_settings("locale") == $language ? TRUE : FALSE;
+        $deactivate = fusion_get_settings("locale") == $language;
 
-        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language),
-            (isset($enabled_languages[$language]) ? TRUE : FALSE),
-            [
-                "input_id"      => "langcheck-".$language,
-                "value"         => $language,
-                "class"         => "m-b-0",
-                "reverse_label" => TRUE,
-                "deactivate"    => $deactivate
-            ]);
+        $res .= form_checkbox("enabled_languages[]", translate_lang_names($language), (isset($enabled_languages[$language])), [
+            "input_id"      => "langcheck-".$language,
+            "value"         => $language,
+            "class"         => "m-b-0",
+            "reverse_label" => TRUE,
+            "deactivate"    => $deactivate
+        ]);
         if ($deactivate == TRUE) {
             $res .= form_hidden('enabled_languages[]', '', $language);
         }

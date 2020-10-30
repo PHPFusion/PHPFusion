@@ -18,6 +18,9 @@
 /* Download Form */
 
 $locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
+$dl_settings = get_settings("downloads");
+
 $data = [
     'download_id'                => 0,
     'download_user'              => fusion_get_userdata("user_id"),

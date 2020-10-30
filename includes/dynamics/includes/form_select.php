@@ -56,7 +56,7 @@
  *
  * @package dynamics/select2
  */
-function form_select($input_name, $label = "", $input_value, array $options = []) {
+function form_select($input_name, $label, $input_value, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -147,7 +147,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
             if (!function_exists('get_form_select_opts')) {
                 // @todo: implement all options settings inherited from dbquery_select_hierarchy
                 function get_form_select_opts($data, $options, $id = 0, $level = 0) {
-                    $list = &$list;
+                    $list = [];
                     //array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
                     if (!empty($data[$id])) {
                         foreach ($data[$id] as $key => $value) {
@@ -219,7 +219,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
              *      value   parent id
              */
             if (!function_exists('get_form_select_chain_index')) {
-                function get_form_select_chain_index($data, $options, $id = 0, $level = 0) {
+                function get_form_select_chain_index($data, $options) {
                     $list = [];
                     if (!empty($data)) {
                         $data = flatten_array($data);
@@ -264,7 +264,7 @@ function form_select($input_name, $label = "", $input_value, array $options = []
     // Optgroup with Hierarchy
     if (!function_exists('form_select_build_optgroup')) {
         function form_select_build_optgroup($array, $input_value, $options) {
-            $html = &$html;
+            $html = '';
             $disable_opts = '';
             if ($options['disable_opts']) {
                 $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
@@ -291,8 +291,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         if ($input_value !== '') {
                             $select = ($input_value == $text_value) ? " selected" : "";
                         }
-                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
-                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts);
+                        $hide = $disabled && $options['hide_disabled'];
                         $item = (!$hide ? "<option".$data_attributes."value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
                     } else {
@@ -300,8 +300,8 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                             $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
-                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts);
+                        $hide = $disabled && $options['hide_disabled'];
                         $item = (!$hide ? "<option".$data_attributes."value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
                         //$item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                     }
@@ -406,16 +406,16 @@ function form_select($input_name, $label = "", $input_value, array $options = []
                         if ($input_value !== '') {
                             $select = ($input_value == $v) ? " selected" : "";
                         }
-                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
-                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts);
+                        $hide = $disabled && $options['hide_disabled'];
                         $html .= (!$hide ? "<option value='$v'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($v)." ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     } else {
                         if ($input_value !== '') {
                             //$input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
-                        $disabled = $disable_opts && in_array($arr, $disable_opts) ? TRUE : FALSE;
-                        $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+                        $disabled = $disable_opts && in_array($arr, $disable_opts);
+                        $hide = $disabled && $options['hide_disabled'];
                         $html .= (!$hide ? "<option value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($v)." ".($options['show_current'] && $input_value == $v ? '(Current Item)' : '')."</option>\n" : "");
                     }
                 }
@@ -675,7 +675,7 @@ function user_search($user_id) {
  *
  * @param        $input_name
  * @param string $label
- * @param bool   $input_value
+ * @param string   $input_value
  * @param array  $options
  * @param        $db       - your db
  * @param        $name_col - the option text to show
@@ -690,7 +690,7 @@ function user_search($user_id) {
  *
  * @return string
  */
-function form_select_tree($input_name, $label = "", $input_value = FALSE, array $options = [], $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
+function form_select_tree($input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
     $html = '';
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -769,7 +769,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
     }
     if ($level == 0) {
-        $html = &$html;
+        $html = '';
         add_to_jquery("
         $('#".$options['input_id']."').select2({
         placeholder: '".$options['placeholder']."',
@@ -809,14 +809,14 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         foreach ($index[$id] as $key => $value) {
             // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
-            $html = &$html;
+            $html = '';
             $name = $data[$value][$name_col];
             //print_p($data[$value]);
 
             $name = PHPFusion\QuantumFields::parse_label($name);
             $select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
-            $disabled = $disable_opts && in_array($value, $disable_opts) ? TRUE : FALSE;
-            $hide = $disabled && $options['hide_disabled'] ? TRUE : FALSE;
+            $disabled = $disable_opts && in_array($value, $disable_opts);
+            $hide = $disabled && $options['hide_disabled'];
             // do a disable for filter_opts item.
             $html .= (!$hide) ? "<option value='$value' ".$select." ".($disable_opts && in_array($value, $disable_opts) ? 'disabled' : '')." >$opt_pattern $name ".($options['show_current'] && $self_id == $value ? '(Current Item)' : '')."</option>\n" : '';
             if (isset($index[$value]) && (!$hide)) {
@@ -825,7 +825,7 @@ function form_select_tree($input_name, $label = "", $input_value = FALSE, array 
         }
     }
     if (!$level) {
-        $html = &$html;
+        $html = '';
         $html .= "</select>\n";
         $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';

@@ -622,8 +622,8 @@ class PrivateMessages {
         $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
-                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
-                $within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive") - 1 > $this->info['archive_total']) ? TRUE : FALSE;
+                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]);
+                $within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive") - 1 > $this->info['archive_total']);
                 if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
                     $moveData['message_folder'] = 2;
@@ -644,8 +644,8 @@ class PrivateMessages {
         $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
-                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
-                $within_limit = self::get_pm_settings($userdata['user_id'], "user_inbox") == "0" || (self::get_pm_settings($userdata['user_id'], "user_inbox") > 0 && self::get_pm_settings($userdata['user_id'], "user_inbox") - 1 > $this->info['inbox_total']) ? TRUE : FALSE;
+                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]);
+                $within_limit = self::get_pm_settings($userdata['user_id'], "user_inbox") == "0" || (self::get_pm_settings($userdata['user_id'], "user_inbox") > 0 && self::get_pm_settings($userdata['user_id'], "user_inbox") - 1 > $this->info['inbox_total']);
                 if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
                     $moveData['message_folder'] = 0;
@@ -666,7 +666,7 @@ class PrivateMessages {
         $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
-                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
+                $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]);
                 if ($ownership && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
                     dbquery_insert(DB_MESSAGES, $moveData, 'delete');
@@ -687,7 +687,7 @@ class PrivateMessages {
             case "mark_all": // mark all as read
                 if (!empty($this->info['items'])) {
                     foreach ($this->info['items'] as $message_id => $array) {
-                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
+                        $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]);
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
                         }
@@ -699,7 +699,7 @@ class PrivateMessages {
                 if (!empty($this->info['items'])) {
                     foreach ($this->info['items'] as $message_id => $pmData) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]) ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => intval($message_id), ':messageuser' => intval($userdata['user_id'])]);
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
                         }
@@ -712,7 +712,7 @@ class PrivateMessages {
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]);
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='1' WHERE message_id='".intval($message_id)."'");
                         }
@@ -725,7 +725,7 @@ class PrivateMessages {
                 if (!empty($messages)) {
                     foreach ($messages as $message_id) {
                         $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES,
-                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]) ? TRUE : FALSE;
+                            "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]);
                         if ($ownership && isset($this->info['items'][$message_id])) {
                             dbquery("UPDATE ".DB_MESSAGES." SET message_read='0' WHERE message_id='".intval($message_id)."'");
                         }

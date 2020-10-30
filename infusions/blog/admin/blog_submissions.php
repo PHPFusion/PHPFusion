@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale();
+$blog_settings = get_settings("blog");
+
 echo '<div class="m-t-10">';
 echo '<h2>'.$locale['blog_0131'].'</h2>';
 

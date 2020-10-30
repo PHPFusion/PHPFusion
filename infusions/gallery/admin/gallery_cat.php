@@ -16,6 +16,11 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
+
+$locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
+$gll_settings = get_settings("gallery");
+
 $data = [
     'album_id'          => 0,
     'album_title'       => '',
@@ -100,6 +105,9 @@ if (isset($_POST['save_album'])) {
         }
     }
 }
+
+$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']);
+
 // callback
 if ($album_edit) {
     $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." WHERE album_id=:catid", [':catid' => intval($_GET['cat_id'])]);

@@ -31,6 +31,7 @@ require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 
 $locale = fusion_get_locale("", DOWNLOAD_LOCALE);
+$aidlink = fusion_get_aidlink();
 
 include INFUSIONS."downloads/templates/downloads.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
@@ -344,6 +345,7 @@ if ($_get_download_id) {
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !check_get("download_id")) {
     $page_nav_link = (!empty($info["get"]["type"]) ? INFUSIONS."downloads/downloads.php?type=$_get_type&amp;" : '');
+    $rowstart = 0;
     if (!empty($_get_cat_id) && isnum($_get_cat_id)) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_get_cat_id.(!empty($_get_type) ? "&amp;type=".$_get_type : '')."&amp;";
     } else if ($_get_author) {

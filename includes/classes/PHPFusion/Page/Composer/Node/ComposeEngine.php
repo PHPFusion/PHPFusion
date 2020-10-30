@@ -336,7 +336,7 @@ class ComposeEngine extends PageAdmin {
                                 <div class='panel panel-default'>
                                     <div class='panel-body'>
                                         <img style='width:40px; margin:15px;'
-                                             src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>'/>
+                                             src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>' alt="icon"/>
                                         <h5 class='m-t-0 m-b-0'><?php echo $widget['widget_title'] ?></h5>
                                         <?php echo $widget['widget_description'] ?>
                                     </div>

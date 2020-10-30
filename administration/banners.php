@@ -108,7 +108,7 @@ class BannersAdministration {
             redirect(clean_request('', ['ref', 'section', 'action', 'banner_id'], FALSE));
         }
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'banners_list';
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? TRUE : FALSE;
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit');
 
         if (!empty($_GET['ref']) || isset($_GET['banner_id'])) {
             $master_tab_title['title'][] = self::$locale['back'];

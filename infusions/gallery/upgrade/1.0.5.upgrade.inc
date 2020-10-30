@@ -18,6 +18,8 @@
 $inf_version = '1.0.5';
 require_once INCLUDES."infusions_include.php";
 
+$locale = fusion_get_locale();
+
 if (!column_exists(DB_PHOTOS, 'photo_keywords', FALSE)) {
     // Option to use keywords in photos
     $inf_altertable[] = DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description";

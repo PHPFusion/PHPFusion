@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+$locale = fusion_get_locale();
 $time_sql = '';
 if (!empty($_POST['filter_date'])) {
     $time_filter = form_sanitizer($_POST['filter_date'], '', 'filter_date');

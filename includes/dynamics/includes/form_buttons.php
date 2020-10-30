@@ -66,7 +66,7 @@ function form_button($input_name, $title, $input_value, array $options = []) {
  *
  * @return string
  */
-function form_btngroup($input_name, $label = "", $input_value, array $options = []) {
+function form_btngroup($input_name, $label, $input_value, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

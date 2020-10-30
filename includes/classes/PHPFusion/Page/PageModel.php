@@ -232,7 +232,7 @@ class PageModel {
                         }
                     }
 
-                    if (!empty($widget_display_callback) && !empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_file)) {
+                    if (!empty($widget_display_callback) && file_exists(WIDGETS.$folder."/".$widget_display_file)) {
                         require_once WIDGETS.$folder."/".$widget_display_file;
                         if (class_exists($widget_display_callback)) {
                             $class = new \ReflectionClass($widget_display_callback);

@@ -16,6 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess("PH");
+
+$locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
+
 if (isset($_POST['cancel'])) {
     redirect(FUSION_SELF.$aidlink);
 }

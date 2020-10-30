@@ -47,6 +47,8 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
         if (\defender::safe()) {
             return \defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
     public function validate_delete() {

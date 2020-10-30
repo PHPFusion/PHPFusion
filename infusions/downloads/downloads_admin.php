@@ -36,8 +36,8 @@ $allowed_section = ["downloads", "download_form", "download_settings", "download
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'downloads';
 $_GET['download_cat_id'] = isset($_GET['download_cat_id']) && isnum($_GET['download_cat_id']) ? $_GET['download_cat_id'] : 0;
 
-$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['download_id']) ? TRUE : FALSE;
-$catEdit = isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) ? TRUE : FALSE;
+$edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['download_id']);
+$catEdit = isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']);
 // master template
 $tab['title'][] = $locale['download_0000'];
 $tab['id'][] = "downloads";
@@ -149,7 +149,7 @@ function download_listing() {
         echo " <span class='caret'></span></a>\n";
         echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
         foreach ($catOpts as $catID => $catName) {
-            $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID ? TRUE : FALSE;
+            $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
                     ["section", "rowstart", "aid"],
                     TRUE)."'>\n";

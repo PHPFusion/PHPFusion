@@ -22,7 +22,7 @@ class RemoteFileReader {
     private $_errorNumber = 0;
     private $_errorMessage = "OK";
     private $_requestMethod = 0;
-    private $_requestURL = "";
+    private $_requestURL;
 
     /**
      * Constructor method for the RemoteFileReader Class

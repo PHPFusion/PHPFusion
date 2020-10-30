@@ -72,7 +72,6 @@ class QuantumFields extends \SqlHandler {
     protected $dom_debug = FALSE;
     // System Internals
     private $input_page = 1;
-    private $max_rows = 0;
     private $locale = [];
     private $page_list = [];
     private $page = [];
@@ -297,8 +296,8 @@ class QuantumFields extends \SqlHandler {
         LEFT JOIN ".$this->category_db." root ON (root.field_cat_id = cat.field_parent)
         ORDER BY cat.field_cat_order ASC, field.field_order ASC
         ");
-        $this->max_rows = dbrows($result);
-        if ($this->max_rows > 0) {
+        $max_rows = dbrows($result);
+        if ($max_rows > 0) {
             while ($data = dbarray($result)) {
                 $this->fields[$data['field_cat']][$data['field_id']] = $data;
             }
@@ -720,7 +719,7 @@ class QuantumFields extends \SqlHandler {
                                     ["options" => $page_list]);
                             }
                             echo form_checkbox('delete_subcat', $this->locale['fields_0315'],
-                                count($page_list) < 1 ? TRUE : FALSE);
+                                count($page_list) < 1);
                             echo "</div></div>";
                         }
                         if (isset($field_list[$_GET['cat_id']])) {
@@ -1221,7 +1220,7 @@ class QuantumFields extends \SqlHandler {
         $default_options = [
             'hide_value'           => FALSE,
             'encrypt'              => FALSE,
-            'show_title'           => $method == "input" ? TRUE : FALSE,
+            'show_title'           => $method == "input",
             'deactivate'           => FALSE,
             'inline'               => FALSE,
             'error_text'           => $data['field_error'],
@@ -1833,7 +1832,7 @@ class QuantumFields extends \SqlHandler {
                 'placeholder' => $this->locale['fields_0663'],
                 "required"    => TRUE,
                 "inline"      => FALSE,
-                "deactivate"  => FALSE, //$this->field_cat_data['field_cat_db'] ? TRUE : FALSE,
+                "deactivate"  => FALSE, //$this->field_cat_data['field_cat_db'],
                 "ext_tip"     => $this->locale['fields_0111'],
                 "options"     => $tableList
             ]);

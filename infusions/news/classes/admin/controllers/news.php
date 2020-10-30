@@ -587,7 +587,7 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         openside(self::$locale['news_0006']);
-        echo form_button('image_gallery', self::$locale['news_0007'], 'image_gallery', ['type' => 'button', 'class' => 'btn-default', 'deactivate' => !$this->news_data['news_id'] ? TRUE : FALSE]);
+        echo form_button('image_gallery', self::$locale['news_0007'], 'image_gallery', ['type' => 'button', 'class' => 'btn-default', 'deactivate' => !$this->news_data['news_id']]);
         if (!empty($news_photo_opts)) :
             ?>
             <hr/>

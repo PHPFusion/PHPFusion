@@ -35,7 +35,6 @@ class Sessions {
     private static $_sess = NULL;
     private static $db_info = [];
     private static $_sess_key = 'sessions';
-    private $_sess_db = NULL;
 
     private function __construct() {
     }
@@ -95,8 +94,8 @@ class Sessions {
      * @return bool|\PHPFusion\Database\AbstractDatabaseDriver
      */
     public function _open() {
-        $this->_sess_db = $this->connection();
-        if ($this->_sess_db['dbselection_success'] && $this->_sess_db['connection_success']) {
+        $_sess_db = $this->connection();
+        if ($_sess_db['dbselection_success'] && $_sess_db['connection_success']) {
             DatabaseFactory::getConnection(self::$_sess_key);
             return TRUE;
         }

@@ -29,8 +29,8 @@ class Admin extends ForumServer {
     /**
      * todo: forum answering via ranks.. assign groups points.
      * */
-    private $ext = '';
-    private $forum_index = [];
+    private $ext;
+    private $forum_index;
     private $level = [];
     private $data = [
         'forum_id'                 => 0,
@@ -140,10 +140,8 @@ class Admin extends ForumServer {
             case 'prune':
                 require_once "forums_prune.php";
                 break;
-            case 'edit':
-                $this->data = self::get_forum($_GET['forum_id']);
-                break;
             case 'p_edit':
+            case 'edit':
                 $this->data = self::get_forum($_GET['forum_id']);
                 break;
         }
@@ -555,8 +553,6 @@ class Admin extends ForumServer {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     public static function prune_attachment($forum_id, $time = FALSE) {
 
@@ -586,8 +582,6 @@ class Admin extends ForumServer {
      *
      * @param      $forum_id
      * @param bool $time
-     *
-     * @return string
      */
     public static function prune_posts($forum_id, $time = FALSE) {
 
@@ -617,8 +611,6 @@ class Admin extends ForumServer {
      * Recalculate a forum post count
      *
      * @param $forum_id
-     *
-     * @return string
      */
     public static function recalculate_post($forum_id) {
         // update last post

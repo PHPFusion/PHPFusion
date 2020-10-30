@@ -21,8 +21,9 @@ if (!defined('BLOG_EXIST')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
-$settings = fusion_get_settings();
 $locale = fusion_get_locale('', BLOG_LOCALE);
+$aidlink = fusion_get_aidlink();
+$settings = fusion_get_settings();
 
 require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
@@ -185,8 +186,8 @@ if (isset($_GET['readmore'])) {
                 'blog_nav'           => ''
             ];
 
-            $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
-            $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y" ? TRUE : FALSE);
+            $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y");
+            $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y");
 
             $item['blog_image_link'] = '';
             $item['blog_thumb_1_link'] = '';
@@ -484,8 +485,8 @@ if (isset($_GET['readmore'])) {
                 $blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
             }
 
-            $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
-            $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y' ? TRUE : FALSE);
+            $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y');
+            $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y');
 
             $cdata = [
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
@@ -551,8 +552,7 @@ $archive_result = dbquery($sql);
 
 if (dbrows($archive_result)) {
     while ($a_data = dbarray($archive_result)) {
-        $active = isset($_GET['archive']) && isnum($_GET['archive']) && ($_GET['archive'] == $a_data['blog_year']) &&
-        isset($_GET['month']) && isnum($_GET['month']) && ($_GET['month'] == $a_data['blog_month']) ? TRUE : FALSE;
+        $active = isset($_GET['archive']) && isnum($_GET['archive']) && ($_GET['archive'] == $a_data['blog_year']) && isset($_GET['month']) && isnum($_GET['month']) && ($_GET['month'] == $a_data['blog_month']);
         $month_locale = explode('|', $locale['months']);
         $info['blog_archive'][$a_data['blog_year']][$a_data['blog_month']] = [
             'title'  => $month_locale[$a_data['blog_month']],

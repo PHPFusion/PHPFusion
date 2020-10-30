@@ -28,7 +28,7 @@ use BadMethodCallException;
  * @method string getDriver()
  */
 class Configuration {
-    private $configuration = [];
+    private $configuration;
 
     /**
      * @param array $configuration

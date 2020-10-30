@@ -22,7 +22,7 @@ class ShoutBox {
     private static $locale = [];
     private static $limit = 4;
     private static $arch_limit = 20;
-    private $postLink = '';
+    private $postLink;
     private $sep;
     private $data = [
         'shout_id'        => 0,
@@ -209,7 +209,7 @@ class ShoutBox {
     }
 
     public function _selectDB($rows, $min) {
-        $result = dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
+        return dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
             u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." s
             LEFT JOIN ".DB_USERS." u ON s.shout_name=u.user_id
@@ -218,8 +218,6 @@ class ShoutBox {
             ORDER BY shout_datestamp DESC
             LIMIT ".intval($rows).", ".$min
         );
-
-        return $result;
     }
 
     public function _selectedSB($ids) {
@@ -296,7 +294,7 @@ class ShoutBox {
                 'input_bbcode' => 'smiley|b|u|url|color'
             ]);
 
-            if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (isset($_CAPTCHA_HIDE_INPUT) && !$_CAPTCHA_HIDE_INPUT))) {
+            if (iGUEST && (!isset($_CAPTCHA_HIDE_INPUT) || (!$_CAPTCHA_HIDE_INPUT))) {
                 $_CAPTCHA_HIDE_INPUT = FALSE;
 
                 echo form_text('shout_name', self::$locale['SB_name'], '', ["required" => TRUE, 'max_length' => 30]);
@@ -456,7 +454,7 @@ class ShoutBox {
     public function DisplayAdmin() {
         $allowed_section = ["shoutbox", "shoutbox_form", "shoutbox_settings"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'shoutbox';
-        $edit = (isset($_GET['s_action']) && $_GET['s_action'] == 'edit') && isset($_GET['shout_id']) ? TRUE : FALSE;
+        $edit = (isset($_GET['s_action']) && $_GET['s_action'] == 'edit') && isset($_GET['shout_id']);
         $_GET['shout_id'] = isset($_GET['shout_id']) && isnum($_GET['shout_id']) ? $_GET['shout_id'] : 0;
 
         opentable(self::$locale['SB_admin1']);

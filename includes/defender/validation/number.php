@@ -42,10 +42,7 @@ class Number extends \Defender\Validation {
                 }
             }
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : ",";
-            $value = implode($delimiter, $vars);
-
-            return $value; // empty str is returned if $vars ends up empty
-
+            return implode($delimiter, $vars); // empty str is returned if $vars ends up empty
         } else if (empty(self::$inputValue) || isnum(self::$inputValue, TRUE)) {
             return self::$inputValue;
         } else {

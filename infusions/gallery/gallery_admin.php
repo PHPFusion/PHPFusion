@@ -77,8 +77,8 @@ if (isset($_GET['section'])){
             break;
     }
 }
-$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? TRUE : FALSE;
-$photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']) ? TRUE : FALSE;
+$album_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['cat_id']) && isnum($_GET['cat_id']);
+$photo_edit = isset($_GET['action']) && $_GET['action'] == "edit" && isset($_GET['photo_id']) && isnum($_GET['photo_id']);
 
 if (!empty($_GET['ref']) || isset($_GET['photo_id']) || isset($_GET['cat_id'])) {
     $tab['title'][] = $locale['back'];

@@ -26,6 +26,8 @@ if (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) {
     $_GET['rowstart'] = 0;
 }
 
+$aidlink = fusion_get_aidlink();
+
 // Set default values
 $dbOrder = "ORDER BY userlog_timestamp DESC";
 $dbWhere = "";

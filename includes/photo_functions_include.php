@@ -40,7 +40,7 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     } else {
         $thumb_w = round($old_x / $ratio_y);
         $thumb_h = round($old_y / $ratio_y);
-    };
+    }
     if ($settings['thumb_compression'] == "gd1") {
         $thumbimage = imagecreate($thumb_w, $thumb_h);
         imagecopyresized($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);

@@ -18,8 +18,6 @@
 
 namespace PHPFusion;
 
-use Defender\Token;
-
 /**
  * Class Admin
  * This class is called in templates/admin_header.php
@@ -545,7 +543,7 @@ class Admins {
         $html = "<ul id='adl' class='admin-vertical-link'>\n";
 
         foreach ($admin_sections as $i => $section_name) {
-            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i)) ? TRUE : FALSE;
+            $active = ((isset($_GET['pagenum']) && $_GET['pagenum'] == $i) || (!isset($_GET['pagenum']) && $this->_isActive() == $i));
 
             $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
 
@@ -560,7 +558,7 @@ class Admins {
                         $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
                     }
 
-                    $secondary_active = $data['admin_link'] == $this->_currentPage() ? TRUE : FALSE;
+                    $secondary_active = $data['admin_link'] == $this->_currentPage();
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
 
                     $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";

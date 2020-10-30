@@ -212,7 +212,6 @@ if (!function_exists("itemoptions")) {
 function getcategory($cat) {
     $presult = dbquery("SELECT link_id, link_name, link_order FROM ".DB_SITE_LINKS." WHERE link_id='$cat'");
     if (dbrows($presult) > 0) {
-        $pdata = dbarray($presult);
         $md[$cat] = "Menu Item Root";
         $result = dbquery("SELECT link_id, link_name FROM ".DB_SITE_LINKS." WHERE link_cat='$cat' ORDER BY link_order ASC");
         if (dbrows($result) > 0) {

@@ -141,7 +141,7 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
         'DL' => db_exists(DB_PREFIX."downloads"),
         'FQ' => db_exists(DB_PREFIX."faqs"),
         'FO' => db_exists(DB_PREFIX."forums"),
-        'FR' => db_exists(DB_PREFIX."forums") ? TRUE : FALSE,
+        'FR' => db_exists(DB_PREFIX."forums"),
         'NS' => db_exists(DB_PREFIX."news"),
         'PG' => db_exists(DB_PREFIX."photos"),
         'PO' => db_exists(DB_PREFIX.'polls'),
@@ -149,7 +149,7 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
         'WL' => db_exists(DB_PREFIX."weblinks"),
         'SL' => TRUE,
         'PN' => TRUE,
-        'PA' => db_exists(DB_PREFIX."photos") ? TRUE : FALSE,
+        'PA' => db_exists(DB_PREFIX."photos"),
     ];
 
     $mlt_array = [

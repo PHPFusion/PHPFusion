@@ -30,12 +30,11 @@ set_error_handler("setError");
  * @param $error_message
  * @param $error_file
  * @param $error_line
- * @param $error_context
  */
-function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
+function setError($error_level, $error_message, $error_file, $error_line) {
     $errors = PHPFusion\Errors::getInstance();
     if (method_exists($errors, "setError")) {
-        $errors->setError($error_level, $error_message, $error_file, $error_line, $error_context);
+        $errors->setError($error_level, $error_message, $error_file, $error_line);
     }
 }
 

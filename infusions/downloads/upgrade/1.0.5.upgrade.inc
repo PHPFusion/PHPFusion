@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 $inf_version = '1.0.5';
 require_once INCLUDES.'infusions_include.php';
+$locale = fusion_get_locale();
 
 $array_check = [
     // Option to use keywords in downloads

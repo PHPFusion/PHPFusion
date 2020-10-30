@@ -23,9 +23,9 @@ use \PHPFusion\BreadCrumbs;
 class CommentsAdministration {
     private static $instance = NULL;
     private static $rows = 0;
-    private $aidlink = '';
-    private $locale = [];
-    private $commentType = [];
+    private $aidlink;
+    private $locale;
+    private $commentType;
     private static $ctype;
 
     private function __construct() {
@@ -174,16 +174,14 @@ class CommentsAdministration {
         $condition = $ctype.$comment_id.$comment_item_id;
         $order = "c.comment_datestamp ASC";
 
-        $query = "SELECT
+        return "SELECT
             c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_ip_type, c.comment_type,
             u.user_id, u.user_name, u.user_status
             FROM ".DB_COMMENTS." AS c
             LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
             $condition
             ORDER BY $order LIMIT ".intval($_GET['rowstart']).", $limit
-            ";
-        return $query;
-
+        ";
     }
 
     private function comments_view() {
@@ -261,19 +259,14 @@ class CommentsAdministration {
     }
 
     private static function delete_comments($comment_id) {
-        $result = NULL;
         if (isnum($comment_id)) {
-            $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
-
-            return $result;
+            return dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
         }
 
-        return $result;
-
+        return NULL;
     }
 
     private function ban_comments($comment_id) {
-        $result = NULL;
         if (isnum($comment_id)) {
             $resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
 
@@ -290,12 +283,10 @@ class CommentsAdministration {
             ];
 
             dbquery_insert(DB_BLACKLIST, $info, 'save');
-            $result = dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
-
-            return $result;
+            return dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
         }
 
-        return $result;
+        return NULL;
 
     }
 

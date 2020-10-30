@@ -157,8 +157,7 @@ if (!function_exists('infusion_exists')) {
             }
         }
 
-        return (boolean)(isset($infusions_installed[$infusion_folder])) ? TRUE : FALSE;
-
+        return (bool)(isset($infusions_installed[$infusion_folder]));
     }
 }
 

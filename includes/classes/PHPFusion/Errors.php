@@ -30,12 +30,12 @@ class Errors {
     private static $locale = [];
     public $no_notice = 0;
     public $compressed = 0;
-    private $error_status = '';
-    private $posted_error_id = '';
-    private $delete_status = '';
-    private $rows = 0;
-    private $rowstart = '';
-    private $error_id = '';
+    private $error_status;
+    private $posted_error_id;
+    private $delete_status;
+    private $rows;
+    private $rowstart;
+    private $error_id;
     private $errors = [];
     private $new_errors = [];
 
@@ -377,10 +377,8 @@ class Errors {
         closetable();
     }
 
-
     /**
      * @return string
-     * @throws \ReflectionException
      */
     private function getErrorLogs() {
         $aidlink = fusion_get_aidlink();

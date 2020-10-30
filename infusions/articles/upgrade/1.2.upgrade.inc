@@ -18,6 +18,8 @@
 $inf_version = '1.2';
 require_once INCLUDES."infusions_include.php";
 
+$locale = fusion_get_locale();
+
 $check_array = [
     // Add support for keywords in article cats items
     'article_cat_visibility' => " ADD article_cat_visibility CHAR(4) NOT NULL DEFAULT '0' AFTER article_cat_name",

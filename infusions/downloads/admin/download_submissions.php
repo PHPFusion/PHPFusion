@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 $locale = fusion_get_locale();
+$dl_settings = get_settings("downloads");
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {

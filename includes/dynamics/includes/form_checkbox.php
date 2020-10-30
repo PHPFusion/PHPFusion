@@ -103,7 +103,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         // options_value
         $input_value = [];
 
-        $default_checked = empty($option_value) ? TRUE : FALSE;
+        $default_checked = empty($option_value);
 
         foreach (array_keys($options['options']) as $key) {
             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;

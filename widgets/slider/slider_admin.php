@@ -215,6 +215,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             return $widget_data;
         }
 
+        return NULL;
     }
 
     public function validate_settings() {
@@ -229,6 +230,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         if (defender::safe() && !empty($widget_settings)) {
             return \defender::serialize($widget_settings);
         }
+
+        return NULL;
     }
 
     public function validate_delete() {

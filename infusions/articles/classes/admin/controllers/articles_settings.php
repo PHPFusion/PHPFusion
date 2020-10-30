@@ -19,7 +19,6 @@ namespace PHPFusion\Articles;
 
 class ArticlesSettingsAdmin extends ArticlesAdminModel {
     private static $instance = NULL;
-    private $locale = [];
 
     public static function getInstance() {
         if (self::$instance == NULL) {
@@ -31,7 +30,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
 
     public function displayArticlesAdmin() {
         pageAccess("A");
-        $this->locale = self::get_articleAdminLocale();
+        $locale = self::get_articleAdminLocale();
         $article_settings = self::get_article_settings();
 
         // Save
@@ -50,33 +49,33 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice('success', $this->locale['900']);
+                addNotice('success', $locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('danger', $this->locale['901']);
+                addNotice('danger', $locale['901']);
                 $article_settings = $inputArray;
             }
         }
 
-        echo "<div class='well m-t-10'>".$this->locale['article_0400']."</div>";
+        echo "<div class='well m-t-10'>".$locale['article_0400']."</div>";
 
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
-        echo form_text('article_pagination', $this->locale['article_0401'], $article_settings['article_pagination'], [
+        echo form_text('article_pagination', $locale['article_0401'], $article_settings['article_pagination'], [
             'inline'      => TRUE,
             'max_length'  => 4,
             'inner_width' => '250px',
             'width'       => '150px',
             'type'        => 'number'
         ]);
-        echo form_select('article_allow_submission', $this->locale['article_0007'], $article_settings['article_allow_submission'], [
+        echo form_select('article_allow_submission', $locale['article_0007'], $article_settings['article_allow_submission'], [
             'inline'  => TRUE,
-            'options' => [$this->locale['disable'], $this->locale['enable']]
+            'options' => [$locale['disable'], $locale['enable']]
         ]);
-        echo form_select('article_extended_required', $this->locale['article_0403'], $article_settings['article_extended_required'], [
+        echo form_select('article_extended_required', $locale['article_0403'], $article_settings['article_extended_required'], [
             'inline'  => TRUE,
-            'options' => [$this->locale['disable'], $this->locale['enable']]
+            'options' => [$locale['disable'], $locale['enable']]
         ]);
-        echo form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
+        echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }

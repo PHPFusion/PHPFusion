@@ -24,8 +24,6 @@ use PHPFusion\httpdownload;
 
 class ViewThread extends ForumServer {
 
-    private $thread_data = [];
-
     public function display_thread() {
 
         $info = self::thread()->get_threadInfo();
@@ -185,7 +183,7 @@ class ViewThread extends ForumServer {
 
         $userdata = fusion_get_userdata();
 
-        $this->thread_data = $thread_info['thread'];
+        //$thread_data1 = $thread_info['thread'];
 
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked'])
             redirect(INFUSIONS.'forum/index.php');
@@ -517,7 +515,7 @@ class ViewThread extends ForumServer {
 
                 if ((iMOD or iSUPERADMIN) || ($thread->getThreadPermission("can_reply") && $post_data['post_author'] == $userdata['user_id'])) {
 
-                    $is_first_post = ($post_data['post_id'] == $thread_info['post_firstpost']) ? TRUE : FALSE;
+                    $is_first_post = ($post_data['post_id'] == $thread_info['post_firstpost']);
 
                     // no edit if locked
                     if ($post_data['post_locked'] && !iMOD) {

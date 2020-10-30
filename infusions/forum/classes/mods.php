@@ -39,7 +39,6 @@ class Moderator {
     private $post_id = 0;
     private $forum_id = 0;
     private $parent_id = 0;
-    private $branch_id = 0;
     private $form_action = '';
     private $locale = [];
 
@@ -50,7 +49,7 @@ class Moderator {
      */
     public static function __getInstance() {
         if (self::$instance === NULL) {
-            self::$instance = new Static();
+            self::$instance = new static();
         }
         return self::$instance;
     }
@@ -191,7 +190,7 @@ class Moderator {
         // get forum parents
         $branch_data = dbarray(dbquery("SELECT forum_cat, forum_branch FROM ".DB_FORUMS." WHERE forum_id='".$this->forum_id."'"));
         $this->parent_id = $branch_data['forum_cat'];
-        $this->branch_id = $branch_data['forum_branch'];
+        $branch_id = $branch_data['forum_branch'];
         // at any time when cancel is clicked, redirect to forum id.
         if (isset($_POST['cancelDelete'])) {
             redirect(FORUM."viewthread.php?thread_id=".intval($this->thread_id));

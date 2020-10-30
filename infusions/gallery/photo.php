@@ -71,12 +71,14 @@ function RGBtoArray($rgb) {
 
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     $result = dbquery("SELECT
-	ta.album_id, ta.album_title, ta.album_description, ta.album_access, tp.photo_title,
-	tp.photo_filename, tp.photo_thumb2
-	FROM ".DB_PHOTOS." tp INNER JOIN ".DB_PHOTO_ALBUMS." ta USING (album_id)
-	WHERE photo_id=".$_GET['photo_id']." GROUP BY tp.photo_id
-	");
+    ta.album_id, ta.album_title, ta.album_description, ta.album_access, tp.photo_title,
+    tp.photo_filename, tp.photo_thumb2
+    FROM ".DB_PHOTOS." tp INNER JOIN ".DB_PHOTO_ALBUMS." ta USING (album_id)
+    WHERE photo_id=".$_GET['photo_id']." GROUP BY tp.photo_id
+    ");
     $data = dbarray($result);
+
+    $image = '';
 
     if (checkgroup($data['album_access'])) {
         $parts = explode(".", $data['photo_filename']);

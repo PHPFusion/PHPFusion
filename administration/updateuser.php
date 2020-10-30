@@ -19,6 +19,10 @@ defined('IN_FUSION') || exit;
 
 pageAccess('M');
 
+$aidlink = fusion_get_aidlink();
+$locale = fusion_get_locale();
+$userdata = fusion_get_userdata();
+
 if (!isset($_GET['user_id']) || !isnum($_GET['user_id'])) {
     redirect(FUSION_SELF.$aidlink);
 }

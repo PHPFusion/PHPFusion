@@ -233,21 +233,19 @@ class UserGroups {
     }
 
     public function _selectDB($rows, $min) {
-        $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
+        return dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
             FROM ".DB_USERS."
             WHERE user_groups REGEXP('^\\\.{$_GET['group_id']}$|\\\.{$_GET['group_id']}\\\.|\\\.{$_GET['group_id']}$')
             ORDER BY user_level DESC, user_name
             LIMIT ".intval($rows).", ".$min
         );
-
-        return $result;
     }
 
     public function display_admin() {
         $allowed_section = ["usergroup", "usergroup_form", "user_form"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'usergroup';
         $_GET['group_id'] = isset($_GET['group_id']) && isnum($_GET['group_id']) ? $_GET['group_id'] : 0;
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['group_id']) ? TRUE : FALSE;
+        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') && isset($_GET['group_id']);
 
         $master_tab_title['title'][] = self::$locale['GRP_420'];
         $master_tab_title['id'][] = "usergroup";

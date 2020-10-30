@@ -18,6 +18,7 @@
 pageAccess("PH");
 
 $locale = fusion_get_locale();
+$gll_settings = get_settings("gallery");
 
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['close'])) {

@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$gll_settings = get_settings("gallery");
+
 pageAccess("PH");
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 

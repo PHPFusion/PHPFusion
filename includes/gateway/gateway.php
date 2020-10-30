@@ -20,6 +20,9 @@ defined('IN_FUSION') || exit;
 /**
  * Anti Bot Gateway that combine multiple methods to prevent auto bots.
  */
+
+$locale = fusion_get_locale();
+
 require_once "constants_include.php";
 require_once "functions_include.php";
 

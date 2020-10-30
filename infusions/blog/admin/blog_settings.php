@@ -16,6 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess('BLOG');
+$locale = fusion_get_locale();
+$blog_settings = get_settings("blog");
+
 if (isset($_POST['savesettings'])) {
     $error = 0;
     $inputArray = [

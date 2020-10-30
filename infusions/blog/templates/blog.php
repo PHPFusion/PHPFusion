@@ -189,8 +189,8 @@ if (!function_exists('display_blog_menu')) {
             $html = '';
             if (!empty($info[$cat_id])) {
                 foreach ($info[$cat_id] as $blog_cat_id => $cdata) {
-                    $unCat_active = ($blog_cat_id == 0 && (isset($_GET['cat_id']) && ($_GET['cat_id'] == 0))) ? TRUE : FALSE;
-                    $active = ($_GET['cat_id'] !== NULL && $blog_cat_id == $_GET['cat_id']) ? TRUE : FALSE;
+                    $unCat_active = ($blog_cat_id == 0 && (isset($_GET['cat_id']) && ($_GET['cat_id'] == 0)));
+                    $active = ($_GET['cat_id'] !== NULL && $blog_cat_id == $_GET['cat_id']);
                     $html .= "<li ".($active || $unCat_active ? "class='active strong'" : '')." >".str_repeat('&nbsp;', $level)." ".$cdata['blog_cat_link']."</li>\n";
                     if ($active && $blog_cat_id != 0) {
                         if (!empty($info[$blog_cat_id])) {
@@ -276,7 +276,7 @@ if (!function_exists('display_blog_submit')) {
                 echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                         $locale['blog_0703'])."</div>\n";
                 echo openform('submit_form', 'post', BASEDIR."submit.php?stype=b",
-                    ["enctype" => $blog_settings['blog_allow_submission_files'] ? TRUE : FALSE]);
+                    ["enctype" => $blog_settings['blog_allow_submission_files']]);
                 echo form_text('blog_subject', $locale['blog_0422'], $criteriaArray['blog_subject'], [
                     "required" => TRUE,
                     "inline"   => TRUE
@@ -352,7 +352,7 @@ if (!function_exists('display_blog_submit')) {
 
                 echo form_textarea('blog_blog', $locale['blog_0425'], $criteriaArray['blog_blog'], $textArea_opts);
 
-                $textArea_opts['required'] = $blog_settings['blog_extended_required'] ? TRUE : FALSE;
+                $textArea_opts['required'] = $blog_settings['blog_extended_required'];
 
                 echo form_textarea('blog_body', $locale['blog_0426'], $criteriaArray['blog_body'], $textArea_opts);
 

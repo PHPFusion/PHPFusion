@@ -65,7 +65,7 @@ class Token extends \defender {
         if (!empty($_POST)) {
 
             if ($form_id = post('form_id')) {
-                $honeypot = \defender::getInstance()->getHoneypot($form_id.'_honeypot');
+                $honeypot = (array) \defender::getInstance()->getHoneypot($form_id.'_honeypot');
                 if (!empty($honeypot['type']) && $honeypot['type'] == 'honeypot') {
                     if (post($honeypot['input_name'])) {
                         \Authenticate::logOut();

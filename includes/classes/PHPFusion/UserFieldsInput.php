@@ -39,17 +39,8 @@ class UserFieldsInput {
     private $data = [];
 
     private $_isValidCurrentPassword = FALSE;
-    private $_isValidCurrentAdminPassword = FALSE;
-    private $_userPassword = FALSE;
     private $_newUserPassword = FALSE;
     private $_newUserPassword2 = FALSE;
-    private $_newUserPasswordHash = FALSE;
-    private $_newUserPasswordSalt = FALSE;
-    private $_newUserPasswordAlgo = FALSE;
-    private $_userAdminPassword = FALSE;
-    private $_newUserAdminPassword = FALSE;
-    // Settings
-    private $_newUserAdminPassword2 = FALSE;
     private $_userNameChange = TRUE;
     // Flags
     private $_themeChanged = FALSE;
@@ -129,7 +120,7 @@ class UserFieldsInput {
                 $this->_completeMessage = $locale['u160']." - ".$locale['u161'];
 
                 if (defined("ADMIN_PANEL")) {
-                    $aidlink = fusion_get_aidlink();;
+                    $aidlink = fusion_get_aidlink();
                     $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/members_email.php");
                     require_once INCLUDES."sendmail_include.php";
                     $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['email_create_subject']);
@@ -273,13 +264,13 @@ class UserFieldsInput {
                 switch ($_isValidNewPassword) {
                     case '0':
                         // New password is valid
-                        $this->_newUserPasswordHash = $passAuth->getNewHash();
-                        $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
-                        $this->_newUserPasswordSalt = $passAuth->getNewSalt();
+                        $_newUserPasswordHash = $passAuth->getNewHash();
+                        $_newUserPasswordAlgo = $passAuth->getNewAlgo();
+                        $_newUserPasswordSalt = $passAuth->getNewSalt();
 
-                        $this->data['user_algo'] = $this->_newUserPasswordAlgo;
-                        $this->data['user_salt'] = $this->_newUserPasswordSalt;
-                        $this->data['user_password'] = $this->_newUserPasswordHash;
+                        $this->data['user_algo'] = $_newUserPasswordAlgo;
+                        $this->data['user_salt'] = $_newUserPasswordSalt;
+                        $this->data['user_password'] = $_newUserPasswordHash;
 
                         $this->_isValidCurrentPassword = 1;
                         if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
@@ -317,19 +308,19 @@ class UserFieldsInput {
 
         } else if ($this->_method == 'validate_update') {
 
-            $this->_userPassword = self::_getPasswordInput('user_password');
+            $_userPassword = self::_getPasswordInput('user_password');
 
             $this->_newUserPassword = self::_getPasswordInput('user_password1');
 
             $this->_newUserPassword2 = self::_getPasswordInput('user_password2');
 
-            if ($this->isAdminPanel or $this->_userPassword) {
+            if ($this->isAdminPanel or $_userPassword) {
 
                 /**
                  * Validation of Password
                  */
                 $passAuth = new PasswordAuth();
-                $passAuth->inputPassword = $this->_userPassword;
+                $passAuth->inputPassword = $_userPassword;
                 $passAuth->inputNewPassword = $this->_newUserPassword;
                 $passAuth->inputNewPassword2 = $this->_newUserPassword2;
                 $passAuth->currentPasswordHash = $this->userData['user_password'];
@@ -349,12 +340,12 @@ class UserFieldsInput {
                         switch ($_isValidNewPassword) {
                             case '0':
                                 // New password is valid
-                                $this->_newUserPasswordHash = $passAuth->getNewHash();
-                                $this->_newUserPasswordAlgo = $passAuth->getNewAlgo();
-                                $this->_newUserPasswordSalt = $passAuth->getNewSalt();
-                                $this->data['user_algo'] = $this->_newUserPasswordAlgo;
-                                $this->data['user_salt'] = $this->_newUserPasswordSalt;
-                                $this->data['user_password'] = $this->_newUserPasswordHash;
+                                $_newUserPasswordHash = $passAuth->getNewHash();
+                                $_newUserPasswordAlgo = $passAuth->getNewAlgo();
+                                $_newUserPasswordSalt = $passAuth->getNewSalt();
+                                $this->data['user_algo'] = $_newUserPasswordAlgo;
+                                $this->data['user_salt'] = $_newUserPasswordSalt;
+                                $this->data['user_password'] = $_newUserPasswordHash;
                                 //if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
                                 //Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
                                 //}
@@ -396,24 +387,24 @@ class UserFieldsInput {
         $locale = fusion_get_locale();
         if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
 
-            $this->_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
-            $this->_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
-            $this->_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
+            $_userAdminPassword = $this->_getPasswordInput("user_admin_password"); // var1
+            $_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1"); // var2
+            $_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
             $adminpassAuth = new PasswordAuth();
 
             if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
                 // New Admin
                 $adminpassAuth->inputPassword = 'fake';
-                $adminpassAuth->inputNewPassword = $this->_userAdminPassword;
-                $adminpassAuth->inputNewPassword2 = $this->_newUserAdminPassword2;
+                $adminpassAuth->inputNewPassword = $_userAdminPassword;
+                $adminpassAuth->inputNewPassword2 = $_newUserAdminPassword2;
                 $valid_current_password = TRUE;
 
             } else {
 
                 // Old Admin changing password
-                $adminpassAuth->inputPassword = $this->_userAdminPassword; // var1
-                $adminpassAuth->inputNewPassword = $this->_newUserAdminPassword; // var2
-                $adminpassAuth->inputNewPassword2 = $this->_newUserAdminPassword2; // var3
+                $adminpassAuth->inputPassword = $_userAdminPassword; // var1
+                $adminpassAuth->inputNewPassword = $_newUserAdminPassword; // var2
+                $adminpassAuth->inputNewPassword2 = $_newUserAdminPassword2; // var3
                 $adminpassAuth->currentPasswordHash = $this->userData['user_admin_password'];
                 $adminpassAuth->currentAlgo = $this->userData['user_admin_algo'];
                 $adminpassAuth->currentSalt = $this->userData['user_admin_salt'];
@@ -422,7 +413,7 @@ class UserFieldsInput {
 
             if ($valid_current_password) {
 
-                $this->_isValidCurrentAdminPassword = 1;
+                //$_isValidCurrentAdminPassword = 1;
 
                 // authenticated. now do the integrity check
                 $_isValidNewPassword = $adminpassAuth->isValidNewPassword();

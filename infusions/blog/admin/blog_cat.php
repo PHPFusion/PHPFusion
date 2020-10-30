@@ -16,6 +16,10 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 pageAccess('BLOG');
+
+$locale = fusion_get_locale();
+$aidlink = fusion_get_aidlink();
+
 /**
  * Delete category images
  */

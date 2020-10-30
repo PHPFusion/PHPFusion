@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function make_order_opts(&$result, $id_col, $cat_col, $title_col, $order_col) {
+function make_order_opts($result, $id_col, $cat_col, $title_col, $order_col) {
     $master_sort = sorter($result, $order_col);
     $option = [];
     foreach ($master_sort as $data) {
@@ -34,7 +34,7 @@ function make_order_opts(&$result, $id_col, $cat_col, $title_col, $order_col) {
     return $option;
 }
 
-function form_select_order($title, $input_name, $input_id, $option_array, $input_value = FALSE, $chain_to_parent_id, $array = FALSE) {
+function form_select_order($title, $input_name, $input_id, $option_array, $input_value, $chain_to_parent_id, $array = FALSE) {
     global $_POST;
     if (!defined("SELECT2")) {
         define("SELECT2", TRUE);

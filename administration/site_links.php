@@ -35,12 +35,12 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
         'link_position_id' => 0,
         'link_window'      => 0,
     ];
-    private $language_opts = [];
-    private $link_index = [];
+    private $language_opts;
+    private $link_index;
     private static $default_display = 16;
     private $form_action = '';
-    private $aidlink = '';
-    private $locale = [];
+    private $aidlink;
+    private $locale;
 
     private function __construct() {
         $this->aidlink = fusion_get_aidlink();
@@ -752,7 +752,7 @@ class SiteLinks_Admin extends PHPFusion\SiteLinks {
                 "link_position"   => form_sanitizer($_POST['link_position'], "", "link_position"),
                 'link_status'     => form_sanitizer($_POST['link_status'], "", "link_status"),
                 "link_visibility" => form_sanitizer($_POST['link_visibility'], "", "link_visibility"),
-                "link_window"     => isset($_POST['link_window']) ? TRUE : FALSE,
+                "link_window"     => isset($_POST['link_window']),
             ];
             if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = form_sanitizer($_POST['link_position_id'], 3, 'link_position_id');

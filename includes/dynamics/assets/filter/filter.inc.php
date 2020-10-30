@@ -20,6 +20,8 @@ function filter_query($request_key, $field_name) {
     if (isset($_GET[$request_key]) && isnum($_GET[$request_key])) {
         return "$field_name='".stripinput($_GET[$request_key])."'";
     }
+
+    return NULL;
 }
 
 function filter_access_query($group, $field) {
@@ -34,7 +36,7 @@ function filter_access_query($group, $field) {
                 $res = "1 = 1";
                 break;
             case USER_LEVEL_ADMIN:
-                "$field in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
+                $res = "$field in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
                 break;
             case USER_LEVEL_MEMBER:
                 $res .= $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
@@ -88,6 +90,8 @@ function filter_show($row_start_key = FALSE, $items_per_page_key = FALSE) {
         }
         return $condition;
     }
+
+    return NULL;
 }
 
 // Making Page Navigation
@@ -96,10 +100,10 @@ function makepagenav_filter($start, $count, $total, $range = 0, $link = "", $get
         define("PAGENAV", TRUE);
         add_to_head("<script src='".INCLUDES."filter/paginator.js'></script>");
     }
-    return makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show", $array = FALSE);
+    return makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $showname = "show");
 }
 
-function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
+function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getname = "rowstart") {
     // start = 0, - is the get rowstart.
     // count = item per page.
     // total = total entries
@@ -107,7 +111,7 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
     // link = append custom links
     // getname = no need
     // showname = no need
-    global $locale, $aidlink;
+    global $locale;
     $fusion_query = ($_SERVER['QUERY_STRING']) ? str_replace("&amp;", "&", $_SERVER['QUERY_STRING']) : "";
     if ($link) {
         $link = FUSION_SELF."?$fusion_query&";
@@ -115,7 +119,6 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
     if (!preg_match("#[0-9]+#", $count) || $count == 0)
         return FALSE;
     $getname = (empty($getname)) ? 'rowstart' : $getname;
-    $showname = (empty($showname)) ? 'show' : $showname;
     $pg_cnt = ceil($total / $count);
     if ($pg_cnt <= 1) {
         return "";
@@ -159,7 +162,6 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
 }
 
 function makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $array = FALSE) {
-    global $locale, $aidlink, $settings;
     // start = 0, - is the get rowstart.
     // count = item per page.
     // total = total entries
@@ -193,7 +195,7 @@ function makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname
         $alignment = (array_key_exists("position", $array)) ? $array['position'] : "left";
         $tooltip = (array_key_exists("tooltip", $array) && ($array['tooltip'] == 0)) ? "false" : "true";
     }
-    $html = add_to_jquery("
+    add_to_jquery("
             var options = {
             bootstrapMajorVersion: 3,
             currentPage: $cur_page,
@@ -249,7 +251,6 @@ function makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname
 
          $('#makepagenav').bootstrapPaginator(options);
     ");
-    $html .= "<ul id='makepagenav'></ul>";
-    return $html;
+    return "<ul id='makepagenav'></ul>";
 }
 

@@ -48,7 +48,7 @@ class PanelsAdministration {
     /**
      * @var array
      */
-    private $panel_data = [];
+    private $panel_data;
 
     /**
      * Sanitization Globals Vars

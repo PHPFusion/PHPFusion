@@ -133,7 +133,6 @@ class SiteLinks {
      * @return bool|mixed|null|resource
      */
     public static function delete_sitelinks($link_id) {
-        $result = NULL;
         if (isnum($link_id)) {
             $data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'"));
             $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order>'".$data['link_order']."'");
@@ -144,7 +143,7 @@ class SiteLinks {
             return $result;
         }
 
-        return $result;
+        return NULL;
     }
 
     /**

@@ -22,7 +22,6 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     private $inputArray = [];
     private $locale = [];
     private $dataUser = [];
-    private $weblinksettings = [];
     private $submit_id = 0;
 
     public static function getInstance() {
@@ -94,7 +93,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $submit_criteria = \defender::decode($data['submit_criteria']);
-            $returnInformations = [
+            return [
                 'weblink_user_name'   => $data['submit_user'],
                 'weblink_name'        => $submit_criteria['weblink_name'],
                 'weblink_cat'         => $submit_criteria['weblink_cat'],
@@ -106,7 +105,6 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 'weblink_user'        => $data['submit_user'],
                 'weblink_status'      => 0
             ];
-            return $returnInformations;
         } else {
             redirect(clean_request("", [], FALSE));
         }
@@ -327,7 +325,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         pageAccess("W");
 
         $this->locale = self::get_WeblinkAdminLocale();
-        $this->weblinksettings = self::get_weblink_settings();
+        //$weblinksettings = self::get_weblink_settings();
 
         // Handle a Submission
         $this->submit_id = filter_input(INPUT_GET, 'submit_id', FILTER_VALIDATE_INT);
