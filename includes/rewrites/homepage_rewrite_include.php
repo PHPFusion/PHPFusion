@@ -25,7 +25,7 @@ $regex = [
     "%orderby%"     => "([a-zA-Z]+)",
     "%sort_order%"  => "([a-zA-Z]+)",
     "%search_text%" => "([0-9a-zA-Z._]+)",
-    "%s%"           => "([a-zA-Z]+)",
+    "%search%"      => "([a-zA-Z]+)",
     "%rowstart%"    => "([0-9]+)"
 ];
 
