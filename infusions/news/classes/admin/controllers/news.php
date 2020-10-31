@@ -185,7 +185,6 @@ class NewsAdmin extends NewsAdminModel {
         }
 
         $this->default_news_data['news_name'] = fusion_get_userdata('user_id');
-        $this->news_data['news_breaks'] = (fusion_get_settings("tinymce_enabled") ? 'n' : 'y');
         $this->news_data = $this->news_data + $this->default_news_data;
         self::newsContent_form();
     }
@@ -211,16 +210,6 @@ class NewsAdmin extends NewsAdminModel {
 
     private function newsContent_form() {
         $news_settings = self::get_news_settings();
-
-        $news_cat_opts = [];
-        $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
-        $result = dbquery($query);
-        $news_cat_opts['0'] = self::$locale['news_0202'];
-        if (dbrows($result)) {
-            while ($odata = dbarray($result)) {
-                $news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
-            }
-        }
 
         $snippetSettings = [
             'required'    => TRUE,
