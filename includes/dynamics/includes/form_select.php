@@ -675,7 +675,7 @@ function user_search($user_id) {
  *
  * @param        $input_name
  * @param string $label
- * @param string   $input_value
+ * @param string $input_value
  * @param array  $options
  * @param        $db       - your db
  * @param        $name_col - the option text to show
@@ -769,7 +769,6 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
     }
     if ($level == 0) {
-        $html = '';
         add_to_jquery("
         $('#".$options['input_id']."').select2({
         placeholder: '".$options['placeholder']."',
@@ -809,7 +808,6 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         foreach ($index[$id] as $key => $value) {
             // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
-            $html = '';
             $name = $data[$value][$name_col];
             //print_p($data[$value]);
 
@@ -825,7 +823,6 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         }
     }
     if (!$level) {
-        $html = '';
         $html .= "</select>\n";
         $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
         $html .= ($options['inline']) ? "</div>\n" : '';
