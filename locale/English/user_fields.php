@@ -109,7 +109,7 @@ $locale['u152'] = "Hello USER_NAME,<br/>\r\n
 Welcome to SITENAME. Here are your login details:<br/>\r\n
 Username: USER_NAME<br/>\r\n
 Password: USER_PASSWORD<br/>\r\n
-Please activate your account via the following link: ACTIVATION_LINK<br/>\r\n
+Please activate your account via the following link: <a href='ACTIVATION_LINK'>Activate Account</a><br/>\r\n
 Regards,<br/>\r\n
 SITEUSERNAME";
 
