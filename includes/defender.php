@@ -602,8 +602,7 @@ class Defender {
 
             } else {
                 self::stop();
-                $locale['type_unknown'] = '%s: has an unknown type set'; // to be moved
-                addNotice('danger', sprintf($locale['type_unknown'], self::$input_name));
+                addNotice('danger', sprintf($locale['df_406'], self::$input_name));
             }
         } catch (Exception $e) {
             self::stop();
