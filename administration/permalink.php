@@ -65,7 +65,13 @@ if (!empty($rewrite_files)) {
             $available_rewrites[] = $rewrite_name;
             $driver_file = INCLUDES."rewrites/".$rewrite_name."_rewrite_include.php";
             $info_file = INCLUDES."rewrites/".$rewrite_name."_rewrite_info.php";
-            $locale_file = LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
+
+            if (file_exists(LOCALE.LOCALESET."permalinks/".$rewrite_name.".php")) {
+                $locale_file = LOCALE.LOCALESET."permalinks/".$rewrite_name.".php";
+            } else {
+                $locale_file = LOCALE."English/permalinks/".$rewrite_name.".php";
+            }
+
             $rewrite_registers[$rewrite_name] = [];
             $rewrite_registers[$rewrite_name]['driver_path'] = $driver_file;
             if (file_exists($info_file)) {
