@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Post;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 
 class NewThread extends ForumServer {
@@ -45,12 +44,11 @@ class NewThread extends ForumServer {
 
         // @todo: Reduce lines and optimize further
         if (iMEMBER) {
+            add_breadcrumb(["link" => FORUM."index.php", "title" => self::$locale['forum_0000']]);
             // New thread directly to a specified forum
             if (!empty($_GET['forum_id']) && isnum($_GET['forum_id']) && ForumServer::verify_forum($_GET['forum_id'])) {
-
                 add_to_title(self::$locale['forum_0000'].self::$locale['global_201'].self::$locale['forum_0057']);
                 add_to_meta("description", self::$locale['forum_0000']);
-                BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."index.php", "title" => self::$locale['forum_0000']]);
 
                 $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                 FROM ".DB_FORUMS." f
@@ -68,12 +66,12 @@ class NewThread extends ForumServer {
                 self::setPermission($forum_data);
 
                 if (self::getPermission('can_post') && self::getPermission('can_access')) {
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
+                    add_breadcrumb([
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&forum_id='.$forum_data['forum_id'],
                         'title' => $forum_data['forum_name']
                     ]);
-                    BreadCrumbs::getInstance()->addBreadCrumb([
-                        'link'  => INFUSIONS.'forum/index.php?viewforum&amp;forum_id='.$forum_data['forum_id'],
+                    add_breadcrumb([
+                        'link'  => INFUSIONS.'forum/index.php?viewforum&forum_id='.$forum_data['forum_id'],
                         'title' => self::$locale['forum_0057']
                     ]);
 
@@ -417,7 +415,7 @@ class NewThread extends ForumServer {
                     redirect(FORUM.'index.php');
                 }
 
-                BreadCrumbs::getInstance()->addBreadCrumb(["link" => FORUM."newthread.php?forum_id=0", "title" => self::$locale['forum_0057']]);
+                add_breadcrumb(["link" => FORUM."newthread.php", "title" => self::$locale['forum_0057']]);
                 $thread_data = [
                     'forum_id'          => isset($_POST['forum_id']) ? form_sanitizer($_POST['forum_id'], 0, "forum_id") : 0,
                     'thread_id'         => 0,
