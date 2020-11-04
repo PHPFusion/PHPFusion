@@ -1163,7 +1163,7 @@ class Securimage {
             $this->log_file = 'securimage.error_log';
         }
 
-        if ($this->no_session != TRUE) {
+        /*if ($this->no_session != TRUE) {
             // Initialize session or attach to existing
             if (session_id() == '' || (function_exists('session_status') && PHP_SESSION_NONE == session_status())) { // no session has been started yet (or it was previousy closed), which is needed for validation
                 if (!is_null($this->session_name) && trim($this->session_name) != '') {
@@ -1171,7 +1171,7 @@ class Securimage {
                 }
                 session_start();
             }
-        }
+        }*/
     }
 
     /**
@@ -1360,10 +1360,12 @@ class Securimage {
         static $javascript_init = FALSE;
 
         if (!isset($options['securimage_path'])) {
-            $docroot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENT_ROOT'] : substr($_SERVER['SCRIPT_FILENAME'], 0, -strlen($_SERVER['SCRIPT_NAME']));
+            /*$docroot = (isset($_SERVER['DOCUMENT_ROOT'])) ? $_SERVER['DOCUMENT_ROOT'] : substr($_SERVER['SCRIPT_FILENAME'], 0, -strlen($_SERVER['SCRIPT_NAME']));
             $docroot = realpath($docroot);
             $sipath = dirname(__FILE__);
-            $securimage_path = str_replace($docroot, '', $sipath);
+            $securimage_path = str_replace($docroot, '', $sipath);*/
+
+            $securimage_path = INCLUDES.'captchas/securimage3';
         } else {
             $securimage_path = $options['securimage_path'];
         }
