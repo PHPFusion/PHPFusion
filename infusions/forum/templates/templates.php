@@ -46,7 +46,8 @@ if (!function_exists('render_forum')) {
         echo '</div>';
 
         echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-        echo '<a href="'.FORUM.'newthread.php" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
+        echo '<a id="create_new_thread" href="'.FORUM.'newthread.php" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
+        forum_newtopic();
 
         $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
 
@@ -656,43 +657,40 @@ if (!function_exists("render_section")) {
 if (!function_exists('forum_newtopic')) {
     function forum_newtopic() {
         $locale = fusion_get_locale();
+
         if (isset($_POST['select_forum'])) {
             $_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
-            redirect(FORUM.'post.php?action=newthread&forum_id='.$_POST['forum_sel']);
+            redirect(FORUM.'newthread.php?forum_id='.$_POST['forum_sel']);
         }
-        echo openmodal('newtopic', $locale['forum_0057'], ['class' => 'modal-md']);
-        $index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-        $result = dbquery("SELECT a.forum_id, a.forum_name, b.forum_name as forum_cat_name, a.forum_post
-         FROM ".DB_FORUMS." a
-         LEFT JOIN ".DB_FORUMS." b ON a.forum_cat=b.forum_id
-         WHERE ".groupaccess('a.forum_access')." ".(multilang_table("FO") ? "AND ".in_group('a.forum_language', LANGUAGE)." AND" : "AND")."
-         (a.forum_type ='2' or a.forum_type='4') AND a.forum_post < ".USER_LEVEL_PUBLIC." AND a.forum_lock !='1' ORDER BY a.forum_cat ASC, a.forum_branch ASC, a.forum_name ASC");
-        $options = [];
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                $depth = get_depth($index, $data['forum_id']);
-                if (checkgroup($data['forum_post'])) {
-                    $options[$data['forum_id']] = str_repeat("&#8212;", $depth).$data['forum_name']." ".($data['forum_cat_name'] ? "(".$data['forum_cat_name'].")" : '');
-                }
-            }
 
-            echo openform('newtopic', 'post');
-            echo "<div class='well clearfix m-t-10'>\n";
-            echo form_select('forum_sel', $locale['forum_0395'], '', [
-                'options' => $options,
-                'inline'  => 1,
-                'width'   => '100%'
-            ]);
-            echo "<div class='display-inline-block col-xs-12 col-sm-offset-3'>\n";
-            echo form_button('select_forum', $locale['forum_0396'], 'select_forum', ['class' => 'btn-primary btn-sm']);
-            echo "</div>\n";
-            echo "</div>\n";
-            echo closeform();
-        } else {
-            echo "<div class='well text-center'>\n";
-            echo $locale['forum_0328'];
-            echo "</div>\n";
+        echo openmodal('newtopic', $locale['forum_0057'], ['class' => 'modal-md', 'button_id' => 'create_new_thread']);
+        echo openform('newtopic', 'post');
+
+        $disabled_opts = [];
+        $disable_query = dbquery("SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND ".in_group('forum_language', LANGUAGE) : ''));
+        if (dbrows($disable_query) > 0) {
+            while ($d_forum = dbarray($disable_query)) {
+                $disabled_opts = $d_forum['forum_id'];
+            }
         }
+
+        echo '<div class="clearfix">';
+
+        echo form_select_tree('forum_sel', $locale['forum_0395'], '', [
+            'width'        => '100%',
+            'inline'       => TRUE,
+            'no_root'      => TRUE,
+            'disable_opts' => $disabled_opts,
+            'query'        => (multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE) : ''),
+        ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
+
+        echo '<div class="display-inline-block col-xs-12 col-sm-offset-3">';
+        echo form_button('select_forum', $locale['forum_0396'], 'select_forum', ['class' => 'btn-primary btn-sm']);
+        echo '</div>';
+
+        echo '</div>';
+
+        echo closeform();
         echo closemodal();
     }
 }
