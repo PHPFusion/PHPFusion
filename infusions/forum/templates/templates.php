@@ -718,6 +718,8 @@ if (!function_exists('render_postify')) {
 if (!function_exists("display_forum_postform")) {
     function display_forum_postform($info) {
         $locale = fusion_get_locale();
+        echo render_breadcrumbs();
+
         echo '<h3 class="m-t-0">'.$info['title'].'</h3>';
         opentable('');
         echo $info['description'] ? '<h4>'.$info['description'].'</h4>' : '';
