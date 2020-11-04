@@ -1259,7 +1259,14 @@ class QuantumFields extends \SqlHandler {
                         foreach ($folder_list as $folder) {
                             if (is_file($plugin_folder.$folder.'/user_fields/'.$data['field_name'].'_include.php')) {
                                 $options['plugin_folder'] = $plugin_folder.$folder.'/user_fields/';
-                                $options['plugin_locale_folder'] = $plugin_folder.$folder.'/locale/'.LANGUAGE.'/';
+
+                                if (is_dir($plugin_folder.$folder.'/locale/'.LANGUAGE.'/')) {
+                                    $lang_dir = $plugin_folder.$folder.'/locale/'.LANGUAGE.'/';
+                                } else {
+                                    $lang_dir = $plugin_folder.$folder.'/locale/English/';
+                                }
+
+                                $options['plugin_locale_folder'] = $lang_dir;
                             }
                         }
                     }
