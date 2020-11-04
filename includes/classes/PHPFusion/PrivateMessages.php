@@ -558,7 +558,7 @@ class PrivateMessages {
             'actions_form'  => '',
         ];
 
-        add_to_title($this->locale['global_200'].$this->locale['400']);
+        add_to_title($this->locale['400']);
         add_to_meta("description", $this->locale['400']);
 
         return $this;

@@ -616,6 +616,8 @@ class NewThread extends ForumServer {
                     }
                 }
 
+                add_to_title(self::$locale['forum_0057']);
+
                 $this->info = [
                     'title'             => self::$locale['forum_0057'],
                     'description'       => '',

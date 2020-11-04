@@ -29,7 +29,7 @@ $inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
-add_to_title($locale['global_200'].$locale['global_042']);
+add_to_title($locale['global_042']);
 
 $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp
     INNER JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id

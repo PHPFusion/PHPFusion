@@ -19,7 +19,7 @@ require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 require_once THEMES."templates/global/login.php";
 $locale = fusion_get_locale();
-add_to_title($locale['global_200'].$locale['global_100']);
+add_to_title($locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
 $info = [];
 if (!iMEMBER) {

@@ -88,15 +88,6 @@ class Search_Engine extends Search_Model {
     }
 
     /**
-     * Returns the search locale
-     *
-     * @return array|null|string
-     */
-    protected function get_search_locale() {
-        return self::$locale;
-    }
-
-    /**
      * Controller for search form
      */
     protected static function display_search_form() {

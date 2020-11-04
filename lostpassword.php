@@ -23,7 +23,7 @@ if (iMEMBER) {
     redirect(BASEDIR.'index.php');
 }
 
-add_to_title($locale['global_200'].$locale['400']);
+add_to_title($locale['400']);
 
 ob_start();
 $obj = new PHPFusion\LostPassword();

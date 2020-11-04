@@ -133,7 +133,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "photo_user"        => $data['user_id'],
                     "photo_order"       => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1
                 ];
-                add_to_title($locale['global_201'].$locale['gallery_0100'].$locale['global_200'].$callback_data['photo_title']."?");
                 $l_image = "";
                 $submissions_dir = INFUSIONS."gallery/submissions/";
                 $submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";

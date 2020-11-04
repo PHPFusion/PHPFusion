@@ -104,7 +104,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
     }
 
     if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
-        add_to_title($locale['global_200'].$locale['news_0400']);
+        add_to_title($locale['news_0400']);
         echo strtr(display_news_confirm_submissions(), [
             '{%title%}'       => $locale['news_0400'],
             '{%message%}'     => $locale['news_0701'],
@@ -113,7 +113,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
         ]);
 
     } else {
-        add_to_title($locale['global_200'].$locale['news_0400']);
+        add_to_title($locale['news_0400']);
 
         $info = [
             'guidelines'             => str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['news_0703']),

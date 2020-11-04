@@ -24,11 +24,13 @@ if (!iMEMBER) {
     redirect(BASEDIR."index.php");
 }
 
+require_once THEMES.'templates/header.php';
+
 $inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
-require_once THEMES.'templates/header.php';
+add_to_title($locale['global_056']);
 
 if (isset($_GET['delete']) && isnum($_GET['delete']) && dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY,
                                                                 "thread_id='".$_GET['delete']."' AND notify_user='".$userdata['user_id']."'")

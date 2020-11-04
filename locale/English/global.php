@@ -266,9 +266,9 @@ $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profi
 //Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
-$locale['global_202'] = " - Search";
-$locale['global_203'] = " - FAQ";
-$locale['global_204'] = " - Forum";
+$locale['global_202'] = "Search";
+$locale['global_203'] = "FAQ";
+$locale['global_204'] = "Forum";
 //Themes
 $locale['global_210'] = "Skip to content";
 $locale['global_300'] = "no theme found";

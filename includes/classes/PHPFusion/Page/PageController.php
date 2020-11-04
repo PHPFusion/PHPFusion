@@ -149,7 +149,7 @@ class PageController extends PageModel {
             self::cache_widget();
 
             // Construct Meta
-            add_to_title($locale['global_200'].self::$data['page_title']);
+            add_to_title(self::$data['page_title']);
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
             if (!empty(self::$data['page_keywords'])) {
                 set_meta("keywords", self::$data['page_keywords']);
@@ -159,7 +159,7 @@ class PageController extends PageModel {
             self::$info['body'] = PageView::display_Composer();
 
         } else {
-            add_to_title($locale['global_200'].$locale['page_401']);
+            add_to_title($locale['page_401']);
             self::$info['title'] = $locale['page_401'];
             self::$info['error'] = $locale['page_402'];
         }

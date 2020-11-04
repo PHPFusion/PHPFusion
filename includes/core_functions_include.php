@@ -1584,12 +1584,12 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
         foreach ($crumb['title'] as $i => $value) {
             \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
-                OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
+                add_to_title($value);
                 OutputHandler::addToMeta($value);
             }
         }
     } else if (isset($crumb['title'])) {
-        OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
+        add_to_title($crumb['title']);
         OutputHandler::addToMeta($crumb['title']);
         \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }

@@ -154,7 +154,7 @@ abstract class Weblinks extends WeblinksServer {
                 'title' => self::$locale['web_0000']
             ]);
 
-            add_to_title(self::$locale['global_201'].$data['weblink_cat_name']);
+            //add_to_title(self::$locale['global_201'].$data['weblink_cat_name']);
 
             // Predefined variables, do not edit these values
             $weblink_cat_index = dbquery_tree(DB_WEBLINK_CATS, "weblink_cat_id", "weblink_cat_parent");

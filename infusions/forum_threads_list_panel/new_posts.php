@@ -30,7 +30,7 @@ $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 $inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 
-add_to_title($locale['global_200'].$locale['global_043']);
+add_to_title($locale['global_043']);
 
 opentable($locale['global_043']);
 $result = dbquery("SELECT tp.post_id FROM ".DB_FORUM_POSTS." tp

@@ -54,7 +54,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 
         if (dbrows($result) > 0) {
 
-            add_to_title($locale['global_200'].$locale['u155']);
+            add_to_title($locale['u155']);
 
             $data = dbarray($result);
 

@@ -512,6 +512,8 @@ class ShoutBox {
             'sb_limit'    => self::$arch_limit
         ];
 
+        add_to_title(self::$locale['SB_archive']);
+
         openside(self::$locale['SB_archive']);
         self::ShoutsListing(self::$default_params);
         closeside();

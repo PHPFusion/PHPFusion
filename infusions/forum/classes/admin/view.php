@@ -628,16 +628,14 @@ class ForumAdminView extends ForumAdminInterface {
                     }
                 }
                 // calculate and update total combined postcount on all threads to forum
-                $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS."
-            WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+                $result = dbquery("SELECT SUM(thread_postcount) AS postcount, forum_id FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_FORUMS." SET forum_postcount='".$data['postcount']."' WHERE forum_id='".$data['forum_id']."'");
                     }
                 }
                 // calculate and update total threads to forum
-                $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS."
-            WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
+                $result = dbquery("SELECT COUNT(thread_id) AS threadcount, forum_id FROM ".DB_FORUM_THREADS." WHERE forum_id='".$_GET['forum_id']."' GROUP BY forum_id");
                 if (dbrows($result)) {
                     while ($data = dbarray($result)) {
                         dbquery("UPDATE ".DB_FORUMS." SET forum_threadcount='".$data['threadcount']."' WHERE forum_id='".$data['forum_id']."'");
@@ -734,18 +732,22 @@ class ForumAdminView extends ForumAdminInterface {
 
             switch ($_GET['section']) {
                 case 'fr':
+                    add_to_title(self::$locale['forum_admin_001']);
                     $this->viewRank()->viewRanksAdmin();
                     break;
                 case 'ft':
+                    add_to_title(self::$locale['forum_admin_002']);
                     $this->viewTags()->viewTagsAdmin();
                     break;
                 case 'fmd':
+                    add_to_title(self::$locale['forum_admin_004']);
                     $this->viewMood()->viewMoodAdmin();
                     break;
                 case 'fs':
+                    add_to_title(self::$locale['forum_admin_003']);
                     $this->viewSettings()->viewSettingsAdmin();
                     break;
-                default :
+                default:
                     redirect(INFUSIONS.'forum/admin/forums.php'.$aidlink);
             }
 
@@ -793,7 +795,7 @@ class ForumAdminView extends ForumAdminInterface {
         $forum_settings = self::get_forum_settings();
         $language_opts = fusion_get_enabled_languages();
         $admin_title = ($this->data['forum_id'] ? self::$locale['forum_002'] : self::$locale['forum_001']);
-
+        add_to_title($admin_title);
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $admin_title]);
 
         if (!isset($_GET['action']) && $_GET['parent_id']) {
@@ -868,8 +870,8 @@ class ForumAdminView extends ForumAdminInterface {
             ], DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat', $self_id).
             form_select('forum_type', self::$locale['forum_009'], $this->data['forum_type'], ["options" => $type_opts]).
             form_select('forum_language[]', self::$locale['forum_010'], $this->data['forum_language'], [
-                "options"   => $language_opts,
-                'multiple'  => TRUE
+                "options"  => $language_opts,
+                'multiple' => TRUE
             ]).
             form_text('forum_order', self::$locale['forum_043'], $this->data['forum_order'], ['number' => 1]).
             form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], ['class' => 'btn btn-sm btn-success']);
@@ -1008,6 +1010,7 @@ class ForumAdminView extends ForumAdminInterface {
         unset($options[-101]); // no member group to moderate, unset.
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
+        add_to_title(self::$locale['forum_030']);
         opentable(self::$locale['forum_030'], 'm-t-15');
         echo openform('permissionsForm', 'post', FUSION_REQUEST);
         echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006'].": ".$data['forum_name']."</span>\n";
@@ -1086,8 +1089,7 @@ class ForumAdminView extends ForumAdminInterface {
     private function display_forum_list() {
         $aidlink = fusion_get_aidlink();
 
-        $title = !empty($this->level['title']) ? sprintf(self::$locale['forum_000b'],
-            $this->level['title'][0]) : self::$locale['forum_root'];
+        $title = !empty($this->level['title']) ? sprintf(self::$locale['forum_000b'], $this->level['title'][0]) : self::$locale['forum_root'];
         add_to_title(" ".$title);
 
         $forum_settings = self::get_forum_settings();

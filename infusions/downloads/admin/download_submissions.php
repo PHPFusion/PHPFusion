@@ -143,7 +143,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "download_datestamp"         => $data['submit_datestamp'],
             ];
 
-            add_to_title($locale['global_201'].$callback_data['download_title']);
             echo openform("publish_download", "post", FUSION_REQUEST);
             echo "<div class='well clearfix m-t-15'>\n";
             echo "<div class='pull-left'>\n";

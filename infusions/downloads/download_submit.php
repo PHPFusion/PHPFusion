@@ -21,7 +21,7 @@ $locale = fusion_get_locale('', DOWNLOAD_ADMIN_LOCALE);
 $dl_settings = get_settings("downloads");
 $userdata = fusion_get_userdata();
 
-add_to_title($locale['global_200'].$locale['download_0041']);
+add_to_title($locale['download_0041']);
 
 opentable("<i class='fa fa-download fa-lg fa-fw'></i>".$locale['download_0041']);
 if (iMEMBER && $dl_settings['download_allow_submission']) {

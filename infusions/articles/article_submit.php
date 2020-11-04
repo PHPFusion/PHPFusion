@@ -24,7 +24,7 @@ $articleSettings = get_settings('articles');
 $locale = fusion_get_locale('', ARTICLE_ADMIN_LOCALE);
 
 opentable("<i class='fa fa-file-text-o fa-lg m-r-10'></i> ".$locale['article_0900']);
-add_to_title($locale['global_200'].$locale['article_0900']);
+add_to_title($locale['article_0900']);
 
 
 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".groupaccess("article_cat_visibility")."")) {

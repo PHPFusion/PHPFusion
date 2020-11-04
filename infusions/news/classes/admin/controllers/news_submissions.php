@@ -228,8 +228,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     'news_allow_ratings'       => 0,
                 ];
 
-                add_to_title(self::$locale['global_200'].self::$locale['global_201'].$this->news_data['news_subject']."?");
-
                 echo openform('publish_news', 'post', FUSION_REQUEST);
                 echo "<div class='spacer-sm'>\n";
                 echo form_button('preview', self::$locale['news_0141'], self::$locale['news_0141'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);

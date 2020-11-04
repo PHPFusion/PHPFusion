@@ -22,7 +22,7 @@ $blog_settings = get_settings("blog");
 $locale = fusion_get_locale('', BLOG_ADMIN_LOCALE);
 $userdata = fusion_get_userdata();
 
-add_to_title($locale['global_200'].$locale['blog_0700']);
+add_to_title($locale['blog_0700']);
 $criteriaArray = [];
 if (iMEMBER && $blog_settings['blog_allow_submission']) {
     $criteriaArray = [

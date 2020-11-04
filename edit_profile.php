@@ -24,7 +24,7 @@ if (!iMEMBER) {
     redirect("index.php");
 }
 
-add_to_title($locale['global_200'].$locale['u102']);
+add_to_title($locale['u102']);
 
 $info = [];
 $errors = [];

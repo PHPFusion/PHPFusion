@@ -20,6 +20,7 @@ defined('IN_FUSION') || exit;
 define("ADMIN_PANEL", TRUE);
 
 $settings = fusion_get_settings();
+$userdata = fusion_get_userdata();
 $locale = fusion_get_locale();
 
 if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") || ($settings['maintenance_level'] < $userdata['user_level']))) {
@@ -55,7 +56,7 @@ ob_start();
 
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link=:base_url", [':base_url' => FUSION_SELF]));
 
-\PHPFusion\OutputHandler::setTitle($GLOBALS['locale']['global_123'].$GLOBALS['locale']['global_201'].($title ? $title.$GLOBALS['locale']['global_201'] : ""));
+set_title($locale['global_123'].$locale['global_201'].($title ? $title : ''));
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.

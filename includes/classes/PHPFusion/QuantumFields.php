@@ -267,7 +267,7 @@ class QuantumFields extends \SqlHandler {
         define('IN_QUANTUM', TRUE);
         if ($this->system_title) {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
-            add_to_title($this->system_title.' | ');
+            add_to_title($this->system_title);
         }
         if ($this->method == 'input') {
             $this->load_fields(); // return fields

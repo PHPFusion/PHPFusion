@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale('', [GALLERY_LOCALE, GALLERY_ADMIN_LOCALE]);
 $gll_settings = get_settings("gallery");
-add_to_title($locale['global_200'].$locale['gallery_0100']);
+add_to_title($locale['gallery_0100']);
 opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_0100']);
 if ($gll_settings['gallery_allow_submission']) {
     $criteriaArray = [

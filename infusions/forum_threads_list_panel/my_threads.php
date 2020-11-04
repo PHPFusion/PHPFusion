@@ -28,7 +28,7 @@ $inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 $userdata = fusion_get_userdata();
 
-add_to_title($locale['global_200'].$locale['global_041']);
+add_to_title($locale['global_041']);
 
 $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
 

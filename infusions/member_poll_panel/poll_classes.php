@@ -526,6 +526,7 @@ class MemberPoll {
 
     public function PollArchive() {
         opentable(self::$locale['POLL_002']);
+        add_to_title(self::$locale['POLL_002']);
 
         $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
         $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;

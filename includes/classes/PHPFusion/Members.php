@@ -82,7 +82,7 @@ class Members {
             self::$instance = new static();
             if ($set_info) {
                 self::$locale = fusion_get_locale('', LOCALE.LOCALESET."members.php");
-                add_to_title(self::$locale['global_200'].self::$locale['MEMB_000'].SiteLinks::get_current_SiteLinks("", "link_name"));
+                add_to_title(self::$locale['MEMB_000'].SiteLinks::get_current_SiteLinks("", "link_name"));
 
                 /** @var
                  * max_rows maximum allowable rows under current filter
