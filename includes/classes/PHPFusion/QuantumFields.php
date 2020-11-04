@@ -1682,9 +1682,8 @@ class QuantumFields extends \SqlHandler {
                 // Improvised to code jquery chained selector
                 if (!column_exists($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'])) {
                     \defender::stop();
-                    addNotice("danger", "Your table must be a valid table. Your column must be a column of a user id in that table.");
+                    addNotice("danger", $this->locale['fields_0671']);
                 }
-
             }
 
             if ($this->field_cat_data['field_cat_order'] == 0) {
