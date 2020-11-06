@@ -313,7 +313,7 @@ set_theme($userdata['user_theme']);
 
 // Check if a given theme exists and is valid
 function theme_exists($theme) {
-    global $settings;
+    $settings = fusion_get_settings();
 
     if ($theme == "Default") {
         $theme = $settings['theme'];
