@@ -19,6 +19,7 @@
 require_once 'securimage.php';
 
 echo '<div class="clearfix m-b-15">';
+Securimage::$lame_binary_path = '';
 echo Securimage::getCaptchaHtml([
     'show_text_input'   => FALSE,
     'input_name'        => 'captcha_code',

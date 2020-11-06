@@ -33,11 +33,11 @@
  * to inform users that the changes are not a part of the original software.<br /><br />
  *
  * @copyright 2014 Drew Phillips
- * @author Drew Phillips <drew@drew-phillips.com>
- * @author Paul Voegler <http://www.voegler.eu/>
- * @version 1.1.1 (Sep 2015)
- * @package PHPWavUtils
- * @license BSD License
+ * @author    Drew Phillips <drew@drew-phillips.com>
+ * @author    Paul Voegler <http://www.voegler.eu/>
+ * @version   1.1.1 (Sep 2015)
+ * @package   PHPWavUtils
+ * @license   BSD License
  *
  * Changelog:
  *   1.1.1 (09/08/2015)
@@ -224,8 +224,8 @@ class WavFile {
      * </code>
      *
      * @param string|int $numChannelsOrFileName (Optional) If string, the filename of the wav file to open. The number of channels otherwise. Defaults to 1.
-     * @param int|bool   $sampleRateOrReadData (Optional) If opening a file and boolean, decides whether to read the data chunk or not. Defaults to true. The sample rate in samples per second otherwise. 8000 = standard telephone, 16000 = wideband telephone, 32000 = FM radio and 44100 = CD quality. Defaults to 8000.
-     * @param int        $bitsPerSample (Optional) The number of bits per sample. Has to be 8, 16 or 24 for PCM audio or 32 for IEEE FLOAT audio. 8 = telephone, 16 = CD and 24 or 32 = studio quality. Defaults to 8.
+     * @param int|bool   $sampleRateOrReadData  (Optional) If opening a file and boolean, decides whether to read the data chunk or not. Defaults to true. The sample rate in samples per second otherwise. 8000 = standard telephone, 16000 = wideband telephone, 32000 = FM radio and 44100 = CD quality. Defaults to 8000.
+     * @param int        $bitsPerSample         (Optional) The number of bits per sample. Has to be 8, 16 or 24 for PCM audio or 32 for IEEE FLOAT audio. 8 = telephone, 16 = CD and 24 or 32 = studio quality. Defaults to 8.
      *
      * @throws WavFormatException
      * @throws WavFileException
@@ -292,7 +292,7 @@ class WavFile {
      * Unpacks a single binary sample to numeric value.
      *
      * @param string $sampleBinary (Required) The sample to decode.
-     * @param int    $bitDepth (Optional) The bits per sample to decode. If omitted, derives it from the length of $sampleBinary.
+     * @param int    $bitDepth     (Optional) The bits per sample to decode. If omitted, derives it from the length of $sampleBinary.
      *
      * @return int|float|null  The numeric sample value. Float for 32-bit samples. Returns null for unsupported bit depths.
      */
@@ -337,7 +337,7 @@ class WavFile {
     /**
      * Packs a single numeric sample to binary.
      *
-     * @param int|float $sample (Required) The sample to encode. Has to be within valid range for $bitDepth. Float values only for 32 bits.
+     * @param int|float $sample   (Required) The sample to encode. Has to be within valid range for $bitDepth. Float values only for 32 bits.
      * @param int       $bitDepth (Required) The bits per sample to encode with.
      *
      * @return string|null  The encoded binary sample. Returns null for unsupported bit depths.
@@ -375,7 +375,7 @@ class WavFile {
      * Unpacks a binary sample block to numeric values.
      *
      * @param string $sampleBlock (Required) The binary sample block (all channels).
-     * @param int    $bitDepth (Required) The bits per sample to decode.
+     * @param int    $bitDepth    (Required) The bits per sample to decode.
      * @param int    $numChannels (Optional) The number of channels to decode. If omitted, derives it from the length of $sampleBlock and $bitDepth.
      *
      * @return array  The sample values as an array of integers of floats for 32 bits. First channel is array index 1.
@@ -398,7 +398,7 @@ class WavFile {
     /**
      * Packs an array of numeric channel samples to a binary sample block.
      *
-     * @param array $samples (Required) The array of channel sample values. Expects float values for 32 bits and integer otherwise.
+     * @param array $samples  (Required) The array of channel sample values. Expects float values for 32 bits and integer otherwise.
      * @param int   $bitDepth (Required) The bits per sample to encode with.
      *
      * @return string  The encoded binary sample block.
@@ -417,17 +417,17 @@ class WavFile {
      * See http://www.voegler.eu/pub/audio/ for more information.
      *
      * @param float $sampleFloat (Required) The float sample to normalize.
-     * @param float $threshold (Required) The threshold or gain factor for normalizing the amplitude. <ul>
-     *     <li> >= 1 - Normalize by multiplying by the threshold (boost - positive gain). <br />
-     *            A value of 1 in effect means no normalization (and results in clipping). </li>
-     *     <li> <= -1 - Normalize by dividing by the the absolute value of threshold (attenuate - negative gain). <br />
-     *            A factor of 2 (-2) is about 6dB reduction in volume.</li>
-     *     <li> [0, 1) - (open inverval - not including 1) - The threshold
-     *            above which amplitudes are comressed logarithmically. <br />
-     *            e.g. 0.6 to leave amplitudes up to 60% "as is" and compress above. </li>
-     *     <li> (-1, 0) - (open inverval - not including -1 and 0) - The threshold
-     *            above which amplitudes are comressed linearly. <br />
-     *            e.g. -0.6 to leave amplitudes up to 60% "as is" and compress above. </li></ul>
+     * @param float $threshold   (Required) The threshold or gain factor for normalizing the amplitude. <ul>
+     *                           <li> >= 1 - Normalize by multiplying by the threshold (boost - positive gain). <br />
+     *                           A value of 1 in effect means no normalization (and results in clipping). </li>
+     *                           <li> <= -1 - Normalize by dividing by the the absolute value of threshold (attenuate - negative gain). <br />
+     *                           A factor of 2 (-2) is about 6dB reduction in volume.</li>
+     *                           <li> [0, 1) - (open inverval - not including 1) - The threshold
+     *                           above which amplitudes are comressed logarithmically. <br />
+     *                           e.g. 0.6 to leave amplitudes up to 60% "as is" and compress above. </li>
+     *                           <li> (-1, 0) - (open inverval - not including -1 and 0) - The threshold
+     *                           above which amplitudes are comressed linearly. <br />
+     *                           e.g. -0.6 to leave amplitudes up to 60% "as is" and compress above. </li></ul>
      *
      * @return float  The normalized sample.
      **/
@@ -513,7 +513,7 @@ class WavFile {
             $this->_fmtChunkSize = $fmtChunkSize;
         }
 
-        $this->setChunkSize()// implicit setActualSize()
+        $this->setChunkSize()    // implicit setActualSize()
         ->setDataOffset();
 
         return $this;
@@ -558,7 +558,7 @@ class WavFile {
             $this->_factChunkSize = $factChunkSize;
         }
 
-        $this->setChunkSize()// implicit setActualSize()
+        $this->setChunkSize()    // implicit setActualSize()
         ->setDataOffset();
 
         return $this;
@@ -576,7 +576,7 @@ class WavFile {
             $this->_dataSize = $dataSize;
         }
 
-        $this->setChunkSize()// implicit setActualSize()
+        $this->setChunkSize()   // implicit setActualSize()
         ->setNumBlocks();
         $this->_dataSize_valid = TRUE;
 
@@ -626,7 +626,7 @@ class WavFile {
         }
 
         $this->setAudioSubFormat()
-            ->setFactChunkSize()// implicit setSize(), setActualSize(), setDataOffset()
+            ->setFactChunkSize()     // implicit setSize(), setActualSize(), setDataOffset()
             ->setFmtExtendedSize();  // implicit setFmtChunkSize(), setSize(), setActualSize(), setDataOffset()
 
         return $this;
@@ -665,7 +665,7 @@ class WavFile {
 
         $this->_numChannels = (int)$numChannels;
 
-        $this->setAudioFormat()// implicit setAudioSubFormat(), setFactChunkSize(), setFmtExtendedSize(), setFmtChunkSize(), setSize(), setActualSize(), setDataOffset()
+        $this->setAudioFormat()  // implicit setAudioSubFormat(), setFactChunkSize(), setFmtExtendedSize(), setFmtChunkSize(), setSize(), setActualSize(), setDataOffset()
         ->setByteRate()
             ->setBlockAlign();  // implicit setNumBlocks()
 
@@ -728,7 +728,7 @@ class WavFile {
 
         $this->_bitsPerSample = (int)$bitsPerSample;
 
-        $this->setValidBitsPerSample()// implicit setAudioFormat(), setAudioSubFormat(), setFmtChunkSize(), setFactChunkSize(), setSize(), setActualSize(), setDataOffset()
+        $this->setValidBitsPerSample()  // implicit setAudioFormat(), setAudioSubFormat(), setFmtChunkSize(), setFactChunkSize(), setSize(), setActualSize(), setDataOffset()
         ->setByteRate()
             ->setBlockAlign();         // implicit setNumBlocks()
 
@@ -1297,7 +1297,7 @@ class WavFile {
      * Read the wav data from the file into the buffer.
      *
      * @param int $dataOffset (Optional) The byte offset to skip before starting to read. Must be a multiple of BlockAlign.
-     * @param int $dataSize (Optional) The size of the data to read in bytes. Must be a multiple of BlockAlign. Defaults to all data.
+     * @param int $dataSize   (Optional) The size of the data to read in bytes. Must be a multiple of BlockAlign. Defaults to all data.
      *
      * @throws WavFileException
      */
@@ -1363,7 +1363,7 @@ class WavFile {
      * Allows to append a sample block.
      *
      * @param string $sampleBlock (Required) The binary sample block (all channels).
-     * @param int    $blockNum (Required) The sample block number. Zero based.
+     * @param int    $blockNum    (Required) The sample block number. Zero based.
      *
      * @throws WavFileException
      */
@@ -1406,7 +1406,7 @@ class WavFile {
     /**
      * Get a float sample value for a specific sample block and channel number.
      *
-     * @param int $blockNum (Required) The sample block number to fetch. Zero based.
+     * @param int $blockNum   (Required) The sample block number to fetch. Zero based.
      * @param int $channelNum (Required) The channel number within the sample block to fetch. First channel is 1.
      *
      * @return float|null  The float sample value. Returns null if the sample block number was out of range.
@@ -1471,8 +1471,8 @@ class WavFile {
      * Allows to append samples (in order).
      *
      * @param float $sampleFloat (Required) The float sample value to set. Converts float values and clips if necessary.
-     * @param int   $blockNum (Required) The sample block number to set or append. Zero based.
-     * @param int   $channelNum (Required) The channel number within the sample block to set or append. First channel is 1.
+     * @param int   $blockNum    (Required) The sample block number to set or append. Zero based.
+     * @param int   $channelNum  (Required) The channel number within the sample block to set or append. First channel is 1.
      *
      * @throws WavFileException
      */
@@ -1557,7 +1557,7 @@ class WavFile {
         } else {
             // replace
             for ($i = 0; $i < $sampleBytes; ++$i) {
-                $this->_samples{$offset + $i} = $sampleBinary{$i};
+                $this->_samples[$offset + $i] = $sampleBinary[$i];
             }
         }
 
@@ -1589,9 +1589,9 @@ class WavFile {
      *  );
      *  </code>
      *
-     * @param array $filters (Required) An array of 1 or more audio processing filters.
+     * @param array $filters     (Required) An array of 1 or more audio processing filters.
      * @param int   $blockOffset (Optional) The block number to start precessing from.
-     * @param int   $numBlocks (Optional) The maximum  number of blocks to process.
+     * @param int   $numBlocks   (Optional) The maximum  number of blocks to process.
      *
      * @throws WavFileException
      */
@@ -1744,7 +1744,7 @@ class WavFile {
      * Mix 2 wav files together. <br />
      * Both wavs must have the same sample rate and same number of channels.
      *
-     * @param WavFile $wav (Required) The WavFile to mix.
+     * @param WavFile $wav                (Required) The WavFile to mix.
      * @param float   $normalizeThreshold (Optional) See normalizeSample for an explanation.
      *
      * @throws WavFileException
@@ -1792,7 +1792,7 @@ class WavFile {
      * Generate noise at the end of the wav for the specified duration and volume.
      *
      * @param float $duration (Optional) Number of seconds of noise to generate.
-     * @param float $percent (Optional) The percentage of the maximum amplitude to use. 100 = full amplitude.
+     * @param float $percent  (Optional) The percentage of the maximum amplitude to use. 100 = full amplitude.
      */
     public function generateNoise($duration = 1.0, $percent = 100) {
         $numChannels = $this->getNumChannels();
@@ -1836,7 +1836,7 @@ class WavFile {
             $this->getNumBlocks()
         );
 
-        $this->setSamples()// implicit setDataSize(), setSize(), setActualSize(), setNumBlocks()
+        $this->setSamples()                       // implicit setDataSize(), setSize(), setActualSize(), setNumBlocks()
         ->setBitsPerSample($bitsPerSample);  // implicit setValidBitsPerSample(), setAudioFormat(), setAudioSubFormat(), setFmtChunkSize(), setFactChunkSize(), setSize(), setActualSize(), setDataOffset(), setByteRate(), setBlockAlign(), setNumBlocks()
         $this->_samples = $tempWav->_samples;
         $this->setDataSize();                     // implicit setSize(), setActualSize(), setNumBlocks()
