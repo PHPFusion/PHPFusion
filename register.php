@@ -21,6 +21,9 @@ require_once CLASSES."UserFields.class.php";
 require_once CLASSES."UserFieldsInput.class.php";
 include LOCALE.LOCALESET."user_fields.php";
 
+$settings = fusion_get_settings();
+$locale = fusion_get_locale();
+
 if (iMEMBER || !$settings['enable_registration']) {
     redirect("index.php");
 }
