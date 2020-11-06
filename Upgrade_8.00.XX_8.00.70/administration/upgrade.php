@@ -74,7 +74,7 @@ if ($settings['version'] < $current_version) {
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$current_version."' WHERE settings_name='version'");
 
         $insert_settings_tbl = [
-            'gateway_method' => '2',
+            'gateway_method' => '1',
             'allow_php_exe'  => '0',
             'update_checker' => '1'
         ];

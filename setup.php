@@ -44,15 +44,7 @@ function opensetup() {
     echo "<link href='themes/templates/default.css' rel='stylesheet' />\n";
     echo "<link href='includes/bootstrap/css/bootstrap.min.css' rel='stylesheet' />\n";
     echo "<link href='includes/fonts/entypo/entypo.css' rel='stylesheet' />";
-    echo '<link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon.png">';
-    echo '<link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">';
-    echo '<link rel="icon" type="image/png" sizes="16x16" href="images/favicons/favicon-16x16.png">';
-    echo '<link rel="manifest" href="images/favicons/site.webmanifest">';
-    echo '<link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#262626">';
     echo '<link rel="shortcut icon" href="images/favicons/favicon.ico">';
-    echo '<meta name="msapplication-TileColor" content="#262626">';
-    echo '<meta name="msapplication-config" content="images/favicons/browserconfig.xml">';
-    echo '<meta name="theme-color" content="#ffffff">';
     echo "</head>\n<body>\n";
     echo "<aside class='block-container'>\n";
     echo "<form name='setupform' method='post' action='setup.php'>\n";
@@ -1463,7 +1455,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 'normalize_seo'               => '0',
                 'debug_seo'                   => '0',
                 'gateway'                     => '1',
-                'gateway_method'              => '2',
+                'gateway_method'              => '1',
                 'sitebanner'                  => 'images/php-fusion-logo.png',
                 'sitebanner1'                 => '',
                 'sitebanner2'                 => '',
