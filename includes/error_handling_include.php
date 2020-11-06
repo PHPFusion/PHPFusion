@@ -28,7 +28,9 @@ $_errorHandler = [];
 
 // PHP-Fusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line, $error_context) {
-    global $userdata, $_errorHandler;
+    global $_errorHandler;
+
+    $userdata = fusion_get_userdata();
 
     $error_file = stripinput($error_file);
 
