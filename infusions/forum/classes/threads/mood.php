@@ -155,7 +155,7 @@ class Forum_Mood extends ForumServer {
 
             $count = format_word(count($mood_users), $locale['fmt_user']);
             $output_message = '<div class="forum-mood">';
-            $output_message .= '<a data-toggle="collapse" href="#moods'.$this->post_id.'">'.$count.' '.$locale['forum_0528'].' <span class="caret"></span></a>';
+            $output_message .= '<a data-toggle="collapse" aria-expanded="false" aria-controls="#moods'.$this->post_id.'" href="#moods'.$this->post_id.'">'.$count.' '.$locale['forum_0528'].' <span class="caret"></span></a>';
             $output_message .= '<div id="moods'.$this->post_id.'" class="moods collapse">'.$users.'</div>';
             $output_message .= '</div>';
 

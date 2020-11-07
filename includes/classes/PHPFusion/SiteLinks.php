@@ -425,7 +425,7 @@ class SiteLinks {
                 $res .= "<div class='navbar-header'>\n";
                 $res .= "<!--Menu Header Start-->\n";
                 if (self::getMenuParam('responsive')) {
-                    $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".self::getMenuParam('id')."_menu' aria-expanded='false'>\n";
+                    $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".self::getMenuParam('id')."_menu' aria-expanded='false' aria-controls='#".self::getMenuParam('id')."_menu'>\n";
                     $res .= "<span class='sr-only'>".$locale['global_017']."</span>\n";
                     $res .= "<span class='icon-bar top-bar'></span>\n";
                     $res .= "<span class='icon-bar middle-bar'></span>\n";

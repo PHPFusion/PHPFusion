@@ -230,8 +230,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ]);
         add_to_head("<style>.panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }</style>");
         echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
-        echo "<li class='active'><a data-toggle='tab' href='#snippet'>".$this->locale['article_0251']."<span class='required'>&nbsp;*</span></a></li>";
-        echo "<li><a data-toggle='tab' href='#extended'>".$this->locale['article_0252'].($this->articleSettings['article_extended_required'] ? "<span class='required'>&nbsp;*</span>" : '')."</a></li>";
+        echo "<li class='active'><a data-toggle='tab' aria-controls='#snippet' href='#snippet'>".$this->locale['article_0251']."<span class='required'>&nbsp;*</span></a></li>";
+        echo "<li><a data-toggle='tab' aria-controls='#extended' href='#extended'>".$this->locale['article_0252'].($this->articleSettings['article_extended_required'] ? "<span class='required'>&nbsp;*</span>" : '')."</a></li>";
         echo "</ul>\n";
         echo "<div class='tab-content p-0'>\n";
         echo "<div id='snippet' class='tab tab-pane fade in active p-0'>\n";

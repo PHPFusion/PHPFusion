@@ -1097,7 +1097,7 @@ if (!function_exists("tab_active")
                 $bs4_li = defined('BOOTSTRAP4') ? 'nav-item' : '';
                 $html .= '<li class="'.$bs4_li.$active.'">';
                 $bs4 = defined('BOOTSTRAP4') ? ' nav-link' : '';
-                $html .= "<a class='pointer".$bs4.$active."' ".(!$link ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
+                $html .= "<a class='pointer".$bs4.$active."' ".(!$link ? "id='tab-".$tab_id."' aria-controls='#".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'")." role='tab'>\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
                 $html .= "</li>\n";
             }
             $html .= "</ul>\n";

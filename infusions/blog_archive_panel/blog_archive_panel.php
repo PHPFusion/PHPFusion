@@ -39,7 +39,7 @@ if (defined('BLOG_EXIST')) {
         }
         foreach ($data as $blog_year => $blog_months) {
             echo "<li>";
-            echo "<a data-toggle='collapse' data-parent='#blog_archive' href='#link-".$blog_year."'><b>".$blog_year."</b></a>";
+            echo "<a data-toggle='collapse' data-parent='#blog_archive' aria-expanded='false' aria-controls='#blog_archive' href='#link-".$blog_year."'><b>".$blog_year."</b></a>";
             echo "<ul id='link-".$blog_year."' class='collapse'>";
             foreach ($blog_months as $blog_month => $blog_entries) {
                 echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";

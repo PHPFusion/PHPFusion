@@ -284,8 +284,8 @@ class NewsAdmin extends NewsAdminModel {
         );
         add_to_css(".panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }");
         echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
-        echo "<li class='active'><a data-toggle='tab' href='#snippet'>".self::$locale['news_0203']."</a></li>";
-        echo "<li><a data-toggle='tab' href='#extended'>".self::$locale['news_0204']."</a></li>";
+        echo "<li class='active'><a data-toggle='tab' aria-controls='#snippet' href='#snippet'>".self::$locale['news_0203']."</a></li>";
+        echo "<li><a data-toggle='tab' aria-controls='#extended' href='#extended'>".self::$locale['news_0204']."</a></li>";
         echo "</ul>\n";
         echo "<div class='tab-content p-0'>\n";
         echo "<div id='snippet' class='tab tab-pane fade in active p-0'>\n";

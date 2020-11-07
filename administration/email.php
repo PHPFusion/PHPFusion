@@ -194,7 +194,7 @@ echo "</div>\n";
 
 
 echo "<div class='m-t-20 m-b-20'>\n";
-echo "<a class='pointer' data-target='#email_tutorial' data-toggle='collapse'>".$locale['MAIL_031']."</a>";
+echo "<a class='pointer' data-target='#email_tutorial' data-toggle='collapse' aria-expanded='false' aria-controls='email_tutorial'>".$locale['MAIL_031']."</a>";
 echo "</div>\n";
 echo "<div id='email_tutorial' class='collapse'>\n";
 echo "<div class='table-responsive'><table class='table'>\n";

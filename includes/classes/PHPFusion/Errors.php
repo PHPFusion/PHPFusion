@@ -189,7 +189,7 @@ class Errors {
 
         $html = "<tr id='rmd-".$data['error_id']."'>";
         $html .= "<td class='word-break' style='text-align:left;'>";
-        $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+        $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' aria-expanded='false' aria-controls='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
         $html .= "<code class='error_page'>".$data['error_page']." <span class='label label-success'>**</span></code><br/>\n";
         $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
         $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
