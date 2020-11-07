@@ -168,14 +168,14 @@ function blog_listing() {
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='pull-left m-t-5 m-r-10'>".$locale['blog_0458']."</div>\n";
         echo "<div class='dropdown pull-left m-r-10' style='position:relative'>\n";
-        echo "<a class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown'>\n<strong>\n";
+        echo "<a id='ddfilter' class='dropdown-toggle btn btn-default btn-sm' style='width: 200px;' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n<strong>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {
             echo $locale['blog_0459'];
         }
         echo " <span class='caret'></span></strong>\n</a>\n";
-        echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
+        echo "<ul aria-labelledby='ddfilter' class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,

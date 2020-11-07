@@ -84,11 +84,11 @@ class AdminPanel {
                         $languages = fusion_get_enabled_languages();
                         if (count($languages) > 1) {
                             $html .= '<li class="dropdown languages-menu">';
-                                $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
+                                $html .= '<a id="ddlangs" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                                     $html .= '<i class="fa fa-globe"></i> <img style="margin-top: -3px;" src="'.BASEDIR.'locale/'.LANGUAGE.'/'.LANGUAGE.'-s.png" alt="'.translate_lang_names(LANGUAGE).'"/>';
                                     $html .= '<span class="caret"></span>';
                                 $html .= '</a>';
-                                $html .= '<ul class="dropdown-menu">';
+                                $html .= '<ul class="dropdown-menu" aria-labelledby="ddlangs">';
                                     foreach ($languages as $language_folder => $language_name) {
                                         $html .= '<li><a class="display-block" href="'.clean_request('lang='.$language_folder, ['lang'], FALSE).'"><img class="m-r-5" src="'.BASEDIR.'locale/'.$language_folder.'/'.$language_folder.'-s.png" alt="'.$language_folder.'"/> '.$language_name.'</a></li>';
                                     }
@@ -118,11 +118,11 @@ class AdminPanel {
         $msg_icon = !empty($messages) ? '<span class="label label-danger" style="margin-top: inherit;">'.count($messages).'</span>' : '';
 
         $html = '<li class="dropdown messages-menu">';
-            $html .= '<a href="'.BASEDIR.'messages.php" class="dropdown-toggle" data-toggle="dropdown">';
+            $html .= '<a id="ddmsg" href="'.BASEDIR.'messages.php" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 $html .= '<i class="fa fa-envelope-o"></i>'.$msg_icon;
                 $html .= '<span class="caret"></span>';
             $html .= '</a>';
-            $html .= '<ul class="dropdown-menu">';
+            $html .= '<ul class="dropdown-menu" aria-labelledby="ddmsg">';
                 $html .= '<li class="header text-center">'.$locale['ALT_001'].' '.format_word(count($messages), $locale['fmt_message']).'</li>';
                 $html .= '<li><ul class="menu">';
                     if (!empty($messages)) {
@@ -157,12 +157,12 @@ class AdminPanel {
         $userdata = fusion_get_userdata();
 
         $html = '<li class="dropdown user user-menu">';
-            $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
+            $html .= '<a id="dduser" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                 $html .= display_avatar($userdata, '25px', '', FALSE, 'user-image img-circle');
                 $html .= '<span class="hidden-xs">'.$userdata['user_name'].'</span>';
                 $html .= '<span class="caret"></span>';
             $html .= '</a>';
-            $html .= '<ul class="dropdown-menu">';
+            $html .= '<ul class="dropdown-menu" aria-labelledby="dduser">';
                 $html .= '<li class="user-header">';
                     $html .= display_avatar($userdata, '90px', '', FALSE, 'img-circle');
                     $html .= '<p>'.$userdata['user_name'].'<small>'.$locale['ALT_004'].' '.showdate('longdate', $userdata['user_joined']).'</small></p>';

@@ -266,8 +266,8 @@ class Atom {
                     ]);
                 }
                 // dropdown
-                echo "<a data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i class='fa fa-cog fa-fw'></i><span class='caret'></span></a>\n";
-                echo "<ul class='dropdown-menu'>\n";
+                echo "<a id='dd".$preset['theme_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default btn-sm dropdown-toggle'><i class='fa fa-cog fa-fw'></i><span class='caret'></span></a>\n";
+                echo "<ul class='dropdown-menu' aria-labelledby='dd".$preset['theme_id']."'>\n";
                 echo "<li><a href='".clean_request("section=css&e_action=edit&preset=".$preset['theme_id'], [
                         "aid",
                         "action",

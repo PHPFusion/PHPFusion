@@ -260,13 +260,13 @@ class adminPanel extends resource {
         <nav>
             <ul class="nav">
                 <li class="dropdown">
-                    <a class="dropdown-toggle pointer" data-toggle="dropdown">
+                    <a id="dduser" class="dropdown-toggle pointer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php echo display_avatar($userdata, "30px", "m-r-10", "", "img-rounded") ?>
                         <span class="hidden-xs hidden-sm hidden-md">
                             <?php echo $locale['welcome'].", <strong>".$userdata['user_name']."</strong> <span class='caret'></span>\n";
                             ?>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu" aria-labelledby="dduser" role="menu">
                         <?php
                         $u_drop_links = resource::get_udrop();
                         if (!empty($u_drop_links)) {
@@ -348,11 +348,11 @@ class adminPanel extends resource {
         $html = '<li class="dropdown hidden-xs hidden-sm">';
         if (!empty($messages)) {
             $html .= '
-            <a class="dropdown-toggle" data-toggle="dropdown" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php">
+            <a id="ddmsg" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="'.$locale['message'].'" href="'.BASEDIR.'messages.php">
                 <i class="fa fa-envelope-o"></i>
                 <span class="badge message_alert">'.count($messages).'</span>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" aria-labelledby="ddmsg">
             ';
             foreach ($messages as $message_data) {
 

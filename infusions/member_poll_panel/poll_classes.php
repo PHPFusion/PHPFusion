@@ -259,8 +259,8 @@ class MemberPoll {
 
                 echo "<div class='panel-footer'>\n";
                 echo "<div class='dropdown'>\n";
-                echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle btn-block' type='button'>".self::$locale['POLL_021']." <span class='caret'></span></button>\n";
-                echo "<ul class='dropdown-menu'>\n";
+                echo "<button id='ddp".$data['poll_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default dropdown-toggle btn-block' type='button'>".self::$locale['POLL_021']." <span class='caret'></span></button>\n";
+                echo "<ul class='dropdown-menu' aria-labelledby='ddp".$data['poll_id']."'>\n";
                 echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll_vote&amp;action=edit&amp;poll_id=".$data['poll_id']."'><i class='fa fa-edit fa-fw'></i> ".self::$locale['edit']."</a></li>\n";
                 if ($data['poll_started'] > time()) {
                     echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=poll&amp;action=poll_add&amp;poll_id=".$data['poll_id']."'><i class='fa fa-play fa-fw'></i> ".self::$locale['POLL_022']."</a></li>\n";

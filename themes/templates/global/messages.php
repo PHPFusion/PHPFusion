@@ -152,8 +152,8 @@ if (!function_exists('display_inbox')) {
                     $form = $info['actions_form']['openform'];
 
                     $form .= "<div class='dropdown display-inline-block m-r-10'>
-                        <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'><i id='chkv' class='fa fa-square-o'></i><span class='caret m-l-5'></span></a>
-                        <ul class='dropdown-menu'>";
+                        <a id='ddmsga' href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default btn-sm dropdown-toggle'><i id='chkv' class='fa fa-square-o'></i><span class='caret m-l-5'></span></a>
+                        <ul class='dropdown-menu' aria-labelledby='ddmsga'>";
                             foreach ($info['actions_form']['check'] as $id => $title) {
                                 $form .= "<li><a id='".$id."' data-action='check' class='pointer'>".$title."</a></li>";
                             }
@@ -170,8 +170,8 @@ if (!function_exists('display_inbox')) {
                     $form .= "</div>\n";
 
                     $form .= "<div class='dropdown display-inline-block m-r-10'>
-                        <a href='#' data-toggle='dropdown' class='btn btn-default btn-sm dropdown-toggle'>".$locale['444']."&hellip; <span class='caret'></span></a>
-                        <ul class='dropdown-menu'>
+                        <a id='ddmsga2' href='#' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default btn-sm dropdown-toggle'>".$locale['444']."&hellip; <span class='caret'></span></a>
+                        <ul class='dropdown-menu' aria-labelledby='ddmsga2'>
                             <li>".$info['actions_form']['mark_all']."</li>
                             <li>".$info['actions_form']['mark_read']."</li>
                             <li>".$info['actions_form']['mark_unread']."</li>

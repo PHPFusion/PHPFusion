@@ -56,7 +56,7 @@ class News  {
                     echo '</span>';
 
                     echo '<div class="dropdown display-inline pull-right">';
-                        echo '<a href="#" id="news-cats" data-toggle="dropdown">'.$locale['news_0009'].' <span class="caret"></span></a>';
+                        echo '<a href="#" id="news-cats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$locale['news_0009'].' <span class="caret"></span></a>';
                         echo '<ul class="dropdown-menu" aria-labelledby="news-cats">';
                         foreach ($info['news_categories'][0] as $id => $data) {
                             $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' class="text-dark"' : '';

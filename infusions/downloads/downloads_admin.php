@@ -140,14 +140,14 @@ function download_listing() {
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
         echo "<div class='dropdown pull-left m-r-10'>\n";
-        echo "<a class='btn btn-default btn-sm dropdown-toggle' style='width: 200px;' data-toggle='dropdown' aria-expanded='false'>\n";
+        echo "<a id='ddfilter' class='btn btn-default btn-sm dropdown-toggle' style='width: 200px;' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
         if (isset($_GET['filter_cid']) && isset($catOpts[$_GET['filter_cid']])) {
             echo $catOpts[$_GET['filter_cid']];
         } else {
             echo $locale['download_0011'];
         }
         echo " <span class='caret'></span></a>\n";
-        echo "<ul class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
+        echo "<ul aria-labelledby='ddfilter' class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
             echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,

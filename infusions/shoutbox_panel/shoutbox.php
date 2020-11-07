@@ -326,10 +326,10 @@ class ShoutBox {
             if (iMEMBER && self::$sb_settings['hidden_shouts']) {
                 echo "<div class='btn-group dropup'>
                 ".form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary'])."
-                <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
+                <button id='ddsg' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
                 echo "<span class='caret'></span>\n";
                 echo "</button>\n";
-                echo "<ul class='dropdown-menu'>\n";
+                echo "<ul class='dropdown-menu' aria-labelledby='ddsg'>\n";
                 foreach (fusion_get_groups() as $key => $glink) {
                     if (!iADMIN && $key > 0) {
                         echo users_groupaccess($key) ? "<li>".form_button($glink, $glink, $glink, ['class' => 'btn-primary'])."</li>\n" : "";

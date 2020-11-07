@@ -477,8 +477,8 @@ class SiteLinks {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
                         $language_opts = "<li class='dropdown'>";
-                        $language_opts .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
-                        $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' role='menu'>\n";
+                        $language_opts .= "<a id='ddlangs".$id."' href='#' class='dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
+                        $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddlangs".$id."' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
                                 $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>";
@@ -495,8 +495,8 @@ class SiteLinks {
 
                 if (self::getMenuParam('searchbar') == TRUE) {
                     $searchbar = "<li class='dropdown'>";
-                    $searchbar .= "<a href='#' class='dropdown-toggle pointer' data-toggle='dropdown' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
-                    $searchbar .= "<ul class='dropdown-menu dropdown-menu-right p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
+                    $searchbar .= "<a id='ddsearch".$id."' href='#' class='dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
+                    $searchbar .= "<ul aria-labelledby='ddsearch".$id."' class='dropdown-menu dropdown-menu-right p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
                         [
@@ -763,7 +763,7 @@ class SiteLinks {
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
                         $link_class = (!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '');
-                        $l_1 = " class='dropdown-toggle".$link_class."' data-toggle='dropdown' ";
+                        $l_1 = " class='dropdown-toggle".$link_class."' id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' ";
                         $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
                         $l_2 = (empty($id) ? "<span class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
@@ -780,7 +780,7 @@ class SiteLinks {
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
                     if ($has_child) {
-                        $res .= "\n<ul id='menu-".$link_data['link_id']."' class='dropdown-menu'>\n";
+                        $res .= "\n<ul id='menu-".$link_data['link_id']."' aria-labelledby='ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
                             $res .= ($itemlink ? "<a ".$itemlink." ".$link_target.">\n" : '');

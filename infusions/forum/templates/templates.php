@@ -546,12 +546,11 @@ if (!function_exists('forum_filter')) {
                 <div class='pull-left'>
                     <?php echo $locale['forum_0388']; ?>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
-                                data-toggle='dropdown'>
+                        <button id='ddfilter1' class='btn btn-xs <?php echo(isset($_GET['time']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                             <?php echo(isset($_GET['time']) && in_array($_GET['time'], array_flip($selector)) ? $selector[$_GET['time']] : $locale['forum_0211']) ?>
                             <span class='caret'></span>
                         </button>
-                        <ul class='dropdown-menu'>
+                        <ul class='dropdown-menu' aria-labelledby='ddfilter1'>
                             <?php
                             foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
                                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
@@ -563,12 +562,11 @@ if (!function_exists('forum_filter')) {
                 <div class='pull-left'>
                     <?php echo $locale['forum_0225'] ?>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
-                                data-toggle='dropdown'>
+                        <button id='ddfilter2' class='btn btn-xs <?php echo(isset($_GET['sort']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                             <?php echo(isset($_GET['sort']) && in_array($_GET['sort'], array_flip($selector3)) ? $selector3[$_GET['sort']] : $locale['forum_0381']) ?>
                             <span class='caret'></span>
                         </button>
-                        <ul class='dropdown-menu dropdown-menu-right'>
+                        <ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddfilter2'>
                             <?php
                             foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
                                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
@@ -577,12 +575,11 @@ if (!function_exists('forum_filter')) {
                         </ul>
                     </div>
                     <div class='forum-filter dropdown'>
-                        <button class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-info" : "btn-default") ?> dropdown-toggle'
-                                data-toggle='dropdown'>
+                        <button id='ddfilter3' class='btn btn-xs <?php echo(isset($_GET['order']) ? "btn-info" : "btn-default") ?> dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                             <?php echo(isset($_GET['order']) && in_array($_GET['order'], array_flip($selector4)) ? $selector4[$_GET['order']] : $locale['forum_0230']) ?>
                             <span class='caret'></span>
                         </button>
-                        <ul class='dropdown-menu dropdown-menu-right'>
+                        <ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddfilter3'>
                             <?php
                             foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
                                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
@@ -595,9 +592,9 @@ if (!function_exists('forum_filter')) {
 
             <?php
             /*echo "<div class='forum-filter'>\n";
-            echo "<button class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown'>".(isset($_GET['type']) && in_array($_GET['type'],
+            echo "<button id='ddfilter4' class='btn btn-xs btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>".(isset($_GET['type']) && in_array($_GET['type'],
                     array_flip($selector2)) ? $selector2[$_GET['type']] : $locale['forum_0390'])." <span class='caret'></span></button>\n";
-            echo "<ul class='dropdown-menu'>\n";
+            echo "<ul class='dropdown-menu' aria-labelledby='ddfilter4'>\n";
             foreach ($info['filter']['type'] as $filter_locale => $filter_link) {
                 echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
             }
@@ -940,7 +937,7 @@ if (!function_exists('render_thread')) {
 
         echo '<div class="clearfix m-t-20">';
             echo '<div class="dropdown display-inline-block m-r-10">';
-                echo '<a class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">';
+                echo '<a id="ddfilter5" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                     echo '<strong>'.$locale['forum_0183'].'</strong> ';
                     $selector['oldest'] = $locale['forum_0180'];
                     $selector['latest'] = $locale['forum_0181'];
@@ -949,7 +946,7 @@ if (!function_exists('render_thread')) {
                 echo '</a>';
 
                 if (!empty($info['post-filters'])) {
-                    echo '<ul class="dropdown-menu">';
+                    echo '<ul class="dropdown-menu" aria-labelledby="ddfilter5">';
                         foreach ($info['post-filters'] as $i => $filters) {
                             echo '<li><a class="text-smaller" href="'.$filters['value'].'">'.$filters['locale'].'</a></li>';
                         }

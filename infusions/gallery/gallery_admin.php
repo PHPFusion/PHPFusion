@@ -224,8 +224,8 @@ function gallery_photo_listing() {
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
                 echo "<div class='dropdown pull-right spacer-xs'>\n";
-                echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle' type='button'> ".$locale['gallery_0013']." <span class='caret'></span></button>\n";
-                echo "<ul class='dropdown-menu'>\n";
+                echo "<button id='ddp".$data['photo_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default dropdown-toggle' type='button'> ".$locale['gallery_0013']." <span class='caret'></span></button>\n";
+                echo "<ul class='dropdown-menu' aria-labelledby='ddp".$data['photo_id']."'>\n";
                 echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0003']."</a></li>\n";
                 echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pu&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order'] - 1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['gallery_0014']."</a></li>\n" : "";
                 echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=pd&amp;photo_id=".$data['photo_id']."&amp;album_id=".$data['album_id']."&amp;order=".($data['photo_order'] + 1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['gallery_0015']."</a></li>\n" : "";
@@ -310,8 +310,8 @@ function gallery_album_listing() {
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
                 echo "<div class='dropdown pull-right spacer-xs'>\n";
-                echo "<button data-toggle='dropdown' class='btn btn-default dropdown-toggle' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
-                echo "<ul class='dropdown-menu'>\n";
+                echo "<button id='dda".$data['album_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='btn btn-default dropdown-toggle' type='button'> ".$locale['album_0020']." <span class='caret'></span></button>\n";
+                echo "<ul class='dropdown-menu' aria-labelledby='dda".$data['album_id']."'>\n";
                 echo "<li><a href='".FUSION_SELF.$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['gallery_0005']."</a></li>\n";
                 echo ($i > 1) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=mu&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order'] - 1)."'><i class='fa fa-arrow-left fa-fw'></i> ".$locale['album_0021']."</a></li>\n" : "";
                 echo ($i !== $rows) ? "<li><a href='".FUSION_SELF.$aidlink."&amp;section=actions&amp;action=md&amp;cat_id=".$data['album_id']."&amp;order=".($data['album_order'] + 1)."'><i class='fa fa-arrow-right fa-fw'></i> ".$locale['album_0022']."</a></li>\n" : "";

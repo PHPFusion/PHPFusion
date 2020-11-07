@@ -1922,8 +1922,8 @@ class QuantumFields extends \SqlHandler {
 
         if (count($language_opts) > 1) {
             $html .= "<div class='dropdown m-b-15'>\n";
-            $html .= "<button id='lang_dropdown' data-toggle='dropdown' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
-            $html .= "<ul class='dropdown-menu'>\n";
+            $html .= "<button id='lang_dropdown' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' class='dropdown-toggle btn btn-sm btn-default' type='button'>".$locale['add_language']." <span class='caret'></span></button>\n";
+            $html .= "<ul class='dropdown-menu' aria-labelledby='lang_dropdown'>\n";
             foreach ($language_opts as $Lang => $LangName) {
                 if ($Lang !== LANGUAGE) {
                     $html .= "<li><a data-add='$Lang' data-input='$input_name' data-locale='$LangName' class='pointer data-add'><i class='fa fa-plus-circle fa-fw'></i> $LangName</a></li>\n";

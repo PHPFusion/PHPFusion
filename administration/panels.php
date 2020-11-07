@@ -443,10 +443,10 @@ class PanelsAdministration {
                 $html .= "<div class='handle'>\n";
                 $html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
                 $html .= "<div class='overflow-hide'>\n";
-                $html .= "<a class='dropdown-toggle' data-toggle='dropdown'>\n";
+                $html .= "<a id='dd".$data['panel_id']."' class='dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
                 $html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
                 $html .= "</a>\n";
-                $html .= "<ul class='dropdown-menu'>\n";
+                $html .= "<ul class='dropdown-menu' aria-labelledby='dd".$data['panel_id']."'>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i><span class='badge'>".$type."</span></li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";

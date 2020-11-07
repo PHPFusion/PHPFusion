@@ -59,7 +59,7 @@ class Blog {
 
                     if (!empty($info['blog_categories'])) {
                         echo '<div class="dropdown display-inline m-r-20">';
-                            echo '<a href="#" id="blog-cats" data-toggle="dropdown">'.$locale['blog_1003'].' <span class="caret"></span></a>';
+                            echo '<a href="#" id="blog-cats" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$locale['blog_1003'].' <span class="caret"></span></a>';
                             echo '<ul class="dropdown-menu" aria-labelledby="blog-cats">';
                                 foreach ($info['blog_categories'][0] as $id => $data) {
                                     $active = isset($_GET['cat_id']) && $_GET['cat_id'] == $id ? ' class="active"' : '';
@@ -82,7 +82,7 @@ class Blog {
 
                     if (!empty($info['blog_author'])) {
                         echo '<div class="dropdown display-inline m-r-20">';
-                            echo '<a href="#" id="blog-authors" data-toggle="dropdown">'.$locale['blog_1005'].' <span class="caret"></span></a>';
+                            echo '<a href="#" id="blog-authors" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'.$locale['blog_1005'].' <span class="caret"></span></a>';
                             echo '<ul class="dropdown-menu" aria-labelledby="blog-authors">';
                                 foreach ($info['blog_author'] as $author_id => $author_info) {
                                     echo '<li'.($author_info['active'] ? ' class="active"' : '').'><a href="'.$author_info['link'].'">'.$author_info['title'].' <span class="badge m-l-10">'.$author_info['count'].'</span></a></li>';
@@ -94,15 +94,15 @@ class Blog {
                     if (!empty($info['blog_archive'])) {
                         add_to_jquery('$("#blog-archive").submenupicker();');
                         echo '<div class="dropdown display-inline">';
-                            echo '<a id="blog-archive" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>'.$locale['blog_1004'].' <span class="caret"></span></a>';
+                            echo '<a id="blog-archive" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>'.$locale['blog_1004'].' <span class="caret"></span></a>';
                             echo '<ul class="dropdown-menu" aria-labelledby="blog-archive">';
                                 foreach ($info['blog_archive'] as $year => $archive_data) {
                                     $active = $year == date('Y') ? 'text-dark ' : '';
                                     $collaped_ = isset($_GET['archive']) && $_GET['archive'] == $year ? 'active strong ' : '';
                                     echo '<li class="'.$collaped_.'dropdown-submenu">';
-                                        echo '<a class="'.$active.'dropdown-toggle" data-toggle="dropdown" href="#">'.$year.'</a>';
+                                        echo '<a id="ddbarchive" class="'.$active.'dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">'.$year.'</a>';
 
-                                        echo '<ul class="dropdown-menu">';
+                                        echo '<ul class="dropdown-menu" aria-labelledby="ddbarchive">';
                                             foreach ($archive_data as $month => $a_data) {
                                                 echo '<li'.($a_data['active'] ? ' class="active string"' : '').'><a href="'.$a_data['link'].'">'.$a_data['title'].' <span class="badge">'.$a_data['count'].'</span></a></li>';
                                             }
