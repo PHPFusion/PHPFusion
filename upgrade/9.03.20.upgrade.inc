@@ -28,7 +28,7 @@ foreach ($update_settings_tbl as $key => $value) {
 }
 
 $insert_settings_tbl = [
-    'gateway_method' => 2
+    'gateway_method' => 1
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {

@@ -522,7 +522,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'gateway_method',
-                'settings_value' => 2
+                'settings_value' => 1
             ],
             [
                 'settings_name'  => 'devmode',
