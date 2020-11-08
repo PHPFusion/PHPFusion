@@ -23,6 +23,7 @@ defined('IN_FUSION') || exit;
  * It's primary role is to declare LANGUAGE and site LOCALESET so all URL will work.
  */
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
+    global $current_user_language;
 
     // Articles
     if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && multilang_table("AR")) {
@@ -36,14 +37,14 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                      LEFT JOIN ".DB_PREFIX.'articles'." a ON ac.article_cat_id = a.article_cat
                                      WHERE a.article_id='".(isset($_GET['article_id']) ? $_GET['article_id'] : $article_matches['1'])."'
                                      GROUP BY a.article_id"));
-            if ($data['article_cat_language'] != LANGUAGE) {
+            if ($data['article_cat_language'] != $current_user_language) {
                 define_site_language($data['article_cat_language']);
             }
         }
 
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($article_cat_matches) && $article_cat_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT article_cat_language FROM ".DB_PREFIX."article_cats WHERE article_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $article_cat_matches['1'])."'"));
-            if ($data['article_cat_language'] != LANGUAGE) {
+            if ($data['article_cat_language'] != $current_user_language) {
                 define_site_language($data['article_cat_language']);
             }
         }
@@ -56,14 +57,14 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
         if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($blog_matches) && $blog_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT blog_language FROM ".DB_PREFIX."blog WHERE blog_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $blog_matches['1'])."'"));
-            if ($data['blog_language'] != LANGUAGE) {
+            if ($data['blog_language'] != $current_user_language) {
                 define_site_language($data['blog_language']);
             }
         }
 
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($blog_cat_matches) && $blog_cat_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT blog_cat_language FROM ".DB_PREFIX."blog_cats WHERE blog_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $blog_cat_matches['1'])."'"));
-            if ($data['blog_cat_language'] != LANGUAGE) {
+            if ($data['blog_cat_language'] != $current_user_language) {
                 define_site_language($data['blog_cat_language']);
             }
         }
@@ -91,14 +92,14 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                     LEFT JOIN ".DB_PREFIX."downloads dl ON dlc.download_cat_id = dl.download_cat
                                     WHERE dl.download_id='".(isset($_GET['download_id']) ? $_GET['download_id'] : $dl_matches['1'])."'
                                     GROUP BY dl.download_id"));
-            if ($data['download_cat_language'] != LANGUAGE) {
+            if ($data['download_cat_language'] != $current_user_language) {
                 define_site_language($data['download_cat_language']);
             }
         }
 
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($dlc_matches) && $dlc_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT download_cat_language FROM ".DB_PREFIX."download_cats WHERE download_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $dlc_matches['1'])."'"));
-            if ($data['download_cat_language'] != LANGUAGE) {
+            if ($data['download_cat_language'] != $current_user_language) {
                 define_site_language($data['download_cat_language']);
             }
         }
@@ -111,14 +112,14 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
         if (isset($_GET['readmore']) && isnum($_GET['readmore']) || !empty($news_matches) && $news_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT news_language FROM ".DB_PREFIX."news WHERE news_id='".(isset($_GET['readmore']) ? $_GET['readmore'] : $news_matches['1'])."'"));
-            if ($data['news_language'] != LANGUAGE) {
+            if ($data['news_language'] != $current_user_language) {
                 define_site_language($data['news_language']);
             }
         }
 
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($nc_matches) && $nc_matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT news_cat_language FROM ".DB_PREFIX."news_cats WHERE news_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $nc_matches['1'])."'"));
-            if ($data['news_cat_language'] != LANGUAGE) {
+            if ($data['news_cat_language'] != $current_user_language) {
                 define_site_language($data['news_cat_language']);
             }
         }
@@ -132,7 +133,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                     FROM ".DB_PREFIX."faqs fq
                                     WHERE fq.faq_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'
                                     GROUP BY fq.faq_id"));
-            if ($data['faq_language'] != LANGUAGE) {
+            if ($data['faq_language'] != $current_user_language) {
                 define_site_language($data['faq_language']);
             }
         }
@@ -146,14 +147,14 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                     LEFT JOIN ".DB_PREFIX."forum_threads t ON f.forum_id = t.forum_id
                                     WHERE t.thread_id='".(isset($_GET['thread_id']) ? $_GET['thread_id'] : $matches['1'])."'
                                     GROUP BY t.thread_id"));
-            if ($data['forum_language'] != LANGUAGE) {
+            if ($data['forum_language'] != $current_user_language) {
                 define_site_language($data['forum_language']);
             }
         }
     } // Forum topics, still need to be Permalink fixed when we settled the Forum / Thread linking.
     else if (preg_match('/index.php/i', $_SERVER['PHP_SELF']) && (isset($_GET['viewforum']) && isnum($_GET['forum_id'])) && multilang_table("FO")) {
         $data = dbarray(dbquery("SELECT forum_cat, forum_branch, forum_language FROM ".DB_PREFIX."forums WHERE forum_id='".stripinput($_GET['forum_id'])."'"));
-        if ($data['forum_language'] != LANGUAGE) {
+        if ($data['forum_language'] != $current_user_language) {
             define_site_language($data['forum_language']);
         }
     } // Photo´s
@@ -166,7 +167,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
                                     LEFT JOIN ".DB_PREFIX."photos ph ON pha.album_id = ph.album_id
                                     WHERE ph.photo_id='".(isset($_GET['photo_id']) ? $_GET['photo_id'] : $matches['1'])."'
                                     GROUP BY ph.photo_id"));
-            if ($data['album_language'] != LANGUAGE) {
+            if ($data['album_language'] != $current_user_language) {
                 define_site_language($data['album_language']);
             }
         }
@@ -176,7 +177,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     ) {
         if (isset($_GET['album_id']) && isnum($_GET['album_id']) || !empty($matches) && $matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT album_language FROM ".DB_PREFIX."photo_albums WHERE album_id='".(isset($_GET['album_id']) ? $_GET['album_id'] : $matches['1'])."'"));
-            if ($data['album_language'] != LANGUAGE) {
+            if ($data['album_language'] != $current_user_language) {
                 define_site_language($data['album_language']);
             }
         }
@@ -186,7 +187,7 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     ) {
         if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) || !empty($matches) && $matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT weblink_cat_language FROM ".DB_PREFIX."weblink_cats WHERE weblink_cat_id='".(isset($_GET['cat_id']) ? $_GET['cat_id'] : $matches['1'])."'"));
-            if ($data['weblink_cat_language'] != LANGUAGE) {
+            if ($data['weblink_cat_language'] != $current_user_language) {
                 define_site_language($data['weblink_cat_language']);
             }
         }
