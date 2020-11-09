@@ -1866,11 +1866,6 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $htc .= "    order allow,deny".PHP_EOL;
             $htc .= "    deny from all".PHP_EOL;
             $htc .= "</Files>".PHP_EOL.PHP_EOL;
-            $htc .= "# Secure .inc files".PHP_EOL;
-            $htc .= "<Files *.inc>".PHP_EOL;
-            $htc .= "    Order allow,deny".PHP_EOL;
-            $htc .= "    deny from all".PHP_EOL;
-            $htc .= "</Files>".PHP_EOL.PHP_EOL;
             $htc .= "# Protect config.php".PHP_EOL;
             $htc .= "<Files config.php>".PHP_EOL;
             $htc .= "    order allow,deny".PHP_EOL;

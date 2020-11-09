@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
-| Filename: homepagw_rewrite_info.php
+| Filename: homepage_rewrite_info.php
 | Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
 | This program is released as free software under the

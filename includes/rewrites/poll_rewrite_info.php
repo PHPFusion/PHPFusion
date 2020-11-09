@@ -4,8 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
-| Filename: photogallery_rewrite_info.php
+| Filename: poll_rewrite_info.php
 | Author: Chan (Frederick MC Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the

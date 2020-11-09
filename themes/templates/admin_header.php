@@ -27,8 +27,8 @@ if ($settings['maintenance'] == "1" && ((iADMIN && $settings['maintenance_level'
     redirect(BASEDIR."maintenance.php");
 }
 
-require_once CLASSES."PHPFusion/Admins.inc";
-require_once CLASSES."PHPFusion/AdminSearch.inc";
+require_once CLASSES."PHPFusion/Admins.php";
+require_once CLASSES."PHPFusion/AdminSearch.php";
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."breadcrumbs.php";
 require_once THEMES."templates/render_functions.php";

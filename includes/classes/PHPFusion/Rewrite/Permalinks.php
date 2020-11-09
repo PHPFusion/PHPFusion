@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Permalinks.inc
+| Filename: Permalinks.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 | Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)

@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: BreaCrumbs.inc
+| Filename: BreaCrumbs.php
 | Author: Takács Ákos (Rimelek)
 | Co-Author: Dan C. (JoiNNN)
 +--------------------------------------------------------+

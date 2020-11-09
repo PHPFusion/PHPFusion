@@ -239,9 +239,9 @@ define("iUSER_RIGHTS", $userdata['user_rights']);
 define("iUSER_GROUPS", substr($userdata['user_groups'], 1));
 
 if ($settings['site_seo']) {
-    require_once CLASSES."PHPFusion/Rewrite/RewriteDriver.inc";
-    require_once CLASSES."PHPFusion/Rewrite/Router.inc";
-    require_once CLASSES."PHPFusion/Rewrite/Permalinks.inc";
+    require_once CLASSES."PHPFusion/Rewrite/RewriteDriver.php";
+    require_once CLASSES."PHPFusion/Rewrite/Router.php";
+    require_once CLASSES."PHPFusion/Rewrite/Permalinks.php";
 }
 
 // Language Engine
@@ -303,7 +303,7 @@ if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
 }
 $lastvisited = Authenticate::setLastVisitCookie();
 
-require_once CLASSES."PHPFusion/OutputHandler.inc";
+require_once CLASSES."PHPFusion/OutputHandler.php";
 $fusion_page_head_tags = &\PHPFusion\OutputHandler::$pageHeadTags;
 $fusion_page_footer_tags = &\PHPFusion\OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &\PHPFusion\OutputHandler::$jqueryTags;

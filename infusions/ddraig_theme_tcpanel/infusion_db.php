@@ -5,6 +5,7 @@
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion_db.php
+| Author: JoiNNN
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

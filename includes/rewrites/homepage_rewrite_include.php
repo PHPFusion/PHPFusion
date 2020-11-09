@@ -4,7 +4,6 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
 | Filename: homepage_rewrite_include.php
 | Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+

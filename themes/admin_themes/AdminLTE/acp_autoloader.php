@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: AdminLTE/acp_autoloader.php
+| Filename: acp_autoloader.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,7 +20,7 @@ if (!defined('IN_FUSION')) {
 }
 
 spl_autoload_register(function ($class_name) {
-    $path = ADMINLTE.'classes/'.str_replace(['\\', 'AdminLTE'], ['/', ''], $class_name).'.inc';
+    $path = ADMINLTE.'classes/'.str_replace(['\\', 'AdminLTE'], ['/', ''], $class_name).'.php';
 
     if (file_exists($path)) {
         require_once $path;

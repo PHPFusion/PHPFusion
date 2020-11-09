@@ -18,7 +18,7 @@
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
-require_once CLASSES."PHPFusion/BreadCrumbs.inc";
+require_once CLASSES."PHPFusion/BreadCrumbs.php";
 
 use PHPFusion\BreadCrumbs;
 

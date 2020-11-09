@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: errors.php
+| Filename: error.php
 | Author: Joakim Falk (Falk)
 | Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+

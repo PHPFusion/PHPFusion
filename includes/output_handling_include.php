@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once CLASSES."PHPFusion/OutputHandler.inc";
+require_once CLASSES."PHPFusion/OutputHandler.php";
 
 use PHPFusion\OutputHandler;
 

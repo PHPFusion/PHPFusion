@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Admins.inc
+| Filename: Admins.php
 | Author: Frederick MC Chan
 +--------------------------------------------------------+
 | This program is released as free software under the

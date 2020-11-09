@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-require_once CLASSES.'PHPFusion/Admins.inc';
-require_once CLASSES."PHPFusion/AdminSearch.inc";
+require_once CLASSES.'PHPFusion/Admins.php';
+require_once CLASSES."PHPFusion/AdminSearch.php";
 
 header('Content-Type: application/json');
 $search = new PHPFusion\AdminSearch();
