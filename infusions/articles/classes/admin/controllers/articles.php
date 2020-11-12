@@ -163,7 +163,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             $articleSnippetSettings = [
                 'required'    => TRUE,
                 'preview'     => TRUE,
-                'type'        => 'bbcode',
+                'html'        => TRUE,
                 'placeholder' => $this->locale['article_0254'],
                 'error_text'  => $this->locale['article_0271'],
                 'form_name'   => 'articleform',
@@ -187,7 +187,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         } else {
             $articleSnippetSettings = [
                 'required'   => TRUE,
-                'type'       => 'bbcode',
+                'html'       => TRUE,
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0271'],
                 'path'       => IMAGES_A,
