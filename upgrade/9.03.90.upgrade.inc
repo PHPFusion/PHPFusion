@@ -26,3 +26,12 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
+
+// PM fix
+if (db_exists(DB_PREFIX.'messages')) {
+    if (!column_exists(DB_MESSAGES, 'message_user')) {
+        $inf_altertable[] = DB_MESSAGES." ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from";
+    }
+
+    $inf_updatedbrow[] = DB_MESSAGES." SET message_user=message_to";
+}

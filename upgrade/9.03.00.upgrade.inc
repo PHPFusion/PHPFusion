@@ -82,7 +82,7 @@ if (db_exists(DB_PREFIX.'sessions')) {
 dbquery("ALTER TABLE ".DB_USERS." ADD FULLTEXT(`user_name`)");
 
 if (db_exists(DB_PREFIX.'messages_options')) {
-    $inf_droptable[] = DB_PREFIX.'messages_options';
+    dbquery("DROP TABLE ".DB_PREFIX.'messages_options');
 }
 
 $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");

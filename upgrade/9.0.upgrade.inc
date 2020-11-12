@@ -46,13 +46,14 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
             $inf_insertdbrow[] = $value;
         }
     }
+}
 
-    if (db_exists(DB_MESSAGES)) {
-        $table = fieldgenerator(DB_MESSAGES);
-        if (!in_array('message_to', $table)) {
-            $inf_updatedbrow[] = DB_MESSAGES." SET message_user=message_to";
-        }
+if (db_exists(DB_PREFIX.'messages')) {
+    if (!column_exists(DB_MESSAGES, 'message_user')) {
+        $inf_altertable[] = DB_MESSAGES." ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from";
     }
+
+    $inf_updatedbrow[] = DB_MESSAGES." SET message_user=message_to";
 }
 
 // Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
@@ -80,8 +81,7 @@ while ($data = dbarray($result)) {
 
 if (db_exists(DB_SETTINGS)) {
     $update_settings_tbl = [
-        'theme'              => 'FusionTheme',
-        'admin_theme'        => 'Artemis',
+        'theme'              => 'Magazine',
         'rendertime_enabled' => '0',
         'timeoffset'         => 'Europe/London',
         'serveroffset'       => 'Europe/London',
