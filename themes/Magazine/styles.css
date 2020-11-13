@@ -5774,3 +5774,7 @@ a.list-group-item-danger.active:focus {
 .popover {
     color: #555555;
 }
+
+.select2-container {
+    width: 100% !important;
+}
