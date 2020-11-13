@@ -180,10 +180,10 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
                 exit;
             }
         }
-    } else {
+    }/* else {
         debug_print_backtrace();
         echo "redirected to ".$location;
-    }
+    }*/
 }
 
 /**
