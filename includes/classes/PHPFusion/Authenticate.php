@@ -411,7 +411,8 @@ class Authenticate {
                 if (!empty($session_token)) {
                     $session_token = explode(".", $session_token);
                     if (count($session_token) === 2) {
-                        $sql = "UPDATE ".DB_USERS." SET user_salt='".$session_token[0]."', user_password='".$session_token[1]."', user_session='' WHERE user_id=$userID";
+                        //$sql = "UPDATE ".DB_USERS." SET user_salt='".$session_token[0]."', user_password='".$session_token[1]."', user_session='' WHERE user_id=$userID";
+                        $sql = "UPDATE ".DB_USERS." SET user_session='' WHERE user_id=$userID";
                         dbquery($sql);
                     }
                 }
