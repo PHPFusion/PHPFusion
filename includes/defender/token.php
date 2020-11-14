@@ -184,10 +184,7 @@ class Token extends \defender {
                     $algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt
                 )) {
                 $error = $locale['token_error_7'];
-            } else if ((TIME - $token_time) < fusion_get_settings('flood_interval') && !iADMIN) {
-                // check if a post wasn't made too fast. Set $post_time to 0 for instant. Go for System Settings later.
-                $error = $locale['token_error_6'];
-            }
+            } 
         } else {
             // token format is incorrect
             $error = $locale['token_error_8'];
