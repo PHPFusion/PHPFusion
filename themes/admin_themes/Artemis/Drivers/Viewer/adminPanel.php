@@ -310,14 +310,15 @@ class adminPanel extends resource {
         $msg_count_sql = "message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'";
 
         $msg_search_sql = "
-                        SELECT message_id, message_subject,
-                        message_from 'sender_id', u.user_name 'sender_name', u.user_avatar 'sender_avatar', u.user_status 'sender_status',
-                        message_datestamp
-                        FROM ".DB_MESSAGES."
-                        INNER JOIN ".DB_USERS." u ON u.user_id=message_from
-                        WHERE message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'
-                        GROUP BY message_id
-                        ";
+            SELECT message_id, message_subject,
+            message_from 'sender_id', u.user_name 'sender_name', u.user_avatar 'sender_avatar', u.user_status 'sender_status',
+            message_datestamp
+            FROM ".DB_MESSAGES."
+            INNER JOIN ".DB_USERS." u ON u.user_id=message_from
+            WHERE message_to = '".$userdata['user_id']."' AND message_user='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'
+            GROUP BY message_id
+            ORDER BY message_datestamp DESC
+        ";
 
         if (dbcount("(message_id)", DB_MESSAGES, $msg_count_sql)) {
 
