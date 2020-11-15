@@ -69,8 +69,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
         $this->link_id = (int)get("id", FILTER_VALIDATE_INT);
         $this->link_cat = (int)get("cat", FILTER_VALIDATE_INT);
-
-        $this->title = $this->locale['SL_0001'];
+        $this->title = $this->locale['SL_0012'];
         $this->refs = get("refs");
         $this->section = get("section");
         $this->action = get("action");
@@ -104,19 +103,17 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             "title" => $this->locale['SL_0001'],
             "link"  => FUSION_SELF.$this->aidlink,
         ]);
-
         if ($this->section == "settings") {
             add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&section=settings", 'title' => $this->locale["SL_0041"]]);
         } else {
-
             if ($this->refs == "form") {
                 if ($this->action == "edit") {
                     add_breadcrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
                 } else {
-                    add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&refs=form", 'title' => "Add Site Links"]);
+                    $this->title = $this->locale["SL_0010"];
+                    add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&refs=form", 'title' => $this->locale["SL_0010"]]);
                 }
             }
-
         }
 
         switch ($this->action) {
@@ -140,17 +137,20 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 break;
             default:
                 $this->form_uri = FUSION_SELF.$this->aidlink."&refs=form";
-
         }
 
-        $links = "<a href='".FUSION_SELF.$this->aidlink."&refs=form&nrefs=$this->refs&cat=".$this->link_cat."' class='btn btn-primary'><i class='fas fa-plus m-r-5'></i>Add Site Links</a>";
+        // buttons
+        $links = "<a href='".FUSION_SELF.$this->aidlink."&refs=form&nrefs=$this->refs&cat=".$this->link_cat."' class='btn btn-primary'><i class='fas fa-plus m-r-5'></i>".$this->locale["SL_0010"]."</a>";
         if ($this->refs == "form") {
-            $links .= "<a href='".FUSION_SELF.$this->aidlink."&refs=".(int)get("nrefs", FILTER_VALIDATE_INT)."&nrefs=$this->refs&cat=".$this->link_cat."' class='btn btn-default m-l-10'>Cancel</a>";
+            $links .= "<a href='".FUSION_SELF.$this->aidlink."&refs=".(int)get("nrefs", FILTER_VALIDATE_INT)."&nrefs=$this->refs&cat=".$this->link_cat."' class='btn btn-default m-l-10'>".$this->locale["cancel"]."</a>";
+        } else {
+            $links .= form_button("link_del", $this->locale["delete"], "link_del", ["class" => "m-l-5 btn-danger"]);
+            $links .= form_button("link_move", $this->locale["move"], "link_move", ["class" => "m-l-5"]);
+            $links .= form_button("publish", $this->locale["publish"], "publish", ["class" => "m-l-5"]);
+            $links .= form_button("unpublish", $this->locale["unpublish"], "unpublish", ["class" => "m-l-5"]);
         }
-        $links .= form_button("link_move", "Move Link", "link_move", ["class" => "m-l-5"]);
-        $links .= form_button("link_del", "Delete Link", "link_del", ["class" => "m-l-5"]);
 
-        $master_title['title'][] = "Site Links Listing";
+        $master_title['title'][] = $this->locale["SL_0012"];
         $master_title['id'][] = "links";
         $master_title['icon'][] = '';
 
@@ -162,10 +162,13 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         $link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "cat");
 
-        opentable("Site Links Management");
+        opentable($this->locale["SL_0001"]);
+        echo "<div class='clearfix'>";
         echo "<div class='pull-right'>".$links."</div>";
         echo "<h4>$this->title</h4>";
         echo "<hr/>";
+        echo "</div>";
+
         switch ($this->section) {
             case "settings":
                 echo opentab($master_title, $this->section, 'link', TRUE, "", "section", ['refs', 'action', 'id', 'cat']);
@@ -465,6 +468,9 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         return $list;
     }
 
+    /**
+     * Perform site links modifications
+     */
     private function doMenuAction() {
 
         if ($action = post("table_action")) {
@@ -474,10 +480,10 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $link_id = sanitizer(["link_id"], "", "link_id");
                 $link_array = explode(",", $link_id);
                 // Link position
-                $link_position = get("refs", FILTER_VALIDATE_INT);
-                if (!$link_position) {
-                    $link_position = 1;
-                }
+                //$link_position = get("refs", FILTER_VALIDATE_INT);
+                //if (!$link_position) {
+                //    $link_position = 1;
+                //}
 
                 if (!empty($link_id)) {
 
@@ -530,14 +536,14 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                             if (self::verify_sitelinks($link_id) && fusion_safe()) {
                                 switch ($action) {
                                     case "publish":
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id='".intval($link_id)."'");
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id=:id", [":id"=> (int)$link_id]);
                                         break;
                                     case "unpublish":
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='0' WHERE link_id='".intval($link_id)."'");
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='0' WHERE link_id=:id", [":id"=> (int)$link_id]);
                                         break;
                                     case "move_confirm":
-                                        $link_move_to = (isset($_POST['move_to_id']) ? form_sanitizer($_POST['move_to_id'], 0, 'move_to_id') : 0);
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat='$link_move_to' WHERE link_id='".intval($link_id)."'");
+                                        $link_move_to = (check_post("move_to_id") ? sanitizer('move_to_id', 0, 'move_to_id') : 0);
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat=:mid WHERE link_id=:id", [":mid"=>(int)$link_move_to, "id"=> (int)$link_id]);
                                         break;
                                     case "link_del":
                                         $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id"=>(int)$link_id]),0);
@@ -550,7 +556,6 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                             }
                         }
                         addNotice("success", $this->locale['SL_0016']);
-
                     }
                 } else {
                     addNotice("warning", $this->locale['SL_0087']);
@@ -567,11 +572,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      */
     private function listing() {
         add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
-        //add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery.mjs.nestedSortable.js'></script>");
-        //add_to_footer("<script src='".CONTENTS."js/sitelinks-sortable.js'></script>");
 
         $this->doMenuAction();
-
         $menus = $this->menuList();
 
         $tab = [];
