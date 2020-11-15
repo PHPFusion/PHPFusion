@@ -1,0 +1,39 @@
+/*
+ * -------------------------------------------------------+
+ * | PHP-Fusion Content Management System
+ * | Copyright (C) PHP-Fusion Inc
+ * | https://www.php-fusion.co.uk/
+ * +--------------------------------------------------------+
+ * | Filename:
+ * | Author:
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ */
+
+table.dataTable tr.dtrg-group td {
+    background-color: #e0e0e0;
+}
+
+table.dataTable tr.dtrg-group.dtrg-level-0 td {
+    font-weight: bold;
+}
+
+table.dataTable tr.dtrg-group.dtrg-level-1 td,
+table.dataTable tr.dtrg-group.dtrg-level-2 td {
+    background-color: #f0f0f0;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    padding-left: 2em;
+    font-size: 0.9em;
+}
+
+table.dataTable tr.dtrg-group.dtrg-level-2 td {
+    background-color: #f3f3f3;
+}

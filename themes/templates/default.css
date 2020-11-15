@@ -1464,3 +1464,16 @@ html[dir="rtl"] .center-xy {
     -o-transform: translate(50%, -50%);
     transform: translate(50%, -50%);
 }
+
+/**
+Responsive Admin for all Admin Themes.
+ */
+.admin-form-type-1 {
+    display: grid;
+    grid-template-columns: 70% 30%;
+}
+@media (max-width: 991px) {
+    .admin-form-type-1 {
+        grid-template-columns: 1fr;
+    }
+}

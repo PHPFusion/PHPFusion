@@ -604,8 +604,6 @@ class SiteLinks {
                 $li_class = [];
                 $link_data += $default_link_data;
 
-                $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
-
                 if (!empty(self::getMenuParam('item_class'))) {
                     $li_class[] = self::getMenuParam('item_class');
                 }
@@ -719,6 +717,9 @@ class SiteLinks {
                 }
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+
+                    $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
+
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                     if ($i == 0 && $id > 0) {
                         $li_class[] = "first-link";

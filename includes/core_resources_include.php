@@ -54,3 +54,4 @@ require_once __DIR__."/translate_include.php";
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/defender.php";
 require_once __DIR__."/dynamics.php";
+require_once __DIR__."/hooks_include.php";

@@ -440,3 +440,166 @@ if (!function_exists('download_file')) {
         exit;
     }
 }
+
+/**
+ * Initiliazes Datatables
+ *
+ * @param       $table_id
+ * @param array $options    - Example $options usage:
+ *                          $options = array(
+ *                          "remote_file" => INFUSIONS."file-path.php", // iMEMBER will work with these, but https:// those will have no maincore parsing and no access to globals.
+ *                          );
+ *
+ * Options for columns parameters (Example)
+ *                          $options["columns"] = array(
+ *                          array("data" => "column_1_name", "orderable"=>FALSE, "width"=>200, "class"=>"min"),
+ *                          array("data" => "column_1_name")
+ *                          )
+ *
+ *                          'orderable' - boolean (true/false)
+ *                          'width' - width of column
+ *                          'class' - class name,
+ *                          'responsive' - boolean (true/false)
+ *                          'className' -   'never' // hide on all devices
+ *                                      -   'all' //show on all devices
+ *                                      -   'not-mobile' // hide on mobile
+ *
+ * @return mixed
+ */
+function fusion_table($table_id, array $options = []) {
+    $table_id = str_replace(["-", " "], "_", $table_id);
+
+    $js_event_function = "";
+    $js_config_script = "";
+    $filters = "";
+    $js_filter_function = "";
+
+    $default_options = [
+        'remote_file'       => '',
+        'boilerplate'       => "bootstrap3", // @todo: implement boilerplate switch functions
+        'cdnurl'            => fusion_get_settings("siteurl"),
+        'page_length'       => 0,
+        'debug'             => FALSE,
+        'reponse_debug'     => FALSE,
+        // Documentation required for these.
+        'server_side'       => "false",
+        'processing'        => "false",
+        'ajax'              => FALSE,
+        'ajax_debug'        => FALSE,
+        'responsive'        => TRUE,
+        // filter input name on the page if extra filters are used
+        'ajax_filters'      => [],
+        // not functional yet
+        'ajax_data'         => [],
+        'state_save'        => "true", // utilizes localStorage to store latest state
+        // documentation needed for columns
+        "columns"           => NULL,
+        "ordering"          => TRUE,
+        "processing_locale" => "Please wait patiently while processing...",
+        "menu_locale"       => "Display _MENU_ records per page",
+        "zero_locale"       => "Nothing found - sorry",
+        "result_locale"     => "Showing page _PAGE_ of _PAGES_",
+        "empty_locale"      => "No records available",
+        "filter_locale"     => "(Filtered from _MAX_ total records)"
+    ];
+
+    $options += $default_options;
+
+    // Strings
+    $options["ordering"] = ($options["ordering"] ? "true" : "false");
+    $options["responsive"] = ($options["responsive"] ? "true" : "false");
+    $options["state_save"] = ($options["state_save"] ? "true" : "false");
+    $options["server_side"] = ($options["server_side"] ? "true" : "false");
+    $options["processing"] = ($options["processing"] ? "true" : "false");
+
+    if ($options['page_length'] && isnum($options['page_length'])) {
+        $options['datatable_config']['pageLength'] = (int)$options['page_length'];
+    }
+
+    // Ajax handling script
+    if ($options['remote_file']) {
+
+        if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
+            $file_output = fusion_get_contents($options['remote_file']);
+            if (!empty($file_output)) {
+                if (isJson($file_output)) {
+                    $output_array = json_decode($file_output, TRUE);
+                    print_P($output_array);
+                    if ($options['reponse_debug']) {
+                        print_p($output_array);
+                    }
+                    // Column
+                    if (!empty($output_array['data'])) {
+                        $output_data = $output_array["data"];
+                        $output_reset = reset($output_data);
+                        if (is_array($output_reset)) {
+                            $column_key = array_keys($output_reset);
+                        }
+                        if (!empty($column_key)) {
+                            foreach ($column_key as $column) {
+                                $options["columns"][] = ['data' => $column];
+                            }
+                        }
+                    }
+                }
+            } else {
+                add_notice("danger", "Table columns could not be loaded automatically.");
+            }
+        }
+
+        $js_config_script = "
+        {
+            'responsive' :".$options["responsive"].",
+            'processing' : ".$options["processing"].",
+            'serverSide' : ".$options["server_side"].",
+            'serverMethod' : 'POST',
+            'searching' : true,
+            'ordering' : ".$options["ordering"].",
+            'stateSave' : ".$options["state_save"].",
+            'ajax' : {
+                url : '".$options['remote_file']."',
+                <data_filters>               
+            },
+            'language': {
+                'processing': '".$options["processing_locale"]."',
+                'lengthMenu': '".$options["menu_locale"]."',
+                'zeroRecords': '".$options["zero_locale"]."',
+                'info': '".$options["result_locale"]."',
+                'infoEmpty': '".$options["empty_locale"]."',
+                'infoFiltered': '".$options["filter_locale"]."',
+            },
+            'columns' : ".json_encode($options['columns'])."
+        }";
+
+        $fields_doms = [];
+        if ($options['ajax'] && !empty($options['ajax_filters'])) {
+            foreach ($options['ajax_filters'] as $field_id) {
+                $field_doms[] = "#".$field_id;
+                $filters .= "data.".$field_id."= $('#".$field_id."').val();";
+            }
+            $js_filter_function = "data: function(data) { $filters }";
+            $js_event_function = "$('body').on('keyup change', '".implode(', ', $fields_doms)."', function(e) {
+            ".$table_id."Table.draw();
+            });";
+        }
+
+        $js_config_script = str_replace("<data_filters>", $js_filter_function, $js_config_script);
+    }
+
+    if (!defined('FUSION_DATATABLES')) {
+        define('FUSION_DATATABLES', TRUE);
+        $css_url = rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css";
+        add_to_head("<link rel='stylesheet' href='$css_url'>");
+        add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
+    }
+
+    $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function";
+
+    if ($options['debug']) {
+        print_p($javascript);
+    }
+
+    add_to_jquery(/** @lang JavaScript */ $javascript);
+
+    return $table_id;
+}

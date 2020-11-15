@@ -843,7 +843,7 @@ function encode_code($text) {
  *
  * @return string
  */
-function formatcode($text) {
+function format_code($text) {
     $text = str_replace(
         ["  ", "  ", "\t"],
         ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;"],
@@ -853,6 +853,65 @@ function formatcode($text) {
 
     return $text;
 }
+
+/**
+ * @param $value
+ *
+ * @return string
+ */
+function formatcode($value) {
+    return format_code($value);
+}
+
+/**
+ * Formats a number in a numeric acronym, and rounding
+ *
+ * @param int    $value
+ * @param int    $decimals
+ * @param string $dec_point
+ * @param string $thousand_sep
+ * @param bool   $round
+ * @param bool   $acryonym
+ *
+ * @return string
+ */
+function format_num($value = 0, $decimals = NULL, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+    $array = [
+        13 => $acryonym ? "t" : "trillion",
+        10 => $acryonym ? "b" : "billion",
+        7  => $acryonym ? "m" : "million",
+        4  => $acryonym ? "k" : "thousand" //2
+    ];
+
+    if (is_numeric($value)) {
+        if ($round === TRUE) {
+            foreach ($array as $length => $rounding) {
+                if (strlen($value) >= $length) {
+                    $power = pow(10, $length - 1);
+                    if ($value > $power && $length > 4 && $decimals === NULL) {
+                        $decimals = 2;
+                    }
+                    return number_format(($value / $power), $decimals, $dec_point, $thousand_sep).$rounding;
+                }
+            }
+        }
+
+        return number_format($value, $decimals, $dec_point, $thousand_sep);
+    }
+    return $value;
+}
+
+/**
+ * Converts any formatted number back to float numbers in PHP
+ *
+ * @param $value
+ *
+ * @return float
+ */
+function format_float($value) {
+    return floatval(preg_replace('/[^\d.]/', '', $value));
+}
+
 
 /**
  * Highlights given words in subject
@@ -1590,8 +1649,8 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
         }
     } else if (isset($crumb['title'])) {
         add_to_title($crumb['title']);
-        OutputHandler::addToMeta($crumb['title']);
-        \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+        add_to_meta($crumb['title']);
+        add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }
 

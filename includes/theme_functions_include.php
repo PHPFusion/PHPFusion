@@ -1040,24 +1040,47 @@ if (!function_exists("tab_active")
 
         public static function tab_active($array, $default_active, $getname = NULL) {
             if (!empty($getname)) {
-                $section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
+                $section = get($getname) ?: $default_active;
+                //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
                 $count = count($array['title']);
+
                 if ($count > 0) {
-                    for ($i = 0; $i < $count; $i++) {
-                        $id = $array['id'][$i];
-                        if ($section == $id) {
-                            return $id;
+                    foreach($array["id"] as $tab_id) {
+                        if ($section == $tab_id) {
+                            return $tab_id;
                         }
+
                     }
-                } else {
-                    return $default_active;
                 }
-            } else {
-                $id = $array['id'][$default_active];
-                return $id;
+
+                return $default_active;
             }
 
-            return NULL;
+            return $array['id'][$default_active];
+        }
+
+        /**
+         * @param      $array
+         * @param      $default_active
+         * @param bool $getname
+         *
+         * @return int
+         */
+        public static function tabIndex($array, $default_active, $getname = FALSE) {
+            if (!empty($getname)) {
+                $section = get($getname) ?: $default_active;
+                //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
+                $count = count($array['title']);
+                if ($count > 0) {
+                    for ($tabCount = 0; $tabCount < $count; $tabCount++) {
+                        $tab_id = $array['id'][$tabCount];
+                        if ($section == $tab_id) {
+                            return $tabCount;
+                        }
+                    }
+                }
+            }
+            return $default_active;
         }
 
         public function set_remember($value) {
@@ -1195,6 +1218,19 @@ if (!function_exists("tab_active")
     function tab_active($array, $default_active, $getname = NULL) {
         return \FusionTabs::tab_active($array, $default_active, $getname);
     }
+
+    /**
+     * Get current active tab index
+     * @param      $array
+     * @param      $default_active
+     * @param bool $getname
+     *
+     * @return int
+     */
+    function tab_index($array, $default_active, $getname = FALSE) {
+        return FusionTabs::tabIndex($array, $default_active, $getname);
+    }
+
 
     /**
      * Render Tab Links
@@ -1358,16 +1394,18 @@ if (!function_exists('social_media_links')) {
      * @return string
      */
     function social_media_links($url, $options = []) {
-        $default = [
-            'facebook' => TRUE,
-            'twitter'  => TRUE,
-            'reddit'   => TRUE,
-            'vk'       => TRUE,
-            'whatsapp' => TRUE,
-            'telegram' => TRUE,
-            'linkedin' => TRUE,
-            'class'    => ''
-        ];
+
+        $default = array(
+            "facebook" => TRUE,
+            "twitter"  => TRUE,
+            "reddit"   => TRUE,
+            "vk"       => TRUE,
+            "whatsapp" => TRUE,
+            "telegram" => TRUE,
+            "linkedin" => TRUE,
+            "class"    => "",
+            "template" => '<a class="m-5 {%class%}" href="{%url%}" title="{%name%}" target="_blank" rel="nofollow noopener"><i class="{%icon%} fa-2x"></i></a>'
+        );
 
         $options += $default;
 
@@ -1376,7 +1414,7 @@ if (!function_exists('social_media_links')) {
         if ($options['facebook'] == 1) {
             $services['facebook'] = [
                 'name' => 'Facebook',
-                'icon' => 'fa fa-2x fa-facebook-square',
+                'icon' => 'fab fa-facebook-square',
                 'url'  => 'https://www.facebook.com/sharer.php?u='
             ];
         }
@@ -1384,7 +1422,7 @@ if (!function_exists('social_media_links')) {
         if ($options['twitter'] == 1) {
             $services['twitter'] = [
                 'name' => 'Twitter',
-                'icon' => 'fa fa-2x fa-twitter-square',
+                'icon' => 'fab fa-twitter-square',
                 'url'  => 'https://twitter.com/intent/tweet?url='
             ];
         }
@@ -1392,7 +1430,7 @@ if (!function_exists('social_media_links')) {
         if ($options['reddit'] == 1) {
             $services['reddit'] = [
                 'name' => 'Reddit',
-                'icon' => 'fa fa-2x fa-reddit-square',
+                'icon' => 'fab fa-reddit-square',
                 'url'  => 'https://www.reddit.com/submit?url='
             ];
         }
@@ -1400,7 +1438,7 @@ if (!function_exists('social_media_links')) {
         if ($options['vk'] == 1) {
             $services['vk'] = [
                 'name' => 'VK',
-                'icon' => 'fa fa-2x fa-vk',
+                'icon' => 'fab fa-vk',
                 'url'  => 'https://vk.com/share.php?url='
             ];
         }
@@ -1408,7 +1446,7 @@ if (!function_exists('social_media_links')) {
         if ($options['whatsapp'] == 1) {
             $services['whatsapp'] = [
                 'name' => 'WhatsApp',
-                'icon' => 'fa fa-2x fa-whatsapp',
+                'icon' => 'fab fa-whatsapp',
                 'url'  => 'https://api.whatsapp.com/send?text='
             ];
         }
@@ -1416,7 +1454,7 @@ if (!function_exists('social_media_links')) {
         if ($options['telegram'] == 1) {
             $services['telegram'] = [
                 'name' => 'Telegram',
-                'icon' => 'fa fa-2x fa-telegram',
+                'icon' => 'fab fa-telegram',
                 'url'  => 'https://telegram.me/share/url?url='
             ];
         }
@@ -1424,19 +1462,37 @@ if (!function_exists('social_media_links')) {
         if ($options['linkedin'] == 1) {
             $services['linkedin'] = [
                 'name' => 'LinkedIn',
-                'icon' => 'fa fa-2x fa-linkedin',
+                'icon' => 'fab fa-linkedin',
                 'url'  => 'https://www.linkedin.com/shareArticle?mini=true&url=',
             ];
         }
 
         $html = '';
-
         if (!empty($services) && is_array($services)) {
             foreach ($services as $service) {
-                $html .= '<a class="m-5 '.$options['class'].'" href="'.$service['url'].$url.'" title="'.$service['name'].'" target="_blank" rel="nofollow noopener noreferrer"><i class="'.$service['icon'].'"></i></a>';
+                $html .= strtr($options["template"], array(
+                    "{%class%}" => $options["class"],
+                    "{%url%}"   => $service["url"].$url,
+                    "{%name%}"  => $service["name"],
+                    "{%icon%}"  => $service["icon"]
+                ));
             }
         }
 
         return $html;
     }
+}
+
+/**
+ * Adds a whitespace if value is present
+ *
+ * @param $value
+ *
+ * @return string
+ */
+function whitespace($value) {
+    if ($value) {
+        return " ".$value;
+    }
+    return "";
 }
