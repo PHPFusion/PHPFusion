@@ -454,9 +454,9 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      */
     private function menuList() {
         $list = [
-            '1' => "Navigation Panel",
-            '2' => "Navigation and Header",
-            '3' => "Header"
+            '1' => $this->locale['SL_0025'],
+            '2' => $this->locale['SL_0026'],
+            '3' => $this->locale['SL_0027']
         ];
         $result = dbquery("SELECT link_position FROM ".DB_SITE_LINKS." WHERE link_position > 3 ORDER BY link_name");
         if (dbrows($result)) {
