@@ -126,10 +126,8 @@ Grids
  */
 /** adding .flexbox class to .row will equalize all child column height */
 .row.flexbox {
-    display: -ms-flexbox;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -moz-box;
     display: flex;
     overflow: hidden;
 }
@@ -137,20 +135,15 @@ Grids
 /** adding .flexbox and .auto_width to .row will euqalize all child column height AND clumn width **/
 .row.flexbox.auto_width > div {
     -webkit-box-flex: 1;
-    -ms-flex: 1;
     -webkit-flex: 1;
-    -moz-box-flex: 1;
     flex: 1;
 }
 
 .row.equal-height {
     display: -webkit-box;
     display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
     display: flex;
     -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 
@@ -160,19 +153,13 @@ Grids
     background-clip: content-box;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
     display: flex;
     -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -moz-box-orient: vertical;
-    -moz-box-direction: normal;
     flex-direction: column;
     -webkit-flex-direction: row;
-    -ms-flex-direction: column;
 }
 
 .row.equal-height:before,
@@ -189,9 +176,7 @@ Grids
     position: relative;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
     transform: translateY(-50%);
 }
 
@@ -199,9 +184,7 @@ Grids
     position: relative;
     left: 50%;
     -webkit-transform: translateX(-50%);
-    -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
-    -o-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
@@ -210,9 +193,7 @@ Grids
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
 
@@ -554,21 +535,15 @@ Grids
 
 .transition {
     -webkit-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    -moz-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
 }
 
 .no-shadow {
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
     box-shadow: none !important;
 }
 
 /* borders */
 .bbr-0 {
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
     border-radius: 0 !important;
 }
 
@@ -726,8 +701,6 @@ ul {
 
 /* resets panelfor accordion */
 li.panel {
-    -webkit-box-shadow: none !important;
-    -moz-box-shadow: none !important;
     box-shadow: none !important;
     margin-bottom: 0 !important;
     background: none;
@@ -889,8 +862,6 @@ dl, dt, dd {
 
 .animated-height {
     -webkit-transition: height 0.2s;
-    -o-transition: height 0.2s;
-    -moz-transition: height 0.2s;
     transition: height 0.2s;
 }
 
@@ -1005,9 +976,7 @@ th.min, td.min {
     position: absolute;
     top: 50%;
     -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 100%;
     text-align: center;
@@ -1062,8 +1031,6 @@ th.min, td.min {
     display: block;
     margin: 0;
     border: 0;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
     padding: 0;
     float: none;
@@ -1133,9 +1100,7 @@ th.min, td.min {
 }
 
 .comment-actions > .btn-group {
-    display: -ms-inline-flexbox;
     display: -webkit-inline-flex;
-    display: -moz-inline-box;
     display: -webkit-inline-box;
     display: inline-flex;
 }
@@ -1153,8 +1118,6 @@ th.min, td.min {
     background: rgba(0, 0, 0, .1);
     margin: 0 -10px 0 10px;
     padding: 7px 12px;
-    -webkit-border-radius: 0 .28571429rem .28571429rem 0;
-    -moz-border-radius: 0 .28571429rem .28571429rem 0;
     border-radius: 0 .28571429rem .28571429rem 0;
     display: inline-block;
     font-weight: 700;
@@ -1318,7 +1281,6 @@ label img, .control-label > img {
 
 .text-overflow-hide {
     overflow: hidden;
-    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
 }
 
@@ -1371,12 +1333,10 @@ tr:hover > td .tbl_actions {
 }
 
 .avatar.img-rounded > svg {
-    -webkit-border-radius: 6px;
     border-radius: 6px;
 }
 
 .avatar.img-circle > svg {
-    -webkit-border-radius: 50%;
     border-radius: 50%;
 }
 
@@ -1449,9 +1409,7 @@ html[dir="rtl"] .center-x {
     left: inherit;
     right: 50%;
     -webkit-transform: translateX(50%);
-    -moz-transform: translateX(50%);
     -ms-transform: translateX(50%);
-    -o-transform: translateX(50%);
     transform: translateX(50%);
 }
 
@@ -1459,9 +1417,7 @@ html[dir="rtl"] .center-xy {
     left: inherit;
     right: 50%;
     -webkit-transform: translate(50%, -50%);
-    -moz-transform: translate(50%, -50%);
     -ms-transform: translate(50%, -50%);
-    -o-transform: translate(50%, -50%);
     transform: translate(50%, -50%);
 }
 
@@ -1469,11 +1425,15 @@ html[dir="rtl"] .center-xy {
 Responsive Admin for all Admin Themes.
  */
 .admin-form-type-1 {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 70% 30%;
     grid-template-columns: 70% 30%;
 }
+
 @media (max-width: 991px) {
     .admin-form-type-1 {
+        -ms-grid-columns: 1fr;
         grid-template-columns: 1fr;
     }
 }
