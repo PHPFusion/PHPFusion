@@ -18,7 +18,6 @@
 namespace PHPFusion\Administration;
 
 use Exception;
-use ReflectionException;
 
 require_once __DIR__.'/../maincore.php';
 
@@ -45,14 +44,14 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         'link_position_id' => 0,
         'link_window'      => 0,
     ];
-    private $language_opts = [];
-    private $link_index = [];
+    private $language_opts;
+    private $link_index;
 
-    private $form_action = '';
-    private $aidlink = '';
-    private $locale = [];
-    private $link_id = 0;
-    private $link_cat = 0;
+    private $form_action;
+    private $aidlink;
+    private $locale;
+    private $link_id;
+    private $link_cat;
     private $title;
     private $refs;
     private $section;
@@ -129,8 +128,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $this->data['link_position_id'] = 0;
                 break;
             case 'del':
-                $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id"=>(int)$this->link_id]),0);
-                dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order"=>(int)$link_order]);
+                $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => (int)$this->link_id]), 0);
+                dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order" => (int)$link_order]);
                 dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => (int)$this->link_id]);
                 addNotice("success", $this->locale['SL_0017']);
                 redirect(FUSION_SELF.$this->aidlink."&section=links&refs=".get("refs", FILTER_VALIDATE_INT)."&cat=".get("cat", FILTER_VALIDATE_INT));
@@ -145,9 +144,9 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             $links .= "<a href='".FUSION_SELF.$this->aidlink."&refs=".(int)get("nrefs", FILTER_VALIDATE_INT)."&nrefs=$this->refs&cat=".$this->link_cat."' class='btn btn-default m-l-10'>".$this->locale["cancel"]."</a>";
         } else {
             $links .= form_button("link_del", $this->locale["delete"], "link_del", ["class" => "m-l-5 btn-danger"]);
-            $links .= form_button("link_move", $this->locale["move"], "link_move", ["class" => "m-l-5"]);
-            $links .= form_button("publish", $this->locale["publish"], "publish", ["class" => "m-l-5"]);
-            $links .= form_button("unpublish", $this->locale["unpublish"], "unpublish", ["class" => "m-l-5"]);
+            $links .= form_button("link_move", $this->locale["move"], "link_move", ["class" => "btn-default m-l-5"]);
+            $links .= form_button("publish", $this->locale["publish"], "publish", ["class" => "btn-default m-l-5"]);
+            $links .= form_button("unpublish", $this->locale["unpublish"], "unpublish", ["class" => "btn-default m-l-5"]);
         }
 
         $master_title['title'][] = $this->locale["SL_0012"];
@@ -536,18 +535,18 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                             if (self::verify_sitelinks($link_id) && fusion_safe()) {
                                 switch ($action) {
                                     case "publish":
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id=:id", [":id"=> (int)$link_id]);
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id=:id", [":id" => (int)$link_id]);
                                         break;
                                     case "unpublish":
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='0' WHERE link_id=:id", [":id"=> (int)$link_id]);
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='0' WHERE link_id=:id", [":id" => (int)$link_id]);
                                         break;
                                     case "move_confirm":
                                         $link_move_to = (check_post("move_to_id") ? sanitizer('move_to_id', 0, 'move_to_id') : 0);
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat=:mid WHERE link_id=:id", [":mid"=>(int)$link_move_to, "id"=> (int)$link_id]);
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat=:mid WHERE link_id=:id", [":mid" => (int)$link_move_to, "id" => (int)$link_id]);
                                         break;
                                     case "link_del":
-                                        $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id"=>(int)$link_id]),0);
-                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order"=>(int)$link_order]);
+                                        $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => (int)$link_id]), 0);
+                                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order" => (int)$link_order]);
                                         dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => (int)$link_id]);
                                         break;
                                     default:

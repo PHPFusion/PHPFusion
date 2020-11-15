@@ -543,7 +543,7 @@ function fusion_table($table_id, array $options = []) {
                     }
                 }
             } else {
-                add_notice("danger", "Table columns could not be loaded automatically.");
+                addNotice("danger", "Table columns could not be loaded automatically.");
             }
         }
 

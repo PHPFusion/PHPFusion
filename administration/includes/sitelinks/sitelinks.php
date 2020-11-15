@@ -121,7 +121,7 @@ function display_sitelinks() {
                 $list[] = [
                     "DT_RowId"        => $data["link_id"],
                     "link_checkbox"   => "<div class='display-flex-row'>
-                    <div>".form_checkbox("link_id[]", "", "", ["value"=>$data["link_id"]])."</div><div><i class='pointer handle fa fa-arrows spacer-xs'></i></div>
+                    <div>".form_checkbox("link_id[]", "", "", ["value" => $data["link_id"], 'input_id' => 'link_id-'.$data["link_id"]])."</div><div><i class='pointer handle fa fa-arrows spacer-xs'></i></div>
                     </div>",
                     "link_name"       => "<div class='display-flex-row'>$link_icon<div><strong>$link_name</strong><br/>ID:".$data["link_id"]." | $admin_links</div></div>",
                     "link_count"      => format_num($data["link_count"]),

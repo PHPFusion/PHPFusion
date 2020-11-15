@@ -1426,7 +1426,7 @@ function makefilelist($folder, $filter = '', $sort = TRUE, $type = "files", $ext
             '{%folder%}'   => $folder,
             '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
         ]);
-        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
+        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
     }
 
     return $res;
@@ -2245,4 +2245,34 @@ function rrmdir($dir) {
         reset($objects);
         rmdir($dir);
     }
+}
+
+/**
+ * cURL method to get any contents for Apache that does not support SSL for remote paths
+ *
+ * @param $url
+ *
+ * @return bool|string
+ */
+function fusion_get_contents($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
+}
+
+/**
+ * Checks whether a string is JSON or not
+ *
+ * @param $string
+ *
+ * @return bool
+ */
+function isJson($string) {
+    json_decode($string);
+    return (json_last_error() == JSON_ERROR_NONE);
 }

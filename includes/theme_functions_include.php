@@ -1045,7 +1045,7 @@ if (!function_exists("tab_active")
                 $count = count($array['title']);
 
                 if ($count > 0) {
-                    foreach($array["id"] as $tab_id) {
+                    foreach ($array["id"] as $tab_id) {
                         if ($section == $tab_id) {
                             return $tab_id;
                         }
@@ -1221,6 +1221,7 @@ if (!function_exists("tab_active")
 
     /**
      * Get current active tab index
+     *
      * @param      $array
      * @param      $default_active
      * @param bool $getname
@@ -1395,7 +1396,7 @@ if (!function_exists('social_media_links')) {
      */
     function social_media_links($url, $options = []) {
 
-        $default = array(
+        $default = [
             "facebook" => TRUE,
             "twitter"  => TRUE,
             "reddit"   => TRUE,
@@ -1405,7 +1406,7 @@ if (!function_exists('social_media_links')) {
             "linkedin" => TRUE,
             "class"    => "",
             "template" => '<a class="m-5 {%class%}" href="{%url%}" title="{%name%}" target="_blank" rel="nofollow noopener"><i class="{%icon%} fa-2x"></i></a>'
-        );
+        ];
 
         $options += $default;
 
@@ -1470,12 +1471,12 @@ if (!function_exists('social_media_links')) {
         $html = '';
         if (!empty($services) && is_array($services)) {
             foreach ($services as $service) {
-                $html .= strtr($options["template"], array(
+                $html .= strtr($options["template"], [
                     "{%class%}" => $options["class"],
                     "{%url%}"   => $service["url"].$url,
                     "{%name%}"  => $service["name"],
                     "{%icon%}"  => $service["icon"]
-                ));
+                ]);
             }
         }
 
