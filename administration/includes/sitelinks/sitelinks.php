@@ -23,7 +23,9 @@ function display_sitelinks() {
 
         $aidlink = fusion_get_aidlink();
 
-        ini_set("memory_limit", "4000000000");
+        $locale = fusion_get_locale();
+
+        //ini_set("memory_limit", "4000000000");
 
         require_once INCLUDES."theme_functions_include.php";
 
@@ -102,9 +104,9 @@ function display_sitelinks() {
                     }
                 }
 
-                $admin_links = "<a class='text-muted' href='".$data["link_url"]."' target='_blank'>View</a> - ";
-                $admin_links .= "<a class='text-muted' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>Edit</a> - ";
-                $admin_links .= "<a class='text-danger del-warn' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=del&&id=".$data["link_id"]."'>Remove</a>";
+                $admin_links = "<a class='text-muted' href='".$data["link_url"]."' target='_blank'>".$locale["view"]."</a> - ";
+                $admin_links .= "<a class='text-muted' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>".$locale["edit"]."</a> - ";
+                $admin_links .= "<a class='text-danger del-warn' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=del&&id=".$data["link_id"]."'>".$locale["delete"]."</a>";
 
                 $link_icon = "";
                 if ($data["link_icon"]) {
