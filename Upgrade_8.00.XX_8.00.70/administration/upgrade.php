@@ -85,6 +85,10 @@ if ($settings['version'] < $current_version) {
             }
         }
 
+        // Number Formating
+        $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
+        $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('thousands_separator', ',')");
+        
         rrmdir(INCLUDES.'filemanager');
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
