@@ -97,12 +97,12 @@ function display_sitelinks() {
                 // automatic link order repair
                 $link_order = $data["link_order"];
 
-                if (isset($ordering) && in_array("link_order asc", $ordering)) {
-                    if ($data["link_order"] !== $i) {
-                        dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:oid WHERE link_id=:lid", [":lid" => $data["link_id"], ":oid" => $i]);
-                        $link_order = $i;
-                    }
-                }
+                //if (isset($ordering) && in_array("link_order asc", $ordering)) {
+                //if ($data["link_order"] !== $i) {
+                //    dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:oid WHERE link_id=:lid", [":lid" => $data["link_id"], ":oid" => $i]);
+                //    $link_order = $i;
+                //}
+                //}
 
                 $admin_links = "<a class='text-muted' href='".$data["link_url"]."' target='_blank'>".$locale["view"]."</a> - ";
                 $admin_links .= "<a class='text-muted' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>".$locale["edit"]."</a> - ";
@@ -135,8 +135,6 @@ function display_sitelinks() {
             }
         }
 
-        //require_once INCLUDES."ajax_include.php";
-        //fusion_set_header_type("json");
         echo json_encode(["data" => $list, "recordsTotal" => $rows, "recordsFiltered" => $max_rows, "responsive" => TRUE]);
 
     } else {
