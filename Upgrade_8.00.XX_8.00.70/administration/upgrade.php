@@ -74,9 +74,13 @@ if ($settings['version'] < $current_version) {
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$current_version."' WHERE settings_name='version'");
 
         $insert_settings_tbl = [
-            'gateway_method' => '1',
-            'allow_php_exe'  => '0',
-            'update_checker' => '1'
+            // 8.00.22
+            'number_delimiter'    => '.',
+            'thousands_separator' => ',',
+            // 8.00.30
+            'gateway_method'      => '1',
+            'allow_php_exe'       => '0',
+            'update_checker'      => '1',
         ];
 
         foreach ($insert_settings_tbl as $key => $value) {
@@ -85,10 +89,6 @@ if ($settings['version'] < $current_version) {
             }
         }
 
-        // Number Formating
-        $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('number_delimiter', '.')");
-        $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('thousands_separator', ',')");
-        
         rrmdir(INCLUDES.'filemanager');
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
