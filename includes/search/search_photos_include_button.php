@@ -15,14 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+if (!defined("IN_FUSION")) { die("Access Denied"); }
 if (db_exists(DB_PHOTOS)) {
-    include LOCALE.LOCALESET."search/photos.php";
-    $form_elements['photos']['enabled'] = ["datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars"];
-    $form_elements['photos']['disabled'] = [];
-    $form_elements['photos']['display'] = [];
-    $form_elements['photos']['nodisplay'] = [];
-    $radio_button['photos'] = "<label><input type='radio' name='stype' value='photos'".($_REQUEST['stype'] == "photos" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['p400']."</label>";
+include LOCALE.LOCALESET."search/photos.php";
+$form_elements['photos']['enabled'] = array("datelimit", "fields1", "fields2", "fields3", "sort", "order1", "order2", "chars");
+$form_elements['photos']['disabled'] = array();
+$form_elements['photos']['display'] = array();
+$form_elements['photos']['nodisplay'] = array();
+$radio_button['photos'] = "<label><input type='radio' name='stype' value='photos'".($_REQUEST['stype'] == "photos" ? " checked='checked'" : "")." onclick=\"display(this.value)\" /> ".$locale['p400']."</label>";
 }

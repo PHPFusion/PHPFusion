@@ -28,7 +28,6 @@ if ($_REQUEST['stype'] == "articles" || $_REQUEST['stype'] == "all") {
     } else if ($_REQUEST['sort'] == "author") {
         $sortby = "article_name";
     }
-    $swords = '';
     $ssubject = search_querylike("article_subject");
     $smessage = search_querylike("article_article");
     $ssnippet = search_querylike("article_snippet");
