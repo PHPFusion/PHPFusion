@@ -44,6 +44,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         'link_position_id' => 0,
         'link_window'      => 0,
     ];
+
     private $language_opts;
     private $link_index;
 
@@ -52,6 +53,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
     private $locale;
     private $link_id;
     private $link_cat;
+
     private $title;
     private $refs;
     private $section;
@@ -102,9 +104,11 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             "title" => $this->locale['SL_0001'],
             "link"  => FUSION_SELF.$this->aidlink,
         ]);
+
         if ($this->section == "settings") {
             add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&section=settings", 'title' => $this->locale["SL_0041"]]);
         } else {
+
             if ($this->refs == "form") {
                 if ($this->action == "edit") {
                     add_breadcrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
@@ -116,7 +120,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         }
 
         switch ($this->action) {
-            case 'edit':
+            case "edit":
                 if ($this->link_id) {
                     $this->title = $this->verify_sitelinks($this->link_id) ? $this->locale['SL_0011'] : $this->locale['SL_0010'];
                 }
@@ -127,7 +131,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $this->form_uri = FUSION_SELF.$this->aidlink."&amp;action=edit&refs=form&id=".$this->link_id."&link_cat=".$this->link_cat;
                 $this->data['link_position_id'] = 0;
                 break;
-            case 'del':
+            case "del":
                 $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => (int)$this->link_id]), 0);
                 dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order" => (int)$link_order]);
                 dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => (int)$this->link_id]);
@@ -192,7 +196,6 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      * @throws Exception
      */
     private function settings() {
-
         add_to_title($this->locale['SL_0041']);
         $settings = fusion_get_settings();
 
@@ -287,18 +290,20 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         if (check_post("save_link")) {
 
             $this->data = [
-                "link_id"         => sanitizer('link_id', 0, 'link_id'),
-                "link_cat"        => sanitizer('link_cat', 0, 'link_cat'),
-                "link_name"       => sanitizer('link_name', '', 'link_name'),
-                "link_url"        => sanitizer('link_url', '', 'link_url'),
-                "link_icon"       => sanitizer('link_icon', '', 'link_icon'),
-                "link_language"   => sanitizer('link_language', '', 'link_language'),
-                "link_visibility" => sanitizer('link_visibility', '', 'link_visibility'),
-                "link_position"   => sanitizer('link_position', '', 'link_position'),
-                'link_status'     => (check_post('link_status') ? '1' : '0'),
-                "link_order"      => sanitizer('link_order', '', 'link_order'),
-                "link_window"     => (check_post('link_window') ? '1' : '0'),
+                "link_id"          => sanitizer('link_id', 0, 'link_id'),
+                "link_cat"         => sanitizer('link_cat', 0, 'link_cat'),
+                "link_name"        => sanitizer('link_name', '', 'link_name'),
+                "link_url"         => sanitizer('link_url', '', 'link_url'),
+                "link_icon"        => sanitizer('link_icon', '', 'link_icon'),
+                "link_language"    => sanitizer('link_language', '', 'link_language'),
+                "link_visibility"  => sanitizer('link_visibility', '', 'link_visibility'),
+                "link_position"    => sanitizer('link_position', '', 'link_position'),
+                'link_status'      => (check_post('link_status') ? '1' : '0'),
+                "link_order"       => sanitizer('link_order', '', 'link_order'),
+                "link_window"      => (check_post('link_window') ? '1' : '0'),
+                "link_position_id" => 0,
             ];
+
             if ($this->data['link_position'] > 3) {
                 $this->data['link_position'] = sanitizer('link_position_id', 3, 'link_position_id');
             }
@@ -309,7 +314,6 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             }
 
             if (fusion_safe()) {
-
                 if (!empty($this->data['link_id'])) {
 
                     dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
@@ -402,13 +406,13 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                     ]
                 )
             ]);
+
         echo form_checkbox('link_status', $this->locale['SL_0031'], $this->data['link_status'], [
             'options' => [0 => $this->locale['unpublish'], 1 => $this->locale['publish']],
             'width'   => '100%',
             "type"    => "radio",
             "inline"  => TRUE,
         ]);
-
 
         echo "</div>\n";
         echo "<div>\n";
@@ -593,22 +597,22 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             let check_status = $(this).is(':checked') ? 1 : 0;
             setChecked('fusion_sltable_form', 'link_id[]', check_status);
         });
-        
+
         // Delete warning link
-        $('body').on('click', '.del-warn', function(ev) {            
+        $('body').on('click', '.del-warn', function(ev) {
             if (!confirm('".$this->locale['SL_0080']."')) {
                 return false;
-            }            
+            }
         });
-        
+
         // Movelinks JS.
         $('#link_move').bind('click', function(ev) {
             ev.preventDefault();
             // check if any link is clicked
             $('#table_action').val('link_move');
-            $('form#fusion_sltable_form').submit();                    
-        }); 
-        
+            $('form#fusion_sltable_form').submit();
+        });
+
         // Delete link JS
         $('#link_del').bind('click', function(ev) {
             ev.preventDefault();
@@ -616,8 +620,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $('#table_action').val('link_del');
                 $('form#fusion_sltable_form').submit();
             }
-            return false;            
-        }); 
+            return false;
+        });
 
         // Sorting
         $('.sort').sortable({
@@ -671,6 +675,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             "processing"  => TRUE,
             "responsive"  => TRUE,
             "debug"       => FALSE,
+            "zero_locale" => $this->locale["SL_0062"],
             "columns"     => [
                 ["data" => "link_checkbox", "width" => "30", "orderable" => FALSE],
                 ["data" => "link_name", "width" => "45%", "className" => "all"],
