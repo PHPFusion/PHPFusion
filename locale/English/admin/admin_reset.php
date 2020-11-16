@@ -10,11 +10,11 @@ $locale['apw_404'] = "Justification for reset:";
 $locale['apw_405'] = "Reset both login and admin passwords";
 $locale['apw_406'] = "Reset Passwords";
 $locale['apw_407'] = "Password reset at ";
-$locale['apw_408'] = "Hello [USER_NAME],<br/>\r\nYour admin password has been reset at [SITEURL]:<br/>\r\n
-Admin Password: [NEW_ADMIN_PASS]<br/>\r\nThe reason for this reset is: [RESET_MESSAGE]<br/>\r\nRegards,<br/>\r\n[ADMIN]";
-$locale['apw_409'] = "Hello [USER_NAME],<br/>\r\nYour login and admin passwords have been reset at [SITEURL]:<br/>\r\n
-Login Password: [NEW_PASS]<br/>\r\nAdmin Password: [NEW_ADMIN_PASS]<br/>\r\nThe reason for this reset is: [RESET_MESSAGE]<br/>\r\n
-Regards,<br/>\r\n[ADMIN]";
+$locale['apw_408'] = "Hello [USER_NAME],<br/>Your admin password has been reset at [SITEURL]:<br/>
+Admin Password: [NEW_ADMIN_PASS]<br/>The reason for this reset is: [RESET_MESSAGE]<br/>Regards,<br/>[ADMIN]";
+$locale['apw_409'] = "Hello [USER_NAME],<br/>Your login and admin passwords have been reset at [SITEURL]:<br/>
+Login Password: [NEW_PASS]<br/>Admin Password: [NEW_ADMIN_PASS]<br/>The reason for this reset is: [RESET_MESSAGE]<br/>
+Regards,<br/>[ADMIN]";
 $locale['apw_410'] = "Reset Results";
 $locale['apw_411'] = "Update Admin Password.";
 $locale['apw_412'] = "Admin Password:";

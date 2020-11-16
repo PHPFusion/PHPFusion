@@ -105,13 +105,12 @@ $locale['u149b'] = "Your Current Login Password was not specified or is invalid.
 // Email activation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
 $locale['u151'] = "Welcome to [SITENAME]";
-$locale['u152'] = "Hello USER_NAME,<br/>\r\n
-Welcome to SITENAME. Here are your login details:<br/>\r\n
-Username: USER_NAME<br/>\r\n
-Password: USER_PASSWORD<br/>\r\n
-Please activate your account via the following link: <a href='ACTIVATION_LINK'>Activate Account</a><br/>\r\n
-Regards,<br/>\r\n
-SITEUSERNAME";
+$locale['u152'] = "Hello USER_NAME,<br/>
+Welcome to SITENAME. Here are your login details:<br/>
+Username: USER_NAME<br/>
+Password: USER_PASSWORD<br/>
+Please activate your account via the following link: <a href='ACTIVATION_LINK'>Activate Account</a><br/>
+Regards,<br/>SITEUSERNAME";
 
 $locale['u153'] = "Activation email could not be sent.";
 $locale['u154'] = "Please [LINK]contact[/LINK] the Site Administrator.";
@@ -152,13 +151,11 @@ $locale['u195'] = "Captcha code can not be left empty.";
 $locale['u200'] = "A verify email has been sent to your new email address (%s). Please check your email.";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
 $locale['u202'] = "E-mail address verify - [SITENAME]";
-$locale['u203'] = "Hello [USER_NAME],<br/>\r\n
-Someone set this email address in his account on our site.<br/>\r\n
-If you really want to change your email address to this one please click the following link:<br/>\r\n
-[EMAIL_VERIFY_LINK]<br/>\r\n
-Note: you have to be logged in to proceed.<br/>\r\n
-Regards,
-[SITEUSERNAME]<br/>\r\n
-[SITENAME]";
+$locale['u203'] = "Hello [USER_NAME],<br/>
+Someone set this email address in his account on our site.<br/>
+If you really want to change your email address to this one please click the following link:<br/>
+[EMAIL_VERIFY_LINK]<br/>
+Note: you have to be logged in to proceed.<br/>
+Regards, [SITEUSERNAME]<br/>[SITENAME]";
 
 $locale['u210'] = "User Reputation";

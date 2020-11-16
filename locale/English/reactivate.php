@@ -9,6 +9,6 @@ If you cannot log in now, please contact the site's administrator at [SITEEMAIL]
 // Send confirmation mail
 $locale['504'] = "Account re-activated at [SITENAME]";
 $locale['505'] = "Hello [USER_NAME],
-<br/>\r\nYour account at [SITENAME] has been re-activated. We hope to see you more often at the site.<br/><br/>\r\n
-Regards,<br/><br/>\r\n[SITEUSERNAME]";
+<br/>Your account at [SITENAME] has been re-activated. We hope to see you more often at the site.<br/><br/>
+Regards,<br/><br/>[SITEUSERNAME]";
 $locale['506'] = "Reactivated by user.";
