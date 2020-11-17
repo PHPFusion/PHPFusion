@@ -595,33 +595,74 @@ class UserFieldsInput {
             $locale['u152']
         );
 
-        if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $locale['u151'].$settings['sitename'], $message)) {
-            $userInfo = serialize([
-                "user_name"         => $this->_userName,
-                "user_password"     => $this->_newUserPasswordHash,
-                "user_salt"         => $this->_newUserPasswordSalt,
-                "user_algo"         => $this->_newUserPasswordAlgo,
-                "user_email"        => $this->_userEmail,
-                "user_field_fields" => $this->_dbFields,
-                "user_field_inputs" => $this->_dbValues
-            ]);
-            $userInfo = base64_encode($userInfo);
+        $template_result = dbquery(" SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='ACTIVATION' LIMIT 1");
 
-            $result = dbquery(
-                "INSERT INTO ".DB_NEW_USERS." (
+        if (dbrows($template_result)) {
+            $template_data = dbarray($template_result);
+            if ($template_data['template_active'] == "1") {
+                $tpl_message = strtr($template_data['template_content'], [
+                    "ACTIVATION_LINK" => $activationUrl,
+                    "USER_NAME"       => $this->_userName,
+                    "USER_PASSWORD"   => $this->_newUserPassword,
+                    'SITENAME'        => $settings['sitename'],
+                    'SITEUSERNAME'    => $settings['siteusername']
+                ]);
+
+                if (sendemail_template("ACTIVATION", str_replace('[SITENAME]', $settings['sitename'], $template_data['template_subject']), '', "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $this->_userName, $this->_userEmail, $tpl_message)) {
+                    $this->newUserData();
+                } else {
+                    $message = strtr($locale['u154'], [
+                        '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
+                        '[/LINK]' => "</strong></a>"
+                    ]);
+                    $this->_setError("email_activation", $locale['u153']."<br />".$message);
+                }
+            } else {
+                if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['u151']), $message)) {
+                    $this->newUserData();
+                } else {
+                    $message = strtr($locale['u154'], [
+                        '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
+                        '[/LINK]' => "</strong></a>"
+                    ]);
+                    $this->_setError("email_activation", $locale['u153']."<br />".$message);
+                }
+            }
+        } else {
+            if (sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', $settings['sitename'], $locale['u151']), $message)) {
+                $this->newUserData();
+            } else {
+                $message = strtr($locale['u154'], [
+                    '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
+                    '[/LINK]' => "</strong></a>"
+                ]);
+                $this->_setError("email_activation", $locale['u153']."<br />".$message);
+            }
+        }
+    }
+
+    private function newUserData() {
+        global $locale, $userCode;
+
+        $userInfo = serialize([
+            "user_name"         => $this->_userName,
+            "user_password"     => $this->_newUserPasswordHash,
+            "user_salt"         => $this->_newUserPasswordSalt,
+            "user_algo"         => $this->_newUserPasswordAlgo,
+            "user_email"        => $this->_userEmail,
+            "user_field_fields" => $this->_dbFields,
+            "user_field_inputs" => $this->_dbValues
+        ]);
+        $userInfo = base64_encode($userInfo);
+
+        $result = dbquery(
+            "INSERT INTO ".DB_NEW_USERS." (
 					user_code, user_name, user_email, user_datestamp, user_info
 				) VALUES(
 					'".$userCode."', '".$this->_userName."', '".$this->_userEmail."', '".time()."', '".$userInfo."'
 				)"
-            );
-            $this->_completeMessage = $locale['u150'];
-        } else {
-            $message = strtr($locale['u154'], [
-                '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
-                '[/LINK]' => "</strong></a>"
-            ]);
-            $this->_setError("email_activation", $locale['u153']."<br />".$message);
-        }
+        );
+        $this->_completeMessage = $locale['u150'];
     }
 
     private function _setUserDataInput() {

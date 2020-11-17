@@ -36,10 +36,10 @@ $locale['033'] = "Database Password:";
 $locale['034'] = "Database Name:";
 $locale['035'] = "Table Prefix:";
 $locale['036'] = "Cookie Prefix:";
-$locale['037'] = "Enable PDO or MySqli";
+$locale['037'] = "Enable PDO or MySQLi";
 $locale['038'] = "PDO seems to not be available";
 $locale['039'] = "PDO";
-$locale['039b'] = "MySqli";
+$locale['039b'] = "MySQLi";
 $locale['039c'] = "Select languages to use:";
 
 // Step 4 - Database Setup
@@ -117,17 +117,17 @@ $locale['107'] = "Upgrade";
 $locale['108'] = "User Groups";
 $locale['109'] = "Web Link Categories";
 $locale['110'] = "Web Links";
-$locale['111'] = "Main";
+$locale['111'] = "Main Settings";
 $locale['112'] = "Time and Date";
-$locale['113'] = "Forum";
+$locale['113'] = "Forum Settings";
 $locale['114'] = "Registration";
 $locale['115'] = "Photo Gallery";
-$locale['116'] = "Miscellaneous";
+$locale['116'] = "Miscellaneous Settings";
 $locale['117'] = "Private Message";
 $locale['118'] = "User Fields";
 $locale['119'] = "Forum Ranks";
 $locale['120'] = "User Field Categories";
-$locale['121'] = "News";
+$locale['121'] = "News Settings";
 $locale['122'] = "User Management";
 $locale['123'] = "Downloads";
 $locale['124'] = "Items per Page";
@@ -268,6 +268,9 @@ $locale['T203'] = "Hello [RECEIVER],\r\n\r\nA reply has been posted in the forum
 $locale['T301'] = "Contact form";
 $locale['T302'] = "[SUBJECT]";
 $locale['T303'] = "[MESSAGE]";
+$locale['T304'] = "Email activation";
+$locale['T305'] = "Welcome to [SITENAME]";
+$locale['T306'] = "Hello USER_NAME,<br/>\r\nWelcome to SITENAME. Here are your login details:<br/>\r\nUsername: USER_NAME<br/>\r\nPassword: USER_PASSWORD<br/>\r\nPlease activate your account via the following link: ACTIVATION_LINK<br/>\r\nRegards,<br/>\r\nSITEUSERNAME";
 
 // Language Admin
 $locale['L001'] = "Multilingual Settings";

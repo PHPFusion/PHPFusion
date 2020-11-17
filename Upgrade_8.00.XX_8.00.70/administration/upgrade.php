@@ -22,6 +22,7 @@ if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid
 }
 
 require_once THEMES."templates/admin_header.php";
+include LOCALE.LOCALESET."setup.php";
 if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
     include LOCALE.LOCALESET."admin/upgrade.php";
 } else {
@@ -50,12 +51,10 @@ if (!function_exists('rrmdir')) {
     }
 }
 
-opentable($locale['400']);
-
-echo "<div style='text-align:center' class='text-center' ><br />\n";
+echo "<div style='text-align:center' class='text-center'><br />\n";
 
 opentable($locale['400']);
-echo "<div style='text-align:center'><br />\n";
+echo "<div style='text-align:center'>\n";
 
 if (isset($_GET['upgrade_ok'])) {
     echo "<div class='alert alert-success'>".$locale['502']."</div>\n";
@@ -89,6 +88,8 @@ if ($settings['version'] < $current_version) {
             }
         }
 
+        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('ACTIVATION', 'html', '0', '".$locale['T304']."', '".$locale['T305']."', '".$locale['T306']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+
         rrmdir(INCLUDES.'filemanager');
         redirect(FUSION_SELF.$aidlink."&amp;upgrade_ok");
     }
@@ -99,5 +100,6 @@ if ($settings['version'] < $current_version) {
 
 echo "</form>\n</div>\n";
 closetable();
+echo '</div>';
 
 require_once THEMES."templates/footer.php";

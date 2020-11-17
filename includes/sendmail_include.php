@@ -81,12 +81,12 @@ function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message,
     }
 }
 
-function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url = "", $toemail, $sender = "", $fromemail = "") {
+function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url = "", $toemail = '', $sender = "", $fromemail = "", $content = "") {
     global $settings;
 
     $data = dbarray(dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='".$template_key."' LIMIT 1"));
     $message_subject = $data['template_subject'];
-    $message_content = $data['template_content'];
+    $message_content = !empty($content) ? $content : $data['template_content'];
     $template_format = $data['template_format'];
     $sender_name = ($sender != "" ? $sender : $data['template_sender_name']);
     $sender_email = ($fromemail != "" ? $fromemail : $data['template_sender_email']);

@@ -165,13 +165,16 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                         fclose($temp);
                         echo "<div class='alert alert-success'>The contents of .htaccess were updated</div>";
                     }
+
+                    $content .= "<br /><br /><input type='hidden' name='stage' value='4'>\n";
+                    $content .= "<input type='submit' name='next' value='Next' class='button btn btn-primary pull-right'><br /><br />\n";
                 }
                 break;
             case 4:
                 $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
                 $content .= "<p class='p-15'>Several changes will be made to the database. <br />
                 If this procedure timeout or crash you need to manually disable the UTF-8 conversion script or if you can, raise the time of allowed PHP and SQL execution.<br />
-                You disable the UTF-8 char conversion function by opening /administration/upgrade.php, line 135 change disabled = FALSE to disabled = TRUE</p>\n";
+                You disable the UTF-8 char conversion function by opening /administration/upgrade.php, line 179 change \$disabled = FALSE to \$disabled = TRUE</p>\n";
                 $content .= "<div class='alert alert-warning'></i>We strongly recommend that you make a <a target='_blank' href='db_backup.php".$aidlink."'>Database Backup</a> before proceeding!</div>\n";
                 $disabled = FALSE; // true to disable the auto UTF-8 conversion.
                 $content .= "<input type='hidden' name='stage' value='4'>\n";
@@ -432,11 +435,11 @@ if (str_replace(".", "", $settings['version']) < "80022") {
 
                     // Create multilang tables
                     $result = dbquery("CREATE TABLE ".DB_PREFIX."mlt_tables (
-                mlt_rights CHAR(4) NOT NULL DEFAULT '',
-                mlt_title VARCHAR(50) NOT NULL DEFAULT '',
-                mlt_status VARCHAR(50) NOT NULL DEFAULT '',
-                PRIMARY KEY (mlt_rights)
-                ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+                    mlt_rights CHAR(4) NOT NULL DEFAULT '',
+                    mlt_title VARCHAR(50) NOT NULL DEFAULT '',
+                    mlt_status VARCHAR(50) NOT NULL DEFAULT '',
+                    PRIMARY KEY (mlt_rights)
+                    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
                     // Add Multilang table rights and status
                     $result = dbquery("INSERT INTO ".DB_PREFIX."mlt_tables (mlt_rights, mlt_title, mlt_status) VALUES ('AR', '".$locale['MLT001']."', '1')");
@@ -536,7 +539,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     $result = dbquery("INSERT INTO ".DB_PREFIX."blog_cats (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['195']."', 'windows.gif', '".$settings['locale']."')");
 
                     // Email templates admin section
-                    $result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['T001']."', 'email.php', '1')");
+                    $result = dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MAIL', 'email.png', '".$locale['T001']."', 'email.php', '3')");
 
                     // Admin rights
                     if ($result) {
@@ -559,9 +562,10 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     PRIMARY KEY (template_id)
                 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
                     if ($result) {
-                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
-                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
-                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_id, template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('', 'CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('PM', 'html', '0', '".$locale['T101']."', '".$locale['T102']."', '".$locale['T103']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('POST', 'html', '0', '".$locale['T201']."', '".$locale['T202']."', '".$locale['T203']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('CONTACT', 'html', '0', '".$locale['T301']."', '".$locale['T302']."', '".$locale['T303']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
+                        $result = dbquery("INSERT INTO ".DB_PREFIX."email_templates (template_key, template_format, template_active, template_name, template_subject, template_content, template_sender_name, template_sender_email, template_language) VALUES ('ACTIVATION', 'html', '0', '".$locale['T304']."', '".$locale['T305']."', '".$locale['T306']."', '".$settings['siteusername']."', '".$settings['siteemail']."', '".$settings['locale']."')");
                     }
 
                     // SEO tables.
