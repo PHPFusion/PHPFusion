@@ -247,7 +247,8 @@ class Members_Action extends Members_Admin {
                     }
 
                     addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
-                    redirect(FUSION_REQUEST);
+                    //redirect(FUSION_REQUEST);
+                    redirect(FUSION_SELF.fusion_get_aidlink());
                 }
             } else {
                 $height = '45px';
