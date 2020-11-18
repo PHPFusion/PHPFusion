@@ -119,3 +119,7 @@ require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.php";
 //require_once __DIR__.'/db_handlers/all_functions_include.php';
+
+if (file_exists(INCLUDES.'custom_includes.php')) {
+    require_once INCLUDES.'custom_includes.php';
+}
