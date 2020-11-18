@@ -1593,3 +1593,7 @@ function rrmdir($dir) {
 }
 
 include INCLUDES."system_images.php";
+
+if (file_exists(INCLUDES.'custom_includes.php')) {
+    require_once INCLUDES.'custom_includes.php';
+}
