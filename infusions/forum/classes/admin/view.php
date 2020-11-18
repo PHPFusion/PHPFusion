@@ -805,7 +805,7 @@ class ForumAdminView extends ForumAdminInterface {
         $type_opts = [
             '1' => self::$locale['forum_opts_001'],
             '2' => self::$locale['forum_opts_002'],
-            '3' => self::$locale['forum_opts_003'],
+            //'3' => self::$locale['forum_opts_003'],
             '4' => self::$locale['forum_opts_004']
         ];
 

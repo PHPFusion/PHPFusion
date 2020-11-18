@@ -830,7 +830,7 @@ class Admin extends ForumServer {
         $type_opts = [
             '1' => $locale['forum_opts_001'],
             '2' => $locale['forum_opts_002'],
-            '3' => $locale['forum_opts_003'],
+            //'3' => $locale['forum_opts_003'],
             '4' => $locale['forum_opts_004']
         ];
 
