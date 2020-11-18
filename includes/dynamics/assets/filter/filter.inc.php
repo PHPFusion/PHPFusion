@@ -131,7 +131,7 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
         if ($cur_page > ($range + 1)) {
             $res .= "<li><a href='".$link.$getname."=0'>1</a></li>";
             if ($cur_page != ($range + 2)) {
-                $res .= "<li>...</li>";
+                $res .= "<li class='page-item'>...</li>";
             }
         }
     }
@@ -144,9 +144,9 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
     for ($i = $idx_fst; $i <= $idx_lst; $i++) {
         $offset_page = ($i - 1) * $count;
         if ($i == $cur_page) {
-            $res .= "<li><span><strong>".$i."</strong></span></li>";
+            $res .= "<li class='page-item'><span><strong>".$i."</strong></span></li>";
         } else {
-            $res .= "<li><a href='".$link.$getname."=".$offset_page."'>".$i."</a></li>";
+            $res .= "<li class='page-item'><a class='page-link' href='".$link.$getname."=".$offset_page."'>".$i."</a></li>";
         }
     }
     $resl = "";
@@ -155,7 +155,7 @@ function makepagenav_nojs($start, $count, $total, $range = 0, $link = "", $getna
             if ($cur_page != ($pg_cnt - $range - 1)) {
                 $resl .= "...";
             }
-            $res .= "<li><a href='".$link.$getname."=".($pg_cnt - 1) * $count."'>$resl ".$pg_cnt."</a></li>\n";
+            $res .= "<li class='page-item'><a class='page-link' href='".$link.$getname."=".($pg_cnt - 1) * $count."'>$resl ".$pg_cnt."</a></li>\n";
         }
     }
     return "<noscript><ul class='pagination'>\n".$res."</ul></noscript>\n";

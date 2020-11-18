@@ -588,7 +588,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         $tab_active = tab_active($tab, 3, "refs");
         $cat = get("cat", FILTER_VALIDATE_INT) ?: 0;
 
-        echo opentab($tab, $tab_active, "sl-menu", TRUE, "nav-pills spacer-sm", "refs", ["cat", "refs"]);
+        echo opentab($tab, $tab_active, "sl-menu", TRUE, "nav-pills m-t-10 m-b-10", "refs", ["cat", "refs"]);
         echo opentabbody($tab["title"][$tab_active], $tab["id"][$tab_active], $tab_active, TRUE);
 
         add_to_jquery(/** @lang JavaScript */ "

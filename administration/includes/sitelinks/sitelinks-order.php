@@ -24,7 +24,7 @@ function update_sitelinks_order() {
                 $link_order = explode(",", $link_order);
                 $order = 1;
                 foreach ($link_order as $link_id) {
-                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:order WHERE link_id=:linkid", [':order' => $order, ':linkid' => $link_id]);
+                    dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=:order ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:linkid", [':order' => $order, ':linkid' => $link_id]);
                     $order++;
                 }
 

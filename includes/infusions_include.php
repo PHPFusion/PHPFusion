@@ -558,7 +558,7 @@ function fusion_table($table_id, array $options = []) {
             'stateSave' : ".$options["state_save"].",
             'ajax' : {
                 url : '".$options['remote_file']."',
-                <data_filters>               
+                <data_filters>
             },
             'language': {
                 'processing': '".$options["processing_locale"]."',
@@ -588,9 +588,12 @@ function fusion_table($table_id, array $options = []) {
 
     if (!defined('FUSION_DATATABLES')) {
         define('FUSION_DATATABLES', TRUE);
-        $css_url = rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css";
-        add_to_head("<link rel='stylesheet' href='$css_url'>");
+        add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css'>");
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
+        if (defined('BOOTSTRAP4')) {
+        add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.bootstrap4.min.css'>");
+            add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.bootstrap4.min.js'></script>");
+        }
     }
 
     $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function";

@@ -61,10 +61,10 @@ function display_sitelinks() {
         $link_cat_sql = (!$search ? "sl.link_cat='$link_cat' AND " : "");
 
         $count_cond = $link_cat_sql." sl.link_position=$refs";
-        $sql_cond = "WHERE ".$link_cat_sql." sl.link_position=$refs";
+        $sql_cond = $link_cat_sql." sl.link_position=$refs";
 
         if ($refs == 1) {
-            $sql_cond = "WHERE ".$link_cat_sql." (sl.link_position=1 OR sl.link_position=2)";
+            $sql_cond = $link_cat_sql." (sl.link_position=1 OR sl.link_position=2)";
         }
 
         $table = DB_SITE_LINKS." sl LEFT JOIN ".DB_SITE_LINKS." sl2 ON (sl2.link_cat=sl.link_id)";
@@ -80,11 +80,11 @@ function display_sitelinks() {
 
         $list = [];
 
-        $count_query = "SELECT ".$column_sel." FROM ".$table.whitespace($sql_cond)." GROUP BY sl.link_id";
+        $count_query = "SELECT ".$column_sel." FROM ".$table.(multilang_table('SL') ? " WHERE sl.link_language='".LANGUAGE."' AND" : " WHERE").whitespace($sql_cond)." GROUP BY sl.link_id";
 
         $max_rows = dbrows(dbquery($count_query));
 
-        $sql_query = "SELECT ".$column_sel." FROM ".$table.whitespace($sql_cond)." GROUP BY sl.link_id".whitespace($orderby).whitespace($rowsearch);
+        $sql_query = "SELECT ".$column_sel." FROM ".$table.(multilang_table('SL') ? " WHERE sl.link_language='".LANGUAGE."' AND" : " WHERE").whitespace($sql_cond)." GROUP BY sl.link_id".whitespace($orderby).whitespace($rowsearch);
 
         $result = dbquery($sql_query);
 
