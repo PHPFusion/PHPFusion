@@ -58,9 +58,11 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
                 [':status' => 0, ':actiontime' => 0, ':user_id' => $data['user_id']]
             );
 
-            $subject = $locale['global_451'];
+            $subject = str_replace("[SITENAME]", $settings['sitename'], $locale['global_451']);
             $message = str_replace("USER_NAME", $data['user_name'], $locale['global_452']);
             $message = str_replace("LOST_PASSWORD", fusion_get_settings("siteurl")."lostpassword.php", $message);
+            $message = str_replace("[SITEURL]", $settings['siteurl'], $message);
+            $message = str_replace("[SITEUSERNAME]", $settings['siteusername'], $message);
             sendemail($data['user_name'], $data['user_email'], fusion_get_settings("siteusername"), fusion_get_settings("siteemail"), $subject,
                 $message);
         }
