@@ -19,7 +19,7 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "plain", $cc = "", $bcc = "") {
+function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "html", $cc = "", $bcc = "") {
     global $settings, $locale;
 
     require_once CLASSES.'PHPMailer/PHPMailer.php';
