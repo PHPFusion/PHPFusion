@@ -1690,6 +1690,10 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('LANG', 'languages.png', '".$locale['129c']."', 'settings_languages.php', '4')");
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('MI', 'migration.png', '".$locale['129e']."', 'migrate.php', '2')");
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('S14', 'settings_theme.png', '".$locale['129f']."', 'settings_theme.php', '4')");
+            $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('DOT', 'database_optimization_tool.png', '".$locale['130f']."', 'database_optimization_tool.php', '6')");
+            $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UIT', 'user_ip_tool.png', '".$locale['130g']."', 'user_ip_tool.php', '6')");
+            $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FST', 'fusion_security_tool.png', '".$locale['130e']."', 'fusion_security_tool.php', '6')");
+    
             $result = dbquery("INSERT INTO ".$db_prefix."users (
                 user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_offset,
                 user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,
@@ -1698,7 +1702,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             ) VALUES (
                 '".$username."', 'sha256', '".$userSalt."', '".$userPassword."', 'sha256', '".$adminSalt."', '".$adminPassword."',
                 '".$email."', '1', '0', '',  '0', '', '".time()."', '0', '0.0.0.0',
-                'A.AC.AD.APWR.B.BB.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.S14.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.BLOG.BLC.MAIL.LANG.MI.FM',
+                'A.AC.AD.APWR.B.BB.C.CP.DB.DC.D.ERRO.FQ.F.FR.IM.I.IP.M.MAIL.N.NC.P.PH.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S5.S6.S7.S8.S9.S10.S11.S12.S13.S14.SB.SM.SU.UF.UFC.UG.UL.U.W.WC.BLOG.BLC.MAIL.LANG.MI.FM.DOT.UIT.FST',
                 '', '103', '0', 'Default', '', '1900-01-01', '', '', ''
             )");
             $result = dbquery("INSERT INTO ".$db_prefix."messages_options (user_id, pm_email_notify, pm_save_sent, pm_inbox, pm_savebox, pm_sentbox) VALUES ('0', '0', '1', '20', '20', '20')");

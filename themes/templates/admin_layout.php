@@ -47,9 +47,9 @@ if (!defined('NO_DEFAULT_CSS')) {
 }
 
 // Site Theme CSS
-/*if (!defined('NO_THEME_CSS')) {
-    echo "<link rel='stylesheet' href='".THEME."styles.css' type='text/css' media='screen' />\n";
-}*/
+if (!defined('NO_THEME_CSS')) {
+    echo "<link rel='stylesheet' href='".THEME."styles.css?v=".filemtime(THEME.'styles.css')."' type='text/css' media='screen' />\n";
+}
 
 // Entypo
 if ($settings['entypo'] || defined('ENTYPO')) {
