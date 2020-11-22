@@ -527,7 +527,7 @@ if (!function_exists("showbanners")) {
                 if ($settings['allow_php_exe']) {
                     eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
                 } else {
-                    echo stripslashes($settings['sitebanner2']);
+                    echo parse_textarea($settings['sitebanner2'], FALSE, FALSE, TRUE);
                 }
             }
         } else {
@@ -535,7 +535,7 @@ if (!function_exists("showbanners")) {
                 if ($settings['allow_php_exe']) {
                     eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
                 } else {
-                    echo stripslashes($settings['sitebanner1']);
+                    echo parse_textarea($settings['sitebanner1'], FALSE, FALSE, TRUE);
                 }
             }
         }

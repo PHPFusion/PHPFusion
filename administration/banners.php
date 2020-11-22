@@ -156,7 +156,7 @@ class BannersAdministration {
             if (self::$settings['allow_php_exe']) {
                 eval("?>".stripslashes(self::$settings['sitebanner1'])."<?php ");
             } else {
-                echo stripslashes(self::$settings['sitebanner1']);
+                echo parse_textarea(self::$settings['sitebanner1'], FALSE, FALSE, TRUE);
             }
         }
         closeside();
@@ -169,7 +169,7 @@ class BannersAdministration {
             if (self::$settings['allow_php_exe']) {
                 eval("?>".stripslashes(self::$settings['sitebanner2'])."<?php ");
             } else {
-                echo stripslashes(self::$settings['sitebanner2']);
+                echo parse_textarea(self::$settings['sitebanner2'], FALSE, FALSE, TRUE);
             }
         }
         closeside();
