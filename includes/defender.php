@@ -400,7 +400,6 @@ class Defender {
      * @param bool   $is_multiLang
      *
      * @return string
-     * @throws Exception
      */
     public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
 
@@ -451,10 +450,8 @@ class Defender {
      * @param string     $default
      * @param bool|FALSE $input_name
      * @param bool|FALSE $is_multiLang
-     * @param string     $page_hash
      *
      * @return string
-     * @throws Exception
      */
     public function formSanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
         $val = [];
@@ -567,7 +564,7 @@ class Defender {
             }
         }
 
-        throw new Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
+        //setError(E_USER_NOTICE, "The form sanitizer could not handle the request! (input: $input_name)", "", "");
     }
 
     public function validate() {
@@ -594,6 +591,7 @@ class Defender {
         // execute sanitisation rules at point blank precision using switch
         try {
             if (!empty($this->field_config['type'])) {
+
                 if (empty($this->field_value) && ($this->field_config['type'] !== 'number')) {
                     return $this->field_default;
                 }
@@ -624,11 +622,7 @@ class Defender {
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {
-                if (function_exists('alert')) {
-                    echo alert($notice);
-                } else {
-                    addNotice('danger', $notice);
-                }
+                addNotice('danger', $notice);
                 define('STOP_REDIRECT', TRUE);
             }
             //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
@@ -655,14 +649,12 @@ class Defender {
 
 /**
  * Verify and Sanitize Inputs
+ * @param        $value
+ * @param string $default
+ * @param bool   $input_name
+ * @param bool   $is_multiLang
  *
- * @param            $value
- * @param string     $default
- * @param bool|FALSE $input_name
- * @param bool|FALSE $is_multiLang
- *
- * @return mixed
- * @throws Exception
+ * @return string
  */
 function form_sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
 
@@ -680,8 +672,8 @@ function form_sanitizer($value, $default = '', $input_name = FALSE, $is_multiLan
  * @param bool   $is_multiLang
  *
  * @return string
- * @throws Exception
  */
+
 function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
     return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
@@ -1058,12 +1050,13 @@ function fusion_safe() {
     return Defender::getInstance()->safe();
 }
 
-
 /**
+ * @param string $error_message
  *
+ * @return null
  */
-function fusion_stop() {
-    return Defender::getInstance()->stop();
+function fusion_stop($error_message = "") {
+    return Defender::getInstance()->stop($error_message);
 }
 
 

@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use defender\ImageValidation;
+
 defined('IN_FUSION') || exit;
 
 function get_rowstart($key, $max_limit) {
@@ -206,6 +209,9 @@ if (!function_exists('send_pm')) {
 if (!function_exists('upload_file')) {
 
     function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "", $replace_upload = FALSE) {
+        // only lower case accepted
+        $valid_ext = strtolower($valid_ext);
+
         if (is_uploaded_file($_FILES[$source_file]['tmp_name'])) {
 
             if (stristr($valid_ext, ',')) {
@@ -213,14 +219,14 @@ if (!function_exists('upload_file')) {
             } else if (stristr($valid_ext, '|')) {
                 $valid_ext = explode("|", $valid_ext);
             } else {
-                \defender::stop();
-                addNotice('warning', 'Fusion Dynamics invalid accepted extension format. Please use either | or ,');
+                fusion_stop("Fusion Dynamics invalid accepted extension format. Please use either | or ,");
             }
 
             $file = $_FILES[$source_file];
             if ($target_file == "" || preg_match("/[^a-zA-Z0-9_-]/", $target_file)) {
                 $target_file = stripfilename(substr($file['name'], 0, strrpos($file['name'], ".")));
             }
+
             $file_ext = strtolower(strrchr($file['name'], "."));
             //$file_dest = $target_folder;
             $upload_file = [
@@ -240,7 +246,7 @@ if (!function_exists('upload_file')) {
             } else if (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
-            } else if (fusion_get_settings('mime_check') && \Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+            } else if (fusion_get_settings('mime_check') && ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
                 $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
@@ -308,7 +314,7 @@ if (!function_exists('upload_image')) {
 
             if ($image['size']) {
 
-                if (\defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
+                if (ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
 
                     $image_res = [0, 1];
 
@@ -355,19 +361,27 @@ if (!function_exists('upload_image')) {
                         if (function_exists("chmod")) {
                             chmod($target_folder.$image_name_full, 0755);
                         }
+
                         if ($query && !dbquery($query)) {
                             // Invalid query string
                             $image_info['error'] = 4;
                             unlink($target_folder.$image_name_full);
                         } else if ($thumb1 || $thumb2) {
+
                             require_once INCLUDES."photo_functions_include.php";
+
                             $noThumb = FALSE;
+
                             if ($thumb1) {
+
                                 if ($image_res[0] <= $thumb1_width && $image_res[1] <= $thumb1_height) {
+
                                     $noThumb = TRUE;
                                     $image_info['thumb1_name'] = $image_info['image_name'];
                                     $image_info['thumb1'] = FALSE;
+
                                 } else {
+
                                     if (!file_exists($thumb1_folder)) {
                                         mkdir($thumb1_folder, 0755, TRUE);
                                     }
@@ -380,8 +394,10 @@ if (!function_exists('upload_image')) {
                                     } else {
                                         createsquarethumbnail($filetype, $target_folder.$image_name_full, $thumb1_folder.$image_name_t1, $thumb1_width);
                                     }
+
                                 }
                             }
+
                             if ($thumb2) {
                                 if ($image_res[0] < $thumb2_width && $image_res[1] < $thumb2_height) {
                                     $noThumb = TRUE;
@@ -464,9 +480,18 @@ if (!function_exists('download_file')) {
  *                                      -   'all' //show on all devices
  *                                      -   'not-mobile' // hide on mobile
  *
+ * The response for the item must contains such:
+ *  [
+ *       "data" => array( 0 => array("column_1" => "data", "column_2" => "data"...), 1 => ... ),
+ *       "recordsTotal" => $rows,
+ *       "recordsFiltered" => $max_rows,
+ *       "responsive" => TRUE
+ *  ]
+ *
  * @return mixed
  */
 function fusion_table($table_id, array $options = []) {
+
     $table_id = str_replace(["-", " "], "_", $table_id);
 
     $js_event_function = "";
@@ -524,7 +549,7 @@ function fusion_table($table_id, array $options = []) {
             if (!empty($file_output)) {
                 if (isJson($file_output)) {
                     $output_array = json_decode($file_output, TRUE);
-                    print_P($output_array);
+                    //print_P($output_array);
                     if ($options['reponse_debug']) {
                         print_p($output_array);
                     }
@@ -556,6 +581,7 @@ function fusion_table($table_id, array $options = []) {
             'searching' : true,
             'ordering' : ".$options["ordering"].",
             'stateSave' : ".$options["state_save"].",
+            'autoWidth' : true,
             'ajax' : {
                 url : '".$options['remote_file']."',
                 <data_filters>
@@ -596,7 +622,12 @@ function fusion_table($table_id, array $options = []) {
         }
     }
 
-    $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function";
+    $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function
+    
+    //$(window).resize(function() {
+    //    //    $('#$table_id').DataTable().ajax.reload();
+    //    //});
+    ";
 
     if ($options['debug']) {
         print_p($javascript);
