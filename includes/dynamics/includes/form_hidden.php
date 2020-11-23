@@ -24,7 +24,6 @@
  * @return string
  */
 function form_hidden($input_name, $label = "", $input_value = "", array $options = []) {
-
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $html = '';
     $default_options = [

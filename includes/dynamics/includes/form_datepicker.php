@@ -199,16 +199,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     }
 
     $input_id = $options['input_id'] ?: $default_options['input_id'];
-    $html = "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']."'>\n";
+    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? ' row ' : '').$error_class.$options['class']."'>\n";
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
-    $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<div class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
-    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox' style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
-    $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='fa fa-calendar'></i></span>\n";
+    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
+    $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='input-group-text fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['stacked'];
-    $html .= $options['inline'] ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>\n" : "";
     $html .= "</div>\n";
 
     \defender::add_field_session([
@@ -234,16 +234,16 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                 var fromVal = $('#".$options['join_from_id']."').val();
                 var toVal = $('#".$input_id."').val();
                 if (fromVal) {
-                    $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(fromVal);
+                    $('#$input_id-field .date').data('DateTimePicker').minDate(fromVal);
                 }
                 if (toVal) {
-                    $('#".$options['join_from_id']."-field .input-group.date').data('DateTimePicker').maxDate(toVal);
+                    $('#".$options['join_from_id']."-field .date').data('DateTimePicker').maxDate(toVal);
                 }
-                $('#".$options['join_from_id']."-field .input-group.date').on('dp.change', function(e) {
-                    $('#$input_id-field .input-group.date').data('DateTimePicker').minDate(e.date);
+                $('#".$options['join_from_id']."-field .date').on('dp.change', function(e) {
+                    $('#$input_id-field .date').data('DateTimePicker').minDate(e.date);
                 });
-                $('#$input_id-field .input-group.date').on('dp.change', function(e) {
-                    $('#".$options['join_from_id']."-field .input-group.date').data('DateTimePicker').maxDate(e.date);
+                $('#$input_id-field .date').on('dp.change', function(e) {
+                    $('#".$options['join_from_id']."-field .date').data('DateTimePicker').maxDate(e.date);
                 });
             ";
         }
@@ -252,17 +252,28 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
             moment.updateLocale('".$locale['datepicker']."', {
                 week: {dow: ".$options['week_start']."}
             });
-            $('#$input_id-field .input-group.date').datetimepicker({
-            locale: '".$locale['datepicker']."',
-            showTodayButton: true,
-            showClear: true,
-            showClose: true,
-            allowInputToggle: true,
-            ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
-            ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
-            ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
-            format: '".$options['date_format_js']."',
-            ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
+            $('#$input_id-field .date').datetimepicker({
+                locale: '".$locale['datepicker']."',
+                showTodayButton: true,
+                showClear: true,
+                showClose: true,
+                allowInputToggle: true,
+                icons: {
+                    time: 'fa fa-clock',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-caret-up',
+                    down: 'fa fa-caret-down',
+                    previous: 'fa fa-caret-left',
+                    next: 'fa fa-caret-right',
+                    today: 'fa fa-calendar-day',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-close'
+                },
+                ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
+                ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
+                ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
+                format: '".$options['date_format_js']."',
+                ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
             });
             ".$bindingJs."
         ");

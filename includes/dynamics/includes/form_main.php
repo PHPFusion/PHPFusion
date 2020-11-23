@@ -63,7 +63,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
             $input_name = 'fusion_'.random_string();
             $html .= "<input type='hidden' name='$input_name' value=''>\n";
             \defender::getInstance()->addHoneypot([
-                'honeypot' => $options['form_id'].'_honeypot',
+                'honeypot'   => $options['form_id'].'_honeypot',
                 'input_name' => $input_name,
                 'form_name'  => $form_name,
                 'type'       => 'honeypot',

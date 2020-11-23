@@ -348,11 +348,11 @@ function form_select($input_name, $label, $input_value, array $options = []) {
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide' : '').$error_class.' '.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? ' row' : '').$error_class.' '.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-12 col-md-9 col-lg-9" : "col-sm-12 p-l-0")."'>\n" : "";
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     if ($options['jsonmode'] || $options['tags']) {
         // json mode.
         $html .= "<div id='".$options['input_id']."-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
@@ -428,7 +428,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
     $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-    $html .= ($options['inline'] && $label) ? "</div>\n" : '';
+    $html .= $options['inline'] && $label ? "</div>\n" : '';
     $html .= "</div>\n";
     if ($options['required']) {
         $html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck
@@ -571,9 +571,9 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3' : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
-    $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? ' row ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."'".($options['deactivate'] ? ' disabled' : '')."/>\n";
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, '', $input_value, ["input_id" => $options['input_id']]);
@@ -584,7 +584,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= \defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
-    $html .= $options['inline'] ? "</div>\n" : '';
+    $html .= $options['inline'] && $label ? "</div>\n" : '';
 
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."includes/" : INCLUDES;
@@ -764,9 +764,9 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
             }
         }
 
-        $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
-        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3' : 'col-xs-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=".$options['tip']."></i>" : '')."</label>\n" : '';
-        $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9" : "col-sm-12")."'>\n" : "";
+        $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? ' row ' : '').$error_class.$options['class']."' ".($options['inline'] && $options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+        $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '')."' for='".$options['input_id']."'>".$label.($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' label=".$options['tip']."></i>" : '')."</label>\n" : '';
+        $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     }
     if ($level == 0) {
         add_to_jquery("
@@ -825,7 +825,7 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
     if (!$level) {
         $html .= "</select>\n";
         $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-        $html .= ($options['inline']) ? "</div>\n" : '';
+        $html .= $options['inline'] && $label ? "</div>\n" : '';
         $html .= "</div>\n";
         if ($options['required']) {
             $html .= "<input class='req' id='dummy-".$options['input_id']."' type='hidden'>\n"; // for jscheck

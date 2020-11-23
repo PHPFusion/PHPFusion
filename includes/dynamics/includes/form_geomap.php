@@ -87,11 +87,11 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     }
 
-    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' >\n";
+    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? ' row ' : '').$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
-    $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
     $html .= "<div class='row'>\n";
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1'].($options['required'] ? " <span class='required'>&nbsp;*</span>" : '')."'".($options['deactivate'] ? " readonly" : '')." />\n";
@@ -131,7 +131,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
 
     $html .= $options['stacked'];
 
-    $html .= ($options['inline']) ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>\n" : "";
 
     $html .= "</div>\n";
 

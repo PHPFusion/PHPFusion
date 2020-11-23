@@ -46,23 +46,23 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $options += $default_options;
 
-	$error_class = '';
+    $error_class = '';
 
-	$option_value = [];
+    $option_value = [];
 
-	$default_checked = FALSE;
+    $default_checked = FALSE;
 
-	$switch_class = '';
+    $switch_class = '';
 
     if ($options['toggle']) {
-    	$switch_class = 'is-bootstrap-switch ';
-	    if (!defined("BOOTSTRAP_SWITCH_ASSETS")) {
-		    define("BOOTSTRAP_SWITCH_ASSETS", TRUE);
-		    // http://www.bootstrap-switch.org
-		    add_to_head("<link href='".DYNAMICS."assets/switch/css/bootstrap-switch.min.css' rel='stylesheet' />");
-		    add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
-		    add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
-	    }
+        $switch_class = 'is-bootstrap-switch ';
+        if (!defined("BOOTSTRAP_SWITCH_ASSETS")) {
+            define("BOOTSTRAP_SWITCH_ASSETS", TRUE);
+            // http://www.bootstrap-switch.org
+            add_to_head("<link href='".DYNAMICS."assets/switch/css/bootstrap-switch.min.css' rel='stylesheet' />");
+            add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
+            add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
+        }
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -82,12 +82,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     }
 
     //@todo: this can use ksort/uksort
-	$on_label = $options['toggle_text'][1];
-	$off_label = $options['toggle_text'][0];
-	if ($options['keyflip']) {
-		$on_label = $options['toggle_text'][0];
-		$off_label = $options['toggle_text'][1];
-	}
+    $on_label = $options['toggle_text'][1];
+    $off_label = $options['toggle_text'][0];
+    if ($options['keyflip']) {
+        $on_label = $options['toggle_text'][0];
+        $off_label = $options['toggle_text'][1];
+    }
 
     if (!empty($options['options']) && is_array($options['options'])) {
 

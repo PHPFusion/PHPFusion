@@ -17,14 +17,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = []) {
-
     $locale = fusion_get_locale();
 
     if (!defined("COLORPICKER")) {
         define("COLORPICKER", TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.min.css' rel='stylesheet' media='screen' />");
-        add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.min.js'></script>");
+
+        if (defined('BOOTSTRAP4')) {
+            add_to_head("<link href='".DYNAMICS."assets/colorpick/bs4/css/bootstrap-colorpicker.min.css' rel='stylesheet'>");
+            add_to_head("<script src='".DYNAMICS."assets/colorpick/bs4/js/bootstrap-colorpicker.min.js'></script>");
+        } else {
+            add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.min.css' rel='stylesheet'>");
+            add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.min.js'></script>");
+        }
     }
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = stripinput($input_name);
     $input_value = stripinput($input_value);
@@ -61,17 +67,17 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         }
     }
 
-    $html = "<div id='$input_id-field' class='form-group clearfix ".$error_class.$options['class']." '>\n";
+    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? ' row ' : '').$error_class.$options['class']." '>\n";
     $html .= $label ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3 col-md-3 col-lg-3' : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
-    $html .= $options['inline'] ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<div id='$input_id' ".($options['width'] ? "style='width: ".$options['width']."'" : '')." class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
-    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')." style='width:".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width']).";'".($options['deactivate'] ? " readonly" : "").">";
-    $html .= "<span class='input-group-addon'>";
-    $html .= "<i style='background: rgba(255,255,255,1);'></i>";
+    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."".($options['deactivate'] ? " readonly" : "").">";
+    $html .= "<span class='input-group-addon input-group-append'>";
+    $html .= "<i class='input-group-text colorpicker-input-addon' style='background: rgba(255,255,255,1);'></i>";
     $html .= "</span></div>";
-    $html .= $options['inline'] ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>\n" : "";
     $html .= "</div>\n";
 
     \defender::getInstance()->add_field_session([
@@ -83,7 +89,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'safemode'   => $options['safemode'],
         'error_text' => $options['error_text']
     ]);
-    add_to_jquery("$('#$input_id').colorpicker({ format : '".$options['format']."'  });");
+    add_to_jquery("$('#$input_id').colorpicker({format: '".$options['format']."' ".(defined('BOOTSTRAP4') ? ", fallbackColor: '#000'" : '')." });");
 
     return $html;
 }
