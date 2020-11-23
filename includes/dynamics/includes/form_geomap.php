@@ -87,7 +87,7 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     }
 
-    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? ' row ' : '').$error_class.$options['class']."' >\n";
+    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >\n";
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';

@@ -110,7 +110,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
     }
 
-    $checkbox = $options['inline'] ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "\n";
+    $checkbox = $options['inline'] && $label ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "\n";
 
     if (!empty($options['options']) && is_array($options['options'])) {
 
@@ -136,14 +136,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
 
     } else {
-
         $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0; vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '')." />\n</div>\n";
-
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group clearfix".($options['inline'] ? ' display-block overflow-hide' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
 
-    $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
+    $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
 
     $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
 
@@ -157,7 +155,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
-    $html .= $options['inline'] ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>\n" : "";
 
     $html .= "</div>\n";
 

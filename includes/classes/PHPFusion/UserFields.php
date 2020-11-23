@@ -305,7 +305,7 @@ class UserFields extends QuantumFields {
                             'max_width'       => fusion_get_settings('avatar_height'),
                             'inline'          => TRUE,
                             'thumbnail'       => 0,
-                            'width'           => '100%',
+                            //'width'           => '100%',
                             "delete_original" => FALSE,
                             'class'           => 'm-t-10 m-b-0',
                             "error_text"      => $locale['u180'],
