@@ -195,7 +195,7 @@ class UserFieldsInput {
         $this->_userName = isset($_POST['user_name']) ? stripinput(trim(preg_replace("/ +/i", " ", $_POST['user_name']))) : "";
 
         if ($this->_userName != "" && $this->_userName != $this->userData['user_name']) {
-            if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
+            if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
                 $this->_setError("user_name", $locale['u120']);
             } else {
                 $name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
