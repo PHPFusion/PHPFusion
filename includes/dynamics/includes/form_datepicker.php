@@ -86,7 +86,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
-        add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet' />");
+        if (defined('BOOTSTRAP4')) {
+            add_to_head("<link href='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>");
+        } else {
+            add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet' />");
+        }
+
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
 
         if (file_exists(DYNAMICS."assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
@@ -94,8 +99,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         } else {
             $lang = 'en-gb';
         }
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
+        if (defined('BOOTSTRAP4')) {
+            add_to_footer("<script src='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.js'></script>");
+        } else {
+            add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
+            add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
+        }
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
 
@@ -202,9 +211,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."'>\n";
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<div class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
-    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' value='".$input_value."' class='form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
-    $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."'><i class='input-group-text fa fa-calendar'></i></span>\n";
+    $html .= "<div id='$input_id-datepicker' data-target-input='nearest' class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
+    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' data-target='#".$input_id."-datepicker' value='".$input_value."' class='datetimepicker-input form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
+    $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."' data-target='#".$input_id."-datepicker' data-toggle='datetimepicker'><i class='input-group-text fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['stacked'];
@@ -230,21 +239,40 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
          */
         $bindingJs = "";
         if (!empty($options['join_from_id'])) {
-            $bindingJs = "
-                var fromVal = $('#".$options['join_from_id']."').val();
-                var toVal = $('#".$input_id."').val();
-                if (fromVal) {
-                    $('#$input_id-field .date').data('DateTimePicker').minDate(fromVal);
-                }
-                if (toVal) {
-                    $('#".$options['join_from_id']."-field .date').data('DateTimePicker').maxDate(toVal);
-                }
-                $('#".$options['join_from_id']."-field .date').on('dp.change', function(e) {
-                    $('#$input_id-field .date').data('DateTimePicker').minDate(e.date);
-                });
-                $('#$input_id-field .date').on('dp.change', function(e) {
-                    $('#".$options['join_from_id']."-field .date').data('DateTimePicker').maxDate(e.date);
-                });
+            if (defined('BOOTSTRAP4')) {
+                $bindingJs = "
+                    $('#".$options['join_from_id']."-datepicker').on('change.datetimepicker', function (e) {
+                        $('#$input_id-datepicker').datetimepicker('minDate', e.date);
+                    });
+                    $('#$input_id-datepicker').on('change.datetimepicker', function (e) {
+                        $('#".$options['join_from_id']."-datepicker').datetimepicker('maxDate', e.date);
+                    });
+                ";
+            } else {
+                $bindingJs = "
+                    $('#".$options['join_from_id']."-datepicker').on('dp.change', function(e) {
+                        $('#$input_id-datepicker').data('DateTimePicker').minDate(e.date);
+                    });
+                    $('#$input_id-datepicker').on('dp.change', function(e) {
+                        $('#".$options['join_from_id']."-datepicker').data('DateTimePicker').maxDate(e.date);
+                    });
+                ";
+            }
+        }
+
+        if (defined('BOOTSTRAP4')) {
+            $dpbuttons = "
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true
+                },
+            ";
+        } else {
+            $dpbuttons = "
+                showTodayButton: true,
+                showClear: true,
+                showClose: true,
             ";
         }
 
@@ -252,11 +280,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
             moment.updateLocale('".$locale['datepicker']."', {
                 week: {dow: ".$options['week_start']."}
             });
-            $('#$input_id-field .date').datetimepicker({
+            $('#$input_id-datepicker').datetimepicker({
                 locale: '".$locale['datepicker']."',
-                showTodayButton: true,
-                showClear: true,
-                showClose: true,
+                ".$dpbuttons."
                 allowInputToggle: true,
                 icons: {
                     time: 'fa fa-clock',
