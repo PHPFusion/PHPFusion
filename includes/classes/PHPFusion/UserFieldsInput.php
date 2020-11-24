@@ -207,13 +207,15 @@ class UserFieldsInput {
 
             if ($this->_userName != $this->userData['user_name']) {
 
-                if (!preg_check("/^[-0-9A-Z_@\s]+$/i", $this->_userName)) {
+                if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
+                    
                     // Check for invalid characters
                     \defender::stop();
                     \defender::setInputError('user_name');
                     \defender::setErrorText('user_name', $locale['u120']);
 
                 } else if (in_array($this->_userName, $uban)) {
+
                     // Check for contains username
                     \defender::stop();
                     \defender::setInputError('user_name');
