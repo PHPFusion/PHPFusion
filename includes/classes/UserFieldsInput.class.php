@@ -582,7 +582,7 @@ class UserFieldsInput {
     }
 
     private function _setEmailVerification() {
-        global $settings, $locale;
+        global $settings, $locale, $userCode;
 
         require_once INCLUDES."sendmail_include.php";
 
