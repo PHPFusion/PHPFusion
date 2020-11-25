@@ -129,8 +129,6 @@ html {
 
 .global-shadow-background {
     position: absolute;
-    -moz-box-shadow: 0 0 18px #D0D0D0;
-    -webkit-box-shadow: 0 0 18px #D0D0D0;
     box-shadow: 0 0 18px #D0D0D0;
     top: 20px;
     bottom: 20px;
@@ -199,14 +197,9 @@ fieldset {
     margin-bottom: 10px !important;
 
     /* -- CSS3 - define rounded corners -- */
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
     border-radius: 10px;
 
     /* -- CSS3 - add a drop shadow -- */
-
-    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -222,8 +215,6 @@ legend {
     font-size: 12px !important;
     width: 95% !important;
     margin-bottom: 5px !important;
-    -webkit-box-shadow: 0px 0 4px #ccc;
-    -moz-box-shadow: 0px 0 4px #ccc;
     box-shadow: 0px 0 4px #ccc;
     -webkit-border-bottom-right-radius: 5px;
     -webkit-border-bottom-left-radius: 5px;
@@ -478,11 +469,6 @@ input[type="checkbox"]:hover {
 
 input[type="submit"]:hover {
     background: #0F98D7 !important;
-    background: -moz-linear-gradient(top, #0F98D7 0%, #0A60B6 100%) !important;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0F98D7), color-stop(100%, #0A60B6)) !important;
-    background: -webkit-linear-gradient(top, #0F98D7 0%, #0A60B6 100%) !important;
-    background: -o-linear-gradient(top, #0F98D7 0%, #0A60B6 100%) !important;
-    background: -ms-linear-gradient(top, #0F98D7 0%, #0A60B6 100%) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#0F98D7), to(#0A60B6)) !important;
     background: linear-gradient(top, #0F98D7 0%, #0A60B6 100%) !important;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0f98d7', endColorstr='#0a60b6', GradientType=0) !important;
@@ -491,16 +477,10 @@ input[type="submit"]:hover {
 
 input[type="submit"] {
     background: #0481BD !important;
-    background: -moz-linear-gradient(top, #0481BD 0%, #00478E 100%) !important;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0481BD), color-stop(100%, #00478E)) !important;
-    background: -webkit-linear-gradient(top, #0481BD 0%, #00478E 100%) !important;
-    background: -o-linear-gradient(top, #0481BD 0%, #00478E 100%) !important;
-    background: -ms-linear-gradient(top, #0481BD 0%, #00478E 100%) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#0481BD), to(#00478E)) !important;
     background: linear-gradient(top, #0481BD 0%, #00478E 100%) !important;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0481bd', endColorstr='#00478e', GradientType=0) !important;
     border-color: #64B3D7 #0569A7 #175AA0 !important;
-    -webkit-border-radius: 2px !important;
     border-radius: 2px !important;
     border-style: solid !important;
     border-width: 1px !important;
@@ -521,8 +501,6 @@ input[type=text], input[type=password], textarea {
     border: solid 1px #ccc;
     padding: 5px 5px !important;
     color: #444 !important;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -805,10 +783,6 @@ label {
     font-size: 11px;
     font-weight: bold;
     background-color: #c7c7c7;
-    background-image: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0%, #d9d9d9), color-stop(100%, #c7c7c7));
-    background-image: -webkit-linear-gradient(#d9d9d9, #c7c7c7);
-    background-image: -moz-linear-gradient(#d9d9d9, #c7c7c7);
-    background-image: -o-linear-gradient(#d9d9d9, #c7c7c7);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#d9d9d9), to(#c7c7c7));
     background-image: linear-gradient(#d9d9d9, #c7c7c7);
     border-bottom: 1px solid #fff;

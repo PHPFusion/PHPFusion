@@ -43,10 +43,9 @@ if (dbrows($result)) {
 }
 echo "<div class='side-label'><strong>".$locale['global_022']."</strong></div>\n";
 
-$timeframe = ($settings['popular_threads_timeframe'] != 0 ? "thread_lastpost >= ".(time() - $settings['popular_threads_timeframe']) : "");
+$timeframe = ($settings['popular_threads_timeframe'] != 0 ? "thread_lastpost >= ".(time() - (int)$settings['popular_threads_timeframe']) : "");
 list($min_posts) = dbarraynum(dbquery("SELECT thread_postcount FROM ".DB_THREADS.($timeframe ? " WHERE ".$timeframe : "")." ORDER BY thread_postcount DESC LIMIT 4,1"));
 $timeframe = ($timeframe ? " AND tt.".$timeframe : "");
-
 
 $result = dbquery(
     "SELECT	f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_moderators, f.forum_lastpost, f.forum_postcount,

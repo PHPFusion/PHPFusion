@@ -42,9 +42,6 @@ define('ENTYPO', TRUE);
 // Disable Load Default CCS
 // define('NO_DEFAULT_CSS', TRUE);
 
-// Disable Load Global CCS
-// define('NO_GLOBAL_CSS', TRUE);
-
 // Enable Fontawesome
 // define('FONTAWESOME', TRUE);
 

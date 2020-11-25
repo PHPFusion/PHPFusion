@@ -26,9 +26,6 @@ define("THEME_WIDTH", "100%");
 // Disable Load Default CCS
 define('NO_DEFAULT_CSS', TRUE);
 
-// Disable Load Global CCS
-define('NO_GLOBAL_CSS', TRUE);
-
 // Enable Fontawesome
 // define('FONTAWESOME', TRUE);
 

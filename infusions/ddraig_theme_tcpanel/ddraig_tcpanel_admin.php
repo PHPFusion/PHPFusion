@@ -28,8 +28,6 @@ if (file_exists(INFUSIONS."ddraig_theme_tcpanel/locale/".LANGUAGE.".php")) {
     include INFUSIONS."ddraig_theme_tcpanel/locale/English.php";
 }
 
-include INFUSIONS."ddraig_theme_tcpanel/infusion_db.php";
-
 //Select options
 $select_opt = [
     1 => ["desc"  => $locale['enabled'],

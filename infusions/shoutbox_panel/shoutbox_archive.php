@@ -18,7 +18,6 @@
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/header.php";
 
-include_once INFUSIONS."shoutbox_panel/infusion_db.php";
 include_once INCLUDES."infusions_include.php";
 
 

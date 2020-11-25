@@ -19,8 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include INFUSIONS."shoutbox_panel/infusion_db.php";
-
 // Check if locale file is available matching the current site locale setting.
 if (file_exists(INFUSIONS."shoutbox_panel/locale/".$settings['locale'].".php")) {
     // Load the locale file matching the current site locale setting.

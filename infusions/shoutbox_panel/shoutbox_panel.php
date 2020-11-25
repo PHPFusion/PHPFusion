@@ -19,7 +19,6 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-include_once INFUSIONS."shoutbox_panel/infusion_db.php";
 include_once INCLUDES."infusions_include.php";
 
 // Check if a locale file is available that match the selected locale.

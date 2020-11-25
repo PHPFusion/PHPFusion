@@ -24,7 +24,6 @@ require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/sitelinks.php";
 
 add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
-add_to_head("<link rel='stylesheet' href='".THEMES."templates/site_links.css' type='text/css' media='all' />");
 add_to_head("<script type='text/javascript'>
     $(document).ready(function() {
         $('.site-links').sortable({

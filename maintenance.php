@@ -77,11 +77,6 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     }
 }
 
-// Global CSS, Resets etc.
-if (!defined('NO_GLOBAL_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/global.css' type='text/css' media='screen' />\n";
-}
-
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.css' rel='stylesheet' type='text/css' media='screen'/>\n";
 }

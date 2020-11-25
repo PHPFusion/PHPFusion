@@ -42,7 +42,7 @@ if (isset($_GET['status']) && !isset($message)) {
         $message = $locale['global_182'];
     }
     if ($message) {
-        $message = "<div class='admin-message'>".$message."</div>";
+        $message = "<div class='admin-message alert alert-info'>".$message."</div>";
         if ($_GET['status'] == "sn" || $_GET['status'] == "su") {
             echo $message;
         } else {

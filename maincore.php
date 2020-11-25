@@ -1594,6 +1594,16 @@ function rrmdir($dir) {
 
 include INCLUDES."system_images.php";
 
+$inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
+if (!empty($inf_folder)) {
+    foreach ($inf_folder as $folder) {
+        $inf_include = INFUSIONS.$folder."/infusion_db.php";
+        if (file_exists($inf_include)) {
+            include $inf_include;
+        }
+    }
+}
+
 if (file_exists(INCLUDES.'custom_includes.php')) {
     require_once INCLUDES.'custom_includes.php';
 }

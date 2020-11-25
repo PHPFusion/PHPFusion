@@ -25,8 +25,6 @@ if (file_exists(INFUSIONS."ddraig_theme_tcpanel/locale/".LANGUAGE.".php")) {
     include INFUSIONS."ddraig_theme_tcpanel/locale/English.php";
 }
 
-include INFUSIONS."ddraig_theme_tcpanel/infusion_db.php";
-
 // Infusion general information
 $inf_title = "Ddraing Theme Control Panel";
 $inf_description = "Ddraig Theme Control Panel";

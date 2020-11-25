@@ -36,7 +36,7 @@ function opensetup() {
     echo "<html lang='".$locale['xml_lang']."'>\n";
     echo "<head>\n<title>".$locale['title']."</title>\n";
     echo "<meta http-equiv='Content-Type' content='text/html; charset=".$locale['charset']."' />\n";
-    echo "<link rel='stylesheet' href='themes/templates/setup_styles.css' type='text/css' />\n";
+    echo "<link rel='stylesheet' href='themes/templates/install.css' type='text/css' />\n";
     echo "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
     echo "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
     echo "<script type='text/javascript' src='includes/jquery/jquery.min.js'></script>\n";
@@ -1693,7 +1693,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('DOT', 'database_optimization_tool.png', '".$locale['130f']."', 'database_optimization_tool.php', '6')");
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('UIT', 'user_ip_tool.png', '".$locale['130g']."', 'user_ip_tool.php', '6')");
             $result = dbquery("INSERT INTO ".$db_prefix."admin (admin_rights, admin_image, admin_title, admin_link, admin_page) VALUES ('FST', 'fusion_security_tool.png', '".$locale['130e']."', 'fusion_security_tool.php', '6')");
-    
+
             $result = dbquery("INSERT INTO ".$db_prefix."users (
                 user_name, user_algo, user_salt, user_password, user_admin_algo, user_admin_salt, user_admin_password, user_email, user_hide_email, user_offset,
                 user_avatar, user_posts, user_threads, user_joined, user_lastvisit, user_ip, user_rights,

@@ -18,8 +18,6 @@
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES."templates/admin_header.php";
 
-include INFUSIONS."shoutbox_panel/infusion_db.php";
-
 // Check if a locale file is available that match the selected locale.
 if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
     // Load the locale file matching selection.

@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!checkrights("I") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {redirect("../index.php");}
+if (!checkrights("I") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+    redirect("../index.php");
+}
 
 require_once THEMES."templates/admin_header.php";
 include LOCALE.LOCALESET."admin/infusions.php";
@@ -30,7 +32,8 @@ $inf_developer = "";
 $inf_email = "";
 $inf_weburl = "";
 $inf_folder = "";
-
+$inf_image = '';
+$inf_image_tmp = '';
 $inf_newtable = [];
 $inf_insertdbrow = [];
 $inf_droptable = [];
@@ -102,20 +105,6 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                         'inf_image'       => $inf_image
                     ];
                 }
-                $inf_title = "";
-                $inf_description = "";
-                $inf_version = "";
-                $inf_developer = "";
-                $inf_email = "";
-                $inf_weburl = "";
-                $inf_folder = "";
-                $inf_newtable = "";
-                $inf_insertdbrow = "";
-                $inf_droptable = "";
-                $inf_altertable = "";
-                $inf_deldbrow = "";
-                $inf_image = "";
-                $inf_image_tmp = "";
             }
         }
     }

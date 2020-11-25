@@ -67,7 +67,6 @@ if (isset($_POST['migrate'])) {
                 if (isset($_POST['shoutbox']) == '1') {
                     $result = dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='shoutbox_panel'");
                     if ($result > 0) {
-                        require_once INFUSIONS."shoutbox_panel/infusion_db.php";
                         user_posts_migrate($user_primary_id, $user_temp_id, DB_SHOUTBOX, 'shout_name', $locale['111']);
                     }
                 }

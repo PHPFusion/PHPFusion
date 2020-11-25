@@ -36,11 +36,6 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     }
 }
 
-// Global CSS, Resets etc.
-if (!defined('NO_GLOBAL_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/global.css?v=".filemtime(THEMES.'templates/global.css')."' type='text/css' media='screen' />\n";
-}
-
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
@@ -212,8 +207,5 @@ echo $fusion_page_footer_tags;
 if (!empty($fusion_jquery_tags)) {
     echo "<script type='text/javascript'>$(function(){".$fusion_jquery_tags."});</script>\n";
 }
-
-// Uncomment to guide your theme development
-//echo "<script src='".INCLUDES."jscripts/html-inspector.js'></script>\n<script> HTMLInspector.inspect() </script>\n";
 echo "</body>\n";
 echo "</html>";

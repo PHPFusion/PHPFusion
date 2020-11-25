@@ -30,8 +30,9 @@ require_once INCLUDES.'theme_functions_include.php';
 require_once ARS.'acp_autoloader.php';
 
 define('BOOTSTRAP', TRUE);
-define('ENTYPO', TRUE);
 define('FONTAWESOME', TRUE);
+define('ENTYPO', TRUE);
+define('NO_THEME_CSS', TRUE);
 
 if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
     define('THEME_BODY', '<body class="login-page">');
