@@ -20,7 +20,6 @@ if (!defined('FORUM_EXIST')) {
 }
 require_once THEMES.'templates/header.php';
 
-require_once "infusion_db.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INCLUDES."infusions_include.php";
