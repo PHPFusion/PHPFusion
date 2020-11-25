@@ -393,9 +393,7 @@ class DbBackupAdministration {
             } else {
                 echo openform("frm_info", "post", clean_request('section=restore_db', ['action', 'section'], FALSE));
                 echo "<h4>".$this->locale['400']."</h4>\n";
-                echo "<div class='text-center panel panel-default panel-body'>\n";
                 echo $this->locale['401']."<br /><br />".$this->locale['402'];
-                echo "</div>\n";
                 echo form_button('btn_cancel', $this->locale['403'], $this->locale['403'], ['class' => 'btn-default spacer-xs']);
                 echo closeform();
             }
@@ -500,8 +498,8 @@ class DbBackupAdministration {
 
         } else {
             $file_types = (function_exists("gzencode")) ? ".gz " : ""; // added
-            echo openform('restore', 'post', clean_request('action=restore', ['action'], FALSE), ['enctype' => 1, 'class' => 'spacer-xs']);
-            echo "<div class='panel panel-default panel-body'>\n";
+            echo openform('restore', 'post', clean_request('action=restore', ['action'], FALSE), ['enctype' => 1]);
+
             echo form_fileinput("upload_backup_file", $this->locale['431'], "", [
                 'inline'    => FALSE,
                 'type'      => "object",
@@ -509,7 +507,7 @@ class DbBackupAdministration {
                 'template'  => 'modern',
             ]);
             echo "<small>".$this->locale['440']." ".$file_types.".sql</small>\n"; // added
-            echo "</div>\n";
+
             echo form_button('restore', $this->locale['438'], $this->locale['438'], ['class' => 'btn-primary spacer-sm',]);
             echo closeform();
         }

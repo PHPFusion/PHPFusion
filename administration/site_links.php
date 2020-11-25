@@ -585,7 +585,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             $tab["id"][$pos_id] = $pos_id;
         }
 
-        $tab_active = tab_active($tab, 3, "refs");
+        $tab_active = tab_active($tab, 2, "refs");
         $cat = get("cat", FILTER_VALIDATE_INT) ?: 0;
 
         echo opentab($tab, $tab_active, "sl-menu", TRUE, "nav-pills m-t-10 m-b-10", "refs", ["cat", "refs"]);

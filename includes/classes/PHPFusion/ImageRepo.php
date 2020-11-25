@@ -66,7 +66,7 @@ class ImageRepo {
             //B
             //C
             //D
-            "down"          => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/down.png",
+            "down"          => IMAGES."icons/down.png",
             //E
             //F
             //G
@@ -76,21 +76,21 @@ class ImageRepo {
             //J
             //K
             //L
-            "left"          => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/left.png",
+            "left"          => IMAGES."icons/left.png",
             //M
             //N
             "noavatar"      => IMAGES."avatars/no-avatar.jpg",
             //O
             //P
-            "panel_on"      => IMAGES."panel_on.gif",
-            "panel_off"     => IMAGES."panel_off.gif",
+            "panel_on"      => IMAGES."icons/panel_on.gif",
+            "panel_off"     => IMAGES."icons/panel_off.gif",
             //Q
             //R
-            "right"         => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/right.png",
+            "right"         => IMAGES."icons/right.png",
             //S
             //T
             //U
-            "up"            => THEMES."admin_themes/".fusion_get_settings('admin_theme')."/images/up.png",
+            "up"            => IMAGES."icons/up.png",
             //V
             //W
             //X

@@ -59,19 +59,19 @@ function bbcode_list() {
         $smileys_checked = isset($_POST['test_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
             $test_message) ? 1 : 0;
         if (\defender::safe()) {
-            opentable($locale['BBCA_417']);
+            openside($locale['BBCA_417']);
             echo "<div class='well'>\n";
             if (!$smileys_checked) {
-                echo parseubb(parsesmileys($test_message));
+                echo parsesmileys(parseubb($test_message));
             } else {
                 echo parseubb($test_message);
             }
             echo "</div>\n";
-            closetable();
+            closeside();
         }
     }
 
-    opentable($locale['BBCA_401']);
+    openside($locale['BBCA_401']);
     echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=bbcode_list");
     echo form_textarea('test_message', $locale['BBCA_418a'], $test_message, [
         'required'   => TRUE,
@@ -91,7 +91,7 @@ function bbcode_list() {
     echo "</div>\n";
     echo "</div>\n";
     closeform();
-    closetable();
+    closeside();
 
 }
 
@@ -176,13 +176,13 @@ function bbcode_form() {
                 $up = $data['bbcode_order'] - 1;
                 $down = $data['bbcode_order'] + 1;
                 if ($i == 1) {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:none;' /></a>\n";
+                    $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
                 } else {
                     if ($i < $numrows) {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:none;' /></a>\n";
-                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><img src='".get_image("down")."' alt='".$locale['BBCA_408']."' title='".$locale['BBCA_408']."' style='border:none;' /></a>\n";
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
+                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&amp;action=mdown&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
                     } else {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><img src='".get_image("up")."' alt='".$locale['BBCA_409']."' title='".$locale['BBCA_409']."' style='border:none;' /></a>\n";
+                        $up_down = " <a href='".FUSION_SELF.$aidlink."&amp;action=mup&amp;bbcode_id=".$data['bbcode_id']."&amp;order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
                     }
                 }
             } else {

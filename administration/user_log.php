@@ -134,11 +134,10 @@ echo form_select('expr', ' ', $orderby, [
     'placholder' => $locale['choose'],
     'inline'     => TRUE
 ]);
-echo form_user_select("user", $locale['UL_009'], '', [
+echo form_user_select("user", $locale['UL_009'], $user, [
     'max_select'  => 1,
     'inline'      => TRUE,
     'inner_width' => '100%',
-    'width'       => '100%',
     'allow_self'  => TRUE,
 ]);
 echo form_select('userField', $locale['UL_010'], $userField, [
@@ -147,7 +146,7 @@ echo form_select('userField', $locale['UL_010'], $userField, [
     'allowclear'  => 1,
     'inline'      => TRUE
 ]);
-echo form_button('submit', $locale['UL_011'], $locale['UL_011'], ['class' => 'btn-primary']);
+echo form_button('submit_uf', $locale['UL_011'], $locale['UL_011'], ['class' => 'btn-primary']);
 echo closeform();
 closeside();
 

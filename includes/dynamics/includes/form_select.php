@@ -536,7 +536,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'allowclear'        => FALSE,
         'multiple'          => FALSE,
         'inner_width'       => '250px',
-        'width'             => '100%',
+        'width'             => '',
         'keyflip'           => FALSE,
         'tags'              => FALSE,
         'jsonmode'          => FALSE,

@@ -81,7 +81,7 @@ if (!function_exists("newsopts")) {
         if ($info['news_ext'] == "y" || ($info['news_allow_comments'] && fusion_get_settings('comments_enabled') == "1")) {
             $res .= $info['news_reads'].$locale['global_074']."\n ".$sep;
         }
-        $res .= "<a href='print.php?type=N&amp;item_id=".$info['news_id']."'><img src='".get_image("printer")."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
+        $res .= "<a href='print.php?type=N&amp;item_id=".$info['news_id']."'><i class='fa fa-print' title='".$locale['global_075']."'></i></a>\n";
 
         return "<!--news_opts-->".$res;
     }
@@ -146,7 +146,7 @@ if (!function_exists("articleopts")) {
             $res = "<a href='articles.php?article_id=".$info['article_id']."#comments'>".$info['article_comments'].($info['article_comments'] == 1 ? $locale['global_073b'] : $locale['global_073'])."</a> ".$sep."\n";
         }
         $res .= $info['article_reads'].$locale['global_074']." ".$sep."\n";
-        $res .= "<a href='print.php?type=A&amp;item_id=".$info['article_id']."'><img src='".get_image("printer")."' alt='".$locale['global_075']."' style='vertical-align:middle;border:0;' /></a>\n";
+        $res .= "<a href='print.php?type=A&amp;item_id=".$info['article_id']."'><i class='fa fa-print' title='".$locale['global_075']."'></i></a>\n";
 
         return "<!--article_opts-->".$res;
     }
@@ -189,11 +189,11 @@ if (!function_exists("itemoptions")) {
         $res = "";
         if ($item_type == "N") {
             if (iADMIN && checkrights($item_type)) {
-                $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;news_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+                $res .= "<!--article_news_opts--> &middot; <a href='".INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;news_id=".$item_id."'><i class='fa fa-pencil' title='".$locale['global_076']."'></i></a>\n";
             }
         } else if ($item_type == "A") {
             if (iADMIN && checkrights($item_type)) {
-                $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><img src='".get_image("edit")."' alt='".$locale['global_076']."' title='".$locale['global_076']."' style='vertical-align:middle;border:0;' /></a>\n";
+                $res .= "<!--article_admin_opts--> &middot; <a href='".INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;action=edit&amp;article_id=".$item_id."'><i class='fa fa-pencil' title='".$locale['global_076']."'></i></a>\n";
             }
         }
 

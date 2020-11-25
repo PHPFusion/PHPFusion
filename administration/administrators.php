@@ -233,23 +233,16 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         );
 
         if (dbrows($result)) {
-            $users = "";
+            echo openform('add_users_form', 'post', FUSION_SELF.fusion_get_aidlink());
+            echo "<strong>".$locale['ADM_413']."</strong>\n";
             while ($data = dbarray($result)) {
-                $users .= "<tr>\n<td>";
-                $users .= form_checkbox('user_id', $data['user_name'], '', [
+                echo form_checkbox('user_id', $data['user_name'], '', [
                     'type'          => 'radio',
                     'inline'        => TRUE,
                     'reverse_label' => TRUE,
                     'value'         => $data['user_id'],
                 ]);
-                $users .= "</td>\n</tr>";
             }
-            echo openform('add_users_form', 'post', FUSION_SELF.fusion_get_aidlink());
-            echo "<div class='table-responsive'>\n";
-            echo "<table class='table table-hover table-striped'>\n";
-            echo "<thead>\n<tr>\n<th><strong>".$locale['ADM_413']."</strong></th>\n</tr></thead>\n";
-            echo "<tbody>\n".$users."</tbody>\n";
-            echo "</table>\n";
             echo "</div>";
             echo "<div class='panel panel-default'>\n";
             echo "<div class='panel-body'>\n";

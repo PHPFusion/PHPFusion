@@ -303,6 +303,8 @@ class PanelsAdministration {
         // do the table
         opentable(self::$locale['600']);
         $edit = (isset($_GET['action']) && $_GET['action'] == 'edit') ? $this->verify_panel($_GET['panel_id']) : 0;
+        $allowed_section = ['listpanel', 'panelform'];
+        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'listpanel';
 
         // build a new interface
         $tab_title['title'][] = self::$locale['407'];
@@ -311,18 +313,15 @@ class PanelsAdministration {
         $tab_title['title'][] = $edit ? self::$locale['409'] : self::$locale['408'];
         $tab_title['id'][] = 'panelform';
         $tab_title['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
-        $tab_active = tab_active($tab_title, $edit ? 1 : 0, 'section');
 
-        echo opentab($tab_title, $tab_active, 'id', TRUE);
-
-        echo opentabbody($tab_title['title'][0], 'listpanel', $tab_active, 1);
-        $this->panel_listing();
-        echo closetabbody();
-
-        if (isset($_GET['section']) && $_GET['section'] == 'panelform') {
-            echo opentabbody($tab_title['title'][1], 'panelform', $tab_active, 1);
-            $this->add_panel_form();
-            echo closetabbody();
+        echo opentab($tab_title, $_GET['section'], 'id', TRUE);
+        switch ($_GET['section']) {
+            case 'panelform':
+                $this->add_panel_form();
+                break;
+            default:
+                $this->panel_listing();
+                break;
         }
 
         echo closetab();
@@ -591,7 +590,7 @@ class PanelsAdministration {
         ]);
         echo "<div id='panel_url_list-grp'>\n";
         echo form_textarea('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
-            'inline'   => FALSE,
+            'inline' => FALSE,
             //'required' => TRUE
         ]);
         echo "<div class='text-smaller'>".self::$locale['463']." <br />

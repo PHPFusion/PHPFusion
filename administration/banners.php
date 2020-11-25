@@ -95,7 +95,7 @@ class BannersAdministration {
                 foreach ($settings_main as $settings_key => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 }
-                addNotice('warning', self::$locale['BN_013']);
+                addNotice('success', self::$locale['BN_013']);
                 redirect(clean_request('', ['section=banners_list', 'aid'], TRUE));
             }
         }
