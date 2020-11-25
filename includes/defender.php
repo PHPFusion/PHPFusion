@@ -321,7 +321,7 @@ class Defender {
      *
      * @param string $input_name
      *
-     * @return string
+     * @return mixed
      */
     public function get_current_field_session($input_name = '') {
         if ($input_name && isset($_SESSION['form_fields'][self::pageHash()][$input_name])) {
@@ -415,7 +415,7 @@ class Defender {
      */
     public function filterPostArray($key) {
 
-        $flag = '';
+        $flag = NULL;
         $input_key = $key;
         if (is_array($key)) {
             // always use key 0 for filter var
@@ -649,6 +649,7 @@ class Defender {
 
 /**
  * Verify and Sanitize Inputs
+ *
  * @param        $value
  * @param string $default
  * @param bool   $input_name
@@ -673,7 +674,6 @@ function form_sanitizer($value, $default = '', $input_name = FALSE, $is_multiLan
  *
  * @return string
  */
-
 function sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
     return Defender::getInstance()->sanitizer($value, $default, $input_name, $is_multiLang);
 }
@@ -712,11 +712,11 @@ function file_sanitizer($value, $default = '', $input_name = FALSE) {
  */
 function check_get($key) {
     if (is_array($key)) {
-        return (!empty(array_reduce($key, function ($carry, $item) {
+        return !empty(array_reduce($key, function ($carry, $item) {
             return (!empty($carry[$item]) ? $carry[$item] : '');
-        }, $_GET)) ? TRUE : FALSE);
+        }, $_GET));
     }
-    return (isset($_GET[$key]) ? TRUE : FALSE);
+    return isset($_GET[$key]);
 }
 
 /**
@@ -728,24 +728,24 @@ function check_get($key) {
  */
 function check_post($key) {
     if (is_array($key)) {
-        return (!empty(array_reduce($key, function ($carry, $item) {
+        return !empty(array_reduce($key, function ($carry, $item) {
             return (!empty($carry[$item]) ? $carry[$item] : '');
-        }, $_POST)) ? TRUE : FALSE);
+        }, $_POST));
     }
-    return (isset($_POST[$key]) ? TRUE : FALSE);
+    return isset($_POST[$key]);
 }
 
 /**
- * @param null   $key
+ * @param mixed  $key
  * @param int    $type
  * @param string $flags
  *
  * @return mixed
  */
-function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
+function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
 
     if (is_array($key)) {
-        $flag = '';
+        $flag = NULL;
         $input_key = $key;
         if (is_array($key)) {
             // always use key 0 for filter var
@@ -795,9 +795,9 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = '') {
  *
  * @return mixed
  */
-function post($key, $type = FILTER_DEFAULT, $flags = '') {
+function post($key, $type = FILTER_DEFAULT, $flags = NULL) {
 
-    $flag = '';
+    $flag = NULL;
     if (is_array($key)) {
         $post_key = $key;
         if (is_array($key)) {
@@ -970,7 +970,7 @@ function session_add($key, $value) {
 /**
  * Get session
  *
- * @param $key
+ * @param string|array $key
  *
  * @return null
  */
