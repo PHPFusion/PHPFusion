@@ -366,10 +366,6 @@ a:focus {
     max-width: 45px;
 }
 
-.forum.label > .detail {
-    margin: 0 -10px;
-}
-
 .mce-fullscreen {
     z-index: 1050 !important;
 }
