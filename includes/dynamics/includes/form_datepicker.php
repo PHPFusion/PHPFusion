@@ -86,23 +86,24 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
-        if (defined('BOOTSTRAP4')) {
-            add_to_head("<link href='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>");
-        } else {
-            add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet' />");
-        }
-
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
-
         if (file_exists(DYNAMICS."assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
             $lang = $locale['datepicker'];
         } else {
             $lang = 'en-gb';
         }
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
+
+        if (defined('BOOTSTRAP4')) {
+            add_to_head("<link href='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>");
+        } else {
+            add_to_head("<link href='".DYNAMICS."assets/datepicker/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>");
+        }
+
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
+
         if (defined('BOOTSTRAP4')) {
             add_to_footer("<script src='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.js'></script>");
         } else {
-            add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
             add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
         }
         add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
@@ -295,6 +296,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                     clear: 'fa fa-trash',
                     close: 'fa fa-close'
                 },
+                tooltips: tooltips_locale,
                 ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
                 ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
                 ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
