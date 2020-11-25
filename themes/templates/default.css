@@ -577,38 +577,6 @@
     border: 1px solid;
 }
 
-/* ol,ul */
-ol, ul {
-    list-style: none outside none;
-}
-
-ul {
-    padding: 0;
-}
-
-/* resets panelfor accordion */
-li.panel {
-    box-shadow: none !important;
-    margin-bottom: 0 !important;
-    background: none;
-    border: 0;
-}
-
-ul > li {
-    padding: 0;
-}
-
-ul > li a {
-    color: rgb(51, 51, 51);
-    width: 100%;
-    outline: none;
-}
-
-/* all tabs must have class */
-ul > li.active > a {
-    /* background: #F6F6F6; */
-}
-
 /* entypo icon */
 a .entypo, a .entypo-social {
     text-decoration: none !important;
@@ -639,7 +607,7 @@ a .entypo, a .entypo-social {
     display: block;
 }
 
-.clearfix:after, li:after {
+.clearfix:after {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -648,16 +616,8 @@ a .entypo, a .entypo-social {
     height: 0;
 }
 
-* html .clearfix, * html {
-    zoom: 1;
-}
-
 .floatfix {
     overflow: hidden;
-}
-
-* html .floatfix {
-    width: 100%;
 }
 
 /* Opacity */
@@ -700,16 +660,6 @@ a .entypo, a .entypo-social {
 .select2-input {
     color: #999 !Important;
     border: none !important;
-}
-
-/** Fusion CSS navigational menu */
-.main-nav {
-}
-
-.sub-nav {
-}
-
-.profile-link {
 }
 
 /* BS collapse mobile menu */
@@ -858,10 +808,6 @@ dl, dt, dd {
 .user-tooltip {
     width: 250px;
     padding-bottom: 10px;
-}
-
-table {
-    font-size: 100%;
 }
 
 /* New CSS Navigation panel, with menu subitems */
@@ -1034,43 +980,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     border-radius: 50%;
 }
 
-/* RESET */
-ul {
-    list-style: none;
-}
-
-.floatfix {
-    overflow: hidden;
-}
-
-* html .floatfix {
-    width: 100%;
-}
-
-.clearfix {
-    display: block;
-}
-
-.clearfix:after, li:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-}
-
-* html .clearfix, * html {
-    zoom: 1;
-}
-
-/* IE6 */
-*:first-child + html .clearfix, *:first-child + html {
-    zoom: 1;
-}
-
 /* IE7 */
-
 .center, *[align="center"] {
     margin-left: auto;
     margin-right: auto;
