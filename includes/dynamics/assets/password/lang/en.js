@@ -1,4 +1,4 @@
-var pwtrength_locale = {
+var pwstrength_locale = {
     wordMinLength: 'Your password is too short',
     wordMaxLength: 'Your password is too long',
     wordInvalidChar: 'Your password contains an invalid character',

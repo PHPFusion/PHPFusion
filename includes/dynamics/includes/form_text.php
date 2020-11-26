@@ -224,7 +224,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
         add_to_jquery("
             i18next.init({
-                lng: '".$locale['password_strength']."',resources: {".$locale['password_strength'].": {translation: pwtrength_locale}}
+                lng: '".$locale['password_strength']."',resources: {".$locale['password_strength'].": {translation: pwstrength_locale}}
             }, function () {
                 var options = {};
                 options.ui = {
@@ -235,7 +235,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                         progress: '.pwstrength_viewport_progress'
                     }
                 };
-                
+
                 $('#".$options['input_id']."').pwstrength(options);
             });
         ");
