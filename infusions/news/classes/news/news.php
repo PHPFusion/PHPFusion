@@ -501,7 +501,18 @@ abstract class News extends NewsServer {
             $info['news_cat_id'] = $data['news_cat_id'];
             $info['news_cat_name'] = $data['news_cat_name'];
             $info['news_cat_image_src'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? IMAGES_NC.$data['news_cat_image'] : "";
-            $info['news_cat_image'] = $data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image']) ? "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />" : "<img class='img-responsive' src='holder.js/80x80/text:".self::$locale['no_image']."/grey' />";
+
+            if ($data['news_cat_image'] && file_exists(IMAGES_NC.$data['news_cat_image'])) {
+                $info['news_cat_image'] = "<img class='img-responsive' src='".IMAGES_NC.$data['news_cat_image']."' />";
+            } else {
+                if (!defined('HOLDERJS')) {
+                    define('HOLDERJS', TRUE);
+                    add_to_footer("<script src='".INCLUDES."jquery/holder.min.js'></script>");
+                }
+
+                $info['news_cat_image'] = "<img class='img-responsive' src='holder.js/80x80/text:".self::$locale['no_image']."/grey' />";
+            }
+
             $info['news_cat_language'] = $data['news_cat_language'];
 
             $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<= '".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");

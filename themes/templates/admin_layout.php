@@ -103,8 +103,6 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
     }
 }
 
-echo "<script src='".INCLUDES."jquery/holder.min.js'></script>\n";
-
 // Output lines added with add_to_footer()
 global $fusion_page_footer_tags;
 echo $fusion_page_footer_tags;

@@ -809,12 +809,18 @@ if (!function_exists("thumbnail")) {
             $html .= "<img ".($responsive ? "class='img-responsive' " : '')."src='$src'".(!$responsive && ($_offset_w || $_offset_h) ? " style='margin-left: -".$_offset_w."px; margin-top: -".$_offset_h."px' " : '')." alt='thumbnail'/>\n";
         } else {
             $size = str_replace('px', '', $size);
+
+            if (!defined('HOLDERJS')) {
+                define('HOLDERJS', TRUE);
+                add_to_footer("<script src='".INCLUDES."jquery/holder.min.js'></script>");
+            }
+
             $html .= "<img src='holder.js/".$size."x".$size."/text:' alt='thumbnail'/>\n";
         }
         $html .= $url || $colorbox ? "</a>" : '';
         $html .= "</div>\n";
-        if ($colorbox && $src && !defined('colorbox')) {
-            define('colorbox', TRUE);
+        if ($colorbox && $src && !defined('COLORBOX')) {
+            define('COLORBOX', TRUE);
             add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
             add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
             add_to_jquery("$('.colorbox').colorbox({width: '75%', height: '75%'});");
