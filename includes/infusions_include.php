@@ -614,19 +614,23 @@ function fusion_table($table_id, array $options = []) {
 
     if (!defined('FUSION_DATATABLES')) {
         define('FUSION_DATATABLES', TRUE);
-        add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css'>");
+        //add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css'>");
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
+
         if (defined('BOOTSTRAP4')) {
-        add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.bootstrap4.min.css'>");
-            add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.bootstrap4.min.js'></script>");
+            add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.css'>");
+            add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.js'></script>");
+        } else {
+            add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs3/datatables.bootstrap.min.css'>");
+            add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs3/datatables.bootstrap.min.js'></script>");
         }
     }
 
     $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function
-    
+
     //$(window).resize(function() {
-    //    //    $('#$table_id').DataTable().ajax.reload();
-    //    //});
+    //    $('#$table_id').DataTable().ajax.reload();
+    //});
     ";
 
     if ($options['debug']) {
