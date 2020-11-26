@@ -22,7 +22,6 @@ if (!defined("IN_FUSION")) {
 define('BOOTSTRAP', TRUE);
 define('FONTAWESOME', TRUE);
 define('ENTYPO', TRUE);
-define('NO_THEME_CSS', TRUE);
 
 require_once INCLUDES."theme_functions_include.php";
 

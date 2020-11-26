@@ -36,14 +36,15 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
     }
 }
 
-// Default CSS styling which applies to all themes but can be overriden
-if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."' rel='stylesheet' type='text/css' media='screen'/>\n";
+// Site Theme CSS
+if (stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
+    $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+    echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 }
 
-// Site Theme CSS
-if (!defined('NO_THEME_CSS')) {
-    echo "<link rel='stylesheet' href='".THEME."styles.css?v=".filemtime(THEME.'styles.css')."' type='text/css' media='screen' />\n";
+// Default CSS styling which applies to all themes but can be overriden
+if (!defined('NO_DEFAULT_CSS')) {
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
 }
 
 // Entypo
@@ -58,7 +59,7 @@ if ($settings['fontawesome'] || defined('FONTAWESOME')) {
 
 // Admin Panel Theme CSS
 $admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-echo "<link href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."' rel='stylesheet' type='text/css' media='screen'/>\n";
+echo "<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'/>\n";
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
@@ -131,7 +132,7 @@ if ($settings['tinymce_enabled'] == 1) {
                 content_css: [
                     '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
                 ],
-                content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+                content_style: 'body.mceDefBody {background:#".(isset($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
                 body_class: 'mceDefBody',
             });
         }
@@ -151,7 +152,7 @@ if ($settings['tinymce_enabled'] == 1) {
                 content_css: [
                     '".(file_exists(THEME."editor.css") ? $settings['siteurl']."themes/".$settings['theme']."/editor.css" : $settings['siteurl']."themes/".$settings['theme']."/styles.css")."',
                 ],
-                content_style: 'body.mceDefBody {background:#".(IsSet($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
+                content_style: 'body.mceDefBody {background:#".(isset($settings['tinymce_bgcolor']) ? $settings['tinymce_bgcolor'] : "FFFFFF").";}',
                 body_class: 'mceDefBody'
             });
         }
