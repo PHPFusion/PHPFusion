@@ -23,12 +23,12 @@
  *
  * Generates the HTML for a textbox or password input
  *
- * @param string $input_name Name of the input, by
+ * @param string $input_name  Name of the input, by
  *                            default it's also used as the ID for the input
- * @param string $label The label
+ * @param string $label       The label
  * @param string $input_value The value to be displayed
  *                            in the input, usually a value from DB prev. saved
- * @param array  $options Various options
+ * @param array  $options     Various options
  *
  * @return string
  *
@@ -174,22 +174,10 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         case "password":
             $input_type = "password";
 
-            $pwd_locale = fusion_get_locale("password_strength");
-            $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-            if (file_exists($path)) {
-                $path = DYNAMICS."assets/password/lang/$pwd_locale.js";
-            } else {
-                $path = DYNAMICS."assets/password/lang/en.js";
-            }
-            PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='$path'></script>");
-
-            // Incompatible with password meter strength due to jquery appending layout.
-            // @todo: Fix pwstrength.js
-            if ($options['password_toggle'] == TRUE && $options['password_strength'] == FALSE) {
-                static $password_toggle = '';
-                if (!$password_toggle) {
-                    $password_toggle = TRUE;
-                    PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwtoggle.min.js'></script>");
+            if ($options['password_toggle'] == TRUE) {
+                if (!defined('PWTOGGLE')) {
+                    define('PWTOGGLE', TRUE);
+                    add_to_footer("<script>function togglePasswordInput(button_id, field_id) {var button=$('#'+button_id);var input=$('#'+field_id);if(input.attr('type')=='password'){input.attr('type','text');button.text('".$locale['hide']."');}else{input.attr('type','password');button.text('".$locale['show']."');}}</script>");
                 }
 
                 $options['append_button'] = TRUE;
@@ -203,7 +191,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                     $('#".$options['input_id']."_pwdToggle').bind('click', function(e) {
                         togglePasswordInput('".$options['input_id']."_pwdToggle', '".$options['input_id']."');
                     });
-                    ");
+                ");
             }
             break;
         default:
@@ -220,22 +208,40 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     if ($options['password_strength'] == TRUE) {
-        PHPFusion\OutputHandler::addToFooter("<script type='text/javascript' src='".DYNAMICS."assets/password/pwstrength.js'></script>");
-        PHPFusion\OutputHandler::addToHead('<script type="text/javascript">'.jsminify('
-            jQuery(document).ready(function() {
+        if (!defined('PWSTRENGTH')) {
+            define('PWSTRENGTH', TRUE);
+
+            if (file_exists(DYNAMICS."assets/password/lang/".$locale['password_strength'].".js")) {
+                $path = DYNAMICS."assets/password/lang/".$locale['password_strength'].".js";
+            } else {
+                $path = DYNAMICS."assets/password/lang/en.js";
+            }
+
+            add_to_footer("<script type='text/javascript' src='$path'></script>");
+            add_to_footer("<script src='".DYNAMICS."assets/password/i18next.js'></script>");
+            add_to_footer("<script src='".DYNAMICS."assets/password/pwstrength-bootstrap.min.js'></script>");
+        }
+
+        add_to_jquery("
+            i18next.init({
+                lng: '".$locale['password_strength']."',resources: {".$locale['password_strength'].": {translation: pwtrength_locale}}
+            }, function () {
                 var options = {};
                 options.ui = {
+                    ".(!defined('BOOTSTRAP4') ? 'bootstrap3: true,' : '')."
+                    container: '#".$options['input_id']."-field',
                     showVerdictsInsideProgressBar: true,
                     viewports: {
-                        progress: ".pwstrength_viewport_progress"
+                        progress: '.pwstrength_viewport_progress'
                     }
                 };
-                $("#'.$options['input_id'].'").pwstrength(options);
+                
+                $('#".$options['input_id']."').pwstrength(options);
             });
-        ').'</script>');
+        ");
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
 
@@ -251,18 +257,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
-    $html .= $options['password_strength'] == TRUE ? '<div class="pwstrength_viewport_progress"></div>' : '';
-
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
-
         $html .= "<span class='input-group-btn'>\n";
         $html .= "<button id='".$options['append_button_id']."' name='".$options['append_button_name']."' type='".$options['append_type']."' value='".$options['append_form_value']."' class='btn ".$options['append_size']." ".$options['append_class']."'>".$options['append_value']."</button>\n";
         $html .= "</span>\n";
 
     } else if ($options['append_value']) {
-
         $html .= "<span class='input-group-addon' id='".$options['append_id']."'>".$options['append_value']."</span>\n";
-
     }
 
     $html .= ($options['feedback_icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : '';
@@ -276,6 +277,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= $options['append_html'];
+
+    $html .= $options['password_strength'] == TRUE ? '<div class="m-t-5 pwstrength_viewport_progress"></div>' : '';
 
     $html .= ($options['inline'] && $label) ? "</div>\n" : "";
 
@@ -302,9 +305,9 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['type'] == 'number' && !defined('NUMBERS_ONLY_JS')) {
         define('NUMBERS_ONLY_JS', TRUE);
         add_to_jquery("$('input[data-type=\"number\"]').keypress(function(e) {
-		var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
-		if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
-		});\n");
+        var key_codes = [96, 97, 98, 99, 100, 101, 102, 103, 44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8];
+        if (!($.inArray(e.which, key_codes) >= 0)) { e.preventDefault(); }
+        });\n");
     }
 
     // Live Regex Error Check
@@ -334,8 +337,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     if ($options['autocomplete_off']) {
         // Delay by 20ms and reset values.
         add_to_jquery("
-        $('#".$options['input_id']."').val(' ');
-        setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
+            $('#".$options['input_id']."').val(' ');
+            setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
         ");
     }
 

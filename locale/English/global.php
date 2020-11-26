@@ -400,6 +400,7 @@ $locale['reactivate'] = "Reactivate";
 $locale['user'] = "User";
 $locale['promote'] = "Promote";
 $locale['show'] = "Show";
+$locale['hide'] = "Hide";
 $locale['actions'] = "Actions";
 $locale['language'] = "Language";
 $locale['loading'] = "Loading...";
