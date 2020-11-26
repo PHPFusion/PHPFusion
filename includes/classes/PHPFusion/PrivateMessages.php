@@ -472,7 +472,7 @@ class PrivateMessages {
                 'closeform' => closeform()
             ];
         } else {
-            add_to_footer("<script src='".INCLUDES."jscripts/pm.js'></script>");
+            add_to_footer("<script src='".INCLUDES."jscripts/pm.min.js'></script>");
             $this->info['actions_form'] = [
                 'openform'    => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', ''),
                 'check'       => [
