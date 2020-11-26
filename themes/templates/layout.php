@@ -94,7 +94,6 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 }
 
 echo "<script type='text/javascript' src='".INCLUDES."jquery/admin-scripts.js'></script>\n";
-echo "<script type='text/javascript' src='".INCLUDES."jquery/holder.min.js'></script>\n";
 
 // Output lines added with add_to_footer()
 echo $fusion_page_footer_tags;
