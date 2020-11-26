@@ -7,7 +7,7 @@ $locale['ac02'] = "User Admin";
 $locale['ac03'] = "System Admin";
 $locale['ac04'] = "Settings";
 $locale['ac05'] = "Infusions";
-$locale['ac06'] = "Tools";
+//$locale['ac06'] = "Tools"; // for a future release, no need to translate atm
 $locale['ac10'] = "Admin Dashboard";
 $locale['202'] = "User Profile Configuration";
 

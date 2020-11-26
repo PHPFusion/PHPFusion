@@ -37,7 +37,7 @@ class Admins {
         '3' => "<i class='fa fa-fw fa-cog'></i>",
         '4' => "<i class='fa fa-fw fa-wrench'></i>",
         '5' => "<i class='fa fa-fw fa-cubes'></i>",
-        '6' => "<i class='fa fa-fw fa-tools'></i>",
+        //'6' => "<i class='fa fa-fw fa-tools'></i>",
     ];
     /**
      * Default core administration pages
@@ -309,7 +309,7 @@ class Admins {
                 3 => self::$locale['ac03'],
                 4 => self::$locale['ac04'],
                 5 => self::$locale['ac05'],
-                6 => self::$locale['ac06'],
+                //6 => self::$locale['ac06'],
             ], $this->admin_sections));
             $this->admin_sections = array_values($this->admin_sections);
             $this->current_page = $this->_currentPage();

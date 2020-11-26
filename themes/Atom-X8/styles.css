@@ -1568,3 +1568,6 @@ input[type=submit]:active {
     -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff'); /* ie8 */
 }
 
+#navigation-user ul {
+    padding: 0;
+}

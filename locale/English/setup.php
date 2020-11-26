@@ -146,9 +146,9 @@ $locale['130a'] = "Blog Categories";
 $locale['130b'] = "Blog";
 $locale['130c'] = "Blog Settings";
 $locale['130d'] = "Fusion File Manager";
-$locale['130e'] = "Fusion Security";
+/*$locale['130e'] = "Fusion Security"; // for a future release, no need to translate atm
 $locale['130f'] = "Database Optimization";
-$locale['130g'] = "User IP Lookup";
+$locale['130g'] = "User IP Lookup";*/
 
 // Step 6 - Navigation Links
 $locale['130'] = "Home";
