@@ -26,7 +26,7 @@ class CommentsAdministration {
     private $aidlink;
     private $locale;
     private $commentType;
-    private static $ctype;
+    private static $ctype = '';
 
     private function __construct() {
 
@@ -198,7 +198,6 @@ class CommentsAdministration {
         }
 
         $info = [
-            'table_name' => \PHPFusion\Admins::getInstance()->getCommentType(self::$ctype)." ".$this->locale['401'],
             'buttons'    => $this->comments_Button(),
             'no_data'    => (!$row) ? "<div class='alert alert-info text-center'>".$this->locale['434']."</div>\n" : '',
             'page_nav'   => '<div class="m-t-5 m-b-5">'.makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".self::$ctype.(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;").'</div>'
