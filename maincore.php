@@ -1399,10 +1399,18 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         formatResult: avatar,
         ".$allowclear."
         })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
-         ");
+    ");
 
-    add_to_head("<link href='".INCLUDES."jscripts/select2/select2.css' rel='stylesheet' />");
-    add_to_footer("<script src='".INCLUDES."jscripts/select2/select2.min.js'></script>");
+    if (!defined("SELECT2")) {
+        define("SELECT2", TRUE);
+        add_to_head("<link href='".INCLUDES."jscripts/select2/select2.min.css' rel='stylesheet' />");
+        add_to_footer("<script src='".INCLUDES."jscripts/select2/select2.min.js'></script>");
+
+        $select2_locale_path = INCLUDES."jscripts/select2/select2_locale_".$locale['select2'].".js";
+        if (file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
+    }
 
     return $html;
 }
