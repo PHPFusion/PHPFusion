@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 // Variation Customization
 $gen_set = defined('UF_GEN_SET') ? UF_GEN_SET : 2; // 0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.
-$with_secret = defined('UF_GEN_SECRET') ? UF_GEN_SECRET : FALSE; // True for additiona unspecified option
+$with_secret = defined('UF_GEN_SECRET') ? UF_GEN_SECRET : FALSE; // Set true for additional unspecified option
 $input_type = 'form_checkbox'; // form_select or form_checkbox (up to you)
 
 /*
