@@ -4,20 +4,32 @@
 # Force LF for all text files
 *.* text eol=lf
 
-# Force images/fonts to be handled as binaries
+# Force images/audio/video/fonts to be handled as binaries
+*.gif binary
+*.ico binary
 *.jpg binary
 *.jpeg binary
-*.gif binary
+*.pdf binary
 *.png binary
-*.otf binary
-*.eof binary
-*.eot binary
-*.ttf binary
-*.woff binary
-*.woff2 binary
+*.psd binary
+*.wbmp binary
+*.webp binary
+*.mp3 binary
+*.wav binary
+*.mp4 binary
+*.mpeg binary
+*.webm binary
 *.swf binary
+*.rar binary
+*.zip binary
+*.ttf   binary
+*.eot   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
 
-# Files and directories with the attribute export-ignore won’t be added to archive files.
+# Files and directories with the attribute export-ignore won't be added to archive files.
+.github export-ignore
+test export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
-README.md export-ignore
