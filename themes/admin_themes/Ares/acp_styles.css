@@ -201,6 +201,10 @@ a:focus {
     vertical-align: top;
 }
 
+#ares-nav ul {
+    padding: 0;
+}
+
 #ares-nav li {
     list-style: none;
     position: inherit;
@@ -813,4 +817,44 @@ a:focus {
 .form-control {
     width: auto;
     display: inline-block;
+}
+
+.table.no-border,
+.table.no-border td,
+.table.no-border th {
+    border: 0;
+}
+
+
+.table.align th {
+    text-align: left;
+}
+
+.table.align td {
+    text-align: right;
+}
+
+.tbl-border {
+    background: #fff;
+    border-spacing: 0;
+}
+
+.tbl {
+    padding: 0 3px;
+}
+
+.tbl1,
+.tbl2 {
+    background: #fbfbfb;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 0;
+    border-bottom: 0;
+    padding: 8px;
+}
+
+.tbl2 {
+    background: #f7f7f7;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
 }

@@ -431,8 +431,8 @@ function admin_nav($style = FALSE) {
         $html = "<ul class='admin-horizontal-link'>\n";
         for ($i = 0; $i < 6; $i++) {
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? 1 : 0;
-            $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
-            $html .= "<li><a href='".ADMIN.$aidlink."&amp;pagenum=$i' alt='".$locale['ac0'.$i]."'><i class='".$admin_icon[$i]."'></i> <span class='hidden-xs hidden-sm hidden-md'>".$locale['ac0'.$i]."</a></span></li>\n";
+            $html .= "<li class='".($active ? 'active' : '')."' >\n";
+            $html .= "<a href='".ADMIN.$aidlink."&amp;pagenum=$i' alt='".$locale['ac0'.$i]."'><i class='".$admin_icon[$i]."'></i> <span class='hidden-xs hidden-sm hidden-md'>".$locale['ac0'.$i]."</a></span></li>\n";
         }
         $html .= "</ul>\n";
     } else {
@@ -441,7 +441,7 @@ function admin_nav($style = FALSE) {
             $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page='".$i."' AND admin_link !='reserved' ORDER BY admin_title ASC");
             $active = (isset($_GET['pagenum']) && $_GET['pagenum'] == $i || !isset($_GET['pagenum']) && Admins::getInstance()->_isActive() == $i) ? 1 : 0;
 
-            $html .= "<li class='".($active ? 'active panel' : 'panel')."' >\n";
+            $html .= "<li class='".($active ? 'active' : '')."' >\n";
             if ($i == 0) {
                 $html .= "<a class='adl-link' href='".ADMIN."index.php".$aidlink."&amp;pagenum=0'><i class='".$admin_icon[$i]."'></i> ".$locale['ac0'.$i]." ".($i > 0 ? "<span class='adl-drop pull-right'></span>" : '')."</a>\n";
             } else {
@@ -569,7 +569,7 @@ function render_admin_panel() {
         });
         ");
 
-        echo "<ul class='hidden-xs pull-right m-r-15'>\n";
+        echo "<ul class='rightnav hidden-xs pull-right m-r-15'>\n";
         $languages = fusion_get_enabled_languages();
         if (sizeof($enabled_languages) > 1) {
             echo "<li class='dropdown'>";
@@ -581,7 +581,6 @@ function render_admin_panel() {
             echo "</ul>\n";
             echo "</li>\n";
         }
-
 
         echo "<li><a title='".$locale['view']." ".$settings['sitename']."' href='".BASEDIR."'><i class='entypo home'></i></a></li>\n";
         echo "<li><a title='".$locale['message']."' href='".BASEDIR."messages.php'><i class='entypo mail'></i></a></li>\n";

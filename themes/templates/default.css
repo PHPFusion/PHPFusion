@@ -4,7 +4,7 @@
 .rss-button {
     background: #FF9800;
     padding: 1px 15px;
-    color: #fff !important;
+    color: #fff;
     border-radius: 4px;
     margin: 3px 0;
     display: block;
@@ -27,111 +27,126 @@
 
 /* positioning - these works on containers that has display:absolute or display:fixed only  */
 .top-0 {
-    top: 0 !important;
+    top: 0;
+}
+
+.top-5 {
+    top: 5px;
 }
 
 .top-10 {
-    top: 10px !important;
+    top: 10px;
 }
 
 .top-20 {
-    top: 20px !important;
+    top: 20px;
 }
 
 .top-30 {
-    top: 30px !important;
+    top: 30px;
 }
 
 .top-40 {
-    top: 40px !important;
+    top: 40px;
 }
 
 .top-50 {
-    top: 50px !important;
+    top: 50px;
 }
 
 .bottom-0 {
-    bottom: 0 !important;
+    bottom: 0;
+}
+
+.bottom-5 {
+    bottom: 5px;
 }
 
 .bottom-10 {
-    bottom: 10px !important;
+    bottom: 10px;
 }
 
 .bottom-20 {
-    bottom: 20px !important;
+    bottom: 20px;
 }
 
 .bottom-30 {
-    bottom: 30px !important;
+    bottom: 30px;
 }
 
 .bottom-40 {
-    bottom: 40px !important;
+    bottom: 40px;
 }
 
 .bottom-50 {
-    bottom: 50px !important;
+    bottom: 50px;
 }
 
 .left-0 {
-    left: 0 !important;
+    left: 0;
 }
 
 .left-10 {
-    left: 10px !important;
+    left: 10px;
 }
 
 .left-15 {
-    left: 15px !important;
+    left: 15px;
 }
 
 .left-20 {
-    left: 20px !important;
+    left: 20px;
 }
 
 .left-30 {
-    left: 30px !important;
+    left: 30px;
 }
 
 .left-40 {
-    left: 40px !important;
+    left: 40px;
 }
 
 .left-50 {
-    left: 50px !important;
+    left: 50px;
 }
 
 .right-0 {
-    right: 0 !important;
+    right: 0;
 }
 
 .right-10 {
-    right: 10px !important;
+    right: 10px;
 }
 
 .right-15 {
-    right: 15px !important;
+    right: 15px;
 }
 
 .right-20 {
-    right: 20px !important;
+    right: 20px;
 }
 
 .right-30 {
-    right: 30px !important;
+    right: 30px;
 }
 
 .right-40 {
-    right: 40px !important;
+    right: 40px;
 }
 
 .right-50 {
-    right: 50px !important;
+    right: 50px;
 }
 
+.center-xy {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
 
-/** Alignments */
 .align-top, .vt {
     vertical-align: top;
     display: table-cell;
@@ -169,8 +184,24 @@
 }
 
 /*spacers family*/
+.spacer-xs {
+    margin: 15px 0;
+}
+
+.spacer-sm {
+    margin: 20px 0;
+}
+
+.spacer-md {
+    margin: 40px 0;
+}
+
+.spacer-lg {
+    margin: 80px 0;
+}
+
 .m-0 {
-    margin: 0 !important;
+    margin: 0;
 }
 
 .m-1 {
@@ -197,6 +228,10 @@
     margin-bottom: 0;
 }
 
+.m-b-5 {
+    margin-bottom: 5px;
+}
+
 .m-b-10 {
     margin-bottom: 10px;
 }
@@ -214,7 +249,7 @@
 }
 
 .m-t-0 {
-    margin-top: 0 !important;
+    margin-top: 0;
 }
 
 .m-t-3 {
@@ -242,7 +277,11 @@
 }
 
 .m-l-0 {
-    margin-left: 0 !important;
+    margin-left: 0;
+}
+
+.m-l-5 {
+    margin-left: 5px;
 }
 
 .m-l-10 {
@@ -257,8 +296,12 @@
     margin-left: 20px;
 }
 
+.m-l-30 {
+    margin-left: 30px;
+}
+
 .m-r-0 {
-    margin-right: 0 !important;
+    margin-right: 0;
 }
 
 .m-r-5 {
@@ -277,33 +320,53 @@
     margin-right: 20px;
 }
 
+.m-r-30 {
+    margin-right: 30px;
+}
+
+.m-auto {
+    margin: 0 auto;
+}
+
+.m-l--15 {
+    margin-left: -15px;
+}
+
+.m-r--15 {
+    margin-right: -15px;
+}
+
 /*padding family*/
 .p-0 {
-    padding: 0 !important;
+    padding: 0;
 }
 
 .p-5 {
-    padding: 5px !important;
+    padding: 5px;
 }
 
 .p-10 {
-    padding: 10px !important;
+    padding: 10px;
 }
 
 .p-15 {
-    padding: 15px !important;
+    padding: 15px;
 }
 
 .p-20 {
-    padding: 20px !important;
+    padding: 20px;
 }
 
 .p-25 {
-    padding: 25px !important;
+    padding: 25px;
 }
 
 .p-t-0 {
-    padding-top: 0 !important;
+    padding-top: 0;
+}
+
+.p-t-5 {
+    padding-top: 5px;
 }
 
 .p-t-10 {
@@ -319,7 +382,11 @@
 }
 
 .p-l-0 {
-    padding-left: 0 !important;
+    padding-left: 0;
+}
+
+.p-l-5 {
+    padding-left: 5px;
 }
 
 .p-l-10 {
@@ -335,7 +402,7 @@
 }
 
 .p-r-0 {
-    padding-right: 0 !important;
+    padding-right: 0;
 }
 
 .p-r-5 {
@@ -355,7 +422,7 @@
 }
 
 .p-b-0 {
-    padding-bottom: 0 !important;
+    padding-bottom: 0;
 }
 
 .p-b-5 {
@@ -376,41 +443,44 @@
 
 /* display family */
 .overflow-hide {
-    overflow: hidden !important;
+    overflow: hidden;
 }
 
 .display-none {
-    display: none !important;
+    display: none;
 }
 
 .display-block {
-    display: block !important;
+    display: block;
     width: 100%;
-    overflow-x: hidden;
 }
 
 .display-inline {
-    display: inline !important;
+    display: inline;
 }
 
 .display-inline-block {
-    display: inline-block !important;
+    display: inline-block;
 }
 
 .display-table {
-    display: table !important;
+    display: table;
+}
+
+.display-table-row {
+    display: table-row;
 }
 
 .display-table-cell {
-    display: table-cell !important;
+    display: table-cell;
 }
 
 .position-relative {
-    position: relative !important;
+    position: relative;
 }
 
 .position-absolute {
-    position: absolute !important;
+    position: absolute;
 }
 
 .transition {
@@ -418,23 +488,17 @@
     transition: all 0.2s ease-in-out;
 }
 
-/* decoratives */
-.form-group {
-    display: inline-block;
-    width: 100%;
-}
-
 .no-shadow {
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
 /* borders */
 .bbr-0 {
-    border-radius: 0 !important;
+    border-radius: 0;
 }
 
 .no-border, .br-0 {
-    border: 0 !important;
+    border: 0;
 }
 
 .br-l-0 {
@@ -455,15 +519,15 @@
 
 /* text family */
 .text-white {
-    color: #FFF !important;
+    color: #FFF;
 }
 
 .text-dark {
-    color: #333 !important;
+    color: #333;
 }
 
 .text-black {
-    color: #444 !important;
+    color: #444;
 }
 
 .text-lighter {
@@ -475,20 +539,26 @@
 }
 
 .text-bigger {
-    font-size: 110% !important;
+    font-size: 110%;
 }
 
 .text-smaller {
-    font-size: 85% !important;
+    font-size: 85%;
 }
 
-.text-bold, .strong {
-    font-weight: bold !important;
+.text-bold, .font-bold, .strong {
+    font-weight: bold;
 }
 
-.text-normal {
-    font-weight: normal !important;
-    text-transform: none !important;
+.text-light, .font-light {
+    font-weight: 300;
+}
+
+.text-normal, .font-normal {
+    font-weight: normal;
+    text-transform: none;
+    text-decoration: none;
+    color: inherit;
 }
 
 .text-active {
@@ -522,9 +592,9 @@
 /* image family*/
 .img-center {
     display: inline-block;
-    position: relative !important;
-    left: 100% !important;
-    margin-left: -200% !important;
+    position: relative;
+    left: 100%;
+    margin-left: -200%;
 }
 
 .thumb > img {
@@ -545,12 +615,12 @@
 }
 
 .pdisabled {
-    background-color: rgb(252, 248, 227) !important;
-    border-color: rgb(250, 235, 204) !important;
+    background-color: rgb(252, 248, 227);
+    border-color: rgb(250, 235, 204);
 }
 
 .pdisabled > .handle > a {
-    color: rgb(138, 109, 59) !important;
+    color: rgb(138, 109, 59);
 }
 
 .image-wrap {
@@ -570,7 +640,7 @@
 
 /*borders*/
 .no-border {
-    border: 0 !important;
+    border: 0;
 }
 
 .bordered {
@@ -579,7 +649,7 @@
 
 /* entypo icon */
 a .entypo, a .entypo-social {
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 .icon-xs {
@@ -659,17 +729,17 @@ a .entypo, a .entypo-social {
 
 .select2-input {
     color: #999 !Important;
-    border: none !important;
+    border: none;
 }
 
 /* BS collapse mobile menu */
 #mp {
     margin: 0;
-    padding: 0 !important; /* standardize the padding */
+    padding: 0; /* standardize the padding */
     z-index: 300;
     position: absolute;
     width: 100%;
-    box-sizing: content-box !important;
+    box-sizing: content-box;
     overflow: visible;
 }
 
@@ -679,7 +749,7 @@ a .entypo, a .entypo-social {
 }
 
 .mobile-pane {
-    margin: 0 -15px !important;
+    margin: 0 -15px;
     background: rgba(255, 255, 255, 1);
     padding: 0;
 }
@@ -712,7 +782,7 @@ a .entypo, a .entypo-social {
     font-size: 14px;
     background: transparent;
     position: absolute;
-    outline: none !important;
+    outline: none;
     color: rgb(51, 153, 255);
     -webkit-transition: 0.3s ease-in-out;
     transition: 0.3s ease-in-out;
@@ -720,7 +790,7 @@ a .entypo, a .entypo-social {
 
 .mobile-btn-close:hover, .mobile-btn-close:focus {
     box-shadow: none;
-    outline: none !important;
+    outline: none;
     color: #DDD;
 }
 
@@ -738,11 +808,11 @@ a .entypo, a .entypo-social {
 }
 
 .tbl {
-    display: table-cell !important;
+    display: table-cell;
 }
 
 .required {
-    color: red !important;
+    color: red;
 }
 
 a img {
@@ -905,8 +975,8 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 .image-wrap.cropfix {
-    max-width: 100% !important;
-    margin: 0 !important;
+    max-width: 100%;
+    margin: 0;
 }
 
 .word-break {
@@ -925,7 +995,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 .sl > li img, .side > li img {
     width: 19px;
-    margin-right: 8px !important;
+    margin-right: 8px;
 }
 
 .HTML-img:hover ul.dropdown-menu {
@@ -955,21 +1025,21 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 .file-input .panel .file-preview-image {
     display: block;
     max-width: 100%;
-    height: auto !important;
+    height: auto;
 }
 
 .file-input .panel .file-default-preview,
 .file-input .panel .file-preview-frame,
 .file-input .panel .file-preview-other {
-    height: 143px !important;
-    max-height: 143px !important;
-    width: 100% !important;
-    display: block !important;
-    margin: 0 !important;
-    border: 0 !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    float: none !important;
+    height: 143px;
+    max-height: 143px;
+    width: 100%;
+    display: block;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    float: none;
 }
 
 .avatar.img-rounded > svg {
@@ -995,7 +1065,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 #panel-side1, #panel-side2, #panel-side3, #panel-side4, #panel-side5, #panel-side6 {
     list-style: none;
     min-height: 20px;
-    height: auto !important;
+    height: auto;
 }
 
 #panel-side1 > li, #panel-side2 > li, #panel-side3 > li, #panel-side4 > li, #panel-side5 > li, #panel-side6 > li {
@@ -1021,7 +1091,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 #site-links {
     list-style: none;
     min-height: 20px;
-    height: auto !important;
+    height: auto;
 }
 
 #site-links li {

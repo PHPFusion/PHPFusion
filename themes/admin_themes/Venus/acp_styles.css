@@ -13,7 +13,7 @@ body {
 
 /* Globals */
 .panel {
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 .box-shadow {
@@ -213,6 +213,8 @@ body {
 .admin-vertical-link {
     border-top: 1px solid rgb(185, 196, 207);
     height: 100vh;
+    list-style: none;
+    padding: 0;
 }
 
 .admin-vertical-link > li {
@@ -243,7 +245,6 @@ body {
 }
 
 .admin-vertical-link > li > .adl-link {
-
     font-weight: 600;
     padding: 15px 20px;
     -webkit-transition: color 0.2s ease-in-out 0s;
@@ -257,6 +258,7 @@ body {
     background-image: -webkit-gradient(linear, left bottom, left top, color-stop(11%, #d9dee3), color-stop(94%, #ebeef1), color-stop(99%, #edf0f2), to(#fafbfb));
     background-image: linear-gradient(to top, #d9dee3 11%, #ebeef1 94%, #edf0f2 99%, #fafbfb);
     border-bottom: 1px solid #B9C4CF;
+    width: 100%;
 }
 
 .admin-vertical-link > li > a {
@@ -335,6 +337,10 @@ body {
 
 #acp-toolkit nav {
     color: rgb(60, 65, 68);
+}
+
+.rightnav > li.dropdown > a {
+    padding: 18px 5px;
 }
 
 nav ul {
@@ -527,4 +533,44 @@ input[type="checkbox"] {
     color: #fff;
     background-color: #04c;
     *background-color: #003bb3;
+}
+
+.table.no-border,
+.table.no-border td,
+.table.no-border th {
+    border: 0;
+}
+
+
+.table.align th {
+    text-align: left;
+}
+
+.table.align td {
+    text-align: right;
+}
+
+.tbl-border {
+    background: #fff;
+    border-spacing: 0;
+}
+
+.tbl {
+    padding: 0 3px;
+}
+
+.tbl1,
+.tbl2 {
+    background: #fbfbfb;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
+    border-right: 0;
+    border-bottom: 0;
+    padding: 8px;
+}
+
+.tbl2 {
+    background: #f7f7f7;
+    border-top: 1px solid #fff;
+    border-left: 1px solid #fff;
 }
