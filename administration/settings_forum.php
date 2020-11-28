@@ -30,7 +30,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
         $message = $locale['global_182'];
     }
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -100,7 +100,7 @@ if (isset($_POST['savesettings'])) {
         }
 
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
-        redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
+        redirect(FUSION_SELF.$aidlink."&error=".$error);
     } else {
         redirect(FUSION_SELF.$aidlink."&error=2");
     }
@@ -169,7 +169,7 @@ echo "<option value='0'".($settings2['forum_edit_lock'] == "0" ? " selected='sel
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['536']."<br /><span class='small2'>".$locale['537']."</span></td>\n";
-echo "<td width='50%' class='tbl'><input type='text' name='forum_edit_timelimit' value='".$settings2['forum_edit_timelimit']."' maxlength='50' class='textbox' style='width:40px;' /></td>\n";
+echo "<td width='50%' class='tbl'><input type='text' name='forum_edit_timelimit' value='".$settings2['forum_edit_timelimit']."' maxlength='50' class='textbox' style='width:100px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['538']."</td>\n";
 echo "<td width='50%' class='tbl'><select name='forum_editpost_to_lastpost' class='textbox'>\n";

@@ -34,9 +34,9 @@ if (isset($_POST['savepermalinks'])) {
         $error = 1;
     }
     if ($error == 0) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['421']."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['421']."</div></div>\n";
     } else if ($error == 1) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['420']."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['420']."</div></div>\n";
     }
 }
 
@@ -206,10 +206,10 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
             echo "</tbody>\n</table></form>\n";
             closetable();
         } else {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['422'], $permalink_name)."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info'>".sprintf($locale['422'], $permalink_name)."</div></div>\n";
         }
     } else {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['423']."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['423']."</div></div>\n";
     }
 } else if (isset($_GET['enable']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['enable'])."_rewrite_include.php")) {
     $rewrite_name = stripinput($_GET['enable']);
@@ -248,12 +248,12 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
             }
         }
         if ($error == 0) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['424'], $permalink_name)."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info'>".sprintf($locale['424'], $permalink_name)."</div></div>\n";
         } else if ($error == 1) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['420']."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['420']."</div></div>\n";
         }
     } else {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['425'], $permalink_name)."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".sprintf($locale['425'], $permalink_name)."</div></div>\n";
     }
     redirect(FUSION_SELF.$aidlink."&amp;error=0");
 } else if (isset($_GET['disable'])) {
@@ -270,7 +270,7 @@ if (isset($_GET['edit']) && file_exists(INCLUDES."rewrites/".stripinput($_GET['e
     $result = dbquery("DELETE FROM ".DB_PERMALINK_REWRITE." WHERE rewrite_id=".$rewrite_id['rewrite_id']);
     $result = dbquery("DELETE FROM ".DB_PERMALINK_METHOD." WHERE pattern_type=".$rewrite_id['rewrite_id']);
     if ($result) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".sprintf($locale['426'], $permalink_name)."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".sprintf($locale['426'], $permalink_name)."</div></div>\n";
     }
     redirect(FUSION_SELF.$aidlink."&amp;error=0");
 }

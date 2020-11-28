@@ -68,7 +68,7 @@ if (function_exists('gd_info')) {
             $message = $locale['419'];
         }
         if ($message) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
         }
     }
 
@@ -275,7 +275,7 @@ if (function_exists('gd_info')) {
         echo "</tr>\n<tr>\n";
         echo "<td class='tbl'>".$locale['442']."</td>\n";
         echo "<td class='tbl'><select name='album_access' class='textbox' style='width:150px;'>\n".$access_opts."</select>\n";
-        echo $locale['443']."<input type='text' name='album_order' value='".$album_order."' maxlength='4' class='textbox' style='width:40px;' />\n";
+        echo $locale['443']."<input type='text' name='album_order' value='".$album_order."' maxlength='4' class='textbox' style='width:100px;' />\n";
         echo "</td>\n</tr>\n<tr>\n";
         echo "<td valign='top' class='tbl'>".$locale['444'];
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($album_thumb && file_exists(PHOTOS.$album_thumb))) {

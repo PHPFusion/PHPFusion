@@ -33,7 +33,7 @@ if (iMEMBER) {
     echo "<div class='clearfix'>\n";
     echo "<h4 class='text-center'><strong>".ucwords($userdata['user_name'])."</strong></h4>\n";
     echo "<div class='avatar-row text-center'>\n";
-    echo "<div class='p-10' style='background: #f1f1f1; border: 1px solid #d4d6d8; border-radius: 4px;'>\n".display_avatar($userdata, '85px')."</div>\n";
+    echo "<div class='p-10 text-center'>\n".display_avatar($userdata, '85px')."</div>\n";
     echo "<small>".getuserlevel($userdata['user_level'])."</small>\n";
     echo "</div>\n";
     echo "</div>\n";

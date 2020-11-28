@@ -62,7 +62,7 @@ if (function_exists('gd_info')) {
             $message = $locale['419'];
         }
         if ($message) {
-            echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+            echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
         }
     }
 
@@ -548,7 +548,7 @@ if (function_exists('gd_info')) {
         echo display_bbcodes("300px", "photo_description", "inputform", "b|i|u|center|small|url|mail|img|quote")."</td>\n";
         echo "</tr>\n";
         echo "<tr>\n<td class='tbl1'>".$locale['434']."</td>\n";
-        echo "<td class='tbl1'><input type='text' name='photo_order' value='".$photo_order."' maxlength='5' class='textbox' style='width:40px;' /></td>\n";
+        echo "<td class='tbl1'><input type='text' name='photo_order' value='".$photo_order."' maxlength='5' class='textbox' style='width:100px;' /></td>\n";
         echo "</tr>\n";
         if ((isset($_GET['action']) && $_GET['action'] == "edit") && ($photo_thumb1 && file_exists(PHOTODIR.$photo_thumb1))) {
             echo "<tr>\n<td class='tbl1' style='vertical-align:top;'>".$locale['435']."</td>\n";

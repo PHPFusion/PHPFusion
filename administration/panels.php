@@ -99,7 +99,7 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
         $result2 = dbquery("UPDATE ".DB_PANELS." SET panel_order='$i' WHERE panel_id='".$data['panel_id']."'");
         $i++;
     }
-    echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['488']."</div></div>\n";
+    echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['488']."</div></div>\n";
 }
 
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['panel_id']) && isnum($_GET['panel_id']))) {

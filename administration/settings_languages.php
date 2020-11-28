@@ -28,7 +28,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
     }
     // Can replace all error=0
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -213,7 +213,7 @@ if (isset($_POST['savesettings'])) {
             }
         }
 
-        redirect(FUSION_SELF.$aidlink);
+        redirect(FUSION_SELF.$aidlink.'&amp;error=0');
     }
 }
 

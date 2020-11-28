@@ -28,7 +28,7 @@ if (isset($_GET['status']) && !isset($message)) {
         $message = sprintf($locale['411'], $_GET['testmail']);
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -203,9 +203,9 @@ if (isset($_GET['template_id']) && isnum($_GET['template_id']) || isset($_POST['
     echo "</td>\n";
     echo "</tr>\n";
     if (multilang_table("ET")) {
-        echo "<tr><td class='tbl'>".$locale['global_ML100']."</td>\n";
+        echo "<tr><td class='tbl1'>".$locale['global_ML100']."</td>\n";
         $opts = get_available_languages_list($selected_language = "$template_language");
-        echo "<td class='tbl'>
+        echo "<td class='tbl1'>
 	<select name='template_language' class='textbox' style='width:200px;'>".$opts."</select></td>\n";
         echo "</tr>\n";
     } else {

@@ -58,7 +58,7 @@ if (isset($_GET['status']) && !isset($message)) {
         }
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 

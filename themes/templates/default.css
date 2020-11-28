@@ -1062,19 +1062,35 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 }
 
 /* Panels css */
-#panel-side1, #panel-side2, #panel-side3, #panel-side4, #panel-side5, #panel-side6 {
+#panel-side1,
+#panel-side2,
+#panel-side3,
+#panel-side4,
+#panel-side5,
+#panel-side6 {
     list-style: none;
     min-height: 20px;
     height: auto;
+    padding: 0;
+    background: #a9a9a9;
 }
 
-#panel-side1 > li, #panel-side2 > li, #panel-side3 > li, #panel-side4 > li, #panel-side5 > li, #panel-side6 > li {
+#panel-side1 > li,
+#panel-side2 > li,
+#panel-side3 > li,
+#panel-side4 > li,
+#panel-side5 > li,
+#panel-side6 > li {
     display: block;
-    margin: 30px;
     padding: 10px;
 }
 
-#panel-side1 > li img.handle, #panel-side2 > li img.handle, #panel-side3 > li img.handle, #panel-side4 > li img.handle, #panel-side5 > li img.handle, #panel-side6 > li img.handle {
+#panel-side1 > li img.handle,
+#panel-side2 > li img.handle,
+#panel-side3 > li img.handle,
+#panel-side4 > li img.handle,
+#panel-side5 > li img.handle,
+#panel-side6 > li img.handle {
     cursor: ns-resize;
 }
 
@@ -1096,7 +1112,6 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
 
 #site-links li {
     display: block;
-    margin: 30px;
     padding: 10px;
 }
 

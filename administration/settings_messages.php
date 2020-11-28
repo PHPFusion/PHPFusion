@@ -30,7 +30,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
         $message = $locale['901'];
     }
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -61,13 +61,13 @@ echo "<table cellpadding='0' cellspacing='0' width='500' class='center'>\n<tr>\n
 echo "<td class='tbl2' align='center' colspan='2'>".$locale['707']."</td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl' width='50%'>".$locale['701']."<br /><span class='small2'>".$locale['704']."</span></td>\n";
-echo "<td class='tbl' width='50%'><input type='text' name='pm_inbox' value='".$pm_inbox."' maxlength='4' class='textbox' style='width:40px;' /></td>\n";
+echo "<td class='tbl' width='50%'><input type='text' name='pm_inbox' value='".$pm_inbox."' maxlength='4' class='textbox' style='width:100px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl' width='50%'>".$locale['702']."<br /><span class='small2'>".$locale['704']."</span></td>\n";
-echo "<td class='tbl' width='50%'><input type='text' name='pm_sentbox' value='".$pm_sentbox."' maxlength='4' class='textbox' style='width:40px;' /></td>\n";
+echo "<td class='tbl' width='50%'><input type='text' name='pm_sentbox' value='".$pm_sentbox."' maxlength='4' class='textbox' style='width:100px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl' width='50%'>".$locale['703']."<br /><span class='small2'>".$locale['704']."</span></td>\n";
-echo "<td class='tbl' width='50%'><input type='text' name='pm_savebox' value='".$pm_savebox."' maxlength='4' class='textbox' style='width:40px;' /></td>\n";
+echo "<td class='tbl' width='50%'><input type='text' name='pm_savebox' value='".$pm_savebox."' maxlength='4' class='textbox' style='width:100px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl2' align='center' colspan='2'>".$locale['708']."</td>\n";
 echo "</tr>\n<tr>\n";

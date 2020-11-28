@@ -34,7 +34,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
         $message = $locale['global_182'];
     }
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -48,7 +48,7 @@ if (isset($_POST['save_banners'])) {
     if (!$result) {
         $error = 1;
     }
-    redirect(FUSION_SELF.$aidlink."&error=".$error, TRUE);
+    redirect(FUSION_SELF.$aidlink."&error=".$error);
 
 } else {
 

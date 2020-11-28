@@ -90,7 +90,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
         $message = $locale['901'];
     }
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -124,8 +124,8 @@ echo "<option value='0'".($settings['hide_userprofiles'] == 0 ? " selected='sele
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['1008']."<br /><span class='small2'>(".$locale['1009'].")</span></td>\n";
-echo "<td width='50%' class='tbl'><input type='text' name='avatar_width' value='".$settings['avatar_width']."' maxlength='3' class='textbox' style='width:40px;' /> x\n";
-echo "<input type='text' name='avatar_height' value='".$settings['avatar_height']."' maxlength='3' class='textbox' style='width:40px;' /></td>\n";
+echo "<td width='50%' class='tbl'><input type='text' name='avatar_width' value='".$settings['avatar_width']."' maxlength='3' class='textbox' style='width:100px;' /> x\n";
+echo "<input type='text' name='avatar_height' value='".$settings['avatar_height']."' maxlength='3' class='textbox' style='width:100px;' /></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['1010']."</td>\n";
 echo "<td width='50%' class='tbl'><input type='text' name='avatar_filesize' value='".$settings['avatar_filesize']."' maxlength='10' class='textbox' style='width:100px;' /></td>\n";

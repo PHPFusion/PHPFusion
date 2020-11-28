@@ -31,7 +31,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
     }
 
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info p-10'> ".$message." </div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'> ".$message." </div></div>\n";
     }
 }
 

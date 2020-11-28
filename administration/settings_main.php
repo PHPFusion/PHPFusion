@@ -30,7 +30,7 @@ if (isset($_GET['error']) && isnum($_GET['error']) && !isset($message)) {
         $message = $locale['902'];
     }
     if (isset($message)) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -157,6 +157,8 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
+
+    redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
 
 $settings2 = [];

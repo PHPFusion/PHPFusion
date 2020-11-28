@@ -46,7 +46,7 @@ if (isset($_GET['status']) && !isset($message)) {
         $message = $locale['SB_shout_deleted'];
     }
     if ($message) {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
 }
 
@@ -150,7 +150,7 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
         }
     }
     if (isset($message) && $message != "") {
-        echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$message."</div></div>\n";
+        echo "<div id='close-message'><div class='admin-message alert alert-info'>".$message."</div></div>\n";
     }
     $inf_settings = get_settings("shoutbox_panel");
     opentable($locale['SB_settings']);

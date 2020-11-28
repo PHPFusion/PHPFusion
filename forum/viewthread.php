@@ -301,7 +301,7 @@ if ($rows != 0) {
         echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:140px'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
         echo "<td class='tbl2 forum_thread_post_date'>\n";
         echo "<div style='float:right' class='small'>";
-        echo "<a href='".BASEDIR."forum/viewthread.php?forum_id=".$_GET['thread_id']."&amp;thread_id=".$_GET['thread_id']."#top'><img src='".get_image("up")."' alt='".$locale['541']."' title='".$locale['542']."' style='border:0;vertical-align:middle' /></a>\n";
+        echo "<a href='#top'><img src='".get_image("up")."' alt='".$locale['541']."' title='".$locale['542']."' style='border:0;vertical-align:middle' /></a>\n";
         echo "&nbsp;<a href='".BASEDIR."forum/viewthread.php?forum_id=".$_GET['thread_id']."&amp;thread_id=".$_GET['thread_id']."#post_".$data['post_id']."' name='post_".$data['post_id']."' id='post_".$data['post_id']."'>#".($current_row + $_GET['rowstart'])."</a>";
         echo "&nbsp;<a href='".BASEDIR."print.php?type=F&amp;thread=".$_GET['thread_id']."&amp;post=".$data['post_id']."&amp;nr=".($current_row + $_GET['rowstart'])."'><img src='".get_image("printer")."' alt='".$locale['519a']."' title='".$locale['519a']."' style='border:0;vertical-align:middle' /></a></div>\n";
         echo "<div class='small'>".$locale['505'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
@@ -567,12 +567,11 @@ if ($can_reply && !$fdata['thread_locked']) {
 
 // viewthread javascript, moved to footer
 $viewthread_js = "<script type='text/javascript'>";
-$viewthread_js .= "/*<![CDATA[*/";
 $viewthread_js .= "jQuery(document).ready(function(){";
 if (!empty($highlight_js) || !empty($colorbox_js) || !empty($edit_reason_js)) {
     $viewthread_js .= $highlight_js.$colorbox_js.$edit_reason_js;
 }
-$viewthread_js .= "jQuery('a[href=#top]').click(function(){";
+$viewthread_js .= "jQuery('#top').click(function(){";
 $viewthread_js .= "jQuery('html, body').animate({scrollTop:0}, 'slow');";
 $viewthread_js .= "return false;";
 $viewthread_js .= "});";
@@ -592,7 +591,6 @@ if (iMOD) { // only moderators need this javascript
     $viewthread_js .= "}";
     $viewthread_js .= "}";
 }
-$viewthread_js .= "/*]]>*/";
 $viewthread_js .= "</script>";
 
 add_to_footer($viewthread_js);
