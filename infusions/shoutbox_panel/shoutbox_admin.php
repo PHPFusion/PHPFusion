@@ -109,12 +109,12 @@ if (!isset($_GET['page']) || $_GET['page'] != "settings") {
                 echo "<div class='comment-name'>";
                 echo $data['user_name'] ? "<span class='slink'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>" : $data['shout_name'];
                 echo "</span>\n";
-                echo "<span class='small'>".$locale['SB_on_date'].showdate("longdate", $data['shout_datestamp'])."</div>\n";
-                echo "<div class='m-t-5'><small>\n";
+                echo "<span>".$locale['SB_on_date'].showdate("longdate", $data['shout_datestamp'])."</div>\n";
+                echo "<div class='m-t-5'>\n";
                 echo "<a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;shout_id=".$data['shout_id']."'>".$locale['SB_edit']."</a> -\n";
                 echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;shout_id=".$data['shout_id']."' onclick=\"return confirm('".$locale['SB_warning_shout']."');\">".$locale['SB_delete']."</a> -\n";
                 echo "<strong>".$locale['SB_userip'].$data['shout_ip']."</strong>\n";
-                echo "</small>\n</div>\n";
+                echo "</div>\n";
                 echo str_replace("<br />", "", parseubb(parsesmileys($data['shout_message']), "b|i|u|url|color"))."<br />\n";
                 echo "</div>\n";
             }
