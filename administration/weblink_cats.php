@@ -77,7 +77,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         }
     }
     if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-        $result = dbquery("SELECT weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_access,web_link_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
+        $result = dbquery("SELECT weblink_cat_name, weblink_cat_description, weblink_cat_sorting, weblink_cat_access,weblink_cat_language FROM ".DB_WEBLINK_CATS." ".(multilang_table("WL") ? "WHERE weblink_cat_language='".LANGUAGE."' AND" : "WHERE")." weblink_cat_id='".$_GET['cat_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
             $cat_name = $data['weblink_cat_name'];
