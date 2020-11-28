@@ -56,7 +56,7 @@ if (!function_exists('render_forum')) {
             echo '<div class="list-group m-b-20">';
             foreach ($thread_tags['tags'] as $tag_id => $tag_data) {
                 $active = isset($_GET['tag_id']) && $_GET['tag_id'] == $tag_id ? ' active' : '';
-                echo '<a href="'.$tag_data['tag_link'].'" class="list-group-item p-5 p-l-15'.$active.'">';
+                echo '<a href="'.$tag_data['tag_link'].'" class="list-group-item clearfix p-5 p-l-15'.$active.'">';
                 echo '<div class="pull-left m-r-10">';
                 $color = !empty($tag_data['tag_color']) ? $tag_data['tag_color'] : '#3498db';
                 echo '<i class="fa fa-square fa-lg" style="color: '.$color.';"></i>';
@@ -85,14 +85,14 @@ if (!function_exists('render_forum')) {
             while ($data = dbarray($result)) {
                 $user = fusion_get_user($data['thread_author']);
 
-                echo '<div class="list-group-item">';
+                echo '<div class="list-group-item clearfix">';
                 echo '<a href="'.FORUM.'viewthread.php?thread_id='.$data['thread_id'].'">'.$data['thread_subject'].'</a>';
                 echo '<span class="m-l-5">'.$locale['by'].' '.profile_link($user['user_id'], $user['user_name'], $user['user_status']).'</span>';
                 echo '<span class="pull-right text-lighter"><i class="fa fa-comment"></i> '.format_word($data['thread_postcount'], $locale['fmt_post']).'</span>';
                 echo '</div>';
             }
         } else {
-            echo '<div class="list-group-item text-center">'.(!empty($locale['forum_0275']) ? $locale['forum_0275'] : $locale['forum_0056']).'</div>';
+            echo '<div class="list-group-item clearfix text-center">'.(!empty($locale['forum_0275']) ? $locale['forum_0275'] : $locale['forum_0056']).'</div>';
         }
         echo '</div>';
 
@@ -133,7 +133,7 @@ if (!function_exists('render_forum_main')) {
                         $sub_forums = $forums[$forum_id]['child'];
 
                         foreach ($sub_forums as $sub_forum_id => $cdata) {
-                            echo '<div class="list-group-item">';
+                            echo '<div class="list-group-item clearfix">';
                             render_forum_item($cdata);
                             echo '</div>';
                         }
@@ -147,7 +147,7 @@ if (!function_exists('render_forum_main')) {
                 } else {
                     echo '<div class="list-group">';
                     if ($data['forum_type'] != 1) {
-                        echo '<div class="list-group-item">';
+                        echo '<div class="list-group-item clearfix">';
                         render_forum_item($data);
                         echo '</div>';
                     }
@@ -309,7 +309,7 @@ if (!function_exists('forum_viewforum')) {
                         echo '<div class="panel panel-default">';
                         echo '<div class="list-group">';
                         foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
-                            echo '<div class="list-group-item">';
+                            echo '<div class="list-group-item clearfix">';
                             render_forum_item($subforum_data);
                             echo '</div>';
                         }
@@ -344,7 +344,7 @@ if (!function_exists('forum_viewforum')) {
                         echo $info['pagenav'];
 
                         if (!empty($info['max_post_count'])) {
-                            echo '<div class="list-group-item m-b-10"><strong>';
+                            echo '<div class="list-group-item clearfix m-b-10"><strong>';
                             echo format_word($info['max_post_count'], $locale['fmt_post']);
                             echo ' | <a href="'.$info['last_activity']['link'].'">'.$locale['forum_0020'].'</a> ';
                             echo sprintf($locale['forum_0021'],
@@ -370,12 +370,12 @@ if (!function_exists('forum_viewforum')) {
                             echo '</div>';
 
                             echo '<div class="list-group">';
-                            echo '<div class="list-group-item">';
+                            echo '<div class="list-group-item clearfix">';
                             echo '<div class="text-smaller text-lighter m-b-10"><b>'.$locale['forum_0023'].' '.$postData['thread_link']['title'].'</b></div>';
                             echo parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE);
                             echo '</div>';
 
-                            echo '<div class="list-group-item">';
+                            echo '<div class="list-group-item clearfix">';
                             echo '<div class="text-smaller strong">'.$locale['forum_0022'].' <a href="'.$postData['thread_link']['link'].'">'.$postData['thread_link']['title'].'</a> <i class="fa fa-external-link-alt"></i></div>';
                             echo '</div>';
                             echo '</div>';
@@ -428,7 +428,7 @@ if (!function_exists('render_forum_threads')) {
             if (!empty($data['sticky'])) {
                 $i = 0;
                 foreach ($data['sticky'] as $cdata) {
-                    echo '<div class="list-group-item" style="background-color: #ffdca9;'.(++$i == count($data['sticky']) ? ' border-bottom: 2px solid #989898;' : '').'">';
+                    echo '<div class="list-group-item clearfix" style="background-color: #ffdca9;'.(++$i == count($data['sticky']) ? ' border-bottom: 2px solid #989898;' : '').'">';
                     render_thread_item($cdata);
                     echo '</div>';
                 }
@@ -436,7 +436,7 @@ if (!function_exists('render_forum_threads')) {
 
             if (!empty($data['item'])) {
                 foreach ($data['item'] as $cdata) {
-                    echo '<div class="list-group-item">';
+                    echo '<div class="list-group-item clearfix">';
                     render_thread_item($cdata);
                     echo '</div>';
                 }
@@ -625,7 +625,7 @@ if (!function_exists("render_section")) {
             echo '<div class="list-group">';
             if (!empty($data['sticky'])) {
                 foreach ($data['sticky'] as $cdata) {
-                    echo '<div class="list-group-item">';
+                    echo '<div class="list-group-item clearfix">';
                     render_thread_item($cdata);
                     echo '</div>';
                 }
@@ -633,7 +633,7 @@ if (!function_exists("render_section")) {
 
             if (!empty($data['item'])) {
                 foreach ($data['item'] as $cdata) {
-                    echo '<div class="list-group-item">';
+                    echo '<div class="list-group-item clearfix">';
                     render_thread_item($cdata);
                     echo '</div>';
                 }
@@ -837,7 +837,7 @@ if (!function_exists("display_forum_tags")) {
                 echo '<div class="list-group">';
                 if (!empty($info['threads']['sticky'])) {
                     foreach ($info['threads']['sticky'] as $cdata) {
-                        echo '<div class="list-group-item">';
+                        echo '<div class="list-group-item clearfix">';
                         render_thread_item($cdata);
                         echo '</div>';
                     }
@@ -845,7 +845,7 @@ if (!function_exists("display_forum_tags")) {
 
                 if (!empty($info['threads']['item'])) {
                     foreach ($info['threads']['item'] as $cdata) {
-                        echo '<div class="list-group-item">';
+                        echo '<div class="list-group-item clearfix">';
                         render_thread_item($cdata);
                         echo '</div>';
                     }
@@ -1052,7 +1052,7 @@ if (!function_exists('render_thread')) {
         }
 
         if (!empty($info['thread_users'])) {
-            echo '<div class="list-group-item"><strong>'.$locale['forum_0581'].'</strong>';
+            echo '<div class="list-group-item clearfix"><strong>'.$locale['forum_0581'].'</strong>';
                 foreach ($info['thread_users'] as $user_id => $user) {
                     echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</strong></a>, ';
                 }
