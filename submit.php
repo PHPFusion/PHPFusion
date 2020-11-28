@@ -90,7 +90,7 @@ if ($_GET['stype'] == "l") {
             opentable($locale['450']);
             echo "<div style='text-align:center'><br />\n".$locale['460']."<br /><br />\n";
             echo "<a href='submit.php?stype=n'>".$locale['461']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
             closetable();
         }
     } else {
@@ -164,7 +164,7 @@ if ($_GET['stype'] == "l") {
             opentable($locale['450b']);
             echo "<div style='text-align:center'><br />\n".$locale['460b']."<br /><br />\n";
             echo "<a href='submit.php?stype=n'>".$locale['461b']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
             closetable();
         }
     } else {
@@ -238,7 +238,7 @@ if ($_GET['stype'] == "l") {
             opentable($locale['500']);
             echo "<div style='text-align:center'><br />\n".$locale['510']."<br /><br />\n";
             echo "<a href='submit.php?stype=a'>".$locale['511']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
             closetable();
         }
     } else {
@@ -343,7 +343,7 @@ if ($_GET['stype'] == "l") {
             $result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES ('p', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
             echo "<div style='text-align:center'><br />\n".$locale['580']."<br /><br />\n";
             echo "<a href='submit.php?stype=p'>".$locale['581']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
         } else {
             echo "<div style='text-align:center'><br />\n".$locale['600']."<br /><br />\n";
             if ($error == 1) {
@@ -495,7 +495,7 @@ if ($_GET['stype'] == "l") {
             $result = dbquery("INSERT INTO ".DB_SUBMISSIONS." (submit_type, submit_user, submit_datestamp, submit_criteria) VALUES ('d', '".$userdata['user_id']."', '".time()."', '".addslashes(serialize($submit_info))."')");
             echo "<div style='text-align:center'><br />\n".$locale['660']."<br /><br />\n";
             echo "<a href='submit.php?stype=d'>".$locale['661']."</a><br /><br />\n";
-            echo "<a href='index.php'>".$locale['412']."</a><br /><br />\n</div>\n";
+            echo "<a href='index.php'>".str_replace('[SITENAME]', $settings['sitename'], $locale['412'])."</a><br /><br />\n</div>\n";
         } else {
             echo "<div style='text-align:center'><br />\n".$locale['670']."<br /><br />\n";
             switch ($error) {
