@@ -17,7 +17,10 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-require_once INCLUDES."footer_includes.php";
+if (file_exists(INCLUDES."footer_includes.php")) {
+    require_once INCLUDES."footer_includes.php";
+}
+
 \PHPFusion\Panels::getInstance()->getSitePanel();
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
