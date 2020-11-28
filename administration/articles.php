@@ -88,8 +88,7 @@ if (!empty($result)) {
             $ratings = isset($_POST['article_ratings']) ? " checked='checked'" : "";
             opentable($subject);
             echo $bodypreview."\n";
-            closetable();
-            opentable($subject);
+            echo '<br>';
             echo $body2preview."\n";
             closetable();
         }

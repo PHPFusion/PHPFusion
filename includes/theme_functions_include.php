@@ -55,7 +55,7 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
                 $first_char = substr($userdata['user_name'], 0, 1);
                 $first_char = strtoupper($first_char);
-                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
+                $img = '<div class="va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
             }
         }
 

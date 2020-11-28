@@ -95,9 +95,9 @@ if (isset($_POST['save'])) {
         }
         set_admin_pass(isset($_POST['admin_password']) ? stripinput($_POST['admin_password']) : "");
         if (isset($_POST['page_id']) && isnum($_POST['page_id'])) {
-            redirect(FUSION_SELF.$aidlink."&status=su&pid=".$_POST['page_id'], TRUE);
+            redirect(FUSION_SELF.$aidlink."&status=su&pid=".$_POST['page_id']);
         } else {
-            redirect(FUSION_SELF.$aidlink."&status=sn&pid=".$page_id, TRUE);
+            redirect(FUSION_SELF.$aidlink."&status=sn&pid=".$page_id);
         }
     } else {
         redirect(FUSION_SELF.$aidlink."&status=pw");
@@ -189,23 +189,23 @@ if (isset($_POST['save'])) {
     }
     echo "<form name='inputform' method='post' action='".FUSION_SELF.$aidlink."' onsubmit='return ValidateForm(this);'>\n";
     echo "<div class='panel panel-default box-shadow' style='border:none;'>";
-    echo "<div class='panel-body text-center'>";
+    echo "<div class='panel-body'><div class='row'>";
 
     if ($settings['tinymce_enabled']) {
-        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['460']." <input type='button' id='tinymce_switch' name='tinymce_switch' value='".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'])."' class='button' style='width:75px;' onclick=\"SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");\"/></div>\n";
+        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-2'><label class='display-block'>".$locale['460']."</label><input type='button' id='tinymce_switch' name='tinymce_switch' value='".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? $locale['461'] : $locale['462'])."' class='button' style='width:75px;' onclick=\"SetTinyMCE(".(!isset($_COOKIE['custom_pages_tinymce']) || $_COOKIE['custom_pages_tinymce'] == 0 ? 1 : 0).");\"/></div>\n";
     }
-    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['422']." <input type='text' name='page_title' value='".$page_title."' class='textbox' style='width:200px;' autocomplete='off' /></div>\n";
-    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>&nbsp;".$locale['423']."<select name='page_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></div>\n";
+    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-4'><label class='display-block'>".$locale['422']."</label><input type='text' name='page_title' value='".$page_title."' class='textbox' style='width:200px;' autocomplete='off' /></div>\n";
+    echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'><label class='display-block'>".$locale['423']."</label><select name='page_access' class='textbox' style='width:150px;'>\n".$access_opts."</select></div>\n";
     if (multilang_table("CP")) {
-        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'>".$locale['global_ML100']."";
+        echo "<div class='col-xs-3 col-sm-3 col-md-3 col-lg-3'><label class='display-block'>".$locale['global_ML100']."</label>";
         $opts = get_available_languages_list($selected_language = "$page_language");
         echo "<select name='page_language' class='textbox' style='width:100px;'>".$opts."</select>\n";
+        echo "</div>\n";
     } else {
         echo "<input type='hidden' name='page_language' value='".$page_language."' />\n";
     }
-    echo "</div>\n";
 
-    echo "</div>\n";
+    echo "</div></div>\n";
     echo "</div>\n";
 
     echo "<div class='panel panel-default box-shadow' style='border:none;'>";

@@ -124,12 +124,9 @@ body {
 }
 
 .content {
-    min-height: 250px;
     padding: 15px;
     margin-right: auto;
     margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
 }
 
 h1,
@@ -1718,37 +1715,6 @@ input[type="checkbox"] {
 .form-group-sm .form-control,
 .form-group-lg .form-control {
     border-radius: 0;
-}
-
-input[type="checkbox"] {
-    position: relative;
-}
-
-input[type="checkbox"]:after,
-input[type="checkbox"]:focus:after {
-    content: "";
-    display: block;
-    width: 14px;
-    height: 14px;
-    border: 1px solid #707070;
-    background-color: #fff;
-    border-radius: 2px;
-}
-
-input[type="checkbox"]:checked:before {
-    content: "";
-    position: absolute;
-    top: -3px;
-    left: 6px;
-    display: table;
-    width: 7px;
-    height: 15px;
-    border: 2px solid #707070;
-    border-top-width: 0;
-    border-left-width: 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
 }
 
 .progress,
@@ -6391,10 +6357,6 @@ html[dir="rtl"] .lockscreen-credentials {
 .tbl-border {
     background: #fff;
     border-spacing: 0;
-}
-
-.tbl {
-    padding: 0 3px;
 }
 
 .tbl1,

@@ -366,7 +366,7 @@ if (!empty($result)) {
     echo "<td class='tbl1'><input type='text' name='download_title' value='".$download_title."' class='textbox' style='width:380px;' /></td>\n";
     echo "</tr>\n";
     echo "<tr>\n<td class='tbl1' style='width:80px;vertical-align:top;'>".$locale['421b']."<br /><br />";
-    echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid; display:none;'>";
+    echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid;'>";
     echo "<strong>".(255 - mb_strlen($download_description_short))."</strong>";
     echo "</span>";
     echo "</td>\n";
@@ -532,23 +532,7 @@ if (!empty($result)) {
     closetable();
 }
 
-echo "<script language='JavaScript' type='text/javascript'>\n";
-echo "/* <![CDATA[ */\n";
-echo "jQuery(document).ready(function() {
-	jQuery('#shortdesc_display').show();
-	jQuery('#calc_upload').click(
-	function() {
-		if (jQuery('#calc_upload').attr('checked')) {
-			jQuery('#download_filesize').attr('readonly', 'readonly');
-			jQuery('#download_filesize').val('');
-			jQuery('#calc_upload').attr('checked', 'checked');
-		} else {
-			jQuery('#download_filesize').removeAttr('readonly');
-			jQuery('#calc_upload').removeAttr('checked');
-		}
-	});
-});
-
+echo "<script language='JavaScript' type='text/javascript'>
 function shortdesc_counter(textarea, counterID, maxLen) {
 cnt = document.getElementById(counterID);
 if (textarea.value.length >= maxLen)
@@ -556,8 +540,7 @@ if (textarea.value.length >= maxLen)
 textarea.value = textarea.value.substring(0,maxLen);
 }
 cnt.innerHTML = maxLen - textarea.value.length;
-}";
-echo "/* ]]>*/\n";
-echo "</script>\n";
+}
+</script>\n";
 
 require_once THEMES."templates/footer.php";
