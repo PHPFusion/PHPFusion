@@ -1471,7 +1471,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
                 'entypo'                      => '0',
                 'fontawesome'                 => '0',
                 'theme'                       => 'Atom-X8',
-                'admin_theme'                 => 'AdminLTE',
+                'admin_theme'                 => 'Ares',
                 'default_search'              => 'all',
                 'exclude_left'                => '',
                 'exclude_upper'               => '',

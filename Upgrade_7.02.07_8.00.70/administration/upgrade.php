@@ -646,7 +646,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('fontawesome', '0')");
 
                     // Admin Theme
-                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('admin_theme', 'AdminLTE')");
+                    $result = dbquery("INSERT INTO ".DB_PREFIX."settings (settings_name, settings_value) VALUES ('admin_theme', 'Ares')");
 
                     // Set a new default theme for display
                     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='Atom-X8' WHERE settings_name='theme'");

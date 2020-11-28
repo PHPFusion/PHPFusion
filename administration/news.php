@@ -242,12 +242,12 @@ if (isset($_POST['save'])) {
 
         opentable($news_subject);
         echo "$bodypreview\n";
-        closetable();
+
         if (isset($body2preview)) {
-            opentable($news_subject);
+            echo '<br>';
             echo "$body2preview\n";
-            closetable();
         }
+        closetable();
     }
     $result = dbquery("SELECT news_id, news_subject, news_draft FROM ".DB_NEWS." ".(multilang_table("NS") ? "WHERE news_language='".LANGUAGE."'" : "")." ORDER BY news_draft DESC, news_datestamp DESC");
     if (dbrows($result) != 0) {

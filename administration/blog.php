@@ -242,12 +242,11 @@ if (isset($_POST['save'])) {
 
         opentable($blog_subject);
         echo "$bodypreview\n";
-        closetable();
         if (isset($body2preview)) {
-            opentable($blog_subject);
+            echo '<br>';
             echo "$body2preview\n";
-            closetable();
         }
+        closetable();
     }
     $result = dbquery("SELECT blog_id, blog_subject, blog_draft FROM ".DB_BLOG." ".(multilang_table("NS") ? "WHERE blog_language='".LANGUAGE."'" : "")." ORDER BY blog_draft DESC, blog_datestamp DESC");
     if (dbrows($result) != 0) {
