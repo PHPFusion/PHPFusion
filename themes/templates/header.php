@@ -33,7 +33,9 @@ if ($settings['site_seo']) {
 
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."breadcrumbs.php";
-require_once INCLUDES."header_includes.php";
+if (file_exists(INCLUDES.'header_includes.php')) {
+    require_once INCLUDES."header_includes.php";
+}
 include_once THEMES.'templates/dynamics.micro.php';
 require_once THEME."theme.php";
 require_once INCLUDES."theme_functions_include.php";

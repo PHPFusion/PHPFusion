@@ -32,7 +32,9 @@ require_once CLASSES."PHPFusion/AdminSearch.php";
 require_once INCLUDES."output_handling_include.php";
 require_once INCLUDES."breadcrumbs.php";
 require_once THEMES."templates/render_functions.php";
-require_once INCLUDES."header_includes.php";
+if (file_exists(INCLUDES.'header_includes.php')) {
+    require_once INCLUDES."header_includes.php";
+}
 include_once THEMES.'templates/dynamics.micro.php';
 
 if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {

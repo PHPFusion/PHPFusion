@@ -19,7 +19,9 @@ if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
 
-require_once INCLUDES."footer_includes.php";
+if (file_exists(INCLUDES.'footer_includes.php')) {
+    require_once INCLUDES."footer_includes.php";
+}
 require_once THEMES."templates/panels.php";
 
 // Error handling site front
