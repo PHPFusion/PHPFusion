@@ -42,7 +42,7 @@ function write_htaccess() {
     $htc .= "# Security".PHP_EOL;
     $htc .= "ServerSignature Off".PHP_EOL.PHP_EOL;
 
-    $htc .= "# Secure .htaccess file".PHP_EOL;
+    $htc .= "# Protect .htaccess file".PHP_EOL;
     $htc .= "<Files .htaccess>".PHP_EOL;
     $htc .= "    order allow,deny".PHP_EOL;
     $htc .= "    deny from all".PHP_EOL;
@@ -50,6 +50,12 @@ function write_htaccess() {
 
     $htc .= "# Protect config.php".PHP_EOL;
     $htc .= "<Files config.php>".PHP_EOL;
+    $htc .= "    order allow,deny".PHP_EOL;
+    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "</Files>".PHP_EOL.PHP_EOL;
+
+    $htc .= "# Protect fusion_error_log.log".PHP_EOL;
+    $htc .= "<Files fusion_error_log.log>".PHP_EOL;
     $htc .= "    order allow,deny".PHP_EOL;
     $htc .= "    deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;

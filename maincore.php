@@ -22,9 +22,6 @@ use PHPFusion\Authenticate;
 use PHPFusion\Installer\Infusion_core;
 use PHPFusion\OutputHandler;
 
-// Uncomment to see server errors without modifying php.ini
-ini_set('display_errors', '1');
-
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
 }
@@ -45,6 +42,12 @@ dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 
 
 // Fetch the settings from the database
 $settings = fusion_get_settings();
+
+if ($settings['error_logging_enabled'] == 1) {
+    ini_set('display_errors', '1');
+} else {
+    error_reporting(0);
+}
 
 // Request Variables
 $_get_lang = get("lang");

@@ -49,23 +49,25 @@ if (isset($_POST['clear_cache'])) {
 if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
-        'captcha'             => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'privacy_policy'      => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
-        'allow_php_exe'       => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
-        'flood_interval'      => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
-        'flood_autoban'       => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
-        'maintenance_level'   => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
-        'maintenance'         => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
-        'maintenance_message' => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
-        'bad_words_enabled'   => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
-        'bad_words'           => stripinput($_POST['bad_words']),
-        'bad_word_replace'    => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'       => stripinput($_POST['user_name_ban']),
-        'database_sessions'   => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
-        'form_tokens'         => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'             => form_sanitizer($_POST['gateway'], 0, 'gateway'),
-        'gateway_method'      => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
-        'mime_check'          => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
+        'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
+        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
+        'allow_php_exe'         => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
+        'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
+        'flood_autoban'         => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
+        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
+        'maintenance'           => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
+        'maintenance_message'   => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
+        'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
+        'bad_words'             => stripinput($_POST['bad_words']),
+        'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
+        'user_name_ban'         => stripinput($_POST['user_name_ban']),
+        'database_sessions'     => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
+        'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
+        'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
+        'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
+        'mime_check'            => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
+        'error_logging_enabled' => form_sanitizer($_POST['error_logging_enabled'], 0, 'error_logging_enabled'),
+        'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
     ];
 
     // Validate extra fields
@@ -251,6 +253,21 @@ echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
 ]);
 echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
     'options'     => $flood_opts,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+closeside();
+openside('');
+echo form_select('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
+    'options'     => $yes_no_array,
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+echo form_select('error_logging_method', $locale['security_016'], $settings['error_logging_method'], [
+    'options'     => [
+        'file'     => $locale['security_017'],
+        'database' => $locale['security_018']
+    ],
     'width'       => '100%',
     'inner_width' => '100%'
 ]);

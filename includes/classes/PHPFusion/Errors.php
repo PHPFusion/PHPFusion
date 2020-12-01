@@ -257,7 +257,15 @@ class Errors {
         echo opentab($tab_title, $tab_active, 'error_tab');
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 
-        echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
+        if (fusion_get_settings('error_logging_method') === 'database') {
+            echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
+        } else {
+            if (file_exists(BASEDIR.'fusion_error_log.log')) {
+                echo '<textarea class="form-control m-t-20" rows="15" disabled>'.file_get_contents(BASEDIR.'fusion_error_log.log').'</textarea>';
+            } else {
+                echo "<div class='text-center well m-t-20'>".$locale['ERROR_418']."</div>\n";
+            }
+        }
 
         echo closetabbody();
 

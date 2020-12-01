@@ -19,9 +19,10 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-error_reporting(E_ALL ^ E_STRICT);
-
-set_error_handler("setError");
+if (fusion_get_settings('error_logging_enabled') == 1) {
+    error_reporting(E_ALL ^ E_STRICT);
+    set_error_handler("set_error");
+}
 
 /**
  * Custom Error Handler
@@ -31,11 +32,27 @@ set_error_handler("setError");
  * @param $error_file
  * @param $error_line
  */
-function setError($error_level, $error_message, $error_file, $error_line) {
-    $errors = PHPFusion\Errors::getInstance();
-    if (method_exists($errors, "setError")) {
-        $errors->setError($error_level, $error_message, $error_file, $error_line);
+function set_error($error_level, $error_message, $error_file, $error_line) {
+    if (fusion_get_settings('error_logging_method') == 'database') {
+        $errors = PHPFusion\Errors::getInstance();
+        if (method_exists($errors, "setError")) {
+            $errors->setError($error_level, $error_message, $error_file, $error_line);
+        }
+    } else {
+        write_error($error_message, $error_file, $error_line);
     }
+}
+
+/**
+ * Fallback function
+ *
+ * @param $error_level
+ * @param $error_message
+ * @param $error_file
+ * @param $error_line
+ */
+function setError($error_level, $error_message, $error_file, $error_line) {
+    set_error($error_level, $error_message, $error_file, $error_line);
 }
 
 /**
@@ -50,4 +67,31 @@ function showFooterErrors() {
     }
 
     return NULL;
+}
+
+/**
+ * Write error to file
+ *
+ * @param string $error_message
+ * @param string $error_file
+ * @param int    $error_line
+ */
+function write_error($error_message, $error_file, $error_line) {
+    $file = BASEDIR.'fusion_error_log.log';
+
+    if (!file_exists($file)) {
+        touch($file);
+    }
+
+    $error = file_get_contents($file);
+    $error .= '[LONG_DATE] [ERROR_MESSAGE] in [ERROR_FILE] on line [ERROR_LINE]'.PHP_EOL;
+
+    $error = strtr($error, [
+        'LONG_DATE'       => date('d-M-Y H:i:s', time()),
+        '[ERROR_MESSAGE]' => $error_message,
+        '[ERROR_FILE]'    => $error_file,
+        '[ERROR_LINE]'    => $error_line
+    ]);
+
+    write_file($file, $error);
 }

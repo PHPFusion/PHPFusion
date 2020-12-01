@@ -11,3 +11,4 @@ footer_includes.php
 /.github/
 includes/gateway/flood/
 .tmb
+fusion_error_log.log
