@@ -134,8 +134,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     ]);
 
     echo '<div class="row">';
-    echo '<div class="col-xs-12 col-sm-7">';
-    echo '<label class="control-label">'.$locale['download_0302'].'</label>';
+    echo '<div class="col-xs-12 col-sm-3">';
+    echo $locale['download_0302'];
+    echo '</div>';
+    echo '<div class="col-xs-12 col-sm-3">';
     echo form_select('download_cat_sort_by', '', $data['download_cat_sort_by'], [
         'options'     => [
             '1' => $locale['download_0303'],
@@ -146,8 +148,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         'inner_width' => '200px',
         'inline'      => TRUE
     ]);
-    echo '</div><div class="col-xs-12 col-sm-5">';
-    echo '<label class="control-label"><!-- --></label>';
+    echo '</div><div class="col-xs-12 col-sm-3">';
     echo form_select('download_cat_sort_order', '', $data['download_cat_sort_order'], [
         'options'     => ['ASC' => $locale['download_0306'], 'DESC' => $locale['download_0307']],
         'inner_width' => '200px',

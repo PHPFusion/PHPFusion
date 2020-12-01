@@ -214,7 +214,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         <?php self::displayFormButtons("formstart"); ?>
 
         <!-- Display Form -->
-        <div class="row">
+        <div class="row m-t-5">
 
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
@@ -244,10 +244,9 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
                 <?php
 
-                openside($this->locale['article_0261']);
+            openside($this->locale['article_0261']);
 
             echo form_select('article_draft', $this->locale['status'], $this->inputArray['article_draft'], [
-                'inline'      => TRUE,
                 'inner_width' => '100%',
                 'options'     => [
                     1 => $this->locale['draft'],
@@ -258,7 +257,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     'required'     => TRUE,
                     'error_text'   => $this->locale['article_0273'],
                     'inner_width'  => '100%',
-                    'inline'       => TRUE,
                     'parent_value' => $this->locale['choose'],
                     'query'        => (multilang_table('AR') ? "WHERE ".in_group('article_cat_language', LANGUAGE) : '')
                 ],
@@ -266,7 +264,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 );
 
                 echo form_select('article_visibility', $this->locale['article_0106'], $this->inputArray['article_visibility'], [
-                    'inline'      => TRUE,
                     'placeholder' => $this->locale['choose'],
                     'inner_width' => '100%',
                     'options'     => fusion_get_groups()
@@ -274,7 +271,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
 
                 if (multilang_table("AR")) {
                     echo form_select('article_language[]', $this->locale['language'], $this->inputArray['article_language'], [
-                        'inline'      => TRUE,
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
                         'options'     => fusion_get_enabled_languages(),
@@ -285,7 +281,6 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 }
 
                 echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->inputArray['article_datestamp'], [
-                    'inline'      => TRUE,
                     'inner_width' => '100%'
                 ]);
 

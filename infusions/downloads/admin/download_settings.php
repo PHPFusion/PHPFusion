@@ -80,8 +80,8 @@ echo form_text('download_pagination', $locale['download_939'], $dl_settings['dow
 ]);
 closeside();
 openside('');
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['download_934']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_w'>".$locale['download_934']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
         'class'      => 'pull-left',
@@ -98,8 +98,8 @@ echo "<div class='display-block overflow-hide'>
     ])."
         <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['download_604'].")</small>
     </div>\n</div>";
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='photo_w'>".$locale['download_937']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_w'>".$locale['download_937']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
         'class'      => 'pull-left',
@@ -118,8 +118,8 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['download_930']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['download_930']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [
         'required'   => TRUE,
@@ -141,8 +141,8 @@ echo "<div class='display-block overflow-hide'>
 </div>
 ";
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_bb'>".$locale['download_936']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_bb'>".$locale['download_936']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_bb', '', $calc_bb, [
         'required'   => TRUE,
@@ -168,7 +168,6 @@ echo form_select('download_allow_submission', $locale['download_0046'], $dl_sett
 echo form_checkbox('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], ['inline' => TRUE]);
 echo form_checkbox('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], ['inline' => TRUE]);
 closeside();
-
 
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');

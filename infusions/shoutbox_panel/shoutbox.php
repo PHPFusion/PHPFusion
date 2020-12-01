@@ -255,7 +255,6 @@ class ShoutBox {
         echo '<div class="col-xs-12 col-sm-6">';
         openside('');
         echo form_select('num_days', self::$locale['SB_delete_old'], '', [
-            'inline'      => TRUE,
             'inner_width' => '200px',
             'options'     => [
                 '90' => "90 ".self::$locale['SB_days'],

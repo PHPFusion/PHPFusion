@@ -93,7 +93,6 @@ $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
 
 echo "<div class='m-t-20'>";
-echo "<h2>".$locale['photo_settings']."</h2><hr/>";
 echo "<div class='well'>".$locale['gallery_0022']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
@@ -102,7 +101,7 @@ echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
 echo "<h4 class='m-0'>".$locale['gallery_0220']."</h4><i>".$locale['gallery_0221']."</i>\n<br/><br/>";
 echo "</div><div class='col-xs-12 col-sm-9'>\n";
 
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0203']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('thumb_w', '', $gll_settings['thumb_w'], [
@@ -124,7 +123,7 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0205']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_w', '', $gll_settings['photo_w'], [
@@ -146,7 +145,7 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0206']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
@@ -168,7 +167,7 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['gallery_0207']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [
@@ -198,21 +197,15 @@ echo "<div class='spacer-sm'>\n";
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
 echo "<h4 class='m-0'>".$locale['gallery_0218']."</h4><i>".$locale['gallery_0219']."</i>\n<br/><br/>";
 echo "</div><div class='col-xs-12 col-sm-9'>\n";
-echo "<div class='display-block overflow-hide'>
-    ".form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], [
-        'inline'      => TRUE,
-        'max_length'  => 2,
-        'width'       => '100px',
-        'type'        => 'number',
-        'inner_width' => '150px'
-    ])."
-</div>";
-echo "<div class='display-block overflow-hide'>
-    ".form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE])."
-</div>";
-echo "<div class='display-block overflow-hide'>
-    ".form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE])."
-</div>";
+echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gallery_pagination'], [
+    'inline'      => TRUE,
+    'max_length'  => 2,
+    'width'       => '100px',
+    'type'        => 'number',
+    'inner_width' => '150px'
+]);
+echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
+echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
 
 echo "</div>\n</div>\n";
 echo "</div>\n";

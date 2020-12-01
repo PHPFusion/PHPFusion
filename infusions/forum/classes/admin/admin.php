@@ -40,12 +40,12 @@ abstract class ForumAdminInterface extends ForumServer {
     }
 
     private static function setLocale() {
-        self::$locale = fusion_get_locale("", [FORUM_ADMIN_LOCALE,
-                                               SETTINGS_LOCALE,
-                                               FORUM_TAGS_LOCALE,
-                                               FORUM_RANKS_LOCALE
+        self::$locale = fusion_get_locale("", [
+            FORUM_ADMIN_LOCALE,
+            SETTINGS_LOCALE,
+            FORUM_TAGS_LOCALE,
+            FORUM_RANKS_LOCALE
         ]);
-
     }
 
     public static function viewRank() {
@@ -75,7 +75,6 @@ abstract class ForumAdminInterface extends ForumServer {
 
         return self::$mood_instance;
     }
-
 
     public static function viewSettings() {
         if (empty(self::$admin_settings_instance)) {

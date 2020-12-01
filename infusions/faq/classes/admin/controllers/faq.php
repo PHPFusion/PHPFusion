@@ -281,7 +281,6 @@ class FaqAdmin extends FaqAdminModel {
                 }
                 echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->faq_data['faq_cat_id'], [
                     'inner_width' => '100%',
-                    'inline'      => TRUE,
                     'options'     => $options,
                     'required'    => TRUE
                 ]);
@@ -289,15 +288,13 @@ class FaqAdmin extends FaqAdminModel {
                 echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
                     'options'     => fusion_get_groups(),
                     'placeholder' => $this->locale['choose'],
-                    'inner_width' => '100%',
-                    'inline'      => TRUE,
+                    'inner_width' => '100%'
                 ]);
                 if (multilang_table('FQ')) {
                     echo form_select("faq_language[]", $this->locale['language'], $this->faq_data['faq_language'], [
                         'options'     => fusion_get_enabled_languages(),
                         'placeholder' => $this->locale['choose'],
                         'inner_width' => '100%',
-                        'inline'      => TRUE,
                         'multiple'    => TRUE
                     ]);
                 } else {

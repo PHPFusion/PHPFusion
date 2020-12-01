@@ -132,7 +132,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "download_version"           => $submit_criteria['download_version'],
                 "download_file"              => $submit_criteria['download_file'],
                 "download_url"               => $submit_criteria['download_url'],
-                "download_filesize"          => ($submit_criteria['download_file']) ? $submit_criteria['download_filesize'] : 0,
+                "download_filesize"          => ($submit_criteria['download_file']) ? $submit_criteria['download_filesize'] : '',
                 "download_image"             => $submit_criteria['download_image'],
                 "download_image_thumb"       => $submit_criteria['download_image_thumb'],
                 // default to none
@@ -195,7 +195,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ]);
             echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
             // start package
-            echo "<div class='well clearfix'>\n";
+            openside('');
             if ($dl_settings['download_screenshot'] && !empty($callback_data['download_image']) && !empty($callback_data['download_image_thumb'])) {
                 echo "<div class='pull-left m-r-10'>\n";
                 echo thumbnail(DOWNLOADS."submissions/images/".$callback_data['download_image_thumb'], '80px');
@@ -203,7 +203,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_hidden('download_image_thumb', '', $callback_data['download_image_thumb']);
                 echo "</div>\n";
             }
-            echo "<div class='overflow-hide p-l-10'>\n";
+
             if (!empty($callback_data['download_file'])) {
                 echo "<p><strong>".$locale['download_0214']."</strong></p>\n";
                 echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
@@ -215,8 +215,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_text('download_url', '', $callback_data['download_url']);
                 echo form_hidden("download_file", "", "");
             }
-            echo "</div>\n";
-            echo "</div>\n";
+
+            closeside();
             // end package
             openside();
             if (fusion_get_settings('comments_enabled') == "0" || fusion_get_settings('ratings_enabled') == "0") {
@@ -253,12 +253,12 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             }
             closeside();
             openside();
-            echo form_text('download_license', $locale['download_0208'], $callback_data['download_license'], ['inline' => 1]);
-            echo form_text('download_copyright', $locale['download_0222'], $callback_data['download_copyright'], ['inline' => 1]);
-            echo form_text('download_os', $locale['download_0209'], $callback_data['download_os'], ['inline' => 1]);
-            echo form_text('download_version', $locale['download_0210'], $callback_data['download_version'], ['inline' => 1]);
-            echo form_text('download_homepage', $locale['download_0221'], $callback_data['download_homepage'], ['inline' => 1]);
-            echo form_text('download_filesize', $locale['download_0211'], $callback_data['download_filesize'], ['inline' => 1]);
+            echo form_text('download_license', $locale['download_0208'], $callback_data['download_license']);
+            echo form_text('download_copyright', $locale['download_0222'], $callback_data['download_copyright']);
+            echo form_text('download_os', $locale['download_0209'], $callback_data['download_os']);
+            echo form_text('download_version', $locale['download_0210'], $callback_data['download_version']);
+            echo form_text('download_homepage', $locale['download_0221'], $callback_data['download_homepage']);
+            echo form_text('download_filesize', $locale['download_0211'], $callback_data['download_filesize']);
             closeside();
             echo "</div>\n</div>\n"; // end row.
             echo form_button('publish', $locale['download_0061'], $locale['download_0061'], ['input_id' => 'publish-btn', 'class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);

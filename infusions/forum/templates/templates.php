@@ -46,8 +46,10 @@ if (!function_exists('render_forum')) {
         echo '</div>';
 
         echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-        echo '<a id="create_new_thread" href="'.FORUM.'newthread.php" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
-        forum_newtopic();
+        if (iMEMBER) {
+            echo '<a id="create_new_thread" href="'.FORUM.'newthread.php" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
+            forum_newtopic();
+        }
 
         $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
 
@@ -823,6 +825,11 @@ if (!function_exists("display_forum_tags")) {
         add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
         $locale = fusion_get_locale();
 
+        echo '<div class="forum-tags">';
+        opentable('');
+
+        echo render_breadcrumbs();
+
         echo '<h3>'.$locale['forum_tag_0100'].'</h3>';
 
         if (isset($_GET['tag_id'])) {
@@ -832,7 +839,7 @@ if (!function_exists("display_forum_tags")) {
                 echo '<div class="text-right">'.$info['threads']['pagenav'].'</div>';
             }
 
-            echo '<div class="panel panel-primary forum-panel">';
+            echo '<div class="panel panel-primary forum-panel m-t-10">';
             if (!empty($info['threads'])) {
                 echo '<div class="list-group">';
                 if (!empty($info['threads']['sticky'])) {
@@ -891,6 +898,9 @@ if (!function_exists("display_forum_tags")) {
             }
             echo '</div>';
         }
+
+        closetable();
+        echo '</div>';
     }
 }
 

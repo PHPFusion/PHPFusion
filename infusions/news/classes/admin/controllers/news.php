@@ -300,7 +300,6 @@ class NewsAdmin extends NewsAdminModel {
         openside(self::$locale['news_0255']);
         echo form_select('news_draft', self::$locale['news_0253'], $this->news_data['news_draft'],
             [
-                'inline'      => TRUE,
                 'inner_width' => '100%',
                 'options'     => [
                     1 => self::$locale['draft'],
@@ -311,7 +310,6 @@ class NewsAdmin extends NewsAdminModel {
         echo form_select_tree('news_cat', self::$locale['news_0201'], $this->news_data['news_cat'],
             [
                 'inner_width'  => '100%',
-                'inline'       => TRUE,
                 'parent_value' => self::$locale['news_0202'],
                 'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
             ],
@@ -321,8 +319,7 @@ class NewsAdmin extends NewsAdminModel {
             [
                 'options'     => fusion_get_groups(),
                 'placeholder' => self::$locale['choose'],
-                'inner_width' => '100%',
-                'inline'      => TRUE,
+                'inner_width' => '100%'
             ]
         );
         if (multilang_table('NS')) {
@@ -330,14 +327,12 @@ class NewsAdmin extends NewsAdminModel {
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => self::$locale['choose'],
                 'inner_width' => '100%',
-                'inline'      => TRUE,
                 'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('news_language', '', $this->news_data['news_language']);
         }
-        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'],
-            ['inline' => TRUE, 'inner_width' => '100%']);
+        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], ['inner_width' => '100%']);
         closeside();
 
         if ($this->news_data['news_id']) {
@@ -367,7 +362,8 @@ class NewsAdmin extends NewsAdminModel {
                         'type'             => 'image',
                         'class'            => 'm-b-0',
                         'valid_ext'        => $news_settings['news_file_types'],
-                        'template'         => 'thumbnail'
+                        'template'         => 'thumbnail',
+                        'inline'           => FALSE,
                     ]
                 );
             }
@@ -377,8 +373,7 @@ class NewsAdmin extends NewsAdminModel {
                         'news-img-center' => self::$locale['center'],
                         'pull-right'      => self::$locale['right']
                     ],
-                    'inner_width' => '100%',
-                    'inline'      => TRUE
+                    'inner_width' => '100%'
                 ]
             );
             closeside();

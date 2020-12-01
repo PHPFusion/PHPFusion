@@ -281,22 +281,19 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             openside("");
             echo form_select_tree("blog_cat", $locale['blog_0423'], $callback_data['blog_cat'], [
                 "width"        => "100%",
-                "inline"       => TRUE,
                 "parent_value" => $locale['blog_0424'],
                 "query"        => (multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")
             ], DB_BLOG_CATS, "blog_cat_name", "blog_cat_id", "blog_cat_parent");
             echo form_select('blog_visibility', $locale['blog_0430'], $callback_data['blog_visibility'], [
                 'options'     => fusion_get_groups(),
                 'placeholder' => $locale['choose'],
-                'width'       => '100%',
-                "inline"      => TRUE,
+                'width'       => '100%'
             ]);
             if (multilang_table("BL")) {
                 echo form_select('blog_language[]', $locale['global_ML100'], $callback_data['blog_language'], [
                     'options'     => fusion_get_enabled_languages(),
                     'placeholder' => $locale['choose'],
                     'width'       => '100%',
-                    "inline"      => TRUE,
                     'multiple'    => TRUE
                 ]);
             } else {

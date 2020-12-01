@@ -194,5 +194,5 @@ echo form_text('album_order', $locale['album_0011'], $data['album_order'], [
 ]);
 echo fusion_get_function('closeside', '');
 echo "</div>\n</div>\n";
-echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], ['class' => 'btn-success m-t-10', 'icon' => 'fa fa-hdd-o']);
 echo closeform();

@@ -227,38 +227,30 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                         $options[$faq_data['faq_cat_id']] = $faq_data['faq_cat_name'];
                     }
                 }
-                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->inputArray['faq_cat_id'],
-                    [
-                        'inner_width' => '100%',
-                        'inline'      => TRUE,
-                        'options'     => $options
-                    ]);
-                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->inputArray['faq_visibility'],
-                    [
-                        'inline'      => TRUE,
-                        'placeholder' => $this->locale['choose'],
-                        'inner_width' => '100%',
-                        'options'     => fusion_get_groups()
-                    ]);
+                echo form_select('faq_cat_id', $this->locale['faq_0252'], $this->inputArray['faq_cat_id'], [
+                    'inner_width' => '100%',
+                    'options'     => $options
+                ]);
+                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->inputArray['faq_visibility'], [
+                    'placeholder' => $this->locale['choose'],
+                    'inner_width' => '100%',
+                    'options'     => fusion_get_groups()
+                ]);
 
                 if (multilang_table('FQ')) {
-                    echo form_select('faq_language[]', $this->locale['language'], $this->inputArray['faq_language'],
-                        [
-                            'inline'      => TRUE,
-                            'placeholder' => $this->locale['choose'],
-                            'inner_width' => '100%',
-                            'options'     => fusion_get_enabled_languages(),
-                            'multiple'    => TRUE
-                        ]);
+                    echo form_select('faq_language[]', $this->locale['language'], $this->inputArray['faq_language'], [
+                        'placeholder' => $this->locale['choose'],
+                        'inner_width' => '100%',
+                        'options'     => fusion_get_enabled_languages(),
+                        'multiple'    => TRUE
+                    ]);
                 } else {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
                 }
 
-                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'],
-                    [
-                        'inline'      => TRUE,
-                        'inner_width' => '100%'
-                    ]);
+                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'], [
+                    'inner_width' => '100%'
+                ]);
 
                 closeside();
 

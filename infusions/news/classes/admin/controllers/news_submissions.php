@@ -245,15 +245,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "</div>\n";
                 echo "</div>\n";
 
-                $news_cat_opts = [];
-                $query = "SELECT news_cat_id, news_cat_name FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')." ORDER BY news_cat_name";
-                $result = dbquery($query);
-                $news_cat_opts['0'] = self::$locale['news_0202'];
-                if (dbrows($result)) {
-                    while ($odata = dbarray($result)) {
-                        $news_cat_opts[$odata['news_cat_id']] = $odata['news_cat_name'];
-                    }
-                }
                 $snippetSettings = [
                     'required'    => TRUE,
                     'preview'     => TRUE,
@@ -305,7 +296,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         openside(self::$locale['news_0255']);
                         echo form_select('news_draft', self::$locale['news_0253'], $this->news_data['news_draft'],
                                 [
-                                    'inline'      => TRUE,
                                     'inner_width' => '100%',
                                     'options'     => [
                                         1 => self::$locale['draft'],
@@ -316,7 +306,6 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             form_select_tree('news_cat', self::$locale['news_0201'], $this->news_data['news_cat'],
                                 [
                                     'inner_width'  => '100%',
-                                    'inline'       => TRUE,
                                     'parent_value' => self::$locale['news_0202'],
                                     'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
                                 ],
@@ -326,8 +315,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                 [
                                     'options'     => fusion_get_groups(),
                                     'placeholder' => self::$locale['choose'],
-                                    'inner_width' => '100%',
-                                    'inline'      => TRUE,
+                                    'inner_width' => '100%'
                                 ]
                             );
 
@@ -336,14 +324,13 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                 'options'     => fusion_get_enabled_languages(),
                                 'placeholder' => self::$locale['choose'],
                                 'inner_width' => '100%',
-                                'inline'      => TRUE,
                                 'multiple'    => TRUE
                             ]);
                         } else {
                             echo form_hidden('news_language', '', $this->news_data['news_language']);
                         }
 
-                        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], ['inline' => TRUE, 'inner_width' => '100%']);
+                        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], ['inner_width' => '100%']);
                         closeside();
 
                         if ($this->news_data['news_image_full_default']) {
@@ -369,7 +356,8 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                     'thumbnail2_h'     => $news_settings['news_photo_h'],
                                     'type'             => 'image',
                                     'class'            => 'm-b-0',
-                                    'template'         => 'thumbnail'
+                                    'template'         => 'thumbnail',
+                                    'inline'           => FALSE
                                 ]
                             );
                             echo form_select('news_image_align', self::$locale['news_0218'], '', [
@@ -378,8 +366,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                         'news-img-center' => self::$locale['center'],
                                         'pull-right'      => self::$locale['right']
                                     ],
-                                    'inner_width' => '100%',
-                                    'inline'      => TRUE
+                                    'inner_width' => '100%'
                                 ]
                             );
                             closeside();

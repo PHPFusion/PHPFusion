@@ -655,7 +655,7 @@ class Defender {
  * @param bool   $input_name
  * @param bool   $is_multiLang
  *
- * @return string
+ * @return string|array
  */
 function form_sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
 

@@ -219,7 +219,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo "</div>\n";
         echo "<hr/>\n";
         echo form_hidden('article_id', '', $this->article_data['article_id']);
-        echo "<div class='row'>\n";
+        echo "<div class='row m-b-10'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
         echo form_text('article_subject', '', $this->article_data['article_subject'], [
             'required'    => TRUE,
@@ -245,7 +245,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
         openside($this->locale['article_0262']);
         echo form_select('article_draft', $this->locale['status'], $this->article_data['article_draft'], [
-            'inline'      => TRUE,
             'inner_width' => '100%',
             'options'     => [
                 1 => $this->locale['draft'],
@@ -254,7 +253,6 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ]);
         echo form_select_tree('article_cat', $this->locale['article_0101'], $this->article_data['article_cat'], [
             'required'     => TRUE,
-            'inline'       => TRUE,
             'error_text'   => $this->locale['article_0273'],
             'inner_width'  => '100%',
             'parent_value' => $this->locale['choose'],
@@ -265,22 +263,19 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo form_select('article_visibility', $this->locale['article_0106'], $this->article_data['article_visibility'], [
             'options'     => fusion_get_groups(),
             'placeholder' => $this->locale['choose'],
-            'inner_width' => '100%',
-            'inline'      => TRUE
+            'inner_width' => '100%'
         ]);
         if (multilang_table("AR")) {
             echo form_select('article_language[]', $this->locale['language'], $this->article_data['article_language'], [
                 'options'     => fusion_get_enabled_languages(),
                 'placeholder' => $this->locale['choose'],
                 'inner_width' => '100%',
-                'inline'      => TRUE,
                 'multiple'    => TRUE
             ]);
         } else {
             echo form_hidden('article_language', '', $this->article_data['article_language']);
         }
         echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->article_data['article_datestamp'], [
-            'inline'      => TRUE,
             'inner_width' => '100%'
         ]);
         closeside();
@@ -511,11 +506,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 </div>
 
                 <div class="display-inline-block hidden-xs" style="vertical-align: top;">
-                    <a class="btn btn-sm m-r-5 <?php echo($filter_empty ? "btn-default" : "btn-info"); ?>"
-                       id="toggle_options" href="#">
+                    <a class="btn btn-sm m-r-5 <?php echo($filter_empty ? "btn-default" : "btn-info"); ?>" id="toggle_options" href="#">
                         <?php echo $this->locale['article_0121']; ?>
-                        <span id="filter_caret"
-                              class="fa fa-fw <?php echo($filter_empty ? "fa-caret-down" : "fa-caret-up"); ?>"></span>
+                        <span id="filter_caret" class="fa fa-fw <?php echo($filter_empty ? "fa-caret-down" : "fa-caret-up"); ?>"></span>
                     </a>
                     <?php echo form_button('article_clear', $this->locale['article_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
                 </div>

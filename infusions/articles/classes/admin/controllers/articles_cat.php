@@ -183,7 +183,6 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
                     if (multilang_table("AR")) {
                         echo form_select('article_cat_language[]', $this->locale['language'], $data['article_cat_language'], [
-                            'inline'      => TRUE,
                             'options'     => fusion_get_enabled_languages(),
                             'placeholder' => $this->locale['choose'],
                             'multiple'    => TRUE
@@ -194,14 +193,12 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
                     echo form_select('article_cat_visibility', $this->locale['article_0106'], $data['article_cat_visibility'], [
                         'options'     => fusion_get_groups(),
-                        'placeholder' => $this->locale['choose'],
-                        'inline'      => TRUE
+                        'placeholder' => $this->locale['choose']
                     ]);
 
                     echo form_select('article_cat_status', $this->locale['article_0152'], $data['article_cat_status'], [
                         'options'     => [0 => $this->locale['unpublish'], 1 => $this->locale['publish']],
-                        'placeholder' => $this->locale['choose'],
-                        'inline'      => TRUE
+                        'placeholder' => $this->locale['choose']
                     ]);
 
                     closeside();

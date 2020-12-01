@@ -203,15 +203,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 }
                 openside("");
                 echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], [
-                    'options' => get_albumOpts(),
-                    'inline'  => TRUE
+                    'options' => get_albumOpts()
                 ]);
                 echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
                 closeside();
                 echo "</div></div>\n";
                 echo form_button('close', $locale['close'], $locale['close'], ['class' => 'btn-default m-r-10']);
                 echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
-                echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], ['class' => 'btn-warning m-r-10']);
+                echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], ['class' => 'btn-danger m-r-10']);
                 echo closeform();
             }
         }

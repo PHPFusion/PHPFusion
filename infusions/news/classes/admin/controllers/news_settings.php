@@ -120,7 +120,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
         echo "<h4 class='m-0'>".$locale['news_0709']."</h4><i>".$locale['news_0710']."</i>\n<br/><br/>";
         echo "</div><div class='col-xs-12 col-sm-9'>\n";
-        echo "<div class='display-block overflow-hide'>
+        echo "<div class='row'>
         <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['news_601']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('news_thumb_w', '', $news_settings['news_thumb_w'], [
@@ -141,7 +141,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
             ])."
             </div>
         </div>";
-        echo "<div class='display-block overflow-hide'>
+        echo "<div class='row'>
         <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_photo_w'>".$locale['news_602']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('news_photo_w', '', $news_settings['news_photo_w'], [
@@ -162,7 +162,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
             ])."
             </div>
         </div>";
-        echo "<div class='display-block overflow-hide'>
+        echo "<div class='row'>
             <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_thumb_w'>".$locale['news_603']."</label>
             <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
             ".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], [
@@ -183,7 +183,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
             ])."
             </div>
         </div>";
-        echo "<div class='display-block overflow-hide'>
+        echo "<div class='row'>
         <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['news_605']."</label>
         <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('calc_b', '', $calc_b, [

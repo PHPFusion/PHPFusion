@@ -208,7 +208,6 @@ echo form_select('blog_cat[]', $locale['blog_0423'], $data['blog_cat'], [
         'options'     => $blog_cat_opts,
         "width"       => "100%",
         'inner_width' => '100%',
-        "inline"      => TRUE,
         'multiple'    => TRUE,
     ]
 );
@@ -216,8 +215,7 @@ echo form_select('blog_cat[]', $locale['blog_0423'], $data['blog_cat'], [
 echo form_select('blog_visibility', $locale['blog_0430'], $data['blog_visibility'], [
     'options'     => fusion_get_groups(),
     'placeholder' => $locale['choose'],
-    'width'       => '100%',
-    "inline"      => TRUE,
+    'width'       => '100%'
 ]);
 
 if (multilang_table("BL")) {
@@ -225,7 +223,6 @@ if (multilang_table("BL")) {
         'options'     => fusion_get_enabled_languages(),
         'placeholder' => $locale['choose'],
         'width'       => '100%',
-        "inline"      => TRUE,
         'multiple'    => TRUE
     ]);
 } else {

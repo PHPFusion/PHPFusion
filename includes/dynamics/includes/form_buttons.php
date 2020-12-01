@@ -104,10 +104,9 @@ function form_btngroup($input_name, $label, $input_value, array $options = []) {
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? ' overflow-hide ' : '').$error_class." clearfix'>\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';
-
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class." clearfix'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."</label>\n" : '';
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
 
     $html .= "<div class='btn-group' id='".$options['input_id']."'>";
 
@@ -134,7 +133,7 @@ function form_btngroup($input_name, $label, $input_value, array $options = []) {
 
     $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
     $html .= \defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-    $html .= $options['inline'] ? "</div>\n" : '';
+    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
     $html .= "</div>\n";
 
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;

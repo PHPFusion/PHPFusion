@@ -68,8 +68,8 @@ echo form_text('blog_pagination', $locale['669b'], $blog_settings['blog_paginati
     'inline' => TRUE, 'max_length' => 4, 'inner_width' => '150px', 'width' => '150px', 'type' => 'number'
 ]);
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_thumb_w'>".$locale['blog_601']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_thumb_w'>".$locale['blog_601']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_thumb_w', '', $blog_settings['blog_thumb_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -82,8 +82,8 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_w'>".$locale['blog_602']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_photo_w'>".$locale['blog_602']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_photo_w', '', $blog_settings['blog_photo_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -96,8 +96,8 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='blog_photo_max_w'>".$locale['blog_603']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_photo_max_w'>".$locale['blog_603']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('blog_photo_max_w', '', $blog_settings['blog_photo_max_w'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
@@ -110,8 +110,8 @@ echo "<div class='display-block overflow-hide'>
     </div>
 </div>";
 
-echo "<div class='display-block overflow-hide'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0' for='calc_b'>".$locale['blog_605']."</label>
+echo "<div class='row'>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['blog_605']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
         ".form_text('calc_b', '', $calc_b, [
         'required' => TRUE, 'type' => 'number', 'error_text' => $locale['error_rate'], 'width' => '100px', 'max_length' => 4,

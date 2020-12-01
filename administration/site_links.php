@@ -166,29 +166,26 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "cat");
 
         opentable($this->locale["SL_0001"]);
-        echo "<div class='clearfix'>";
-        echo "<div class='pull-right'>".$links."</div>";
-        echo "<h4>$this->title</h4>";
-        echo "<hr/>";
-        echo "</div>";
-
+        echo opentab($master_title, $this->section, 'link', TRUE, "", "section", ['refs', 'action', 'id', 'cat']);
         switch ($this->section) {
             case "settings":
-                echo opentab($master_title, $this->section, 'link', TRUE, "", "section", ['refs', 'action', 'id', 'cat']);
                 $this->settings();
-                echo closetab();
                 break;
             default:
+                echo "<div class='clearfix'>";
+                echo "<div class='pull-right'>".$links."</div>";
+                echo "<h4>$this->title</h4>";
+                echo "<hr/>";
+                echo "</div>";
                 if ($this->refs == "form") {
                     add_breadcrumb(['link' => $this->form_action, 'title' => ($this->refs == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                     $this->form();
                 } else {
                     add_breadcrumb(['link' => $this->form_action, 'title' => ($this->refs == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
-                    echo opentab($master_title, $this->section, 'link', TRUE, "", "section", ['refs', 'action', 'id', 'cat']);
                     $this->listing();
-                    echo closetab();
                 }
         }
+        echo closetab();
         closetable();
     }
 
@@ -360,8 +357,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
 
         echo openform('link_administration_frm', 'POST', $this->form_uri);
 
-        echo "<div class='admin-form-type-1'>";
-        echo "<div>";
+        echo "<div class='row'>";
+        echo "<div class='col-xs-12 col-sm-9'>";
 
         echo form_hidden('link_id', '', $this->data['link_id']);
         echo form_text('link_name', $this->locale['SL_0020'], $this->data['link_name'], [
@@ -415,7 +412,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         ]);
 
         echo "</div>\n";
-        echo "<div>\n";
+        echo "<div class='col-xs-12 col-sm-3'>\n";
         openside("");
         echo form_select("link_cat", $this->locale['SL_0029'], $this->data['link_cat'], [
             'input_id'        => "link_categories",

@@ -53,7 +53,8 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             'download_file'              => '',
             'download_url'               => '',
             'download_image'             => '',
-            'download_image_thumb'       => ''
+            'download_image_thumb'       => '',
+            'download_filesize'          => ''
         ];
         /**
          * Download File Section
@@ -118,7 +119,6 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
          */
         // must have category
         if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? in_group('download_cat_language', LANGUAGE) : "")) {
-            echo "<div class='panel panel-default tbl-border'>\n<div class='panel-body'>\n";
             echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
                     $locale['download_0044'])."</div>\n";
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=d", ['enctype' => TRUE]);
@@ -167,10 +167,6 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 
             echo form_textarea('download_description', $locale['download_0202a'], $criteriaArray['download_description'], $textArea_opts);
 
-            echo "<div class='row m-l-0 m-r-0 m-b-20'>\n";
-            echo "<div class='col-xs-12 col-sm-3 p-l-0'>\n&nbsp;";
-            echo "</div>\n";
-            echo "<div class='col-xs-12 col-sm-9 p-r-0'>\n";
             $tab_title['title'][] = "1 -".$locale['download_0214'];
             $tab_title['id'][] = 'dlf';
             $tab_title['icon'][] = 'fa fa-file-zip-o fa-fw';
@@ -178,7 +174,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             $tab_title['id'][] = 'dll';
             $tab_title['icon'][] = 'fa fa-plug fa-fw';
             $tab_active = tab_active($tab_title, 0);
-            echo "<div class='list-group-item'>\n";
+            echo "<div class='list-group-item m-b-10'>\n";
             echo "<div class='well'>\n";
             echo "<strong>".$locale['download_0204']."</strong>\n";
             echo "</div>\n";
@@ -214,8 +210,6 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             ]);
             echo closetabbody();
             echo closetab();
-            echo "</div>\n";
-            echo "</div>\n";
             echo "</div>\n";
             if ($dl_settings['download_screenshot']) {
                 $screenshot_options = [
@@ -259,8 +253,6 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             echo form_text('download_copyright', $locale['download_0222'], $criteriaArray['download_copyright'], ["inline" => TRUE]);
 
             echo form_hidden('calc_upload', '', '1');
-
-            echo "</div>\n</div>\n";
 
             echo form_button('submit_download', $locale['download_0041'], $locale['download_0041'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 

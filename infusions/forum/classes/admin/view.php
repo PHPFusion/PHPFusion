@@ -778,7 +778,6 @@ class ForumAdminView extends ForumAdminInterface {
         } else if (isset($_GET['action']) && $_GET['action'] == 'p_edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
             self::display_forum_permissions_form();
         } else {
-            self::display_forum_jumper();
             self::display_forum_list();
             self::quick_create_forum();
         }
@@ -832,7 +831,7 @@ class ForumAdminView extends ForumAdminInterface {
             }
         }
 
-        opentable($admin_title);
+        echo '<h4>'.$admin_title.'</h4>';
 
         echo openform('inputform', 'post', FUSION_REQUEST, ['enctype' => 1]);
 
@@ -968,7 +967,6 @@ class ForumAdminView extends ForumAdminInterface {
         echo "</div>\n</div>\n";
         echo form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], ['class' => 'btn-sm btn-success']);
         echo closeform();
-        closetable();
     }
 
     /**
@@ -1011,7 +1009,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
         add_to_title(self::$locale['forum_030']);
-        opentable(self::$locale['forum_030'], 'm-t-15');
+        echo '<h4>'.self::$locale['forum_030'].'</h4>';
         echo openform('permissionsForm', 'post', FUSION_REQUEST);
         echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006'].": ".$data['forum_name']."</span>\n";
         openside();
@@ -1062,7 +1060,6 @@ class ForumAdminView extends ForumAdminInterface {
         echo form_button('save_permission', self::$locale['forum_042'], self::$locale['forum_042'],
             ['class' => 'btn-primary']);
 
-        closetable();
     }
 
     /**
@@ -1070,7 +1067,7 @@ class ForumAdminView extends ForumAdminInterface {
      */
     private function display_forum_jumper() {
         /* JS Menu Jumper */
-        echo "<div class='pull-right m-t-10'>\n";
+        echo "<div class='pull-right'>\n";
         echo form_select_tree('forum_jump', self::$locale['forum_044'], $_GET['parent_id'], [
             'inline'       => FALSE,
             'parent_value' => self::$locale['forum_root']
@@ -1098,8 +1095,12 @@ class ForumAdminView extends ForumAdminInterface {
             (multilang_table("FO") ? in_group('forum_language', LANGUAGE)." AND" : '')." forum_cat='".$_GET['parent_id']."'"); // need max rows
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows) ? intval($_GET['rowstart']) : 0;
 
-        echo '<div class="m-t-10">';
-        opentable($title);
+        echo '<div class="clearfix">';
+        self::display_forum_jumper();
+        echo '<h4>'.$title.'</h4>';
+        echo '</div>';
+
+        echo '<div class="m-t-25">';
 
         $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
             ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
@@ -1178,7 +1179,7 @@ class ForumAdminView extends ForumAdminInterface {
         } else {
             echo "<div class='well text-center'>".self::$locale['560']."</div>\n";
         }
-        closetable();
+
         echo '</div>';
     }
 
@@ -1187,7 +1188,7 @@ class ForumAdminView extends ForumAdminInterface {
      */
     private function quick_create_forum() {
         echo "<hr/>\n";
-        echo openform('forum_create_form', 'post', FUSION_REQUEST, ['class' => 'spacer-sm m-t-0 p-15']);
+        echo openform('forum_create_form', 'post', FUSION_REQUEST);
         echo "<h4>".self::$locale['forum_001']."</h4>";
         echo form_text('forum_name', self::$locale['forum_006'], '', [
             'class'       => 'form-group-lg',

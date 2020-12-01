@@ -60,7 +60,6 @@ foreach ($temp as $folders) {
         $content .= "</div>\n</div>\n";
 
         foreach ($infs as $i => $inf) {
-
             $content .= openform('infuseform', 'post', FUSION_SELF.fusion_get_aidlink());
             $content .= "<div class='list-group-item'>\n";
             $content .= "<div class='row'>\n";
@@ -77,7 +76,15 @@ foreach ($temp as $folders) {
             $content .= "</div>\n";
             $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n";
             $content .= "<div class='pull-left m-r-10'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
-            $content .= "<div class='overflow-hide'><strong>".$inf['title']."</strong><br/>".$inf['description']."</div>\n</div>\n";
+
+            $button = $inf['title'];
+            if (!empty($inf['mlt_adminpanel'][LANGUAGE][0])) {
+                $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['mlt_adminpanel'][LANGUAGE][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
+            } else if (!empty($inf['adminpanel'][0])) {
+                $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['adminpanel'][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
+            }
+
+            $content .= "<div class='overflow-hide'><strong>".$button."</strong><br/>".$inf['description']."</div>\n</div>\n";
             $content .= "<div class='col-xs-2 col-sm-2 col-md-2'><h5 class='m-0'>".($inf['status'] > 0 ? "<span class='label label-success'>".$locale['415']."</span>" : "<span class='label label-default'>".$locale['414']."</span>")."</h5></div>\n";
             $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
             $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";

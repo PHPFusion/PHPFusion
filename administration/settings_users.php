@@ -82,7 +82,7 @@ $action_opts = ['0' => $locale['1012'], '1' => $locale['1013']];
 echo form_select('deactivation_action', $locale['1011'], $settings['deactivation_action'], ['options' => $action_opts]);
 closeside();
 openside('');
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_max_w'>".$locale['1008']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('avatar_width', '', $settings['avatar_width'], [
@@ -106,7 +106,7 @@ echo "<div class='display-block overflow-hide'>
 $calc_c = calculate_byte($settings['avatar_filesize']);
 $calc_b = $settings['avatar_filesize'] / $calc_c;
 
-echo "<div class='display-block overflow-hide'>
+echo "<div class='row'>
     <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='calc_b'>".$locale['605']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('calc_b', '', $calc_b, [

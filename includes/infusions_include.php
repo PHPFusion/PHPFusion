@@ -491,6 +491,7 @@ if (!function_exists('download_file')) {
  * @return mixed
  */
 function fusion_table($table_id, array $options = []) {
+    $settings = fusion_get_settings();
 
     $table_id = str_replace(["-", " "], "_", $table_id);
 

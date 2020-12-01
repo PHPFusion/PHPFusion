@@ -60,18 +60,15 @@ function bbcode_list() {
             $test_message) ? 1 : 0;
         if (\defender::safe()) {
             openside($locale['BBCA_417']);
-            echo "<div class='well'>\n";
             if (!$smileys_checked) {
                 echo parsesmileys(parseubb($test_message));
             } else {
                 echo parseubb($test_message);
             }
-            echo "</div>\n";
             closeside();
         }
     }
 
-    openside($locale['BBCA_401']);
     echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=bbcode_list");
     echo form_textarea('test_message', $locale['BBCA_418a'], $test_message, [
         'required'   => TRUE,
@@ -91,8 +88,6 @@ function bbcode_list() {
     echo "</div>\n";
     echo "</div>\n";
     closeform();
-    closeside();
-
 }
 
 function bbcode_form() {
@@ -160,7 +155,7 @@ function bbcode_form() {
     $result = dbquery("SELECT * FROM ".DB_BBCODES." ORDER BY bbcode_order");
     sort($available_bbcodes);
     if (dbrows($result)) {
-        opentable($locale['BBCA_402']);
+        echo '<h4>'.$locale['BBCA_402'].'</h4>';
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
         echo "<th><strong>".$locale['BBCA_403']."</strong></th>\n";
         echo "<th><strong>".$locale['BBCA_404']."</strong></th>\n";
@@ -228,9 +223,9 @@ function bbcode_form() {
     } else {
         echo "<div class='text-center'>".$locale['BBCA_411']."</div>\n";
     }
-    closetable();
+
     $enabled = dbcount("(bbcode_id)", DB_BBCODES);
-    opentable($locale['BBCA_413']);
+    echo '<h4>'.$locale['BBCA_413'].'</h4>';
     if (count($available_bbcodes) != $enabled) {
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
         echo "<th><strong>".$locale['BBCA_403']."</strong></th>\n";
@@ -277,8 +272,6 @@ function bbcode_form() {
     } else {
         echo "<div class='text-center'>".$locale['BBCA_416']."</div>\n";
     }
-    closetable();
-
 }
 
 require_once THEMES.'templates/footer.php';

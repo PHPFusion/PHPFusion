@@ -341,12 +341,12 @@ if (isset($_GET['action']) && $_GET['action'] === "edit") {
 }
 closeside();
 openside();
-echo form_text('download_license', $locale['download_0208'], $data['download_license'], ['inline' => TRUE]);
-echo form_text('download_copyright', $locale['download_0222'], $data['download_copyright'], ['inline' => TRUE]);
-echo form_text('download_os', $locale['download_0209'], $data['download_os'], ['inline' => TRUE]);
-echo form_text('download_version', $locale['download_0210'], $data['download_version'], ['inline' => TRUE]);
-echo form_text('download_homepage', $locale['download_0221'], $data['download_homepage'], ['inline' => TRUE, 'type' => 'url', 'regex' => 'http(s)?\:\/\/(.*?)']);
-echo form_text('download_filesize', $locale['download_0211'], $data['download_filesize'], ['inline' => TRUE]);
+echo form_text('download_license', $locale['download_0208'], $data['download_license']);
+echo form_text('download_copyright', $locale['download_0222'], $data['download_copyright']);
+echo form_text('download_os', $locale['download_0209'], $data['download_os']);
+echo form_text('download_version', $locale['download_0210'], $data['download_version']);
+echo form_text('download_homepage', $locale['download_0221'], $data['download_homepage'], ['type' => 'url', 'regex' => 'http(s)?\:\/\/(.*?)']);
+echo form_text('download_filesize', $locale['download_0211'], $data['download_filesize']);
 closeside();
 echo "</div>\n</div>\n"; // end row.
 echo "<div class='m-t-20'>\n";
