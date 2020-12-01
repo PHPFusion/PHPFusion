@@ -260,6 +260,16 @@ class Errors {
         if (fusion_get_settings('error_logging_method') === 'database') {
             echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
         } else {
+            if (isset($_POST['delete_log'])) {
+                if (file_exists(BASEDIR.'fusion_error_log.log')) {
+                    @unlink(BASEDIR.'fusion_error_log.log');
+                    redirect(FUSION_REQUEST);
+                }
+            }
+            echo openform('deletelog', 'post', FUSION_REQUEST);
+            echo form_button('delete_log', $locale['delete'], 'delete_log', ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
+            echo closeform();
+
             if (file_exists(BASEDIR.'fusion_error_log.log')) {
                 echo '<textarea class="form-control m-t-20" rows="15" disabled>'.file_get_contents(BASEDIR.'fusion_error_log.log').'</textarea>';
             } else {
