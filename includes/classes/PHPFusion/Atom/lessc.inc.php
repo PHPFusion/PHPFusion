@@ -4,264 +4,273 @@
  * to be a drop-in replacement for following products:
  *  - Drupal 7, by the less module v3.0+ (https://drupal.org/project/less)
  *  - Symfony 2
- *
  */
 
-namespace PHPFusion\Atom;
-
 // Register autoloader for non-composer installations
-if (!class_exists('Less_Parser')) {
-    require_once __DIR__.'/lib/Less/Autoloader.php';
-    \Less_Autoloader::register();
+if ( !class_exists( 'Less_Parser' ) ) {
+	require_once __DIR__ . '/lib/Less/Autoloader.php';
+	Less_Autoloader::register();
 }
 
-class Lessc {
+class lessc {
 
-    static public $VERSION = \Less_Version::less_version;
+	static public $VERSION = Less_Version::less_version;
 
-    public $importDir = '';
-    protected $allParsedFiles = [];
-    protected $libFunctions = [];
-    protected $registeredVars = [];
-    private $formatterName;
+	public $importDir = '';
+	protected $allParsedFiles = array();
+	protected $libFunctions = array();
+	protected $registeredVars = array();
+	private $formatterName;
+	private $options = array();
 
-    public function __construct($lessc = NULL, $sourceName = NULL) {
-    }
+	public function __construct( $lessc=null, $sourceName=null ) {}
 
-    public static function cexecute($in, $force = FALSE, $less = NULL) {
-        if ($less === NULL) {
-            $less = new self;
-        }
+	public function setImportDir( $dirs ) {
+		$this->importDir = (array)$dirs;
+	}
 
-        return $less->cachedCompile($in, $force);
-    }
+	public function addImportDir( $dir ) {
+		$this->importDir = (array)$this->importDir;
+		$this->importDir[] = $dir;
+	}
 
-    /**
-     * Execute lessphp on a .less file or a lessphp cache structure
-     *
-     * The lessphp cache structure contains information about a specific
-     * less file having been parsed. It can be used as a hint for future
-     * calls to determine whether or not a rebuild is required.
-     *
-     * The cache structure contains two important keys that may be used
-     * externally:
-     *
-     * compiled: The final compiled CSS
-     * updated: The time (in seconds) the CSS was last compiled
-     *
-     * The cache structure is a plain-ol' PHP associative array and can
-     * be serialized and unserialized without a hitch.
-     *
-     * @param mixed $in Input
-     * @param bool  $force Force rebuild?
-     *
-     * @return array lessphp cache structure
-     */
-    public function cachedCompile($in, $force = FALSE) {
-        // assume no root
-        $root = NULL;
+	public function setFormatter( $name ) {
+		$this->formatterName = $name;
+	}
 
-        if (is_string($in)) {
-            $root = $in;
-        } else if (is_array($in) and isset($in['root'])) {
-            if ($force or !isset($in['files'])) {
-                // If we are forcing a recompile or if for some reason the
-                // structure does not contain any file information we should
-                // specify the root to trigger a rebuild.
-                $root = $in['root'];
-            } else if (isset($in['files']) and is_array($in['files'])) {
-                foreach ($in['files'] as $fname => $ftime) {
-                    if (!file_exists($fname) or filemtime($fname) > $ftime) {
-                        // One of the files we knew about previously has changed
-                        // so we should look at our incoming root again.
-                        $root = $in['root'];
-                        break;
-                    }
-                }
-            }
-        } else {
-            // TODO: Throw an exception? We got neither a string nor something
-            // that looks like a compatible lessphp cache structure.
-            return NULL;
-        }
+	public function setPreserveComments( $preserve ) {}
 
-        if ($root !== NULL) {
-            // If we have a root value which means we should rebuild.
-            $out = [];
-            $out['root'] = $root;
-            $out['compiled'] = $this->compileFile($root);
-            $out['files'] = $this->allParsedFiles();
-            $out['updated'] = time();
+	public function registerFunction( $name, $func ) {
+		$this->libFunctions[$name] = $func;
+	}
 
-            return $out;
-        } else {
-            // No changes, pass back the structure
-            // we were given initially.
-            return $in;
-        }
-    }
+	public function unregisterFunction( $name ) {
+		unset( $this->libFunctions[$name] );
+	}
 
-    public function compileFile($fname, $outFname = NULL) {
-        if (!is_readable($fname)) {
-            throw new \Exception('load error: failed to find '.$fname);
-        }
+	public function setVariables( $variables ){
+		foreach ( $variables as $name => $value ) {
+			$this->setVariable( $name, $value );
+		}
+	}
 
-        $pi = pathinfo($fname);
+	public function setVariable( $name, $value ) {
+		$this->registeredVars[$name] = $value;
+	}
 
-        $oldImport = $this->importDir;
+	public function unsetVariable( $name ) {
+		unset( $this->registeredVars[$name] );
+	}
 
-        $this->importDir = (array)$this->importDir;
-        $this->importDir[] = realpath($pi['dirname']).'/';
+	public function setOptions( $options ) {
+		foreach ( $options as $name => $value ) {
+			$this->setOption( $name, $value);
+		}
+	}
 
-        $this->allParsedFiles = [];
-        $this->addParsedFile($fname);
+	public function setOption( $name, $value ) {
+		$this->options[$name] = $value;
+	}
 
-        $parser = new \Less_Parser();
-        $parser->SetImportDirs($this->getImportDirs());
-        if (count($this->registeredVars)) {
-            $parser->ModifyVars($this->registeredVars);
-        }
-        foreach ($this->libFunctions as $name => $func) {
-            $parser->registerFunction($name, $func);
-        }
-        $parser->parseFile($fname);
-        $out = $parser->getCss();
+	public function parse( $buffer, $presets = array() ) {
 
-        $parsed = \Less_Parser::AllParsedFiles();
-        foreach ($parsed as $file) {
-            $this->addParsedFile($file);
-        }
+		$this->setVariables( $presets );
 
-        $this->importDir = $oldImport;
+		$parser = new Less_Parser( $this->getOptions() );
+		$parser->setImportDirs( $this->getImportDirs() );
+		foreach ( $this->libFunctions as $name => $func ) {
+			$parser->registerFunction( $name, $func );
+		}
+		$parser->parse($buffer);
+		if ( count( $this->registeredVars ) ) {
+			$parser->ModifyVars( $this->registeredVars );
+		}
 
-        if ($outFname !== NULL) {
-            return file_put_contents($outFname, $out);
-        }
+		return $parser->getCss();
+	}
 
-        return $out;
-    }
+	protected function getOptions() {
+		$options = array( 'relativeUrls'=>false );
+		switch( $this->formatterName ) {
+			case 'compressed':
+				$options['compress'] = true;
+				break;
+		}
+		if (is_array($this->options))
+		{
+			$options = array_merge($options, $this->options);
+		}
+		return $options;
+	}
 
-    protected function addParsedFile($file) {
-        $this->allParsedFiles[realpath($file)] = filemtime($file);
-    }
+	protected function getImportDirs() {
+		$dirs_ = (array)$this->importDir;
+		$dirs = array();
+		foreach ( $dirs_ as $dir ) {
+			$dirs[$dir] = '';
+		}
+		return $dirs;
+	}
 
-    protected function getImportDirs() {
-        $dirs_ = (array)$this->importDir;
-        $dirs = [];
-        foreach ($dirs_ as $dir) {
-            $dirs[$dir] = '';
-        }
+	public function compile( $string, $name = null ) {
 
-        return $dirs;
-    }
+		$oldImport = $this->importDir;
+		$this->importDir = (array)$this->importDir;
 
-    public function allParsedFiles() {
-        return $this->allParsedFiles;
-    }
+		$this->allParsedFiles = array();
 
-    public function setImportDir($dirs) {
-        $this->importDir = (array)$dirs;
-    }
+		$parser = new Less_Parser( $this->getOptions() );
+		$parser->SetImportDirs( $this->getImportDirs() );
+		if ( count( $this->registeredVars ) ) {
+			$parser->ModifyVars( $this->registeredVars );
+		}
+		foreach ( $this->libFunctions as $name => $func ) {
+			$parser->registerFunction( $name, $func );
+		}
+		$parser->parse( $string );
+		$out = $parser->getCss();
 
-    public function addImportDir($dir) {
-        $this->importDir = (array)$this->importDir;
-        $this->importDir[] = $dir;
-    }
+		$parsed = Less_Parser::AllParsedFiles();
+		foreach ( $parsed as $file ) {
+			$this->addParsedFile( $file );
+		}
 
-    public function setFormatter($name) {
-        $this->formatterName = $name;
-    }
+		$this->importDir = $oldImport;
 
-    public function setPreserveComments($preserve) {
-    }
+		return $out;
+	}
 
-    public function registerFunction($name, $func) {
-        $this->libFunctions[$name] = $func;
-    }
+	public function compileFile( $fname, $outFname = null ) {
+		if ( !is_readable( $fname ) ) {
+			throw new Exception( 'load error: failed to find '.$fname );
+		}
 
-    public function unregisterFunction($name) {
-        unset($this->libFunctions[$name]);
-    }
+		$pi = pathinfo( $fname );
 
-    public function unsetVariable($name) {
-        unset($this->registeredVars[$name]);
-    }
+		$oldImport = $this->importDir;
 
-    public function parse($buffer, $presets = []) {
-        $options = [];
-        $this->setVariables($presets);
+		$this->importDir = (array)$this->importDir;
+		$this->importDir[] = Less_Parser::AbsPath( $pi['dirname'] ).'/';
 
-        switch ($this->formatterName) {
-            case 'compressed':
-                $options['compress'] = TRUE;
-                break;
-        }
-        /*
-        $parser = Less_Parser($options);
-        $parser->setImportDirs($this->getImportDirs());
-        if( count( $this->registeredVars ) ) $parser->ModifyVars( $this->registeredVars );
-        foreach ($this->libFunctions as $name => $func) {
-            $parser->registerFunction($name, $func);
-        }
-        $parser->parse($buffer);
+		$this->allParsedFiles = array();
+		$this->addParsedFile( $fname );
 
-        return $parser->getCss();
-        */
-    }
+		$parser = new Less_Parser( $this->getOptions() );
+		$parser->SetImportDirs( $this->getImportDirs() );
+		if ( count( $this->registeredVars ) ) {
+			$parser->ModifyVars( $this->registeredVars );
+		}
+		foreach ( $this->libFunctions as $name => $func ) {
+			$parser->registerFunction( $name, $func );
+		}
+		$parser->parseFile( $fname );
+		$out = $parser->getCss();
 
-    public function setVariables($variables) {
-        foreach ($variables as $name => $value) {
-            $this->setVariable($name, $value);
-        }
-    }
+		$parsed = Less_Parser::AllParsedFiles();
+		foreach ( $parsed as $file ) {
+			$this->addParsedFile( $file );
+		}
 
-    public function setVariable($name, $value) {
-        $this->registeredVars[$name] = $value;
-    }
+		$this->importDir = $oldImport;
 
-    public function compile($string, $name = NULL) {
+		if ( $outFname !== null ) {
+			return file_put_contents( $outFname, $out );
+		}
 
-        $oldImport = $this->importDir;
-        $this->importDir = (array)$this->importDir;
+		return $out;
+	}
 
-        $this->allParsedFiles = [];
+	public function checkedCompile( $in, $out ) {
+		if ( !is_file( $out ) || filemtime( $in ) > filemtime( $out ) ) {
+			$this->compileFile($in, $out);
+			return true;
+		}
+		return false;
+	}
 
-        $parser = new \Less_Parser();
-        $parser->SetImportDirs($this->getImportDirs());
-        if (count($this->registeredVars)) {
-            $parser->ModifyVars($this->registeredVars);
-        }
-        foreach ($this->libFunctions as $name => $func) {
-            $parser->registerFunction($name, $func);
-        }
-        $parser->parse($string);
-        $out = $parser->getCss();
 
-        $parsed = \Less_Parser::AllParsedFiles();
-        foreach ($parsed as $file) {
-            $this->addParsedFile($file);
-        }
+	/**
+	 * Execute lessphp on a .less file or a lessphp cache structure
+	 *
+	 * The lessphp cache structure contains information about a specific
+	 * less file having been parsed. It can be used as a hint for future
+	 * calls to determine whether or not a rebuild is required.
+	 *
+	 * The cache structure contains two important keys that may be used
+	 * externally:
+	 *
+	 * compiled: The final compiled CSS
+	 * updated: The time (in seconds) the CSS was last compiled
+	 *
+	 * The cache structure is a plain-ol' PHP associative array and can
+	 * be serialized and unserialized without a hitch.
+	 *
+	 * @param mixed $in Input
+	 * @param bool $force Force rebuild?
+	 * @return array lessphp cache structure
+	 */
+	public function cachedCompile( $in, $force = false ) {
+		// assume no root
+		$root = null;
 
-        $this->importDir = $oldImport;
+		if ( is_string( $in ) ) {
+			$root = $in;
+		} elseif ( is_array( $in ) and isset( $in['root'] ) ) {
+			if ( $force or ! isset( $in['files'] ) ) {
+				// If we are forcing a recompile or if for some reason the
+				// structure does not contain any file information we should
+				// specify the root to trigger a rebuild.
+				$root = $in['root'];
+			} elseif ( isset( $in['files'] ) and is_array( $in['files'] ) ) {
+				foreach ( $in['files'] as $fname => $ftime ) {
+					if ( !file_exists( $fname ) or filemtime( $fname ) > $ftime ) {
+						// One of the files we knew about previously has changed
+						// so we should look at our incoming root again.
+						$root = $in['root'];
+						break;
+					}
+				}
+			}
+		} else {
+			// TODO: Throw an exception? We got neither a string nor something
+			// that looks like a compatible lessphp cache structure.
+			return null;
+		}
 
-        return $out;
-    }
+		if ( $root !== null ) {
+			// If we have a root value which means we should rebuild.
+			$out = array();
+			$out['root'] = $root;
+			$out['compiled'] = $this->compileFile($root);
+			$out['files'] = $this->allParsedFiles();
+			$out['updated'] = time();
+			return $out;
+		} else {
+			// No changes, pass back the structure
+			// we were given initially.
+			return $in;
+		}
+	}
 
-    public function ccompile($in, $out, $less = NULL) {
-        if ($less === NULL) {
-            $less = new self;
-        }
+	public function ccompile( $in, $out, $less = null ) {
+		if ( $less === null ) {
+			$less = new self;
+		}
+		return $less->checkedCompile( $in, $out );
+	}
 
-        return $less->checkedCompile($in, $out);
-    }
+	public static function cexecute( $in, $force = false, $less = null ) {
+		if ( $less === null ) {
+			$less = new self;
+		}
+		return $less->cachedCompile($in, $force);
+	}
 
-    public function checkedCompile($in, $out) {
-        if (!is_file($out) || filemtime($in) > filemtime($out)) {
-            $this->compileFile($in, $out);
+	public function allParsedFiles() {
+		return $this->allParsedFiles;
+	}
 
-            return TRUE;
-        }
-
-        return FALSE;
-    }
+	protected function addParsedFile( $file ) {
+		$this->allParsedFiles[Less_Parser::AbsPath( $file )] = filemtime( $file );
+	}
 }

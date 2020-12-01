@@ -22,7 +22,7 @@ require_once LOCALE.LOCALESET."admin/theme.php";
 class Atom {
     public $target_folder = '';
     public $theme_name = '';
-    public $compress = FALSE;
+    public $compress = TRUE;
     public $debug = FALSE;
     public $Compiler = TRUE; // turn off compiler here.
     private $font_decoration_options = [];
