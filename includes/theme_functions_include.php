@@ -53,8 +53,13 @@ if (!function_exists('display_avatar')) {
             } else {
                 $color = stringToColorCode($userdata['user_name']);
                 $font_color = get_brightness($color) > 130 ? '000' : 'fff';
-                $first_char = mb_substr($userdata['user_name'], 0, 1);
-                $first_char = mb_strtoupper($first_char);
+                if (function_exists('mb_substr') && function_exists('mb_strtoupper')) {
+                    $first_char = mb_substr($userdata['user_name'], 0, 1, 'UTF-8');
+                    $first_char = mb_strtoupper($first_char, 'UTF-8');
+                } else {
+                    $first_char = substr($userdata['user_name'], 0, 1);
+                    $first_char = strtoupper($first_char);
+                }
                 $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg version="1.1" viewBox="0 0 20 20"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" height="100%" width="100%"/><text fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" alignment-baseline="central" dy="-0.05em">'.$first_char.'</text></svg></div>';
             }
         }

@@ -208,7 +208,7 @@ function search_striphtmlbbcodes($text) {
 function search_textfrag($text) {
     if ($_REQUEST['chars'] != 0) {
         if (function_exists('mb_substr')) {
-            $text = nl2br(stripslashes(mb_substr($text, 0, $_REQUEST['chars'], 'utf-8')."..."));
+            $text = nl2br(stripslashes(mb_substr($text, 0, $_REQUEST['chars'], 'UTF-8')."..."));
         } else {
             $text = nl2br(stripslashes(substr($text, 0, $_REQUEST['chars'])."..."));
         }

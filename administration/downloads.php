@@ -367,7 +367,12 @@ if (!empty($result)) {
     echo "</tr>\n";
     echo "<tr>\n<td class='tbl1' style='width:80px;vertical-align:top;'>".$locale['421b']."<br /><br />";
     echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid;'>";
-    echo "<strong>".(255 - mb_strlen($download_description_short))."</strong>";
+    if (function_exists('mb_strlen')) {
+        $strlen = mb_strlen($download_description_short, 'UTF-8');
+    } else {
+        $strlen = strlen($download_description_short);
+    }
+    echo "<strong>".(255 - $strlen)."</strong>";
     echo "</span>";
     echo "</td>\n";
     echo "<td class='tbl1'><textarea name='download_description_short' cols='60' rows='4' class='textbox' style='width:380px;' onkeydown=\"shortdesc_counter(this,'shortdesc_display',255);\" onkeyup=\"shortdesc_counter(this,'shortdesc_display',255);\">".$download_description_short."</textarea></td>\n";

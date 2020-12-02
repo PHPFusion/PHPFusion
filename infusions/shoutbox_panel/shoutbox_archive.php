@@ -60,22 +60,23 @@ function sbawrap($text) {
     $chars = 0;
     $res = "";
 
-    $str_len = strlen($text);
+    $str_len = function_exists('mb_strlen') ? mb_strlen($text, 'UTF-8') : strlen($text);
 
     for ($i = 0; $i < $str_len; $i++) {
-        $chr = mb_substr($text, $i, 1, $locale['charset']);
+        $chr = function_exists('mb_substr') ? mb_substr($text, $i, 1, 'UTF-8') : substr($text, $i, 1);
         if ($chr == "<") {
-            if (mb_substr($text, ($i + 1), 6, $locale['charset']) == "a href" || mb_substr($text, ($i + 1), 3, $locale['charset']) == "img") {
+            $chr = function_exists('mb_substr') ? mb_substr($text, $i, 1, 'UTF-8') : substr($text, $i, 1);
+            if (substr($text, ($i + 1), 6) == "a href" || substr($text, ($i + 1), 3) == "img") {
                 $chr = " ".$chr;
                 $chars = 0;
             }
             $tags++;
         } else if ($chr == "&") {
-            if (mb_substr($text, ($i + 1), 5, $locale['charset']) == "quot;") {
+            if (substr($text, ($i + 1), 5) == "quot;") {
                 $chars = $chars - 5;
-            } else if (mb_substr($text, ($i + 1), 4, $locale['charset']) == "amp;" || mb_substr($text, ($i + 1), 4, $locale['charset']) == "#39;" || mb_substr($text, ($i + 1), 4, $locale['charset']) == "#92;") {
+            } else if (substr($text, ($i + 1), 4) == "amp;" || substr($text, ($i + 1), 4) == "#39;" || substr($text, ($i + 1), 4) == "#92;") {
                 $chars = $chars - 4;
-            } else if (mb_substr($text, ($i + 1), 3, $locale['charset']) == "lt;" || mb_substr($text, ($i + 1), 3, $locale['charset']) == "gt;") {
+            } else if (substr($text, ($i + 1), 3) == "lt;" || substr($text, ($i + 1), 3) == "gt;") {
                 $chars = $chars - 3;
             }
         } else if ($chr == ">") {

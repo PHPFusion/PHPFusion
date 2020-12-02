@@ -708,7 +708,12 @@ function download_submissions_review() {
             echo "</tr>\n";
             echo "<tr>\n<td class='tbl1' style='width:80px;vertical-align:top;'>".$locale['646b']."<br /><br />";
             echo "<span id='shortdesc_display' style='padding: 1px 3px 1px 3px; border:1px solid; display:none;'>";
-            echo "<strong>".(500 - mb_strlen($submit_criteria['download_description_short']))."</strong>";
+            if (function_exists('mb_strlen')) {
+                $strlen = mb_strlen($submit_criteria['download_description_short'], 'UTF-8');
+            } else {
+                $strlen = strlen($submit_criteria['download_description_short']);
+            }
+            echo "<strong>".(500 - $strlen)."</strong>";
             echo "</span>";
             echo "</td>\n";
             echo "<td class='tbl1'><textarea name='download_description_short' cols='60' rows='4' class='textbox' style='width:380px;' onKeyDown=\"shortdesc_counter(this,'shortdesc_display',500);\" onKeyUp=\"shortdesc_counter(this,'shortdesc_display',500);\">".$submit_criteria['download_description_short']."</textarea></td>\n";
