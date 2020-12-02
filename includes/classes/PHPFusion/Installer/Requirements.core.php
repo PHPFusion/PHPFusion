@@ -115,7 +115,7 @@ class Requirements extends Install_Core {
                 'severability' => -5
             ];
         }
-        if (version_compare($phpversion, '5.6.39') < 0) {
+        if (version_compare($phpversion, '7.0') < 0) {
             $requirements['php']['title'] = 'PHP';
             $requirements['php']['description'] = self::$locale['setup_0113'];
             $requirements['php']['severability'] = -10;
@@ -201,7 +201,7 @@ class Requirements extends Install_Core {
                 'severability' => -5,
             ];
             if (php_ini_loaded_file() == get_cfg_var('cfg_file_path')) {
-                $requirements['php_memory_limit']['value'] = self::$locale['setup_0119b'];
+                $requirements['php_memory_limit']['value'] = str_replace('[CFG_FILE_PATH]', get_cfg_var('cfg_file_path'), self::$locale['setup_0119b']);
                 $requirements['php_memory_limit']['severability'] = -5;
             } else {
                 $requirements['php_memory_limit']['value'] = self::$locale['setup_0119c'];

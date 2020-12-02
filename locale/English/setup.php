@@ -1,9 +1,9 @@
 <?php
 $locale['setup_0000'] = "PHP-Fusion Install";
 $locale['setup_0002'] = "Welcome to PHP-Fusion Installation";
-$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page=216' target='_blank'>Online Installation Documentation</a>.";
+$locale['setup_0003'] = "The installer guide will guide you through the steps required to install PHP-Fusion CMS on your server. Should you need further assistance, please check our <a class='strong' href='https://php-fusion.co.uk/infusions/wiki/documentation.php?page_id=216' target='_blank'>Online Installation Documentation</a>.";
 $locale['setup_0005'] = " I have read and agreed to the PHP-Fusion <a href='https://www.php-fusion.co.uk/licensing/?agpl' target='_blank'>Terms and Conditions of Use</a>";
-$locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 5.6.39. See the <a href='https://www.php-fusion.co.uk/infusions/wiki/documentation.php?page=215'>system requirements</a> page for more information.";
+$locale['setup_0006'] = "PHP-Fusion 9 requires at least PHP 7.0. See the <a href='https://www.php-fusion.co.uk/infusions/wiki/documentation.php?page_id=215'>system requirements</a> page for more information.";
 $locale['setup_0007'] = "Systems with OPCache installed must have <a href=\"http://php.net/manual/en/opcache.configuration.php#ini.opcache.save-comments\">opcache.save_comments</a> enabled.";
 $locale['setup_5000'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion.";
 $locale['setup_0010'] = "Current Build Version - ";
@@ -27,17 +27,17 @@ $locale['setup_0104'] = "Config / Database Setup";
 $locale['setup_0105'] = "Configure Core System";
 $locale['setup_0106'] = "Primary Admin Details";
 $locale['setup_0107'] = "Final Settings";
-$locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.2.16.";
-$locale['setup_0110'] = "Due to the settings for Server tokens in httpd.confg, it is impossible to determine the version of Apache without mod_rewrite, a minimum version of 2.2.16 is needed.";
+$locale['setup_0109'] = "The minimum version of Apache needed to run PHP-Fusion without mod_rewrite enabled is 2.4.";
+$locale['setup_0110'] = "Due to the settings for Server tokens in httpd.confg, it is impossible to determine the version of Apache without mod_rewrite, a minimum version of 2.4 is needed.";
 $locale['setup_0112'] = "The phpinfo() function has been disabled for security reasons. To see your server's phpinfo() information, change your PHP settings or contact your server administrator.";
-$locale['setup_0113'] = "Your PHP installation is too old. PHP-Fusion requires at least a minimum of 5.6.39. PHP versions higher than 5.6.39 provide built-in SQL injection protection for mysql databases. It is recommended to update.";
+$locale['setup_0113'] = "Your PHP installation is too old. PHP-Fusion requires at least a minimum of 7.0. PHP versions higher than 7.0 provide built-in SQL injection protection for mysql databases. It is recommended to update.";
 $locale['setup_0114'] = "PHP-Fusion requires you to enable the PHP extension in the following list";
 $locale['setup_0115'] = "Enabled";
 $locale['setup_0115a'] = "Not Enabled";
 $locale['setup_0116'] = "PHP OPCache caching can improve your site's performance considerably. It is <strong>highly recommended</strong> to have <a href='http://php.net/manual/opcache.installation.php' target='_blank'>OPCache</a> installed on your server.";
 $locale['setup_0118'] = "Your web server does not appear to support PDO (PHP Data Objects). Ask your hosting provider if they support the native PDO extension.";
 $locale['setup_0119a'] = "Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.";
-$locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file ".get_cfg_var('cfg_file_path')." and then restart your web server (or contact your system administrator or hosting provider for assistance).";
+$locale['setup_0119b'] = "Increase the memory limit by editing the memory_limit parameter in the file [CFG_FILE_PATH] and then restart your web server (or contact your system administrator or hosting provider for assistance).";
 $locale['setup_0119c'] = "Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.";
 // Buttons
 $locale['setup_0120'] = "Finish Configuration";
@@ -61,7 +61,7 @@ $locale['setup_0143'] = "The specified table prefix is already in use and is run
 $locale['setup_0144'] = "Database Diagnostics Completed";
 // Step 1
 $locale['setup_1000'] = "Please select your language";
-$locale['setup_1001'] = "Download more locales from <a href='https://www.php-fusion.co.uk/php_fusion_9_downloads.php' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
+$locale['setup_1001'] = "Download more locales from <a href='https://translations.phpfusion.com/' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
 $locale['setup_1002'] = "Welcome to PHP-Fusion 9 Recovery Mode.";
 $locale['setup_1003'] = "We have detected that there is an existing system installed. Please choose any of the following to proceed.";
 $locale['setup_1004'] = "Clean Installation";
