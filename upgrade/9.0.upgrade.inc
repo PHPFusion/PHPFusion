@@ -60,14 +60,15 @@ if (db_exists(DB_PREFIX.'messages')) {
 $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
 while ($data = dbarray($result)) {
     $current_rights = explode('.', $data['user_rights']);
-    $isset_rights = array_flip($current_rights);
+
     $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
     foreach ($remove_rights as $key => $remove) {
-        if (isset($isset_rights[$remove]) && in_array($remove, $isset_rights) && isset($current_rights[$isset_rights[$remove]])) {
-            unset($current_rights[$isset_rights[$remove]]);
+        if (($key = array_search($remove, $current_rights)) !== FALSE) {
+            unset($current_rights[$key]);
         }
     }
-    if ($data['user_level'] === USER_LEVEL_SUPER_ADMIN || $data['user_level'] === '103') {
+
+    if ($data['user_level'] == USER_LEVEL_SUPER_ADMIN || $data['user_level'] == '103') {
         $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
         foreach ($new_rights as $key => $add) {
             if (!in_array($add, $current_rights)) {
