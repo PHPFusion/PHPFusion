@@ -62,8 +62,7 @@ function move_photos($album_id) {
     if (dbrows($result) > 0) {
         while ($photo_data = dbarray($result)) {
             if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'])) {
-                rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'],
-                    INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
+                rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'], INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
             }
             if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'])) {
                 rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'], INFUSIONS."gallery/photos/".$photo_data['photo_thumb1']);

@@ -248,7 +248,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
                                 'name' => $data['photo_title']
                             ],
-                            'image'       => displayPhotoImage($data['photo_id'], $data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']),
+                            'image'       => displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']),
                             'title'       => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
                             'description' => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE)) : '',
                             'photo_views' => format_word($data['photo_views'], $locale['fmt_views'])
@@ -336,8 +336,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
 
                 // if ($data['album_image']) {
-                $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'],
-                    INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
+                $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']);
                 //}
                 $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['gallery_402'];
                 $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
@@ -362,35 +361,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     }
 }
 
-function photo_thumbnail($data) {
-    $locale = fusion_get_locale();
-    echo "<div class='panel panel-default tbl-border'>\n";
-    echo "<div class='p-0'>\n";
-    echo "<!--photogallery_album_photo_".$data['photo_id']."-->";
-    echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'>\n";
-    $thumb_img = ($data['photo_thumb1'] && file_exists(IMAGES_G.$data['photo_thumb1'])) ? IMAGES_G.$data['photo_thumb1'] : DOWNLOADS."images/no_image.jpg";
-    $title = ($data['album_thumb1'] && file_exists(IMAGES_G.$data['album_thumb1'])) ? $data['album_thumb1'] : $locale['gallery_402'];
-    echo "<img class='photogallery_album_photo img-responsive' style='min-width: 100%;' src='".$thumb_img."' title='$title' alt='$title' />\n";
-    echo "</a>\n";
-    echo "</div>\n<div class='panel-body photogallery_album_photo_info'>\n";
-    echo "<a href='".INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id']."' class='photogallery_album_photo_link'><strong>".$data['photo_title']."</strong></a>\n";
-    echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<!--photogallery_album_photo_info-->\n";
-    echo "<span class='display-inline-block'>\n";
-    echo($data['photo_allow_ratings'] ? $locale['gallery_437'].($data['count_votes'] > 0 ? str_repeat("<i class='fa fa-star'></i>", ceil($data['sum_rating'] / $data['count_votes'])) : $locale['gallery_438'])."<br />\n" : "");
-    echo "</span>\n<br/>\n";
-    echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span> ".$locale['gallery_434'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])." </span>";
-    echo "</div>\n<div class='panel-body photogallery_album_photo_info' style='border-top:1px solid #ddd'>\n";
-    echo "<span class='m-r-10'><abbr title='".$locale['gallery_403'].showdate("shortdate", $data['photo_datestamp'])."'><i title='".$locale['gallery_403'].showdate("shortdate", $data['photo_datestamp'])."' class='fa fa-calendar text-lighter'></i></abbr></span>";
-    $photo_comments = dbcount("(comment_id)", DB_COMMENTS, "comment_type='P' AND comment_item_id='".$data['photo_id']."'");
-    $comments_text = ($data['photo_allow_comments'] ? ($photo_comments == 1 ? $locale['gallery_436b'] : $locale['gallery_436']).$photo_comments : "");
-    echo "<span class='m-r-10'><abbr title='".$comments_text."'><i class='fa fa-comment text-lighter'></i></abbr> $photo_comments</abbr></span>";
-    echo "<span class='m-r-10'><abbr title='".$locale['gallery_434'].$data['user_name']."'><i class='fa fa-user text-lighter'></i></span>";
-    echo "<span><abbr title='".$locale['gallery_435'].$data['photo_views']."'><i class='fa fa-eye text-lighter'></i></abbr> ".$data['photo_views']."</span>";
-    echo "</div></div>\n";
-}
-
 require_once THEMES.'templates/footer.php';
 
 /**
@@ -410,22 +380,22 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
     if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
         if (file_exists(IMAGES_G.$album_thumb1)) {
             // uncommon first
-            $image = thumbnail(IMAGES_G.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+            $image = thumbnail(IMAGES_G.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         } else {
             // sure fire if image is usually more than thumb threshold
-            $image = thumbnail(IMAGES_G_T.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+            $image = thumbnail(IMAGES_G_T.$album_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         }
 
         return $image;
     }
     if (!empty($album_thumb2) && file_exists(IMAGES_G.$album_thumb2)) {
-        return thumbnail(IMAGES_G.$album_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+        return thumbnail(IMAGES_G.$album_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
     }
     if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
-        return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+        return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
     }
 
-    return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+    return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
 }
 
 /**
@@ -438,29 +408,29 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
  *
  * @return string
  */
-function displayPhotoImage($photo_id, $photo_filename, $photo_thumb1, $photo_thumb2, $link) {
+function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link) {
     $gallery_settings = get_settings("gallery");
     // Thumb will have 2 possible path following v7
     if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
         if (file_exists(IMAGES_G.$photo_thumb1)) {
             // uncommon first
-            $image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+            $image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         } else {
             // sure fire if image is usually more than thumb threshold
-            $image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
+            $image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         }
 
         return $image;
     }
 
     if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-        return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+        return thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, TRUE, TRUE, "cropfix");
     }
     if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-        return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
+        return thumbnail(IMAGES_G.$photo_filename, $gallery_settings['thumb_w']."px", $link, TRUE, TRUE, "cropfix");
     }
 
-    return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
+    return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, TRUE, "cropfix");
 }
 
 function get_photo_comments($data) {

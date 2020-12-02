@@ -32,13 +32,11 @@ if (!function_exists("render_gallery")) {
                 $gallery_settings = get_settings('gallery');
                 $locale = fusion_get_locale();
                 echo "<div class='panel panel-default'>\n";
-                echo "<div class='panel-heading'>\n";
-                echo "<a title='".$locale['gallery_430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'], 18)."</strong>\n</a>\n";
-                echo "</div>\n";
-                echo "<div class='overflow-hide album_thumbnail' style='background: #ccc; height: ".($gallery_settings['thumb_h'] - 15)."px'>\n";
+                echo "<div class='overflow-hide album_thumbnail'>\n";
                 echo $info['image'];
                 echo "</div>\n";
                 echo "<div class='panel-body'>\n";
+                echo "<a class='display-block' title='".$locale['gallery_430']."' href='".$info['album_link']['link']."'>\n<strong>".trim_text($info['album_link']['name'], 18)."</strong>\n</a>\n";
                 echo "<span class='album_count'>".format_word($info['photo_rows'], $locale['gallery_461'])."</span>";
                 echo "<br/><span><abbr title='".$locale['gallery_464'].showdate("shortdate", $info['album_datestamp'])."'><i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['album_datestamp']).'</span>';
                 echo "</div>\n";
@@ -122,28 +120,8 @@ if (!function_exists('render_photo_album')) {
             echo $info['image'];
             echo "</div>\n";
 
-            echo "<div class='panel-footer'>\n";
-            echo '<div class="clearfix text-center">';
-            echo "<span class='m-r-5'><i class='fa fa-eye fa-fw'></i> ".$info['photo_views']."</span>\n";
-            if ($info['photo_allow_comments'] && fusion_get_settings('comments_enabled') == 1) {
-                echo "<span class='m-r-5'><i class='fa fa-comment-o fa-fw'></i> <a href='".$info['photo_comments']['link']."'>".$info['photo_comments']['name']."</a>\n</span>\n";
-            }
-
-            if ($info['photo_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) {
-                echo "<span><i class='fa fa-star-o fa-fw'></i> <a href='".$info['photo_ratings']['link']."'>".$info['photo_ratings']['name']."</a>\n</span>\n";
-            }
-            echo '</div>';
-
-            echo '</div>';
-            echo "<div class='panel-footer'>\n";
-
-            echo "<small><strong>".$locale['gallery_434']."</strong></small> ";
-            echo display_avatar($info, "15px", "m-l-5 m-r-5", "", "img-rounded");
-            echo ' '.profile_link($info['user_id'], $info['user_name'], $info['user_status']);
-            echo "<br/><abbr title='".$locale['gallery_464'].showdate("shortdate", $info['photo_datestamp'])."'>
-            <i class='fa fa-calendar text-lighter'></i></abbr> ".timer($info['photo_datestamp'])."";
             if (!empty($info['photo_edit']) && !empty($info['photo_delete'])) {
-                echo "</div>\n<div class='panel-footer'>\n";
+                echo "<div class='panel-footer'>\n";
                 echo '<div class="btn-group center-x">';
                 echo "<a class='btn btn-default btn-sm' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit'></i></a>\n";
                 echo "<a class='btn btn-danger btn-sm' href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash'></i></a>\n";
