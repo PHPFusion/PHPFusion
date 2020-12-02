@@ -123,9 +123,10 @@ if (db_exists(DB_PREFIX."photo_albums")) {
             if (!empty($data['album_thumb']) && file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
                 // Rename the album thumb here
                 rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
-                // Call the album directory rename function here
-                move_photos($data['album_id']);
             }
+
+            // Call the album directory rename function here
+            move_photos($data['album_id']);
         }
     }
 }
