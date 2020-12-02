@@ -682,8 +682,8 @@ if (!function_exists('display_avatar')) {
             } else {
                 $color = string_to_color_code($userdata['user_name']);
                 $font_color = get_color_brightness($color) > 130 ? '000' : 'fff';
-                $first_char = substr($userdata['user_name'], 0, 1);
-                $first_char = strtoupper($first_char);
+                $first_char = mb_substr($userdata['user_name'], 0, 1);
+                $first_char = mb_strtoupper($first_char);
                 $size_int = (int)filter_var($size, FILTER_SANITIZE_NUMBER_INT);
                 $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.($size_int - 5).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
             }
