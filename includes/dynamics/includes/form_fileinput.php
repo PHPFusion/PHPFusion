@@ -230,8 +230,6 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $value = json_encode($value);
         }
 
-        $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
-
         $extra_data_js = "";
         if ($options['form_id'] && $options['jsonurl']) {
             $extra_data_js = "
@@ -261,6 +259,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             );
         }
 
+        $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
+
         switch ($options['template']) {
             case "classic":
                 add_to_jquery("
@@ -281,6 +281,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         ".($options['hide_upload'] ? 'showUpload: false,' : '')."
                         ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                         dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        ".($locale['text-direction'] == 'rtl' ? 'rtl: true,' : '')."
                         $extra_data_js
                         ".$lang."
                     });

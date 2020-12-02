@@ -374,7 +374,7 @@ class MemberPoll {
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-8 col-lg-9'>\n";
         echo \PHPFusion\QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
-            'required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['POLL_069'], 'inner_width' => '100%']);
+            'required' => TRUE, 'inline' => FALSE, 'placeholder' => self::$locale['POLL_069']]);
 
         echo "<div class='panel panel-default'>\n";
         echo "<div class='panel-body'>\n";
@@ -397,8 +397,8 @@ class MemberPoll {
             'inner_width' => '100%',
             'options'     => fusion_get_groups()
         ]);
-        echo form_datepicker('poll_started', self::$locale['POLL_048'], $this->data['poll_started'], ['inline' => FALSE, 'width' => '100%', 'inner_width' => '100%']);
-        echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], ['inline' => FALSE, 'width' => '100%', 'inner_width' => '100%']);
+        echo form_datepicker('poll_started', self::$locale['POLL_048'], $this->data['poll_started'], ['inline' => FALSE]);
+        echo form_datepicker('poll_ended', self::$locale['POLL_049'], $this->data['poll_ended'], ['inline' => FALSE]);
         closeside();
         echo "</div>\n</div>\n";
 

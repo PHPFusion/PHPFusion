@@ -296,12 +296,12 @@ class Members_Display extends Members_Admin {
          * User Actions Button
          */
         $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, ['class' => 'btn-success m-r-10']).
-            form_button('action', self::$locale['ME_500'], self::USER_BAN, ['class' => ' btn-default m-r-10']).
-            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, ['class' => ' btn-default m-r-10']).
-            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, ['class' => ' btn-default m-r-10']).
-            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, ['class' => ' btn-default m-r-10']).
-            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, ['class' => ' btn-default m-r-10']).
-            form_button('action', self::$locale['ME_506'], self::USER_ANON, ['class' => ' btn-default m-r-10']);
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, ['input_id' => 'action_ban', 'class' => 'btn-default m-r-10']).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, ['input_id' => 'action_deactivate', 'class' => 'btn-default m-r-10']).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, ['input_id' => 'action_suspend', 'class' => 'btn-default m-r-10']).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, ['input_id' => 'action_security_ban', 'class' => 'btn-default m-r-10']).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, ['input_id' => 'action_cancel', 'class' => 'btn-default m-r-10']).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, ['input_id' => 'action_anon', 'class' => 'btn-default m-r-10']);
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
@@ -315,13 +315,14 @@ class Members_Display extends Members_Admin {
             'append_value'       => self::$locale['search'],
             'append_form_value'  => 'search_member',
             'append_button_name' => 'search_member',
-            'class'              => 'm-b-0'
+            'class'              => 'm-b-0',
+            'group_size'         => 'sm'
         ]));
-        $tpl->set_tag('filter_button', form_button('filter_btn', self::$locale['ME_402'], 'filter_btn', ['icon' => 'caret']));
-        $tpl->set_tag('action_button', "<a class='btn btn-success' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>");
-        $tpl->set_tag('filter_status', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_status))."</span>");
-        $tpl->set_tag('filter_options', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($field_checkboxes))."</span>");
-        $tpl->set_tag('filter_extras', "<span class='m-r-15'>".implode("</span><span class='m-r-15'>", array_values($extra_checkboxes))."</span>");
+        $tpl->set_tag('filter_button', '<button class="btn btn-default btn-sm" type="button" data-toggle="collapse" data-target="#filterpanel" aria-expanded="false" aria-controls="filterpanel">'.self::$locale['ME_402'].' <span class="caret"></span></button>');
+        $tpl->set_tag('action_button', "<a class='btn btn-success btn-sm m-l-5' href='".FUSION_SELF.fusion_get_aidlink()."&amp;ref=add'>".self::$locale['ME_403']."</a>");
+        $tpl->set_tag('filter_status', "<span class='m-r-15 display-inline-block'>".implode("</span><span class='m-r-15 display-inline-block'>", array_values($field_status))."</span>");
+        $tpl->set_tag('filter_options', "<span class='m-r-15 display-inline-block'>".implode("</span><span class='m-r-15 display-inline-block'>", array_values($field_checkboxes))."</span>");
+        $tpl->set_tag('filter_extras', "<span class='m-r-15 display-inline-block'>".implode("</span><span class='m-r-15 display-inline-block'>", array_values($extra_checkboxes))."</span>");
         $tpl->set_tag('filter_apply_button', form_button('apply_filter', self::$locale['ME_404'], 'apply_filter', ['class' => 'btn-primary']));
         $tpl->set_tag('page_count', $list_sum);
         $tpl->set_tag('list_head', $table_head);

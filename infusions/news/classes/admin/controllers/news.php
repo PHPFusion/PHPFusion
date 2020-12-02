@@ -282,19 +282,22 @@ class NewsAdmin extends NewsAdminModel {
                 'placeholder' => self::$locale['news_0200'],
             ]
         );
-        add_to_css(".panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }");
-        echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
-        echo "<li class='active'><a data-toggle='tab' aria-controls='#snippet' href='#snippet'>".self::$locale['news_0203']."</a></li>";
-        echo "<li><a data-toggle='tab' aria-controls='#extended' href='#extended'>".self::$locale['news_0204']."</a></li>";
-        echo "</ul>\n";
-        echo "<div class='tab-content p-0'>\n";
-        echo "<div id='snippet' class='tab tab-pane fade in active p-0'>\n";
+
+        $tab_title['title'][] = self::$locale['news_0203'];
+        $tab_title['id'][] = 'snippet';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['news_0204'];
+        $tab_title['id'][] = 'extended';
+        $tab_title['icon'][] = '';
+        $tab_active = tab_active($tab_title, 0);
+        echo opentab($tab_title, $tab_active, 'newstext', FALSE, 'nav-tabs m-b-10');
+        echo opentabbody($tab_title['title'][0], 'snippet', $tab_active);
         echo form_textarea('news_news', '', $this->news_data['news_news'], $snippetSettings);
-        echo "</div>\n";
-        echo "<div id='extended' class='tab tab-pane fade p-0'>\n";
+        echo closetabbody();
+        echo opentabbody($tab_title['title'][1], 'extended', $tab_active);
         echo form_textarea('news_extended', '', $this->news_data['news_extended'], $extendedSettings);
-        echo "</div>\n";
-        echo "</div>\n";
+        echo closetabbody();
+        echo closetab();
 
         echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
         openside(self::$locale['news_0255']);
@@ -332,7 +335,7 @@ class NewsAdmin extends NewsAdminModel {
         } else {
             echo form_hidden('news_language', '', $this->news_data['news_language']);
         }
-        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], ['inner_width' => '100%']);
+        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp']);
         closeside();
 
         if ($this->news_data['news_id']) {
@@ -383,16 +386,14 @@ class NewsAdmin extends NewsAdminModel {
             [
                 'placeholder' => self::$locale['news_0208'],
                 'join_to_id'  => 'news_end',
-                'width'       => '100%',
-                'inner_width' => '100%'
+                'width'       => '100%'
             ]
         );
         echo form_datepicker('news_end', self::$locale['news_0207'], $this->news_data['news_end'],
             [
                 'placeholder'  => self::$locale['news_0208'],
                 'join_from_id' => 'news_start',
-                'width'        => '100%',
-                'inner_width'  => '100%',
+                'width'        => '100%'
 
             ]
         );

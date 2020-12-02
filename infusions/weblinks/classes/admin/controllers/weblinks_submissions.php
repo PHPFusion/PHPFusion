@@ -214,10 +214,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                     echo form_hidden('article_language', '', $this->inputArray['article_language']);
                 }
 
-                /**/
-                echo form_datepicker('weblink_datestamp', $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp'], [
-                    'inner_width' => '100%'
-                ]);
+                echo form_datepicker('weblink_datestamp', $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp']);
                 closeside();
 
                 ?>

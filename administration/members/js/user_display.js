@@ -1,11 +1,3 @@
-$('#filter_panel').hide();
-$('#user_action_bar').hide();
-$('#filter_btn').bind('click', function (e) {
-    e.preventDefault();
-    $(this).toggleClass('active');
-    slide_hide('filter_panel');
-});
-
 $('#check_all').bind('click', function () {
     if ($(this).is(':checked')) {
         $('input[name^=user_id]:checkbox').prop('checked', true);

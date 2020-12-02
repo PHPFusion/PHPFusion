@@ -248,9 +248,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     echo form_hidden('faq_language', "", $this->inputArray['faq_language']);
                 }
 
-                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp'], [
-                    'inner_width' => '100%'
-                ]);
+                echo form_datepicker('faq_datestamp', $this->locale['faq_0203'], $this->inputArray['submit_datestamp']);
 
                 closeside();
 

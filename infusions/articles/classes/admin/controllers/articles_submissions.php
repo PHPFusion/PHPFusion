@@ -152,7 +152,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             $articleSnippetSettings = [
                 'required'    => TRUE,
                 'preview'     => TRUE,
-                'type'        => 'bbcode',
+                'html'        => TRUE,
                 'autosize'    => TRUE,
                 'placeholder' => $this->locale['article_0254'],
                 'error_text'  => $this->locale['article_0271'],
@@ -280,9 +280,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     echo form_hidden('article_language', '', $this->inputArray['article_language']);
                 }
 
-                echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->inputArray['article_datestamp'], [
-                    'inner_width' => '100%'
-                ]);
+                echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->inputArray['article_datestamp']);
 
                 closeside();
 

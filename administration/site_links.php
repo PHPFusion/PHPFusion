@@ -166,7 +166,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "cat");
 
         opentable($this->locale["SL_0001"]);
-        echo opentab($master_title, $this->section, 'link', TRUE, "", "section", ['refs', 'action', 'id', 'cat']);
+        echo opentab($master_title, $this->section, 'link', TRUE, "nav-tabs m-b-10", "section", ['refs', 'action', 'id', 'cat']);
         switch ($this->section) {
             case "settings":
                 $this->settings();

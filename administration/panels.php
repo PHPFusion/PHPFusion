@@ -334,9 +334,9 @@ class PanelsAdministration {
     public function panel_listing() {
         $aidlink = fusion_get_aidlink();
 
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
+        add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
         add_to_jquery("
-        $('.panels-list').sortable({
+        $('.panels-list, .cards-list').sortable({
                 handle : '.handle',
                 placeholder: 'state-highlight',
                 connectWith: '.connected',

@@ -214,7 +214,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
     $html .= "<div id='$input_id-datepicker' data-target-input='nearest' class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
     $html .= "<input type='text' name='".$input_name."' id='".$input_id."' data-target='#".$input_id."-datepicker' value='".$input_value."' class='datetimepicker-input form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
-    $html .= "<span class='input-group-addon ".($options['fieldicon_off'] ? 'display-none' : '')."' data-target='#".$input_id."-datepicker' data-toggle='datetimepicker'><i class='input-group-text fa fa-calendar'></i></span>\n";
+    $html .= "<span class='input-group-addon input-group-append ".($options['fieldicon_off'] ? 'display-none' : '')."' data-target='#".$input_id."-datepicker' data-toggle='datetimepicker'><i class='input-group-text fa fa-calendar'></i></span>\n";
     $html .= "</div>\n";
     $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
     $html .= $options['stacked'];

@@ -271,7 +271,7 @@ class Admins {
                 $html .= "<button name='cancel_session' type='button' class='btn btn-default' value='cancel_session'>".self::$locale['cancel']."</button>\n";
                 $html .= "<button name='fill_session' type='button' class='btn btn-primary' value='fill_session'>".self::$locale['293']."</button>\n";
                 $html .= "</div>\n";
-                $html .= fusion_get_function('closeside');
+                $html .= fusion_get_function('closeside', '');
                 $html .= "</div>\n";
                 add_to_jquery("
                     $('button[name^=\"fill_session\"]').bind('click', function(e) {

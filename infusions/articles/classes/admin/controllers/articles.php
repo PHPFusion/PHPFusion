@@ -228,19 +228,22 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'placeholder' => $this->locale['article_0163'],
             'error_text'  => $this->locale['article_0270']
         ]);
-        add_to_head("<style>.panel-txtarea {border:0; padding-bottom:0;} .tab-content > .tab > .form-group { margin:0; }</style>");
-        echo "<ul class='nav nav-tabs m-b-15 clearfix'>\n";
-        echo "<li class='active'><a data-toggle='tab' aria-controls='#snippet' href='#snippet'>".$this->locale['article_0251']."<span class='required'>&nbsp;*</span></a></li>";
-        echo "<li><a data-toggle='tab' aria-controls='#extended' href='#extended'>".$this->locale['article_0252'].($this->articleSettings['article_extended_required'] ? "<span class='required'>&nbsp;*</span>" : '')."</a></li>";
-        echo "</ul>\n";
-        echo "<div class='tab-content p-0'>\n";
-        echo "<div id='snippet' class='tab tab-pane fade in active p-0'>\n";
+
+        $tab_title['title'][] = $this->locale['article_0251']."<span class='required'>&nbsp;*</span>";
+        $tab_title['id'][] = 'snippet';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = $this->locale['article_0252'].($this->articleSettings['article_extended_required'] ? "<span class='required'>&nbsp;*</span>" : '');
+        $tab_title['id'][] = 'extended';
+        $tab_title['icon'][] = '';
+        $tab_active = tab_active($tab_title, 0);
+        echo opentab($tab_title, $tab_active, 'articletext', FALSE, 'nav-tabs m-b-10');
+        echo opentabbody($tab_title['title'][0], 'snippet', $tab_active);
         echo form_textarea('article_snippet', '', $this->article_data['article_snippet'], $articleSnippetSettings);
-        echo "</div>\n";
-        echo "<div id='extended' class='tab tab-pane fade p-0'>\n";
+        echo closetabbody();
+        echo opentabbody($tab_title['title'][1], 'extended', $tab_active);
         echo form_textarea('article_article', '', $this->article_data['article_article'], $articleExtendedSettings);
-        echo "</div>\n";
-        echo "</div>\n";
+        echo closetabbody();
+        echo closetab();
 
         echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
         openside($this->locale['article_0262']);
@@ -275,9 +278,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         } else {
             echo form_hidden('article_language', '', $this->article_data['article_language']);
         }
-        echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->article_data['article_datestamp'], [
-            'inner_width' => '100%'
-        ]);
+        echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->article_data['article_datestamp']);
         closeside();
 
         openside('');

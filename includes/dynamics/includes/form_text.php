@@ -252,7 +252,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "<button id='".$options['prepend_button_id']."' name='".$options['prepend_button_name']."' type='".$options['prepend_type']."' value='".$options['prepend_form_value']."' class='btn ".$options['prepend_size']." ".$options['prepend_class']."'>".$options['prepend_value']."</button>\n";
         $html .= "</span>\n";
     } else if ($options['prepend_value']) {
-        $html .= "<span class='input-group-addon' id='".$options['prepend_id']."'>".$options['prepend_value']."</span>\n";
+        $html .= "<span class='input-group-addon input-group-prepend' id='".$options['prepend_id']."'><span class='input-group-text'>".$options['prepend_value']."</span></span>\n";
     }
 
     $html .= "<input type='".$input_type."' data-type='".$input_type."' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
@@ -263,7 +263,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         $html .= "</span>\n";
 
     } else if ($options['append_value']) {
-        $html .= "<span class='input-group-addon' id='".$options['append_id']."'>".$options['append_value']."</span>\n";
+        $html .= "<span class='input-group-addon input-group-append' id='".$options['append_id']."'><span class='input-group-text'>".$options['append_value']."</span></span>\n";
     }
 
     $html .= ($options['feedback_icon']) ? "<div class='form-control-feedback' style='top:0;'><i class='".$options['icon']."'></i></div>\n" : '';

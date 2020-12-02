@@ -330,7 +330,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             echo form_hidden('news_language', '', $this->news_data['news_language']);
                         }
 
-                        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp'], ['inner_width' => '100%']);
+                        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp']);
                         closeside();
 
                         if ($this->news_data['news_image_full_default']) {
@@ -380,9 +380,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                 echo form_datepicker('news_start', self::$locale['news_0206'], $this->news_data['news_start'],
                                     [
                                         'placeholder' => self::$locale['news_0208'],
-                                        'join_to_id'  => 'news_end',
-                                        'width'       => '100%',
-                                        'inner_width' => '100%'
+                                        'join_to_id'  => 'news_end'
                                     ]
                                 );
                                 ?>
@@ -392,9 +390,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                 echo form_datepicker('news_end', self::$locale['news_0207'], $this->news_data['news_end'],
                                     [
                                         'placeholder'  => self::$locale['news_0208'],
-                                        'join_from_id' => 'news_start',
-                                        'width'        => '100%',
-                                        'inner_width'  => '100%',
+                                        'join_from_id' => 'news_start'
 
                                     ]
                                 );

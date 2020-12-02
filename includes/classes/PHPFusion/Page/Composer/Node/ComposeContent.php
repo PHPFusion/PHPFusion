@@ -81,21 +81,21 @@ class ComposeContent extends PageAdmin {
                     <div class="panel-body">
                         <?php
                         echo form_select('page_status', self::$locale['page_0305'], self::$data['page_status'], [
-                                'options'     => [self::$locale['unpublish'], self::$locale['publish']],
-                                'inner_width' => '100%',
-                                'inline'      => FALSE
+                                'options' => [self::$locale['unpublish'], self::$locale['publish']],
+                                'width'   => '100%',
+                                'inline'  => FALSE
                             ]).
                             form_select('page_access', self::$locale['page_0306'], self::$data['page_access'], [
-                                'options'     => fusion_get_groups(),
-                                'inner_width' => '100%',
-                                'inline'      => FALSE,
+                                'options' => fusion_get_groups(),
+                                'width'   => '100%',
+                                'inline'  => FALSE,
                             ]).
                             form_datepicker('page_datestamp', self::$locale['page_0307'], self::$data['page_datestamp'], [
-                                'inner_width' => '100%',
-                                'inline'      => FALSE,
+                                'width'  => '100%',
+                                'inline' => FALSE,
                             ]).
                             form_select_tree('page_cat', self::$locale['page_0308'], self::$data['page_cat'], [
-                                'inner_width' => '100%',
+                                'width'       => '100%',
                                 'placeholder' => self::$locale['choose'],
                                 'inline'      => FALSE,
                             ], DB_CUSTOM_PAGES, 'page_title', 'page_id', 'page_cat', self::$data['page_id']);

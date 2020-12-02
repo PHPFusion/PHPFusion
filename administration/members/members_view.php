@@ -20,28 +20,23 @@ namespace Administration\Members;
 class Members_View {
 
     public static function display_members() {
-        return "<div class='clearfix'>
+        return "<div class='display-block clearfix'>
         <div class='pull-right'>{%action_button%}</div>
-        <div class='pull-left'>{%filter_text%} {%filter_button%}</div>
+        <div class='pull-left'><div style='display:inline-block'>{%filter_text%}</div> {%filter_button%}</div>
         </div>
-        <!--filter-->
-        <div id='filter_panel' class='m-t-10' style='display:none'>
-            <div class='panel panel-default panel-body'>
-                <div class='row'>
-                    <div class='col-xs-3'><strong>{[ME_560]}</strong></div>
-                    <div class='col-xs-9'>{%filter_options%}{%filter_extras%}</div>
+
+        <div class='collapse m-t-10' id='filterpanel' style='width: 100%'>
+            <div class='list-grup'>
+                <div class='list-group-item'>
+                    <div><strong>{[ME_560]}</strong><br>{%filter_options%}{%filter_extras%}</div>
                 </div>
-            </div>
-            <div class='panel panel-default panel-body spacer-xs'>
-                <div class='row'>
-                    <div class='col-xs-3'><strong>{[ME_561]}</strong></div>
-                    <div class='col-xs-9'>{%filter_status%}</div>
+                <div class='list-group-item'>
+                    <div><strong>{[ME_561]}</strong><br>{%filter_status%}</div>
                 </div>
             </div>
             <br/>{%filter_apply_button%}
         </div>
-        <!--//filter-->
-        <hr/>
+        <hr>
         <div class='clearfix spacer-xs'>{%page_count%}<div class='pull-right'>{%page_nav%}</div></div>
         <div id='user_action_bar' class='panel panel-default panel-body spacer-sm p-10'>{%user_actions%}</div>
         <div class='table-responsive'><table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
