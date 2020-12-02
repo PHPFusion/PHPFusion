@@ -409,7 +409,11 @@ function phpentities($text) {
  */
 function trimlink($text, $length) {
     if (strlen($text) > $length) {
-        $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
+        if (function_exists('mb_substr')) {
+            $text = mb_substr($text, 0, ($length - 3), 'UTF-8')."...";
+        } else {
+            $text = substr($text, 0, ($length - 3))."...";
+        }
     }
 
     return $text;

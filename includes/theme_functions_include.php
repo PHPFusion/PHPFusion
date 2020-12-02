@@ -684,8 +684,8 @@ if (!function_exists('display_avatar')) {
                 $font_color = get_color_brightness($color) > 130 ? '000' : 'fff';
 
                 if (function_exists('mb_substr') && function_exists('mb_strtoupper')) {
-                    $first_char = mb_substr($userdata['user_name'], 0, 1, 'utf-8');
-                    $first_char = mb_strtoupper($first_char, 'utf-8');
+                    $first_char = mb_substr($userdata['user_name'], 0, 1, 'UTF-8');
+                    $first_char = mb_strtoupper($first_char, 'UTF-8');
                 } else {
                     $first_char = substr($userdata['user_name'], 0, 1);
                     $first_char = strtoupper($first_char);
