@@ -110,7 +110,7 @@ if (db_exists(DB_SETTINGS)) {
         'exclude_user2'     => '',
         'exclude_user3'     => '',
         'exclude_user4'     => '',
-        'admin_theme'       => 'Artemis',
+        'admin_theme'       => 'AdminLTE',
         'bootstrap'         => 1,
         'entypo'            => 0,
         'fontawesome'       => 1,
