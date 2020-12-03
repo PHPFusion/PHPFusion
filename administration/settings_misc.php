@@ -46,7 +46,7 @@ if (isset($_POST['savesettings'])) {
         'devmode'                => form_sanitizer($_POST['devmode'], '0', 'devmode'),
         'update_checker'         => form_sanitizer($_POST['update_checker'], '0', 'update_checker'),
         'number_delimiter'       => sanitizer('number_delimiter', '.', 'number_delimiter'),
-        'number_seperator'       => sanitizer('number_seperator', ',', 'number_seperator')
+        'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator')
     ];
 
     if (\defender::safe()) {
@@ -193,7 +193,7 @@ echo form_select('number_delimiter', $locale['611'], $settings['number_delimiter
     'width'   => '100%'
 ]);
 
-echo form_select('number_seperator', $locale['612'], $settings['number_seperator'], [
+echo form_select('thousands_separator', $locale['612'], $settings['thousands_separator'], [
     'options' => $options,
     'width'   => '100%'
 ]);

@@ -29,7 +29,7 @@ foreach ($update_settings_tbl as $key => $value) {
 
 $insert_settings_tbl = [
     'number_delimiter'      => '.',
-    'number_seperator'      => ',',
+    'thousands_separator'   => ',',
     'error_logging_enabled' => 1,
     'error_logging_method'  => 'database'
 ];
