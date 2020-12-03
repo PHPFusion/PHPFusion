@@ -295,13 +295,13 @@ class Members_Display extends Members_Admin {
         /*
          * User Actions Button
          */
-        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, ['class' => 'btn-success m-r-10']).
-            form_button('action', self::$locale['ME_500'], self::USER_BAN, ['input_id' => 'action_ban', 'class' => 'btn-default m-r-10']).
-            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, ['input_id' => 'action_deactivate', 'class' => 'btn-default m-r-10']).
-            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, ['input_id' => 'action_suspend', 'class' => 'btn-default m-r-10']).
-            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, ['input_id' => 'action_security_ban', 'class' => 'btn-default m-r-10']).
-            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, ['input_id' => 'action_cancel', 'class' => 'btn-default m-r-10']).
-            form_button('action', self::$locale['ME_506'], self::USER_ANON, ['input_id' => 'action_anon', 'class' => 'btn-default m-r-10']);
+        $user_actions = form_button('action', self::$locale['ME_501'], self::USER_REINSTATE, ['class' => 'btn-success']).
+            form_button('action', self::$locale['ME_500'], self::USER_BAN, ['input_id' => 'action_ban']).
+            form_button('action', self::$locale['ME_502'], self::USER_DEACTIVATE, ['input_id' => 'action_deactivate']).
+            form_button('action', self::$locale['ME_503'], self::USER_SUSPEND, ['input_id' => 'action_suspend']).
+            form_button('action', self::$locale['ME_504'], self::USER_SECURITY_BAN, ['input_id' => 'action_security_ban']).
+            form_button('action', self::$locale['ME_505'], self::USER_CANCEL, ['input_id' => 'action_cancel']).
+            form_button('action', self::$locale['ME_506'], self::USER_ANON, ['input_id' => 'action_anon']);
 
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
@@ -315,7 +315,7 @@ class Members_Display extends Members_Admin {
             'append_value'       => self::$locale['search'],
             'append_form_value'  => 'search_member',
             'append_button_name' => 'search_member',
-            'class'              => 'm-b-0',
+            'class'              => 'm-b-0 m-r-10 display-inline-block',
             'group_size'         => 'sm'
         ]));
         $tpl->set_tag('filter_button', '<button class="btn btn-default btn-sm" type="button" data-toggle="collapse" data-target="#filterpanel" aria-expanded="false" aria-controls="filterpanel">'.self::$locale['ME_402'].' <span class="caret"></span></button>');

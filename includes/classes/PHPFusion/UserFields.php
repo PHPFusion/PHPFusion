@@ -195,8 +195,7 @@ class UserFields extends QuantumFields {
                         'autocomplete_off' => 1,
                         'inline'           => TRUE,
                         'max_length'       => 64,
-                        'error_text'       => $locale['u133'],
-                        'stacked'          => "<div id='fusion_verify_password'></div>"
+                        'error_text'       => $locale['u133']
                     ]
                 );
                 $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', [
@@ -239,7 +238,8 @@ class UserFields extends QuantumFields {
                             'autocomplete_off' => 1,
                             'inline'           => TRUE,
                             'max_length'       => 64,
-                            'error_text'       => $locale['u136']
+                            'error_text'       => $locale['u136'],
+                            'password_strength' => TRUE
                         ]
                     );
                 } else {
