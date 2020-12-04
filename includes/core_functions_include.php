@@ -826,9 +826,17 @@ function encode_code($text) {
     preg_match_all("#<code>(.*?)</code>#is", $text, $codes);
     $replace = [];
     foreach ($codes[1] as $key => $codeblock) {
-        $replace[$key] = htmlentities($codeblock, ENT_QUOTES, "UTF-8", FALSE);
+        $replace[$key] = htmlentities($codeblock, ENT_QUOTES, 'UTF-8', FALSE);
     }
     unset($key, $codeblock);
+
+    if (!empty($codes[0])) {
+        if (!defined('PRISMJS')) {
+            define('PRISMJS', TRUE);
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css">');
+            add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
+        }
+    }
 
     foreach ($codes[0] as $key => $replacer) {
         $code = str_replace('&lt;br /&gt;', '', $replace[$key]);
@@ -870,12 +878,12 @@ function formatcode($value) {
 /**
  * Formats a number in a numeric acronym, and rounding
  *
- * @param int    $value
- * @param int    $decimals
- * @param string $dec_point
- * @param string $thousand_sep
- * @param bool   $round
- * @param bool   $acryonym
+ * @param int      $value
+ * @param int|null $decimals
+ * @param string   $dec_point
+ * @param string   $thousand_sep
+ * @param bool     $round
+ * @param bool     $acryonym
  *
  * @return string
  */
