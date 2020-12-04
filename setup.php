@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$current_version = '8.00.70';
+$current_version = '8.00.80';
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("IN_FUSION", TRUE);
 if (isset($_POST['localeset']) && file_exists("locale/".$_POST['localeset']) && is_dir("locale/".$_POST['localeset'])) {
