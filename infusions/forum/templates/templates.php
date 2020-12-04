@@ -1082,7 +1082,7 @@ if (!function_exists('render_post_item')) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
 
         echo '<!-- forum-thread-prepost-'.$data['marker']['id'].' -->';
-        echo '<div class="post-item m-t-20">';
+        echo '<div class="post-item m-t-20" id="'.$data['marker']['id'].'">';
             echo '<div class="clearfix">';
                 echo '<div class="forum_avatar">';
                     echo display_avatar($data, '30px', FALSE, FALSE, 'img-rounded m-r-10 avatar');
@@ -1118,7 +1118,7 @@ if (!function_exists('render_post_item')) {
                     echo '<input class="m-l-5" type="checkbox" id="check-'.$data['post_id'].'" name="delete_post[]" value="'.$data['post_id'].'">';
                 }
 
-                echo '<a href="#post-'.$data['post_id'].'" class="m-l-5">#'.$i.'</a>';
+                echo '<a href="#post_'.$data['post_id'].'" class="m-l-5">#'.$i.'</a>';
                 echo '</div>';
 
             echo '</div>';
