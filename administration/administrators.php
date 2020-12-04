@@ -197,28 +197,13 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     opentable($locale['ADM_410']);
     if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
         echo openform('searchform', 'post', FUSION_SELF.fusion_get_aidlink());
-        echo "<div class='table-responsive'>\n";
-        echo "<table class='table table-hover table-striped'>\n";
-        echo "<tr>\n";
-        echo "<td class='text-center'>\n";
+
         echo form_user_select('search_criteria', $locale['ADM_411'], '', [
             'required'    => TRUE,
             'max_select'  => 1,
-            'class'       => 'center-block',
-            'inner_width' => '50%',
-            'width'       => '50%',
             'allow_self'  => TRUE,
         ]);
-
-        echo "</td>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "<td class='text-center'>\n";
         echo form_button('search_users', $locale['search'], $locale['search']);
-        echo "</td>\n";
-        echo "</tr>\n";
-        echo "</table>\n";
-        echo "</div>\n";
         echo closeform();
     } else if (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
         $search_criteria = form_sanitizer($_POST['search_criteria'], '', 'search_criteria');
@@ -243,9 +228,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                     'value'         => $data['user_id'],
                 ]);
             }
-            echo "</div>";
-            echo "<div class='panel panel-default'>\n";
-            echo "<div class='panel-body'>\n";
+
+            echo '<hr>';
+
             echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
             echo form_checkbox('all_rights', $locale['ADM_415'], '', [
                 'required'      => TRUE,
@@ -259,8 +244,6 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             }
             echo form_button('add_admin', $locale['ADM_461'], $locale['ADM_461'], ['class' => 'btn-primary']);
             add_to_jquery("$('#add_admin').bind('click', function() { return confirm('".$locale['ADM_461']."'); });");
-            echo "</div>\n";
-            echo "</div>\n";
             echo closeform();
         } else {
             echo "<div class='well text-center'>".$locale['ADM_418']."<br /></div>";

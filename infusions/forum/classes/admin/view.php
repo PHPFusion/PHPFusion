@@ -1122,11 +1122,11 @@ class ForumAdminView extends ForumAdminInterface {
             ];
 
             $ui_label = [
-                "move_up"         => ($has_entypo ? "<i class='entypo entypo-arrow-up m-r-10'></i>" : $has_fa) ? "<i class='fa fa-arrow-up fa-lg m-r-10'></i>" : self::$locale['forum_046'],
-                "move_down"       => ($has_entypo ? "<i class='entypo entypo-arrow-down m-r-10'></i>" : $has_fa) ? "<i class='fa fa-arrow-down fa-lg m-r-10'></i>" : self::$locale['forum_045'],
-                "edit_permission" => ($has_entypo ? "<i class='entypo entypo-eye m-r-10'></i>" : $has_fa) ? "<i class='fa fa-eye fa-lg m-r-10'></i>" : self::$locale['forum_029'],
-                "edit"            => ($has_entypo ? "<i class='entypo entypo-cog m-r-10'></i>" : $has_fa) ? "<i class='fa fa-cog fa-lg m-r-10'></i>" : self::$locale['forum_002'],
-                "delete"          => ($has_entypo ? "<i class='entypo entypo-trash m-r-10'></i>" : $has_fa) ? "<i class='fa fa-trash-o fa-lg m-r-10'></i>" : self::$locale['forum_049'],
+                "move_up"         => ($has_entypo ? "<i class='entypo entypo-arrow-up'></i>" : $has_fa) ? "<i class='fa fa-arrow-up fa-lg'></i>" : self::$locale['forum_046'],
+                "move_down"       => ($has_entypo ? "<i class='entypo entypo-arrow-down'></i>" : $has_fa) ? "<i class='fa fa-arrow-down fa-lg'></i>" : self::$locale['forum_045'],
+                "edit_permission" => ($has_entypo ? "<i class='entypo entypo-eye'></i>" : $has_fa) ? "<i class='fa fa-eye fa-lg'></i>" : self::$locale['forum_029'],
+                "edit"            => ($has_entypo ? "<i class='entypo entypo-cog'></i>" : $has_fa) ? "<i class='fa fa-cog fa-lg'></i>" : self::$locale['forum_002'],
+                "delete"          => ($has_entypo ? "<i class='entypo entypo-trash'></i>" : $has_fa) ? "<i class='fa fa-trash-o fa-lg'></i>" : self::$locale['forum_049'],
             ];
 
             $i = 1;
@@ -1150,17 +1150,17 @@ class ForumAdminView extends ForumAdminInterface {
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo "<div class='row'>\n";
-                echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+                echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
                 echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description']));
-                echo "</div>\n<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>\n";
+                echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
                 echo "<div class='pull-right'>\n";
                 $upLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'];
                 $downLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=md&amp;order=$down&amp;forum_id=".$data['forum_id'];
 
-                echo ($i == 1) ? '' : "<a title='".self::$locale['forum_046']."' href='".$upLink."'>".$ui_label['move_up']."</a>";
-                echo ($i == $rows) ? '' : "<a title='".self::$locale['forum_045']."' href='".$downLink."'>".$ui_label['move_down']."</a>";
-                echo "<a title='".self::$locale['forum_029']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
-                echo "<a title='".self::$locale['forum_002']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
+                echo ($i == 1) ? '' : "<a class='m-r-10' title='".self::$locale['forum_046']."' href='".$upLink."'>".$ui_label['move_up']."</a>";
+                echo ($i == $rows) ? '' : "<a class='m-r-10' title='".self::$locale['forum_045']."' href='".$downLink."'>".$ui_label['move_down']."</a>";
+                echo "<a class='m-r-10' title='".self::$locale['forum_029']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
+                echo "<a class='m-r-10' title='".self::$locale['forum_002']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
                 echo "<a title='".self::$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".self::$locale['delete_notice']."');\">".$ui_label['delete']."</a>"; // delete
                 echo "</div>\n";
                 echo "<span class='text-dark text-smaller strong'>".self::$locale['forum_057']." ".number_format($data['forum_threadcount'])." / ".self::$locale['forum_059']." ".number_format($data['forum_postcount'])." </span>\n<br/>";
