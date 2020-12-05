@@ -97,9 +97,8 @@ if (db_exists(DB_SETTINGS)) {
     }
 
     // Insert rows to settings table
-    $enabled_languages = implode('.', fusion_get_detected_languages());
     $insert_settings_tbl = [
-        'enabled_languages' => $enabled_languages,
+        'enabled_languages' => !empty($settings['enabled_languages']) ? $settings['enabled_languages'] : $settings['locale'],
         'site_seo'          => 0,
         'normalize_seo'     => 0,
         'debug_seo'         => 0,
@@ -325,44 +324,50 @@ if (db_exists(DB_USER_FIELDS)) {
         }
     }
 
-    if (!isset($previous_install['user_location'])) {
-        $uf_to_install[] = "('user_location', '".$locale['uf_location']."', '3', 'file', '0', '1', '', '', '', '')";
+    if (column_exists('users', 'user_location')) {
+        if (!isset($previous_install['user_location'])) {
+            $uf_to_install[] = "('".$locale['uf_location']."', 'user_location', '3', 'file', '', '1')";
+        }
     }
 
-    if (!isset($previous_install['user_birthdate'])) {
-        $uf_to_install[] = "('user_birthdate', '".$locale['uf_birthdate']."', '3', 'file', '0', '2', '1900-01-01', '', '', '')";
+    if (column_exists('users', 'user_birthdate')) {
+        if (!isset($previous_install['user_birthdate'])) {
+            $uf_to_install[] = "('".$locale['uf_birthdate']."', 'user_birthdate', '3', 'file', '1900-01-01', '2')";
+        }
     }
 
-    if (!isset($previous_install['user_skype'])) {
-        $uf_to_install[] = "('user_skype', '".$locale['uf_skype']."', '2', 'file', '0', '1', '', '', '', '')";
+    if (column_exists('users', 'user_skype')) {
+        if (!isset($previous_install['user_skype'])) {
+            $uf_to_install[] = "('".$locale['uf_skype']."', 'user_skype', '2', 'file', '', '1')";
+        }
     }
 
-    if (!isset($previous_install['user_aim'])) {
-        $uf_to_install[] = "('user_aim', '".$locale['uf_aim']."', '2', 'file', '0', '2', '', '', '', '')";
+    if (column_exists('users', 'user_icq')) {
+        if (!isset($previous_install['user_icq'])) {
+            $uf_to_install[] = "('".$locale['uf_icq']."', 'user_icq', '2', 'file', '', '3')";
+        }
     }
 
-    if (!isset($previous_install['user_icq'])) {
-        $uf_to_install[] = "('user_icq', '".$locale['uf_icq']."', '2', 'file', '0', '3', '', '', '', '')";
+    if (column_exists('users', 'user_web')) {
+        if (!isset($previous_install['user_web'])) {
+            $uf_to_install[] = "('".$locale['uf_web']."', 'user_web', '2', 'file', '', '6')";
+        }
     }
 
-    if (!isset($previous_install['user_yahoo'])) {
-        $uf_to_install[] = "('user_yahoo', '".$locale['uf_yahoo']."', '2', 'file', '0', '5', '', '', '', '')";
+    if (column_exists('users', 'user_theme')) {
+        if (!isset($previous_install['user_theme'])) {
+            $uf_to_install[] = "('".$locale['uf_theme']."', 'user_theme', '4', 'file', '', '2')";
+        }
     }
 
-    if (!isset($previous_install['user_web'])) {
-        $uf_to_install[] = "('user_web', '".$locale['uf_web']."', '2', 'file', '0', '6', '', '', '', '')";
-    }
-
-    if (!isset($previous_install['user_theme'])) {
-        $uf_to_install[] = "('user_theme', '".$locale['uf_theme']."', '4', 'file', '0', '2', '', '', '', '')";
-    }
-
-    if (!isset($previous_install['user_sig'])) {
-        $uf_to_install[] = "('user_sig', '".$locale['uf_sig']."', '4', 'file', '0', '3', '', '', '', '')";
+    if (column_exists('users', 'user_sig')) {
+        if (!isset($previous_install['user_sig'])) {
+            $uf_to_install[] = "('".$locale['uf_sig']."', 'user_sig', '4', 'file', '', '3')";
+        }
     }
 
     if (!empty($uf_to_install)) {
-        $uf_sql = DB_USER_FIELDS." (field_name, field_title, field_cat, field_type, field_required, field_order, field_default, field_options, field_error, field_config) VALUES ";
+        $uf_sql = DB_USER_FIELDS." (field_title, field_name, field_cat, field_type, field_default, field_order) VALUES ";
         $uf_sql .= implode(",\n", $uf_to_install);
         $inf_insertdbrow[] = $uf_sql;
     }
