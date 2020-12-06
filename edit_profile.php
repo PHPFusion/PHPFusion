@@ -32,7 +32,7 @@ $_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET
 
 if (isset($_POST['update_profile'])) {
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->setUserNameChange(fusion_get_settings('userNameChange')); // accept or not username change.
+    $userInput->setUserNameChange(fusion_get_settings('username_change')); // accept or not username change.
     $userInput->verifyNewEmail = TRUE;
     $userInput->userData = fusion_get_userdata();
     $userInput->saveUpdate();

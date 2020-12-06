@@ -198,7 +198,7 @@ class UserFieldsInput {
      */
     private function _settUserName() {
         $locale = fusion_get_locale();
-        $uban = explode(',', fusion_get_settings('user_name_ban'));
+        $uban = explode(',', fusion_get_settings('username_ban'));
 
         $this->_userName = "";
         if (isset($_POST['user_name'])) {
@@ -208,7 +208,7 @@ class UserFieldsInput {
             if ($this->_userName != $this->userData['user_name']) {
 
                 if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
-                    
+
                     // Check for invalid characters
                     \defender::stop();
                     \defender::setInputError('user_name');

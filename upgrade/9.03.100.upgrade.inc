@@ -27,12 +27,16 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-/*$insert_settings_tbl = [
-    '' => '',
+$insert_settings_tbl = [
+    'username_change' => $settings['userNameChange'],
+    'username_ban'    => $settings['user_name_ban'],
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
     }
-}*/
+}
+
+$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='userNameChange'";
+$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='user_name_ban'";

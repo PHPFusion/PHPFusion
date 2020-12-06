@@ -31,7 +31,7 @@ foreach ($update_settings_tbl as $key => $value) {
 }
 
 $insert_settings_tbl = [
-    'user_name_ban'     => '',
+    'username_ban'      => '',
     'database_sessions' => 0,
     'domain_server'     => '',
     'form_tokens'       => 5,

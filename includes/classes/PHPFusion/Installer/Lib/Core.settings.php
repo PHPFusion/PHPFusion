@@ -421,7 +421,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => 'Europe/London'
             ],
             [
-                'settings_name'  => 'userNameChange',
+                'settings_name'  => 'username_change',
                 'settings_value' => 1
             ],
             [
@@ -505,7 +505,7 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => $_GET['localeset']
             ],
             [
-                'settings_name'  => 'user_name_ban',
+                'settings_name'  => 'username_ban',
                 'settings_value' => ''
             ],
             [

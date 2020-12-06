@@ -60,7 +60,7 @@ if (isset($_POST['savesettings'])) {
         'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'             => stripinput($_POST['bad_words']),
         'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'user_name_ban'         => stripinput($_POST['user_name_ban']),
+        'username_ban'          => stripinput($_POST['username_ban']),
         'database_sessions'     => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
         'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
         'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
@@ -283,7 +283,7 @@ echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
     'placeholder' => $locale['652'],
     'autosize'    => TRUE
 ]);
-echo form_textarea('user_name_ban', $locale['649'], $settings['user_name_ban'], [
+echo form_textarea('username_ban', $locale['649'], $settings['username_ban'], [
     'placeholder' => $locale['411'],
     'autosize'    => TRUE
 ]);
