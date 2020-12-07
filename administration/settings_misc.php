@@ -64,10 +64,6 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['mime_check']) ? $_POST['mime_check'] : "0")."' WHERE settings_name='mime_check'");
-    if (!$result) {
-        $error = 1;
-    }
     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['guestposts']) ? $_POST['guestposts'] : "0")."' WHERE settings_name='guestposts'");
     if (!$result) {
         $error = 1;
@@ -136,12 +132,6 @@ echo "<td width='50%' class='tbl'><select name='login_method' class='textbox'>\n
 echo "<option value='0'".($settings['login_method'] == "0" ? " selected='selected'" : "").">".$locale['global_101']."</option>\n";
 echo "<option value='1'".($settings['login_method'] == "1" ? " selected='selected'" : "").">".$locale['699e']."</option>\n";
 echo "<option value='2'".($settings['login_method'] == "2" ? " selected='selected'" : "").">".$locale['699b']."</option>\n";
-echo "</select></td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'>".$locale['699g']."</td>\n";
-echo "<td width='50%' class='tbl'><select name='mime_check' class='textbox'>\n";
-echo "<option value='1'".($settings['mime_check'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
-echo "<option value='0'".($settings['mime_check'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['655']."</td>\n";
