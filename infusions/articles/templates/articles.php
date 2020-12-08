@@ -136,7 +136,7 @@ if (!function_exists("render_article")) {
                     <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>" class="text-dark strong"><?php echo $subject; ?></a>
                 </h4>
                 <div class="article-text overflow-hide m-t-10">
-                    <?php echo parse_textarea($article, TRUE, TRUE, TRUE, '', TRUE); ?>
+                    <?php echo $article; ?>
                 </div>
                 <hr/>
                 <div class="article-footer m-t-5">

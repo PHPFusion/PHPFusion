@@ -237,7 +237,7 @@ abstract class Articles extends ArticlesServer {
                 $articleText = $data['article_article'] ? $data['article_article'] : $data['article_snippet'];
 
                 // Handle Pages
-                $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $data['article_breaks'] == "y" ? nl2br($articleText) : $articleText);
+                $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $articleText);
                 $pagecount = count($articleText);
                 if (is_array($articleText)) {
                     $articleText = $articleText[$_GET['rowstart']];

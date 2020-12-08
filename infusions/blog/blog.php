@@ -240,7 +240,7 @@ if (isset($_GET['readmore'])) {
             }
 
             $blog_pagecount = 1;
-            $blog_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_breaks'] == "y" ? nl2br($item['blog_extended']) : $item['blog_extended']);
+            $blog_extended = preg_split("/<!?--\s*pagebreak\s*-->/i", $item['blog_extended']);
             $blog_pagecount = count($blog_extended);
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
 
