@@ -1058,13 +1058,13 @@ if (!function_exists('render_thread')) {
         echo '</div>';
 
         if ($info['forum_moderators']) {
-            echo '<div class="m-b-10>'.$locale['forum_0185'].' '.$info['forum_moderators'].'</div>';
+            echo '<div class="m-b-10">'.$locale['forum_0185'].' '.$info['forum_moderators'].'</div>';
         }
 
         if (!empty($info['thread_users'])) {
             echo '<div class="list-group-item clearfix"><strong>'.$locale['forum_0581'].'</strong>';
                 foreach ($info['thread_users'] as $user_id => $user) {
-                    echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</strong></a>, ';
+                    echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</a>, ';
                 }
             echo '</div>';
         }
