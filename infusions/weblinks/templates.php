@@ -99,7 +99,7 @@ if (!function_exists('display_weblinks_item')) {
                     'weblink_id'          => $web_data['weblink_id'],
                     'weblink_link'        => $web_data['weblinks_url'],
                     'weblink_name'        => $web_data['weblink_name'],
-                    'weblink_description' => htmlspecialchars_decode($web_data['weblink_description']),
+                    'weblink_description' => parse_textarea($web_data['weblink_description'], FALSE, FALSE, TRUE, '', TRUE),
                     'weblink_cat_link'    => $web_data['weblinks_cat_url'],
                     'weblink_cat_name'    => $web_data['weblink_cat_name'],
                     'weblink_count'       => $web_data['weblink_count'],
