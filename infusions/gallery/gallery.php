@@ -315,7 +315,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             FROM ".DB_PHOTO_ALBUMS." AS ta
             LEFT JOIN ".DB_USERS." AS tu ON ta.album_user=tu.user_id
             ".(multilang_table("PG") ? "WHERE ".in_group('ta.album_language', LANGUAGE)." AND" : "WHERE")."
-            ".groupaccess('album_access')." ORDER BY album_order
+            ".groupaccess('album_access')." ORDER BY ta.album_order DESC, ta.album_datestamp DESC
             LIMIT ".$_GET['rowstart'].", ".$gallery_settings['gallery_pagination']);
             while ($data = dbarray($result)) {
                 $data['album_link'] = [

@@ -278,7 +278,7 @@ function gallery_album_listing() {
         INNER JOIN ".DB_USERS." u on u.user_id=album.album_user
         ".(multilang_table("PG") ? "WHERE ".in_group('album.album_language', LANGUAGE)." AND " : "WHERE ").groupaccess('album.album_access')."
         GROUP BY album.album_id
-        ORDER BY album.album_order ASC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
+        ORDER BY album.album_order DESC, album.album_datestamp DESC LIMIT ".intval($_GET['rowstart']).", ".$gll_settings['gallery_pagination'];
         $result = dbquery($gallery_sql);
         $rows = dbrows($result);
         // Photo Album header
