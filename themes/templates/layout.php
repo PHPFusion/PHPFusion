@@ -51,12 +51,26 @@ if (count($languages) > 1) {
 if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
     if (defined('BOOTSTRAP4')) {
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
-        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
+
+        $custom_bs = file_exists(THEME.'custom_bootstrap/custom_bootstrap.min.css') ? THEME.'custom_bootstrap/custom_bootstrap.min.css' : THEME.'custom_bootstrap/custom_bootstrap.css';
+        if (file_exists($custom_bs)) {
+            echo '<link rel="stylesheet" href="'.$custom_bs.'">';
+        } else {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
+        }
+
         echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap-submenu.min.css">';
     } else {
         echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
         echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-        echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap.min.css">';
+
+        $custom_bs = file_exists(THEME.'custom_bootstrap/custom_bootstrap.min.css') ? THEME.'custom_bootstrap/custom_bootstrap.min.css' : THEME.'custom_bootstrap/custom_bootstrap.css';
+        if (file_exists($custom_bs)) {
+            echo '<link rel="stylesheet" href="'.$custom_bs.'">';
+        } else {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap.min.css">';
+        }
+
         echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap-submenu.min.css">';
 
         if ($locale['text-direction'] == 'rtl') {
