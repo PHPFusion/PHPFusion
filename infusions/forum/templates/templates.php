@@ -1133,7 +1133,7 @@ if (!function_exists('render_post_item')) {
 
             echo '<div class="m-t-20">';
                 if (!empty($data['user_profiles'])) {
-                    echo '<div class="post_profiles">';
+                    echo '<div class="post_profiles clearfix">';
                     foreach ($data['user_profiles'] as $attr) {
                         if (!empty($attr['type']) && $attr['type'] == 'social') {
                             echo '<a class="social-link" href="'.$attr['link'].'"'.(fusion_get_settings('index_url_userweb') ? '' : 'rel="nofollow noopener noreferrer" ').'target="_blank">'.$attr['icon'].'</a>';
