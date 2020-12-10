@@ -96,9 +96,6 @@ if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
 }
 
-$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
-echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
-
 if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
@@ -191,3 +188,6 @@ echo "</body>\n";
 echo "</html>";
 
 PHPFusion\OpenGraph::ogDefault();
+
+$theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
+add_to_head("<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n");
