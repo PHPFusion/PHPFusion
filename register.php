@@ -102,6 +102,34 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->skipCurrentPass = TRUE;
         $userFields->registration = TRUE;
         $userFields->display_profile_input();
+
+        if (!defined('DATEPICKER')) {
+            define('DATEPICKER', TRUE);
+            add_to_jquery('
+                let r_username = $("#userfieldsform #user_name");
+                let r_username_field = $("#userfieldsform #user_name-field");
+                let r_register = $("#userfieldsform #register");
+                r_username.bind("keyup", function () {
+                    $.ajax({
+                        url: "'.INCLUDES.'user_validation.php",
+                        method: "get",
+                        data: $.param({"name": $(this).val()}),
+                        dataType: "json",
+                        success: function (e) {
+                            if (e.result == "valid") {
+                                r_username.addClass("is-valid").removeClass("is-invalid");
+                                r_username_field.addClass("has-success").removeClass("has-error");
+                                r_register.removeAttr("disabled");
+                            } else if (e.result == "invalid") {
+                                r_username.addClass("is-invalid").removeClass("is-valid");
+                                r_username_field.addClass("has-error").removeClass("has-success");
+                                r_register.prop("disabled", true);
+                            }
+                        }
+                    });
+                });
+            ');
+        }
     }
 }
 
