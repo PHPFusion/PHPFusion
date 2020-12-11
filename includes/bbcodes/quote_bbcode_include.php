@@ -36,6 +36,19 @@ for ($i = 0; $i < $qcount; $i++) {
     //Replace default quotes
     $text = preg_replace('#\[quote\](.*?)\[/quote\]#si', $before.$locale['bb_quote'].$endbefore.'$1'.$after, $text); //replace default quote //HTML
     //Replace extended quotes
-    $text = preg_replace('#'.$exta.'(.*?)\[/quote\]#si', $before.'<a class=\'quote-link\' href=\'#post_$2\'>$1 '.$locale['bb_wrote'].': <span class=\'goto-post-arrow\'><i class="fa fa-arrow-up"></i></span></a>'.$endbefore.'$3'.$after, $text); //replace quote with valid name and post //HTML
+
+    $result = dbquery("SELECT thread_id, thread_postcount FROM ".DB_FORUM_THREADS." WHERE thread_hidden='0' AND thread_id=:id LIMIT 1", [
+        ':id' => isnum($_GET['thread_id'])
+    ]);
+    $thread_rowstart = '';
+    $inf_settings = get_settings('forum');
+    if (!empty($data['thread_postcount']) && !empty($inf_settings['posts_per_page'])) {
+        if ($data['thread_postcount'] > $inf_settings['posts_per_page']) {
+            $thread_rowstart = $inf_settings['posts_per_page'] * floor(($data['thread_postcount'] - 1) / $inf_settings['posts_per_page']);
+            $thread_rowstart = "&rowstart=".$thread_rowstart;
+        }
+    }
+
+    $text = preg_replace('#'.$exta.'(.*?)\[/quote\]#si', $before.'<a class="quote-link" href="'.FORUM.'viewthread.php?thread_id='.$_GET['thread_id'].$thread_rowstart.'&pid=$2#post_$2">$1 '.$locale['bb_wrote'].': <span class="goto-post-arrow"><i class="fa fa-arrow-up"></i></span></a>'.$endbefore.'$3'.$after, $text); //replace quote with valid name and post //HTML
     $text = preg_replace('#'.$extb.'(.*?)\[/quote\]#si', $before.'$1'.$endbefore.'$2'.$after, $text); //replace quote with valid name and no post //HTML
 }
