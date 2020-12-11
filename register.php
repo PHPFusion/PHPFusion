@@ -111,8 +111,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                 let r_register = $("#userfieldsform #register");
                 r_username.bind("keyup", function () {
                     $.ajax({
-                        url: "'.INCLUDES.'user_validation.php",
-                        method: "get",
+                        url: "'.INCLUDES.'api/?api=usrname-check",
+                        method: "GET",
                         data: $.param({"name": $(this).val()}),
                         dataType: "json",
                         success: function (e) {
