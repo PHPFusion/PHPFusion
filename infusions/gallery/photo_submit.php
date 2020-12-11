@@ -81,7 +81,7 @@ if ($gll_settings['gallery_allow_submission']) {
         echo "<p><a href='index.php'>".str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['gallery_0113'])."</a></p>\n";
         echo "</div>\n";
     } else {
-        $result = dbquery("SELECT album_id, album_title FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE ".in_group('album_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_title");
+        $result = dbquery("SELECT album_id, album_title, album_order, album_datestamp FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "WHERE ".in_group('album_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess("album_access")." ORDER BY album_order DESC, album_datestamp DESC");
         if (dbrows($result) > 0) {
             $opts = [];
             while ($data = dbarray($result)) {

@@ -352,7 +352,7 @@ function gallery_album_listing() {
  */
 function get_albumOpts() {
     $list = [];
-    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where ".in_group('album_language', LANGUAGE) : "")." ORDER BY album_order ASC");
+    $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where ".in_group('album_language', LANGUAGE) : "")." ORDER BY album_order DESC, album_datestamp DESC");
     if (dbrows($result) > 0) {
         while ($data = dbarray($result)) {
             $list[$data['album_id']] = $data['album_title'];
