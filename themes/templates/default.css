@@ -746,7 +746,7 @@ ul > li {
     display: block;
 }
 
-.clearfix:after {
+.clearfix:after, li:after {
     visibility: hidden;
     display: block;
     font-size: 0;
