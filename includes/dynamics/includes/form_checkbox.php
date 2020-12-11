@@ -5,7 +5,7 @@
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_checkbox.php
-| Author: Frederick MC Chan (Chan)
+| Author: PHPFusion Core Developers
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,6 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+/**
+ * @param        $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = []) {
 
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
@@ -41,7 +50,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'inner_width'    => '',
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
-        'onclick'        => ''
+        'onclick'        => '',
     ];
 
     $options += $default_options;
@@ -114,6 +123,11 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     if (!empty($options['options']) && is_array($options['options'])) {
 
+        // Multiple checkboxes - with many options, the input_name must be in array form
+        if ($options["type"] == "checkbox") {
+            $input_name = $input_name."[]";
+        }
+
         foreach ($options['options'] as $key => $value) {
 
             if ($options['deactivate_key'] !== NULL && $options['deactivate_key'] == $key) {
@@ -136,18 +150,22 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
 
     } else {
-        $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin: 0; vertical-align: middle' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '')." />\n</div>\n";
+        $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>\n";
+
+        $checkbox .= "<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin:0;vertical-align:middle;' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').">";
+
+        $checkbox .= "</div>";
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
 
     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
 
-    $html .= ($options['reverse_label'] == TRUE) ? $checkbox : "";
+    $html .= ($options['reverse_label'] == TRUE ? $checkbox : "");
 
     $html .= (!empty($label)) ? "<div class='overflow-hide'>\n".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '').($options['tip'] ? " <i class='pointer fa fa-question-circle text-lighter' title='".$options['tip']."'></i>" : '')."</div>\n</label>\n" : "";
 
-    $html .= ($options['reverse_label'] == FALSE) ? $checkbox : "";
+    $html .= ($options['reverse_label'] == FALSE ? $checkbox : "");
 
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
