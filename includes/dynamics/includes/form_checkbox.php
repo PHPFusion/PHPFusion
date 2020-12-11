@@ -157,7 +157,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         $checkbox .= "</div>";
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
+    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>\n";
 
     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">\n" : "";
 
