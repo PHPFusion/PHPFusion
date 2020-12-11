@@ -85,7 +85,7 @@ if (!function_exists('display_inbox')) {
                         'avatar'       => display_avatar($data, "40px", '', FALSE, 'img-circle'),
                         'profile_link' => profile_link($data['user_id'], $data['user_name'], $data['user_status']),
                         'user_level'   => getgroupname($data['user_level']),
-                        'date'         => showdate($locale['date_day'], $data['message_datestamp']),
+                        'date'         => showdate('%d %b', $data['message_datestamp']),
                         'timer'        => timer($data['message_datestamp']),
                         'message'      => $data['message']['message_text'],
                         'reply_form'   => $info['reply_form']

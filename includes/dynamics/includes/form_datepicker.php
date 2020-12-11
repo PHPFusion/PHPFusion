@@ -123,8 +123,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'class'                  => '',
         'inline'                 => FALSE,
         'error_text'             => $locale['error_input_default'],
-        'date_format_js'         => $locale['datepicker_js'],
-        'date_format_php'        => $locale['datepicker_php'],
+        'date_format_js'         => 'M-DD-YYYY H:mm:ss',
+        'date_format_php'        => 'm-d-Y H:i:s',
         'delimiter'              => '-',
         'fieldicon_off'          => FALSE,
         'filtered_dates'         => [], // must be an array
