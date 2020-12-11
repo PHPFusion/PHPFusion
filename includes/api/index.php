@@ -18,8 +18,9 @@
 require_once __DIR__."/../../maincore.php";
 
 $endpoints = [
-    "usrname-check" => "username_validation.php",
+    "username-check" => "username_validation.php",
 ];
+
 if ($api = get("api")) {
     if (isset($endpoints[$api])) {
 
@@ -33,4 +34,3 @@ if ($api = get("api")) {
 } else {
     throw new Exception("API is not specified");
 }
-

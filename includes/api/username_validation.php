@@ -4,7 +4,7 @@
 | Copyright (C) PHP-Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: user_validation.php
+| Filename: username_validation.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+defined('IN_FUSION') || exit;
 
-(defined("IN_FUSION")||exit);
-
-function xhttp_usrnamecheck() {
+function xhttp_usernamecheck() {
     $input_string = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
     $result = [];
     if (!empty($input_string)) {
