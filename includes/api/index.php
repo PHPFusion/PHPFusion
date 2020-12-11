@@ -17,23 +17,20 @@
 +--------------------------------------------------------*/
 require_once __DIR__."/../../maincore.php";
 
-if (iADMIN) {
-    $endpoints = [
-        "usrname-check"       => "username_validation.php",
-    ];
-    if ($api = get("api")) {
-        if (isset($endpoints[$api])) {
+$endpoints = [
+    "usrname-check" => "username_validation.php",
+];
+if ($api = get("api")) {
+    if (isset($endpoints[$api])) {
 
-            require $endpoints[$api];
+        require $endpoints[$api];
 
-            fusion_apply_hook("fusion_filters");
+        fusion_apply_hook("fusion_filters");
 
-        } else {
-            throw new Exception("End point is faulty");
-        }
     } else {
-        throw new Exception("API is not specified");
+        throw new Exception("End point is faulty");
     }
 } else {
-    throw new Exception("You are not authorized to view the data");
+    throw new Exception("API is not specified");
 }
+
