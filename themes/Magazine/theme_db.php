@@ -29,11 +29,11 @@ $locale = fusion_get_locale('', MG_LOCALE);
 
 $theme_title       = 'Magazine';
 $theme_description = $locale['MG_description'];
-$theme_screenshot  = 'screenshot.jpg';
+$theme_screenshot  = 'screenshot.png';
 $theme_author      = 'RobiNN';
 $theme_web         = 'https://github.com/RobiNN1';
 $theme_license     = 'AGPL3';
-$theme_version     = '1.0.0';
+$theme_version     = '1.4.0';
 $theme_folder      = 'Magazine';
 
 $theme_insertdbrow[] = DB_SETTINGS_THEME." (settings_name, settings_value, settings_theme) VALUES
