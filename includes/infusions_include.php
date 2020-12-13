@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 use defender\ImageValidation;
+use PHPFusion\PrivateMessages;
 
 defined('IN_FUSION') || exit;
 
@@ -201,7 +202,7 @@ if (!function_exists('send_pm')) {
      * @param bool   $to_group - set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
-        \PHPFusion\PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
+        PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
     }
 }
 

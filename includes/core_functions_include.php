@@ -180,10 +180,11 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
                 exit;
             }
         }
-    }/* else {
-        debug_print_backtrace();
-        echo "redirected to ".$location;
-    }*/
+    }
+    //else {
+    //    debug_print_backtrace();
+    //    echo "redirected to ".$location;
+    //}
 }
 
 /**
@@ -1557,6 +1558,27 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 
     return sprintf($tpl_global, "<small class='m-r-10'><span>".$locale['global_092']."</span> ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
 }
+
+/**
+ * @param     $total
+ * @param     $count
+ * @param int $range
+ *
+ * @return float|int
+ */
+function rowstart_count($total, $count, $range = 3) {
+    if ($total > $count) {
+        $cur_page = ceil(($total + 1) / $count);
+        $pg_cnt = ceil($total / $count);
+        if ($pg_cnt <= 1) {
+            return 0;
+        }
+        $row = min($cur_page + $range, $pg_cnt);
+        return ($row - 1) * $count;
+    }
+    return 0;
+}
+
 
 /**
  * Inifity sroll

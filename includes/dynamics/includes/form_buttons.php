@@ -34,8 +34,7 @@ function form_button($input_name, $title, $input_value, array $options = []) {
         'alt'         => $title,
         'data'        => [],
     ];
-
-    $options = $options + $default_options;
+    $options += $default_options;
 
     if ($options['block']) {
         $options['class'] = $options['class']." btn-block";
