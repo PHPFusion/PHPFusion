@@ -56,8 +56,8 @@ function photo_form() {
             'photo_user'           => $userdata['user_id'],
             'photo_views'          => 0,
             'photo_order'          => 0,
-            'photo_allow_comments' => TRUE,
-            'photo_allow_ratings'  => TRUE,
+            'photo_allow_comments' => 1,
+            'photo_allow_ratings'  => 1,
         ];
         if (isset($_POST['save_photo'])) {
             $data = [
@@ -277,14 +277,16 @@ function mass_photo_form() {
                         $current_upload = $upload[$i];
                         if ($current_upload['error'] == 0) {
                             $current_photos = [
-                                'album_id'        => $data['album_id'],
-                                'photo_title'     => $current_upload['image_name'],
-                                'photo_filename'  => $current_upload['image_name'],
-                                'photo_thumb1'    => $current_upload['thumb1_name'],
-                                'photo_thumb2'    => $current_upload['thumb2_name'],
-                                'photo_datestamp' => time(),
-                                'photo_user'      => $userdata['user_id'],
-                                'photo_order'     => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id=:albumid", [':albumid' => $data['album_id']]), 0) + 1
+                                'album_id'             => $data['album_id'],
+                                'photo_title'          => $current_upload['image_name'],
+                                'photo_filename'       => $current_upload['image_name'],
+                                'photo_thumb1'         => $current_upload['thumb1_name'],
+                                'photo_thumb2'         => $current_upload['thumb2_name'],
+                                'photo_datestamp'      => time(),
+                                'photo_user'           => $userdata['user_id'],
+                                'photo_order'          => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id=:albumid", [':albumid' => $data['album_id']]), 0) + 1,
+                                'photo_allow_comments' => 1,
+                                'photo_allow_ratings'  => 1
                             ];
                             dbquery("INSERT INTO ".DB_PHOTOS." (".implode(", ", array_keys($current_photos)).")
                              VALUES ('".implode("','", array_values($current_photos))."')
