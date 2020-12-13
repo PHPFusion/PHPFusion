@@ -186,13 +186,14 @@ class Admin {
                 ];
             } else {
                 // older legacy theme.
-                if (file_exists(THEMES.$folder.'/theme.php')) {
-                    $theme_screenshot = '/screenshot.jpg';
+                $themefolder = THEMES.$folder;
+                if (file_exists($themefolder.'/theme.php')) {
+                    $theme_screenshot = file_exists($themefolder.'/screenshot.png') ? $themefolder.'/screenshot.png' : $themefolder.'/screenshot.jpg';
                     $data[$status][$folder] = [
                         'readme'      => '',
-                        'folder'      => THEMES.$folder,
+                        'folder'      => $themefolder,
                         'title'       => $folder,
-                        'screenshot'  => file_exists(THEMES.$folder.$theme_screenshot) ? THEMES.$folder.$theme_screenshot : IMAGES.'imagenotfound.jpg',
+                        'screenshot'  => file_exists($theme_screenshot) ? $theme_screenshot : IMAGES.'imagenotfound.jpg',
                         'author'      => '',
                         'license'     => '',
                         'version'     => '',
