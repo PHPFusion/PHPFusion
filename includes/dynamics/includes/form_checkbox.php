@@ -51,6 +51,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
         'onclick'        => '',
+        'multiple'       => FALSE,
     ];
 
     $options += $default_options;
@@ -124,7 +125,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     if (!empty($options['options']) && is_array($options['options'])) {
 
         // Multiple checkboxes - with many options, the input_name must be in array form
-        if ($options["type"] == "checkbox") {
+        if ($options['type'] == 'checkbox' && $options['multiple'] == TRUE) {
             $input_name = $input_name."[]";
         }
 
