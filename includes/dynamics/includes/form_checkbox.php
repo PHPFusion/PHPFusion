@@ -51,7 +51,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'reverse_label'  => FALSE,
         'deactivate_key' => NULL,
         'onclick'        => '',
-        'multiple'       => FALSE,
     ];
 
     $options += $default_options;
