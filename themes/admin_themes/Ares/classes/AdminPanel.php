@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: AdminPanel.php
@@ -187,7 +187,7 @@ class AdminPanel {
                     $html .= showrendertime().' '.showMemoryUsage().'<br />';
                 }
 
-                $html .= 'Ares Admin Theme &copy; '.date('Y').' '.$locale['ares_002'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> & PHP-Fusion Inc.<br/>';
+                $html .= 'Ares Admin Theme &copy; '.date('Y').' '.$locale['ares_002'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a> & PHP Fusion Inc.<br/>';
                 $html .= showcopyright('', TRUE);
             $html .= '</footer>';
         $html .= '</section>';

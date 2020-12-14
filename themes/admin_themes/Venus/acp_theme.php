@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: acp_theme.php
-| Author: PHP-Fusion Inc
+| Author: PHP Fusion Inc
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -614,7 +614,7 @@ function render_admin_panel() {
         echo CONTENT;
         echo "</div>\n";
         echo "<footer>";
-        echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.phpfusion.com'><strong>PHP-Fusion Inc.</strong></a>\n";
+        echo "Venus Admin Theme &copy; ".date("Y")." created by <a href='https://www.phpfusion.com'><strong>PHP Fusion Inc.</strong></a>\n";
         echo showcopyright();
 
         if ($settings['rendertime_enabled']) {

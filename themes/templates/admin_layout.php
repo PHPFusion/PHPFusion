@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: admin_layout.php
@@ -37,10 +37,10 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
 }
 
 // Site Theme CSS
-if (stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
+/*if (stristr($_SERVER['PHP_SELF'], $settings['site_path'].'infusions')) {
     $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
     echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
-}
+}*/
 
 // Default CSS styling which applies to all themes but can be overriden
 if (!defined('NO_DEFAULT_CSS')) {

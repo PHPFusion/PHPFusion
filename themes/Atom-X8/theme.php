@@ -110,7 +110,7 @@ function copyright() {
     if (!defined('LICENSED')) {
         define('LICENSED', TRUE);
     }
-    $res = "Powered by <a href='https://www.phpfusion.com'>PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP-Fusion Inc<br >";
+    $res = "Powered by <a href='https://www.phpfusion.com'>PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc<br >";
     $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'>GNU Affero GPL</a> v3.<br>\n";
     return $res;
 }
