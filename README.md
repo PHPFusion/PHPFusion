@@ -1,8 +1,7 @@
-PHP-Fusion Andromeda
+PHPFusion Andromeda
 ---
 
-This is the development of PHP-Fusion Version 9.03.XX, code name Andromeda.
-
+This is the development of PHPFusion Version 9.XX, code name Andromeda.
 
 **Cloning of Andromeda branch:**
 ````git
