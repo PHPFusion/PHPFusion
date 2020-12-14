@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/token.php
@@ -184,7 +184,7 @@ class Token extends \defender {
                     $algo, $user_id.$token_time.stripinput($_POST['form_id']).SECRET_KEY, $salt
                 )) {
                 $error = $locale['token_error_7'];
-            } 
+            }
         } else {
             // token format is incorrect
             $error = $locale['token_error_8'];

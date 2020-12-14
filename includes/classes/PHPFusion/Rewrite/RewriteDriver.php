@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: RewriteDriver.php
@@ -976,5 +976,15 @@ abstract class RewriteDriver {
     protected function cleanString($mystr = "") {
         $search = ["", "\"", "'", "\\", "\'", "<", ">"];
         return str_replace($search, "", $mystr);
+    }
+
+    /**
+     * @param $string
+     *
+     * @return string
+     * @deprecated
+     */
+    public static function normalize($string) {
+        return normalize($string);
     }
 }
