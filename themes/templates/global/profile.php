@@ -27,31 +27,32 @@ if (!function_exists('display_register_form')) {
      */
     function display_register_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-        ?>
-        <!---HTML---->
-        {%tab_header%}
-        <!--register_pre_idx-->
-        <div id='register_form' class='row m-t-20'>
-            <div class='col-xs-12 col-sm-12'>
-                {%open_form%}
-                {%user_id%}
-                {%user_name_field%}
-                {%user_email_field%}
-                {%user_hide_email_field%}
-                {%user_avatar_field%}
-                {%user_password_field%}
-                {%user_admin_password_field%}
-                {%custom_fields%}
-                {%captcha_fields%}
-                {%eula%}
-                {%post_button%}
-                {%close_form%}
-            </div>
-        </div>
-        <!--register_sub_idx-->
-        {%tab_footer%}
-        <!---//HTML---->
-        <?php
+        $opentab = "";
+        $closetab = "";
+        if (!empty($info["tab_info"])) {
+            $opentab = opentab($info["tab_info"], $_GET["section"], "user-profile-form", TRUE);
+            $closetab = closetab();
+        }
+        echo "<!--HTML-->";
+        opentable();
+        echo $opentab;
+        echo "<!--register_pre_idx--><div class='spacer-sm'><div id='register_form' class='row'><div class='col-xs-12 col-sm-12'>";
+        echo $info["openform"].
+            $info["user_id"].
+            $info["user_name"].
+            $info["user_email"].
+            $info["user_hide_email"].
+            $info["user_avatar"].
+            $info["user_password"].
+            $info["user_admin_password"].
+            $info["user_custom"].
+            $info["validate"].
+            $info["terms"].
+            $info["button"];
+        echo "</div></div></div><!--register_sub_idx-->";
+        echo $closetab;
+        closetable();
+        echo "<!--//HTML-->";
     }
 }
 
@@ -65,39 +66,39 @@ if (!function_exists('display_profile_form')) {
      */
     function display_profile_form(array $info = []) {
         add_to_head("<link href='".THEMES."templates/global/css/profile.css' rel='stylesheet'/>");
-        ?>
-        <!--HTML-->
-        {%opentable%}
-        {%tab_header%}
-        <!--editprofile_pre_idx-->
-        <div id='profile_form' class='row m-t-20'>
-            <div class='col-xs-12 col-sm-12'>
-                {%open_form%}
-                {%user_id%}
-                {%user_name_field%}
-                {%user_email_field%}
-                {%user_hide_email_field%}
-                {%user_reputation_field%}
-                {%user_avatar_field%}
-                {%user_password_field%}
-                {%user_admin_password_field%}
-                {%custom_fields%}
-                {%captcha_fields%}
-                {%eula%}
-                {%post_button%}
-                {%close_form%}
-            </div>
-        </div>
-        <!--editprofile_sub_idx-->
-        {%tab_footer%}
-        {%closetable%}
-        <!--//HTML-->
-        <?php
+        $opentab = "";
+        $closetab = "";
+        if (!empty($info["tab_info"])) {
+            $opentab = opentab($info["tab_info"], $_GET["section"], "user-profile-form", TRUE);
+            $closetab = closetab();
+        }
+        echo "<!--HTML-->";
+        opentable();
+        echo $opentab;
+        echo "<!--editprofile_pre_idx--><div class='spacer-sm'><div id='profile_form' class='row'><div class='col-xs-12 col-sm-12'>";
+        echo $info["openform"].
+            $info["user_id"].
+            $info["user_name"].
+            $info["user_email"].
+            $info["user_hide_email"].
+            $info["user_reputation"].
+            $info["user_avatar"].
+            $info["user_password"].
+            $info["user_admin_password"].
+            $info["user_custom"].
+            $info["validate"].
+            $info["terms"].
+            $info["button"];
+        echo " </div ></div ></div ><!--editprofile_sub_idx-->";
+        echo $closetab;
+        closetable();
+        echo "<!--//HTML-->";
     }
 }
 
 /**
  * Profile display view
+ *
  * @param $info (array) - prepared responsive fields
  * To get information of the current raw userData
  * Uncomment and include the 3 lines at bottom inside render_userprofile()
