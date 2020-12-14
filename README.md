@@ -1,4 +1,4 @@
-PHPFusion Tesseract (v8)
+# PHPFusion Tesseract (v8)
 
 An updated PHPFusion 7 that has some of the features PHPFusion 9 has to offer.
 
