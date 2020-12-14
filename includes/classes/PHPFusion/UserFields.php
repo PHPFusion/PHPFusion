@@ -394,6 +394,7 @@ class UserFields extends QuantumFields {
                 }
             }
         }
+        $this->info["user_custom"] = $user_fields;
 
         if (isset($this->info['section']) && count($this->info['section']) > 1) {
             $tab_title = [];
@@ -410,28 +411,6 @@ class UserFields extends QuantumFields {
          */
         ob_start();
         $this->registration ? display_register_form($this->info) : display_profile_form($this->info);
-        echo strtr(ob_get_clean(), [
-                '{%tab_header%}'                => isset($tab_title) ? opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE) : '',
-                '{%open_form%}'                 => $this->info['openform'],
-                '{%user_id%}'                   => $this->info['user_id'],
-                '{%user_name_field%}'           => $this->info['user_name'],
-                '{%user_email_field%}'          => $this->info['user_email'],
-                //'{%user_password_verify%}'      => $this->info['user_password_verify'],
-                '{%user_hide_email_field%}'     => $this->info['user_hide_email'],
-                '{%user_avatar_field%}'         => $this->info['user_avatar'],
-                '{%user_reputation_field%}'     => $this->info['user_reputation'],
-                '{%user_password_field%}'       => $this->info['user_password'],
-                '{%user_admin_password_field%}' => $this->info['user_admin_password'],
-                '{%custom_fields%}'             => $user_fields,
-                '{%captcha_fields%}'            => $this->info['validate'],
-                '{%eula%}'                      => $this->info['terms'],
-                '{%post_button%}'               => $this->info['button'],
-                '{%close_form%}'                => $this->info['closeform'],
-                '{%tab_footer%}'                => isset($tab_title) ? closetab() : '',
-                '{%opentable%}'                 => fusion_get_function('opentable', ''),
-                '{%closetable%}'                => fusion_get_function('closetable')
-            ]
-        );
         /*
         add_to_jquery("
         var current_email = $('#user_email').val();
