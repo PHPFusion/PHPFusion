@@ -17,13 +17,23 @@
 +--------------------------------------------------------*/
 namespace Defender;
 
+use ReflectionClass;
+use ReflectionException;
+
 abstract class Validation {
+
     protected static $inputName = '';
+
     protected static $inputValue;
+
     protected static $inputDefault = '';
+
     protected static $isMultiLang = '';
+
     protected static $inputConfig = [];
+
     protected static $validate_instance = NULL;
+
     protected static $validate_method = NULL;
 
     protected static $validation_rules_assigned = [
@@ -45,7 +55,8 @@ abstract class Validation {
         'file'        => ['upload', 'verify_file_upload'],
         'document'    => ['user', 'verify_document'],
         'radio'       => ['text', 'verify_text'],
-        'mediaSelect' => ['uri', 'verify_path']
+        'mediaSelect' => ['uri', 'verify_path'],
+        'contact'     => ['contact', 'verify_contact']
     ];
 
     public static function inputName($value = NULL) {
@@ -71,25 +82,29 @@ abstract class Validation {
     public static function getValidated() {
         if (!isset(self::$validate_instance[self::$inputName])) {
             if (class_exists(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]))) {
-                $class = new \ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                try {
+                    $class = new ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                } catch (ReflectionException $e) {
+                    setError(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
+                }
                 self::$validate_instance[self::$inputName] = $class->newInstance();
             }
         }
 
-        if (self::$validate_instance[self::$inputName] !== NULL) {
+        if (isset(self::$validate_instance[self::$inputName]) && self::$validate_instance[self::$inputName] !== NULL) {
             $object = self::$validate_instance[self::$inputName];
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
+
             if (is_callable([$object, $method])) {
+
                 return $object->$method();
             } else {
-                \defender::stop();
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
-                addNotice('danger', sprintf($locale['type_unset'], self::$inputName, $method));
+                fusion_stop(sprintf($locale['type_unset'], self::$inputName));
             }
         } else {
-            \defender::stop();
             $locale['type_unset'] = '%s: has no validation file'; // to be moved
-            addNotice('danger', sprintf($locale['type_unset'], self::$inputName));
+            fusion_stop(sprintf($locale['type_unset'], self::$inputName));
         }
 
         return FALSE;
@@ -104,3 +119,4 @@ require_once(__DIR__.'/validation/text.php');
 require_once(__DIR__.'/validation/upload.php');
 require_once(__DIR__.'/validation/uri.php');
 require_once(__DIR__.'/validation/user.php');
+require_once(__DIR__.'/validation/contact.php');
