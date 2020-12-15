@@ -39,14 +39,14 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         $input_value['5'] = "";
     }
 
-    $options += [
+    $default_options = [
         'input_id'     => $input_name,
         'required'     => FALSE,
         'placeholder'  => '',
         'deactivate'   => FALSE,
         'width'        => '100%',
         'class'        => '',
-        'inline'       => '',
+        'inline'       => FALSE,
         'tip'          => '',
         'error_text'   => !empty($options['error_text']) ? $options['error_text'] : $locale['street_error'],
         'error_text_2' => !empty($options['error_text_2']) ? $options['error_text_2'] : $locale['street_error'],
@@ -58,6 +58,8 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         'flag'         => '',
         'stacked'      => '',
     ];
+
+    $options += $default_options;
 
     $input_id = $options['input_id'];
 
@@ -87,46 +89,84 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     }
 
+    if (!defined("SELECT2")) {
+        define("SELECT2", TRUE);
+        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
+
+        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+        if (file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
+    }
+
     $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >\n";
+
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
+
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+
     $html .= "<div class='row'>\n";
+
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1'].($options['required'] ? " <span class='required'>&nbsp;*</span>" : '')."'".($options['deactivate'] ? " readonly" : '')." />\n";
+
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[0])) || \defender::inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
     $html .= "</div>\n";
 
     $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
     // Street 2 is not needed even on required.
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."'".($options['deactivate'] ? " readonly" : '')." />";
+
     $html .= "</div>\n";
 
-    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-20'>\n";
+    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
+
     $html .= "<select name='".$input_name."[]' id='$input_id-country' style='width:100%;'>\n";
+
     $html .= "<option value=''></option>";
     foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
         $country_key = str_replace(" ", "-", $countryname);
         $select = ($input_value[2] == $country_key) ? "selected" : '';
         $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
     }
+
     $html .= "</select>\n";
+
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[2])) || \defender::inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
+
     $html .= "</div>\n";
-    $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-20'>\n";
+
+    $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
+
     $html .= "<div id='state-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
+
     $html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
+
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[3])) || \defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
+
     $html .= "</div>\n";
+
     $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
+
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."'".($options['deactivate'] ? " readonly" : '')." />\n";
+
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
+
     $html .= "</div>\n";
+
     $html .= "<div class='col-xs-12 col-sm-7 col-md-4 col-lg-7 m-b-10'>\n";
+
     $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."'".($options['deactivate'] ? " readonly" : '')." />\n";
+
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[5])) || \defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
+
     $html .= "</div>\n";
+
     $html .= "</div>\n"; // close inner row
 
     $html .= $options['stacked'];
@@ -166,12 +206,22 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         ";
     }
 
+    $states_array[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
+    $states_array = json_encode($states_array);
+
     add_to_jquery("
     ".$flag_function."
     $('#$input_id-country').select2({
     $flag_plugin
     placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
     });
+    
+    $('#".$input_id."-state').select2({
+            placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
+            allowClear: true,
+            data: $states_array
+    });
+    
     $('#".$input_id."-country').bind('change', function(){
         var ce_id = $(this).val();
         $.ajax({
@@ -180,16 +230,17 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         data: { id : ce_id },
         dataType: 'json',
         beforeSend: function(e) {
-        //$('#state-spinner').show();
-        $('#".$input_id."-state').hide();
+            //$('#state-spinner').show();
+            $('#".$input_id."-state').hide();
         },
         success: function(data) {
-        //$('#state-spinner').hide();
-        $('#".$input_id."-state').select2({
-        placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
-        allowClear: true,
-        data : data
-        });
+            console.log(data);
+            //$('#state-spinner').hide();
+            $('#".$input_id."-state').select2({
+                placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
+                allowClear: true,
+                data : data
+            });
         },
         error : function() {
             console.log('Error Fetching');
@@ -215,6 +266,17 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
             return '<table><tr><td style=\"\"><img style=\"height:16px;\" src=\"".IMAGES."/' + flag + '\"/></td><td style=\"padding-left:10px\"><div>' + item.text + '</div></div></td></tr></table>';
         }
         ");
+    }
+
+    if (!defined("SELECT2")) {
+        define("SELECT2", TRUE);
+        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
+        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
+
+        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+        if (file_exists($select2_locale_path)) {
+            add_to_footer("<script src='$select2_locale_path'></script>");
+        }
     }
 
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -272,7 +334,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'row ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
 
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
