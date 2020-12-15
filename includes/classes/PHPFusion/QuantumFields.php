@@ -2517,6 +2517,7 @@ class QuantumFields extends \SqlHandler {
             'select'      => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
             'textarea'    => "TEXT NOT NULL",
             'tags'        => "TEXT NOT NULL",
+            'contact'     => "VARCHAR(100) NOT NULL DEFAULT '".$default_value."'",
             'checkbox'    => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'toggle'      => "TINYINT(3) NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
             'datepicker'  => "INT(10) UNSIGNED NOT NULL DEFAULT '".(isnum($default_value) ? $default_value : 0)."'",
@@ -2778,7 +2779,7 @@ class QuantumFields extends \SqlHandler {
         $indexes = array_reverse($this->field_cat_index[0]);
         $sec_id = array_pop($indexes);
 
-        $cur_section = (isset($_GET['section']) && in_array($_GET['section'], array_values($this->field_cat_index[0])) ? (int) $_GET['section'] : $sec_id);
+        $cur_section = (isset($_GET['section']) && in_array($_GET['section'], array_values($this->field_cat_index[0])) ? (int)$_GET['section'] : $sec_id);
         // get current section categories
         $cur_cid = array_values($this->field_cat_index[$cur_section]);
         $fields = [];
@@ -2787,7 +2788,7 @@ class QuantumFields extends \SqlHandler {
                 $fields[] = $this->fields[$category_id];
             }
         }
-        // print_P($fields);
+
         // selected fields to push
         $field = flatten_array($fields);
         if ($callback_data == TRUE) {
@@ -2805,15 +2806,11 @@ class QuantumFields extends \SqlHandler {
 
             $output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
             // Set input as default if posted but blank
-            if (isset($_POST[$field_data['field_name']])) {
-                $output_fields[$target_database][$field_data['field_name']] =
-                    form_sanitizer(
-                        $_POST[$field_data['field_name']],
-                        $field_data['field_default'],
-                        $field_data['field_name']
-                    );
+            if (isset($_POST[$field_data["field_name"]])) {
+                $output_fields[$target_database][$field_data['field_name']] = form_sanitizer($_POST[$field_data["field_name"]], $field_data['field_default'], $field_data['field_name']);
             }
         }
+
         $this->output_fields = $output_fields;
 
         return $this->output_fields;

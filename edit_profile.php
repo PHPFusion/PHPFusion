@@ -31,14 +31,17 @@ $errors = [];
 $_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
 if (isset($_POST['update_profile'])) {
+
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->setUserNameChange(fusion_get_settings('username_change')); // accept or not username change.
     $userInput->verifyNewEmail = TRUE;
     $userInput->userData = fusion_get_userdata();
-    $userInput->saveUpdate();
-    if (\defender::safe()) {
+
+    if ($userInput->saveUpdate()) {
         redirect(FUSION_REQUEST);
     }
+
+
 } else if (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->verifyCode($_GET['code']);

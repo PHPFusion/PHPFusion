@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use Defender;
+
 class UserFieldsInput {
 
     public $adminActivation = 1;
@@ -47,6 +49,7 @@ class UserFieldsInput {
 
     /**
      * Returns $user_data
+     *
      * @return array
      * @throws \Exception
      */
@@ -63,7 +66,8 @@ class UserFieldsInput {
     /**
      * Save User Fields
      *
-     * @return bool - true if successful.
+     * @return bool
+     * @throws \Exception
      */
     public function saveInsert() {
 
@@ -108,7 +112,7 @@ class UserFieldsInput {
             $this->_setValidationError();
         }
 
-        if (\defender::safe()) {
+        if (defender::safe()) {
 
             if ($this->emailVerification) {
                 $this->_setEmailVerification();
@@ -210,16 +214,16 @@ class UserFieldsInput {
                 if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
 
                     // Check for invalid characters
-                    \defender::stop();
-                    \defender::setInputError('user_name');
-                    \defender::setErrorText('user_name', $locale['u120']);
+                    defender::stop();
+                    defender::setInputError('user_name');
+                    defender::setErrorText('user_name', $locale['u120']);
 
                 } else if (in_array($this->_userName, $uban)) {
 
                     // Check for contains username
-                    \defender::stop();
-                    \defender::setInputError('user_name');
-                    \defender::setErrorText('user_name', $locale['u119']);
+                    defender::stop();
+                    defender::setInputError('user_name');
+                    defender::setErrorText('user_name', $locale['u119']);
 
                 } else {
 
@@ -229,9 +233,9 @@ class UserFieldsInput {
                     if ($name_active == 0 && $name_inactive == 0) {
                         $this->data['user_name'] = $this->_userName;
                     } else {
-                        \defender::stop();
-                        \defender::setInputError('user_name');
-                        \defender::setErrorText('user_name', $locale['u121']);
+                        defender::stop();
+                        defender::setInputError('user_name');
+                        defender::setErrorText('user_name', $locale['u121']);
                     }
                 }
             } else {
@@ -281,31 +285,31 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // New Password equal old password
-                        \defender::stop();
-                        \defender::setInputError('user_password2');
-                        \defender::setInputError('user_password2');
-                        \defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
-                        \defender::setErrorText('user_password2', $locale['u134'].$locale['u146'].$locale['u133']);
+                        defender::stop();
+                        defender::setInputError('user_password2');
+                        defender::setInputError('user_password2');
+                        defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
+                        defender::setErrorText('user_password2', $locale['u134'].$locale['u146'].$locale['u133']);
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        \defender::stop();
-                        \defender::setInputError('user_password1');
-                        \defender::setInputError('user_password2');
-                        \defender::setErrorText('user_password1', $locale['u148']);
-                        \defender::setErrorText('user_password2', $locale['u148']);
+                        defender::stop();
+                        defender::setInputError('user_password1');
+                        defender::setInputError('user_password2');
+                        defender::setErrorText('user_password1', $locale['u148']);
+                        defender::setErrorText('user_password2', $locale['u148']);
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        \defender::stop();
-                        \defender::setInputError('user_password1');
-                        \defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+                        defender::stop();
+                        defender::setInputError('user_password1');
+                        defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
                         break;
                 }
             } else {
-                \defender::stop();
-                \defender::setInputError('user_password1');
-                \defender::setErrorText('user_password1', $locale['u134'].$locale['u143a']);
+                defender::stop();
+                defender::setInputError('user_password1');
+                defender::setErrorText('user_password1', $locale['u134'].$locale['u143a']);
             }
 
         } else if ($this->_method == 'validate_update') {
@@ -354,32 +358,32 @@ class UserFieldsInput {
                                 break;
                             case '1':
                                 // New Password equal old password
-                                \defender::stop();
-                                \defender::setInputError('user_password');
-                                \defender::setInputError('user_password1');
-                                \defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
-                                \defender::setErrorText('user_password1', $locale['u134'].$locale['u146'].$locale['u133']);
+                                defender::stop();
+                                defender::setInputError('user_password');
+                                defender::setInputError('user_password1');
+                                defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
+                                defender::setErrorText('user_password1', $locale['u134'].$locale['u146'].$locale['u133']);
                                 break;
                             case '2':
                                 // The two new passwords are not identical
-                                \defender::stop();
-                                \defender::setInputError('user_password1');
-                                \defender::setInputError('user_password2');
-                                \defender::setErrorText('user_password1', $locale['u148']);
-                                \defender::setErrorText('user_password2', $locale['u148']);
+                                defender::stop();
+                                defender::setInputError('user_password1');
+                                defender::setInputError('user_password2');
+                                defender::setErrorText('user_password1', $locale['u148']);
+                                defender::setErrorText('user_password2', $locale['u148']);
                                 break;
                             case '3':
                                 // New password contains invalid chars / symbols
-                                \defender::stop();
-                                \defender::setInputError('user_password1');
-                                \defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
+                                defender::stop();
+                                defender::setInputError('user_password1');
+                                defender::setErrorText('user_password1', $locale['u134'].$locale['u142']."<br />".$locale['u147']);
                                 break;
                         }
                     }
                 } else {
-                    \defender::stop();
-                    \defender::setInputError('user_password');
-                    \defender::setErrorText('user_password', $locale['u149']);
+                    defender::stop();
+                    defender::setInputError('user_password');
+                    defender::setErrorText('user_password', $locale['u149']);
                 }
             }
         }
@@ -431,31 +435,31 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // new password is old password
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password');
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
+                        defender::stop();
+                        defender::setInputError('user_admin_password');
+                        defender::setInputError('user_admin_password1');
+                        defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
+                        defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u146'].$locale['u133']);
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setInputError('user_admin_password2');
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
-                        \defender::setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
+                        defender::stop();
+                        defender::setInputError('user_admin_password1');
+                        defender::setInputError('user_admin_password2');
+                        defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
+                        defender::setErrorText('user_admin_password2', $locale['u144'].$locale['u148a']);
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        \defender::stop();
-                        \defender::setInputError('user_admin_password1');
-                        \defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
+                        defender::stop();
+                        defender::setInputError('user_admin_password1');
+                        defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
                         break;
                 }
             } else {
-                \defender::stop();
-                \defender::setInputError('user_admin_password');
-                \defender::setErrorText('user_admin_password', $locale['u149a']);
+                defender::stop();
+                defender::setInputError('user_admin_password');
+                defender::setErrorText('user_admin_password', $locale['u149a']);
             }
         } else { // check db only - admin cannot save profile page without password
 
@@ -463,9 +467,9 @@ class UserFieldsInput {
                 $require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
                 if (!$require_valid_password) {
                     // 149 for admin
-                    \defender::stop();
-                    \defender::setInputError('user_admin_password');
-                    \defender::setErrorText('user_admin_password', $locale['u149a']);
+                    defender::stop();
+                    defender::setInputError('user_admin_password');
+                    defender::setErrorText('user_admin_password', $locale['u149a']);
                 }
             }
         }
@@ -482,60 +486,66 @@ class UserFieldsInput {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
-        $this->data['user_hide_email'] = !empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0;
-        $this->_userEmail = isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "";
-        $this->userData['user_email'] = !empty($this->userData['user_email']) ? $this->userData['user_email'] : '';
+        $this->_userEmail = (isset($_POST['user_email']) ? form_sanitizer($_POST['user_email'], "", "user_email") : "");
 
-        if ($this->_userEmail != $this->userData['user_email']) {
-            // override the requirements of password to change email address of a member in admin panel
-            if (defined('ADMIN_PANEL') && (iADMIN && checkrights('M'))) {
-                $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
-            } else if (!$this->registration) {
-                $this->verify_password();
-            }
-            // Require user password for email change
-            if ($this->_isValidCurrentPassword || $this->registration) {
-                // Require a valid email account
-                if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
+        if ($this->_userEmail) {
+            $this->userData['user_email'] = !empty($this->userData['user_email']) ? $this->userData['user_email'] : '';
+            if ($this->_userEmail != $this->userData['user_email']) {
+                // override the requirements of password to change email address of a member in admin panel
+                if (defined('ADMIN_PANEL') && (iADMIN && checkrights('M'))) {
+                    $this->_isValidCurrentPassword = TRUE; // changing an email in administration panel
+                } else if (!$this->registration) {
+                    $this->verify_password();
+                }
+                // Require user password for email change
+                if ($this->_isValidCurrentPassword || $this->registration) {
+                    // Require a valid email account
+                    if (preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,6}$/i", $this->_userEmail)) {
 
-                    if (dbcount("(blacklist_id)", DB_BLACKLIST,
-                        ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
-                        [':email' => $this->_userEmail])) {
-                        // this email blacklisted.
-                        \defender::stop();
-                        \defender::setInputError('user_email');
-                        \defender::setErrorText('user_email', $locale['u124']);
+                        if (dbcount("(blacklist_id)", DB_BLACKLIST,
+                            ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
+                            [':email' => $this->_userEmail])) {
+                            // this email blacklisted.
+                            defender::stop();
+                            defender::setInputError('user_email');
+                            defender::setErrorText('user_email', $locale['u124']);
 
-                    } else {
-
-                        $email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
-                        $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
-                        if ($email_active == 0 && $email_inactive == 0) {
-                            if ($this->verifyNewEmail && $settings['email_verification'] == 1 && !iSUPERADMIN) {
-                                $this->_verifyNewEmail();
-                            } else {
-                                $this->data['user_email'] = $this->_userEmail;
-                            }
                         } else {
-                            // email taken
-                            \defender::stop();
-                            \defender::setInputError('user_email');
-                            \defender::setErrorText('user_email', $locale['u125']);
+
+                            $email_active = dbcount("(user_id)", DB_USERS, "user_email='".$this->_userEmail."'");
+                            $email_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_email='".$this->_userEmail."'");
+                            if ($email_active == 0 && $email_inactive == 0) {
+                                if ($this->verifyNewEmail && $settings['email_verification'] == 1 && !iSUPERADMIN) {
+                                    $this->_verifyNewEmail();
+                                } else {
+                                    $this->data['user_email'] = $this->_userEmail;
+                                }
+                            } else {
+                                // email taken
+                                defender::stop();
+                                defender::setInputError('user_email');
+                                defender::setErrorText('user_email', $locale['u125']);
+                            }
                         }
+                    } else {
+                        // invalid email address
+                        defender::stop();
+                        defender::setInputError('user_email');
+                        defender::setErrorText('user_email', $locale['u123']); // once refresh, text lost.
                     }
                 } else {
-                    // invalid email address
-                    \defender::stop();
-                    \defender::setInputError('user_email');
-                    \defender::setErrorText('user_email', $locale['u123']); // once refresh, text lost.
+                    // must have a valid password to change email
+                    defender::stop();
+                    defender::setInputError('user_email');
+                    defender::setErrorText('user_email', $locale['u156']);
                 }
-            } else {
-                // must have a valid password to change email
-                \defender::stop();
-                \defender::setInputError('user_email');
-                \defender::setErrorText('user_email', $locale['u156']);
             }
         }
+
+        if (isset($_POST["user_hide_email"])) {
+            $this->data['user_hide_email'] = (!empty($_POST['user_hide_email']) && $_POST['user_hide_email'] == 1 ? 1 : 0);
+        }
+
     }
 
     /**
@@ -545,9 +555,8 @@ class UserFieldsInput {
     private function verify_password() {
         $locale = fusion_get_locale();
 
-        // Validation of password using user_password_verify field
-        $_userPassword = self::_getPasswordInput('user_password');
-        if ($_userPassword) {
+        // Validation of password change
+        if ($_userPassword = self::_getPasswordInput('user_password')) {
             /**
              * Validation of Password
              */
@@ -560,15 +569,20 @@ class UserFieldsInput {
             if ($passAuth->isValidCurrentPassword()) {
                 $this->_isValidCurrentPassword = 1;
             } else {
-                \defender::stop();
-                \defender::setInputError('user_password');
-                \defender::setErrorText('user_password', $locale['u149']);
+                defender::stop();
+                defender::setInputError('user_password');
+                defender::setErrorText('user_password', $locale['u149']);
             }
-        } else {
-            \defender::stop();
-            \defender::setInputError('user_password');
-            \defender::setErrorText('user_password', $locale['u149']);
         }
+    }
+
+    /**
+     * Securing profile hash
+     *
+     * @return bool
+     */
+    private function verifyHash() {
+        return ($this->userData["user_password"] === sanitizer("user_hash", "", "user_hash"));
     }
 
     /**
@@ -604,8 +618,8 @@ class UserFieldsInput {
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php";
         if ($_CAPTCHA_IS_VALID == FALSE) {
-            \defender::stop();
-            \defender::setInputError('user_captcha');
+            defender::stop();
+            defender::setInputError('user_captcha');
             addNotice('danger', $locale['u194']);
         }
     }
@@ -635,7 +649,7 @@ class UserFieldsInput {
             addNotice('warning', $locale['u153']."<br />".$message, 'all');
         }
         $userInfo = base64_encode(serialize($this->data));
-        if (\defender::safe()) {
+        if (defender::safe()) {
             dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
@@ -648,20 +662,27 @@ class UserFieldsInput {
 
     /**
      * Update User Fields
+     *
      * @return bool
      * @throws \Exception
      */
     public function saveUpdate() {
         $locale = fusion_get_locale();
+
         $settings = fusion_get_settings();
 
         $this->_method = "validate_update";
+
         $this->_settUserName();
+
         $this->_setPassword();
+
         if (!defined('ADMIN_PANEL')) {
             $this->_setAdminPassword();
         }
+
         $this->_setUserEmail();
+
         if ($this->validation == 1) {
             $this->_setValidationError();
         }
@@ -675,21 +696,23 @@ class UserFieldsInput {
         $quantum->load_fields();
         $quantum->load_field_cats();
         $quantum->setCallbackData($this->userData);
+
         $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+
         if (!empty($_input)) {
             foreach ($_input as $input) {
                 $this->data += $input;
             }
         }
+
         $this->data = $this->getData();
 
         // hidden input tamper check
-        if (isset($_GET['section']) && $_GET['section'] > 1 && $this->userData['user_password'] !== $this->data['user_hash']) {
-            \defender::stop();
-        }
+        $this->verifyHash();
 
         // check for password match
-        if (\defender::safe()) {
+        if (fusion_safe()) {
+
             // Logs Username change
             if ($this->_userName != $this->userData['user_name']) {
                 save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
@@ -700,9 +723,12 @@ class UserFieldsInput {
             }
             // Logs Field changes
             $quantum->log_user_action(DB_USERS, "user_id");
+
             // Update Table
             dbquery_insert(DB_USERS, $this->data, 'update');
+
             $this->_completeMessage = $locale['u163'];
+
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
@@ -733,9 +759,8 @@ class UserFieldsInput {
                     addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
             }
-            if (\defender::safe()) {
-                addNotice('success', $locale['u169']);
-            }
+
+            addNotice('success', $locale['u169']);
 
             return TRUE;
         }
@@ -762,7 +787,9 @@ class UserFieldsInput {
     }
 
     private function _setUserReputation() {
-        $this->data['user_reputation'] = !empty($_POST['user_reputation']) ? $_POST['user_reputation'] : 0;
+        if (isset($_POST["user_reputation"])) {
+            $this->data['user_reputation'] = (!empty($_POST['user_reputation']) ? $_POST['user_reputation'] : 0);
+        }
     }
 
     public function setUserNameChange($value) {

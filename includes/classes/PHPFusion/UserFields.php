@@ -126,6 +126,7 @@ class UserFields extends QuantumFields {
      */
     public function display_profile_input(array $input = []) {
         $this->method = 'input';
+
         $locale = fusion_get_locale();
         $this->info = [
             'section'             => $this->getProfileSections(),
@@ -532,7 +533,6 @@ class UserFields extends QuantumFields {
         $item = [];
 
         $this->callback_data = $this->userData;
-
         switch ($this->method) {
             case 'input':
                 if ($this->registration == FALSE) {
