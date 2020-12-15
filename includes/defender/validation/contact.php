@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/defender/validation/contact.php
+| Filename: contact.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,8 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-(defined("IN_FUSION")||exit);
+defined("IN_FUSION") || exit;
 
 use Defender\Validation;
 
@@ -46,7 +45,7 @@ class Contact extends Validation {
                         if (!$calling_codes = calling_codes($val)) {
                             return FALSE;
                         }
-                    } elseif ($index ===1 && !isnum($val)) {
+                    } else if ($index === 1 && !isnum($val)) {
                         return FALSE;
                     }
                     $vars[] = $val;

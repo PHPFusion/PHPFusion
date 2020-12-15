@@ -69,7 +69,6 @@ class QuantumFields extends \SqlHandler {
     // debug mode
     protected $debug = FALSE;
     protected $module_debug = FALSE;
-    protected $dom_debug = FALSE;
     // System Internals
     private $input_page = 1;
     private $locale = [];

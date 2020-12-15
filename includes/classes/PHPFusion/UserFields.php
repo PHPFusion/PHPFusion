@@ -120,6 +120,7 @@ class UserFields extends QuantumFields {
 
     /**
      * Display Input Fields
+     *
      * @param array $input
      *
      * @throws \Exception
@@ -234,11 +235,11 @@ class UserFields extends QuantumFields {
                         ]
                     );
                     $this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', [
-                            'type'             => 'password',
-                            'autocomplete_off' => 1,
-                            'inline'           => TRUE,
-                            'max_length'       => 64,
-                            'error_text'       => $locale['u136'],
+                            'type'              => 'password',
+                            'autocomplete_off'  => 1,
+                            'inline'            => TRUE,
+                            'max_length'        => 64,
+                            'error_text'        => $locale['u136'],
                             'password_strength' => TRUE
                         ]
                     );
@@ -327,7 +328,7 @@ class UserFields extends QuantumFields {
                     'inline'     => TRUE,
                     'max_length' => '100',
                     'error_text' => $locale['u126'],
-                    'ext_tip' => $ext_tip
+                    'ext_tip'    => $ext_tip
                 ]
             );
 
@@ -427,8 +428,8 @@ class UserFields extends QuantumFields {
     /**
      * Display Captcha
      *
-     * @todo: remove locale.
      * @return string
+     * @todo: remove locale.
      */
     private function renderValidation() {
         $locale = fusion_get_locale();
@@ -465,8 +466,8 @@ class UserFields extends QuantumFields {
     /**
      * Display Terms of Agreement Field
      *
-     * @todo: remove locale.
      * @return string
+     * @todo: remove locale.
      */
     private function renderTerms() {
         $locale = fusion_get_locale();

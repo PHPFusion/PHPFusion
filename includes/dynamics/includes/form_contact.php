@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: form_contact.php
 | Author: Frederick MC CHan (Chan)
-| Credits: https://farbelous.github.io/bootstrap-colorpicker/
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -100,9 +99,6 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
         }, $options_data);
     }
 
-    // Error messages based on settings
-    $options['error_text'] = (empty($options['error_text']) ? $locale['error_input_phone'] : $options['error_text']);
-
     $error_class = "";
     if (\defender::inputHasError($input_name)) {
         $error_class = " has-error";
@@ -135,7 +131,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "<span class='input-group-text'>";
 
-    $html .= form_select($input_name."[]", "", $input_value[0], ["input_id" => $options["input_id"]."_prefix", "options" => calling_codes(), "class" => "m-0", "width"=>"250px"]);
+    $html .= form_select($input_name."[]", "", $input_value[0], ["input_id" => $options["input_id"]."_prefix", "options" => calling_codes(), "class" => "m-0", "width" => "250px"]);
 
     $html .= "</span>";
 
@@ -161,7 +157,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= $options['stacked'];
 
-    $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "</div>" : "";
+    $html .= ($options['append_button'] || $options['append_value']) ? "</div>" : "";
 
     $html .= $options['append_html'];
 
@@ -177,18 +173,16 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     \defender::add_field_session([
         'input_name'     => $input_name,
-        'title'          => trim($title, '[]'),
+        'title'          => $title,
         'id'             => $options['input_id'],
-        'type'           => "contact",
+        'type'           => 'contact',
         'required'       => $options['required'],
         'safemode'       => $options['safemode'],
         'regex'          => $options['regex'],
         'callback_check' => $options['callback_check'],
         'delimiter'      => $options['delimiter'],
         'min_length'     => $options['min_length'],
-        'max_length'     => $options['max_length'],
-        'censor_words'   => $options['censor_words'],
-        'descript'       => $options['descript']
+        'max_length'     => $options['max_length']
     ]);
 
     // This should affect all number inputs by type, not by ID
