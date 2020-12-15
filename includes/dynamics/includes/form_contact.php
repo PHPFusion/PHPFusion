@@ -135,7 +135,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "<span class='input-group-text'>";
 
-    $html .= form_select($input_name."[]", "", $input_value[0], ["input_id" => $options["input_id"]."_prefix", "options" => calling_codes(), "class" => "m-0"]);
+    $html .= form_select($input_name."[]", "", $input_value[0], ["input_id" => $options["input_id"]."_prefix", "options" => calling_codes(), "class" => "m-0", "width"=>"250px"]);
 
     $html .= "</span>";
 

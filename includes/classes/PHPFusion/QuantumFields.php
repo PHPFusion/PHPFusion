@@ -1165,7 +1165,7 @@ class QuantumFields extends \SqlHandler {
     /**
      * Display fields for each fieldDB record entry
      *
-     * @param array  $data The array of the user field.
+     * @param array  $data   The array of the user field.
      * @param        $callback_data
      * @param string $method input or display. In case of any other value
      *                       the method return FALSE. See the description of return for more details.
@@ -1280,22 +1280,21 @@ class QuantumFields extends \SqlHandler {
         $option_list = $data['field_options'] ? explode(',', $data['field_options']) : [];
 
         // Format Callback Data
-        $field_value = isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : '';
-
+        $field_value = (isset($callback_data[$data['field_name']]) ? $callback_data[$data['field_name']] : "");
         if (isset($_POST[$data['field_name']]) && !$options['hide_value']) {
-            $field_value = form_sanitizer($_POST[$data['field_name']], '', $data['field_name']);
+            //$field_value = form_sanitizer($_POST[$data['field_name']], '', $data['field_name']);
+            $field_value = sanitizer($data['field_name'], "", $data['field_name']);
         } else if ($options['hide_value']) {
-            $field_value = '';
+            $field_value = "";
         }
 
-        $field_label = $options['show_title'] ? self::parse_label($data['field_title']) : '';
+        $field_label = ($options['show_title'] ? self::parse_label($data['field_title']) : "");
 
         switch ($data['field_type']) {
             case 'file':
                 $user_data = $callback_data;
                 $profile_method = $method;
                 //print_p($options['plugin_locale_folder']);
-
                 $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
                 include($options['plugin_folder'].$data['field_name']."_include.php");
 
@@ -1458,7 +1457,17 @@ class QuantumFields extends \SqlHandler {
                 break;
             case 'address':
                 if ($method == 'input') {
-                    return form_geo($data['field_name'], $field_label, $options);
+                    return form_geo($data['field_name'], $field_label, $field_value, $options);
+                } else if ($method == 'display' && $field_value) {
+                    return [
+                        'title' => self::parse_label($data['field_title']),
+                        'value' => implode('|', $field_value)
+                    ];
+                }
+                break;
+            case "contact":
+                if ($method == 'input') {
+                    return form_contact($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
                         'title' => self::parse_label($data['field_title']),
@@ -1623,6 +1632,7 @@ class QuantumFields extends \SqlHandler {
             'upload'      => $this->locale['fields_0508'],
             'hidden'      => $this->locale['fields_0509'],
             'address'     => $this->locale['fields_0510'],
+            'contact'     => $this->locale['fields_0516'],
             'tags'        => $this->locale['fields_0511'],
             'location'    => $this->locale['fields_0512'],
             'number'      => $this->locale['fields_0513'],
@@ -2752,6 +2762,7 @@ class QuantumFields extends \SqlHandler {
 
     /**
      * Return sanitized post values of input fields
+     *
      * @param      $db
      * @param      $primary_key
      * @param bool $callback_data
@@ -2767,11 +2778,11 @@ class QuantumFields extends \SqlHandler {
         $indexes = array_reverse($this->field_cat_index[0]);
         $sec_id = array_pop($indexes);
 
-        $cur_section = isset($_GET['section']) && in_array($_GET['section'], array_values($this->field_cat_index[0])) ? (int) $_GET['section'] : $sec_id;
+        $cur_section = (isset($_GET['section']) && in_array($_GET['section'], array_values($this->field_cat_index[0])) ? (int) $_GET['section'] : $sec_id);
         // get current section categories
         $cur_cid = array_values($this->field_cat_index[$cur_section]);
         $fields = [];
-        foreach($cur_cid as $category_id) {
+        foreach ($cur_cid as $category_id) {
             if (isset($this->fields[$category_id])) {
                 $fields[] = $this->fields[$category_id];
             }
@@ -2810,6 +2821,7 @@ class QuantumFields extends \SqlHandler {
 
     /**
      * Logs the user actions
+     *
      * @param $db
      * @param $primary_key
      *
