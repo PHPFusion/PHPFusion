@@ -165,7 +165,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= ($options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "");
 
-    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['append_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= "</div>";
 
