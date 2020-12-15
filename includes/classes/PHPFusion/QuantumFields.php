@@ -118,7 +118,7 @@ class QuantumFields extends \SqlHandler {
                 if (self::is_serialized($data[$input_name])) {
                     return unserialize($data[$input_name]);
                 } else {
-                    $value = "";
+                    $value = [];
                     foreach ($language_opts as $lang) {
                         $value[$lang] = $data[$input_name];
                     }
@@ -142,7 +142,7 @@ class QuantumFields extends \SqlHandler {
         if (isset($_POST[$input_name])) {
             $field_var = [];
             foreach ($_POST[$input_name] as $language => $value) {
-                $field_var[$language] = form_sanitizer($value, '');
+                $field_var[$language] = form_sanitizer($value);
             }
 
             return serialize($field_var);
@@ -872,7 +872,7 @@ class QuantumFields extends \SqlHandler {
         if (is_array($plugin_folder)) {
             foreach ($plugin_folder as $folder_name) {
                 // dont use opendir
-                $files = makefilelist($folder_name, '.|..|index.php', TRUE, 'files');
+                $files = makefilelist($folder_name, '.|..|index.php', TRUE);
                 if (!empty($files)) {
                     foreach ($files as $file) {
                         if (preg_match("/_var.php/i", $file)) {
@@ -912,7 +912,7 @@ class QuantumFields extends \SqlHandler {
 
                             if (is_dir($plugin_path)) {
 
-                                $files = makefilelist($plugin_path, '.|..|index.php', TRUE, 'files');
+                                $files = makefilelist($plugin_path, '.|..|index.php', TRUE);
                                 foreach ($files as $file) {
                                     if (preg_match("/_var.php/i", $file)) {
 
@@ -1543,8 +1543,9 @@ class QuantumFields extends \SqlHandler {
         echo $tabs->opentabbody($tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', [
-            'class' => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
-            'icon'  => 'fa fa-plus-circle'
+            'class'    => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
+            'icon'     => 'fa fa-plus-circle',
+            'input_id' => 'add_new_cat'
         ]);
 
         if (!empty($this->cat_list)) {
@@ -1552,7 +1553,7 @@ class QuantumFields extends \SqlHandler {
             $field_type = $this->get_dynamics_type();
             unset($field_type['file']);
             foreach ($field_type as $type => $name) {
-                echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type, ['class' => 'btn-block btn-sm btn-default'])."</div>\n";
+                echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type, ['input_id' => 'add_field-'.$type, 'class' => 'btn-block btn-sm btn-default'])."</div>\n";
             }
             echo "</div>\n";
         }
@@ -1563,12 +1564,12 @@ class QuantumFields extends \SqlHandler {
         if (!empty($this->cat_list)) {
             echo $tabs->opentabbody($tab_title['id'][1], $tab_active);
             // list down modules.
-            echo openform('addfield', 'post', FUSION_SELF.$aidlink, ['notice' => 0, 'max_tokens' => 1]);
+            echo openform('addmodule', 'post', FUSION_SELF.$aidlink, ['notice' => 0, 'max_tokens' => 1]);
             echo "<div class='m-t-20'>\n";
             if (!empty($this->available_field_info)) {
                 foreach ($this->available_field_info as $title => $module_data) {
                     echo "<div class='list-group-item'>";
-                    echo form_button('add_module', $this->locale['fields_0312'], $title, ['class' => 'btn-sm btn-default pull-right m-l-10']);
+                    echo form_button('add_module', $this->locale['fields_0312'], $title, ['input_id' => 'add_module-'.$title, 'class' => 'btn-sm btn-default pull-right m-l-10']);
                     echo "<div class='overflow-hide'>\n";
                     echo "<span class='text-dark strong'>".$module_data['title']."</span><br/>\n";
                     echo "<span>".$module_data['description']."</span>\n<br/>";
@@ -1596,12 +1597,12 @@ class QuantumFields extends \SqlHandler {
 
         } else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
             echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
-            echo $this->quantum_dynamics_form();
+            $this->quantum_dynamics_form();
             echo $tabs->closetabbody();
 
         } else if (isset($_POST['add_module']) && in_array($_POST['add_module'], array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))) {
             echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
-            echo $this->display_module_form();
+            $this->display_module_form();
             echo $tabs->closetabbody();
 
         }
@@ -1675,7 +1676,6 @@ class QuantumFields extends \SqlHandler {
             }
 
             if ($this->field_cat_data['field_parent'] == 0) {
-
                 $this->field_cat_data['field_cat_db'] = form_sanitizer($_POST['field_cat_db'], 'users', 'field_cat_db');
                 $this->field_cat_data['field_cat_index'] = form_sanitizer($_POST['field_cat_index'], '', 'field_cat_index');
                 $this->field_cat_data['field_cat_class'] = form_sanitizer($_POST['field_cat_class'], '', 'field_cat_class');
@@ -1702,7 +1702,7 @@ class QuantumFields extends \SqlHandler {
                     $this->category_db, $this->field_cat_data['field_cat_order'],
                     'field_cat_order',
                     $this->field_cat_data['field_cat_id'], 'field_cat_id',
-                    $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE, 'update'
+                    $this->field_cat_data['field_parent'], 'field_parent', FALSE, FALSE
                 );
 
                 if (!$this->debug) {
@@ -1818,7 +1818,7 @@ class QuantumFields extends \SqlHandler {
         $html .= form_text('field_cat_order', $this->locale['fields_0433'], $this->field_cat_data['field_cat_order'],
             ['number' => 1]);
         $html .= form_hidden('field_cat_id', '', $this->field_cat_data['field_cat_id'], ['number' => 1]);
-        $html .= form_hidden('add_cat', '', 'add_cat');
+        $html .= form_hidden('add_cat', '', 'add_cat', ['input_id' => 'addnewcat']);
         // root settings
         $html .= "<div id='page_settings' class='list-group-item m-t-20'>\n";
 
@@ -1927,9 +1927,7 @@ class QuantumFields extends \SqlHandler {
             foreach ($language_opts as $Lang => $LangName) {
                 if ($Lang !== LANGUAGE) {
                     $html .= "<li><a data-add='$Lang' data-input='$input_name' data-locale='$LangName' class='pointer data-add'><i class='fa fa-plus-circle fa-fw'></i> $LangName</a></li>\n";
-                    if ($Lang !== LANGUAGE) {
-                        add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");
-                    }
+                    add_to_jquery("$('#".$input_name."-".$Lang."-field').hide();");
                 }
             }
             $html .= "</ul>\n";
@@ -2002,12 +2000,12 @@ class QuantumFields extends \SqlHandler {
             }
         }
 
-        $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'];
+        $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field']) : $this->field_data['field_type'];
 
         if (isset($_POST['save_field'])) {
 
             $this->field_data = [
-                'field_type'         => isset($_POST['add_field']) ? form_sanitizer($_POST['add_field'], '') : $this->field_data['field_type'],
+                'field_type'         => isset($_POST['add_field']) ? form_sanitizer($_POST['add_field']) : $this->field_data['field_type'],
                 'field_id'           => form_sanitizer($_POST['field_id'], '0', 'field_id'),
                 'field_title'        => form_sanitizer($_POST['field_title'], '', 'field_title', 1),
                 'field_name'         => form_sanitizer($_POST['field_name'], '', 'field_name'),
@@ -2061,7 +2059,7 @@ class QuantumFields extends \SqlHandler {
                 if (!empty($this->field_data['field_config'])) {
                     $this->field_data['field_config'] = \defender::encode($this->field_data['field_config']);
                 }
-                $this->create_fields($this->field_data, 'dynamics'); // will redirect and refresh config
+                $this->create_fields($this->field_data); // will redirect and refresh config
             }
 
         }
