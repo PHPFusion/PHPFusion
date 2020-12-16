@@ -61,7 +61,7 @@ $userFields->postValue = $locale['u105'];
 $userFields->userData = fusion_get_userdata();
 $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-$userFields->setUserNameChange(fusion_get_settings("userNameChange"));
+$userFields->setUserNameChange(fusion_get_settings("username_change"));
 $userFields->registration = FALSE;
 $userFields->method = 'input';
 $userFields = $userFields->display_profile_input($info);

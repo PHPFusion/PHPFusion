@@ -45,19 +45,31 @@ class UserFields extends QuantumFields {
         'user_timezone'       => 'Europe/London',
         'user_reputation'     => 0
     ];
+
     /* Quantum Fields Extensions */
     public $system_title = '';
+
     public $admin_rights = '';
+
     public $locale_file = '';
+
     public $category_db = '';
+
     public $field_db = '';
+
     public $plugin_folder = '';
+
     public $plugin_locale_folder = '';
+
     public $debug = FALSE;
+
     public $method;
+
     public $paginate = TRUE;
+
     public $admin_mode = FALSE;
-    private $_userNameChange = TRUE;
+
+    private $username_change = TRUE;
 
     private $info = [
         'terms'               => '',
@@ -94,7 +106,7 @@ class UserFields extends QuantumFields {
     /* Page Navigation with UF Cats */
 
     public function setUserNameChange($value) {
-        $this->_userNameChange = $value;
+        $this->username_change = $value;
     }
 
     private function getProfileSections() {
@@ -158,7 +170,7 @@ class UserFields extends QuantumFields {
                 $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->userData['user_reputation'];
             }
 
-            if (iADMIN || $this->_userNameChange) {
+            if (iADMIN || $this->username_change) {
                 $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, [
                     'max_length' => 30,
                     'required'   => 1,

@@ -43,7 +43,7 @@ class UserFieldsInput {
     private $_isValidCurrentPassword = FALSE;
     private $_newUserPassword = FALSE;
     private $_newUserPassword2 = FALSE;
-    private $_userNameChange = TRUE;
+    private $username_change = TRUE;
     // Flags
     private $_themeChanged = FALSE;
 
@@ -79,7 +79,7 @@ class UserFieldsInput {
 
         $this->data = $this->_setEmptyFields();
 
-        if ($this->_userNameChange) {
+        if ($this->username_change) {
             $this->_settUserName();
         }
 
@@ -793,7 +793,7 @@ class UserFieldsInput {
     }
 
     public function setUserNameChange($value) {
-        $this->_userNameChange = $value;
+        $this->username_change = $value;
     }
 
     public function verifyCode($value) {
