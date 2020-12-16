@@ -126,8 +126,9 @@ if (!function_exists('render_photo_album')) {
                 echo "<a class='btn btn-default btn-sm' href='".$info['photo_edit']['link']."' title='".$info['photo_edit']['name']."'><i class='fa fa-edit'></i></a>\n";
                 echo "<a class='btn btn-danger btn-sm' href='".$info['photo_delete']['link']."' title='".$info['photo_delete']['name']."'><i class='fa fa-trash'></i></a>\n";
                 echo '</div>';
+                echo '</div>';
             }
-            echo "</div></div>\n";
+            echo "</div>";
         }
 
         if (isset($info['item'])) {
