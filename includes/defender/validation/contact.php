@@ -36,7 +36,7 @@ class Contact extends Validation {
             defender::setInputError(self::$inputName);
         }
 
-        if (is_array(self::$inputValue) && count(self::$inputValue)) {
+        if (is_array(self::$inputValue) && count(self::$inputValue) == 2) {
             $vars = [];
             foreach (self::$inputValue as $index => $val) {
                 if (!empty($val)) {
@@ -45,12 +45,18 @@ class Contact extends Validation {
                         if (!$calling_codes = calling_codes($val)) {
                             return FALSE;
                         }
-                    } else if ($index === 1 && !isnum($val)) {
-                        return FALSE;
+                    } else if ($index === 1) {
+                        if (!isnum($val)) {
+                            return FALSE;
+                        }
                     }
                     $vars[] = $val;
                 } else {
-                    return FALSE;
+                    if (self::$inputConfig["required"]) {
+                        return FALSE;
+                    } else {
+                        $vars = [];
+                    }
                 }
             }
 
