@@ -60,8 +60,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     !is_dir(INFUSIONS."gallery/submissions/".$photo_name)
                 ) {
                     $callback_data['photo_filename'] = filename_exists(IMAGES_G, $photo_name);
-                    copy(INFUSIONS."gallery/submissions/".$photo_name, IMAGES_G.$photo_name);
-                    chmod(IMAGES_G.$photo_name, 0644);
+                    copy(INFUSIONS."gallery/submissions/".$photo_name, IMAGES_G.$callback_data['photo_filename']);
+                    chmod(IMAGES_G.$callback_data['photo_filename'], 0644);
                     unlink(INFUSIONS."gallery/submissions/".$photo_name);
                 }
 
@@ -69,8 +69,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name)
                 ) {
                     $callback_data['photo_thumb1'] = filename_exists(IMAGES_G_T, $thumb1_name);
-                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name, IMAGES_G_T.$thumb1_name);
-                    chmod(IMAGES_G_T.$thumb1_name, 0644);
+                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name, IMAGES_G_T.$callback_data['photo_thumb1']);
+                    chmod(IMAGES_G_T.$callback_data['photo_thumb1'], 0644);
                     unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name);
                 }
 
@@ -78,8 +78,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name)
                 ) {
                     $callback_data['photo_thumb2'] = filename_exists(IMAGES_G_T, $thumb2_name);
-                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name, IMAGES_G_T.$thumb2_name);
-                    chmod(IMAGES_G_T.$thumb2_name, 0644);
+                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name, IMAGES_G_T.$callback_data['photo_thumb2']);
+                    chmod(IMAGES_G_T.$callback_data['photo_thumb2'], 0644);
                     unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name);
                 }
 
@@ -209,7 +209,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 closeside();
                 echo "</div></div>\n";
                 echo form_button('close', $locale['close'], $locale['close'], ['class' => 'btn-default m-r-10']);
-                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
+                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['input_id' => 'publishbtn', 'class' => 'btn-primary m-r-10']);
                 echo form_button('delete', $locale['gallery_0159'], $locale['gallery_0159'], ['class' => 'btn-danger m-r-10']);
                 echo closeform();
             }
@@ -227,10 +227,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "<div class='well m-t-15'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<tr>\n";
-            echo "<th>".$locale['gallery_0152']."</th>\n";
-            echo "<th>".$locale['gallery_0153']."</th>\n";
-            echo "<th>".$locale['gallery_0154']."</th>\n";
-            echo "<th>".$locale['gallery_0155']."</th>";
+        echo "<th>".$locale['gallery_0152']."</th>\n";
+        echo "<th>".$locale['gallery_0153']."</th>\n";
+        echo "<th>".$locale['gallery_0154']."</th>\n";
+        echo "<th>".$locale['gallery_0155']."</th>";
         echo "</tr>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {
