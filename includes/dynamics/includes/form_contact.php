@@ -137,7 +137,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "</span>";
 
-    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."[]' id='".$options['input_id']."_contact' value='".$input_value[1]."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."[]' id='".$options['input_id']."_contact' value='".$input_value['1']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
