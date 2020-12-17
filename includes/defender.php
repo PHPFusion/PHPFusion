@@ -6,7 +6,6 @@
 +--------------------------------------------------------+
 | Filename: defender.php
 | Author: Frederick MC Chan (Chan)
-| Co-Author: Dan C (JoiNNN)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -52,12 +51,11 @@ class Defender {
     /**
      * Generates and return class instance
      * Eliminates global usage in functions
-     * Instead of using  - `global $defender`, try `\defender->getInstance()`
+     * Instead of using - `global $defender`, try `\defender->getInstance()`
      *
      * @return null|static
      */
     public static function getInstance() {
-
         if (self::$defender_instance === NULL) {
             self::$defender_instance = new static();
         }
@@ -73,7 +71,6 @@ class Defender {
      * @return string
      */
     public static function serialize(array $array = []) {
-
         $return_default = '';
         if (is_array($array)) {
             return base64_encode(serialize($array));
@@ -82,20 +79,28 @@ class Defender {
         return $return_default;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
     public static function encode($value) {
-
         return base64_encode(json_encode($value));
     }
 
+    /**
+     * @param string $value
+     *
+     * @return mixed
+     */
     public static function decode($value) {
-
         return json_decode(base64_decode($value), TRUE);
     }
 
     /**
      * Read serialized array
      *
-     * @param $string - serialized string
+     * @param $string string serialized string
      *
      * @return array|mixed
      */
@@ -112,8 +117,10 @@ class Defender {
         return $return_default;
     }
 
+    /**
+     * @param array $array
+     */
     public static function add_field_session(array $array) {
-
         $_SESSION['form_fields'][self::pageHash()][$array['input_name']] = $array;
     }
 
@@ -123,7 +130,6 @@ class Defender {
      * @return string
      */
     public static function pageHash() {
-
         if (!defined('SECRET_KEY')) {
             $chars = ['abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ', '123456789'];
             $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
@@ -144,12 +150,15 @@ class Defender {
     }
 
     public static function unset_field_session() {
-
         session_remove('form_fields');
     }
 
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
     static function sanitize_array($array) {
-
         foreach ($array as $name => $value) {
             $array[stripinput($name)] = trim(stripinput($value));
         }
@@ -165,30 +174,26 @@ class Defender {
      * @return mixed
      */
     public static function set_sessionUserID() {
-
         $userdata = fusion_get_userdata();
-
         return !empty($userdata['user_id']) && !isset($_POST['login']) ? (int)fusion_get_userdata('user_id') : str_replace('.', '-', USER_IP);
     }
 
-    // Checks whether an input was marked as invalid
-
     /**
+     * Checks whether an input was marked as invalid
+     *
      * @return array
      */
     public static function getInputErrors() {
-
         return self::$input_errors;
     }
 
     /**
      * Set and override default field error text
      *
-     * @param $input_name
-     * @param $text
+     * @param string $input_name
+     * @param string $text
      */
     public static function setErrorText($input_name, $text) {
-
         self::$input_error_text[$input_name] = $text;
     }
 
@@ -197,12 +202,11 @@ class Defender {
      * Important! Ensure your applications do not refresh screen for this error to show.
      * Usage fusion_safe(); for conditional redirect.
      *
-     * @param $input_name
+     * @param string $input_name
      *
      * @return null
      */
     public static function getErrorText($input_name) {
-
         if (self::inputHasError($input_name)) {
             return isset(self::$input_error_text[$input_name]) ? self::$input_error_text[$input_name] : NULL;
         }
@@ -211,12 +215,11 @@ class Defender {
     }
 
     /**
-     * @param $input_name
+     * @param string $input_name
      *
      * @return bool
      */
     public static function inputHasError($input_name) {
-
         if (isset(self::$input_errors[$input_name])) {
             return TRUE;
         }
@@ -224,20 +227,21 @@ class Defender {
         return FALSE;
     }
 
+    /**
+     * @return array
+     */
     public static function get_inputError() {
-
         return self::$input_errors;
     }
 
     /**
      * Generate a key
      *
-     * @param $private_key
+     * @param string $private_key
      *
      * @return string
      */
     public static function get_encrypt_key($private_key) {
-
         return $encryption_key = openssl_random_pseudo_bytes(32, $private_key); // 256 bits
     }
 
@@ -252,7 +256,6 @@ class Defender {
      * @return string
      */
     public static function encrypt_string($string, $private_key = 'php-fusion') {
-
         $ivlen = openssl_cipher_iv_length($cipher = 'AES-128-CBC');
         $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
         $string = self::pkcs7_pad($string, 16);
@@ -262,23 +265,26 @@ class Defender {
         return base64_encode($iv.$hmac.$ciphertext_raw);
     }
 
+    /**
+     * @param string $data
+     * @param int    $size
+     *
+     * @return string
+     */
     private static function pkcs7_pad($data, $size) {
-
         $length = $size - strlen($data) % $size;
-
         return $data.str_repeat(chr($length), $length);
     }
 
     /**
      * Decrypts a string securely with a private key
      *
-     * @param $string      - The string to decrypt
-     * @param $private_key - For better security use \Defender::get_encrypt_key to generate your private key
+     * @param string $string      The string to decrypt
+     * @param string $private_key For better security use \Defender::get_encrypt_key to generate your private key
      *
      * @return null|string
      */
     public static function decrypt_string($string, $private_key = 'php-fusion') {
-
         $c = base64_decode($string);
         $ivlen = openssl_cipher_iv_length($cipher = 'AES-128-CBC');
         $iv = substr($c, 0, $ivlen);
@@ -287,9 +293,9 @@ class Defender {
         $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
         $string = self::pkcs7_unpad($string);
         $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
+
         if (!function_exists('hash_equals')) {
             function hash_equals($str1, $str2) {
-
                 if (strlen($str1) != strlen($str2)) {
                     return FALSE;
                 } else {
@@ -310,8 +316,12 @@ class Defender {
         return NULL;
     }
 
+    /**
+     * @param string $data
+     *
+     * @return false|string
+     */
     private static function pkcs7_unpad($data) {
-
         return substr($data, 0, -ord($data[strlen($data) - 1]));
     }
 
@@ -345,7 +355,6 @@ class Defender {
      * @return bool
      */
     public static function safe() {
-
         if (!defined('FUSION_NULL')) {
             return TRUE;
         }
@@ -357,7 +366,6 @@ class Defender {
      * @param array $array
      */
     public function addHoneypot(array $array) {
-
         $_SESSION['honeypots'][self::pageHash()][$array['honeypot']] = $array;
     }
 
@@ -367,7 +375,6 @@ class Defender {
      * @return string
      */
     public function getHoneypot($honeypot = '') {
-
         if ($honeypot && isset($_SESSION['honeypots'][self::pageHash()][$honeypot])) {
             return $_SESSION['honeypots'][self::pageHash()][$honeypot];
         } else {
@@ -383,18 +390,13 @@ class Defender {
      * @param bool|FALSE $value
      */
     public function debug($value = FALSE) {
-
         self::$debug = $value;
     }
-
-    /*
-     * Highlight the form field as error
-     */
 
     /**
      * Sanitize with input name
      *
-     * @param        $key
+     * @param string $key
      * @param string $default
      * @param bool   $input_name
      * @param bool   $is_multiLang
@@ -402,19 +404,16 @@ class Defender {
      * @return string
      */
     public function sanitizer($key, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
-
         $value = $this->filterPostArray($key);
-
         return $this->formSanitizer($value, $default, $input_name, $is_multiLang);
     }
 
     /**
-     * @param $key
+     * @param mixed $key
      *
      * @return string
      */
     public function filterPostArray($key) {
-
         $flag = NULL;
         $input_key = $key;
         if (is_array($key)) {
@@ -446,10 +445,10 @@ class Defender {
     /**
      * Sanitize
      *
-     * @param            $value
-     * @param string     $default
-     * @param bool|FALSE $input_name
-     * @param bool|FALSE $is_multiLang
+     * @param string|array $value
+     * @param string       $default
+     * @param bool|FALSE   $input_name
+     * @param bool|FALSE   $is_multiLang
      *
      * @return string
      */
@@ -465,7 +464,6 @@ class Defender {
                     $iname = $input_name.'['.$lang.']';
 
                     if (isset($_SESSION['form_fields'][$page_hash][$iname])) {
-
                         $this->field_config = $_SESSION['form_fields'][$page_hash][$iname];
                         $this->field_name = $iname;
                         $this->field_value = $value[$lang];
@@ -567,8 +565,10 @@ class Defender {
         //setError(E_USER_NOTICE, "The form sanitizer could not handle the request! (input: $input_name)", "", "");
     }
 
+    /**
+     * @return false|string|null
+     */
     public function validate() {
-
         Validation::inputName($this->field_name);
         Validation::inputDefault($this->field_default);
         Validation::inputValue($this->field_value);
@@ -630,13 +630,21 @@ class Defender {
         return NULL;
     }
 
+    /**
+     * @param string $input_name
+     */
     public static function setInputError($input_name) {
-
         self::$input_errors[$input_name] = TRUE;
     }
 
+    /**
+     * @param string $key
+     * @param string $default
+     * @param false  $input_name
+     *
+     * @return array
+     */
     public function fileSanitizer($key, $default = '', $input_name = FALSE) {
-
         $upload = (array)$this->formSanitizer($_FILES[$key], $default, $input_name);
         if (isset($upload['error']) && $upload['error'] == 0) {
             return $upload;
@@ -650,7 +658,7 @@ class Defender {
 /**
  * Verify and Sanitize Inputs
  *
- * @param        $value
+ * @param string $value
  * @param string $default
  * @param bool   $input_name
  * @param bool   $is_multiLang
@@ -658,10 +666,8 @@ class Defender {
  * @return string|array
  */
 function form_sanitizer($value, $default = '', $input_name = FALSE, $is_multiLang = FALSE) {
-
     return Defender::getInstance()->formSanitizer($value, $default, $input_name, $is_multiLang);
 }
-
 
 /**
  * Verify and Sanitize Inputs with input_name
@@ -699,7 +705,6 @@ function sanitize_array($array = []) {
  * @return array|string
  */
 function file_sanitizer($value, $default = '', $input_name = FALSE) {
-
     return Defender::getInstance()->fileSanitizer($value, $default, $input_name);
 }
 
@@ -736,9 +741,9 @@ function check_post($key) {
 }
 
 /**
- * @param mixed  $key
- * @param int    $type
- * @param string $flags
+ * @param mixed $key
+ * @param int   $type
+ * @param mixed $flags
  *
  * @return mixed
  */
@@ -782,16 +787,21 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
         return (int)0;
     }
 
-    return stripinput(filter_input(INPUT_GET, $key, $type, $flags));
-}
+    if (filter_has_var(INPUT_GET, $key)) {
+        $filtered_input = filter_input(INPUT_GET, $key, $type, $flags);
+    } else {
+        $filtered_input = isset($_GET[$key]) ? filter_var($_GET[$key], $type, $flags) : NULL;
+    }
 
+    return stripinput($filtered_input);
+}
 
 /**
  * Sanitizes $_POST by name
  *
  * @param mixed $key input_name
  * @param int   $type
- * @param       $flags
+ * @param mixed $flags
  *
  * @return mixed
  */
@@ -834,36 +844,39 @@ function post($key, $type = FILTER_DEFAULT, $flags = NULL) {
         }
     }
 
-    return filter_input(INPUT_POST, $key, $type, $flags);
+    if (filter_has_var(INPUT_POST, $key)) {
+        return filter_input(INPUT_POST, $key, $type, $flags);
+    } else {
+        return isset($_POST[$key]) ? filter_var($_POST[$key], $type, $flags) : NULL;
+    }
 }
-
 
 /**
  * Sanitizes input
  *
- * @param $key
+ * @param mixed $key
  *
  * @return array
  */
 function post_array($key) {
-
     return (array)Defender::getInstance()->filterPostArray($key);
 }
-
 
 /**
  * Gets server array
  *
- * @param     $key
- * @param int $type
+ * @param string $key
+ * @param int    $type
  *
  * @return mixed
  */
 function server($key, $type = FILTER_DEFAULT) {
-
-    return filter_input(INPUT_SERVER, $key, $type);
+    if (filter_has_var(INPUT_SERVER, $key)) {
+        return filter_input(INPUT_SERVER, $key, $type);
+    } else {
+        return isset($_SERVER[$key]) ? filter_var($_SERVER[$key], $type) : NULL;
+    }
 }
-
 
 /**
  * Checks if a file is uploaded during upload post event
@@ -873,7 +886,6 @@ function server($key, $type = FILTER_DEFAULT) {
  * @return bool
  */
 function file_uploaded($key) {
-
     if (!empty($_FILES)) {
         if (is_array($key)) {
             $files =& $_FILES;
@@ -890,18 +902,19 @@ function file_uploaded($key) {
     return FALSE;
 }
 
-
 /**
- * @param     $key
- * @param int $type
+ * @param string $key
+ * @param int    $type
  *
  * @return mixed
  */
 function environment($key, $type = FILTER_DEFAULT) {
-
-    return filter_input(INPUT_ENV, $key, $type);
+    if (filter_has_var(INPUT_ENV, $key)) {
+        return filter_input(INPUT_ENV, $key, $type);
+    } else {
+        return isset($_ENV[$key]) ? filter_var($_ENV[$key], $type) : NULL;
+    }
 }
-
 
 /***
  * Sets a $_COOKIE
@@ -912,10 +925,14 @@ function environment($key, $type = FILTER_DEFAULT) {
  * @return mixed|string|string[]
  */
 function cookie(string $key, $type = FILTER_DEFAULT) {
+    if (filter_has_var(INPUT_COOKIE, $key)) {
+        $filtered_input = filter_input(INPUT_COOKIE, $key, $type);
+    } else {
+        $filtered_input = isset($_COOKIE[$key]) ? filter_var($_COOKIE[$key], $type) : NULL;
+    }
 
-    return stripinput(filter_input(INPUT_COOKIE, $key, $type));
+    return stripinput($filtered_input);
 }
-
 
 /**
  * Remove a $_COOKIE
@@ -925,32 +942,26 @@ function cookie(string $key, $type = FILTER_DEFAULT) {
  * @return mixed
  */
 function cookie_remove(string $key) {
-
     unset($_COOKIE[$key]);
-
     return $_COOKIE;
 }
-
 
 /**
  * Cleans curent $_SESSION
  */
 function session_clean() {
-
     $_SESSION = [];
 }
-
 
 /**
  * Add a value to $_SESSION
  *
- * @param $key
- * @param $value
+ * @param string $key
+ * @param mixed  $value
  *
  * @return mixed
  */
 function session_add($key, $value) {
-
     //global $_SESSION;
     if (is_array($key)) {
         //  print_p($_SESSION);
@@ -966,7 +977,6 @@ function session_add($key, $value) {
     return $_SESSION[$key] = $value;
 }
 
-
 /**
  * Get session
  *
@@ -975,7 +985,6 @@ function session_add($key, $value) {
  * @return null
  */
 function session_get($key) {
-
     if (is_array($key)) {
         $session =& $_SESSION;
         foreach ($key as $i) {
@@ -988,9 +997,8 @@ function session_get($key) {
     return (isset($_SESSION[$key]) ? $_SESSION[$key] : NULL);
 }
 
-
 /**
- * @param $key
+ * @param string $key
  *
  * @return mixed
  */
@@ -1005,9 +1013,8 @@ function session_remove($key) {
             $temp = &$temp[$nkey];
             $counter++;
         }
-        $session = &$temp;
 
-        return $session;
+        return $temp;
     }
 
     unset($_SESSION[$key]);
@@ -1015,29 +1022,25 @@ function session_remove($key) {
     return $_SESSION;
 }
 
-
 /**
  * Converts an array/string to string
  *
- * @param $value
+ * @param string $value
  *
  * @return string
  */
 function fusion_encode($value) {
-
     return Defender::encode($value);
 }
-
 
 /**
  * Converts string to array/string
  *
- * @param $value
+ * @param string $value
  *
  * @return mixed
  */
 function fusion_decode($value) {
-
     return Defender::decode($value);
 }
 
@@ -1059,32 +1062,29 @@ function fusion_stop($error_message = "") {
     return Defender::getInstance()->stop($error_message);
 }
 
-
 /**
  * Decrypt a string
  *
- * @param $value
- * @param $password
+ * @param string $value
+ * @param string $password
  *
  * @return null|string
  */
 function fusion_decrypt($value, $password) {
-
     return Defender::decrypt_string($value, $password);
 }
 
 /**
  * Encrypts a string
  *
- * @param $value
- * @param $password
+ * @param string $value
+ * @param string $password
  *
  * @return string
  */
 function fusion_encrypt($value, $password) {
     return Defender::encrypt_string($value, $password);
 }
-
 
 require_once __DIR__.'/defender/validation.php';
 require_once __DIR__.'/defender/token.php';
