@@ -3,10 +3,12 @@
 *.iml
 *.db
 *.config
+.DS_Store
+.tmb
+/cache
 .htaccess
 config.php
-.DS_Store
-includes/gateway/flood/
-.tmb
-_config.php
-_htaccess
+/includes/custom_includes.php
+/includes/header_includes.php
+/includes/footer_includes.php
+/includes/gateway/flood/
