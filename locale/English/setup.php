@@ -1,7 +1,6 @@
 <?php
-$locale['title'] = "PHP-Fusion Core 8 Edition Setup";
-$locale['sub-title'] = "PHP-Fusion Core 8 Edition Setup";
-$locale['os_version'] = '8';
+$locale['title'] = "PHPFusion Core 8 Edition Setup";
+$locale['sub-title'] = "PHPFusion Core 8 Edition Setup";
 $locale['xml_lang'] = "en";
 $locale['charset'] = "utf-8";
 $locale['001'] = "Step 1: Locale";
@@ -16,9 +15,9 @@ $locale['009'] = "Finish";
 
 // Step 1
 $locale['010'] = "Please select the required locale (language):";
-$locale['011'] = "Download more locales from <a href='https://www.phpfusion.com/infusions/downloads/downloads.php?cat_id=29' target='_blank'><strong>PHP-Fusion Official Support Site</strong></a>";
-$locale['012'] = "In order to use PHP-Fusion, you need to check and agree to the terms of PHP-Fusion.";
-$locale['013'] = " I have read and agreed to the PHP-Fusion <a href='https://www.phpfusion.com/licensing/?agpl' target='_blank'>Terms and Conditions of Use</a>";
+$locale['011'] = "Download more locales from <a href='https://www.phpfusion.com/infusions/downloads/downloads.php?cat_id=29' target='_blank'><strong>PHPFusion Official Support Site</strong></a>";
+$locale['012'] = "In order to use PHPFusion, you need to check and agree to the terms of PHPFusion.";
+$locale['013'] = " I have read and agreed to the PHPFusion <a href='https://www.phpfusion.com/licensing/?agpl' target='_blank'>Terms and Conditions of Use</a>";
 
 // Step 2
 $locale['020'] = "In order for setup to continue, the following files/folders must be writable:";
@@ -208,7 +207,7 @@ $locale['187'] = "Mods";
 $locale['188'] = "Movies";
 $locale['189'] = "Network";
 $locale['190'] = "News";
-$locale['191'] = "PHP-Fusion";
+$locale['191'] = "PHPFusion";
 $locale['192'] = "Security";
 $locale['193'] = "Software";
 $locale['194'] = "Themes";
@@ -247,11 +246,11 @@ $locale['224'] = "Privacy";
 $locale['230'] = "Welcome to your site";
 
 // Final message
-$locale['240'] = "Setup is complete, PHP-Fusion 8 is now ready for use.<br />
-Click Finish to go to your PHP-Fusion powered site.<br />
+$locale['240'] = "Setup is complete, PHPFusion 8 is now ready for use.<br />
+Click Finish to go to your PHPFusion powered site.<br />
 <strong>Note:</strong> After you enter your site you should delete setup.php from
 your server and chmod your config.php back to 644 for security purposes.<br /><br />
-Thank you for choosing PHP-Fusion.";
+Thank you for choosing PHPFusion.";
 
 // Default time settings
 $locale['shortdate'] = "%d.%m.%y";

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -541,7 +541,7 @@ function render_admin_panel() {
         echo "<section id='acp-header' class='clearfix'>\n";
         echo "<div class='brand pull-left'>\n";
         echo "<img src='".IMAGES."php-fusion-icon.png' style='width:100px;'>\n";
-        echo "<h4 class='brand-text'>PHP-Fusion ".$settings['version']."</h4>\n";
+        echo "<h4 class='brand-text'>PHPFusion ".$settings['version']."</h4>\n";
         echo "</div>\n";
         echo "<nav>\n";
         echo "<ul class='venus-toggler'>\n";

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -26,7 +26,7 @@ error_reporting(E_ALL ^ E_STRICT);
 set_error_handler("setError");
 $_errorHandler = [];
 
-// PHP-Fusion Error Handler
+// PHPFusion Error Handler
 function setError($error_level, $error_message, $error_file, $error_line) {
     global $_errorHandler;
 

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -63,7 +63,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
         $content .= "<input class='button btn btn-primary pull-right' type='submit' name='enable_maintenance' value='Enable Maintenance'>";
         $content .= "</div>\n";
     } else if (isset($_GET['upgrade_ok'])) {
-        $content .= "<div class='alert alert-success'>The database upgrade has been completed, you can now copy the files from your PHP-Fusion 8 archive.</div>\n";
+        $content .= "<div class='alert alert-success'>The database upgrade has been completed, you can now copy the files from your PHPFusion 8 archive.</div>\n";
     } else {
         switch (filter_input(INPUT_POST, 'stage', FILTER_VALIDATE_INT) ?: 1) {
             case 1:
@@ -107,7 +107,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
                     $content .= "</div>";
                 } else {
                     $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
-                    $content .= "A new .htaccess file will be created with specific settings that are neccessary for PHP-Fusion to run properly<br />
+                    $content .= "A new .htaccess file will be created with specific settings that are neccessary for PHPFusion to run properly<br />
                                 Please note that any changes previosuly made to .htaccess will be lost.";
                     $content .= "<input type='hidden' name='stage' value='3'>\n";
                     $content .= "<br /><br /><input type='submit' name='write_htaccess' value='Next' class='button btn btn-primary pull-right'><br /><br />\n";
@@ -117,7 +117,7 @@ if (str_replace(".", "", $settings['version']) < "80022") {
             case 3:
                 if (!isset($_POST['write_htaccess'])) {
                     $content .= "<div class='panel panel-default display-inline-block' style='margin-top:10px; padding: 8px; text-align:left;'>\n";
-                    $content .= "A new .htaccess file will be created with specific settings that are neccessary for PHP-Fusion to run properly<br />
+                    $content .= "A new .htaccess file will be created with specific settings that are neccessary for PHPFusion to run properly<br />
                                  Please note that any changes previosuly made to .htaccess will be lost.";
                     $content .= "<input type='hidden' name='stage' value='3'>\n";
                     $content .= "<br /><input type='submit' name='write_htaccess' value='Continue' class='button btn btn-primary pull-right'><br /><br />\n";

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -20,7 +20,7 @@
 namespace PHPFusion\Rewrite;
 
 /**
- * Rewrite API for PHP-Fusion
+ * Rewrite API for PHPFusion
  * This Rewrite API handles the Permalinks Requests
  * and map them to suitable existing URLs in website.
  * You can use this API to Add custom rules for handling requests

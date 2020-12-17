@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -30,7 +30,7 @@ opentable($locale['400']);
 echo "<div style='text-align:center'><br />\n";
 
 if (str_replace(".", "", $settings['version']) < "80019") {
-    echo "Your PHP-Fusion install reports a version of ".$settings['version']." , there should be an upgrade\n";
+    echo "Your PHPFusion install reports a version of ".$settings['version']." , there should be an upgrade\n";
 } else {
     echo "<br />".$locale['401']."<br /><br />\n";
 }

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -113,7 +113,7 @@ if ($_GET['page'] == 1) {
             //classic phpinfo
             if ($_GET['page'] == 4) {
                 if (!stristr(ini_get('disable_functions'), "phpinfo")) {
-                    //Generating new phpinfo style, compatible with PHP-Fusion styles
+                    //Generating new phpinfo style, compatible with PHPFusion styles
                     ob_start();
                     $phpinfo = phpinfo();
                     $phpinfo = ob_get_contents();

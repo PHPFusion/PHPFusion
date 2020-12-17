@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Stylo v2 Theme for PHP-Fusion V8
+| Stylo v2 Theme for PHPFusion V8
 | Author: Ion "Falcon" Cladico
 | Web: www.agxthemes.com
 +--------------------------------------------------------+

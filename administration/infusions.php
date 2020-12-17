@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -65,7 +65,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                             'inf_folder'      => $folder,
                             'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
                             'inf_version'     => isset($inf_version) && $inf_version ? $inf_version : 'beta',
-                            'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                            'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHPFusion',
                             'inf_url'         => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
                             'inf_email'       => isset($inf_email) && $inf_email ? $inf_email : '',
                             'inf_status'      => 2,
@@ -77,7 +77,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                             'inf_folder'      => $folder,
                             'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
                             'inf_version'     => isset($inf_version) && $inf_version ? $inf_version : 'beta',
-                            'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                            'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHPFusion',
                             'inf_url'         => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
                             'inf_email'       => isset($inf_email) && $inf_email ? $inf_email : '',
                             'inf_status'      => 1,
@@ -98,7 +98,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
                         'inf_folder'      => $folder,
                         'inf_description' => isset($inf_description) && $inf_description ? $inf_description : '',
                         'inf_version'     => isset($inf_version) && $inf_version ? $inf_version : 'beta',
-                        'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHP-Fusion',
+                        'inf_developer'   => isset($inf_developer) && $inf_developer ? $inf_developer : 'PHPFusion',
                         'inf_url'         => isset($inf_weburl) && $inf_weburl ? $inf_weburl : '',
                         'inf_email'       => isset($inf_email) && $inf_email ? $inf_email : '',
                         'inf_status'      => 0,

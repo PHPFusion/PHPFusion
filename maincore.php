@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -104,7 +104,7 @@ if (dbrows($result)) {
 // Settings dependent functions
 date_default_timezone_set($settings['default_timezone']);
 
-header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+header('X-Powered-By: PHPFusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
 
 //ob_start("ob_gzhandler"); //Uncomment this line and comment the one below to enable output compression.
 ob_start();
@@ -296,7 +296,7 @@ if (iADMIN) {
     $aidlink = "?aid=".iAUTH;
 }
 
-// PHP-Fusion user cookie functions
+// PHPFusion user cookie functions
 if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
     setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");

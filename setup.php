@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------*
@@ -52,7 +52,7 @@ function opensetup() {
     echo "<div class='block-content'>\n";
     echo "<h6><strong>".$locale['title']."</strong></h6>\n";
     echo "<img class='pf-logo position-absolute' src='images/php-fusion-icon.png' alt='Logo'/>";
-    echo "<p class='text-right mid-opacity'>Version ".$locale['os_version']."</p>";
+    echo "<p class='text-right mid-opacity'>Version 8</p>";
     echo "<div class='row'>\n";
     echo "<div class='col-xs-4 col-sm-4 col-md-4 col-lg-4'>\n";
     $steps = ['1' => $locale['001'], '2' => $locale['002'], '3' => $locale['003'], '4' => $locale['004'],
@@ -1445,7 +1445,7 @@ if (isset($_POST['step']) && $_POST['step'] == "6") {
             $url = parse_url($siteurl);
 
             $settings_rows = [
-                'sitename'                    => 'PHP-Fusion Powered Website',
+                'sitename'                    => 'PHPFusion Powered Website',
                 'siteurl'                     => $siteurl,
                 'site_protocol'               => $url['scheme'],
                 'site_host'                   => $url['host'],

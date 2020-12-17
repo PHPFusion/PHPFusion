@@ -264,7 +264,7 @@ $locale['global_204'] = " - Forum";
 $locale['global_210'] = "Skip to content";
 $locale['global_300'] = "no theme found";
 $locale['global_301'] = "This page cannot be displayed. Due to unknown reasons a valid site theme can not be found.
- If you are the Administrator, please use your FTP client to upload any theme designed for PHP-Fusion 8 to the themes folder.
+ If you are the Administrator, please use your FTP client to upload any theme designed for PHPFusion 8 to the themes folder.
  After upload check in Theme Settings to see if the selected theme was correctly uploaded to your themes directory.
  Please note that the uploaded theme folder has to have the exact same name (including character case, which is important on Unix based servers)
  as chosen in Theme Settings page.<br/>If you are regular member of this site, please contact the site\'s administrator via [SITE_EMAIL] e-mail and report this issue.";

@@ -129,4 +129,4 @@ $locale['search_msg_102'] = 'Pages failed to load';
 $locale['search_msg_103'] = 'Search string is too short';
 $locale['search_msg_104'] = 'There are no results found';
 
-$locale['new_update_avalaible'] = "A new [LINK]PHP-Fusion v[VERSION] update[/LINK] is available. Please update!";
+$locale['new_update_avalaible'] = "A new [LINK]PHPFusion v[VERSION] update[/LINK] is available. Please update!";

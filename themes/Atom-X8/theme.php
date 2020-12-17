@@ -1,7 +1,7 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 PHP-Fusion International
+| PHPFusion Content Management System
+| Copyright (C) 2002 - 2011 PHPFusion International
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: theme.php
@@ -84,7 +84,7 @@ function render_page($license = FALSE) {
 	echo "<section class='p-0'><div class='container'>\n";
 	echo "<footer id='footer' class='m-b-50'>\n";
 	echo "<div class='row'>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6 text-left'>\n";
-	echo "Atom-X8 for PHP-Fusion Version 8 - ".date('Y')." All rights reserved <br />\n";
+	echo "Atom-X8 for PHPFusion Version 8 - ".date('Y')." All rights reserved <br />\n";
 	echo "".stripslashes($settings['footer'])."\n";
 	echo "</div>\n";
 
@@ -110,7 +110,7 @@ function copyright() {
     if (!defined('LICENSED')) {
         define('LICENSED', TRUE);
     }
-    $res = "Powered by <a href='https://www.phpfusion.com'>PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc<br >";
+    $res = "Powered by <a href='https://www.phpfusion.com'>PHPFusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc<br >";
     $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'>GNU Affero GPL</a> v3.<br>\n";
     return $res;
 }

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -51,7 +51,7 @@ class AdminPanel {
         echo '<header class="main-header">';
             echo '<a href="'.ADMIN.'index.php'.$aidlink.'" class="logo">';
                 echo '<span class="logo-mini"><i class="php-fusion"></i></span>';
-                echo '<span class="logo-lg">PHP-Fusion</span>';
+                echo '<span class="logo-lg">PHPFusion</span>';
             echo '</a>';
 
             echo '<nav class="navbar navbar-static-top">';

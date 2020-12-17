@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -21,7 +21,7 @@
 function atom_micro($iLeft, $iRight) {
     global $settings, $userdata, $locale;
 
-    // This is the PHP-Fusion 8 & < standard render
+    // This is the PHPFusion 8 & < standard render
     function phpfusion_default_render() {
         $_left = 0;
         $_right = 0;

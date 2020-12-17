@@ -1,14 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: captcha_check.php
 | Author: Krelli (systemweb.de)
-| ------------------------------------------------------
-| This integrates the NEW reCAPTCHA Google API v2 into
-| PHP-Fusion using the built-in PHP-Fusion captcha system
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

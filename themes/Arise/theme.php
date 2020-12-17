@@ -1,6 +1,6 @@
 <?php
 /*---------------------------------------------------------+
-| PHP-Fusion Content Management System                     |
+| PHPFusion Content Management System                     |
 | Copyright (C) 2002 - 2010 Nick Jones                     |
 | https://www.phpfusion.com/                            |
 +----------------------------------------------------------+
