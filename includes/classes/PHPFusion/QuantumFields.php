@@ -2573,21 +2573,26 @@ class QuantumFields extends \SqlHandler {
         $plugin_folder = '';
         $folder = '';
         if (is_array($this->plugin_folder) && !empty($this->plugin_folder)) {
-            $p_folder = $this->plugin_folder;
-            foreach ($p_folder as $plugin_folder) {
-                $plugin_folder = rtrim($plugin_folder, '/').'/';
-                $locale_folder = rtrim($this->plugin_locale_folder, '/').'/';
-                // Conventional
-                if (file_exists($locale_folder.$this->field_data['add_module'].'.php') && file_exists($plugin_folder.$this->field_data['add_module'].'_include_var.php')) {
-                    include($locale_folder.$this->field_data['add_module'].'.php');
-                    include($plugin_folder.$this->field_data['add_module'].'_include_var.php');
+            foreach ($this->plugin_folder as $plugin_folder) {
+                $plugin_path = (rtrim($plugin_folder, '/').'/').$this->field_data['add_module'].'_include_var.php';
+                $plugin_locale_path = (rtrim($this->plugin_locale_folder, '/').'/').$this->field_data['add_module'].'.php';
+
+                if (is_file($plugin_locale_path) && is_file($plugin_path)) {
+
+                    $plugin_file_found = TRUE;
+
+                    include($plugin_path);
+
+                    include($plugin_locale_path);
 
                     $this->user_field_dbinfo = $user_field_dbinfo;
+
                     if (!isset($user_field_dbinfo)) {
+
                         addNotice('info', $this->locale['fields_0602']);
-                        redirect(FUSION_REQUEST);
+
                     }
-                    $plugin_file_found = TRUE;
+
                     break;
                 } else {
                     // Infusions
@@ -2612,9 +2617,10 @@ class QuantumFields extends \SqlHandler {
             }
         } else {
             // When global plugin folder is not an array.
-            $current_plugin_folder = rtrim($this->plugin_folder, '/').'/';
-            $current_locale_folder = rtrim($this->plugin_locale_folder, '/').'/';
-            if (file_exists($plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php') && file_exists($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php')) {
+            $plugin_language_path = rtrim($plugin_folder, '/').'/'.$folder."/locale/".LANGUAGE."/".$this->field_data["add_module"].".php";
+            $plugin_path = rtrim($plugin_folder, '/').'/'.$folder."/user_fields/".$this->field_data["add_module"]."_include_var.php";
+
+            if (file_exists($plugin_language_path) && file_exists($plugin_path)) {
                 include($plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php');
                 include($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php');
                 $this->user_field_dbinfo = $user_field_dbinfo;
@@ -2627,9 +2633,7 @@ class QuantumFields extends \SqlHandler {
         }
 
         if ($plugin_file_found === FALSE) {
-            \defender::stop();
-            addNotice('danger', $this->locale['fields_0109']);
-            redirect(FUSION_REQUEST);
+            fusion_stop($this->locale['fields_0109']);
         }
 
         /*

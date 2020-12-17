@@ -181,7 +181,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
             }
         }
     }
-    //else {
+    //elseif (fusion_get_settings("devmode")) {
     //    debug_print_backtrace();
     //    echo "redirected to ".$location;
     //}
@@ -535,11 +535,15 @@ function normalize($value) {
  * Generate random string numbers
  *
  * @param int $length
+ * @param boolean $alpha_only
  *
  * @return string
  */
-function random_string($length = 6) {
+function random_string($length = 6, $alpha_only = FALSE) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if ($alpha_only) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
     $charactersLength = strlen($characters);
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
