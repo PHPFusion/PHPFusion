@@ -88,7 +88,7 @@ function clean_input_name($value) {
 
 function load_select2_script() {
     $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.js", "script");
+    fusion_load_script(DYNAMICS."assets/select2/select2.js", "script");
     if (is_file($select2_locale_path)) {
         fusion_load_script($select2_locale_path, "script");
     }
