@@ -111,6 +111,7 @@ class InstallerInfusions extends Install_Core {
                     $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3'>\n<strong>".$locale['421']."</strong></div>\n";
                     $content .= "</div>\n</div>\n";
 
+                    sort($infs);
                     foreach ($infs as $i => $inf) {
                         $content .= "<div class='list-group-item'>\n";
                         $content .= "<div class='row'>\n";
