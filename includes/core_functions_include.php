@@ -2386,3 +2386,51 @@ function isJson($string) {
     json_decode($string);
     return (json_last_error() == JSON_ERROR_NONE);
 }
+
+/**
+ * Cached script loader
+ * This function will cache the path that has been added and avoid duplicates.
+ * @param $file_path    - source file
+ * @param $file_type         - script, css
+ */
+function fusion_load_script($file_path, $file_type="script") {
+    static $paths = [];
+
+    $file_info = pathinfo($file_path);
+
+    try {
+
+        if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
+
+            $file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
+
+            $min_file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['filename'].'.min.'.$file_info['extension'];
+
+            $return_file = $file;
+
+            if (file_exists($min_file) && !fusion_get_settings("devmode")) {
+                $return_file = $min_file;
+            }
+
+            $mtime = filemtime($return_file);
+
+            $file_path = $return_file."?v=".$mtime;
+
+            if (empty($paths[$return_file])) {
+
+                $paths[$return_file] = $file_path;
+                if ($file_type == "script") {
+                    add_to_footer("<script src='$file_path'></script>\n");
+                } else if ($file_type == "css") {
+                    add_to_head("<link rel='stylehsset' href='$file_path'>\n");
+                }
+            }
+            //else {
+            //    print_p("Ommitted");
+            //}
+        }
+
+    } catch (Exception $e) {
+        setError(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+    }
+}

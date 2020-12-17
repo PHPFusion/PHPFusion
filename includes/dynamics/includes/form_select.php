@@ -115,17 +115,10 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     }
     $list = [];
 
-
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
+    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
+    fusion_load_script($select2_locale_path, "script");
+    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
 
     static $select_db = [];
     // New DB Caching Function.
@@ -477,7 +470,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
             }
 
             if ($options['required']) {
-                \PHPFusion\OutputHandler::addToJQuery("
+                add_to_jquery("
                 var init_value = $('#".$options['input_id']."').select2('val');
                 if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
                 $('#".$options['input_id']."').select2({
@@ -489,7 +482,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
                 }).bind('change', function(e) {	$('#dummy-".$options['input_id']."').val($(this).val()); });
                 ");
             } else {
-                \PHPFusion\OutputHandler::addToJQuery("
+                add_to_jquery("
                 $('#".$options['input_id']."').select2({
                     ".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
                     minimumResultsForSearch: ".$options['display_search_count'].",
@@ -502,7 +495,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
 
         } else {
             // json mode
-            \PHPFusion\OutputHandler::addToJQuery("
+            add_to_jquery("
                 var this_data = [{id:0, text: '".$options['placeholder']."'}];
                 $('#".$options['input_id']."').select2({
                 placeholder: '".$options['placeholder']."',
@@ -574,16 +567,10 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
     $error_class = "";
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
+    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
+    fusion_load_script($select2_locale_path, "script");
+    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
 
     if (defender::inputHasError($input_name)) {
         $error_class = "has-error ";
@@ -751,16 +738,10 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
     ];
     $options += $default_options;
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
+    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
+    fusion_load_script($select2_locale_path, "script");
+    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
 
     $options['input_id'] = trim($options['input_id'], "[]");
     if ($options['multiple']) {
