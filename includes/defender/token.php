@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -20,7 +20,7 @@ namespace Defender;
 
 /**
  * Class Token
- * CSRF protection layer for PHP-Fusion CMS
+ * CSRF protection layer for PHPFusion CMS
  *
  * @package Defender
  */

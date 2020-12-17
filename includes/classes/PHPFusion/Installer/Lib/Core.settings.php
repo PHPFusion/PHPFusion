@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -106,7 +106,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'keywords',
-                'settings_value' => 'PHP-Fusion, CMS, Hosting, Domain, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
+                'settings_value' => 'PHPFusion, CMS, Hosting, Domain, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
             ],
             [
                 'settings_name'  => 'footer',

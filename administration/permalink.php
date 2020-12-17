@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -415,7 +415,7 @@ switch ($_GET['section']) {
 
                         $name = (!empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name));
                         $version = (!empty($permalink_version) ? $permalink_version : "1.00");
-                        $author = (!empty($permalink_author) ? $permalink_author : "PHP-Fusion Core Developers Team");
+                        $author = (!empty($permalink_author) ? $permalink_author : "PHPFusion Core Development Team");
                         $description = (!empty($permalink_desc) ? $permalink_desc : sprintf($locale['PL_429'], $permalink_name));
                         $row_class = "";
                         $link = "<a href='".FUSION_SELF.$aidlink."&amp;enable=".$rewrite_name."'>".$locale['PL_404a']."</a>\n";

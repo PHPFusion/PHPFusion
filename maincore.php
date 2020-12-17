@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -95,7 +95,7 @@ if (empty($settings)) {
     die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
-header('X-Powered-By: PHP-Fusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+header('X-Powered-By: PHPFusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
 
 //ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
 ob_start();
@@ -266,7 +266,7 @@ if (iADMIN) {
     $_SESSION['aid'] = $userdata['user_id'].".".$token_time.".".hash_hmac($algo, $key, $salt);
 }
 
-// PHP-Fusion user cookie functions
+// PHPFusion user cookie functions
 Authenticate::setVisitorCounter();
 
 // Set admin login procedures

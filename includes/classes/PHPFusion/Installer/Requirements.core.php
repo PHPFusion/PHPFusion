@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -28,7 +28,7 @@ use PHPFusion\Database\DatabaseFactory;
 class Requirements extends Install_Core {
 
     /**
-     * Get System Requirements for PHP-Fusion 9
+     * Get System Requirements for PHPFusion 9
      *
      * @return array
      */

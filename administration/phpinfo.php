@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -161,7 +161,7 @@ function folderpermission() {
 function details() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
     if (!stristr(ini_get('disable_functions'), "phpinfo")) {
-        //Generating new phpinfo style, compatible with PHP-Fusion styles
+        //Generating new phpinfo style, compatible with PHPFusion styles
         ob_start();
         phpinfo();
         $phpinfo = ob_get_contents();

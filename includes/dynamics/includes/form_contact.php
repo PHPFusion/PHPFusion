@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -206,10 +206,10 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
               }
             });
           };
-        }(jQuery));       
+        }(jQuery));
        ");
     }
-    add_to_jquery("        
+    add_to_jquery("
     $('#".$options['input_id']."_contact').inputFilter(function(value) { return /^-?\d*$/.test(value); });
     ");
 

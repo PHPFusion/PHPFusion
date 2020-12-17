@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -79,7 +79,7 @@ class DbBackupAdministration {
                 ob_start();
                 @ob_implicit_flush(0);
                 echo "#----------------------------------------------------------".$crlf;
-                echo "# PHP-Fusion SQL Data Dump".$crlf;
+                echo "# PHPFusion SQL Data Dump".$crlf;
                 echo "# Database Name: `".$db_name."`".$crlf;
                 echo "# Table Prefix: `".$db_prefix."`".$crlf;
                 echo "# Date: `".date("d/m/Y H:i")."`".$crlf;

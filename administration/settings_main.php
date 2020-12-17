@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -24,7 +24,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
 /**
  * Get the default search options
- * with file exists validation of the PHP-Fusion Search SDK files.
+ * with file exists validation of the PHPFusion Search SDK files.
  *
  * @return array
  */

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -20,5 +20,5 @@ defined('IN_FUSION') || exit;
 $permalink_name = $locale['pl_blog_title'];
 $permalink_desc = $locale['pl_blog_desc'];
 $permalink_tags_desc = ["%blog_id%" => $locale['pl_tags_001'], "%blog_title%" => $locale['pl_tags_002']];
-$permalink_author = "PHP-Fusion Dev Team";
+$permalink_author = "Core Development Team";
 $permalink_version = "1.0";

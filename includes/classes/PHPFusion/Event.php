@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Event.php
 | Author: Frederick MC Chan
-| Version: PHP-Fusion 9.1
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -22,8 +21,6 @@ namespace PHPFusion;
  * Class DomainEvent
  * The purpose of this class is to enable domain level event management
  * such as notifications and user level cron to run.
- *
- * Event Class will be used on PHP-Fusion 9.1 onwards only
  *
  * @package PHPFusion\Event
  */

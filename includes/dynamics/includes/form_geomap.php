@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -215,13 +215,13 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     $flag_plugin
     placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
     });
-    
+
     $('#".$input_id."-state').select2({
             placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
             allowClear: true,
             data: $states_array
     });
-    
+
     $('#".$input_id."-country').bind('change', function(){
         var ce_id = $(this).val();
         $.ajax({

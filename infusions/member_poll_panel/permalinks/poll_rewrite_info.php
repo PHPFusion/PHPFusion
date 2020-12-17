@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -19,5 +19,5 @@ defined('IN_FUSION') || exit;
 
 $permalink_name = $locale['pl_poll_title'];
 $permalink_desc = $locale['pl_poll_desc'];
-$permalink_author = "PHP-Fusion Dev Team";
+$permalink_author = "Core Development Team";
 $permalink_version = "1.0";

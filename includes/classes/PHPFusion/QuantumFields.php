@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -780,7 +780,7 @@ class QuantumFields extends \SqlHandler {
         return FALSE;
     }
 
-    /* The Current Stable PHP-Fusion Dynamics Module */
+    /* The Current Stable PHPFusion Dynamics Module */
     private function _delete_fields() {
         $aidlink = fusion_get_aidlink();
 

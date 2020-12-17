@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -21,7 +21,7 @@ use PHPFusion\Database\DatabaseFactory;
 
 /**
  * Class Errors
- * PHP-Fusion Error Handling
+ * PHPFusion Error Handling
  *
  * @package PHPFusion
  */

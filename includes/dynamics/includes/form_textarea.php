@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -151,7 +151,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             ');
 
             define('tinymce', TRUE);
-            // PHP-Fusion Parse Cache Smileys
+            // PHPFusion Parse Cache Smileys
             $smileys = cache_smileys();
             $tinymce_smiley_vars = "";
             if (!empty($smileys)) {

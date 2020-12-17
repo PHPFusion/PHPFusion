@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -23,7 +23,7 @@ use PHPFusion\Panels;
 defined('IN_FUSION') || exit;
 
 /**
- * Show PHP-Fusion Performance
+ * Show PHPFusion Performance
  *
  * @param bool $queries
  *
@@ -145,7 +145,7 @@ function showMemoryUsage() {
 }
 
 /**
- * Show PHP-Fusion copyright.
+ * Show PHPFusion copyright.
  *
  * @param string $class
  * @param false  $nobreak
@@ -154,7 +154,7 @@ function showMemoryUsage() {
  */
 function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
-    $res = "Powered by <a href='https://www.phpfusion.com'".$link_class.">PHP-Fusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc";
+    $res = "Powered by <a href='https://www.phpfusion.com'".$link_class.">PHPFusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
     $res .= "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.\n";
 

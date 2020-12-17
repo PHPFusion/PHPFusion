@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -137,7 +137,7 @@ class Infusion_Core {
                                  * The version of the CMS is irrelevant. Infusion can be upgraded as many times as the authors
                                  * make it available to be distributed. (i.e. they can say Version 1 is for Version 9 of the CMS)
                                  * in their own website, Version 2 is for Version 10 of the CMS etc). Apps and CMS are not tied
-                                 * together in terms of version-ing, as PHP-Fusion does not track it as we do not maintain them.
+                                 * together in terms of version-ing, as PHPFusion does not track it as we do not maintain them.
                                  *
                                  * When developing upgrades, people should not just make insertions and declare without checking
                                  * if the table exist or column exist as renaming a non-existent table could not be performed.
@@ -255,7 +255,7 @@ class Infusion_Core {
                 'title'           => $inf_title,
                 'description'     => $inf_description,
                 'version'         => $inf_version ?: 'beta',
-                'developer'       => $inf_developer ?: 'PHP-Fusion',
+                'developer'       => $inf_developer ?: 'PHPFusion',
                 'email'           => $inf_email,
                 'url'             => $inf_weburl,
                 'image'           => $inf_image ? $inf_image : 'infusion_panel.png',
@@ -341,7 +341,7 @@ class Infusion_Core {
                 'title'           => $inf_title,
                 'description'     => $inf_description,
                 'version'         => $inf_version ?: 'beta',
-                'developer'       => $inf_developer ?: 'PHP-Fusion',
+                'developer'       => $inf_developer ?: 'PHPFusion',
                 'email'           => $inf_email,
                 'url'             => $inf_weburl,
                 'image'           => $inf_image ? $inf_image : 'infusion_panel.png',

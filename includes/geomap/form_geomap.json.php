@@ -1,13 +1,13 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_geomap.json.php
 | Author: Frederick MC Chan
 +--------------------------------------------------------+
-| With Codes from PHP-Fusion Communities Authors
+| With Codes from PHPFusion Communities Authors
 +--------------------------------------------------------+
 | Registered in phpfusion.com under the username of:
 | Falk (Sweden) + Rest not covered by community,

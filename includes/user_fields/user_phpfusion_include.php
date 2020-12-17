@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHP Fusion'/>";
+$icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHPFusion'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

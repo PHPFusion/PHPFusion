@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -91,9 +91,9 @@ class Install_Core extends Infusion_Core {
 
     /*
      * Verify the requirements that allows you to run the installer before boot up.
-     * Due to the support for PHP-Fusion 9 in many uses of empty() as a condition
+     * Due to the support for PHPFusion 9 in many uses of empty() as a condition
      * and being counter productive in fixing low end php version deprecated codes /e,
-     * no oPCache, and other problems, using PHP-Fusion 9 is not going to be allowed
+     * no oPCache, and other problems, using PHPFusion 9 is not going to be allowed
      * entirely.
      */
     protected static $locale_files = [];

@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -21,7 +21,7 @@ namespace PHPFusion\Installer;
  * Class Batch_Core
  *
  * Batching of the installation process
- ** PHP-Fusion will compare existing tables with the package contents and build
+ ** PHPFusion will compare existing tables with the package contents and build
  * according to identified requirements of a non-destructive approach.
  *
  * - Should the table is missing, the batch process will auto create the table.
@@ -73,7 +73,7 @@ class Batch_Core extends Install_Core {
     const ADD_INDEX_STATEMENT = "ALTER TABLE {%table%} ADD INDEX {%column_name%} ({%column_name%})";
 
     /*
-     * Defines the PHP-Fusion Package and to be developed with the PHP-Fusion sql-handler
+     * Defines the PHPFusion Package and to be developed with the PHPFusion sql-handler
      * http://dev.mysql.com/doc/refman/5.7/en/show-columns.html
      * http://dev.mysql.com/doc/refman/5.5/en/data-types.html
      * http://dev.mysql.com/doc/refman/5.5/en/create-table.html

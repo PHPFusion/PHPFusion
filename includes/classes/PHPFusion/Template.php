@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -18,7 +18,7 @@
 namespace PHPFusion;
 
 /**
- * PHP-Fusion Template
+ * PHPFusion Template
  *
  * @package PHPFusion
  */

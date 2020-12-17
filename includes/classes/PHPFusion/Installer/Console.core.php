@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -49,8 +49,8 @@ class Console_Core extends Install_Core {
         $html .= '<div class="block">';
         $html .= '<div class="row equal-height m-0">';
         $html .= '<div class="col-xs-12 col-sm-3 left-side p-0"><div>';
-        $html .= '<img class="logo img-responsive" src="'.IMAGES.'php-fusion-icon.png" alt="PHP-Fusion"/>';
-        $html .= '<h3 class="text-center m-t-0">PHP-Fusion CMS</h3>';
+        $html .= '<img class="logo img-responsive" src="'.IMAGES.'php-fusion-icon.png" alt="PHPFusion"/>';
+        $html .= '<h3 class="text-center m-t-0">PHPFusion CMS</h3>';
 
         $html .= '<ul class="menu list-style-none m-t-15">';
         foreach ($steps as $key => $value) {

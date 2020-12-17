@@ -1,6 +1,6 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
+| PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
@@ -42,7 +42,7 @@ $inf_mlt[] = [
     "rights" => "FR",
 ];
 /**
- * Forum Upgrades covering PHP-Fusion 7 to PHP-Fusion 9 RC4
+ * Forum Upgrades covering PHPFusion 7 to PHPFusion 9 RC4
  */
 // Forum tables renaming
 if (db_exists(DB_PREFIX."posts")) {
