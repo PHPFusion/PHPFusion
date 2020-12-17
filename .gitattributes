@@ -22,14 +22,12 @@
 *.swf binary
 *.rar binary
 *.zip binary
-*.ttf   binary
-*.eot   binary
-*.otf   binary
+*.ttf binary
+*.eot binary
+*.otf binary
 *.woff  binary
 *.woff2 binary
 
 # Files and directories with the attribute export-ignore won't be added to archive files.
-.github export-ignore
-test export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
