@@ -35,23 +35,7 @@ function make_order_opts($result, $id_col, $cat_col, $title_col, $order_col) {
 }
 
 function form_select_order($title, $input_name, $input_id, $option_array, $input_value, $chain_to_parent_id, $array = FALSE) {
-    global $_POST;
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
-
-    if (!defined("SELECTCHAIN")) {
-        define("SELECTCHAIN", TRUE);
-        add_to_head("<script type='text/javascript' src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
-    }
     if (isset($title) && ($title !== "")) {
         $title = stripinput($title);
     } else {
@@ -116,6 +100,9 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
     ");
     add_to_jquery("$('#".$input_id."').chained('#".$chain_to_parent_id."');");
     $html .= "</div></div>";
+
+    load_select2_script();
+    fusion_load_script(DYNAMICS."assets/chainselect/jquery.chained.js");
 
     return $html;
 }

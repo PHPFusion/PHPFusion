@@ -89,17 +89,6 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     }
 
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
-    }
-
     $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >\n";
 
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
@@ -249,6 +238,8 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
     }).trigger('change');
     ");
 
+    load_select2_script();
+
     return $html;
 }
 
@@ -266,17 +257,6 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
             return '<table><tr><td style=\"\"><img style=\"height:16px;\" src=\"".IMAGES."/' + flag + '\"/></td><td style=\"padding-left:10px\"><div>' + item.text + '</div></div></td></tr></table>';
         }
         ");
-    }
-
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js'></script>");
-        add_to_head("<link href='".DYNAMICS."assets/select2/select2.min.css' rel='stylesheet' />");
-
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-        if (file_exists($select2_locale_path)) {
-            add_to_footer("<script src='$select2_locale_path'></script>");
-        }
     }
 
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
@@ -436,6 +416,8 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         'safemode'       => $options['safemode'],
         'error_text'     => $options['error_text']
     ]);
+
+    load_select2_script();
 
     return $html;
 }
