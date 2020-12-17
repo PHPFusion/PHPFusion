@@ -115,11 +115,6 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     }
     $list = [];
 
-    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
-    fusion_load_script($select2_locale_path, "script");
-    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
-
     static $select_db = [];
     // New DB Caching Function.
     if ($options['db'] && $options['id_col'] && $options['title_col']) {
@@ -259,10 +254,9 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     // $options['chain_to_id']  - parent id
     // $options['chain_index'] - a list of array of current id and the parent id as value (see get_form_select_chain_index function how it's done)
     if ($options['chainable'] && $options['chain_to_id'] && !empty($options['chain_index'])) {
-        if (!defined('JS_SELECT_CHAINED')) {
-            define('JS_SELECT_CHAINED', TRUE);
-            add_to_footer("<script src='".DYNAMICS."assets/chainselect/jquery.chained.js'></script>");
-        }
+
+        fusion_load_script(DYNAMICS."assets/chainselect/jquery.chained.js", "script");
+
         add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
     }
 
@@ -511,9 +505,11 @@ function form_select($input_name, $label, $input_value, array $options = []) {
                 $val = html_entity_decode($val);
                 $vals .= ($arr == count($input_value) - 1) ? "'$val'" : "'$val',";
             }
-            \PHPFusion\OutputHandler::addToJQuery("$('#".$options['input_id']."').select2('val', [$vals]);");
+            add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
     }
+
+    load_select2_script();
 
     return (string)$html;
 }
@@ -567,11 +563,6 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $length = "minimumInputLength: 1,";
     $error_class = "";
 
-    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
-    fusion_load_script($select2_locale_path, "script");
-    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
-
     if (defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         $new_error_text = defender::getErrorText($input_name);
@@ -608,6 +599,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     } else {
         $encoded = json_encode([]);
     }
+
     defender::getInstance()->add_field_session([
         'input_name' => $input_name,
         'title'      => $title,
@@ -617,7 +609,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         'safemode'   => $options['safemode'],
         'error_text' => $options['error_text']
     ]);
-    \PHPFusion\OutputHandler::addToJQuery("
+
+    add_to_jquery("
         function avatar(item) {
             if(!item.id) {return item.text;}
             var avatar = item.avatar;
@@ -646,6 +639,8 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         ".$allowclear."
         })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
     ");
+
+    load_select2_script();
 
     return $html;
 }
@@ -737,11 +732,6 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         'full_query'      => '',
     ];
     $options += $default_options;
-
-    $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
-    fusion_load_script(fusion_get_settings('siteurl')."includes/dynamics/assets/select2/select2.min.js", "script");
-    fusion_load_script($select2_locale_path, "script");
-    fusion_load_script(DYNAMICS."assets/select2/select2.min.css", "css");
 
     $options['input_id'] = trim($options['input_id'], "[]");
     if ($options['multiple']) {
@@ -862,6 +852,8 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
             ]
         );
     }
+
+    load_select2_script();
 
     return $html;
 }

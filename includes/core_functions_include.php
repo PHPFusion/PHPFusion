@@ -2393,45 +2393,44 @@ function isJson($string) {
  *
  * @param $file_path - source file
  * @param $file_type - script, css
+ * @param $cached - false to invalidate browser's cache
  */
-function fusion_load_script($file_path, $file_type = "script") {
+function fusion_load_script($file_path, $file_type = "script", $cached = TRUE) {
     static $paths = [];
-
-    $file_info = pathinfo($file_path);
-
-    try {
-
-        if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
-
-            $file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
-
-            $min_file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['filename'].'.min.'.$file_info['extension'];
-
-            $return_file = $file;
-
-            if (file_exists($min_file) && !fusion_get_settings("devmode")) {
-                $return_file = $min_file;
-            }
-
-            $mtime = filemtime($return_file);
-
-            $file_path = $return_file."?v=".$mtime;
-
-            if (empty($paths[$return_file]) && is_file($return_file)) {
-
-                $paths[$return_file] = $file_path;
-                if ($file_type == "script") {
-                    add_to_footer("<script src='$file_path'></script>\n");
-                } else if ($file_type == "css") {
-                    add_to_head("<link rel='stylehsset' href='$file_path'>\n");
+    // v10
+    if (function_exists("auto_file")) {
+        $file_path = auto_file($file_path);
+    } else {
+        $file_info = pathinfo($file_path);
+        try {
+            if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
+                $file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
+                $min_file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['filename'].'.min.'.$file_info['extension'];
+                $return_file = $file;
+                if (file_exists($min_file) && !fusion_get_settings("devmode")) {
+                    $return_file = $min_file;
+                }
+                $mtime = filemtime($return_file);
+                $file_path = $return_file."?v=".$mtime;
+                if (!$cached) {
+                    $file_path = $return_file;
                 }
             }
-            //else {
-            //    print_p("Ommitted");
-            //}
-        }
 
-    } catch (Exception $e) {
-        setError(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+        } catch (Exception $e) {
+            setError(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
     }
+
+    if (empty($paths[$file_path])) {
+        $paths[$file_path] = $file_path;
+        if ($file_type == "script") {
+            add_to_footer("<script src='$file_path'></script>\n");
+
+        } else if ($file_type == "css") {
+
+            add_to_head("<link rel='stylesheet' href='$file_path' />\n");
+        }
+    }
+
 }
