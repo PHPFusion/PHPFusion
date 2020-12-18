@@ -581,7 +581,7 @@ class SiteLinks {
     /*
      * Recursion loop of data
      */
-    private function showMenuLinks($id, $data) {
+    private function showMenuLinks($id, $data, $linkclass = 'nav-link', $dropdown = FALSE) {
         $res = '';
 
         if (!empty($data[$id])) {
@@ -593,7 +593,7 @@ class SiteLinks {
                 "link_cat"      => 0,
                 "link_url"      => "",
                 "link_icon"     => "",
-                "link_class"    => "",
+                "link_class"    => $linkclass,
                 "link_active"   => '',
                 "link_title"    => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
@@ -604,7 +604,7 @@ class SiteLinks {
                 $li_class = [];
                 $link_data += $default_link_data;
 
-                if (!empty(self::getMenuParam('item_class'))) {
+                if (!empty(self::getMenuParam('item_class')) && !$dropdown) {
                     $li_class[] = self::getMenuParam('item_class');
                 }
 
@@ -719,12 +719,7 @@ class SiteLinks {
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
                     $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
-
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
-                    if ($i == 0 && $id > 0) {
-                        $li_class[] = "first-link";
-                    }
-
                     $link_is_active = $link_data['link_active'];
 
                     if ($secondary_active) {
@@ -759,16 +754,14 @@ class SiteLinks {
                     $has_child = FALSE;
                     $l_1 = "";
                     $l_2 = "";
-                    $tab_index = "";
 
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
-                        $link_class = (!empty($link_data['link_class']) ? " ".$link_data['link_class'] : '');
-                        $l_1 = " class='dropdown-toggle".$link_class."' id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' ";
-                        $l_1 .= (empty($id) && $has_child ? "data-submenu " : "");
+                        $link_class = " class='".$link_data['link_class']." dropdown-toggle'";
+                        $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
+                        $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty($id) ? "<span class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
-                        $tab_index .= !empty($id) ? " tabindex='0'" : "";
                     } else {
                         $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
                     }
@@ -776,7 +769,8 @@ class SiteLinks {
                     $li_class = array_filter($li_class);
 
                     $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
-                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.$tab_index.">" : "");
+
+                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.">" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
@@ -784,13 +778,17 @@ class SiteLinks {
                         $res .= "\n<ul id='menu-".$link_data['link_id']."' aria-labelledby='ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
-                            $res .= ($itemlink ? "<a ".$itemlink." ".$link_target.">\n" : '');
+                            $link_class = strtr($link_class, [
+                                'nav-link' => 'dropdown-item',
+                                'dropdown-toggle' => ''
+                            ]);
+                            $res .= ($itemlink ? "<a ".$itemlink.$link_target.$link_class.">\n" : '');
                             $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
                             $res .= $link_data['link_name'];
                             $res .= ($itemlink ? "\n</a>\n" : '');
                             $res .= "</li>\n";
                         }
-                        $res .= $this->showMenuLinks($link_data['link_id'], $data);
+                        $res .= $this->showMenuLinks($link_data['link_id'], $data, 'dropdown-item', TRUE);
                         $res .= "</ul>\n";
                     }
                     $res .= "</li>\n";
