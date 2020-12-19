@@ -264,10 +264,12 @@ class QuantumFields extends \SqlHandler {
     public function displayQuantumAdmin() {
         pageAccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
+
         if ($this->system_title) {
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $this->system_title]);
             add_to_title($this->system_title);
         }
+
         if ($this->method == 'input') {
             $this->load_fields(); // return fields
             $this->load_field_cats(); // return cat
@@ -1001,22 +1003,24 @@ class QuantumFields extends \SqlHandler {
                 $tab_title['title'][$page_id] = self::parse_label($page_data['field_cat_name']);
                 $tab_title['id'][$page_id] = $page_id;
                 $tab_title['icon'][$page_id] = $page_data['field_cat_class'];
-                $active = (isset($_GET['cat_id']) && $page_id == $_GET['cat_id']) ? $page_id : '';
+                $active = ((isset($_GET['cat_id']) && $page_id == $_GET['cat_id']) ? $page_id : '');
             }
 
-            if (isset($_GET['field_id']) && isnum($_GET['field_id']) || isset($_GET['module_id']) && isnum($_GET['module_id'])) {
+            if (check_get("field_id") || check_get("module_id")) {
                 $_fields = flatten_array($this->fields);
+
                 foreach ($_fields as $fData) {
-                    if (isset($_GET['field_id'])) {
-                        if ($fData['field_id'] == $_GET['field_id']) {
+                    $active = 0;
+                    if ($field_id = get("field_id", FILTER_VALIDATE_INT)) {
+                        if ($fData['field_id'] == $field_id) {
                             $fieldCat = $fData['field_cat'];
-                            $active = isset($_GET['field_id']) ? get_root($this->field_cat_index, $fieldCat) : 0;
+                            $active = get_root($this->field_cat_index, $fieldCat);
                             break;
                         }
-                    } else if (isset($_GET['module_id'])) {
-                        if ($fData['field_id'] == $_GET['module_id']) {
+                    } else if ($module_id = get("module_id", FILTER_VALIDATE_INT)) {
+                        if ($fData['field_id'] == $module_id) {
                             $fieldCat = $fData['field_cat'];
-                            $active = isset($_GET['module_id']) ? get_root($this->field_cat_index, $fieldCat) : 0;
+                            $active = get_root($this->field_cat_index, $fieldCat);
                             break;
                         }
                     }
@@ -1125,7 +1129,8 @@ class QuantumFields extends \SqlHandler {
                                 echo "</div>\n";
                                 echo "</div>\n";
 
-                                $options = ['inline' => 1, 'show_title' => 1, 'hide_value' => 1];
+                                $options = ['inline' => TRUE, 'show_title' => TRUE, 'hide_value' => TRUE];
+
                                 if ($field_data['field_type'] == 'file') {
                                     $options += [
                                         'plugin_folder'        => $this->plugin_folder,
@@ -1133,7 +1138,9 @@ class QuantumFields extends \SqlHandler {
                                     ];
                                 }
                                 echo $this->display_fields($field_data, $this->callback_data, $this->method, $options);
+
                                 echo $end_edit;
+
                                 $k++;
                             }
                         }
@@ -2842,43 +2849,6 @@ class QuantumFields extends \SqlHandler {
                     save_user_log($index_value, $field_data['field_name'], $new_val, $old_cache);
                 }
             }
-        }
-    }
-
-    /**
-     * Quantum Installer for 3rd party applications
-     */
-    protected function install_quantum() {
-        if (!db_exists($this->category_db)) {
-            dbquery("CREATE TABLE ".$this->category_db." (
-                field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
-                field_cat_name VARCHAR(200) NOT NULL ,
-                field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-                field_cat_db VARCHAR(100) NOT NULL,
-                field_cat_index VARCHAR(200) NOT NULL,
-                field_cat_class VARCHAR(50) NOT NULL,
-                field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
-                PRIMARY KEY (field_cat_id)
-            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
-        }
-        if (!db_exists($this->field_db)) {
-            dbquery("CREATE TABLE ".$this->field_db." (
-                field_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-                field_title VARCHAR(50) NOT NULL,
-                field_name VARCHAR(50) NOT NULL,
-                field_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
-                field_type VARCHAR(25) NOT NULL,
-                field_default TEXT NOT NULL,
-                field_options TEXT NOT NULL,
-                field_error VARCHAR(50) NOT NULL,
-                field_required TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_log TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_registration TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-                field_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-                field_config TEXT NOT NULL,
-                PRIMARY KEY (field_id),
-                KEY field_order (field_order)
-            ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
         }
     }
 
