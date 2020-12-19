@@ -18,11 +18,22 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function form_geo($input_name, $label = '', $input_value = FALSE, array $options = []) {
+/**
+ * @param        $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
+function form_geo($input_name, $label = "", $input_value = "", array $options = []) {
+
     $locale = fusion_get_locale();
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $countries = [];
     require(INCLUDES.'geomap/geomap.inc.php');
+
+    $id = trim($input_name, "[]");
 
     // NOTE (remember to parse readback value as of '|' seperator)
     if (isset($input_value) && (!empty($input_value))) {
@@ -31,16 +42,16 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     } else {
         $input_value = [];
-        $input_value['0'] = "";
-        $input_value['1'] = "";
-        $input_value['2'] = "";
-        $input_value['3'] = "";
-        $input_value['4'] = "";
-        $input_value['5'] = "";
+        $input_value[0] = "";
+        $input_value[1] = "";
+        $input_value[2] = "";
+        $input_value[3] = "";
+        $input_value[4] = "";
+        $input_value[5] = "";
     }
 
     $default_options = [
-        'input_id'     => $input_name,
+        'input_id'     => $id,
         'required'     => FALSE,
         'placeholder'  => '',
         'deactivate'   => FALSE,
@@ -89,33 +100,33 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         }
     }
 
-    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >\n";
+    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >";
 
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-    </label>\n" : '';
+    </label>" : '';
 
-    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : '';
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>" : '';
 
-    $html .= "<div class='row'>\n";
+    $html .= "<div class='row'>";
 
-    $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>";
 
-    $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1'].($options['required'] ? " <span class='required'>&nbsp;*</span>" : '')."'".($options['deactivate'] ? " readonly" : '')." />\n";
+    $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[0])) || \defender::inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10'>";
     // Street 2 is not needed even on required.
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street2' value='".$input_value['1']."' placeholder='".$locale['street2']."'".($options['deactivate'] ? " readonly" : '')." />";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>";
 
-    $html .= "<select name='".$input_name."[]' id='$input_id-country' style='width:100%;'>\n";
+    $html .= "<select name='".$input_name."[]' id='$input_id-country' style='width:100%;'>";
 
     $html .= "<option value=''></option>";
     foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
@@ -124,45 +135,45 @@ function form_geo($input_name, $label = '', $input_value = FALSE, array $options
         $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
     }
 
-    $html .= "</select>\n";
+    $html .= "</select>";
 
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[2])) || \defender::inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>";
 
-    $html .= "<div id='state-spinner' style='display:none;'>\n<img src='".fusion_get_settings('siteurl')."images/loader.svg'>\n</div>\n";
+    $html .= "<div id='state-spinner' style='display:none;'><img src='".fusion_get_settings('siteurl')."images/loader.svg'></div>";
 
-    $html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />\n";
+    $html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />";
 
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[3])) || \defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>";
 
-    $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city']."'".($options['deactivate'] ? " readonly" : '')." />\n";
+    $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-7 col-md-4 col-lg-7 m-b-10'>\n";
+    $html .= "<div class='col-xs-12 col-sm-7 col-md-4 col-lg-7 m-b-10'>";
 
-    $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode']."'".($options['deactivate'] ? " readonly" : '')." />\n";
+    $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
     $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[5])) || \defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
-    $html .= "</div>\n"; // close inner row
+    $html .= "</div>"; // close inner row
 
     $html .= $options['stacked'];
 
-    $html .= $options['inline'] && $label ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
     \defender::getInstance()->add_field_session([
         'input_name'   => $input_name,
@@ -314,13 +325,13 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'row ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'row ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">";
 
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-    </label>\n" : '';
+    </label>" : '';
 
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
+    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>" : "";
 
     if ($options['multiple'] == TRUE) {
 
@@ -357,14 +368,14 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
     } else {
 
-        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".($options['width'] ? $options['width'] : $default_options['width'])."' />\n";
+        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".($options['width'] ? $options['width'] : $default_options['width'])."' />";
         $html .= "<option value=''></option>";
         foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
             $country_key = str_replace(" ", "-", $countryname);
             $select = ($input_value == $country_key) ? "selected" : '';
             $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
         }
-        $html .= "</select>\n";
+        $html .= "</select>";
 
         $flag_function = '';
         $flag_plugin = '';
@@ -394,16 +405,16 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     }
 
     $html .= $options['stacked'];
-    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+    $html .= $options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
     if ($options['deactivate']) {
         $html .= form_hidden($input_name, "", $input_value, ["input_id" => $options['input_id']]);
     }
 
     $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
 
-    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
+    $html .= ($options['inline'] && $label) ? "</div>" : "";
 
-    $html .= "</div>\n";
+    $html .= "</div>";
 
     \defender::add_field_session([
         'input_name'     => $input_name,
