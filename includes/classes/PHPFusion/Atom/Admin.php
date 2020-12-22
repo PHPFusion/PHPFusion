@@ -128,6 +128,7 @@ class Admin {
                 $atom->display_theme_widgets();
                 break;
             case "css":
+                echo '<div class="alert alert-danger">'.$locale['deprecated_section'].'</div>';
                 $atom->theme_editor();
                 break;
             case "close":
