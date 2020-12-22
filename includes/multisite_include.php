@@ -20,7 +20,6 @@ define("DB_ADMIN", DB_PREFIX."admin");
 define("DB_ADMIN_RESETLOG", DB_PREFIX."admin_resetlog");
 define("DB_BBCODES", DB_PREFIX."bbcodes");
 define("DB_BLACKLIST", DB_PREFIX."blacklist");
-define("DB_CAPTCHA", DB_PREFIX."captcha");
 define("DB_COMMENTS", DB_PREFIX."comments");
 define("DB_CUSTOM_PAGES", DB_PREFIX."custom_pages");
 define("DB_CUSTOM_PAGES_GRID", DB_PREFIX."custom_pages_grid");

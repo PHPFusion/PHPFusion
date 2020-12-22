@@ -40,3 +40,7 @@ foreach ($insert_settings_tbl as $key => $value) {
 
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='userNameChange'";
 $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='user_name_ban'";
+
+if (db_exists(DB_PREFIX.'captcha')) {
+    dbquery("DROP TABLE ".DB_PREFIX.'captcha');
+}
