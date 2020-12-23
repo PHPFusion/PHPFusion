@@ -312,14 +312,6 @@ foreach ($check_array as $name => $val) {
     }
 }
 
-/*// Add forum default thread tag //FORUM_LOCALE
-if (db_exists(DB_FORUM_TAGS)) {
-    if (!dbcount("(tag_title)", DB_FORUM_TAGS)) {
-        $inf_insertdbrow[] = DB_FORUM_TAGS." (tag_title, tag_description, tag_color, tag_status, tag_language) VALUES ('".$locale['forum_tag_0110']."', '".$locale['forum_tag_0111']."', '#2e8c65', '1', '".fusion_get_settings('locale')."')";
-    }
-}
-*/
-
 // Delete the old link
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='forum/index.php'";
 
@@ -431,11 +423,12 @@ if (db_exists(DB_FORUM_POSTS)) {
     }
 }
 // Move all forum attachments
-include_once BASEDIR.'upgrade/upgrade_functions_include.php';
 if (file_exists(BASEDIR."forum/attachments/")) {
     $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+        if (file_exists(BASEDIR."forum/attachments/".$file)) {
+            fusion_rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
+        }
     }
 
     // Remove the whole old dir including rouge files
@@ -445,7 +438,9 @@ if (file_exists(BASEDIR."forum/attachments/")) {
 if (file_exists(IMAGES."ranks/")) {
     $attachment_files = makefilelist(IMAGES."ranks/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
+        if (file_exists(IMAGES."ranks/".$file)) {
+            fusion_rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
+        }
     }
 
     // Remove the whole old dir including rouge files

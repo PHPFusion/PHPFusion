@@ -99,7 +99,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         $percent = 100 / $columns;
         $admin_page_titles = [1 => $locale['ADM_441'], $locale['ADM_442'], $locale['ADM_443'], $locale['ADM_449'], $locale['ADM_444']];
         $admin_pages = array_fill(1, count($admin_page_titles), []);
-        $risky_rights = ['CP', 'AD', 'SB', 'DB', 'IP', 'P', 'S11', 'S3', 'ERRO'];
+        $risky_rights = ['CP', 'AD', 'SB', 'DB', 'IP', 'P', 'S3', 'ERRO'];
 
         while ($row = dbarray($rights_result)) {
             $admin_pages[$row['admin_page']][] = $row;

@@ -2358,6 +2358,22 @@ function rrmdir($dir) {
 }
 
 /**
+ * Alternative to rename() that works on Windows
+ *
+ * @param string $origin
+ * @param string $target
+ */
+function fusion_rename($origin, $target) {
+    if ($origin != "." && $origin != ".." && !is_dir($origin)) {
+        if (TRUE !== @rename($origin, $target)) {
+            copy($origin, $target);
+            unlink($origin);
+        }
+    }
+}
+
+
+/**
  * cURL method to get any contents for Apache that does not support SSL for remote paths
  *
  * @param $url
@@ -2393,7 +2409,7 @@ function isJson($string) {
  *
  * @param $file_path - source file
  * @param $file_type - script, css
- * @param $cached - false to invalidate browser's cache
+ * @param $cached    - false to invalidate browser's cache
  */
 function fusion_load_script($file_path, $file_type = "script", $cached = TRUE) {
     static $paths = [];

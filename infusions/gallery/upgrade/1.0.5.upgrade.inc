@@ -112,19 +112,44 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".LANGUAGE."')";
 }
 // Move all photos
-include_once BASEDIR.'upgrade/upgrade_functions_include.php';
-if (db_exists(DB_PREFIX."photo_albums")) {
-    $result = dbquery("SELECT * FROM ".DB_PREFIX."photo_albums");
-
-    if (dbrows($result) > 0) {
-        while ($data = dbarray($result)) {
-            if (!empty($data['album_thumb']) && file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
-                // Rename the album thumb here
-                rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
+/**
+ * Returns all photos inside the album into an array
+ *
+ * @param $album_id
+ */
+function move_photos($album_id) {
+    if (file_exists(IMAGES."photoalbum/album_".$album_id."/")) {
+        $result = dbquery("SELECT * FROM ".DB_PHOTOS." WHERE album_id='".$album_id."'");
+        if (dbrows($result) > 0) {
+            while ($photo_data = dbarray($result)) {
+                if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'])) {
+                    fusion_rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_filename'], INFUSIONS."gallery/photos/".$photo_data['photo_filename']);
+                }
+                if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'])) {
+                    fusion_rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb1'], INFUSIONS."gallery/photos/thumbs/".$photo_data['photo_thumb1']);
+                }
+                if (file_exists(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'])) {
+                    fusion_rename(IMAGES."photoalbum/album_".$album_id."/".$photo_data['photo_thumb2'], INFUSIONS."gallery/photos/thumbs/".$photo_data['photo_thumb2']);
+                }
             }
+        }
+    }
+}
 
-            // Call the album directory rename function here
-            move_photos($data['album_id']);
+if (db_exists(DB_PREFIX."photo_albums")) {
+    if (file_exists(IMAGES."photoalbum/")) {
+        $result = dbquery("SELECT * FROM ".DB_PREFIX."photo_albums");
+
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                if (!empty($data['album_thumb']) && file_exists(IMAGES."photoalbum/".$data['album_thumb'])) {
+                    // Rename the album thumb here
+                    fusion_rename(IMAGES."photoalbum/".$data['album_thumb'], INFUSIONS."gallery/photos/".$data['album_thumb']);
+                }
+
+                // Call the album directory rename function here
+                move_photos($data['album_id']);
+            }
         }
     }
 }

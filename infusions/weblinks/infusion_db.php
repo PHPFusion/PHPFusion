@@ -49,7 +49,6 @@ if (!defined("DB_WEBLINKS")) {
 
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("WC", "<i class='admin-ico fa fa-fw fa-link'></i>");
 
 $inf_settings = get_settings('weblinks');
 if (!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) {

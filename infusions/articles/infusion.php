@@ -131,7 +131,6 @@ if (!empty($enabled_languages)) {
 $inf_droptable[] = DB_ARTICLES;
 $inf_droptable[] = DB_ARTICLE_CATS;
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='A'";
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='AC'";
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='A'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='A'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='latest_articles_panel'";

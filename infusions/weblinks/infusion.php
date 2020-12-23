@@ -123,7 +123,6 @@ $inf_droptable[] = DB_WEBLINKS;
 $inf_droptable[] = DB_WEBLINK_CATS;
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='l'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='W'";
-$inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='WC'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/weblinks.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=l'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='WL'";

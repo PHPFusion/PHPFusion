@@ -20,7 +20,6 @@ $settings = fusion_get_settings();
 
 $update_settings_tbl = [
     'fontawesome' => 1,
-    'theme'       => 'Magazine',
     'version'     => '9.03.00',
 ];
 

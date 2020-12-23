@@ -15,8 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once(BASEDIR.'upgrade/upgrade_functions_include.php');
-
 $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 $settings = fusion_get_settings();
 
@@ -418,5 +416,26 @@ if (db_exists(DB_INFUSIONS)) {
         if (!dbcount("(inf_id)", DB_INFUSIONS, "inf_folder='".$value['check']."'") && db_exists($table_name)) {
             $inf_insertdbrow[] = $value['insert'];
         }
+    }
+}
+
+$result = dbquery("SELECT * FROM ".DB_SMILEYS);
+if (dbrows($result)) {
+    $arr_defaults = [
+        'smile.gif' => 'smile.svg',
+        'wink.gif'  => 'wink.svg',
+        'sad.gif'   => 'sad.svg',
+        'frown.gif' => 'frown.svg',
+        'shock.gif' => 'shock.svg',
+        'pfft.gif'  => 'pfft.svg',
+        'cool.gif'  => 'cool.svg',
+        'grin.gif'  => 'grin.svg',
+        'angry.gif' => 'angry.svg',
+        'like.gif'  => 'like.svg'
+    ];
+
+    while ($data = dbarray($result)) {
+        $data['smiley_image'] = strtr($data['smiley_image'], $arr_defaults);
+        dbquery_insert(DB_SMILEYS, $data, 'update', ['keep_session' => TRUE]);
     }
 }

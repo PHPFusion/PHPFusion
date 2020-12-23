@@ -54,7 +54,6 @@ class Admins {
         'B'    => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
         'M'    => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
         'MI'   => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
-        'SU'   => "<i class='admin-ico fa fa-fw fa-file-o'></i>", // User Submissions
         'UF'   => "<i class='admin-ico fa fa-fw fa-table'></i>", // User Fields
         'UG'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // user groups
         'UL'   => "<i class='admin-ico fa fa-fw fa-coffee'></i>", // user logs

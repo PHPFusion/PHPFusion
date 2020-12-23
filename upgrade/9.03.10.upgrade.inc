@@ -28,6 +28,10 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
+if (column_exists('users', 'user_msn')) {
+    $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_msn'];
+}
+
 if (column_exists('users', 'user_aim')) {
     $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_aim'];
 }

@@ -58,8 +58,6 @@ if (!defined("NEWS_CLASS")) {
 
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("NC", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S8", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
 \PHPFusion\Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"));
 \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 

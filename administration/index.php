@@ -231,7 +231,7 @@ $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_ava
 
 $global_submissions['data'] = [];
 
-if (dbrows($result) > 0 && checkrights('SU')) {
+if (dbrows($result) > 0) {
     while ($_subdata = dbarray($result)) {
         $global_submissions['data'][] = $_subdata;
     }

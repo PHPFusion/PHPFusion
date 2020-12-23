@@ -121,12 +121,13 @@ if (dbrows($result)) {
         }
     }
 }
-include_once BASEDIR.'upgrade/upgrade_functions_include.php';
 
 if (file_exists(IMAGES."news/thumbs/")) {
     $attachment_files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
+        if (file_exists(IMAGES."news/thumbs/".$file)) {
+            fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
+        }
     }
     // Remove the whole old dir including rouge files
 }
@@ -134,7 +135,9 @@ if (file_exists(IMAGES."news/thumbs/")) {
 if (file_exists(IMAGES."news/")) {
     $attachment_files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
+        if (file_exists(IMAGES."news/".$file)) {
+            fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
+        }
     }
     // Remove the whole old dir including rouge files
 }
@@ -142,7 +145,9 @@ if (file_exists(IMAGES."news/")) {
 if (file_exists(IMAGES."news_cats/")) {
     $attachment_files = makefilelist(IMAGES."news_cats/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
+        if (file_exists(IMAGES."news_cats/".$file)) {
+            fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
+        }
     }
     // Remove the whole old dir including rouge files
 }

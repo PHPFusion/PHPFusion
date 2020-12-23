@@ -122,11 +122,12 @@ if (dbrows($result)) {
 }
 
 if (file_exists(BASEDIR.'downloads/')) {
-	include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php", TRUE);
     if (!empty($files)) {
         foreach ($files as $filename) {
-            rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
+            if (file_exists(BASEDIR.'downloads/'.$filename)) {
+                fusion_rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
+            }
         }
     }
 
@@ -135,7 +136,9 @@ if (file_exists(BASEDIR.'downloads/')) {
         $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php", TRUE);
         if (!empty($files)) {
             foreach ($files as $filename) {
-                rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
+                if (file_exists(BASEDIR.'downloads/images/'.$filename)) {
+                    fusion_rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
+                }
             }
         }
         rrmdir(BASEDIR.'downloads/images');
@@ -146,7 +149,9 @@ if (file_exists(BASEDIR.'downloads/')) {
         $files = makefilelist(BASEDIR.'downloads/submissions/', ".|..|index.php", TRUE);
         if (!empty($files)) {
             foreach ($files as $filename) {
-                rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
+                if (file_exists(BASEDIR.'downloads/submissions/'.$filename)) {
+                    fusion_rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
+                }
             }
             rrmdir(BASEDIR.'downloads/submissions');
         }
@@ -155,7 +160,9 @@ if (file_exists(BASEDIR.'downloads/')) {
             $files = makefilelist(BASEDIR.'downloads/submissions/images/', ".|..|index.php", TRUE);
             if (!empty($files)) {
                 foreach ($files as $filename) {
-                    rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
+                    if (file_exists(BASEDIR.'downloads/submissions/images/'.$filename)) {
+                        fusion_rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
+                    }
                 }
             }
             rrmdir(BASEDIR.'downloads/submissions/images');

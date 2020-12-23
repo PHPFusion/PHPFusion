@@ -93,7 +93,7 @@ foreach ($check_array as $key => $value) {
 }
 
 // Insert new and old settings tables to Infusions table
-$settings = get_settings('article');
+$settings = get_settings('articles');
 $check_array = [
     'article_pagination'        => 15,
     'article_extended_required' => 0,
@@ -101,15 +101,16 @@ $check_array = [
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
-        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'article')";
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'articles')";
     }
 }
 
 if (file_exists(IMAGES."articles/")) {
-    include_once BASEDIR.'upgrade/upgrade_functions_include.php';
     $attachment_files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);
+        if (file_exists(IMAGES."articles/".$file)) {
+            fusion_rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);
+        }
     }
     // Remove the whole old dir including rouge files
     rrmdir(IMAGES.'articles');

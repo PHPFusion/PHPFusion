@@ -28,8 +28,8 @@ foreach ($update_settings_tbl as $key => $value) {
 }
 
 $insert_settings_tbl = [
-    'username_change' => $settings['userNameChange'],
-    'username_ban'    => $settings['user_name_ban'],
+    'username_change' => !empty($settings['userNameChange']) ? $settings['userNameChange'] : '',
+    'username_ban'    => !empty($settings['user_name_ban']) ? $settings['user_name_ban'] : ''
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
