@@ -33,9 +33,11 @@ if (!empty($data[0])) {
             if (isset($data[$id])) {
                 $sub_i = 0;
                 echo '<ul class="sub-nav p-l-10 block" style="display:none;">';
-                echo '<li>';
-                create_link($link_data, $i, $id);
-                echo '</li>';
+                if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
+                    echo '<li>';
+                    create_link($link_data, $i, $id);
+                    echo '</li>';
+                }
                 foreach ($data[$id] as $sub_id => $sub_link_data) {
                     echo '<li>';
                     create_link($sub_link_data, $sub_i, $sub_id);
