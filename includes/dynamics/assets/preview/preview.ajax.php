@@ -31,7 +31,7 @@ if (fusion_safe()) {
         $count = substr($url, -1) == "/" ? substr_count($uri['dirname'], "/") : substr_count($uri['dirname'], "/") - 1;
         $prefix_ = str_repeat("../", ($count >= 0) ? $count : 0);
         foreach (cache_smileys() as $smiley) {
-            $smiley_path = fusion_get_settings('siteurl')."images/smiley/".$smiley['smiley_image'];
+            $smiley_path = IMAGES."smiley/".$smiley['smiley_image'];
             set_image("smiley_".$smiley['smiley_text'], $smiley_path);
         }
     }
