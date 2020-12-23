@@ -672,9 +672,8 @@ if (!function_exists('display_avatar')) {
         $name = !empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest';
 
         if ($hasAvatar) {
-            $user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
             $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
-            $img = sprintf($imgTpl, $user_avatar);
+            $img = sprintf($imgTpl, IMAGES."avatars/".$userdata['user_avatar']);
         } else {
             if (!empty($custom_avatar) && file_exists($custom_avatar)) {
                 $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
