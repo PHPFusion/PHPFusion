@@ -122,7 +122,7 @@ if (!function_exists('display_inbox')) {
                                 'profile_link'   => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
                                 'message_link'   => $message['message']['link'],
                                 'message_title'  => $message['message']['name'],
-                                'datestamp'      => $message['message_datestamp'] > TIME - 86400 ? timer($message['message_datestamp']) : showdate($locale['date_day'], $message['message_datestamp']),
+                                'datestamp'      => $message['message_datestamp'] > TIME - 86400 ? timer($message['message_datestamp']) : showdate('%d %b', $message['message_datestamp']),
                                 'timer'          => timer($message['message_datestamp']),
                             ];
 
