@@ -30,6 +30,31 @@ if (!dbcount("(user_id)", DB_USERS, "user_level < '-100'")) {
     $inf_updatedbrow[] = DB_USERS." SET user_level='-101' WHERE user_level='101'";
 }
 
+// Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
+$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
+while ($data = dbarray($result)) {
+    $current_rights = explode('.', $data['user_rights']);
+
+    $remove_rights = ['A', 'AC', 'DC', 'FR', 'NC', 'S5', 'S8', 'S10', 'S11', 'S13', 'SU', 'UFC', 'WC'];
+    foreach ($remove_rights as $key => $remove) {
+        if (($key = array_search($remove, $current_rights)) !== FALSE) {
+            unset($current_rights[$key]);
+        }
+    }
+
+    if ($data['user_level'] == '-103' || $data['user_level'] == '103') {
+        $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
+        foreach ($new_rights as $add) {
+            if (!in_array($add, $current_rights, TRUE)) {
+                array_push($current_rights, $add);
+            }
+        }
+    }
+
+    $final_rights = implode('.', $current_rights);
+    dbquery("UPDATE ".DB_USERS." SET user_rights='".$final_rights."' WHERE user_id='".$data['user_id']."'");
+}
+
 $del_table = [];
 if (db_exists(DB_EMAIL_TEMPLATES)) {
     // Upgrade Email templates
@@ -44,38 +69,6 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
             $inf_insertdbrow[] = $value;
         }
     }
-}
-
-if (db_exists(DB_PREFIX.'messages')) {
-    if (!column_exists(DB_MESSAGES, 'message_user')) {
-        $inf_altertable[] = DB_MESSAGES." ADD message_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER message_from";
-    }
-
-    $inf_updatedbrow[] = DB_MESSAGES." SET message_user=message_to";
-}
-
-// Remove dropped rights, these settings have been moved to tabs and follow the Infusions rights
-$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
-while ($data = dbarray($result)) {
-    $current_rights = explode('.', $data['user_rights']);
-
-    $remove_rights = ["AC", "DC", "NC", "WC", "S5", "S8", "S11", "S13", "SU"];
-    foreach ($remove_rights as $key => $remove) {
-        if (($key = array_search($remove, $current_rights)) !== FALSE) {
-            unset($current_rights[$key]);
-        }
-    }
-
-    if ($data['user_level'] == USER_LEVEL_SUPER_ADMIN || $data['user_level'] == '103') {
-        $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
-        foreach ($new_rights as $key => $add) {
-            if (!in_array($add, $current_rights)) {
-                $current_rights[] = $add;
-            }
-        }
-    }
-    $final_rights = implode('.', $current_rights);
-    $inf_updatedbrow[] = DB_USERS." SET user_rights='".$final_rights."', user_theme ='Default' WHERE user_id='".$data['user_id']."'";
 }
 
 if (db_exists(DB_SETTINGS)) {
@@ -289,7 +282,7 @@ if (db_exists(DB_PREFIX.'panels')) {
 
 if (db_exists(DB_USER_FIELD_CATS)) {
     // Dump old categories
-    //dbquery("TRUNCATE TABLE `".DB_PREFIX."user_field_cats`");
+    dbquery("TRUNCATE TABLE ".DB_PREFIX."user_field_cats");
     if (!dbcount("(field_cat_name)", DB_USER_FIELD_CATS, "field_cat_name='".$locale['setup_3640']."'")) {
         $field_cat_id = dbresult(dbquery("SELECT MAX(field_cat_id) 'field_rows' FROM ".DB_USER_FIELD_CATS), 0) + 1;
         // Install a new default set of UF cats
@@ -353,8 +346,10 @@ if (db_exists(DB_USER_FIELDS)) {
     }
 
     if (column_exists('users', 'user_theme')) {
+        $inf_updatedbrow[] = DB_USERS." SET user_theme='Default'";
         if (!isset($previous_install['user_theme'])) {
             $uf_to_install[] = "('".$locale['uf_theme']."', 'user_theme', '4', 'file', '', '2')";
+
         }
     }
 

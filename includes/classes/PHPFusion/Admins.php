@@ -45,33 +45,25 @@ class Admins {
      * @var array
      */
     public $admin_page_icons = [
-        'C'    => "<i class='admin-ico fa fa-fw fa-comments'></i>", // Comments
-        'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // Custom page
-        'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
-        'PM'   => "<i class='admin-ico fa fa-fw fa-envelope-o'></i>", // private message
+        'AD'   => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrators
         'APWR' => "<i class='admin-ico fa fa-fw fa-medkit'></i>", // Admin Password Reset
-        'AD'   => "<i class='admin-ico fa fa-fw fa-user-md'></i>", // Administrator
         'B'    => "<i class='admin-ico fa fa-fw fa-ban'></i>", // Blacklist
-        'M'    => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
-        'MI'   => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration tool
-        'UF'   => "<i class='admin-ico fa fa-fw fa-table'></i>", // User Fields
-        'UG'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // user groups
-        'UL'   => "<i class='admin-ico fa fa-fw fa-coffee'></i>", // user logs
-        'SB'   => "<i class='admin-ico fa fa-fw fa-language'></i>", // Banners
-        'BB'   => "<i class='admin-ico fa fa-fw fa-bold'></i>", // Bbcode
-        'DB'   => "<i class='admin-ico fa fa-fw fa-history'></i>", // database backup
-        'MAIL' => "<i class='admin-ico fa fa-fw fa-send'></i>", // Email templates
-        'ERRO' => "<i class='admin-ico fa fa-fw fa-bug'></i>", // Error Logs
+        'BB'   => "<i class='admin-ico fa fa-fw fa-bold'></i>", // BB Codes
+        'C'    => "<i class='admin-ico fa fa-fw fa-comments'></i>", // Comments
+        'CP'   => "<i class='admin-ico fa fa-fw fa-leaf'></i>", // Custom Pages
+        'DB'   => "<i class='admin-ico fa fa-fw fa-history'></i>", // Database Backup
+        'ERRO' => "<i class='admin-ico fa fa-fw fa-bug'></i>", // Error Log
+        'FM'   => "<i class='admin-ico fa fa-fw fa-folder-open'></i>", // Fusion File Manager
         'I'    => "<i class='admin-ico fa fa-fw fa-cubes'></i>", // Infusions
-        'P'    => "<i class='admin-ico fa fa-fw fa-desktop'></i>", // Panels
-        'PL'   => "<i class='admin-ico fa fa-fw fa-puzzle-piece'></i>", // Permalink
-        'PI'   => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // php Info
-        'ROB'  => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
-        'SL'   => "<i class='admin-ico fa fa-fw fa-link'></i>", // Site Links
-        'SM'   => "<i class='admin-ico fa fa-fw fa-smile-o'></i>", // Smileys
-        'TS'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme
-        'U'    => "<i class='admin-ico fa fa-fw fa-database'></i>", // Upgrade
+        'IM'   => "<i class='admin-ico fa fa-fw fa-picture-o'></i>", // Images
         'LANG' => "<i class='admin-ico fa fa-fw fa-flag'></i>", // Language Settings
+        'M'    => "<i class='admin-ico fa fa-fw fa-user'></i>", // Members
+        'MAIL' => "<i class='admin-ico fa fa-fw fa-send'></i>", // Email Templates
+        'MI'   => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration Tool
+        'P'    => "<i class='admin-ico fa fa-fw fa-desktop'></i>", // Panels
+        'PI'   => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // PHP Info
+        'PL'   => "<i class='admin-ico fa fa-fw fa-puzzle-piece'></i>", // Permalinks
+        'ROB'  => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
         'S1'   => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings
         'S2'   => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
         'S3'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
@@ -79,9 +71,15 @@ class Admins {
         'S6'   => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
         'S7'   => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
         'S9'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Management
-        'S10'  => "<i class='admin-ico fa fa-fw fa-arrow-circle-up'></i>", // Items Per Page
         'S12'  => "<i class='admin-ico fa fa-fw fa-shield'></i>", // Security Settings
-        'FM'   => "<i class='admin-ico fa fa-fw fa-folder-open'></i>", // Fusion File Manager
+        'SB'   => "<i class='admin-ico fa fa-fw fa-language'></i>", // Banners
+        'SL'   => "<i class='admin-ico fa fa-fw fa-link'></i>", // Site Links
+        'SM'   => "<i class='admin-ico fa fa-fw fa-smile-o'></i>", // Smileys
+        'TS'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Manager
+        'U'    => "<i class='admin-ico fa fa-fw fa-database'></i>", // Upgrade
+        'UF'   => "<i class='admin-ico fa fa-fw fa-table'></i>", // User Fields
+        'UG'   => "<i class='admin-ico fa fa-fw fa-users'></i>", // User Groups
+        'UL'   => "<i class='admin-ico fa fa-fw fa-coffee'></i>", // User Log
     ];
     /**
      * @var array

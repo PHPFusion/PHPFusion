@@ -123,38 +123,31 @@ if (dbrows($result)) {
 }
 
 if (file_exists(IMAGES."news/thumbs/")) {
-    $attachment_files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        if (file_exists(IMAGES."news/thumbs/".$file)) {
-            fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
-        }
+    $files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
     }
     // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news/thumbs');
 }
 
 if (file_exists(IMAGES."news/")) {
-    $attachment_files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        if (file_exists(IMAGES."news/".$file)) {
-            fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
-        }
+    $files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
     }
     // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news');
 }
 
 if (file_exists(IMAGES."news_cats/")) {
-    $attachment_files = makefilelist(IMAGES."news_cats/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        if (file_exists(IMAGES."news_cats/".$file)) {
-            fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
-        }
+    $files = makefilelist(IMAGES."news_cats/", ".|..|index.php", TRUE);
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
     }
     // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news_cats');
 }
-
-rrmdir(IMAGES.'news/thumbs');
-rrmdir(IMAGES.'news');
-rrmdir(IMAGES.'news_cats');
 
 // Drop existing columns
 $check_array = [

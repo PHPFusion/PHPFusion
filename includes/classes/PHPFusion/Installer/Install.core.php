@@ -45,7 +45,7 @@ class Install_Core extends Infusion_Core {
     const STEP_TRANSFER = 9;
     const BUILD_VERSION = '9.03.100';
     const INSTALLER_ALGO = 'sha256';
-    const USER_RIGHTS_SA = 'AD.APWR.B.BB.C.CP.DB.ERRO.IM.I.IP.M.MI.MAIL.P.PI.PL.PO.ROB.SL.S1.S2.S3.S4.S6.S7.S9.S10.S12.S13.SB.SM.UF.UFC.UG.UL.U.TS.LANG.FM';
+    const USER_RIGHTS_SA = 'AD.APWR.B.BB.C.CP.DB.ERRO.FM.I.IM.IP.LANG.M.MAIL.MI.P.PI.PL.ROB.S1.S2.S3.S4.S6.S7.S9.S12.SB.SL.SM.TS.U.UF.UG.UL';
     protected static $locale = [];
     protected static $localeset = 'English';
     protected static $allow_delete = FALSE;

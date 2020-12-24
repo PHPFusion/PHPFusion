@@ -102,7 +102,7 @@ if (!empty($enabled_languages)) {
 }
 
 // Move download files to new infusions folder
-    // Change download path to new path
+// Change download path to new path
 $result = dbquery("SELECT download_id, download_url FROM ".DB_DOWNLOADS." WHERE download_url!=''");
 if (dbrows($result)) {
     while ($data = dbarray($result)) {
@@ -125,9 +125,7 @@ if (file_exists(BASEDIR.'downloads/')) {
     $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php", TRUE);
     if (!empty($files)) {
         foreach ($files as $filename) {
-            if (file_exists(BASEDIR.'downloads/'.$filename)) {
-                fusion_rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
-            }
+            fusion_rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
         }
     }
 
@@ -136,9 +134,7 @@ if (file_exists(BASEDIR.'downloads/')) {
         $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php", TRUE);
         if (!empty($files)) {
             foreach ($files as $filename) {
-                if (file_exists(BASEDIR.'downloads/images/'.$filename)) {
-                    fusion_rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
-                }
+                fusion_rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
             }
         }
         rrmdir(BASEDIR.'downloads/images');
@@ -149,9 +145,7 @@ if (file_exists(BASEDIR.'downloads/')) {
         $files = makefilelist(BASEDIR.'downloads/submissions/', ".|..|index.php", TRUE);
         if (!empty($files)) {
             foreach ($files as $filename) {
-                if (file_exists(BASEDIR.'downloads/submissions/'.$filename)) {
-                    fusion_rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
-                }
+                fusion_rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
             }
             rrmdir(BASEDIR.'downloads/submissions');
         }
@@ -160,9 +154,7 @@ if (file_exists(BASEDIR.'downloads/')) {
             $files = makefilelist(BASEDIR.'downloads/submissions/images/', ".|..|index.php", TRUE);
             if (!empty($files)) {
                 foreach ($files as $filename) {
-                    if (file_exists(BASEDIR.'downloads/submissions/images/'.$filename)) {
-                        fusion_rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
-                    }
+                    fusion_rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);
                 }
             }
             rrmdir(BASEDIR.'downloads/submissions/images');

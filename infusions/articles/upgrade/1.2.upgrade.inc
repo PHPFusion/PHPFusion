@@ -106,9 +106,9 @@ foreach ($check_array as $key => $value) {
 }
 
 if (file_exists(IMAGES."articles/")) {
-    $attachment_files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        if (file_exists(IMAGES."articles/".$file)) {
+    $files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
+    if (!empty($files)) {
+        foreach ($files as $file) {
             fusion_rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);
         }
     }

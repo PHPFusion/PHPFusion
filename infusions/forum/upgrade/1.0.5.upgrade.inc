@@ -422,13 +422,12 @@ if (db_exists(DB_FORUM_POSTS)) {
         }
     }
 }
+
 // Move all forum attachments
 if (file_exists(BASEDIR."forum/attachments/")) {
     $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
     foreach ($attachment_files as $file) {
-        if (file_exists(BASEDIR."forum/attachments/".$file)) {
-            fusion_rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
-        }
+        fusion_rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
     }
 
     // Remove the whole old dir including rouge files
@@ -436,11 +435,9 @@ if (file_exists(BASEDIR."forum/attachments/")) {
 }
 
 if (file_exists(IMAGES."ranks/")) {
-    $attachment_files = makefilelist(IMAGES."ranks/", ".|..|index.php", TRUE);
-    foreach ($attachment_files as $file) {
-        if (file_exists(IMAGES."ranks/".$file)) {
-            fusion_rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
-        }
+    $files = makefilelist(IMAGES."ranks/", ".|..|index.php", TRUE);
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
     }
 
     // Remove the whole old dir including rouge files
