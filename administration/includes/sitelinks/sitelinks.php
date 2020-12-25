@@ -105,8 +105,8 @@ function display_sitelinks() {
                 //}
 
                 $admin_links = "<a class='text-muted' href='".$data["link_url"]."' target='_blank'>".$locale["view"]."</a> - ";
-                $admin_links .= "<a class='text-muted' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>".$locale["edit"]."</a> - ";
-                $admin_links .= "<a class='text-danger del-warn' href='".ADMIN."site_links.php".$aidlink."&refs=form&action=del&&id=".$data["link_id"]."'>".$locale["delete"]."</a>";
+                $admin_links .= "<a class='text-muted' href='".fusion_get_settings('siteurl')."administration/site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>".$locale["edit"]."</a> - ";
+                $admin_links .= "<a class='text-danger del-warn' href='".fusion_get_settings('siteurl')."administration/site_links.php".$aidlink."&refs=form&action=del&&id=".$data["link_id"]."'>".$locale["delete"]."</a>";
 
                 $link_icon = "";
                 if ($data["link_icon"]) {
@@ -115,7 +115,7 @@ function display_sitelinks() {
 
                 $link_name = $data["link_name"];
                 if ($data["link_count"]) {
-                    $link_name = "<a href='".ADMIN."site_links.php".$aidlink."&section=links&refs=".$refs."&cat=".$data["link_id"]."'>".$data["link_name"]."</a>";
+                    $link_name = "<a href='".fusion_get_settings('siteurl')."administration/site_links.php".$aidlink."&section=links&refs=".$refs."&cat=".$data["link_id"]."'>".$data["link_name"]."</a>";
                 }
 
                 $list[] = [
