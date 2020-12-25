@@ -138,13 +138,14 @@ foreach ($check_forums as $key => $value) {
 }
 
 $change_forums = [
-    'forum_moderators'      => " CHANGE forum_moderators forum_mods TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_post'            => " CHANGE forum_post forum_post TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_access'          => " CHANGE forum_access forum_access TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_reply'           => " CHANGE forum_reply forum_reply TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_vote'            => " CHANGE forum_vote forum_vote TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_poll'            => " CHANGE forum_poll forum_poll TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_attach'          => " CHANGE forum_attach forum_attach TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'"
+    'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_moderators'      => " CHANGE forum_moderators forum_mods TINYINT(4) DEFAULT '".USER_LEVEL_MEMBER."'"
 ];
 
 foreach ($change_forums as $key => $value) {
