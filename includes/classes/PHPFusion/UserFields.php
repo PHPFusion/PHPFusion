@@ -421,7 +421,6 @@ class UserFields extends QuantumFields {
         /*
          * Template Output
          */
-        ob_start();
         $this->registration ? display_register_form($this->info) : display_profile_form($this->info);
         /*
         add_to_jquery("

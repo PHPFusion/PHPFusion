@@ -73,7 +73,6 @@ if (!function_exists('display_profile_form')) {
             $closetab = closetab();
         }
         echo "<!--HTML-->";
-        opentable();
         echo $opentab;
         echo "<!--editprofile_pre_idx--><div class='spacer-sm'><div id='profile_form' class='row'><div class='col-xs-12 col-sm-12'>";
         echo $info["openform"].
@@ -91,7 +90,6 @@ if (!function_exists('display_profile_form')) {
             $info["button"];
         echo " </div ></div ></div ><!--editprofile_sub_idx-->";
         echo $closetab;
-        closetable();
         echo "<!--//HTML-->";
     }
 }
