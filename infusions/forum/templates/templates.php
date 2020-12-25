@@ -1086,6 +1086,7 @@ if (!function_exists('render_post_item')) {
             echo '<div class="clearfix">';
                 echo '<div class="forum_avatar">';
                     echo display_avatar($data, '30px', FALSE, FALSE, 'img-rounded m-r-10 avatar');
+                    echo '<span class="text-bold m-r-10">'.$data['user_profile_link'].'</span>';
 
                     if ($forum_settings['forum_rank_style'] == '0') {
                         echo '<span class="forum_rank">'.$data['user_rank'].'</span>';
@@ -1112,6 +1113,22 @@ if (!function_exists('render_post_item')) {
 
                 if (isset($data['post_edit']) && !empty($data['post_edit'])) {
                     echo '<a href="'.$data['post_edit']['link'].'" title="'.$locale['forum_0507'].'" class="m-l-5"><i class="fa fa-pen"></i></a>';
+                }
+
+                if ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                    if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
+                        $aidlink = fusion_get_aidlink();
+
+                        echo '<div class="dropdown display-inline-block text-bold m-l-5">';
+                            echo '<a href="#" id="ddpost'.$data['marker']['id'].'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'.$locale['forum_0662'].'</a>';
+
+                            echo '<ul class="dropdown-menu" aria-labelledby="ddpost'.$data['marker']['id'].'">';
+                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&ref=edit&lookup='.$data['user_id'].'">'.$locale['forum_0663'].'</a></li>';
+                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&lookup='.$data['user_id'].'&action=1">'.$locale['forum_0664'].'</a></li>';
+                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&ref=delete&lookup='.$data['user_id'].'">'.$locale['forum_0665'].'</a></li>';
+                            echo '</ul>';
+                        echo '</div>';
+                    }
                 }
 
                 if (iMOD) {
