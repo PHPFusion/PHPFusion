@@ -209,7 +209,6 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             if (fusion_safe()) {
                 foreach ($settings as $key => $value) {
                     $sql = "UPDATE ".DB_SETTINGS." SET settings_value = '$value' WHERE settings_name = '$key'";
-                    print_p($sql);
                     dbquery($sql);
                 }
                 addNotice("success", $this->locale['SL_0018']);
@@ -295,7 +294,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 "link_language"    => sanitizer('link_language', '', 'link_language'),
                 "link_visibility"  => sanitizer('link_visibility', '', 'link_visibility'),
                 "link_position"    => sanitizer('link_position', '', 'link_position'),
-                'link_status'      => (check_post('link_status') ? '1' : '0'),
+                'link_status'      => sanitizer('link_status', 0, 'link_status'),
                 "link_order"       => sanitizer('link_order', '', 'link_order'),
                 "link_window"      => (check_post('link_window') ? '1' : '0'),
                 "link_position_id" => 0,
@@ -475,7 +474,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
 
         if ($action = post("table_action")) {
 
-            if (in_array($action, ["link_move", "link_del"])) {
+            if (in_array($action, ["link_move", "link_del", 'publish', 'unpublish'])) {
 
                 $link_id = sanitizer(["link_id"], "", "link_id");
                 $link_array = explode(",", $link_id);
@@ -607,6 +606,20 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             ev.preventDefault();
             // check if any link is clicked
             $('#table_action').val('link_move');
+            $('form#fusion_sltable_form').submit();
+        });
+        
+        $('#publish').bind('click', function(ev) {
+            ev.preventDefault();
+            // check if any link is clicked
+            $('#table_action').val('publish');
+            $('form#fusion_sltable_form').submit();
+        });
+        
+        $('#unpublish').bind('click', function(ev) {
+            ev.preventDefault();
+            // check if any link is clicked
+            $('#table_action').val('unpublish');
             $('form#fusion_sltable_form').submit();
         });
 

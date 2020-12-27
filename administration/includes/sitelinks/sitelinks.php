@@ -125,7 +125,7 @@ function display_sitelinks() {
                     </div>",
                     "link_name"       => "<div class='display-flex-row'>$link_icon<div><strong>$link_name</strong><br/>ID:".$data["link_id"]." | $admin_links</div></div>",
                     "link_count"      => format_num($data["link_count"]),
-                    "link_status"     => $data["link_status"] ? $locale['published'] : $locale['draft'],
+                    "link_status"     => $data["link_status"] ? $locale['published'] : $locale['unpublished'],
                     "link_window"     => $data["link_window"] ? "<i class='fas fa-check'></i>" : "<i class='fas fa-times-circle'></i>",
                     "link_visibility" => getgroupname($data["link_visibility"]),
                     "link_order"      => "<span class='num'>".$link_order."</span>"
