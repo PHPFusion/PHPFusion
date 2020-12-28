@@ -93,7 +93,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 }
 
 if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';

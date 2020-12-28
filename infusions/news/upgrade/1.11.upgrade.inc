@@ -187,10 +187,10 @@ if (dbrows($result)) {
         'hardware.gif'   => 'hardware.svg',
         'journal.gif'    => 'journal.svg',
         'members.gif'    => 'members.svg',
-        'mods.gif'       => 'members.svg',
-        'network.gif'    => 'members.svg',
+        'mods.gif'       => 'mods.svg',
+        'network.gif'    => 'network.svg',
         'news.gif'       => 'news.svg',
-        'php-fusion.gif' => 'php-fusion.svg',
+        'php-fusion.gif' => 'phpfusion.svg',
         'security.gif'   => 'security.svg',
         'software.gif'   => 'software.svg',
         'themes.gif'     => 'themes.svg',
@@ -222,7 +222,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3509']."', 'network.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3510']."', 'news.svg', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.svg', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'phpfusion.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3512']."', 'security.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3513']."', 'software.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.svg', '".$language."')";

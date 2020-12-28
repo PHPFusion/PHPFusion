@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$icon = "<img src='".IMAGES."php-fusion-icon.png' title='PHP Fusion' alt='PHPFusion'/>";
+$icon = "<img src='".IMAGES."phpfusion-icon.png' title='PHPFusion' alt='PHPFusion'/>";
 // Display user field input
 if ($profile_method == "input") {
     $options = [

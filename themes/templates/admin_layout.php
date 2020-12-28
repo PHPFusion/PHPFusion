@@ -53,7 +53,7 @@ if ($settings['fontawesome'] || defined('FONTAWESOME')) {
 
 if (!defined('NO_DEFAULT_CSS')) {
     echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');

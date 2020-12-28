@@ -255,7 +255,7 @@ class Defender {
      *
      * @return string
      */
-    public static function encrypt_string($string, $private_key = 'php-fusion') {
+    public static function encrypt_string($string, $private_key = 'phpfusion') {
         $ivlen = openssl_cipher_iv_length($cipher = 'AES-128-CBC');
         $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
         $string = self::pkcs7_pad($string, 16);
@@ -284,7 +284,7 @@ class Defender {
      *
      * @return null|string
      */
-    public static function decrypt_string($string, $private_key = 'php-fusion') {
+    public static function decrypt_string($string, $private_key = 'phpfusion') {
         $c = base64_decode($string);
         $ivlen = openssl_cipher_iv_length($cipher = 'AES-128-CBC');
         $iv = substr($c, 0, $ivlen);

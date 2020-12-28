@@ -59,7 +59,7 @@ class AdminPanel {
 
         $html = '<header class="main-header">';
             $html .= '<a href="'.ADMIN.'index.php'.$aidlink.'" class="logo">';
-                $html .= '<span class="logo-mini"><i class="php-fusion"></i></span>';
+                $html .= '<span class="logo-mini"><i class="phpfusion-icon"></i></span>';
                 $html .= '<span class="logo-lg">PHPFusion</span>';
             $html .= '</a>';
 

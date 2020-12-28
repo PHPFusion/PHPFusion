@@ -129,7 +129,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3506']."', 'members.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3509']."', 'network.svg', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.svg', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3511']."', 'phpfusion.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3512']."', 'security.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3513']."', 'software.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.svg', '".$language."')";
