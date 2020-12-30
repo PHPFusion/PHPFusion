@@ -30,7 +30,7 @@ if (!iMEMBER) {
         }
         switch ($_GET['error']) {
             case 1:
-                addNotice("danger", $locale['error_input_username']);
+                addNotice("danger", $locale['error_input_login']);
                 break;
             case 2:
                 addNotice("danger", $locale['global_192']);
@@ -77,9 +77,6 @@ if (!iMEMBER) {
                     }
                 }
                 break;
-                break;
-            case 5:
-                addNotice('danger', $locale['error_input_password']);
         }
     }
     switch (fusion_get_settings("login_method")) {
@@ -96,7 +93,7 @@ if (!iMEMBER) {
     $login_connectors = [];
     $login_hooks = fusion_filter_hook('fusion_login_connectors');
     if (!empty($login_hooks)) {
-        foreach($login_hooks as $buttons) {
+        foreach ($login_hooks as $buttons) {
             $login_connectors[] = $buttons;
         }
     }

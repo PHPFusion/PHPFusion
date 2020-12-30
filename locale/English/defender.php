@@ -17,6 +17,7 @@ $locale['error_invalid_theme'] = "Please select a valid theme";
 $locale['error_input_checkbox'] = "Please tick this checkbox";
 $locale['error_input_file'] = "Please select a valid file";
 $locale['error_secure_file'] = "The uploaded file has been rejected due to possibility of malicious payload.";
+$locale['error_input_login'] = "Incorrect username or password";
 // Admin Login
 $locale['cookie_title'] = "Session Timed Out";
 $locale['cookie_description'] = "There are no valid authentication / or your session has probably timed out. Please login again.";
