@@ -173,7 +173,7 @@ function makepagenav_js($start, $count, $total, $range = 0, $link = "", $getname
         add_to_head("<script src='".INCLUDES."filter/paginator.js'></script>");
     }
     $fusion_query = ($_SERVER['QUERY_STRING']) ? str_replace("&amp;", "&", $_SERVER['QUERY_STRING']) : "";
-    if (isset($_GET['rowstart'])) { // override old query string because this adds in.
+    if (isset($_GET['rowstart']) && isnum($_GET['rowstart'])) { // override old query string because this adds in.
         $fusion_query = str_replace("&rowstart=".$_GET['rowstart']."", "", $fusion_query); // remove clean old base.
     }
     if ($link) {

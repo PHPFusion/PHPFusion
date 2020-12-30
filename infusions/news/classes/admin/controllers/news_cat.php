@@ -218,10 +218,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
      * Displays News Category Listing
      */
     private function display_news_cat_listing() {
-        $_GET['rowstart'] = isset(
-            $_GET['rowstart']) && isnum($_GET['rowstart']) &&
-        $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS, ""
-        ) ? intval($_GET['rowstart']) : 0;
+        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS, "") ? intval($_GET['rowstart']) : 0;
 
         // Run functions
         $allowed_actions = array_flip(["publish", "unpublish", "sticky", "unsticky", "delete"]);

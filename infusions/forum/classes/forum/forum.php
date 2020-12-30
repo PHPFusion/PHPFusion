@@ -410,7 +410,7 @@ class Forum extends ForumServer {
                                         ':forum_id' => $this->forum_info['forum_id']
                                     ];
                                     $this->forum_info['max_user_count'] = dbcount("(user_id)", $sql_select, $sql_cond, $sql_param);
-                                    $_GET['rowstart'] = (isset($_GET['rowstart'])) && $_GET['rowstart'] <= $this->forum_info['max_user_count'] ? $_GET['rowstart'] : 0;
+                                    $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_user_count'] ? $_GET['rowstart'] : 0;
 
                                     $query = "SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, p.post_id, p.post_datestamp, t.thread_id, t.thread_subject, t.forum_id
                                     FROM $sql_select INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=p.thread_id AND t.forum_id=p.forum_id WHERE $sql_cond GROUP BY u.user_id ORDER BY u.user_name ASC, p.post_datestamp DESC LIMIT ".$_GET['rowstart'].", ".$this->forum_info['posts_per_page']."";
@@ -446,7 +446,7 @@ class Forum extends ForumServer {
                                         ':forum_id' => $this->forum_info['forum_id']
                                     ];
                                     $this->forum_info['max_post_count'] = dbcount("(post_id)", $sql_select, $sql_cond, $sql_param);
-                                    $rowstart = (!empty($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_post_count'] ? $_GET['rowstart'] : 0);
+                                    $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_post_count'] ? $_GET['rowstart'] : 0);
                                     $query = "SELECT p.*, t.thread_id, t.thread_subject FROM $sql_select WHERE $sql_cond ORDER BY p.post_datestamp DESC LIMIT ".$rowstart.", ".$this->forum_info['posts_per_page'];
                                     // Make var for Limits
                                     $result = dbquery($query, $sql_param);

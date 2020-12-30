@@ -168,11 +168,9 @@ class Moderator {
 
         $this->locale = fusion_get_locale('', FORUM_LOCALE);
 
-        $this->form_action = FORUM.'viewthread.php?thread_id='.$this->thread_id.(isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? "&amp;rowstart=".$_GET['rowstart'] : '');
+        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
 
-        if (!isset($_GET['rowstart'])) {
-            $_GET['rowstart'] = 0;
-        }
+        $this->form_action = FORUM.'viewthread.php?thread_id='.$this->thread_id.(isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? "&amp;rowstart=".$_GET['rowstart'] : '');
 
         if (isset($_POST['step']) && $_POST['step'] != "") {
             $_GET['step'] = $_POST['step'];

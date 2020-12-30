@@ -213,7 +213,7 @@ class MemberPoll {
     public function poll_listing() {
         $aidlink = fusion_get_aidlink();
         $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
-        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+        $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart);
         $rows = dbrows($result);
 
@@ -529,7 +529,7 @@ class MemberPoll {
         add_to_title(self::$locale['POLL_002']);
 
         $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
-        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+        $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart);
         $rows = dbrows($result);
 

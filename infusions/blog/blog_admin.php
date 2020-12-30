@@ -129,7 +129,7 @@ function blog_listing() {
     // all blog are uncategorized by default unless specified.
     $limit = 15;
     $total_rows = dbcount("(blog_id)", DB_BLOG, (multilang_table("BL") ? in_group('blog_language', LANGUAGE) : ""));
-    $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+    $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 
     // add a filter browser
     $catOpts = [

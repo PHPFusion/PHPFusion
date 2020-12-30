@@ -365,7 +365,7 @@ class UserGroups {
      */
     public function userForm() {
         $total_rows = $this->count_usergroup($_GET['group_id']);
-        $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+        $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
         $result = $this->_selectDB($rowstart, self::$limit);
         $rows = dbrows($result);
 

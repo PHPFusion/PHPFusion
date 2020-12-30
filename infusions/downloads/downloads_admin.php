@@ -101,7 +101,7 @@ function download_listing() {
 
     $limit = 15;
     $total_rows = dbcount("(download_id)", DB_DOWNLOADS, "");
-    $rowstart = isset($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
+    $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 
     // add a filter browser
     $catOpts['all'] = $locale['download_0004'];
