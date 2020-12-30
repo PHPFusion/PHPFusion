@@ -434,7 +434,7 @@ class Panels {
             $current_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;
-                $current_url .= "/".$script_url[(int)$current];
+                $current_url .= "/".(!empty($script_url[(int)$current]) ? $script_url[(int)$current] : '');
                 $base_url_count--;
             }
 
