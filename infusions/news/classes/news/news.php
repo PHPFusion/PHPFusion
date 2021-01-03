@@ -77,7 +77,7 @@ abstract class News extends NewsServer {
      */
     protected static function get_NewsFilter() {
         $array['allowed_filters'] = [
-            'recent'  => self::$locale['news_0011']
+            'recent' => self::$locale['news_0011']
         ];
 
         if (fusion_get_settings('comments_enabled') == 1) {
@@ -104,28 +104,46 @@ abstract class News extends NewsServer {
      */
     public static function get_NewsCategory() {
         $array = [];
-        $array['news_categories'][0][0] = [
-            'link' => INFUSIONS."news/news.php?cat_id=0",
-            'name' => fusion_get_locale('news_0006', NEWS_LOCALE)
-        ];
-        $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility
-        FROM ".DB_NEWS_CATS."
-        ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE)." AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
+        $news_cat = [];
+        $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE)." AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
                 $id = $data['news_cat_id'];
                 $parent_id = $data['news_cat_parent'] === NULL ? "NULL" : $data['news_cat_parent'];
                 $array['news_categories'][$parent_id][$id] = [
+                    'id'         => $data['news_cat_id'],
                     'link'       => INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'],
                     'parent'     => $data['news_cat_parent'],
                     'name'       => $data['news_cat_name'],
                     'icon'       => IMAGES_NC.$data['news_cat_image'],
-                    'visibility' => $data['news_cat_visibility']
+                    'visibility' => $data['news_cat_visibility'],
+                    'active'     => get('cat_id') == $data['news_cat_id'] ? 1 : 0
                 ];
+            }
+
+            $array['news_categories'][0][0] = [
+                'id'     => 0,
+                'link'   => INFUSIONS."news/news.php?cat_id=0",
+                'name'   => fusion_get_locale('news_0006', NEWS_LOCALE),
+                'active' => check_get('cat_id') && get('cat_id') == 0 ? 1 : 0
+            ];
+
+            foreach ($array['news_categories'][0] as $id => $data) {
+                $news_cat['news_categories'][$id] = $data;
+
+                if ($id != 0 && $array['news_categories'] != 0) {
+                    foreach ($array['news_categories'] as $sub_cats_id => $sub_cats) {
+                        foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
+                            if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
+                                $news_cat['news_categories'][$id]['sub'][$sub_cat_id] = $sub_cat_data;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        return $array;
+        return $news_cat;
     }
 
     /**
@@ -187,7 +205,7 @@ abstract class News extends NewsServer {
             GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
             ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
             LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : $_GET['rowstart'].",".(!empty($news_settings['news_pagination']) ? $news_settings['news_pagination'] : 12)
-        );
+            );
     }
 
     public static function getNewsURL($news_id) {
