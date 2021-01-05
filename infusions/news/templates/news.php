@@ -54,7 +54,7 @@ if (!function_exists('display_main_news')) {
                             echo '<span><i class="fa fa-folder-o"></i> <a href="'.INFUSIONS.'news/news.php?cat_id='.$data['news_cat_id'].'">'.$data['news_cat_name'].'</a></span>';
                         echo '</div>';
 
-                        echo '<div>'.trim_text($data['news_news'], 100).'</div>';
+                        echo '<div>'.trim_text(strip_tags($data['news_news']), 100).'</div>';
 
                         echo '<a href="'.$link.'">'.$locale['news_0001'].'</a>';
                     echo '</div>';
