@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: articles.php
+| Filename: articles.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -94,9 +94,42 @@ if (!function_exists("display_main_articles")) {
             <!-- Display Articles -->
             <?php
             if (!empty($info['article_items'])) {
-                foreach ($info['article_items'] as $i => $article_info) {
+                foreach ($info['article_items'] as $i => $data) {
                     echo (isset($_GET['cat_id'])) ? "<!--pre_articles_cat_idx-->\n" : "<!--articles_prepost_".$i."-->\n";
-                    render_article($article_info['article_subject'], $article_info['article_article'], $article_info);
+                    ?>
+                    <article class="panel panel-default clearfix article-index-item" style="min-height: 150px;">
+                        <div class="panel-body">
+                            <h4 class="article-title panel-title">
+                                <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$data['article_id']; ?>" class="text-dark strong"><?php echo $data['article_subject']; ?></a>
+                            </h4>
+                            <div class="article-text overflow-hide m-t-10">
+                                <?php echo $data['article_article']; ?>
+                            </div>
+                            <hr/>
+                            <div class="article-footer m-t-5">
+                                <i class="fa fa-fw fa-folder"></i>
+                                <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$data['article_cat_id']; ?>" title="<?php echo $data['article_cat_name']; ?>"><?php echo $data['article_cat_name']; ?></a>
+                                <i class="fa fa-fw fa-eye m-l-10"></i> <?php echo format_word($data['article_reads'], $locale['fmt_read']); ?>
+                                <?php if ($data['article_allow_comments'] && fusion_get_settings('comments_enabled') == 1) { ?>
+                                    <i class="fa fa-fw fa-comments m-l-10"></i>
+                                    <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$data['article_id']."#comments"; ?>" title="<?php echo format_word($data['article_comments'], $locale['fmt_comment']); ?>">
+                                        <?php echo format_word($data['article_comments'], $locale['fmt_comment']); ?>
+                                    </a>
+                                <?php } ?>
+                                <?php if ($data['article_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) { ?>
+                                    <i class="fa fa-fw fa-bar-chart m-l-10"></i>
+                                    <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$data['article_id']."#ratings"; ?>" title="<?php echo format_word($data['article_count_votes'], $locale['fmt_rating']); ?>">
+                                        <?php echo format_word($data['article_count_votes'], $locale['fmt_rating']); ?>
+                                    </a>
+                                <?php } ?>
+                                <a href="<?php echo $data['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
+                                <?php if (!empty($data['admin_actions'])) { ?>
+                                    <a href="<?php echo $data['admin_actions']['edit']['link']; ?>" title="<?php echo $data['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i> <?php echo $locale['edit']; ?></a>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </article>
+                    <?php
                     echo (isset($_GET['cat_id'])) ? "<!--sub_articles_cat_idx-->" : "<!--sub_articles_idx-->\n";
                 }
 
@@ -116,53 +149,6 @@ if (!function_exists("display_main_articles")) {
         }
         echo '</div>';
         closetable();
-    }
-}
-
-if (!function_exists("render_article")) {
-    /**
-     * Articles Item Container
-     *
-     * @param $subject
-     * @param $article
-     * @param $info
-     */
-    function render_article($subject, $article, $info) {
-        $locale = fusion_get_locale();
-        ?>
-        <article class="panel panel-default clearfix article-index-item" style="min-height: 150px;">
-            <div class="panel-body">
-                <h4 class="article-title panel-title">
-                    <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']; ?>" class="text-dark strong"><?php echo $subject; ?></a>
-                </h4>
-                <div class="article-text overflow-hide m-t-10">
-                    <?php echo $article; ?>
-                </div>
-                <hr/>
-                <div class="article-footer m-t-5">
-                    <i class="fa fa-fw fa-folder"></i>
-                    <a href="<?php echo INFUSIONS."articles/articles.php?cat_id=".$info['article_cat_id']; ?>" title="<?php echo $info['article_cat_name']; ?>"><?php echo $info['article_cat_name']; ?></a>
-                    <i class="fa fa-fw fa-eye m-l-10"></i> <?php echo format_word($info['article_reads'], $locale['fmt_read']); ?>
-                    <?php if ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == 1) { ?>
-                        <i class="fa fa-fw fa-comments m-l-10"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#comments"; ?>" title="<?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>">
-                            <?php echo format_word($info['article_comments'], $locale['fmt_comment']); ?>
-                        </a>
-                    <?php } ?>
-                    <?php if ($info['article_allow_ratings'] && fusion_get_settings('ratings_enabled') == 1) { ?>
-                        <i class="fa fa-fw fa-bar-chart m-l-10"></i>
-                        <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$info['article_id']."#ratings"; ?>" title="<?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>">
-                            <?php echo format_word($info['article_count_votes'], $locale['fmt_rating']); ?>
-                        </a>
-                    <?php } ?>
-                    <a href="<?php echo $info['print_link']; ?>" title="<?php echo $locale['print']; ?>" target="_blank"><i class="fa fa-fw fa-print m-l-10"></i> <?php echo $locale['print']; ?></a>
-                    <?php if (!empty($info['admin_actions'])) { ?>
-                        <a href="<?php echo $info['admin_actions']['edit']['link']; ?>" title="<?php echo $info['admin_actions']['edit']['title']; ?>"><i class="fa fa-fw fa-pencil m-l-10"></i> <?php echo $locale['edit']; ?></a>
-                    <?php } ?>
-                </div>
-            </div>
-        </article>
-        <?php
     }
 }
 
