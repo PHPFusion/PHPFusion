@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale();
 
-include_once INFUSIONS.'latest_comments_panel/templates.php';
+include_once INFUSIONS.'latest_comments_panel/templates/latest_comments.tpl.php';
 $displayComments = 10;
 $comments_per_page = fusion_get_settings('comments_per_page');
 $comments_sorting_asc = fusion_get_settings('comments_sorting');
@@ -36,7 +36,6 @@ $result = dbquery(
 $info = [];
 
 $info['title'] = $locale['global_025'];
-$info['theme_bullet'] = THEME_BULLET;
 
 function latest_comments_get_item_title($type, $item_id) {
     static $cache = [];

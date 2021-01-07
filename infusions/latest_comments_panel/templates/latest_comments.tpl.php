@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: templates.php
+| Filename: latest_comments.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,29 +19,28 @@ defined('IN_FUSION') || exit;
 
 if (!function_exists('render_latest_comments')) {
     function render_latest_comments($info) {
-        $html = \PHPFusion\Template::getInstance('latest_comments');
-        $html->set_template(__DIR__.'/templates/latest_comments.html');
-        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
-        $html->set_tag('closeside', fusion_get_function('closeside'));
-
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
+        openside($info['title']);
         if (!empty($info['item'])) {
+            echo '<ul class="list-style-none">';
             foreach ($info['item'] as $id => $data) {
                 $link = !empty($data['data']['user_id']);
-                $html->set_block('comment', [
-                    'comment_user_avatar' => display_avatar($data['data'], '35px', '', $link, 'img-circle m-r-10 m-t-5'),
-                    'comment_subject'     => trim_text($data['title'], 40),
-                    'comment_subject_url' => $data['url'],
-                    'comment_url'         => $data['c_url'],
-                    'comment_message'     => trim_text(strip_tags(parse_textarea($data['data']['comment_message'], FALSE, TRUE)), 35),
-                    'comment_bullet'      => $info['theme_bullet']
-                ]);
-            }
-        } else {
-            $html->set_block('no_item', ['message' => $info['no_rows']]);
-        }
+                $avatar = display_avatar($data['data'], '35px', '', $link, 'img-circle m-r-10 m-t-5');
+                $message = trim_text(strip_tags(parse_textarea($data['data']['comment_message'], FALSE, TRUE)), 35);
 
-        echo $html->get_output();
+                echo '<li>
+                    <div class="pull-left">'.$avatar.'</div>
+                    <div class="overflow-hide">
+                        <strong><a href="'.$data['url'].'">'.trim_text($data['title'], 40).'</a></strong>
+                        <div class="clearfix"><a href="'.$data['c_url'].'">'.$message.'</a></div>
+                    </div>
+                </li>';
+            }
+            echo '</ul>';
+        } else {
+            echo $info['no_rows'];
+        }
+        closeside();
     }
 }
