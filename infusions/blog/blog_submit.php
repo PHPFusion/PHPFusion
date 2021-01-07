@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-require_once INFUSIONS.'blog/templates/blog.php';
+require_once INFUSIONS.'blog/templates/blog.tpl.php';
 $blog_settings = get_settings("blog");
 $locale = fusion_get_locale('', BLOG_ADMIN_LOCALE);
 $userdata = fusion_get_userdata();

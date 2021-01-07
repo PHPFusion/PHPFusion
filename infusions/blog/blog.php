@@ -29,7 +29,7 @@ require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
-require_once INFUSIONS."blog/templates/blog.php";
+require_once INFUSIONS."blog/templates/blog.tpl.php";
 require_once INCLUDES."infusions_include.php";
 
 if ($settings['tinymce_enabled'] == 1) {
