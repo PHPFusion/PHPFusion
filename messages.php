@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once(__DIR__.'/maincore.php');
 require_once THEMES.'templates/header.php';
-include THEMES."templates/global/messages.php";
+include THEMES."templates/global/messages.tpl.php";
 echo \PHPFusion\PrivateMessages::getInstance()->Server()->View();
 require_once THEMES.'templates/footer.php';
