@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: poll.php
+| Filename: poll.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,28 +20,30 @@ defined('IN_FUSION') || exit;
 if (!function_exists('render_poll')) {
     function render_poll($info) {
         if (!empty($info['poll_table'])) {
-            $tpl = \PHPFusion\Template::getInstance('member_poll');
-            $tpl->set_template(__DIR__.'/poll.html');
-            $tpl->set_locale(fusion_get_locale());
-            $tpl->set_tag('openside', fusion_get_function('openside', $info['poll_tablename']));
-            $tpl->set_tag('closeside', fusion_get_function('closeside'));
-            if (!empty($info['poll_arch'])) {
-                $tpl->set_block('poll_arch', [
-                    'content' => $info['poll_arch']
-                ]);
-            }
+            openside($info['poll_tablename']);
+
             foreach ($info['poll_table'] as $poll) {
                 if (!empty($poll['poll_option'])) {
                     $poll['poll_option'] = implode('', $poll['poll_option']);
                 }
-                if (!empty($poll['poll_foot'])) {
-                    $poll['poll_foot'] = "<div class='text-center'>\n".implode("</div>\n<div class='text-center'>\n", $poll['poll_foot'])."</div>\n";
-                }
-                $tpl->set_block('polls', $poll);
+
+                echo !empty($poll['openform']) ? $poll['openform'] : '';
+                echo '<div class="panel panel-default">
+                    <div class="panel-heading text-center">'.$poll['poll_title'].'</div>
+                    <div class="panel-body">'.$poll['poll_option'].'</div>';
+                    if (!empty($poll['button'])) {
+                        echo '<div class="panel-footer">
+                            <div class="text-center">'.$poll['button'].'</div>
+                        </div>';
+                    }
+                echo '</div>';
+                echo !empty($poll['closeform']) ? $poll['closeform'] : '';
             }
 
-            echo $tpl->get_output();
-
+            if (!empty($info['poll_arch'])) {
+                echo '<div class="text-center">'.$info['poll_arch'].'</div>';
+            }
+            closeside();
         }
     }
 }

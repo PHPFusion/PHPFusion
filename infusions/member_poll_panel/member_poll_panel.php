@@ -18,6 +18,6 @@
 defined('IN_FUSION') || exit;
 
 require_once INFUSIONS.'member_poll_panel/poll_classes.php';
-require_once INFUSIONS.'member_poll_panel/templates/poll.php';
+require_once INFUSIONS.'member_poll_panel/templates/poll.tpl.php';
 
 MemberPoll::getInstance()->DisplayPoll();
