@@ -25,7 +25,7 @@ if (defined('FORUM_EXIST')) {
     }
     $locale = fusion_get_locale("", $locale_path);
 
-    include_once INFUSIONS."forum_mods_online_panel/templates.php";
+    include_once INFUSIONS."forum_mods_online_panel/templates/forum_mods_online.tpl.php";
 
     $moderator_groups = [];
     $mod_group = '';
@@ -48,7 +48,6 @@ if (defined('FORUM_EXIST')) {
         $group_sql = "(user_level <= ".iMEMBER." AND user_groups !='') OR ";
         $mod_group = array_flip($moderator_groups);
     }
-
 
     $site_admin_result = dbquery("SELECT u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_level, u.user_groups
         FROM ".DB_USERS." u
