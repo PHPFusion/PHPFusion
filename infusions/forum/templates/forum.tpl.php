@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: templates.php
+| Filename: forum.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -24,7 +24,7 @@ if (!function_exists('render_forum')) {
     function render_forum($info) {
         $locale = fusion_get_locale();
 
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
 
         echo '<div class="forum-main-index">';
         opentable('');
@@ -822,7 +822,7 @@ if (!function_exists("display_quick_reply")) {
  */
 if (!function_exists("display_forum_tags")) {
     function display_forum_tags($info) {
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
         $locale = fusion_get_locale();
 
         echo '<div class="forum-tags">';
@@ -911,7 +911,7 @@ if (!function_exists('render_thread')) {
     function render_thread($info) {
         $locale = fusion_get_locale();
 
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/forum.css'>");
+        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
 
         echo '<div class="forum-viewthread">';
         opentable('');

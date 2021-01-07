@@ -23,7 +23,7 @@ require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once FORUM_CLASS."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
-include INFUSIONS."forum/templates/templates.php";
+include INFUSIONS."forum/templates/forum.tpl.php";
 // Base theme is 0.06s TOP
 \PHPFusion\Locale::setLocale(FORUM_LOCALE);
 $info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
