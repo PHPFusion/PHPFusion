@@ -47,34 +47,47 @@ function codeWrap($code, $maxLength = 150) {
         preg_match('`^\s*`', $code, $matches);
         $lines[$i] = wordwrap($lines[$i], $maxLength, "\n$matches[0]\t", TRUE);
     }
+
     return implode("\n", $lines);
 }
 
 // Print code
-function printCode($source_code, $starting_line, $error_line = "") {
+function printCode($source_code, $starting_line, $error_line = "", array $error_message = [], $title = NULL) {
+    $locale = fusion_get_locale();
+
     if (is_array($source_code)) {
         return FALSE;
     }
+
+    $error_message = [
+        'time' => !empty($error_message['time']) ? $error_message['time'] : time(),
+        'text' => !empty($error_message['text']) ? $error_message['text'] : $locale['na'],];
     $source_code = explode("\n", str_replace(["\r\n", "\r"], "\n", $source_code));
     $line_count = $starting_line;
     $formatted_code = "";
+    $error_message = "<div class='panel panel-default m-10'><div class='panel-heading'>Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
     foreach ($source_code as $code_line) {
         $code_line = codeWrap($code_line, 145);
         $line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
         $formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
-        $line_count++;
         if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
             $formatted_code .= "<td class='".$line_class."'>".str_replace(['<code>', '</code>'], '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
         } else {
-            $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(['<code>', '</code>'], '', highlight_string('<?php '.$code_line, TRUE)))."</td>\n</tr>\n";
+            $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(['<code>', '</code>'], '', highlight_string('<?php '.$code_line, TRUE)))."
+            </td>\n</tr>\n";
+            if ($line_count == $error_line) {
+                $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
+            }
         }
+        $line_count++;
     }
-    return "<table class='err_tbl-border center' style='width:100%;' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
+
+    $title = !empty($title) ? '<thead><tr><th colspan="2" class="p-10">'.$title.'</th></tr></thead>' : '';
+
+    return "<table class='table-bordered err_tbl-border center' cellspacing='0' cellpadding='0'>".$title."<tbody>".$formatted_code."</tbody></table>";
 }
 
-if (isset($_POST['error_status']) && isnum($_POST['error_status'])
-    && isset($_POST['error_id']) && isnum($_POST['error_id'])
-) {
+if (isset($_POST['error_status']) && isnum($_POST['error_status']) && isset($_POST['error_id']) && isnum($_POST['error_id'])) {
     $result = dbquery(
         "UPDATE ".DB_ERRORS." SET error_status='".$_POST['error_status']."'
         WHERE error_id='".$_POST['error_id']."'"
@@ -101,7 +114,7 @@ if ($rows != 0) {
     echo "<tr>\n";
     echo "<th class='tbl1' colspan='4' style='text-align:center;'>";
     echo "<form name='delete_form' action='".FUSION_SELF.$aidlink."' method='post'>";
-    echo "".$locale['440']." <select name='delete_status' class='textbox'>";
+    echo "".$locale['440']." <select name='delete_status' class='textbox va'>";
     echo "<option>---</option>\n";
     echo "<option value='0'>".$locale['450']."</option>\n";
     echo "<option value='1'>".$locale['451']."</option>\n";
@@ -154,30 +167,15 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
     }
 
     $data = dbarray($result);
-    $error_file = htmlspecialchars_decode($data['error_file']);
+    $error_file = html_entity_decode($data['error_file'], ENT_QUOTES, fusion_get_locale('charset'));
     $thisFileContent = is_file($error_file) ? file($error_file) : [];
-    $line_start = "";
-    $line_end = "";
-    if (isset($data['error_line']) && isnum($data['error_line'])) {
-        $line_start = $data['error_line'] - 10;
-    } else {
-        $line_start = 1;
-    }
-    if (isset($data['error_line']) && isnum($data['error_line'])) {
-        if (($data['error_line'] + 10) <= count($thisFileContent)) {
-            $line_end = $data['error_line'] + 10;
-        } else {
-            $line_end = count($thisFileContent);
-        }
-    } else {
-        $line_end = count($thisFileContent);
-    }
-    opentable($locale['401']." ".getMaxFolders($data['error_file'], 3));
-    $output = "";
-    for ($i = ($line_start - 1); $i < ($line_end - 1); $i++) {
-        $output .= $thisFileContent[$i];
-    }
+    $line_start = max($data['error_line'] - 10, 1);
+    $line_end = min($data['error_line'] + 10, count($thisFileContent));
+    $output = implode("", array_slice($thisFileContent, $line_start - 1, $line_end - $line_start + 1));
+    $pageFilePath = BASEDIR.$data['error_page'];
+    $pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 
+    opentable($locale['401']." ".getMaxFolders($error_file, 3));
     echo "<table cellpadding='0' cellspacing='1' class='tbl-border center' style='border-collapse:collapse;'>\n";
     echo "<tr>\n";
     echo "<td colspan='4' class='tbl2'><a name='file'></a>\n<strong>".$locale['420']."</strong></td>\n";
@@ -188,7 +186,7 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
     echo "<td class='tbl1 err_tbl-error'>".$data['error_line']."</td>\n";
     echo "</tr>\n<tr>\n";
     echo "<td class='tbl2' style='width:5%;white-space:nowrap;'>".$locale['419'].":</td>\n";
-    echo "<td class='tbl1'><strong>".getMaxFolders($data['error_file'], 3)."</strong></td>\n";
+    echo "<td class='tbl1'><strong>".getMaxFolders($error_file, 3)."</strong></td>\n";
     echo "<td class='tbl2' style='width:5%;white-space:nowrap;'>".$locale['411'].":</td>\n";
     echo "<td class='tbl1'>";
     echo "<a href='".FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#page' title='".$data['error_page']."'>";
@@ -211,37 +209,29 @@ if (isset($_GET['error_id']) && isnum($_GET['error_id'])) {
     echo "<option value='2'".($data['error_status'] == 2 ? " selected='selected'" : "").">".$locale['452']."</option>\n";
     echo "</select>\n<input type='submit' class='button change_status' value='".$locale['453']."' style='margin-left:5px;' /></form>\n";
     echo "</td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td colspan='4' class='tbl1' style='text-align:center;font-weight:bold;'>";
-    echo "<hr />\n<a href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
-    echo "</td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td colspan='4' class='tbl2'><strong>".$locale['421']."</strong> (".$locale['415']." ".$line_start." - ".$line_end.")</td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td colspan='4'><div style='max-height:600px;overflow:auto;'>".printCode($output, $line_start, $data['error_line'])."</div>\n</td>\n";
-    echo "</tr>\n";
-
-    $thisPageContent = file(BASEDIR.$data['error_page']);
-    $output = "";
-    for ($i = 0; $i < count($thisPageContent); $i++) {
-        $output .= $thisPageContent[$i];
-    }
-    echo "<tr>\n";
-    echo "<td colspan='4' class='tbl1' style='text-align:center;font-weight:bold;'>";
-    echo "<hr />\n<a href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
-    echo "</td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td colspan='4' class='tbl2'><a name='page'></a>\n";
-    echo "<strong>".$locale['411'].": ".getMaxFolders($data['error_page'], 2)."</strong></td>\n";
-    echo "</tr>\n<tr>\n";
-    echo "<td colspan='4'><div style='max-height:500px;overflow:auto;'>".printCode($output, "1")."</div>\n</td>\n";
     echo "</tr>\n";
     echo "</table>\n";
-    echo "<div style='margin-top:5px;text-align:center;font-weight:bold;'>\n";
-    echo "<a href='#top' title='".$locale['422']."'>".$locale['422']."</a>\n";
-    echo "</div>";
-    closetable();
 
+    echo "<div style='text-align:center;font-weight:bold;'><a href='#top' title='".$locale['422']."'>".$locale['422']."</a></div>\n";
+    ?><div class='m-t-10'>
+        <div class="table-responsive">
+            <?php echo printCode($output, $line_start, $data['error_line'], [
+                'time' => $data['error_timestamp'],
+                'text' => $data['error_message']
+            ], '<strong>'.$locale['421'].'</strong> ('.$locale['415'].' '.$line_start.' - '.$line_end.')'); ?>
+        </div>
+    </div><?php
+
+    echo "<hr />\n<div style='text-align:center;font-weight:bold;'><a href='#top' title='".$locale['422']."'>".$locale['422']."</a></div>\n";
+
+    ?><div class='m-t-10'>
+        <div class="table-responsive">
+            <?php echo printCode($pageContent, 1, NULL, [], "<strong>".$locale['411'].": ".getMaxFolders($data['error_page'], 2)."</strong>"); ?>
+        </div>
+    </div><?php
+
+    echo "<div style='text-align:center;font-weight:bold;'><a href='#top' title='".$locale['422']."'>".$locale['422']."</a></div>\n";
+    closetable();
 }
 
 // Show the "Apply"-button only when javascript is disabled"
@@ -255,4 +245,5 @@ echo "$(document).ready(function() {
     });
 });";
 echo "</script>\n";
+
 require_once THEMES."templates/footer.php";
