@@ -118,8 +118,8 @@ if ($settings['site_protocol'] == 'https' && (!(isset($_SERVER['HTTPS']) && ($_S
 
 // Redirect to correct path if there are double // in the current uri
 if (substr_count($_SERVER['REQUEST_URI'], '//')) {
-    $site_path = str_replace('/', '', $_SERVER['REQUEST_URI']);
-    redirect(rtrim($settings['siteurl'], '/').'/'.$site_path);
+    $site_path = preg_replace('/(\/+)/','/', $_SERVER['REQUEST_URI']);
+    redirect(rtrim($settings['siteurl'], '/').$site_path);
 }
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
