@@ -56,51 +56,47 @@ if (!function_exists('display_inbox')) {
                     }
 
                     echo '<div class="display-inline-block">';
-                        if (is_array($info['actions_form'])) {
-                            echo $info['actions_form']['openform'];
+                        echo $info['actions_form']['openform'];
 
-                            if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) {
-                                echo '<div class="btn-group display-inline-block m-r-10">';
-                                    if ($_GET['folder'] == 'archive') {
-                                        echo $info['actions_form']['unlockbtn'];
-                                    } else if ($_GET['folder'] == 'inbox') {
-                                        echo $info['actions_form']['lockbtn'];
-                                    }
-                                    echo $info['actions_form']['deletebtn'];
-                                echo '</div>';
-                            } else {
-                                echo '<div class="dropdown display-inline-block m-r-10">';
-                                    echo '<a id="ddactions" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i><span class="caret m-l-5"></span></a>';
-                                    echo '<ul class="dropdown-menu" aria-labelledby="ddactions">';
-                                        foreach ($info['actions_form']['check'] as $id => $title) {
-                                            echo '<li><a id="'.$id.'" data-action="check" class="pointer">'.$title.'</a></li>';
-                                        }
-                                    echo '</ul>';
-                                echo '</div>';
-
-                                echo '<div class="btn-group display-inline-block m-r-10">';
-                                    if ($_GET['folder'] == 'archive') {
-                                        echo $info['actions_form']['unlockbtn'];
-                                    } else if ($_GET['folder'] !== 'outbox') {
-                                        echo $info['actions_form']['lockbtn'];
-                                    }
-                                    echo $info['actions_form']['deletebtn'];
-                                echo '</div>';
-
-                                echo '<div class="dropdown display-inline-block m-r-10">';
-                                    echo '<a id="ddactions2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle">'.$locale['444'].'&hellip; <span class="caret"></span></a>';
-                                    echo '<ul class="dropdown-menu" aria-labelledby="ddactions2">';
-                                        echo '<li>'.$info['actions_form']['mark_all'].'</li>';
-                                        echo '<li>'.$info['actions_form']['mark_read'].'</li>';
-                                        echo '<li>'.$info['actions_form']['mark_unread'].'</li>';
-                                        echo '<li>'.$info['actions_form']['unmark_all'].'</li>';
-                                    echo '</ul>';
-                                echo '</div>';
-                            }
-                            echo $info['actions_form']['closeform'];
+                        if (isset($_GET['msg_read']) && isset($info['items'][$_GET['msg_read']])) {
+                            echo '<div class="btn-group display-inline-block m-r-10">';
+                                if ($_GET['folder'] == 'archive') {
+                                    echo $info['actions_form']['unlockbtn'];
+                                } else if ($_GET['folder'] == 'inbox') {
+                                    echo $info['actions_form']['lockbtn'];
+                                }
+                                echo $info['actions_form']['deletebtn'];
+                            echo '</div>';
                         } else {
-                            echo $info['actions_form'];
+                            echo '<div class="dropdown display-inline-block m-r-10">';
+                                echo '<a id="ddactions" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i><span class="caret m-l-5"></span></a>';
+                                echo '<ul class="dropdown-menu" aria-labelledby="ddactions">';
+                                    foreach ($info['actions_form']['check'] as $id => $title) {
+                                        echo '<li><a id="'.$id.'" data-action="check" class="pointer">'.$title.'</a></li>';
+                                    }
+                                echo '</ul>';
+                            echo '</div>';
+
+                            echo '<div class="btn-group display-inline-block m-r-10">';
+                                if ($_GET['folder'] == 'archive') {
+                                    echo $info['actions_form']['unlockbtn'];
+                                } else if ($_GET['folder'] !== 'outbox') {
+                                    echo $info['actions_form']['lockbtn'];
+                                }
+                                echo $info['actions_form']['deletebtn'];
+                            echo '</div>';
+
+                            echo '<div class="dropdown display-inline-block m-r-10">';
+                                echo '<a id="ddactions2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle">'.$locale['444'].'&hellip; <span class="caret"></span></a>';
+                                echo '<ul class="dropdown-menu" aria-labelledby="ddactions2">';
+                                    echo '<li>'.$info['actions_form']['mark_all'].'</li>';
+                                    echo '<li>'.$info['actions_form']['mark_read'].'</li>';
+                                    echo '<li>'.$info['actions_form']['mark_unread'].'</li>';
+                                    echo '<li>'.$info['actions_form']['unmark_all'].'</li>';
+                                echo '</ul>';
+                            echo '</div>';
                         }
+                        echo $info['actions_form']['closeform'];
                     echo '</div>';
 
                     echo !empty($info['pagenav']) ? '<div class="display-inline-block pull-right">'.$info['pagenav'].'</div>' : '';
