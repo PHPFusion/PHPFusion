@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-require_once __DIR__.'/templates/default.php';
+require_once __DIR__.'/templates/user_info.tpl.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
