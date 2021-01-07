@@ -21,7 +21,7 @@ if (!defined('GALLERY_EXIST')) {
 }
 require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale('', GALLERY_LOCALE);
-include INFUSIONS."gallery/templates/gallery.php";
+include INFUSIONS."gallery/templates/gallery.tpl.php";
 require_once INCLUDES."infusions_include.php";
 
 if (!defined('SAFEMODE')) {
