@@ -69,7 +69,7 @@ class PageController extends PageModel {
      */
     public static function displayContentHTML($colData) {
 
-        require_once THEMES."templates/global/custompage.php";
+        require_once THEMES."templates/global/custompage.tpl.php";
 
         $htmlArray = [];
         ob_start();
