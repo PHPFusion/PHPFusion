@@ -82,8 +82,8 @@ function closetable() {
 
 \PHPFusion\OutputHandler::addHandler(function ($output = '') {
     return strtr($output, [
-        'class=\'textbox' => 'class=\'textbox form-control m-t-5 m-b-5',
-        'class="textbox'  => 'class="textbox form-control m-t-5 m-b-5',
+        'class=\'textbox' => 'class=\'textbox form-control',
+        'class="textbox'  => 'class="textbox form-control',
         'class=\'button'  => 'class=\'button btn btn-default',
         'class="button'   => 'class="button btn btn-default'
     ]);
