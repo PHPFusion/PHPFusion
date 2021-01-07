@@ -195,7 +195,8 @@ class Members {
                     'DESC' => self::$locale['MEMB_013'],
                 ),
                 'inner_width' => "150px",
-                'inline'      => TRUE
+                'inline'      => TRUE,
+                'class'       => 'm-0 p-0'
             ]);
             $search_form .= "</div>\n";
             $search_form .= closeform();
