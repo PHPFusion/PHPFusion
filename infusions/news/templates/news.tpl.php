@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: news.php
+| Filename: news.tpl.php
 | Author: PHP Fusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -31,7 +31,7 @@ if (!function_exists('display_main_news')) {
         opentable($locale['news_0004']);
         echo render_breadcrumbs();
 
-        add_to_head('<link rel="stylesheet" href="'.INFUSIONS.'news/templates/news.css?v='.filemtime(INFUSIONS.'news/templates/news.css').'">');
+        add_to_head('<link rel="stylesheet" href="'.INFUSIONS.'news/templates/css/news.css?v='.filemtime(INFUSIONS.'news/templates/css/news.css').'">');
 
         if (!empty($info['news_items'])) {
             echo '<div class="row equal-height">';

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-include INFUSIONS.'news/templates/submissions.php';
+include INFUSIONS.'news/templates/submissions.tpl.php';
 
 $news_settings = get_settings('news');
 $locale = fusion_get_locale('', [NEWS_ADMIN_LOCALE]);
