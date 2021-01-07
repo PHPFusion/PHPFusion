@@ -20,7 +20,7 @@ require_once THEMES.'templates/header.php';
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
 
-require_once THEMES.'templates/global/homepage.php';
+require_once THEMES.'templates/global/homepage.tpl.php';
 
 add_to_title($locale['home']);
 
