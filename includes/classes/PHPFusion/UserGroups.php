@@ -116,7 +116,7 @@ class UserGroups {
      * Render the global or custom template
      */
     public function showGroup() {
-        require_once THEMES."templates/global/groups.php";
+        require_once THEMES."templates/global/groups.tpl.php";
         render_user_group($this->info);
     }
 
