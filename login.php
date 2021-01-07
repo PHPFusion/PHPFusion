@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-require_once THEMES."templates/global/login.php";
+require_once THEMES."templates/global/login.tpl.php";
 $locale = fusion_get_locale();
 add_to_title($locale['global_100']);
 add_to_meta("keywords", $locale['global_100']);
