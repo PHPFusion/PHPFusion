@@ -339,7 +339,6 @@ class Errors {
                         'time' => $data['error_timestamp'],
                         'text' => $data['error_message']
                     ], '<strong>'.$locale['ERROR_421'].'</strong> ('.$locale['ERROR_415'].' '.$line_start.' - '.$line_end.')'); ?>
-
                 </div>
             </div>
             <?php
@@ -347,20 +346,9 @@ class Errors {
             echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
             ?>
             <div class='m-t-10'>
-                <?php openside('') ?>
                 <div class="table-responsive">
-                    <table class='table'>
-                        <tr>
-                            <td class='tbl2'><a name='page'></a>
-                                <strong><?php echo $locale['ERROR_411'] ?>: <?php echo self::getMaxFolders($data['error_page'], 3) ?></strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><?php echo $this->printCode($pageContent, "1") ?></td>
-                        </tr>
-                    </table>
+                    <?php echo $this->printCode($pageContent, 1, NULL, [], '<strong>'.$locale['ERROR_411'].': '.self::getMaxFolders($data['error_page'], 3).'</strong>'); ?>
                 </div>
-                <?php closeside() ?>
             </div>
             <?php
             echo closetabbody();
