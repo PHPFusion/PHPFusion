@@ -33,7 +33,7 @@ require_once INCLUDES."infusions_include.php";
 $locale = fusion_get_locale("", DOWNLOAD_LOCALE);
 $aidlink = fusion_get_aidlink();
 
-include INFUSIONS."downloads/templates/downloads.php";
+include INFUSIONS."downloads/templates/downloads.tpl.php";
 require_once INFUSIONS."downloads/classes/Functions.php";
 require_once INFUSIONS."downloads/classes/OpenGraphDownloads.php";
 
