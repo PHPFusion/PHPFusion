@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-require_once THEMES."templates/global/error.php";
+require_once THEMES."templates/global/error.tpl.php";
 
 function replaceHTMLTags($m) {
     return (string) $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
