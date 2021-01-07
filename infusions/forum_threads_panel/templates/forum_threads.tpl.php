@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: templates.php
+| Filename: forum_threads.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,43 +19,34 @@ defined('IN_FUSION') || exit;
 
 if (!function_exists('render_threads_panel')) {
     function render_threads_panel($info) {
-        $html = \PHPFusion\Template::getInstance('threads');
-        $html->set_template(__DIR__.'/templates/threads.html');
-
-        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
-        $html->set_tag('closeside', fusion_get_function('closeside'));
-        $html->set_tag('label', $info['latest']['label']);
-        $html->set_tag('label2', $info['hottest']['label']);
-
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
+        openside($info['title']);
         if (!empty($info['latest'])) {
+            echo '<div class="side-label"><strong>'.$info['latest']['label'].'</strong></div>';
+            echo '<ul class="side">';
             if (!empty($info['latest']['item'])) {
                 foreach ($info['latest']['item'] as $data) {
-                    $html->set_block('latest', [
-                        'link_url'   => $data['link_url'],
-                        'link_title' => '<span data-trim-text="18">'.$data['link_title'].'</span>',
-                    ]);
+                    echo '<li><a href="'.$data['link_url'].'"><span data-trim-text="18">'.$data['link_title'].'</span></a></li>';
                 }
             } else {
-                $html->set_block('latest_no_item', ['message' => $info['latest']['no_rows']]);
+                echo '<li><span class="text-center">'.$info['latest']['no_rows'].'</span></li>';
             }
+            echo '</ul>';
         }
 
         if (!empty($info['hottest'])) {
+            echo '<div class="side-label"><strong>'.$info['hottest']['label'].'</strong></div>';
+            echo '<ul class="side">';
             if (!empty($info['hottest']['item'])) {
                 foreach ($info['hottest']['item'] as $data) {
-                    $html->set_block('hottest', [
-                        'link_url'   => $data['link_url'],
-                        'link_title' => '<span data-trim-text="18">'.$data['link_title'].'</span>',
-                        'badge'      => $data['badge'],
-                    ]);
+                    echo '<li><a href="'.$data['link_url'].'"><span data-trim-text="18">'.$data['link_title'].'</span> '.$data['badge'].'</a></li>';
                 }
             } else {
-                $html->set_block('hottest_no_item', ['message' => $info['hottest']['no_rows']]);
+                echo '<li><span class="text-center">'.$info['hottest']['no_rows'].'</span></li>';
             }
+            echo '</ul>';
         }
-
-        echo $html->get_output();
+        closeside();
     }
 }

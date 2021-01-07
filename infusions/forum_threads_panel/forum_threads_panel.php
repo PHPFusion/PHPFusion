@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 if (defined('FORUM_EXIST')) {
     include_once INCLUDES."infusions_include.php";
-    include_once INFUSIONS."forum_threads_panel/templates.php";
+    include_once INFUSIONS."forum_threads_panel/templates/forum_threads.tpl.php";
 
     $inf_settings = get_settings('forum');
     $locale = fusion_get_locale("", FORUM_LOCALE);
