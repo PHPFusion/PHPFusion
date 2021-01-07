@@ -18,7 +18,7 @@
 require_once "maincore.php";
 require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
-include THEMES."templates/global/profile.php";
+include THEMES."templates/global/profile.tpl.php";
 
 if (!iMEMBER) {
     redirect("index.php");

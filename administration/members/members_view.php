@@ -58,4 +58,4 @@ class Members_View {
 
 }
 
-require_once(THEMES.'templates/global/profile.php');
+require_once(THEMES.'templates/global/profile.tpl.php');

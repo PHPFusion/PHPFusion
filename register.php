@@ -19,7 +19,7 @@ require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
-require_once THEMES."templates/global/profile.php";
+require_once THEMES."templates/global/profile.tpl.php";
 add_to_title($locale['global_107']);
 add_to_meta("keywords", $locale['global_107']);
 $_GET['profiles'] = 1;
