@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://www.phpfusion.com/
 +--------------------------------------------------------+
-| Filename: templates.php
+| Filename: latest_articles.tpl.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,26 +21,22 @@ if (!function_exists('render_latest_articles')) {
     function render_latest_articles($info) {
         $locale = fusion_get_locale();
 
-        $html = \PHPFusion\Template::getInstance('render_latest_articles');
-        $html->set_template(__DIR__.'/templates/latest_articles.html');
-        $html->set_tag('openside', fusion_get_function('openside', $info['title']));
-        $html->set_tag('closeside', fusion_get_function('closeside'));
-
         add_to_jquery("$('[data-trim-text]').trim_text();");
 
-        if (!empty($info['item'])) {
-            foreach ($info['item'] as $data) {
-                $html->set_block('article', [
-                    'article_url'   => $data['article_url'],
-                    'article_title' => $data['article_title'],
-                    'author'        => $locale['global_070'].' '.$data['profile_link'],
-                    'bullet'        => $info['theme_bullet']
-                ]);
-            }
-        } else {
-            $html->set_block('no_item', ['message' => $info['no_item']]);
-        }
+        openside($info['title']);
 
-        echo $html->get_output();
+        if (!empty($info['item'])) {
+            echo '<ul style="margin-left: 25px;">';
+            foreach ($info['item'] as $data) {
+                echo '<li style="list-style-position: inside;text-indent: -1.5em;">
+                    <a class="overflow-hide" data-trim-text="30" href="'.$data['article_url'].'">'.$data['article_title'].'</a>
+                    <br><span>'.$locale['global_070'].' '.$data['profile_link'].'</span>
+                </li>';
+            }
+            echo '</ul>';
+        } else {
+            echo $info['no_item'];
+        }
+        closeside();
     }
 }
