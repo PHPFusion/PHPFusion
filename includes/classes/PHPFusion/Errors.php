@@ -59,15 +59,10 @@ class Errors {
     public function __construct() {
 
         self::$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/errors.php', LOCALE.LOCALESET.'errors.php']);
-
         $this->error_status = (int)descript(post('error_status', FILTER_VALIDATE_INT));
-
         $this->posted_error_id = (int)descript(post('error_id', FILTER_VALIDATE_INT));
-
         $this->delete_status = (int)descript(post('delete_status', FILTER_VALIDATE_INT));
-
         $this->rowstart = (int)get('rowstart', FILTER_VALIDATE_INT);
-
         $this->error_id = (int)get('error_id', FILTER_VALIDATE_INT);
 
         if (check_post('error_status') && check_post('error_id')) {
@@ -205,7 +200,7 @@ class Errors {
         $html .= "<a data-id='".$data['error_id']."' data-type='0' class='btn btn-sm".($data['error_status'] == 0 ? ' active' : '')." e_status_0 button btn-default  move_error_log'>".$locale['ERROR_450']."</a>\n";
         $html .= "<a data-id='".$data['error_id']."' data-type='1' class='btn btn-sm".($data['error_status'] == 1 ? ' active' : '')." e_status_1 button btn-default  move_error_log'>".$locale['ERROR_451']."</a>\n";
         $html .= "<a data-id='".$data['error_id']."' data-type='2' class='btn btn-sm".($data['error_status'] == 2 ? ' active' : '')." e_status_2 button btn-default  move_error_log'>".$locale['ERROR_452']."</a>\n";
-        $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn btn-sm e_status_999 button btn-default  move_error_log'>".$locale['delete']."</a>\n";
+        $html .= "<a data-id='".$data['error_id']."' data-type='999' class='btn btn-sm e_status_999 button btn-default move_error_log'>".$locale['delete']."</a>\n";
         $html .= "</td>\n";
         $html .= "</tr>\n";
         /* Toggle Info */
@@ -289,15 +284,10 @@ class Errors {
             }
 
             $thisFileContent = is_file($data['error_file']) ? file($data['error_file']) : [];
-
             $line_start = max($data['error_line'] - 10, 1);
-
             $line_end = min($data['error_line'] + 10, count($thisFileContent));
-
             $output = implode("", array_slice($thisFileContent, $line_start - 1, $line_end - $line_start + 1));
-
             $pageFilePath = BASEDIR.$data['error_page'];
-
             $pageContent = is_file($pageFilePath) ? file_get_contents($pageFilePath) : '';
 
             add_to_jquery("$('#error_status_sel').bind('change', function(e){this.form.submit();});");
@@ -307,8 +297,7 @@ class Errors {
             <div class='m-t-20'>
                 <h2><?php echo $data['error_message'] ?></h2>
 
-                <h3 style='border-bottom:0;' class='display-inline'><label
-                            class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
+                <h3 style='border-bottom:0;' class='display-inline'><label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
                 </h3>
 
                 <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
@@ -324,14 +313,11 @@ class Errors {
                     <span class='text-lighter'><?php echo $locale['ERROR_463'] ?></span>
 
                     <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
-                        <strong><?php echo $locale['ERROR_412']."-".$locale['ERROR_416'] ?>
-                            <?php echo $data['error_user_level']; ?>
-                            -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'] ?></strong>
+                        <strong><?php echo $locale['ERROR_412']."-".$locale['ERROR_416']; echo $data['error_user_level']; ?> -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'] ?></strong>
                     </div>
                     <span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
 
-                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong
-                                class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
+                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
                     </div>
                 </div>
                 <div class='m-t-10 display-inline-block' style='width:300px'>
@@ -348,23 +334,13 @@ class Errors {
             </div>
 
             <div class='m-t-10'>
-                <?php openside('') ?>
                 <div class="table-responsive">
-                    <table class='table'>
-                        <tr>
-                            <td colspan='4' class='tbl2'><strong><?php echo $locale['ERROR_421'] ?></strong>
-                                (<?php echo $locale['ERROR_415']." ".$line_start." - ".$line_end ?>)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan='4'><?php echo $this->printCode($output, $line_start, $data['error_line'], [
-                                    'time' => $data['error_timestamp'],
-                                    'text' => $data['error_message']
-                                ]) ?></td>
-                        </tr>
-                    </table>
+                    <?php echo $this->printCode($output, $line_start, $data['error_line'], [
+                        'time' => $data['error_timestamp'],
+                        'text' => $data['error_message']
+                    ], '<strong>'.$locale['ERROR_421'].'</strong> ('.$locale['ERROR_415'].' '.$line_start.' - '.$line_end.')'); ?>
+
                 </div>
-                <?php closeside() ?>
             </div>
             <?php
             echo closetabbody();
@@ -376,8 +352,7 @@ class Errors {
                     <table class='table'>
                         <tr>
                             <td class='tbl2'><a name='page'></a>
-                                <strong><?php echo $locale['ERROR_411'] ?>
-                                    : <?php echo self::getMaxFolders($data['error_page'], 3) ?></strong>
+                                <strong><?php echo $locale['ERROR_411'] ?>: <?php echo self::getMaxFolders($data['error_page'], 3) ?></strong>
                             </td>
                         </tr>
                         <tr>
@@ -550,7 +525,7 @@ class Errors {
         }
     }
 
-    private function printCode($source_code, $starting_line, $error_line = "", array $error_message = []) {
+    private function printCode($source_code, $starting_line, $error_line = "", array $error_message = [], $title = NULL) {
         $locale = fusion_get_locale();
 
         if (is_array($source_code)) {
@@ -569,17 +544,9 @@ class Errors {
             $line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
             $formatted_code .= "<tr>\n<td class='err_tbl2' style='text-align:right;width:1%;'>".$line_count."</td>\n";
             if (preg_match('#<\?(php)?[^[:graph:]]#', $code_line)) {
-                $formatted_code .= "<td class='".$line_class."'>".str_replace([
-                        '<code>',
-                        '</code>'
-                    ], '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
+                $formatted_code .= "<td class='".$line_class."'>".str_replace(['<code>', '</code>'], '', highlight_string($code_line, TRUE))."</td>\n</tr>\n";
             } else {
-                $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace([
-                        '<code>',
-                        '</code>'
-                    ], '',
-                        highlight_string('<?php '.$code_line,
-                            TRUE)))."
+                $formatted_code .= "<td class='".$line_class."'>".preg_replace('#(&lt;\?php&nbsp;)+#', '', str_replace(['<code>', '</code>'], '', highlight_string('<?php '.$code_line, TRUE)))."
                 </td>\n</tr>\n";
                 if ($line_count == $error_line) {
                     $formatted_code .= "<tr>\n<td colspan='2'>".$error_message."</td></tr>\n";
@@ -588,7 +555,9 @@ class Errors {
             $line_count++;
         }
 
-        return "<table class='err_tbl-border center' cellspacing='0' cellpadding='0'>".$formatted_code."</table>";
+        $title = !empty($title) ? '<thead><tr><th colspan="2" class="p-10">'.$title.'</th></tr></thead>' : '';
+
+        return "<table class='table-bordered err_tbl-border center' cellspacing='0' cellpadding='0'>".$title."<tbody>".$formatted_code."</tbody></table>";
     }
 
     private function codeWrap($code, $maxLength = 150) {
