@@ -68,7 +68,7 @@ if (file_exists(INCLUDES."header_includes.php")) {
 }
 require_once INCLUDES."theme_functions_include.php";
 require_once THEMES."templates/render_functions.php";
-include THEMES."templates/global/maintenance.php";
+include THEMES."templates/global/maintenance.tpl.php";
 
 header("Content-Type: text/html; charset=".$locale['charset']."");
 echo "<!DOCTYPE html>\n";
