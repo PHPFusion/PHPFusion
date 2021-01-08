@@ -107,7 +107,7 @@ if (!function_exists('display_user_profile')) {
     function display_user_profile($info) {
         $locale = fusion_get_locale();
 
-        add_to_css('.social-icons>img,.cat-field img{max-width:25px;}');
+        add_to_css('.cat-field img{max-width:25px;}');
 
         opentable('');
         echo '<section id="user-profile">';
@@ -139,30 +139,26 @@ if (!function_exists('display_user_profile')) {
             echo '<h2 class="m-0">'.$info['core_field']['profile_user_name']['value'].'</h2>';
             echo $info['core_field']['profile_user_level']['value'];
 
-            if (!empty($info['user_field'])) {
-                echo '<div class="m-t-5">';
-                foreach ($info['user_field'] as $cat_id => $category_data) {
-                    if (!empty($category_data['fields'])) {
-                        foreach ($category_data['fields'] as $field_id => $field_data) {
-                            if (!empty($field_data['type']) && $field_data['type'] == 'social') {
-                                echo '<a class="social-icons" href="'.$field_data['link'].'">'.$field_data['icon'].'</a>';
-                            }
-                        }
-                    }
-                }
-                echo '</div>';
-            }
-
             if (!empty($info['core_field'])) {
                 echo '<hr>';
                 foreach ($info['core_field'] as $field_id => $field_data) {
                     switch ($field_id) {
                         case 'profile_user_group':
-                            if (!empty($field_data['value']) && is_array($field_data['value'])) {
-                                foreach ($field_data['value'] as $groups) {
-                                    $user_groups[] = $groups;
+                            echo '<div class="row cat-field">';
+                                echo '<div class="col-xs-12 col-sm-3"><strong>'.$locale['u057'].'</strong></div>';
+                                echo '<div class="col-xs-12 col-sm-9">';
+                                if (!empty($field_data['value']) && is_array($field_data['value'])) {
+                                    $i = 0;
+                                    foreach ($field_data['value'] as $id => $group) {
+                                        echo $i > 0 ? ', ' : '';
+                                        echo '<a href="'.$group['group_url'].'">'.$group['group_name'].'</a>';
+                                        $i++;
+                                    }
+                                } else {
+                                    echo !empty($locale['u117']) ? $locale['u117'] : $locale['na'];
                                 }
-                            }
+                                echo '</div>';
+                            echo '</div>';
                             break;
                         case 'profile_user_avatar':
                             $avatar['user_avatar'] = $field_data['value'];
@@ -203,30 +199,16 @@ if (!function_exists('display_user_profile')) {
                     echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, TRUE);
 
                     if ($tab_title['id'][$_GET['section']] == $tab_title['id'][1]) {
-                        echo '<div class="row cat-field">';
-                            echo '<div class="col-xs-12 col-sm-3"><strong>'.$locale['u057'].'</strong></div>';
-                            echo '<div class="col-xs-12 col-sm-9">';
-                                if (!empty($user_groups) && is_array($user_groups)) {
-                                    $i = 0;
-                                    foreach ($user_groups as $id => $group) {
-                                        echo $i > 0 ? ', ' : '';
-                                        echo '<a href="'.$group['group_url'].'">'.$group['group_name'].'</a>';
-                                        $i++;
-                                    }
-                                } else {
-                                    echo !empty($locale['u117']) ? $locale['u117'] : $locale['na'];
-                                }
-                            echo '</div>';
-                        echo '</div>';
-
                         if (!empty($info['group_admin'])) {
                             $group = $info['group_admin'];
 
-                            echo '<div class="m-t-10">';
+                            echo '<div class="well m-t-10">';
                                 echo $group['ug_openform'];
-                                echo '<div>'.$group['ug_title'].'</div>';
-                                echo '<div class="spacer-xs">'.$group['ug_dropdown_input'].'</div>';
-                                echo '<div>'.$group['ug_button'].'</div>';
+                                echo '<div class="row">';
+                                    echo '<div class="col-xs-12 col-sm-2">'.$group['ug_title'].'</div>';
+                                    echo '<div class="col-xs-12 col-sm-8">'.$group['ug_dropdown_input'].'</div>';
+                                    echo '<div class="col-xs-12 col-sm-2">'.$group['ug_button'].'</div>';
+                                echo '</div>';
                                 echo $group['ug_closeform'];
                             echo '</div>';
                         }
@@ -237,11 +219,7 @@ if (!function_exists('display_user_profile')) {
                                 if (!empty($category_data['fields'])) {
                                     if (isset($category_data['fields'])) {
                                         foreach ($category_data['fields'] as $field_id => $field_data) {
-                                            if (isset($field_data['type']) && $field_data['type'] == 'social') {
-                                                // Hide Social UF
-                                            } else {
-                                                $fields[] = $field_data;
-                                            }
+                                            $fields[] = $field_data;
                                         }
                                     }
 
@@ -250,14 +228,10 @@ if (!function_exists('display_user_profile')) {
 
                                         if (isset($category_data['fields'])) {
                                             foreach ($category_data['fields'] as $field_id => $field_data) {
-                                                if (isset($field_data['type']) && $field_data['type'] == 'social') {
-                                                    // Hide Social UF
-                                                } else {
-                                                    echo '<div id="field-'.$field_id.'" class="row cat-field">';
-                                                        echo '<div class="col-xs-12 col-sm-3"><strong>'.(!empty($field_data['icon']) ? $field_data['icon'] : '').' '.$field_data['title'].'</strong></div>';
-                                                        echo '<div class="col-xs-12 col-sm-9">'.$field_data['value'].'</div>';
-                                                    echo '</div>';
-                                                }
+                                                echo '<div id="field-'.$field_id.'" class="row cat-field m-b-5">';
+                                                    echo '<div class="col-xs-12 col-sm-3"><strong>'.(!empty($field_data['icon']) ? $field_data['icon'] : '').' '.$field_data['title'].'</strong></div>';
+                                                    echo '<div class="col-xs-12 col-sm-9">'.$field_data['value'].'</div>';
+                                                echo '</div>';
                                             }
                                         }
 
