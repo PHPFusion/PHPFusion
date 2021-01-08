@@ -38,7 +38,7 @@ if (!function_exists('display_main_news')) {
             foreach ($info['news_items'] as $id => $data) {
                 $link = INFUSIONS.'news/news.php?readmore='.$data['news_id'];
 
-                echo '<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 news-item m-b-20">';
+                echo '<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 news-item m-b-20"><div>';
                     $thumbnail = !empty($data['news_image_optimized']) ? $data['news_image_optimized'] : get_image('imagenotfound');
                     echo '<div class="overflow-hide item-image"><div class="item-thumbnail" style="background-image: url('.$thumbnail.')">';
                     echo '<a class="img-link" href="'.$link.'"></a>';
@@ -58,7 +58,7 @@ if (!function_exists('display_main_news')) {
 
                         echo '<a href="'.$link.'">'.$locale['news_0001'].'</a>';
                     echo '</div>';
-                echo '</div>';
+                echo '</div></div>';
             }
             echo '</div>';
 

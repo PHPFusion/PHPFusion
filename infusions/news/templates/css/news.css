@@ -1,5 +1,6 @@
 .news-index .news-item .item-image {
     border-radius: 5px;
+    max-height: 230px;
 }
 
 .news-index .news-item .item-thumbnail {
