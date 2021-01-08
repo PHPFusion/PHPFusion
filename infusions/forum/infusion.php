@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -28,7 +28,7 @@ $inf_description = $locale['forums']['description'];
 $inf_version = '2.0';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@phpfusion.com';
-$inf_weburl = 'https://www.phpfusion.com';
+$inf_weburl = 'https://phpfusion.com';
 $inf_folder = 'forum';
 $inf_image = 'forums.svg';
 

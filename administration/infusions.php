@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -34,7 +34,7 @@ if (($folder = filter_input(INPUT_POST, 'infuse'))) {
 
 opentable($locale['400']);
 echo "<div class='text-right'>\n";
-echo "<a href='https://www.phpfusion.com/infusions/marketplace/' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+echo "<a href='https://phpfusion.com/infusions/marketplace/' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
 echo "</div>\n";
 
 $infs = [];

@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: site_links.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -608,14 +608,14 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             $('#table_action').val('link_move');
             $('form#fusion_sltable_form').submit();
         });
-        
+
         $('#publish').bind('click', function(ev) {
             ev.preventDefault();
             // check if any link is clicked
             $('#table_action').val('publish');
             $('form#fusion_sltable_form').submit();
         });
-        
+
         $('#unpublish').bind('click', function(ev) {
             ev.preventDefault();
             // check if any link is clicked
