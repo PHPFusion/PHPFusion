@@ -107,6 +107,8 @@ if (!function_exists('display_user_profile')) {
     function display_user_profile($info) {
         $locale = fusion_get_locale();
 
+        add_to_css('.social-icons>img,.cat-field img{max-width:25px;}');
+
         opentable('');
         echo '<section id="user-profile">';
         echo '<div class="row m-b-20">';
@@ -138,7 +140,6 @@ if (!function_exists('display_user_profile')) {
             echo $info['core_field']['profile_user_level']['value'];
 
             if (!empty($info['user_field'])) {
-                add_to_css('.social-icons>img{max-width:25px;}');
                 echo '<div class="m-t-5">';
                 foreach ($info['user_field'] as $cat_id => $category_data) {
                     if (!empty($category_data['fields'])) {
