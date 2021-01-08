@@ -57,9 +57,8 @@ if (!function_exists("display_main_articles")) {
                 <!-- Diplay Categories -->
                 <div id="articlescat" class="panel-collapse collapse m-b-10">
                     <!--pre_articles_cat_idx-->
-                    <ul class="list-group">
+                    <ul class="list-group m-5">
                         <li class="list-group-item">
-                            <hr class="m-t-0 m-b-5">
                             <span class="display-inline-block m-b-10 strong text-smaller text-uppercase"><?php echo $locale['article_0003']; ?></span><br/>
                             <?php
                             foreach ($info['article_categories'] as $cat_id => $cat_data) {
@@ -97,7 +96,7 @@ if (!function_exists("display_main_articles")) {
                 foreach ($info['article_items'] as $i => $data) {
                     echo (isset($_GET['cat_id'])) ? "<!--pre_articles_cat_idx-->\n" : "<!--articles_prepost_".$i."-->\n";
                     ?>
-                    <article class="panel panel-default clearfix article-index-item" style="min-height: 150px;">
+                    <article class="panel panel-default clearfix article-index-item m-b-10" style="min-height: 150px;">
                         <div class="panel-body">
                             <h4 class="article-title panel-title">
                                 <a href="<?php echo INFUSIONS."articles/articles.php?article_id=".$data['article_id']; ?>" class="text-dark strong"><?php echo $data['article_subject']; ?></a>

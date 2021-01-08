@@ -177,7 +177,7 @@ class SiteLinks {
             'container'            => FALSE,
             'container_fluid'      => FALSE,
             'responsive'           => TRUE,
-            'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar navbar-expand-lg navbar-light' : 'navbar-default',
+            'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light bg-light' : 'navbar-default',
             'nav_class'            => defined('BOOTSTRAP4') ? 'navbar-nav ml-auto primary' : '',
             'additional_nav_class' => '',
             'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class
@@ -422,9 +422,9 @@ class SiteLinks {
             $res .= self::getMenuParam('container') ? "<div class='container'>\n" : "";
             $res .= self::getMenuParam('container_fluid') ? "<div class='container-fluid'>\n" : "";
             if (self::getMenuParam('show_header')) {
-                $res .= "<div class='navbar-header'>\n";
+                $res .= !defined('BOOTSTRAP4') ? "<div class='navbar-header'>\n" : '';
                 $res .= "<!--Menu Header Start-->\n";
-                if (self::getMenuParam('responsive')) {
+                if (self::getMenuParam('responsive') && !defined('BOOTSTRAP4')) {
                     $res .= "<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#".self::getMenuParam('id')."_menu' aria-expanded='false' aria-controls='#".self::getMenuParam('id')."_menu'>\n";
                     $res .= "<span class='sr-only'>".$locale['global_017']."</span>\n";
                     $res .= "<span class='icon-bar top-bar'></span>\n";
@@ -439,8 +439,15 @@ class SiteLinks {
                 } else {
                     $res .= self::getMenuParam('show_header');
                 }
+
+                if (self::getMenuParam('responsive') && defined('BOOTSTRAP4')) {
+                    $res .= '<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#'.self::getMenuParam('id').'_menu" aria-controls="'.self::getMenuParam('id').'_menu" aria-expanded="false">';
+                    $res .= '<span class="navbar-toggler-icon"></span>';
+                    $res .= '</button>';
+                }
+
                 $res .= "<!--Menu Header End-->\n";
-                $res .= "</div>\n";
+                $res .= !defined('BOOTSTRAP4') ? "</div>\n" : '';
             }
 
             $res .= self::getMenuParam('custom_header');
@@ -476,8 +483,8 @@ class SiteLinks {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
-                        $language_opts = "<li class='dropdown'>";
-                        $language_opts .= "<a id='ddlangs".$id."' href='#' class='dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
+                        $language_opts = "<li class='nav-item dropdown'>";
+                        $language_opts .= "<a id='ddlangs".$id."' href='#' class='nav-link dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddlangs".$id."' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $folder => $langData) {
@@ -494,8 +501,8 @@ class SiteLinks {
                 }
 
                 if (self::getMenuParam('searchbar') == TRUE) {
-                    $searchbar = "<li class='dropdown'>";
-                    $searchbar .= "<a id='ddsearch".$id."' href='#' class='dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
+                    $searchbar = "<li class='nav-item dropdown'>";
+                    $searchbar .= "<a id='ddsearch".$id."' href='#' class='nav-link dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
                     $searchbar .= "<ul aria-labelledby='ddsearch".$id."' class='dropdown-menu dropdown-menu-right p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',

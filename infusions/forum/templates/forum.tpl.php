@@ -259,19 +259,15 @@ if (!function_exists('forum_viewforum')) {
         }
 
         if (!empty($info['forum_page_link'])) {
-            echo '<nav class="navbar navbar-default forum-navbar" style="min-height: inherit;">';
-            echo '<div class="container-fluid">';
-            echo '<ul class="nav navbar-nav">';
+            echo '<ul class="nav">';
             $i = 0;
             foreach ($info['forum_page_link'] as $view_keys => $page_link) {
-                $active = (!isset($_GET['view']) && !$i) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? ' class="active"' : '';
+                $active = (!isset($_GET['view']) && !$i) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? ' active' : '';
 
-                echo '<li'.$active.'><a class="p-t-10 p-b-10" href="'.$page_link['link'].'">'.$page_link['title'].'</a></li>';
+                echo '<li class="nav-item'.$active.'"><a class="nav-link p-t-10 p-b-10" href="'.$page_link['link'].'">'.$page_link['title'].'</a></li>';
                 $i++;
             }
             echo '</ul>';
-            echo '</div>';
-            echo '</nav>';
         }
 
         if (!empty($info['forum_rules'])) {
@@ -540,7 +536,7 @@ if (!function_exists('forum_filter')) {
             'descending' => $locale['forum_0230'],
             'ascending'  => $locale['forum_0231']
         ];
-        // temporarily fix before moving to TPL
+
         ob_start();
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id']) || isset($_GET['forum_id']) && isnum($_GET['forum_id'])) {
             ?>
@@ -555,7 +551,7 @@ if (!function_exists('forum_filter')) {
                         <ul class='dropdown-menu' aria-labelledby='ddfilter1'>
                             <?php
                             foreach ($info['filter']['time'] as $filter_locale => $filter_link) {
-                                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+                                echo "<li class='dropdown-item''><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
                             }
                             ?>
                         </ul>
@@ -571,7 +567,7 @@ if (!function_exists('forum_filter')) {
                         <ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddfilter2'>
                             <?php
                             foreach ($info['filter']['sort'] as $filter_locale => $filter_link) {
-                                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+                                echo "<li class='dropdown-item'><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
                             }
                             ?>
                         </ul>
@@ -584,7 +580,7 @@ if (!function_exists('forum_filter')) {
                         <ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddfilter3'>
                             <?php
                             foreach ($info['filter']['order'] as $filter_locale => $filter_link) {
-                                echo "<li><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
+                                echo "<li class='dropdown-item''><a class='text-smaller' href='".$filter_link."'>".$filter_locale."</a></li>\n";
                             }
                             ?>
                         </ul>
@@ -958,7 +954,7 @@ if (!function_exists('render_thread')) {
                 if (!empty($info['post-filters'])) {
                     echo '<ul class="dropdown-menu" aria-labelledby="ddfilter5">';
                         foreach ($info['post-filters'] as $i => $filters) {
-                            echo '<li><a class="text-smaller" href="'.$filters['value'].'">'.$filters['locale'].'</a></li>';
+                            echo '<li class="dropdown-item"><a class="text-smaller" href="'.$filters['value'].'">'.$filters['locale'].'</a></li>';
                         }
                     echo '</ul>';
                 }
@@ -1123,9 +1119,9 @@ if (!function_exists('render_post_item')) {
                             echo '<a href="#" id="ddpost'.$data['marker']['id'].'" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'.$locale['forum_0662'].'</a>';
 
                             echo '<ul class="dropdown-menu" aria-labelledby="ddpost'.$data['marker']['id'].'">';
-                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&ref=edit&lookup='.$data['user_id'].'">'.$locale['forum_0663'].'</a></li>';
-                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&lookup='.$data['user_id'].'&action=1">'.$locale['forum_0664'].'</a></li>';
-                                echo '<li><a href="'.ADMIN.'members.php'.$aidlink.'&ref=delete&lookup='.$data['user_id'].'">'.$locale['forum_0665'].'</a></li>';
+                                echo '<li class="dropdown-item"><a href="'.ADMIN.'members.php'.$aidlink.'&ref=edit&lookup='.$data['user_id'].'">'.$locale['forum_0663'].'</a></li>';
+                                echo '<li class="dropdown-item"><a href="'.ADMIN.'members.php'.$aidlink.'&lookup='.$data['user_id'].'&action=1">'.$locale['forum_0664'].'</a></li>';
+                                echo '<li class="dropdown-item"><a href="'.ADMIN.'members.php'.$aidlink.'&ref=delete&lookup='.$data['user_id'].'">'.$locale['forum_0665'].'</a></li>';
                             echo '</ul>';
                         echo '</div>';
                     }

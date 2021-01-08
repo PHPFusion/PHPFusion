@@ -88,7 +88,7 @@ if (!function_exists('display_weblinks_item')) {
                 $date = showdate('shortdate', $web_data['weblink_datestamp']);
 
                 echo '<div id="weblink-'.$web_data['weblink_id'].'" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default m-b-20">
                         <div class="panel-body">
                             <h4 class="weblink-title panel-title"><i class="fa fa-fw fa-link"></i><a target="_blank" href="'.$web_data['weblinks_url'].'" class="strong">'.$web_data['weblink_name'].'</a></h4>
                             <div class="weblink-text overflow-hide m-t-5">'.$description.'</div>
