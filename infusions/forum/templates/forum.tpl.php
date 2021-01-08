@@ -259,7 +259,7 @@ if (!function_exists('forum_viewforum')) {
         }
 
         if (!empty($info['forum_page_link'])) {
-            echo '<ul class="nav">';
+            echo '<ul class="nav nav-pills">';
             $i = 0;
             foreach ($info['forum_page_link'] as $view_keys => $page_link) {
                 $active = (!isset($_GET['view']) && !$i) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? ' active' : '';
