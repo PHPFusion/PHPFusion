@@ -143,7 +143,7 @@ class News  {
                     echo !empty($data['news_pagenav']) ? '<div class="text-center m-10">'.$data['news_pagenav'].'</div>' : '';
                 echo '</div>';
 
-                if (!empty($data['news_gallery'])) {
+                if (!empty($data['news_gallery']) && count($data['news_gallery']) > 1) {
                     echo '<hr/>';
                     echo '<h3>'.$locale['news_0019'].'</h3>';
 
