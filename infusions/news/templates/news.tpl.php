@@ -104,9 +104,7 @@ if (!function_exists('render_news_item')) {
      * @param $info
      */
     function render_news_item($info) {
-
         $locale = fusion_get_locale();
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
         $data = $info['news_item'];
 
         opentable($locale['news_0004']);
@@ -121,9 +119,13 @@ if (!function_exists('render_news_item')) {
         }
         echo "<h2 class='text-left m-t-0 m-b-0'>".$data['news_subject']."</h2>\n";
         echo "<div class='news_news text-dark m-t-20 m-b-20 overflow-hide'>\n";
+
         if ($data['news_image_src']) {
-            echo "<a class='news-image-overlay' href='".$data['news_image_src']."'>
-            <img class='img-responsive ".$data['news_image_align']." m-r-10' src='".$data['news_image_src']."' alt='".$data['news_subject']."' style='padding:5px; width: 30%; max-height:".$news_settings['news_photo_h']."px; overflow:hidden;' /></a>";
+            echo '<a href="'.$data['news_image_src'].'" class="news-image-overlay">';
+            $position = $data['news_image_align'] == 'news-img-center' ? 'center-x m-b-10' : $data['news_image_align'];
+            $width = $data['news_image_align'] == 'news-img-center' ? '100%' : '200px';
+            echo '<img class="img-responsive '.$position.' m-r-10" style="width: '.$width.';" src="'.$data['news_image_src'].'" alt="'.$data['news_subject'].'"/>';
+            echo '</a>';
         }
 
         echo $data['news_news'];
