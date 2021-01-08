@@ -31,6 +31,8 @@ if (!function_exists('display_inbox')) {
         echo '<div class="row">';
 
         echo '<div class="col-xs-12 col-sm-3">
+            <div class="text-center"><a class="btn btn-primary btn-block btn-sm" href="'.$info['button']['new']['link'].'">'.$locale['401'].'</a></div>
+
             <ul class="block nav p-5">';
                 $i = 1;
                 foreach ($info['folders'] as $key => $folder) {
@@ -72,7 +74,7 @@ if (!function_exists('display_inbox')) {
                                 echo '<a id="ddactions" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i><span class="caret m-l-5"></span></a>';
                                 echo '<ul class="dropdown-menu" aria-labelledby="ddactions">';
                                     foreach ($info['actions_form']['check'] as $id => $title) {
-                                        echo '<li><a id="'.$id.'" data-action="check" class="pointer">'.$title.'</a></li>';
+                                        echo '<li class="dropdown-item"><a id="'.$id.'" data-action="check" class="pointer">'.$title.'</a></li>';
                                     }
                                 echo '</ul>';
                             echo '</div>';
@@ -89,10 +91,10 @@ if (!function_exists('display_inbox')) {
                             echo '<div class="dropdown display-inline-block m-r-10">';
                                 echo '<a id="ddactions2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle">'.$locale['444'].'&hellip; <span class="caret"></span></a>';
                                 echo '<ul class="dropdown-menu" aria-labelledby="ddactions2">';
-                                    echo '<li>'.$info['actions_form']['mark_all'].'</li>';
-                                    echo '<li>'.$info['actions_form']['mark_read'].'</li>';
-                                    echo '<li>'.$info['actions_form']['mark_unread'].'</li>';
-                                    echo '<li>'.$info['actions_form']['unmark_all'].'</li>';
+                                    echo '<li class="dropdown-item">'.$info['actions_form']['mark_all'].'</li>';
+                                    echo '<li class="dropdown-item">'.$info['actions_form']['mark_read'].'</li>';
+                                    echo '<li class="dropdown-item">'.$info['actions_form']['mark_unread'].'</li>';
+                                    echo '<li class="dropdown-item">'.$info['actions_form']['unmark_all'].'</li>';
                                 echo '</ul>';
                             echo '</div>';
                         }
