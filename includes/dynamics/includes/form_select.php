@@ -325,7 +325,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     }
     if ($options['multiple']) {
         if ($input_value) {
-            $input_value = explode('|', $input_value);
+            $input_value = explode($options['delimiter'], $input_value);
         } else {
             $input_value = [];
         }
