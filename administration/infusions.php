@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -162,7 +162,7 @@ if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_POST['def
     }
 
     echo "<div class='well text-center m-t-10'>\n";
-    echo "<a class='btn btn-block btn-primary' href='https://www.phpfusion.com/infusions/marketplace' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
+    echo "<a class='btn btn-block btn-primary' href='https://phpfusion.com/infusions/marketplace' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
     echo "</div>\n";
 
     closetable();

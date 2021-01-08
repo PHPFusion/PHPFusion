@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: theme_functions_include.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -416,7 +416,7 @@ function showrendertime($queries = TRUE) {
 
 function showcopyright($class = "", $nobreak = FALSE) {
     $link_class = $class ? " class='$class' " : "";
-    $res = "Powered by <a href='https://www.phpfusion.com'".$link_class.">PHPFusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc";
+    $res = "Powered by <a href='https://phpfusion.com'".$link_class.">PHPFusion</a> Copyright &copy; ".date("Y")." PHP Fusion Inc";
     $res .= ($nobreak ? "&nbsp;" : "<br />\n");
     $res .= "Released as free software without warranties under <a href='http://www.fsf.org/licensing/licenses/agpl-3.0.html'".$link_class.">GNU Affero GPL</a> v3.\n";
     return $res;

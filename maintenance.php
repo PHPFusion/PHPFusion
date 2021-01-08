@@ -2,7 +2,7 @@
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
-| https://www.phpfusion.com/
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: maintenance.php
 | Author: Core Development Team (coredevs@phpfusion.com)
@@ -118,7 +118,7 @@ echo "<table cellpadding='0' cellspacing='1' width='80%' class='tbl-border cente
 echo "<td class='tbl2'>\n<div style='text-align:center'><br />\n";
 echo "<img src='".BASEDIR.$settings['sitebanner']."' alt='".$settings['sitename']."' /><br /><br />\n";
 echo stripslashes(nl2br($settings['maintenance_message']))."<br /><br />\n";
-echo "Powered by <a href='http://www.phpfusion.com'>PHPFusion</a> &copy; PHP Fusion Inc<br /><br />\n";
+echo "Powered by <a href='http://phpfusion.com'>PHPFusion</a> &copy; PHP Fusion Inc<br /><br />\n";
 echo "</div>\n</td>\n</tr>\n</table>\n";
 
 echo "<div align='center'><br />\n";
