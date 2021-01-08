@@ -177,7 +177,7 @@ class SiteLinks {
             'container'            => FALSE,
             'container_fluid'      => FALSE,
             'responsive'           => TRUE,
-            'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light bg-light' : 'navbar-default',
+            'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light' : 'navbar-default',
             'nav_class'            => defined('BOOTSTRAP4') ? 'navbar-nav ml-auto primary' : '',
             'additional_nav_class' => '',
             'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class
