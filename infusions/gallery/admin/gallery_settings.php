@@ -102,7 +102,7 @@ echo "<h4 class='m-0'>".$locale['gallery_0220']."</h4><i>".$locale['gallery_0221
 echo "</div><div class='col-xs-12 col-sm-9'>\n";
 
 echo "<div class='row'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0203']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='thumb_w'>".$locale['gallery_0203']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('thumb_w', '', $gll_settings['thumb_w'], [
         'class'         => 'pull-left m-r-10',
@@ -124,7 +124,7 @@ echo "<div class='row'>
 </div>";
 
 echo "<div class='row'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0205']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_w'>".$locale['gallery_0205']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_w', '', $gll_settings['photo_w'], [
         'class'         => 'pull-left m-r-10',
@@ -146,7 +146,7 @@ echo "<div class='row'>
 </div>";
 
 echo "<div class='row'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_thumb_w'>".$locale['gallery_0206']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_max_w'>".$locale['gallery_0206']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('photo_max_w', '', $gll_settings['photo_max_w'], [
         'class'         => 'pull-left m-r-10',
