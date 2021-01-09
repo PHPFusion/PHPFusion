@@ -44,3 +44,62 @@ $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='user_name_ban'";
 if (db_exists(DB_PREFIX.'captcha')) {
     dbquery("DROP TABLE ".DB_PREFIX.'captcha');
 }
+
+/**
+ * Delete all unused files
+ */
+$deleted_files = [
+    INFUSIONS.'articles/templates/articles.php',
+    INFUSIONS.'blog/templates/blog.php',
+    INFUSIONS.'downloads/templates/downloads.php',
+    INFUSIONS.'faq/templates/faq_info.html',
+    INFUSIONS.'faq/templates/faq_submissions.html',
+    INFUSIONS.'faq/templates/main_faq.html',
+    INFUSIONS.'faq/templates.php',
+    INFUSIONS.'forum/templates/forum.css',
+    INFUSIONS.'forum/templates/templates.php',
+    INFUSIONS.'forum_mods_online_panel/templates/forum_mods.html',
+    INFUSIONS.'forum_mods_online_panel/templates.php',
+    INFUSIONS.'forum_threads_panel/templates/threads.html',
+    INFUSIONS.'forum_threads_panel/templates.php',
+    INFUSIONS.'latest_articles_panel/templates/latest_articles.html',
+    INFUSIONS.'latest_articles_panel/templates.php',
+    INFUSIONS.'latest_comments_panel/templates/latest_comments.html',
+    INFUSIONS.'latest_comments_panel/templates.php',
+    INFUSIONS.'latest_downloads_panel/templates/latest_downloads.html',
+    INFUSIONS.'latest_downloads_panel/templates.php',
+    INFUSIONS.'online_user_panel/templates/online_user_panel.html',
+    INFUSIONS.'user_info_panel/templates/default.php',
+    INFUSIONS.'gallery/css/',
+    INFUSIONS.'gallery/templates/gallery.php',
+    INFUSIONS.'member_poll_panel/templates/poll.html',
+    INFUSIONS.'member_poll_panel/templates/poll.php',
+    INFUSIONS.'news/templates/html/',
+    INFUSIONS.'news/templates/news.php',
+    INFUSIONS.'news/templates/submissions.php',
+    INFUSIONS.'weblinks/templates/main_weblinks.html',
+    INFUSIONS.'weblinks/templates/weblinks_info.html',
+    INFUSIONS.'weblinks/templates/weblinks_submissions.html',
+    INFUSIONS.'weblinks/templates.php',
+    THEMES.'templates/global/contact.php',
+    THEMES.'templates/global/css/',
+    THEMES.'templates/global/tpl/',
+    THEMES.'templates/global/custompage.php',
+    THEMES.'templates/global/error.php',
+    THEMES.'templates/global/groups.php',
+    THEMES.'templates/global/homepage.php',
+    THEMES.'templates/global/login.php',
+    THEMES.'templates/global/maintenance.php',
+    THEMES.'templates/global/members.php',
+    THEMES.'templates/global/messages.php',
+    THEMES.'templates/global/profile.php',
+    THEMES.'templates/global/register.php',
+];
+
+foreach ($deleted_files as $file) {
+    if (is_file($file)) {
+        @unlink($file);
+    } else {
+        rrmdir($file);
+    }
+}
