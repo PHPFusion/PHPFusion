@@ -61,7 +61,7 @@ if (isset($_POST['savesettings'])) {
         'bad_words'             => stripinput($_POST['bad_words']),
         'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'username_ban'          => stripinput($_POST['username_ban']),
-        'database_sessions'     => form_sanitizer($_POST['database_sessions'], '', 'database_sessions'),
+        'database_sessions'     => form_sanitizer($_POST['database_sessions'], 0, 'database_sessions'),
         'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
         'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
         'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
