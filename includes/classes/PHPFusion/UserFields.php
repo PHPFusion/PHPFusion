@@ -42,8 +42,7 @@ class UserFields extends QuantumFields {
         "user_email"          => '',
         'user_hide_email'     => 0,
         "user_language"       => LANGUAGE,
-        'user_timezone'       => 'Europe/London',
-        'user_reputation'     => 0
+        'user_timezone'       => 'Europe/London'
     ];
 
     /* Quantum Fields Extensions */
@@ -150,7 +149,6 @@ class UserFields extends QuantumFields {
             'user_email'          => '',
             'user_hide_email'     => '',
             'user_avatar'         => '',
-            'user_reputation'     => '',
             'validate'            => '',
             'terms'               => ''
         ];
@@ -165,10 +163,6 @@ class UserFields extends QuantumFields {
             $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
             $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
-            $user_reputation = '';
-            if (defined('FORUM_EXIST')) {
-                $user_reputation = isset($_POST['user_reputation']) ? $_POST['user_reputation'] : $this->userData['user_reputation'];
-            }
 
             if (iADMIN || $this->username_change) {
                 $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, [
@@ -355,14 +349,6 @@ class UserFields extends QuantumFields {
                     ],
                 ]
             );
-
-            if (iSUPERADMIN && defined('FORUM_EXIST')) {
-                $this->info['user_reputation'] = form_text('user_reputation', $locale['u210'], $user_reputation, [
-                        'type'   => 'number',
-                        'inline' => TRUE
-                    ]
-                );
-            }
 
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();

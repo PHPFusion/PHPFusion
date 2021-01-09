@@ -361,6 +361,8 @@ class NewThread extends ForumServer {
                                     'valid_ext'      => $forum_settings['forum_attachtypes'],
                                     'class'          => 'm-b-0',
                                     'replace_upload' => TRUE,
+                                    'max_width'      => $forum_settings['forum_attachmax_w'],
+                                    'max_height'     => $forum_settings['forum_attachmax_h'],
                                     'max_byte'       => $forum_settings['forum_attachmax'],
                                 ]
                             )." <div class='m-b-20'>\n<small>

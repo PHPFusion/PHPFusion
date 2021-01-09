@@ -171,6 +171,11 @@ class UserFieldsInput {
         /** Prepare initial variables for settings */
         if ($this->_method == "validate_insert") {
 
+            $forum_settings = [];
+            if (defined('FORUM_EXIST')) {
+                $forum_settings = get_settings('forum');
+            }
+
             // Compulsory Core Fields
             return [
                 'user_id'         => 0,
@@ -189,7 +194,7 @@ class UserFieldsInput {
                 'user_theme'      => 'Default',
                 'user_language'   => LANGUAGE,
                 'user_timezone'   => fusion_get_settings('timeoffset'),
-                'user_reputation' => 0
+                'user_reputation' => (!empty($forum_settings['default_points']) ? $forum_settings['default_points'] : '')
             ];
 
         } else {
@@ -687,7 +692,6 @@ class UserFieldsInput {
             $this->_setValidationError();
         }
         $this->_setUserAvatar();
-        $this->_setUserReputation();
         $quantum = new QuantumFields();
         $quantum->setCategoryDb(DB_USER_FIELD_CATS);
         $quantum->setFieldDb(DB_USER_FIELDS);
@@ -783,12 +787,6 @@ class UserFieldsInput {
                     $this->data['user_avatar'] = $upload['image_name'];
                 }
             }
-        }
-    }
-
-    private function _setUserReputation() {
-        if (isset($_POST["user_reputation"])) {
-            $this->data['user_reputation'] = (!empty($_POST['user_reputation']) ? $_POST['user_reputation'] : 0);
         }
     }
 

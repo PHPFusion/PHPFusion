@@ -685,16 +685,19 @@ class ViewThread extends ForumServer {
                         'delete_field'      => form_checkbox('delete', $locale['forum_0624'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         'edit_reason_field' => form_text('post_editreason', $locale['forum_0611'], $post_data['post_editreason'], ['placeholder' => '', 'class' => 'm-t-20 m-b-20']),
                         'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
-                            form_fileinput('file_attachments[]', $locale['forum_0557'], "",
-                                ['input_id'    => 'file_attachments',
-                                 'upload_path' => FORUM.'attachments/',
-                                 'type'        => 'object',
-                                 'template'    => 'modern',
-                                 'multiple'    => TRUE,
-                                 'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
-                                 'max_byte'    => $forum_settings['forum_attachmax'],
-                                 'valid_ext'   => $forum_settings['forum_attachtypes']])."
-                                                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
+                            form_fileinput('file_attachments[]', $locale['forum_0557'], "", [
+                                'input_id'    => 'file_attachments',
+                                'upload_path' => FORUM.'attachments/',
+                                'type'        => 'object',
+                                'template'    => 'modern',
+                                'multiple'    => TRUE,
+                                'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
+                                'max_width'   => $forum_settings['forum_attachmax_w'],
+                                'max_height'  => $forum_settings['forum_attachmax_h'],
+                                'max_byte'    => $forum_settings['forum_attachmax'],
+                                'valid_ext'   => $forum_settings['forum_attachtypes']
+                            ])."
+                               <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                             : "",
                         // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
                         "poll_form"         => '',

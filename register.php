@@ -29,13 +29,13 @@ if (iMEMBER || $settings['enable_registration'] == 0) {
 }
 
 if ($settings['gateway'] == 1) {
-	if (empty($_SESSION["validated"])) {
-		$_SESSION['validated'] = 'False';
-	}
+    if (empty($_SESSION["validated"])) {
+        $_SESSION['validated'] = 'False';
+    }
 
-	if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
+    if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
         require_once INCLUDES."gateway/gateway.php";
-	}
+    }
 }
 
 if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $settings['gateway'] == 0) {
@@ -103,8 +103,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->registration = TRUE;
         $userFields->display_profile_input();
 
-        if (!defined('DATEPICKER')) {
-            define('DATEPICKER', TRUE);
+        if (!defined('USERNAME_CHECK')) {
+            define('USERNAME_CHECK', TRUE);
             add_to_jquery('
                 let r_username = $("#userfieldsform #user_name");
                 let r_username_field = $("#userfieldsform #user_name-field");

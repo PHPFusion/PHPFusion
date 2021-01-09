@@ -121,11 +121,15 @@ class ForumAdminSettings extends ForumAdminInterface {
                                     if (dbrows($uf_query)) {
                                         while ($cdata = dbarray($uf_query)) {
                                             if (empty($cdata['field_title']) && $cdata['field_type'] == 'file') {
-                                                $locale_file = LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php';
+                                                if (file_exists(LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php')) {
+                                                    $locale_file = LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php';
+                                                }  else {
+                                                    $locale_file = LOCALE.'English/user_fields/'.$cdata['field_name'].'.php';
+                                                }
+                                                $locale = fusion_get_locale('', $locale_file);
                                                 $var_file = INCLUDES.'user_fields/'.$cdata['field_name'].'_include_var.php';
                                                 if (file_exists($locale_file) && file_exists($var_file)) {
                                                     $user_field_name = '';
-                                                    Locale::setLocale($locale_file);
                                                     // after that i need to include the file.
                                                     include $var_file;
                                                 }
@@ -169,6 +173,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_rank_style'          => form_sanitizer($_POST['forum_rank_style'], 0, 'forum_rank_style'),
                 'popular_threads_timeframe' => form_sanitizer($_POST['popular_threads_timeframe'], 604800, 'popular_threads_timeframe'),
                 'forum_last_posts_reply'    => form_sanitizer($_POST['forum_last_posts_reply'], 0, 'forum_last_posts_reply'),
+                'default_points'            => form_sanitizer($_POST['default_points'], 10, 'default_points'),
                 'upvote_points'             => form_sanitizer($_POST['upvote_points'], 2, 'upvote_points'),
                 'downvote_points'           => form_sanitizer($_POST['downvote_points'], 1, 'downvote_points'),
                 'answering_points'          => form_sanitizer($_POST['answering_points'], 15, 'answering_points'),
@@ -287,6 +292,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 <?php
                 openside(self::$locale['forum_136']);
                 $points_config = ['type' => 'number', 'width' => '150px', 'placeholder' => '1', 'inline' => TRUE, 'append' => TRUE, 'append_value' => self::$locale['forum_135']];
+                echo form_text('default_points', self::$locale['forum_136a'], $forum_settings['default_points'], $points_config);
                 echo form_text('upvote_points', self::$locale['forum_130'], $forum_settings['upvote_points'], $points_config);
                 echo form_text('downvote_points', self::$locale['forum_131'], $forum_settings['downvote_points'], $points_config);
                 echo form_text('answering_points', self::$locale['forum_132'], $forum_settings['answering_points'], $points_config);
@@ -320,6 +326,8 @@ class ForumAdminSettings extends ForumAdminInterface {
         if (isset($_POST['save_forum_post_settings'])) {
             $inputArray = [
                 'forum_ips'                  => form_sanitizer($_POST['forum_ips'], USER_LEVEL_SUPER_ADMIN, 'forum_ips'),
+                'forum_attachmax_w'          => form_sanitizer($_POST['forum_attachmax_w'], 5048, 'forum_attachmax_w'),
+                'forum_attachmax_h'          => form_sanitizer($_POST['forum_attachmax_h'], 5365, 'forum_attachmax_h'),
                 'forum_attachmax'            => form_sanitizer($_POST['calc_b'], 1048576, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
                 'forum_attachmax_count'      => form_sanitizer($_POST['forum_attachmax_count'], 5, 'forum_attachmax_count'),
                 'forum_attachtypes'          => form_sanitizer($_POST['forum_attachtypes'], '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z', 'forum_attachtypes'),
@@ -365,6 +373,27 @@ class ForumAdminSettings extends ForumAdminInterface {
             <div class='col-xs-12 col-sm-6'>
                 <?php
                 openside(self::$locale['forum_142']);
+
+                echo "<div class='row'>
+                    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='forum_attachmax_w'>".self::$locale['508a']."</label>
+                    <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
+                        ".form_text('forum_attachmax_w', '', $forum_settings['forum_attachmax_w'], [
+                        'class'      => 'pull-left',
+                        'max_length' => 4,
+                        'type'       => 'number',
+                        'width'      => '150px',
+                        'ext_tip'    => self::$locale['508b']
+                    ])."
+                        <i class='fa fa-close pull-left m-r-5 m-l-5 m-t-10'></i>
+                            ".form_text('forum_attachmax_h', '', $forum_settings['forum_attachmax_h'], [
+                        'class'      => 'pull-left',
+                        'max_length' => 4,
+                        'type'       => 'number',
+                        'width'      => '150px'
+                    ])."
+                    </div>
+                </div>";
+
                 $calc_opts = self::$locale['1020'];
                 $calc_c = calculate_byte($forum_settings['forum_attachmax']);
                 $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
@@ -377,8 +406,8 @@ class ForumAdminSettings extends ForumAdminInterface {
                 }
                 sort($mime_opts);
 
-                echo '<div class="display-block overflow-hide">';
-                echo '<label class="control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" for="calc_b">'.self::$locale['508'].'</label>';
+                echo '<div class="row">';
+                echo '<label class="control-label col-xs-12 col-sm-3 col-md-3 col-lg-3" for="calc_b">'.self::$locale['508'].'</label>';
                 echo '<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">';
                 echo form_text('calc_b', '', $calc_b, [
                     'required'   => TRUE,

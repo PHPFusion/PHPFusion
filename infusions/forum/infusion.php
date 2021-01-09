@@ -25,7 +25,7 @@ $locale = fusion_get_locale('', [
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '2.0';
+$inf_version = '2.1.0';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@phpfusion.com';
 $inf_weburl = 'https://phpfusion.com';
@@ -243,6 +243,8 @@ if (!column_exists('users', 'user_reputation')) {
 // Insert settings
 $settings = [
     'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
+    'forum_attachmax_w'          => 5048,
+    'forum_attachmax_h'          => 5365,
     'forum_attachmax'            => 15728640,
     'forum_attachmax_count'      => 5,
     'forum_attachtypes'          => '.pdf,.gif,.jpg,.png,.zip,.rar,.tar,.bz2,.7z',
@@ -258,6 +260,7 @@ $settings = [
     'posts_per_page'             => 20,
     'numofthreads'               => 16,
     'forum_rank_style'           => 0,
+    'default_points'             => 10,
     'upvote_points'              => 2,
     'downvote_points'            => 1,
     'answering_points'           => 15,

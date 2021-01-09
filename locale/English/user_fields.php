@@ -157,5 +157,3 @@ If you really want to change your email address to this one please click the fol
 [EMAIL_VERIFY_LINK]<br/>
 Note: you have to be logged in to proceed.<br/>
 Regards, [SITEUSERNAME]<br/>[SITENAME]";
-
-$locale['u210'] = "User Reputation";
