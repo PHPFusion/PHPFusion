@@ -587,6 +587,10 @@ class PrivateMessages {
         $unread_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2 AND message_read=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
         $total_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
 
+        $inbox_limit = user_pm_settings($userdata['user_id'], 'user_inbox');
+        $outbox_limit = user_pm_settings($userdata['user_id'], 'user_outbox');
+        $archive_limit = user_pm_settings($userdata['user_id'], 'user_archive');
+
         /**
          * Defaults
          */
@@ -597,12 +601,15 @@ class PrivateMessages {
                 'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404'], 'icon' => 'fa fa-archive'],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425'], 'icon' => 'fa fa-cog'],
             ],
+            'inbox_limit'   => (int)$inbox_limit,
+            'outbox_limit'  => (int)$outbox_limit,
+            'archive_limit' => (int)$archive_limit,
             'inbox_count'   => (int)$total_inbox,
             'outbox_count'  => (int)$total_outbox,
             'archive_count' => (int)$total_arc,
-            'inbox_total'   => $unread_inbox."/".$total_inbox,
-            'outbox_total'  => $unread_outbox."/".$total_outbox,
-            'archive_total' => $unread_arc."/".$total_arc,
+            'inbox_total'   => $total_inbox."/".($inbox_limit == 0 ? '&#8734;' : $inbox_limit),
+            'outbox_total'  => $total_outbox."/".($outbox_limit == 0 ? '&#8734;' : $outbox_limit),
+            'archive_total' => $total_arc."/".($archive_limit == 0 ? '&#8734;' : $archive_limit),
             'pagenav'       => '',
             'button'        => [
                 'new'     => [
