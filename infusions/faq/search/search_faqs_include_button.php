@@ -19,7 +19,7 @@ namespace PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('FAQ_EXIST')) {
+if (defined('FAQ_EXISTS')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
     $form_elements += [

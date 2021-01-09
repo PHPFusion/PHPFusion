@@ -32,12 +32,12 @@ if ($profile_method == "input") {
         if (iMEMBER && isset($_POST['delete_me']) && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
             $data = fusion_get_userdata('user_id');
 
-            if (defined('ARTICLES_EXIST')) {
+            if (defined('ARTICLES_EXISTS')) {
                 dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data."'");
             }
             dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data."'");
             dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data."' OR message_from='".$data."'");
-            if (defined('NEWS_EXIST')) {
+            if (defined('NEWS_EXISTS')) {
                 dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data."'");
             }
             if (db_exists(DB_POLL_VOTES)) {

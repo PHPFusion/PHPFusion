@@ -47,27 +47,27 @@ add_to_css('
 ');
 
 openside($locale['rss_title']);
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_articles'].'</a>';
 }
 
-if (defined('BLOG_EXIST')) {
+if (defined('BLOG_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_blog'].'</a>';
 }
 
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_downloads.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_downloads'].'</a>';
 }
 
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_forums.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_forums'].'</a>';
 }
 
-if (defined('NEWS_EXIST')) {
+if (defined('NEWS_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_news.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_news'].'</a>';
 }
 
-if (defined('WEBLINKS_EXIST')) {
+if (defined('WEBLINKS_EXISTS')) {
     echo '<a href="'.INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php" target="_blank" class="rss-button"><i class="fa fa-rss"></i> '.$locale['rss_weblinks'].'</a>';
 }
 

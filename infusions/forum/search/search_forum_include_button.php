@@ -21,7 +21,7 @@ use PHPFusion\Search\Search_Engine;
 
 defined('IN_FUSION') || exit;
 
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     $form_elements = &$form_elements;
     $radio_button = &$radio_button;
 

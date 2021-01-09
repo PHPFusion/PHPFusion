@@ -30,39 +30,39 @@ $aidlink = fusion_get_aidlink();
 
 $admin_images = TRUE;
 
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXISTS')) {
     $article_query = "(SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS article_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS article_comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS article_submissions";
 }
-if (defined('BLOG_EXIST')) {
+if (defined('BLOG_EXISTS')) {
     $blog_query = "(SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS blog_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS blog_comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS blog_submissions";
 }
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     $download_query = "(SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS download_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS download_comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS download_submissions";
 }
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     $forum_query = "(SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
         (SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,
         (SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,
         (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts";
 }
-if (defined('GALLERY_EXIST')) {
+if (defined('GALLERY_EXISTS')) {
     $photo_query = "(SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS photo_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS photo_comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS photo_submissions";
 }
-if (defined('NEWS_EXIST')) {
+if (defined('NEWS_EXISTS')) {
     $news_query = "
         (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS news_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS news_comments,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS news_submissions";
 }
-if (defined('WEBLINKS_EXIST')) {
+if (defined('WEBLINKS_EXISTS')) {
     $weblink_query = "(SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS weblink_items,
         (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS weblink_submissions";
 }
@@ -94,44 +94,44 @@ $members['cancelled'] = $queries['members_canceled'];
 $members['inactive'] = $settings['enable_deactivation'] == 1 ? $queries['members_inactive'] : 0;
 
 // Get Core Infusion's stats
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXISTS')) {
     $articles = [];
     $articles['article'] = $queries['article_items'];
     $articles['comment'] = $queries['article_comments'];
     $articles['submit'] = $queries['article_submissions'];
 }
-if (defined('BLOG_EXIST')) {
+if (defined('BLOG_EXISTS')) {
     $blog = [];
     $blog['blog'] = $queries['blog_items'];
     $blog['comment'] = $queries['blog_comments'];
     $blog['submit'] = $queries['blog_submissions'];
 }
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     $download = [];
     $download['download'] = $queries['download_items'];
     $download['comment'] = $queries['download_comments'];
     $download['submit'] = $queries['download_submissions'];
 }
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     $forum = [];
     $forum['count'] = $queries['forums'];
     $forum['thread'] = $queries['threads'];
     $forum['post'] = $queries['posts'];
     $forum['users'] = $queries['user_posts'];
 }
-if (defined('GALLERY_EXIST')) {
+if (defined('GALLERY_EXISTS')) {
     $photos = [];
     $photos['photo'] = $queries['photo_items'];
     $photos['comment'] = $queries['photo_comments'];
     $photos['submit'] = $queries['photo_submissions'];
 }
-if (defined('NEWS_EXIST')) {
+if (defined('NEWS_EXISTS')) {
     $news = [];
     $news['news'] = $queries['news_items'];
     $news['comment'] = $queries['news_comments'];
     $news['submit'] = $queries['news_submissions'];
 }
-if (defined('WEBLINKS_EXIST')) {
+if (defined('WEBLINKS_EXISTS')) {
     $weblinks = [];
     $weblinks['weblink'] = $queries['weblink_items'];
     $weblinks['submit'] = $queries['weblink_submissions'];

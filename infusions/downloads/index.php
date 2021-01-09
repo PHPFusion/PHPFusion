@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!defined('DOWNLOADS_EXIST')) {
+if (!defined('DOWNLOADS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (defined('WEBLINKS_EXIST')) {
+if (defined('WEBLINKS_EXISTS')) {
     $result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_WEBLINK_CATS." tbl1
         RIGHT JOIN ".DB_WEBLINKS." tbl2 ON tbl1.weblink_cat_id=tbl2.weblink_cat
         WHERE ".groupaccess('weblink_visibility').(multilang_table('WL') ? " AND ".in_group('weblink_cat_language', LANGUAGE) : '')."

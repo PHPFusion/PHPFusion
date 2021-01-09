@@ -23,7 +23,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('NEWS_EXIST')) {
+if (defined('NEWS_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'news' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';

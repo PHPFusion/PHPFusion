@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-if (!defined('GALLERY_EXIST')) {
+if (!defined('GALLERY_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

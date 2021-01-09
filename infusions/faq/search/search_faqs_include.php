@@ -22,7 +22,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('FAQ_EXIST')) {
+if (defined('FAQ_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'faqs' || Search_Engine::get_param('stype') == 'all') {
         $locale = fusion_get_locale('', INFUSIONS."faq/locale/".LOCALESET."search/faqs.php");

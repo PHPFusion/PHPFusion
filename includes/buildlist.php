@@ -60,7 +60,7 @@ if (defined('IMAGES_NC')) {
     closedir($temp);
 }
 
-if (defined('GALLERY_EXIST')) {
+if (defined('GALLERY_EXISTS')) {
     $result = dbquery("
         SELECT ".DB_PHOTO_ALBUMS.".album_title, ".DB_PHOTOS.".photo_id
         FROM ".DB_PHOTO_ALBUMS.", ".DB_PHOTOS."

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!defined('BLOG_EXIST')) {
+if (!defined('BLOG_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

@@ -99,8 +99,8 @@ class ImageRepo {
         ];
         //</editor-fold>
         $installedTables = [
-            'blog' => defined('BLOG_EXIST'),
-            'news' => defined('NEWS_EXIST')
+            'blog' => defined('BLOG_EXISTS'),
+            'news' => defined('NEWS_EXISTS')
         ];
 
         $selects = "SELECT admin_image as image, admin_rights as name, 'ac_' as prefix FROM ".DB_ADMIN;

@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     if (file_exists(INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php")) {
         $locale_path = INFUSIONS."forum_mods_online_panel/locale/".LANGUAGE.".php";
     } else {

@@ -142,7 +142,7 @@ abstract class Weblinks extends WeblinksServer {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-            if (defined('WEBLINKS_EXIST')) {
+            if (defined('WEBLINKS_EXISTS')) {
                 if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_weblinks.php')) {
                     add_to_head('<link rel="alternate" type="application/rss+xml" title="'.fusion_get_locale('web_0000').' - RSS Feed" href="'.fusion_get_settings('siteurl').'infusions/rss_feeds_panel/feeds/rss_weblinks.php"/>');
                 }

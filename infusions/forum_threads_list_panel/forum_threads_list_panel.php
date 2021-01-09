@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     include_once INCLUDES."infusions_include.php";
 
     $inf_settings = get_settings('forum');

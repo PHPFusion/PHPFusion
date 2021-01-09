@@ -22,7 +22,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'articles' || Search_Engine::get_param('stype') == 'all') {
 

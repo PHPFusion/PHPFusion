@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-if (!defined('WEBLINKS_EXIST')) {
+if (!defined('WEBLINKS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES.'templates/header.php';

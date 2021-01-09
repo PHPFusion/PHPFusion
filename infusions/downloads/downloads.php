@@ -23,7 +23,7 @@ use PHPFusion\SiteLinks;
 
 require_once __DIR__.'/../../maincore.php';
 
-if (!defined('DOWNLOADS_EXIST')) {
+if (!defined('DOWNLOADS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

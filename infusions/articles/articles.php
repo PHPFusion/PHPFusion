@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 
-if (!defined('ARTICLES_EXIST')) {
+if (!defined('ARTICLES_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 

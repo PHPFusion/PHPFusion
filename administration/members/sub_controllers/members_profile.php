@@ -132,7 +132,7 @@ class Members_Profile extends Members_Admin {
                 /**
                  * @todo: Need to store user content reference column in a table for each infusions
                  */
-                if (defined('GALLERY_EXIST')) {
+                if (defined('GALLERY_EXISTS')) {
                     // Delete photos
                     $result = dbquery("SELECT album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_user=:photo_user", [':photo_user' => $user_id]);
                     if (dbrows($result)) {
@@ -152,16 +152,16 @@ class Members_Profile extends Members_Admin {
                 dbquery("DELETE FROM ".DB_SUSPENDS." WHERE suspended_user=:suspended_user", [':suspended_user' => $user_id]);
                 dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to=:message_to OR message_from=:message_from", [':message_to' => $user_id, ':message_from' => $user_id]);
 
-                if (defined('ARTICLES_EXIST')) {
+                if (defined('ARTICLES_EXISTS')) {
                     dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:article_name", [':article_name' => $user_id]);
                 }
-                if (defined('NEWS_EXIST')) {
+                if (defined('NEWS_EXISTS')) {
                     dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:news_name", [':news_name' => $user_id]);
                 }
-                if (defined('MEMBER_POLL_PANEL_EXIST')) {
+                if (defined('MEMBER_POLL_PANEL_EXISTS')) {
                     dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:vote_user", [':vote_user' => $user_id]);
                 }
-                if (defined('FORUM_EXIST')) {
+                if (defined('FORUM_EXISTS')) {
                     dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:thread_author", [':thread_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:post_author", [':post_author' => $user_id]);
                     dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:notify_user", [':notify_user' => $user_id]);

@@ -22,7 +22,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('WEBLINKS_EXIST')) {
+if (defined('WEBLINKS_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'weblinks' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';

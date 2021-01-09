@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
     include_once INCLUDES."infusions_include.php";
     include_once INFUSIONS."forum_threads_panel/templates/forum_threads.tpl.php";
 

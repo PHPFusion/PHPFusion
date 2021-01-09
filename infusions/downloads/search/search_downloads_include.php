@@ -22,7 +22,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     $formatted_result = '';
     $settings = fusion_get_settings();
     $locale = fusion_get_locale('', INFUSIONS."downloads/locale/".LOCALESET."search/downloads.php");

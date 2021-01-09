@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale();
 
-if (defined('ARTICLES_EXIST')) {
+if (defined('ARTICLES_EXISTS')) {
     include_once INFUSIONS."latest_articles_panel/templates/latest_articles.tpl.php";
 
     $result = dbquery("SELECT a.article_id, a.article_subject, u.user_id, u.user_name, u.user_status, u.user_avatar

@@ -172,7 +172,7 @@ class UserFieldsInput {
         if ($this->_method == "validate_insert") {
 
             $forum_settings = [];
-            if (defined('FORUM_EXIST')) {
+            if (defined('FORUM_EXISTS')) {
                 $forum_settings = get_settings('forum');
             }
 

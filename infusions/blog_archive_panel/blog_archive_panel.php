@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (defined('BLOG_EXIST')) {
+if (defined('BLOG_EXISTS')) {
     $locale = fusion_get_locale('', BLOG_LOCALE);
 
     openside($locale['blog_1004']);

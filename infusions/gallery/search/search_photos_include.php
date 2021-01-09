@@ -22,7 +22,7 @@ use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
-if (defined('GALLERY_EXIST')) {
+if (defined('GALLERY_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'photos' || Search_Engine::get_param('stype') == 'all') {
         $formatted_result = '';

@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 $locale = fusion_get_locale();
 
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     include_once INFUSIONS."latest_downloads_panel/templates/latest_downloads.tpl.php";
 
     $result = dbquery("SELECT d.download_id, d.download_title, u.user_id, u.user_name, u.user_status, u.user_avatar

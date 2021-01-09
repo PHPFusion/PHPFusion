@@ -21,7 +21,7 @@ use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
-if (defined('FORUM_EXIST')) {
+if (defined('FORUM_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'forum' || Search_Engine::get_param('stype') == 'all') {
 

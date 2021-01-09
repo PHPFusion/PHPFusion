@@ -27,7 +27,7 @@ $settings = fusion_get_settings();
 
 require_once INFUSIONS.'rss_feeds_panel/RSS.php';
 
-if (defined('DOWNLOADS_EXIST')) {
+if (defined('DOWNLOADS_EXISTS')) {
     $result = dbquery("SELECT tbl1.*, tbl2.* FROM ".DB_DOWNLOAD_CATS." tbl1
         RIGHT JOIN ".DB_DOWNLOADS." tbl2 ON tbl1.download_cat_id=tbl2.download_cat
         WHERE ".groupaccess('download_visibility').(multilang_table('DL') ? " AND ".in_group('download_cat_language', LANGUAGE) : '')."

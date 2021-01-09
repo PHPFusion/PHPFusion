@@ -76,7 +76,7 @@ class Dashboard {
             $html .= '<div class="row">';
                 $modules = [];
 
-                if (defined('FORUM_EXIST')) {
+                if (defined('FORUM_EXISTS')) {
                     $modules['forum'] = [
                         'title' => $locale['265'],
                         'icon' => 'fa fa-comments',
@@ -89,7 +89,7 @@ class Dashboard {
                     ];
                 }
 
-                if (defined('DOWNLOADS_EXIST')) {
+                if (defined('DOWNLOADS_EXISTS')) {
                     $modules['downloads'] = [
                         'title' => $locale['268'],
                         'icon' => 'fa fa-cloud-download',
@@ -101,7 +101,7 @@ class Dashboard {
                     ];
                 }
 
-                if (defined('NEWS_EXIST')) {
+                if (defined('NEWS_EXISTS')) {
                     $modules['news'] = [
                         'title' => $locale['269'],
                         'icon' => 'fa fa-newspaper-o',
@@ -113,7 +113,7 @@ class Dashboard {
                     ];
                 }
 
-                if (defined('ARTICLES_EXIST')) {
+                if (defined('ARTICLES_EXISTS')) {
                     $modules['articles'] = [
                         'title' => $locale['270'],
                         'icon' => 'fa fa-book',
@@ -125,7 +125,7 @@ class Dashboard {
                     ];
                 }
 
-                if (defined('WEBLINKS_EXIST')) {
+                if (defined('WEBLINKS_EXISTS')) {
                     $modules['weblinks'] = [
                         'title' => $locale['271'],
                         'icon' => 'fa fa-link',
@@ -136,7 +136,7 @@ class Dashboard {
                     ];
                 }
 
-                if (defined('GALLERY_EXIST')) {
+                if (defined('GALLERY_EXISTS')) {
                     $modules['gallery'] = [
                         'title' => $locale['272'],
                         'icon' => 'fa fa-camera-retro',
