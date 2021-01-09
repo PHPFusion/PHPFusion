@@ -81,7 +81,7 @@ echo form_text('download_pagination', $locale['download_939'], $dl_settings['dow
 closeside();
 openside('');
 echo "<div class='row'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_w'>".$locale['download_934']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='download_screen_max_w'>".$locale['download_934']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_screen_max_w', '', $dl_settings['download_screen_max_w'], [
         'class'      => 'pull-left',
@@ -99,7 +99,7 @@ echo "<div class='row'>
         <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['download_604'].")</small>
     </div>\n</div>";
 echo "<div class='row'>
-    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='photo_w'>".$locale['download_937']."</label>
+    <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='download_thumb_max_w'>".$locale['download_937']."</label>
     <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
     ".form_text('download_thumb_max_w', '', $dl_settings['download_thumb_max_w'], [
         'class'      => 'pull-left',
