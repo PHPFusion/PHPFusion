@@ -163,7 +163,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
             </div>
         </div>";
         echo "<div class='row'>
-            <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='blog_thumb_w'>".$locale['news_603']."</label>
+            <label class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3' for='news_photo_max_w'>".$locale['news_603']."</label>
             <div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>
             ".form_text('news_photo_max_w', '', $news_settings['news_photo_max_w'], [
                 'class'         => 'pull-left m-r-10',
