@@ -64,32 +64,31 @@ if (!function_exists('display_profile_form')) {
      * @param $info - the array output that is accessible for your custom requirements
      */
     function display_profile_form(array $info = []) {
-        $opentab = "";
-        $closetab = "";
-        if (!empty($info["tab_info"])) {
-            $opentab = opentab($info["tab_info"], $_GET["section"], "user-profile-form", TRUE);
+        $opentab = '';
+        $closetab = '';
+        if (!empty($info['tab_info'])) {
+            $opentab = opentab($info['tab_info'], $_GET['section'], 'user-profile-form', TRUE);
             $closetab = closetab();
         }
-        echo "<!--HTML-->";
         opentable('');
         echo $opentab;
-        echo "<!--editprofile_pre_idx--><div class='spacer-sm'><div id='profile_form' class='row'><div class='col-xs-12 col-sm-12'>";
-        echo $info["openform"].
-            $info["user_id"].
-            $info["user_name"].
-            $info["user_email"].
-            $info["user_hide_email"].
-            $info["user_avatar"].
-            $info["user_password"].
-            $info["user_admin_password"].
-            $info["user_custom"].
-            $info["validate"].
-            $info["terms"].
-            $info["button"];
-        echo " </div ></div ></div ><!--editprofile_sub_idx-->";
+        echo "<!--editprofile_pre_idx--><div id='profile_form' class='spacer-sm'>";
+        echo $info['openform'];
+        echo $info['user_id'];
+        echo $info['user_name'];
+        echo $info['user_email'];
+        echo $info['user_hide_email'];
+        echo $info['user_avatar'];
+        echo $info['user_password'];
+        echo $info['user_admin_password'];
+        echo $info['user_custom'];
+        echo $info['validate'];
+        echo $info['terms'];
+        echo $info['button'];
+        echo $info['closeform'];
+        echo "</div><!--editprofile_sub_idx-->";
         echo $closetab;
         closetable();
-        echo "<!--//HTML-->";
     }
 }
 
