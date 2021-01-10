@@ -28,15 +28,18 @@ class LostPassword extends PasswordAuth {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         if ($this->_isValidEMailAddress($email)) {
-            $data = dbarray(dbquery("SELECT user_name, user_password FROM ".DB_USERS." WHERE user_email=:email", [':email' => $this->_userEMail]));
-            $this->_userName = $data['user_name'];
-            $link = $settings['siteurl']."lostpassword.php?user_email=".$this->_userEMail."&account=".$data['user_password'];
-            $mailBody = str_replace("[SITENAME]", $settings['sitename'], $locale['410']);
-            $mailBody = str_replace("[NEW_PASS_LINK]", $link, $mailBody);
-            $mailBody = str_replace("[USER_NAME]", $data['user_name'], $mailBody);
-            $mailBody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailBody);
-            sendemail($data['user_name'], $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'],
-                $mailBody);
+            if (dbcount("(user_id)", DB_USERS, "user_email=:email", [':email' => $email]) > 0) {
+                $this->_userEMail = $email;
+                $data = dbarray(dbquery("SELECT user_name, user_password FROM ".DB_USERS." WHERE user_email=:email", [':email' => $this->_userEMail]));
+                $this->_userName = $data['user_name'];
+                $link = $settings['siteurl']."lostpassword.php?user_email=".$this->_userEMail."&account=".$data['user_password'];
+                $mailBody = str_replace("[SITENAME]", $settings['sitename'], $locale['410']);
+                $mailBody = str_replace("[NEW_PASS_LINK]", $link, $mailBody);
+                $mailBody = str_replace("[USER_NAME]", $data['user_name'], $mailBody);
+                $mailBody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailBody);
+                sendemail($data['user_name'], $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'], $mailBody);
+            }
+
             $this->_html .= "<div class='text-center'>".$locale['401']."<br /><br />\n<a href='".BASEDIR."index.php'>".$locale['403']."</a></div>\n";
 
             return TRUE;
@@ -46,20 +49,8 @@ class LostPassword extends PasswordAuth {
     }
 
     private function _isValidEMailAddress($email) {
-        //$email = stripinput(trim(preg_replace("/ +/i", "", $email)));
-        //if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $check = dbcount("(user_id)", DB_USERS, "user_email=:email", [':email' => $email]);
-            if ($check > 0) {
-                $this->_userEMail = $email;
-
-                return TRUE;
-            } else {
-                // e-mail adress is not found
-                $this->_error = 1;
-
-                return FALSE;
-            }
+            return TRUE;
         } else {
             // no valid e-mail adress
             $this->_error = 2;
@@ -72,12 +63,10 @@ class LostPassword extends PasswordAuth {
         if (!$this->_isValidEMailAddress($email)) {
             return FALSE;
         }
-        if ((preg_match("/^[0-9a-z]{32}$/", $account) && dbcount("(user_id)", DB_USERS,
-                    "user_email=:email AND user_algo=:algo", [':email' => $email, ':algo' => 'md5'])) || preg_match("/^[0-9a-z]{64}$/",
-                $account)
-        ) {
+        if ((preg_match("/^[0-9a-z]{32}$/", $account) && dbcount("(user_id)", DB_USERS, "user_email=:email AND user_algo=:algo", [':email' => $email, ':algo' => 'md5'])) || preg_match("/^[0-9a-z]{64}$/", $account)) {
             $result = dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_email=:email AND user_password=:password", [':email' => $email, ':password' => $account]);
             if (dbrows($result)) {
+                $this->_userEMail = $email;
                 $data = dbarray($result);
                 $this->_userName = $data['user_name'];
                 $this->_newPassword = $this->getNewPassword();
@@ -104,8 +93,7 @@ class LostPassword extends PasswordAuth {
         $mailbody = str_replace("[NEW_PASS]", $this->_newPassword, $mailbody);
         $mailbody = str_replace("[USER_NAME]", $this->_userName, $mailbody);
         $mailbody = str_replace("[SITEUSERNAME]", $settings['siteusername'], $mailbody);
-        sendemail($this->_userName, $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'],
-            $mailbody);
+        sendemail($this->_userName, $this->_userEMail, $settings['siteusername'], $settings['siteemail'], $locale['409'].$settings['sitename'], $mailbody);
         dbquery("UPDATE ".DB_USERS." SET user_algo='".fusion_get_settings('password_algorithm')."', user_password='".$this->getNewHash()."', user_salt='".$this->getNewSalt()."' WHERE user_email='".$this->_userEMail."'");
         $this->_html .= "<div class='text-center'>".$locale['402']."<br /><br />\n<a href='".BASEDIR."index.php'>".$locale['403']."</a></div>\n";
     }
@@ -131,9 +119,9 @@ class LostPassword extends PasswordAuth {
 
         if ($this->_error != "") {
             switch ($this->_error) {
-                case 1:
+                /*case 1:
                     $message = $locale['404'];
-                    break;
+                    break;*/
                 case 2:
                     $message = $locale['405'];
                     break;
