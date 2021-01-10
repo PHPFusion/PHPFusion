@@ -204,7 +204,7 @@ class Errors {
         $html .= "</td>\n";
         $html .= "</tr>\n";
         /* Toggle Info */
-        $error_message = strtr(htmlspecialchars_decode(stripslashes($data['error_message'])), ['#' => '<br/>#']);
+        $error_message = strtr(htmlspecialchars_decode($data['error_message']), ['#' => '<br/>#']);
         $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
         $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->getErrorTypes($data['error_level'])."</p>";
         $html .= "<div class='alert alert-info'>".$error_message."</div>\n";
