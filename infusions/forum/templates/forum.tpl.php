@@ -671,7 +671,7 @@ if (!function_exists('forum_newtopic')) {
 
         echo '<div class="clearfix">';
 
-        echo form_select_tree('forum_sel', $locale['forum_0395'], '', [
+        echo form_select_tree('forum_sel', $locale['forum_0395'], get('forum_id'), [
             'width'        => '100%',
             'inline'       => TRUE,
             'no_root'      => TRUE,
