@@ -29,7 +29,7 @@ class QuickReply extends ForumServer {
 
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         if ($user_sig) {
-            $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '1', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
+            $options_field .= form_checkbox('post_showsig', $locale['forum_0170'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         }
         if ($notify_options) {
             $options_field .= form_checkbox('notify_me', $locale['forum_0171'], $info['user_tracked'], ['class' => 'm-b-0', 'reverse_label' => TRUE]);

@@ -657,6 +657,15 @@ class Forum extends ForumServer {
             'forum_threadcount_word' => '',
         ];
 
+        $parameters= [];
+
+        if ($forum_id && $branch_id) {
+            $parameters = [
+                ':forum_id'  => intval($forum_id),
+                ':branch_id' => intval($branch_id)
+            ];
+        }
+
         $query = dbquery("
             SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid, f.forum_language,
             t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
@@ -665,10 +674,7 @@ class Forum extends ForumServer {
             ".(multilang_table("FO") ? "WHERE ".in_group('f.forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('f.forum_access')."
             ".($forum_id && $branch_id ? "AND f.forum_id=:forum_id or f.forum_cat=:forum_id OR f.forum_branch=:branch_id" : '')."
             GROUP BY f.forum_id ORDER BY f.forum_cat ASC, f.forum_order ASC, t.thread_lastpost DESC
-        ", [
-            ':forum_id'  => intval($forum_id),
-            ':branch_id' => intval($branch_id)
-        ]);
+        ", $parameters);
 
         while ($data = dbarray($query) and checkgroup($data['forum_access'])) {
             $newStatus = '';
