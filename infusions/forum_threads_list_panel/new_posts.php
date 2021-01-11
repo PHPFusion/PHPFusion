@@ -89,9 +89,9 @@ if ($rows) {
         echo "</tbody>";
     echo "</table></div>";
 
-    echo "<div class='text-center'>".sprintf($locale["global_055"], $rows, $threads)."</div>";
+    echo "<div class='well text-center'>".sprintf($locale["global_055"], $rows, $threads)."</div>";
 } else {
-    echo "<div class='text-center'>".sprintf($locale['global_055'], 0, 0)."</div>\n";
+    echo "<div class='well text-center'>".sprintf($locale['global_055'], 0, 0)."</div>\n";
 }
 
 closetable();

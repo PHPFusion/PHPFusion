@@ -91,7 +91,7 @@ if ($rows) {
         echo "<div class='text-center'>".makepagenav($_GET['rowstart'], 20, $rows, 3, INFUSIONS."forum_threads_list_panel/my_threads.php?")."</div>\n";
     }
 } else {
-    echo "<div class='text-center'>".$locale['global_053']."</div>\n";
+    echo "<div class='well text-center'>".$locale['global_053']."</div>\n";
 }
 closetable();
 
