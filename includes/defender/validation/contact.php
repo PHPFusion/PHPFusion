@@ -34,38 +34,43 @@ class Contact extends Validation {
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
             fusion_stop();
             defender::setInputError(self::$inputName);
+            return FALSE;
         }
 
-        if (is_array(self::$inputValue) && count(self::$inputValue) == 2) {
-            $vars = [];
-            foreach (self::$inputValue as $index => $val) {
-                if (!empty($val)) {
-                    // Get prefix value.
-                    if ($index === 0) {
-                        if (!$calling_codes = calling_codes($val)) {
-                            return FALSE;
-                        }
-                    } else if ($index === 1) {
-                        if (!isnum($val)) {
-                            return FALSE;
-                        }
-                    }
-                    $vars[] = $val;
-                } else {
-                    if (self::$inputConfig["required"]) {
-                        return FALSE;
-                    } else {
-                        $vars = [];
-                    }
-                }
+        $prefix = sanitizer(self::$inputName."_prefix");
+
+        if ($calling_codes = calling_codes($prefix)) {
+
+            if (self::$inputValue && isnum(self::$inputValue)) {
+
+                return "$prefix|".self::$inputValue;
+
+            }
+            // else
+            if (self::$inputConfig["required"]) {
+                fusion_stop();
+
+                defender::setInputError(self::$inputName."_prefix");
+
+                defender::setInputError(self::$inputName);
+
+                return FALSE;
             }
 
-            $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : ",";
-
-            return implode($delimiter, $vars); // empty str is returned if $vars ends up empty
+            return "";
 
         } else {
-            return FALSE;
+
+            if (self::$inputConfig["required"] && (empty($prefix))) {
+
+                fusion_stop();
+
+                defender::setInputError(self::$inputName."_prefix");
+
+                return FALSE;
+            }
+            // if not required
+            return "";
         }
 
     }

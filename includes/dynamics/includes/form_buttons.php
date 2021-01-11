@@ -69,7 +69,7 @@ function form_btngroup($input_name, $label, $input_value, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    $input_value = (isset($input_value) && (!empty($input_value))) ? stripinput($input_value) : NULL;
+    $input_value = (!empty($input_value) ? stripinput($input_value) : "");
 
 
     $default_options = [

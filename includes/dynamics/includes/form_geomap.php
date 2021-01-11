@@ -417,7 +417,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $html .= "</div>";
 
     \defender::add_field_session([
-        'input_name'     => $input_name,
+        'input_name'     => clean_input_name($input_name),
         'type'           => 'textbox',
         'title'          => trim($title, '[]'),
         'id'             => $options['input_id'],

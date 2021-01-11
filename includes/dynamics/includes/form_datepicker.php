@@ -208,29 +208,39 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         }
     }
 
-    $input_id = $options['input_id'] ?: $default_options['input_id'];
-    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."'>\n";
-    $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
+
+    $html = "<div id='".$options["input_id"]."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."'>\n";
+
+    $html .= ($label ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options["input_id"]."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span> " : '').($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>" : "");
+
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<div id='$input_id-datepicker' data-target-input='nearest' class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : '').">\n";
-    $html .= "<input type='text' name='".$input_name."' id='".$input_id."' data-target='#".$input_id."-datepicker' value='".$input_value."' class='datetimepicker-input form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
-    $html .= "<span class='input-group-addon input-group-append ".($options['fieldicon_off'] ? 'display-none' : '')."' data-target='#".$input_id."-datepicker' data-toggle='datetimepicker'><i class='input-group-text fa fa-calendar'></i></span>\n";
-    $html .= "</div>\n";
-    $html .= ($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$input_id."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
-    $html .= $options['stacked'];
-    $html .= $options['inline'] && $label ? "</div>\n" : "";
+
+    $html .= "<div id='".$options["input_id"]."_datepicker' data-target-input='nearest' class='input-group date'".($options['width'] ? " style='width: ".$options['width']."'" : "").">\n";
+
+    $html .= "<input type='text' name='".$input_name."' id='".$options["input_id"]."' data-target='#".$options["input_id"]."-datepicker' value='".$input_value."' class='datetimepicker-input form-control textbox'".($options['inner_width'] ? " style='width:".$options['inner_width'].";'" : '').($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."/>\n";
+
+    $html .= "<span class='input-group-addon input-group-append ".($options['fieldicon_off'] ? 'display-none' : '')."' data-target='#".$options["input_id"]."-datepicker' data-toggle='datetimepicker'><i class='input-group-text fa fa-calendar'></i></span>\n";
+
     $html .= "</div>\n";
 
+    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$options["input_id"]."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "");
+
+    $html .= $options['stacked'];
+
+    $html .= ($options['inline'] && $label ? "</div>" : "");
+
+    $html .= "</div>";
+
     \defender::add_field_session([
-        'input_name'  => $input_name,
+        'input_name'  => clean_input_name($input_name),
         'type'        => $options['type'],
         'title'       => $title,
-        'id'          => $input_id,
+        'id'          => $options["input_id"],
         'required'    => $options['required'],
-        'safemode'    => TRUE,
         'error_text'  => $options['error_text'],
         "delimiter"   => $options['delimiter'],
         'date_format' => $options['date_format_php'],
+        'safemode'    => TRUE,
     ]);
 
     if (!$options['deactivate']) {
@@ -242,20 +252,20 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         if (!empty($options['join_from_id'])) {
             if (defined('BOOTSTRAP4')) {
                 $bindingJs = "
-                    $('#".$options['join_from_id']."-datepicker').on('change.datetimepicker', function (e) {
-                        $('#$input_id-datepicker').datetimepicker('minDate', e.date);
+                    $('#".$options['join_from_id']."_datepicker').on('change.datetimepicker', function (e) {
+                        $('#".$options["input_id"]."_datepicker').datetimepicker('minDate', e.date);
                     });
-                    $('#$input_id-datepicker').on('change.datetimepicker', function (e) {
-                        $('#".$options['join_from_id']."-datepicker').datetimepicker('maxDate', e.date);
+                    $('#".$options["input_id"]."_datepicker').on('change.datetimepicker', function (e) {
+                        $('#".$options['join_from_id']."_datepicker').datetimepicker('maxDate', e.date);
                     });
                 ";
             } else {
                 $bindingJs = "
-                    $('#".$options['join_from_id']."-datepicker').on('dp.change', function(e) {
-                        $('#$input_id-datepicker').data('DateTimePicker').minDate(e.date);
+                    $('#".$options['join_from_id']."_datepicker').on('dp.change', function(e) {
+                        $('#".$options["input_id"]."_datepicker').data('DateTimePicker').minDate(e.date);
                     });
-                    $('#$input_id-datepicker').on('dp.change', function(e) {
-                        $('#".$options['join_from_id']."-datepicker').data('DateTimePicker').maxDate(e.date);
+                    $('#".$options["input_id"]."_datepicker').on('dp.change', function(e) {
+                        $('#".$options['join_from_id']."_datepicker').data('DateTimePicker').maxDate(e.date);
                     });
                 ";
             }
@@ -278,32 +288,33 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         }
 
         add_to_jquery("
-            moment.updateLocale('".$locale['datepicker']."', {
-                week: {dow: ".$options['week_start']."}
-            });
-            $('#$input_id-datepicker').datetimepicker({
-                locale: '".$locale['datepicker']."',
-                ".$dpbuttons."
-                allowInputToggle: true,
-                icons: {
-                    time: 'fa fa-clock',
-                    date: 'fa fa-calendar',
-                    up: 'fa fa-caret-up',
-                    down: 'fa fa-caret-down',
-                    previous: 'fa fa-caret-left',
-                    next: 'fa fa-caret-right',
-                    today: 'fa fa-calendar-day',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-close'
-                },
-                tooltips: tooltips_locale,
-                ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
-                ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
-                ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
-                format: '".$options['date_format_js']."',
-                ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
-            });
-            ".$bindingJs."
+        moment.updateLocale('".$locale['datepicker']."', {
+            week: {dow: ".$options['week_start']."}
+        });
+        
+        let ".$options["input_id"]."_datepicker = $('#".$options["input_id"]."_datepicker').datetimepicker({
+            locale: '".$locale['datepicker']."',
+            ".$dpbuttons."
+            allowInputToggle: true,
+            icons: {
+                time: 'fa fa-clock',
+                date: 'fa fa-calendar',
+                up: 'fa fa-caret-up',
+                down: 'fa fa-caret-down',
+                previous: 'fa fa-caret-left',
+                next: 'fa fa-caret-right',
+                today: 'fa fa-calendar-day',
+                clear: 'fa fa-trash',
+                close: 'fa fa-close'
+            },
+            tooltips: tooltips_locale,
+            ".($options['showTime'] == TRUE ? "sideBySide: true," : "")."
+            ".(!empty($dateFilter) ? $dateFilter[0].$dateFilter[1]."," : "")."
+            ".(!empty($weekendFilter) ? $weekendFilter[0].$weekendFilter[1]."," : "")."
+            format: '".$options['date_format_js']."',
+            ".(!empty($options['join_from_id']) ? "useCurrent: false" : "")."
+        });
+        ".$bindingJs."
         ");
     }
 

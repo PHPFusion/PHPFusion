@@ -347,12 +347,11 @@ class Upload extends Validation {
                         $image_info = ["error" => 5];
                     }
                     if ($image_info['error'] != 0) {
-                        $this->set_error_notice($image_info['error']);
-                        $result[$i] = $image_info;
-                    } else {
-                        $result[$i] = $image_info;
+                        $image_info["error_message"] = $this->setError($image_info['error']);
                     }
+                    $result[$i] = $image_info;
                 } // end for
+
                 return $result;
             } else {
                 return [];
@@ -386,45 +385,52 @@ class Upload extends Validation {
                     self::$inputConfig['replace_upload']
                 );
 
+                $upload["error_message"] = "";
                 if ($upload['error'] != 0) {
                     fusion_stop();
-                    $this->set_error_notice($upload['error']);
-                    return $upload;
-                } else {
-                    return $upload;
+                    $upload["error_message"] = $this->setError($upload['error']);
                 }
+
+                return $upload;
+
             } else {
                 return [];
             }
         }
     }
 
-    private function set_error_notice($error_code) {
-        fusion_stop();
+    /**
+     * @param $error_code
+     *
+     * @return string
+     */
+    private function setError($error_code) {
         $locale = fusion_get_locale();
+
+        $error_message = "";
         switch ($error_code) {
             case 1: // Invalid file size
-                addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
-                defender::setInputError(self::$inputName);
+                $error_message = sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte']));
                 break;
             case 2: // Unsupported image type
                 //addNotice('danger', $locale['df_423']);
-                addNotice('danger', $locale['error_secure_file']);
-                defender::setInputError(self::$inputName);
+                $error_message = $locale['error_secure_file'];
                 break;
             case 3: // Invalid image resolution
-                addNotice('danger', sprintf($locale['df_421'], self::$inputConfig['max_width'], self::$inputConfig['max_height']));
-                defender::setInputError(self::$inputName);
+                $error_message = sprintf($locale['df_421'], self::$inputConfig['max_width'], self::$inputConfig['max_height']);
                 break;
             case 4: // Invalid query string
-                addNotice('danger', $locale['df_422']);
-                defender::setInputError(self::$inputName);
+                $error_message = $locale["df_422"];
                 break;
             case 5: // Image not uploaded
-                addNotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
-                defender::setInputError(self::$inputName);
+                $error_message = sprintf($locale['df_417'], self::$inputConfig['valid_ext']);
                 break;
         }
+
+        addNotice('danger', $error_message);
+        defender::setInputError(self::$inputName);
+
+        return $error_message;
     }
 }
 

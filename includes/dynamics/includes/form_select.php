@@ -272,13 +272,16 @@ function form_select($input_name, $label, $input_value, array $options = []) {
             foreach ($array as $arr => $value) {
 
                 // where options is more than one value, pass to data attributes.
-                $data_attributes = '';
-                if (count($value) > 1) {
-                    $data_options = [];
-                    foreach ($value as $datakey => $dataval) {
-                        $data_options[] = "data-$datakey='$dataval'";
+                $data_attributes = "";
+                $data_options = [];
+
+                if (is_array($value)) {
+                    if (!isset($value["text"])) {
+                        foreach ($value as $datakey => $dataval) {
+                            $data_options[] = "data-$datakey='$dataval'";
+                        }
+                        $data_attributes = " ".implode(' ', $data_options)." ";
                     }
-                    $data_attributes = " ".implode(' ', $data_options)." ";
                 }
 
                 $select = "";
@@ -526,7 +529,9 @@ function form_select($input_name, $label, $input_value, array $options = []) {
  */
 function form_user_select($input_name, $label = "", $input_value = FALSE, array $options = []) {
     $locale = fusion_get_locale();
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $default_options = [
         'required'          => FALSE,
         'regex'             => '',
@@ -558,7 +563,9 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     ];
 
     $options += $default_options;
+
     $options['input_id'] = trim($options['input_id'], "[]");
+
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
     $length = "minimumInputLength: 1,";
     $error_class = "";
@@ -588,7 +595,9 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= $options['inline'] && $label ? "</div>\n" : '';
 
     $html .= "</div>\n";
+
     $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."includes/" : INCLUDES;
+
     $root_img = fusion_get_settings("site_seo") == 1 && !defined('ADMIN_PANEL') ? fusion_get_settings('siteurl') : '';
 
     $path = $options['file'] ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
@@ -601,7 +610,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     }
 
     defender::getInstance()->add_field_session([
-        'input_name' => $input_name,
+        'input_name' => clean_input_name($input_name),
         'title'      => $title,
         'id'         => $options['input_id'],
         'type'       => 'dropdown',
@@ -615,7 +624,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
             if(!item.id) {return item.text;}
             var avatar = item.avatar;
             var level = item.level;
-            return '<table><tr><td style=\"\"><img style=\"height:25px;\" class=\"img-rounded\" src=\"".$root_img.$options['image_path']."' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
+            return '<table><tr><td style=\"\"><img style=\"height:35px;\" class=\"img-rounded\" src=\"".$root_img.$options['image_path']."' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;line-height:1.2;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
         }
         $('#".$options['input_id']."').select2({
         $length

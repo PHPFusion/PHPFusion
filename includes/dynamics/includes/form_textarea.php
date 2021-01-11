@@ -475,7 +475,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html .= "</div>\n";
 
     \defender::add_field_session([
-        'input_name'   => $input_name,
+        'input_name'     => clean_input_name($input_name),
         'type'         => 'textarea',
         'title'        => $label,
         'id'           => $options['input_id'],

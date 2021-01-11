@@ -51,8 +51,9 @@ function form_hidden($input_name, $label = "", $input_value = "", array $options
         $html .= ($options['inline']) ? "</div>\n" : "";
         $html .= "</div>\n";
     }
+
     \defender::add_field_session([
-        'input_name' => $input_name,
+        'input_name' => clean_input_name($input_name),
         'title'      => trim($title, '[]'),
         'type'       => 'textbox',
         'id'         => $options['input_id'],

@@ -81,7 +81,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $html .= "</div>\n";
 
     \defender::getInstance()->add_field_session([
-        'input_name' => $input_name,
+        'input_name'     => clean_input_name($input_name),
         'type'       => 'color',
         'title'      => $title,
         'id'         => $input_id,

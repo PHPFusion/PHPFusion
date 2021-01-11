@@ -131,13 +131,13 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "<span class='input-group-text'>";
 
-    $html .= form_select($input_name."[]", "", $input_value[0], ["input_id" => $options["input_id"]."_prefix", "options" => calling_codes(), "class" => "m-0", "width" => "250px"]);
+    $html .= form_select($input_name."_prefix", "", $input_value[0], ["options" => calling_codes(), "class" => "m-0", "width" => "250px"]);
 
     $html .= "</span>";
 
     $html .= "</span>";
 
-    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."[]' id='".$options['input_id']."_contact' value='".$input_value['1']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='$input_name' id='".$options['input_id']."_contact' value='".$input_value['1']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
@@ -172,7 +172,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
     $html .= "</div>";
 
     \defender::add_field_session([
-        'input_name'     => $input_name,
+        'input_name'     => clean_input_name($input_name),
         'title'          => $title,
         'id'             => $options['input_id'],
         'type'           => 'contact',

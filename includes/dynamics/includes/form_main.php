@@ -82,7 +82,7 @@ function closeform() {
 }
 
 function clean_input_name($value) {
-    $re = '/(\[\d+\])/';
+    $re = '/\[(.*?)\]/m';
     return preg_replace($re, '', $value);
 }
 
