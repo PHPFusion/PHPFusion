@@ -119,6 +119,7 @@ require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.php";
 // Always put this last file
-require_once __DIR__."/core_includes.php";
-
+if (is_file(__DIR__.'/custom_includes.php')) {
+    require_once __DIR__.'/custom_includes.php';
+}
 //require_once __DIR__.'/db_handlers/all_functions_include.php';
