@@ -50,13 +50,13 @@ $gen_opts = [];
 for ($i = 0; $i < count($gen_options); $i++) {
     switch ($gen_set) {
         case 3:
-            $value = "<img src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' style='width: 16px;' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/>";
+            $value = "<img src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/>";
             break;
         case 1:
-            $value = "<i class='".$img[$gen_set][$i]."'></i> ".$gen_options[$i];
+            $value = "<i class='m-l-5 ".$img[$gen_set][$i]."'></i> ".$gen_options[$i];
             break;
         case 2:
-            $value = "<img src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' style='width: 16px;' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/> ".$gen_options[$i];
+            $value = "<img class='m-l-5' style='width: 16px;' src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/> ".$gen_options[$i];
             break;
         default:
             $value = $gen_options[$i];
