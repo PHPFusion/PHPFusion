@@ -1058,7 +1058,7 @@ if (!function_exists('render_thread')) {
         }
 
         if (!empty($info['thread_users'])) {
-            echo '<div class="list-group-item clearfix"><strong>'.$locale['forum_0581'].'</strong>';
+            echo '<div class="clearfix"><strong>'.$locale['forum_0581'].'</strong> ';
                 foreach ($info['thread_users'] as $user_id => $user) {
                     echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</a>, ';
                 }
