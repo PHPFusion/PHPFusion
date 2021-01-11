@@ -66,7 +66,7 @@ function closeside($footer = FALSE) {
     echo $html;
 }
 
-function opentable($title, $class = NULL, $bg = TRUE) {
+function opentable($title = NULL, $class = NULL, $bg = TRUE) {
     AdminLTE\AdminPanel::openTable($title, $class, $bg);
 }
 

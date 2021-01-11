@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+(defined('IN_FUSION') || exit);
 
 use PHPFusion\Authenticate;
 use PHPFusion\OutputHandler;
@@ -2409,13 +2409,14 @@ function isJson($string) {
  *
  * @param $file_path - source file
  * @param $file_type - script, css
- * @param $cached    - false to invalidate browser's cache
+ * @param $cached - false to invalidate browser's cache
+ * @param $show_warnings - true to show error notices
  */
-function fusion_load_script($file_path, $file_type = "script", $cached = TRUE) {
+function fusion_load_script($file_path, $file_type = "script", $cached = TRUE, $show_warnings = FALSE) {
     static $paths = [];
     // v10
     if (function_exists("auto_file")) {
-        $file_path = auto_file($file_path);
+        $file_path = auto_file($file_path, $show_warnings);
     } else {
         $file_info = pathinfo($file_path);
         try {

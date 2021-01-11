@@ -494,7 +494,7 @@ class AdminPanel {
         return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER['HTTP_USER_AGENT']);
     }
 
-    public static function openTable($title = FALSE, $class = NULL, $bg = TRUE) {
+    public static function openTable($title = NULL, $class = NULL, $bg = TRUE) {
         $html = '';
 
         if (!empty($title)) {
