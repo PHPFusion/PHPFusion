@@ -63,7 +63,6 @@ spl_autoload_register(function ($className) {
 });
 
 // Load infusions autoloader.
-// @todo 9.04 --
 // @todo: Rename all infusions namespace with "PHPFusion\Infusions\{Infusion_name};
 // @todo: then remove all infusions autoloader and complete check the file structure.
 spl_autoload_register(function ($className) {

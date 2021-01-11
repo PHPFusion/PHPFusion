@@ -92,8 +92,8 @@ function write_htaccess() {
 
     // Extended feature for auto_file function
     //$htc .= "<ifModule mod_rewrite.c>".PHP_EOL;
-    //$htc .= "RewriteEngine on".PHP_EOL;
-    //$htc .= "RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]".PHP_EOL;
+    //$htc .= "    RewriteEngine on".PHP_EOL;
+    //$htc .= "    RewriteRule ^(.*)\.[\d]{10}\.(css|js)$ $1.$2 [L]".PHP_EOL;
     //$htc .= "</ifModule>".PHP_EOL;
 
     write_file(BASEDIR.".htaccess", $htc);

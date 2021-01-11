@@ -1,4 +1,20 @@
 <?php
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: infusions_includes.php
+| Author: Core Development Team (coredevs@phpfusion.com)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 use Defender\ImageValidation;
 
@@ -198,7 +214,7 @@ if (!function_exists('upload_image_alt')) {
                         list($imagewidth, $imageheight, $imageType) = $image_res;
                     }
 
-                    $image_info = array(
+                    $image_info = [
                         "image"         => FALSE,
                         "target_folder" => $target_folder,
                         "valid_ext"     => $allowed_extensions,
@@ -214,7 +230,7 @@ if (!function_exists('upload_image_alt')) {
                         "thumb2_name"   => "",
                         "error"         => 0,
                         "query"         => $query,
-                    );
+                    ];
 
                     if ($image["size"] > $max_size) {
                         // Invalid file size

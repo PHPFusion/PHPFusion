@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.phpfusion.com
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: twig_include.php
-| Author: PHP-Fusion Development Team (coredevs@php-fusion.co.uk)
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -132,7 +132,7 @@ function twig_init($path = THEME.'twig', $debug = FALSE) {
         'lorem_ipsum'         => new TwigFunction('lorem_ipsum', function () {
             return strip_tags(call_user_func_array('lorem_ipsum', func_get_args()));
         }),
-        "parse_textarea"          => new TwigFunction("parse_textarea", function () {
+        "parse_textarea"      => new TwigFunction("parse_textarea", function () {
             return call_user_func_array("parse_textarea", func_get_args());
         })
     ];
@@ -184,6 +184,6 @@ function fusion_render($dir_path = THEMES.'templates/', $file_path = '', array $
         setError(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
     }
 
-    return "";
+    return NULL;
 }
 

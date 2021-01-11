@@ -2407,10 +2407,10 @@ function isJson($string) {
  * Cached script loader
  * This function will cache the path that has been added and avoid duplicates.
  *
- * @param $file_path - source file
- * @param $file_type - script, css
- * @param $cached - false to invalidate browser's cache
- * @param $show_warnings - true to show error notices
+ * @param string $file_path     source file
+ * @param string $file_type     script, css
+ * @param bool   $cached        false to invalidate browser's cache
+ * @param bool   $show_warnings true to show error notices
  */
 function fusion_load_script($file_path, $file_type = "script", $cached = TRUE, $show_warnings = FALSE) {
     static $paths = [];
