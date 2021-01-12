@@ -17,9 +17,29 @@
 +--------------------------------------------------------*/
 require_once __DIR__."/../../maincore.php";
 
+/**
+ * Namespace Description
+ *
+ * fusion_register_hook_paths   - extend hook paths directory list
+ * fusion_filters               - namespace to be executed
+ */
+
+/**
+ * Get extended endpoint
+ *
+ * @return array
+ */
+function get_extended_endpoints(): array {
+    if ($extended_endpoints = fusion_filter_hook("fusion_register_hook_paths")) {
+        return flatten_array($extended_endpoints);
+    }
+    return [];
+}
+
 $endpoints = [
-    "username-check" => "username_validation.php",
-];
+        "username-check" => "username_validation.php",
+    ]
+    + get_extended_endpoints();
 
 if ($api = get("api")) {
     if (isset($endpoints[$api])) {
@@ -29,8 +49,9 @@ if ($api = get("api")) {
         fusion_apply_hook("fusion_filters");
 
     } else {
-        throw new Exception("End point is faulty");
+        die("End point is faulty");
     }
 } else {
-    throw new Exception("API is not specified");
+    die("API is not specified");
 }
+die();
