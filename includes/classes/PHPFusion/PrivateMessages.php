@@ -344,8 +344,6 @@ class PrivateMessages {
 
     /**
      * Set Message Listing for inbox, outbox and archive*
-     *
-     * @todo: expand to longpoll or implement node.js
      */
     private function set_list_messages() {
         // list messages
@@ -408,7 +406,7 @@ class PrivateMessages {
                         'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                         'name'           => $data['message_subject'],
                         'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                        'message_text'   => parse_textarea($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y"),
+                        'message_text'   => parse_textarea($data['message_message'], $data['message_smileys'] == "y", TRUE, FALSE, NULL, TRUE)
                     ];
                     $this->info['items'][$data['message_id']] = $data;
                 }
@@ -459,7 +457,7 @@ class PrivateMessages {
                 'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                 'name'           => $data['message_subject'],
                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                'message_text'   => parse_textarea($data['message_message'], TRUE, TRUE, FALSE, TRUE, $data['message_smileys'] == "y")
+                'message_text'   => parse_textarea($data['message_message'], $data['message_smileys'] == "y", TRUE, FALSE, NULL, TRUE)
             ];
 
             $this->info['items'][$data['message_id']] = $data;
@@ -527,7 +525,11 @@ class PrivateMessages {
                 'closeform' => closeform()
             ];
         } else {
-            add_to_footer("<script src='".INCLUDES."jscripts/pm.min.js'></script>");
+            if (!defined('PM_JS')) {
+                define('PM_JS', TRUE);
+                add_to_footer("<script src='".INCLUDES."jscripts/pm.min.js'></script>");
+            }
+
             $this->info['actions_form'] = [
                 'openform'    => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', ''),
                 'check'       => [
@@ -622,7 +624,6 @@ class PrivateMessages {
         ];
 
         add_to_title($this->locale['400']);
-        add_to_meta("description", $this->locale['400']);
 
         return $this;
     }
@@ -927,7 +928,8 @@ class PrivateMessages {
                 'max_length'  => 100,
                 'width'       => '100%',
                 'error_text'  => $this->locale['error_input_default'],
-            ]).form_textarea('message', '', $this->data['message'], [
+            ]).
+            form_textarea('message', '', $this->data['message'], [
                 'placeholder' => $this->locale['422'],
                 'required'    => TRUE,
                 'autosize'    => TRUE,
@@ -937,7 +939,10 @@ class PrivateMessages {
                 'height'      => '150px',
                 'error_text'  => $this->locale['error_input_default'],
                 'bbcode'      => TRUE
-            ]).form_button('cancel', $this->locale['cancel'], $this->locale['cancel']).form_button('send_pm', $this->locale['430'], $this->locale['430'], [
+            ]).
+            form_checkbox('chk_disablesmileys', $this->locale['427']).
+            form_button('cancel', $this->locale['cancel'], $this->locale['cancel']).
+            form_button('send_pm', $this->locale['430'], $this->locale['430'], [
                 'class' => 'btn m-l-10 btn-primary'
             ]).closeform();
     }
