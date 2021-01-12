@@ -477,8 +477,11 @@ class SiteLinks {
                 if (self::getMenuParam('additional_nav_class')) {
                     $class = "class='".self::getMenuParam('additional_nav_class')."'";
                 }
+
                 $res .= "<ul $class>\n";
+
                 $res .= $this->showMenuLinks($id, self::getMenuParam('additional_data'));
+
                 if (self::getMenuParam('language_switcher') == TRUE) {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
@@ -534,8 +537,11 @@ class SiteLinks {
             $res .= self::getMenuParam('html_post_content');
 
             $res .= (self::getMenuParam('responsive')) ? "</div>\n" : "";
+
             $res .= self::getMenuParam('container_fluid') ? "</div>\n" : "";
+
             $res .= self::getMenuParam('container') ? "</div>\n" : "";
+
             $res .= "</div>\n";
         }
 
@@ -725,7 +731,9 @@ class SiteLinks {
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
-                    $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parsesmileys(parseubb($link_data['link_name'])) : $link_data['link_name'];
+                    $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parseubb($link_data['link_name']) : $link_data['link_name'];
+                    $link_data["link_name"] = html_entity_decode($link_data["link_name"], ENT_QUOTES);
+
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                     $link_is_active = $link_data['link_active'];
 
