@@ -31,5 +31,5 @@ if (dbrows($result) > 0) {
     $object->use_resume = TRUE;
     $object->download();
 } else {
-    redirect(BASEDIR."index.php");
+    redirect(DOWNLOADS.'downloads.php');
 }
