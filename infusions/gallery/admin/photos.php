@@ -154,6 +154,47 @@ function photo_form() {
         ]);
 
         openside('');
+        if ($data['photo_filename'] || $data['photo_thumb1']) {
+            echo "<div class='well col-sm-offset-3'>\n";
+            $image = '';
+
+            if (!empty($data['photo_filename']) && (file_exists(IMAGES_G.$data['photo_filename']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename']))) {
+                if (file_exists(IMAGES_G.$data['photo_filename'])) {
+                    $image = thumbnail(IMAGES_G.$data['photo_filename'], $gallery_settings['thumb_w']."px");
+                } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename'])) {
+                    $image = thumbnail(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename'], $gallery_settings['thumb_w']."px");
+                }
+                echo form_hidden('photo_filename', '', $data['photo_filename']);
+            }
+
+            if (!empty($data['photo_thumb2']) && (file_exists(IMAGES_G_T.$data['photo_thumb2']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2']))) {
+                if (file_exists(IMAGES_G.$data['photo_thumb2'])) {
+                    $image = thumbnail(IMAGES_G.$data['photo_thumb2'], $gallery_settings['thumb_w']."px");
+                } else if (file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
+                    $image = thumbnail(IMAGES_G_T.$data['photo_thumb2'], $gallery_settings['thumb_w']."px");
+                } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'])) {
+                    $image = thumbnail(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'], $gallery_settings['thumb_w']."px");
+                }
+                echo form_hidden('photo_thumb2', '', $data['photo_thumb2']);
+            }
+
+            if (!empty($data['photo_thumb1']) && (file_exists(IMAGES_G_T.$data['photo_thumb1']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1']))) {
+                if (file_exists(IMAGES_G.$data['photo_thumb1'])) {
+                    $image = thumbnail(IMAGES_G.$data['photo_thumb1'], $gallery_settings['thumb_w']."px");
+                } else if (file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
+                    $image = thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gallery_settings['thumb_w']."px");
+                } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'])) {
+                    $image = thumbnail(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'], $gallery_settings['thumb_w']."px");
+                }
+                echo form_hidden('photo_thumb1', '', $data['photo_thumb1']);
+            }
+
+            echo "<label for='del_image'>\n";
+            echo $image;
+            echo "</label>\n";
+            echo form_checkbox('del_image', $locale['gallery_0017'], '');
+            echo "</div>\n";
+        } else {
             $upload_settings = [
                 'upload_path'       => is_dir(IMAGES_G.'album_'.post('album_id').'/') ? IMAGES_G.'album_'.post('album_id').'/' : IMAGES_G,
                 'required'          => TRUE,
