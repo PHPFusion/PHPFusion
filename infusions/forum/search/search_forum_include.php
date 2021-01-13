@@ -69,7 +69,7 @@ if (defined('FORUM_EXISTS')) {
             LEFT JOIN ".DB_FORUM_THREADS." tt ON tt.thread_id = tp.thread_id
             ".(multilang_table("FR") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('forum_access')
                 .(Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : "")."
-            AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search;
+            AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search." LIMIT 100";
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
