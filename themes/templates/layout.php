@@ -96,16 +96,6 @@ if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 
-if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
-    $user_theme = fusion_get_userdata('user_theme');
-    $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
-    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-
-    if (!empty($theme_data)) {
-        echo "<link rel='stylesheet' href='".THEMES.$theme_data['theme_file']."'>\n";
-    }
-}
-
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 if (function_exists("get_head_tags")) {
@@ -190,3 +180,12 @@ echo "</html>";
 PHPFusion\OpenGraph::ogDefault();
 
 fusion_load_script(THEME."styles.css", "css");
+
+if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
+    $user_theme = fusion_get_userdata('user_theme');
+    $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
+    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
+    if (!empty($theme_data)) {
+        fusion_load_script(THEMES.$theme_data["theme_file"], "css");
+    }
+}
