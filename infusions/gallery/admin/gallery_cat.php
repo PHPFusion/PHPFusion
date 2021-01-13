@@ -90,16 +90,22 @@ if (isset($_POST['save_album'])) {
     if (\defender::safe()) {
         if (dbcount("(album_id)", DB_PHOTO_ALBUMS, "album_id=:albumid", [':albumid' => intval($data['album_id'])])) {
             // update album
-            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE,
-                'album_language', 'update');
+            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE, 'album_language', 'update');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'update');
             addNotice('success', $locale['album_0013']);
             redirect(FUSION_REQUEST);
         } else {
             // create album
-            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', 0, "album_id", FALSE, FALSE, TRUE, 'album_language',
-                'save');
+            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', 0, "album_id", FALSE, FALSE, TRUE, 'album_language', 'save');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'save');
+
+            $album_id = dblastid();
+            @mkdir(IMAGES_G.'album_'.$album_id, 0777);
+            @copy(IMAGES.'index.php', IMAGES_G.'album_'.$album_id.'/index.php');
+
+            @mkdir(IMAGES_G.'album_'.$album_id.'/thumbs', 0777);
+            @copy(IMAGES.'index.php', IMAGES_G.'album_'.$album_id.'/thumbs/index.php');
+
             addNotice('success', $locale['album_0014']);
             redirect(FUSION_REQUEST);
         }
@@ -140,7 +146,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
     echo "<label for='del_image clearfix'>\n";
     echo "<div class='row m-0' style='height:".$gll_settings['thumb_h']."px;'>\n";
     echo "<div class='col-xs-12' style='height: 100%; position:relative;'>\n";
-    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "");
+    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
     echo "</div></div>\n";
     echo "</label>\n";
     echo form_checkbox('del_image', $locale['album_0016'], '', ['class' => 'p-l-15', 'reverse_label' => TRUE]);

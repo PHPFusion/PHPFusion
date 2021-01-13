@@ -40,7 +40,7 @@ function photo_form() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
-    $gll_settings = get_settings('gallery');
+    $gallery_settings = get_settings('gallery');
     $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
     if ($albumRows) {
         $data = [
@@ -91,18 +91,10 @@ function photo_form() {
                     // delete image
                     if (!empty($_POST['del_image'])) {
                         // album_id
-                        $result = dbquery("select photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_id=:photoid", [':photoid' => $data['photo_id']]);
+                        $result = dbquery("select album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_id=:photoid", [':photoid' => $data['photo_id']]);
                         if (dbrows($result) > 0) {
                             $pData = dbarray($result);
-                            if ($pData['photo_filename'] && file_exists(IMAGES_G.$pData['photo_filename'])) {
-                                unlink(IMAGES_G.$pData['photo_filename']);
-                            }
-                            if ($pData['photo_thumb1'] && file_exists(IMAGES_G.$pData['photo_thumb1'])) {
-                                unlink(IMAGES_G_T.$pData['photo_thumb1']);
-                            }
-                            if ($pData['photo_thumb2'] && file_exists(IMAGES_G.$pData['photo_thumb2'])) {
-                                unlink(IMAGES_G_T.$pData['photo_thumb2']);
-                            }
+                            purgePhotoImage($pData);
                             $data['photo_filename'] = "";
                             $data['photo_thumb1'] = "";
                             $data['photo_thumb2'] = "";
@@ -143,74 +135,52 @@ function photo_form() {
                 redirect(FUSION_REQUEST);
             }
         }
+
         echo openform('photoform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-20']);
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
         echo form_hidden('photo_id', '', $data['photo_id']);
         echo form_hidden('photo_datestamp', '', $data['photo_datestamp']);
         echo form_hidden('photo_user', '', $data['photo_user']);
+
         echo form_text('photo_title', $locale['photo_0001'], $data['photo_title'], [
             'required'    => TRUE,
             'placeholder' => $locale['photo_0002'],
             'class'       => 'form-group-lg'
         ]);
 
+        echo form_select('album_id', $locale['photo_0003'], $data['album_id'], [
+            'options'     => get_albumOpts(),
+            'inner_width' => "100%",
+        ]);
+
         openside('');
-        if ($data['photo_filename'] || $data['photo_thumb1']) {
-            echo "<div class='well col-sm-offset-3'>\n";
-            $image = '';
-            if ($data['photo_filename'] && file_exists(IMAGES_G.$data['photo_filename'])) {
-                $image = thumbnail(IMAGES_G.$data['photo_filename'], $gll_settings['thumb_w']);
-                echo form_hidden('photo_filename', '', $data['photo_filename']);
-            }
-            if ($data['photo_thumb2'] && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
-                $image = thumbnail(IMAGES_G_T.$data['photo_thumb2'], $gll_settings['thumb_w']);
-                echo form_hidden('photo_thumb2', '', $data['photo_thumb2']);
-            }
-            if ($data['photo_thumb1'] && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
-                $image = thumbnail(IMAGES_G_T.$data['photo_thumb1'], $gll_settings['thumb_w']);
-                echo form_hidden('photo_thumb1', '', $data['photo_thumb1']);
-            }
-            echo "<label for='del_image'>\n";
-            echo $image;
-            echo "</label>\n";
-            echo form_checkbox('del_image', $locale['gallery_0017'], '');
-            echo "</div>\n";
-        } else {
             $upload_settings = [
-                'upload_path'       => IMAGES_G,
+                'upload_path'       => is_dir(IMAGES_G.'album_'.post('album_id').'/') ? IMAGES_G.'album_'.post('album_id').'/' : IMAGES_G,
                 'required'          => TRUE,
                 'thumbnail_folder'  => 'thumbs',
                 'thumbnail'         => TRUE,
-                'thumbnail_w'       => $gll_settings['thumb_w'],
-                'thumbnail_h'       => $gll_settings['thumb_h'],
+                'thumbnail_w'       => $gallery_settings['thumb_w'],
+                'thumbnail_h'       => $gallery_settings['thumb_h'],
                 'thumbnail_suffix'  => '_t1',
                 'thumbnail2'        => TRUE,
-                'thumbnail2_w'      => $gll_settings['photo_w'],
-                'thumbnail2_h'      => $gll_settings['photo_h'],
+                'thumbnail2_w'      => $gallery_settings['photo_w'],
+                'thumbnail2_h'      => $gallery_settings['photo_h'],
                 'thumbnail2_suffix' => '_t2',
-                'max_width'         => $gll_settings['photo_max_w'],
-                'max_height'        => $gll_settings['photo_max_h'],
-                'max_byte'          => $gll_settings['photo_max_b'],
+                'max_width'         => $gallery_settings['photo_max_w'],
+                'max_height'        => $gallery_settings['photo_max_h'],
+                'max_byte'          => $gallery_settings['photo_max_b'],
                 'multiple'          => FALSE,
                 'delete_original'   => FALSE,
                 'inline'            => FALSE,
                 'template'          => "modern",
                 'error_text'        => $locale['photo_0014'],
-                'valid_ext'         => $gll_settings['gallery_file_types'],
-                'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'],
-                    $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])
+                'valid_ext'         => $gallery_settings['gallery_file_types'],
+                'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
             ];
             echo form_fileinput('photo_image', $locale['photo_0004'], '', $upload_settings);
         }
         closeside();
 
-        echo form_select('photo_keywords', $locale['album_0005'], $data['photo_keywords'], [
-            'placeholder' => $locale['album_0006'],
-            'multiple'    => TRUE,
-            'tags'        => TRUE,
-            'width'       => '100%',
-            'inner_width' => '100%',
-        ]);
         $snippetSettings = [
             'required'    => FALSE,
             'preview'     => TRUE,
@@ -238,9 +208,13 @@ function photo_form() {
 
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-        echo form_select('album_id', $locale['photo_0003'], $data['album_id'], [
-            'options'     => get_albumOpts(),
-            'inner_width' => "100%",
+
+        echo form_select('photo_keywords', $locale['album_0005'], $data['photo_keywords'], [
+            'placeholder' => $locale['album_0006'],
+            'multiple'    => TRUE,
+            'tags'        => TRUE,
+            'width'       => '100%',
+            'inner_width' => '100%',
         ]);
 
         echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $data['photo_allow_comments']);
@@ -262,7 +236,7 @@ function mass_photo_form() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
     $userdata = fusion_get_userdata();
-    $gll_settings = get_settings('gallery');
+    $gallery_settings = get_settings('gallery');
     $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
     if ($albumRows) {
         if (isset($_POST['upload_photo'])) {
@@ -317,25 +291,25 @@ function mass_photo_form() {
             'required'          => TRUE,
             'thumbnail_folder'  => 'thumbs',
             'thumbnail'         => TRUE,
-            'thumbnail_w'       => $gll_settings['thumb_w'],
-            'thumbnail_h'       => $gll_settings['thumb_h'],
+            'thumbnail_w'       => $gallery_settings['thumb_w'],
+            'thumbnail_h'       => $gallery_settings['thumb_h'],
             'thumbnail_suffix'  => '_t1',
             'thumbnail2'        => TRUE,
-            'thumbnail2_w'      => $gll_settings['photo_w'],
-            'thumbnail2_h'      => $gll_settings['photo_h'],
+            'thumbnail2_w'      => $gallery_settings['photo_w'],
+            'thumbnail2_h'      => $gallery_settings['photo_h'],
             'thumbnail2_suffix' => '_t2',
-            'max_width'         => $gll_settings['photo_max_w'],
-            'max_height'        => $gll_settings['photo_max_h'],
-            'max_byte'          => $gll_settings['photo_max_b'],
+            'max_width'         => $gallery_settings['photo_max_w'],
+            'max_height'        => $gallery_settings['photo_max_h'],
+            'max_byte'          => $gallery_settings['photo_max_b'],
             'delete_original'   => FALSE,
             'template'          => 'modern',
             'multiple'          => TRUE,
             'inline'            => FALSE,
             'max_count'         => 20,
             'error_text'        => $locale['photo_0014'],
-            'valid_ext'         => $gll_settings['gallery_file_types'],
-            'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'],
-                $gll_settings['photo_max_w'], $gll_settings['photo_max_h']),
+            'valid_ext'         => $gallery_settings['gallery_file_types'],
+            'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'],
+                $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h']),
         ];
         echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], '', $upload_settings);
         echo form_button('upload_photo', $locale['photo_0020'], $locale['photo_0020'], ['class' => 'btn-primary']);

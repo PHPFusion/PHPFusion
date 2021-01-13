@@ -21,6 +21,7 @@ require_once THEMES.'templates/admin_header.php';
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale('', [GALLERY_ADMIN_LOCALE, LOCALE.LOCALESET."admin/settings.php"]);
 require_once INCLUDES."photo_functions_include.php";
+include INFUSIONS."gallery/functions.php";
 require_once INCLUDES."infusions_include.php";
 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
@@ -59,7 +60,7 @@ if (isset($_GET['section']) && $_GET['section'] == "back") {
 
 $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_pages) ? $_GET['section'] : 'gallery';
 $_GET['album'] = 0;
-if (isset($_GET['section'])){
+if (isset($_GET['section'])) {
     switch ($_GET['section']) {
         case "photo_form":
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0002']]);
@@ -154,7 +155,7 @@ function rating_vote($id, $type) {
                 IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $id, ':ratingtype' => $type]
-             ));
+    ));
     return $count_db['total_votes'];
 }
 
@@ -163,7 +164,7 @@ function rating_count($id, $type) {
                 COUNT(rating_id) AS rating_count
                 FROM ".DB_RATINGS."
                 WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $id, ':ratingtype' => $type]
-             ));
+    ));
     return $count_db['rating_count'];
 }
 
@@ -220,7 +221,7 @@ function gallery_photo_listing() {
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
                 echo "<div class='panel-image-wrapper'>\n";
-                echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename']);
+                echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename'], $data['album_id']);
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
                 echo "<div class='dropdown pull-right spacer-xs'>\n";
@@ -303,9 +304,9 @@ function gallery_album_listing() {
                 echo "<div class='panel-image-wrapper'>\n";
                 if ($data['photo_count']) {
                     $link = FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
-                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link);
+                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link, $data['album_id']);
                 } else {
-                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "");
+                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
                 }
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
@@ -387,16 +388,32 @@ function purgeAlbumImage($albumData) {
  * @param $photoData
  */
 function purgePhotoImage($photoData) {
-    if (!empty($photoData['photo_filename']) && file_exists(IMAGES_G.$photoData['photo_filename'])) {
-        unlink(IMAGES_G.$photoData['photo_filename']);
+    if (!empty($photoData['photo_filename'])) {
+        if (file_exists(IMAGES_G.$photoData['photo_filename'])) {
+            unlink(IMAGES_G.$photoData['photo_filename']);
+        } else if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$photoData['photo_filename'])) {
+            unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$photoData['photo_filename']);
+        }
     }
+
     sleep(0.3);
-    if (!empty($photoData['photo_thumb1']) && file_exists(IMAGES_G_T.$photoData['photo_thumb1'])) {
-        unlink(IMAGES_G_T.$photoData['photo_thumb1']);
+
+    if (!empty($photoData['photo_thumb1'])) {
+        if (file_exists(IMAGES_G_T.$photoData['photo_thumb1'])) {
+            unlink(IMAGES_G_T.$photoData['photo_thumb1']);
+        } else if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb1'])) {
+            unlink(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb1']);
+        }
     }
+
     sleep(0.3);
-    if (!empty($photoData['photo_thumb2']) && file_exists(IMAGES_G_T.$photoData['photo_thumb2'])) {
-        unlink(IMAGES_G_T.$photoData['photo_thumb2']);
+
+    if (!empty($photoData['photo_thumb2'])) {
+        if (file_exists(IMAGES_G_T.$photoData['photo_thumb2'])) {
+            unlink(IMAGES_G_T.$photoData['photo_thumb2']);
+        } else if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb2'])) {
+            unlink(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb2']);
+        }
     }
 }
 
@@ -419,70 +436,4 @@ function purgeSubmissionsPhotoImage($photoData) {
     if (!empty($photoData['photo_thumb2']) && file_exists($submissions_dir_t.$photoData['photo_thumb2'])) {
         unlink($submissions_dir_t.$photoData['photo_thumb2']);
     }
-}
-
-/**
- * Displays the Album Image
- *
- * @param $album_image
- * @param $album_thumb1
- * @param $album_thumb2
- * @param $link
- *
- * @return string
- */
-function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link) {
-    $gll_settings = get_settings('gallery');
-    // Thumb will have 2 possible path following v7
-    if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
-        if (file_exists(IMAGES_G.$album_thumb1)) {
-            // uncommon first
-            $image = thumbnail(IMAGES_G.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
-        } else {
-            // sure fire if image is usually more than thumb threshold
-            $image = thumbnail(IMAGES_G_T.$album_thumb1, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
-        }
-
-        return $image;
-    }
-    if (!empty($album_thumb2) && file_exists(IMAGES_G.$album_thumb2)) {
-        return thumbnail(IMAGES_G.$album_thumb2, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix center-xy");
-    }
-    if (!empty($album_image) && file_exists(IMAGES_G.$album_image)) {
-        return thumbnail(IMAGES_G.$album_image, $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
-    }
-
-    return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", $link, FALSE, FALSE, "cropfix");
-}
-
-/**
- * Displays Album Thumb with Colorbox
- *
- * @param $photo_filename
- * @param $photo_thumb1
- * @param $photo_thumb2
- * @param $link
- *
- * @return string
- */
-function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link) {
-    $gll_settings = get_settings('gallery');
-    // Thumb will have 2 possible path following v7
-    if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.$photo_thumb1))) {
-        if (file_exists(IMAGES_G.$photo_thumb1)) {
-            // uncommon first
-            return thumbnail(IMAGES_G.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
-        } else {
-            // sure fire if image is usually more than thumb threshold
-            return thumbnail(IMAGES_G_T.$photo_thumb1, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
-        }
-    }
-    if (!empty($photo_thumb2) && file_exists(IMAGES_G.$photo_thumb2)) {
-        return thumbnail(IMAGES_G.$photo_thumb2, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
-    }
-    if (!empty($photo_filename) && file_exists(IMAGES_G.$photo_filename)) {
-        return thumbnail(IMAGES_G.$photo_filename, $gll_settings['thumb_w']."px", $link, TRUE, FALSE, "cropfix");
-    }
-
-    return thumbnail(IMAGES_G."album_default.jpg", $gll_settings['thumb_w']."px", "", FALSE, FALSE, "cropfix");
 }

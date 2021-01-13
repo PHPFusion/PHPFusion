@@ -104,8 +104,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 if (dbrows($photosResult) > 0) {
                     if ($targetAlbum > 0) {
                         // move picture to $move_album
-                        $target_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($targetAlbum)."'"),
-                                0) + 1;
+                        $target_max_order = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." WHERE album_id='".intval($targetAlbum)."'"), 0) + 1;
                         while ($photo_data = dbarray($photosResult)) {
                             $photo_data['photo_order'] = $target_max_order;
                             dbquery("UPDATE ".DB_PHOTOS." SET album_id='".intval($targetAlbum)."' WHERE photo_id='".$photo_data['photo_id']."'");
@@ -126,6 +125,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                     }
                 }
                 purgeAlbumImage($albumData);
+                rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
             } else {
                 // Confirmation form
@@ -146,10 +146,13 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
             }
         } else {
             purgeAlbumImage($albumData);
+            rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
             dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
             addNotice("success", $locale['album_0030']);
         }
 
+        redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
+    } else {
         redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
     }
 }
