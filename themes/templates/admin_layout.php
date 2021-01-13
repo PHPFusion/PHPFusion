@@ -118,6 +118,5 @@ if (!empty($fusion_jquery_tags)) {
 echo "</body>\n";
 echo "</html>";
 
-// Admin Panel Theme CSS
-$admin_theme_css = file_exists(THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css') ? THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.min.css' : THEMES.'admin_themes/'.$settings['admin_theme'].'/acp_styles.css';
-add_to_head("<link rel='stylesheet' href='".$admin_theme_css."?v=".filemtime($admin_theme_css)."'/>\n");
+fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.css", "css");
+

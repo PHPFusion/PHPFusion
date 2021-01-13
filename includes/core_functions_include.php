@@ -2412,7 +2412,7 @@ function isJson($string) {
  * @param bool   $cached        false to invalidate browser's cache
  * @param bool   $show_warnings true to show error notices
  */
-function fusion_load_script($file_path, $file_type = "script", $cached = TRUE, $show_warnings = FALSE) {
+function fusion_load_script(string $file_path, $file_type = "script", $cached = TRUE, $show_warnings = FALSE) {
     static $paths = [];
     // v10
     if (function_exists("auto_file")) {
