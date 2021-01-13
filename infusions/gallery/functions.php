@@ -121,3 +121,43 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link,
 
     return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, TRUE, "cropfix");
 }
+
+function return_photo_paths($data) {
+    $photo_thumb2 = '';
+    $photo_thumb1 = '';
+    $photo_filename = '';
+
+    if (!empty($data['photo_thumb2']) && (file_exists(IMAGES_G_T.$data['photo_thumb2']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2']))) {
+        if (file_exists(IMAGES_G.$data['photo_thumb2'])) {
+            $photo_thumb2 = IMAGES_G.$data['photo_thumb2'];
+        } else if (file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
+            $photo_thumb2 = IMAGES_G_T.$data['photo_thumb2'];
+        } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'])) {
+            $photo_thumb2 = IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'];
+        }
+    }
+
+    if (!empty($data['photo_thumb1']) && (file_exists(IMAGES_G_T.$data['photo_thumb1']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1']))) {
+        if (file_exists(IMAGES_G.$data['photo_thumb1'])) {
+            $photo_thumb1 = IMAGES_G.$data['photo_thumb1'];
+        } else if (file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
+            $photo_thumb1 = IMAGES_G_T.$data['photo_thumb1'];
+        } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'])) {
+            $photo_thumb1 = IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'];
+        }
+    }
+
+    if (!empty($data['photo_filename']) && (file_exists(IMAGES_G.$data['photo_filename']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename']))) {
+        if (file_exists(IMAGES_G.$data['photo_filename'])) {
+            $photo_filename = IMAGES_G.$data['photo_filename'];
+        } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename'])) {
+            $photo_filename = IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename'];
+        }
+    }
+
+    return [
+        'photo_thumb2'   => $photo_thumb2,
+        'photo_thumb1'   => $photo_thumb1,
+        'photo_filename' => $photo_filename
+    ];
+}

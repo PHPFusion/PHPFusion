@@ -91,7 +91,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         }
 
         header("Content-type: image/jpeg");
-        $img = IMAGES_G.$data['photo_filename'];
+        $photo_path = return_photo_paths($data);
+        $img = $photo_path['photo_filename'];
         $cop = BASEDIR.$gallery_settings['photo_watermark_image'];
         $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
         if (in_array($ext, ['jpeg', 'jpg'])) {

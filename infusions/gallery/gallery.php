@@ -73,7 +73,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             $last = dbarray($lres);
         }
 
-        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' type='text/css' media='screen' />");
+        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' media='screen' />");
         add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
 
         set_title($locale['gallery_465']);
@@ -102,8 +102,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             'link'  => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
             'title' => $data['photo_title']
         ]);
+
+        $photo_path = return_photo_paths($data);
+
         // broken watermaking. how to do this?
-        if ($gallery_settings['photo_watermark']) {
+        /*if ($gallery_settings['photo_watermark']) {
             // how does watermarking do?
             if ($gallery_settings['photo_watermark_save']) {
                 $parts = explode(".", $data['photo_filename']);
@@ -126,18 +129,18 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 }
                 $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
             }
-            $info['photo_size'] = @getimagesize(IMAGES_G.$data['photo_filename']);
-        } else {
+            $info['photo_size'] = @getimagesize($photo_path['photo_filename']);
+        } else {*/
             $info += [
-                'photo_thumb2'   => $data['photo_thumb2'] ? IMAGES_G_T.$data['photo_thumb2'] : "",
-                'photo_thumb1'   => $data['photo_thumb1'] ? IMAGES_G_T.$data['photo_thumb1'] : "",
-                'photo_filename' => IMAGES_G.$data['photo_filename'],
-                'photo_size'     => getimagesize(IMAGES_G.$data['photo_filename'])
+                'photo_thumb2'   => $photo_path['photo_thumb2'],
+                'photo_thumb1'   => $photo_path['photo_thumb1'],
+                'photo_filename' => $photo_path['photo_filename'],
+                'photo_size'     => getimagesize($photo_path['photo_filename'])
             ];
-        }
+        //}
         $info += [
             'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
-            'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize(IMAGES_G.$data['photo_filename']) : ''),
+            'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize($photo_path['photo_filename']) : ''),
             'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['count_comment']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
         ];

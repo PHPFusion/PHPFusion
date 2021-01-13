@@ -81,6 +81,41 @@ function photo_form() {
             }
             if (\defender::safe()) {
                 if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
+                    $upload_dir = is_dir(IMAGES_G.'album_'.$data['album_id'].'/') && $data['album_id'] > 0 ? IMAGES_G.'album_'.$data['album_id'].'/' : IMAGES_G;
+
+                    $upload_settings = [
+                        'input_name'        => 'photo_image',
+                        'type'              => 'image',
+                        'title'             => $locale['photo_0004'],
+                        'id'                => 'photo_image',
+                        'path'              => $upload_dir,
+                        'required'          => TRUE,
+                        'thumbnail_folder'  => 'thumbs',
+                        'thumbnail'         => TRUE,
+                        'thumbnail_ratio'   => 0,
+                        'thumbnail_w'       => $gallery_settings['thumb_w'],
+                        'thumbnail_h'       => $gallery_settings['thumb_h'],
+                        'thumbnail_suffix'  => '_t1',
+                        'thumbnail2'        => TRUE,
+                        'thumbnail2_w'      => $gallery_settings['photo_w'],
+                        'thumbnail2_h'      => $gallery_settings['photo_h'],
+                        'thumbnail2_suffix' => '_t2',
+                        'thumbnail2_ratio'  => 0,
+                        'max_width'         => $gallery_settings['photo_max_w'],
+                        'max_height'        => $gallery_settings['photo_max_h'],
+                        'max_byte'          => $gallery_settings['photo_max_b'],
+                        'replace_upload'    => FALSE,
+                        'multiple'          => FALSE,
+                        'delete_original'   => FALSE,
+                        'inline'            => FALSE,
+                        'template'          => "modern",
+                        'error_text'        => $locale['photo_0014'],
+                        'valid_ext'         => $gallery_settings['gallery_file_types'],
+                        'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
+                    ];
+
+                    \Defender::getInstance()->add_field_session($upload_settings);
+
                     $upload = form_sanitizer($_FILES['photo_image'], '', 'photo_image');
                     if (empty($upload['error'])) {
                         $data['photo_filename'] = $upload['image_name'];
@@ -196,7 +231,6 @@ function photo_form() {
             echo "</div>\n";
         } else {
             $upload_settings = [
-                'upload_path'       => is_dir(IMAGES_G.'album_'.post('album_id').'/') ? IMAGES_G.'album_'.post('album_id').'/' : IMAGES_G,
                 'required'          => TRUE,
                 'thumbnail_folder'  => 'thumbs',
                 'thumbnail'         => TRUE,
@@ -218,6 +252,7 @@ function photo_form() {
                 'valid_ext'         => $gallery_settings['gallery_file_types'],
                 'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
             ];
+
             echo form_fileinput('photo_image', $locale['photo_0004'], '', $upload_settings);
         }
         closeside();
