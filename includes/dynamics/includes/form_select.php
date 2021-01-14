@@ -56,7 +56,7 @@
  *
  * @package dynamics/select2
  */
-function form_select($input_name, $label, $input_value, array $options = []) {
+function form_select($input_name, string $label, $input_value, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -86,7 +86,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
         'value_filter'         => ['col' => '', 'value' => NULL], // Specify if building opts has to specifically match these conditions
         'optgroup'             => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
         'option_pattern'       => "&#8212;",
-        'display_search_count' => 5,
+        'display_search_count' => "5",
         'max_select'           => FALSE,
         'error_text'           => $locale['error_input_default'],
         'class'                => '',
@@ -255,7 +255,7 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     // $options['chain_index'] - a list of array of current id and the parent id as value (see get_form_select_chain_index function how it's done)
     if ($options['chainable'] && $options['chain_to_id'] && !empty($options['chain_index'])) {
 
-        fusion_load_script(DYNAMICS."assets/chainselect/jquery.chained.js", "script");
+        fusion_load_script(DYNAMICS."assets/chainselect/jquery.chained.js");
 
         add_to_jquery("$('#".$options['input_id']."').chained('#".$options['chain_to_id']."');");
     }
@@ -272,16 +272,13 @@ function form_select($input_name, $label, $input_value, array $options = []) {
             foreach ($array as $arr => $value) {
 
                 // where options is more than one value, pass to data attributes.
-                $data_attributes = "";
-                $data_options = [];
-
-                if (is_array($value)) {
-                    if (!isset($value["text"])) {
-                        foreach ($value as $datakey => $dataval) {
-                            $data_options[] = "data-$datakey='$dataval'";
-                        }
-                        $data_attributes = " ".implode(' ', $data_options)." ";
+                $data_attributes = '';
+                if (count($value) > 1) {
+                    $data_options = [];
+                    foreach ($value as $datakey => $dataval) {
+                        $data_options[] = "data-$datakey='$dataval'";
                     }
+                    $data_attributes = " ".implode(' ', $data_options)." ";
                 }
 
                 $select = "";
@@ -438,8 +435,8 @@ function form_select($input_name, $label, $input_value, array $options = []) {
     // Generate Defender Tag
     $input_name = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
     \defender::add_field_session([
-        'input_name'     => $input_name,
-        'title'          => trim($title, '[]'),
+        'input_name'     => clean_input_name($input_name),
+        'title'          => clean_input_name($title),
         'id'             => $options['input_id'],
         'type'           => 'dropdown',
         'regex'          => $options['regex'],
@@ -466,9 +463,10 @@ function form_select($input_name, $label, $input_value, array $options = []) {
                 $tag_js = ($tag_value) ? "tags: ".html_entity_decode($tag_value)."" : "tags: []";
             }
 
+
             if ($options['required']) {
                 add_to_jquery("
-                var init_value = $('#".$options['input_id']."').select2('val');
+                let init_value = $('#".$options['input_id']."').select2('val');
                 if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
                 $('#".$options['input_id']."').select2({
                     ".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."

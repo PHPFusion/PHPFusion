@@ -96,7 +96,16 @@ if (!defined('NO_DEFAULT_CSS')) {
 if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
-
+// Core CSS loading
+$core_css_files = fusion_filter_hook("fusion_core_styles");
+if (is_array($core_css_files)) {
+    $core_css_files = array_filter($core_css_files);
+    foreach($core_css_files as $css_file) {
+        if (is_file($css_file)) {
+            echo fusion_load_script($css_file, "css", TRUE);
+        }
+    }
+}
 // Theme CSS loading
 echo fusion_load_script(THEME."styles.css", "css", TRUE);
 
@@ -113,7 +122,6 @@ $theme_css_files = fusion_filter_hook("fusion_css_styles");
 if (is_array($theme_css_files)) {
     $theme_css_files = array_filter($theme_css_files);
     foreach($theme_css_files as $css_file) {
-        //print_p($css_file);
         if (is_file($css_file)) {
             echo fusion_load_script($css_file, "css", TRUE);
         }
