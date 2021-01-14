@@ -192,6 +192,7 @@ $locale['global_126'] = "message";
 $locale['global_127'] = "messages";
 $locale['global_128'] = "submission";
 $locale['global_129'] = "submissions";
+$locale["global_130"] = "Panel %s could not be found";
 // User Menu
 $locale['UM060'] = "Login";
 $locale['UM061'] = "Username";

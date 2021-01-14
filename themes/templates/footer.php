@@ -15,13 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Panels;
+
 defined('IN_FUSION') || exit;
 
 if (file_exists(INCLUDES."footer_includes.php")) {
     require_once INCLUDES."footer_includes.php";
 }
 
-\PHPFusion\Panels::getInstance()->getSitePanel();
+Panels::getInstance()->getSitePanel();
 
 define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 

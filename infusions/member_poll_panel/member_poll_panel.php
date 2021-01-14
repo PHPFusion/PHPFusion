@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+
+(defined('IN_FUSION') || exit);
 
 require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 require_once INFUSIONS.'member_poll_panel/templates/poll.tpl.php';

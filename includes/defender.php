@@ -463,14 +463,15 @@ class Defender {
                 foreach ($language as $lang) {
                     $iname = $input_name.'['.$lang.']';
 
-                    if (isset($_SESSION['form_fields'][$page_hash][$iname])) {
-                        $this->field_config = $_SESSION['form_fields'][$page_hash][$iname];
+                    if ($this->field_config = $this->get_current_field_session($input_name)) {
+                        //$this->field_config = $_SESSION['form_fields'][$page_hash][$iname];
                         $this->field_name = $iname;
                         $this->field_value = $value[$lang];
                         $this->field_default = $default;
                         $val[$lang] = $this->validate();
                     }
                 }
+
                 if (!empty($this->field_config['required']) && (!$value[LANGUAGE])) {
 
                     fusion_stop();
@@ -490,7 +491,8 @@ class Defender {
                 }
             } else {
                 // Make sure that the input was actually defined in code.. AND there must be a value to worth the processing power expense!
-                if (!empty($_SESSION['form_fields'][$page_hash][$input_name])) {
+                if ($this->field_config = $this->get_current_field_session($input_name)) {
+
                     $this->field_config = $_SESSION['form_fields'][$page_hash][$input_name];
                     $this->field_name = $input_name;
                     $this->field_value = $value;
@@ -982,7 +984,7 @@ function session_add($key, $value) {
  *
  * @param string|array $key
  *
- * @return null
+ * @return mixed
  */
 function session_get($key) {
     if (is_array($key)) {
@@ -1029,7 +1031,7 @@ function session_remove($key) {
  *
  * @return string
  */
-function fusion_encode($value) {
+function fusion_encode(string $value): string {
     return Defender::encode($value);
 }
 
@@ -1040,7 +1042,7 @@ function fusion_encode($value) {
  *
  * @return mixed
  */
-function fusion_decode($value) {
+function fusion_decode(string $value) {
     return Defender::decode($value);
 }
 
@@ -1049,7 +1051,7 @@ function fusion_decode($value) {
  *
  * @return bool
  */
-function fusion_safe() {
+function fusion_safe(): bool {
     return Defender::getInstance()->safe();
 }
 
@@ -1070,7 +1072,7 @@ function fusion_stop($error_message = "") {
  *
  * @return null|string
  */
-function fusion_decrypt($value, $password) {
+function fusion_decrypt(string $value, string $password) {
     return Defender::decrypt_string($value, $password);
 }
 
@@ -1082,8 +1084,26 @@ function fusion_decrypt($value, $password) {
  *
  * @return string
  */
-function fusion_encrypt($value, $password) {
+function fusion_encrypt(string $value, string $password): string {
     return Defender::encrypt_string($value, $password);
+}
+
+/**
+ * Fetches field configurations
+ * @param $field_name
+ *
+ * @return array|false|mixed|null
+ */
+function get_fusion_field_config($field_name) {
+    return Defender::getInstance()->get_current_field_session($field_name);
+}
+
+/**
+ * Sets field configurations
+ * @param $field_config
+ */
+function set_fusion_field_config($field_config) {
+    Defender::add_field_session($field_config);
 }
 
 require_once __DIR__.'/defender/validation.php';

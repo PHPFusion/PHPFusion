@@ -49,7 +49,13 @@ class Panels {
     private static $panel_id = 0;
     private static $available_panels = [];
 
-    public static function getInstance($set_info = TRUE, $panel_id = 0) {
+    /**
+     * @param bool $set_info
+     * @param int  $panel_id
+     *
+     * @return Panels|null
+     */
+    public static function getInstance($set_info = TRUE, $panel_id = 0): ?Panels {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
             if ($set_info) {
@@ -69,8 +75,8 @@ class Panels {
      *
      * @return array
      */
-    public static function cachePanels() {
-        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side ASC, panel_order ASC";
+    public static function cachePanels(): array {
+        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side, panel_order";
         $param = [
             ':panel_status' => 1,
         ];
@@ -136,7 +142,8 @@ class Panels {
      *
      * @return string
      */
-    public static function display_panel($panel_id) {
+    public static function display_panel($panel_id): string {
+        $locale = fusion_get_locale();
         $html = "";
         if (!empty(self::$panels_cache)) {
             $panels = flatten_array(self::$panels_cache);
@@ -144,10 +151,12 @@ class Panels {
                 if ($panelData['panel_id'] == $panel_id) {
                     ob_start();
                     if ($panelData['panel_type'] == "file") {
-                        if (file_exists(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
+                        if (is_file(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
                             include INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php";
+                        } else {
+                            addNotice("error", sprintf($locale["global_130"], $panelData["panel_name"]));
                         }
-                    } else {
+                     } else {
                         if (fusion_get_settings("allow_php_exe")) {
                             eval(stripslashes($panelData['panel_content']));
                         } else {
@@ -170,7 +179,7 @@ class Panels {
      *
      * @return array
      */
-    public static function getPanelExcluded() {
+    public static function getPanelExcluded(): array {
         return (array)self::$panel_excluded;
     }
 
@@ -181,7 +190,7 @@ class Panels {
      *
      * @return array
      */
-    public static function get_available_panels($excluded_panels = []) {
+    public static function get_available_panels($excluded_panels = []): array {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
@@ -232,7 +241,6 @@ class Panels {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
 
-
         if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
             $params = http_build_query(Router::getRouterInstance()->get_FileParams());
             $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
@@ -249,8 +257,8 @@ class Panels {
         foreach (self::$panel_name as $p_key => $p_side) {
 
             if (isset(self::$panels_cache[$p_key + 1]) || defined("ADMIN_PANEL")) {
-
                 ob_start();
+
                 if (!defined("ADMIN_PANEL")) {
 
                     if (self::check_panel_status($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
@@ -261,7 +269,7 @@ class Panels {
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
 
-                            if (fusion_get_settings('site_seo')) {
+                            if (fusion_get_settings("site_seo")) {
                                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
                                 $script_url = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
                             } else {
@@ -308,8 +316,11 @@ class Panels {
 
                             if ($show_panel === TRUE) { // Prevention of rendering unnecessary files
                                 if ($p_data['panel_type'] == "file") {
-                                    if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
-                                        include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
+                                    $file_path = INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
+                                    if (is_file($file_path)) {
+                                        include $file_path;
+                                    } else {
+                                        addNotice("error", sprintf($locale["global_130"], $p_data["panel_name"]));
                                     }
                                 } else {
                                     if (fusion_get_settings("allow_php_exe")) {
@@ -351,13 +362,12 @@ class Panels {
                 $html .= $content;
                 $html .= "</div>\n";
 
-                define($p_side['name'], (!empty($content) ? $html : ''));
+                define($p_side['name'], (!empty($content) ? $html : 'Unable to get content'));
                 ob_end_clean();
 
             } else {
                 // This is in administration
                 define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
-
             }
         }
 
@@ -371,7 +381,7 @@ class Panels {
      *
      * @return bool
      */
-    public static function check_panel_status($side) {
+    public static function check_panel_status(string $side): bool {
         $settings = fusion_get_settings();
 
         $exclude_list = "";
@@ -452,6 +462,12 @@ class Panels {
         }
     }
 
+    /**
+     * @param $source
+     * @param $pattern
+     *
+     * @return false|int
+     */
     public function wildcard_match($source, $pattern) {
         $pattern = preg_quote($pattern, '/');
         $pattern = str_replace('\*', '.*', $pattern);
