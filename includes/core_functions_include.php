@@ -2409,10 +2409,13 @@ function isJson($string) {
  *
  * @param string $file_path     source file
  * @param string $file_type     script, css
+ * @param bool   $html          return as html tags instead add to output handler
  * @param bool   $cached        false to invalidate browser's cache
  * @param bool   $show_warnings true to show error notices
+ *
+ * @return string
  */
-function fusion_load_script(string $file_path, $file_type = "script", $cached = TRUE, $show_warnings = FALSE) {
+function fusion_load_script(string $file_path, $file_type = "script", $html = FALSE, $cached = TRUE, $show_warnings = FALSE): string {
     static $paths = [];
     // v10
     if (function_exists("auto_file")) {
@@ -2440,14 +2443,25 @@ function fusion_load_script(string $file_path, $file_type = "script", $cached = 
     }
 
     if (empty($paths[$file_path])) {
+
         $paths[$file_path] = $file_path;
+
         if ($file_type == "script") {
-            add_to_footer("<script src='$file_path'></script>\n");
+
+            $html_tag = "<script src='$file_path'></script>\n";
+            if ($html === TRUE) {
+                return $html_tag;
+            }
+            add_to_footer($html_tag);
 
         } else if ($file_type == "css") {
-
-            add_to_head("<link rel='stylesheet' href='$file_path' />\n");
+            $html_tag = "<link rel='stylesheet' href='$file_path' />\n";
+            if ($html === TRUE) {
+                return $html_tag;
+            }
+            add_to_head($html_tag);
         }
     }
 
+    return "";
 }

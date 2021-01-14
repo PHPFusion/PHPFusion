@@ -67,27 +67,4 @@ if (iMEMBER) {
     );
 }
 
-// Theme CSS loading
-fusion_load_script(THEME."styles.css", "css");
-
-if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
-    $user_theme = fusion_get_userdata('user_theme');
-    $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
-    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
-    if (!empty($theme_data)) {
-        fusion_load_script(THEMES.$theme_data["theme_file"], "css");
-    }
-}
-
-$theme_css_files = fusion_filter_hook("fusion_css_styles");
-if (is_array($theme_css_files)) {
-    $theme_css_files = array_filter($theme_css_files);
-    foreach($theme_css_files as $css_file) {
-        //print_p($css_file);
-        if (is_file($css_file)) {
-            fusion_load_script($css_file, "css");
-        }
-    }
-}
-
 ob_start();

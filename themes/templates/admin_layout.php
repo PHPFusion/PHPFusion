@@ -56,16 +56,30 @@ if (!defined('NO_DEFAULT_CSS')) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 
-echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
+// Theme CSS loading
+echo fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.css", "css", TRUE);
+
+$theme_css_files = fusion_filter_hook("fusion_css_styles");
+if (is_array($theme_css_files)) {
+    $theme_css_files = array_filter($theme_css_files);
+    foreach($theme_css_files as $css_file) {
+        //print_p($css_file);
+        if (is_file($css_file)) {
+            echo fusion_load_script($css_file, "css", TRUE);
+        }
+    }
+}
 
 if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
+echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
+
 echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
 echo "<script>var site_path = '".$settings['site_path']."';</script>";
 echo "<script src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
-echo "</head>";
+echo "</head>\n";
 
 /**
  * Constant - THEME_BODY;
@@ -117,6 +131,3 @@ if (!empty($fusion_jquery_tags)) {
 
 echo "</body>\n";
 echo "</html>";
-
-fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.css", "css");
-

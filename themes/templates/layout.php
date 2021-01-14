@@ -35,6 +35,7 @@ echo "<meta name='description' content='".$settings['description']."'>\n";
 echo "<meta name='url' content='".$settings['siteurl']."'>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
+
 $is_https = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
 echo "<link rel='canonical' href='http".($is_https ? 's' : '')."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."'>\n";
 
@@ -94,6 +95,29 @@ if (!defined('NO_DEFAULT_CSS')) {
 
 if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
+}
+
+// Theme CSS loading
+echo fusion_load_script(THEME."styles.css", "css", TRUE);
+
+if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
+    $user_theme = fusion_get_userdata('user_theme');
+    $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
+    $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
+    if (!empty($theme_data)) {
+        echo fusion_load_script(THEMES.$theme_data["theme_file"], "css", TRUE);
+    }
+}
+
+$theme_css_files = fusion_filter_hook("fusion_css_styles");
+if (is_array($theme_css_files)) {
+    $theme_css_files = array_filter($theme_css_files);
+    foreach($theme_css_files as $css_file) {
+        //print_p($css_file);
+        if (is_file($css_file)) {
+            echo fusion_load_script($css_file, "css", TRUE);
+        }
+    }
 }
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
