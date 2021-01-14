@@ -90,8 +90,8 @@ function load_select2_script() {
     static $loaded = FALSE;
     if ($loaded === FALSE) {
         /**
-         * @see load_select2_script()
          * @return string
+         * @see load_select2_script()
          */
         function select2csspath(): string {
             return DYNAMICS."assets/select2/select2.css";

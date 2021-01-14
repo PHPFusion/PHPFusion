@@ -455,7 +455,7 @@ class MemberPoll {
                     $render['poll_table'][0]['poll_option'][] = form_checkbox('check', $data1, '-1', ['reverse_label' => TRUE, 'type' => 'radio', 'value' => $im1, 'input_id' => 'check-'.$im1]);
                 }
 
-                $render['poll_table'][0]['openform'] = openform('voteform', 'post', clean_request(), ['max_tokens'=>1]).form_hidden('poll_id', '', $data['poll_id']);
+                $render['poll_table'][0]['openform'] = openform('voteform', 'post', clean_request(), ['max_tokens' => 1]).form_hidden('poll_id', '', $data['poll_id']);
                 $render['poll_table'][0]['button'] = form_button("cast_vote", self::$locale['POLL_020'], self::$locale['POLL_020'], ['class' => 'btn-primary']);
                 $render['poll_table'][0]['closeform'] = closeform();
 

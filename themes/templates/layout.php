@@ -100,7 +100,7 @@ if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
 $core_css_files = fusion_filter_hook("fusion_core_styles");
 if (is_array($core_css_files)) {
     $core_css_files = array_filter($core_css_files);
-    foreach($core_css_files as $css_file) {
+    foreach ($core_css_files as $css_file) {
         if (is_file($css_file)) {
             echo fusion_load_script($css_file, "css", TRUE);
         }
@@ -121,7 +121,7 @@ if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
 $theme_css_files = fusion_filter_hook("fusion_css_styles");
 if (is_array($theme_css_files)) {
     $theme_css_files = array_filter($theme_css_files);
-    foreach($theme_css_files as $css_file) {
+    foreach ($theme_css_files as $css_file) {
         if (is_file($css_file)) {
             echo fusion_load_script($css_file, "css", TRUE);
         }

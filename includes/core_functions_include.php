@@ -1973,7 +1973,7 @@ function fusion_get_username($user_id) {
 function fusion_get_userdata($key = NULL) {
     global $userdata;
     if (empty($userdata)) {
-        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip"=>USER_IP];
+        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip" => USER_IP];
     }
     $userdata = $userdata + [
             "user_id"     => 0,
