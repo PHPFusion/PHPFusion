@@ -362,7 +362,7 @@ class Panels {
                 $html .= $content;
                 $html .= "</div>\n";
 
-                define($p_side['name'], (!empty($content) ? $html : 'Unable to get content'));
+                define($p_side['name'], (!empty($content) ? $html : ''));
                 ob_end_clean();
 
             } else {
