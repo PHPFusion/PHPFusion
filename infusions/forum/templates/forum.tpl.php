@@ -1173,3 +1173,37 @@ if (!function_exists('render_post_item')) {
         echo '</div>';
     }
 }
+
+if (!function_exists('render_last_posts_reply')) {
+    function render_last_posts_reply($info) {
+        $locale = fusion_get_locale();
+        $forum_settings = get_settings('forum');
+
+        echo "<p><strong>".$info['title']."</strong>\n</p>\n";
+        echo "<div class='table-responsive'><table class='table'>\n";
+        $i = $forum_settings['posts_per_page'];
+
+        foreach ($info['last_post_items'] as $data) {
+            $message = $data['post_message'];
+            if ($data['post_smileys']) {
+                $message = parsesmileys($message);
+            }
+            $message = parseubb($message);
+            echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:10%'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
+            echo "<td class='tbl2 forum_thread_post_date'>\n";
+            echo "<div style='float:right' class='small'>\n";
+            echo $i.($i == $forum_settings['forum_last_posts_reply'] ? " (".$locale['forum_0525'].")" : "");
+            echo "</div>\n";
+            echo "<div class='small'>".$locale['forum_0524'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
+            echo "</td>\n";
+            echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:10%'>\n";
+            echo display_avatar($data, '50px');
+            echo "</td>\n<td valign='top' class='tbl1 forum_thread_user_post'>\n";
+            echo nl2br($message);
+            echo "</td>\n</tr>\n";
+            $i--;
+        }
+
+        echo "</table></div>\n";
+    }
+}

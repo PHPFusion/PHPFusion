@@ -433,35 +433,13 @@ class ViewThread extends ForumServer {
                     if ($forum_settings['forum_last_posts_reply'] == "1") {
                         $title = $locale['forum_0525'];
                     }
-                    ob_start();
-                    echo "<p><strong>".$title."</strong>\n</p>\n";
-                    echo "<div class='table-responsive'><table class='table'>\n";
-                    $i = $forum_settings['posts_per_page'];
+                    $info[$title] = $title;
 
                     while ($data = dbarray($last_post_result)) {
-                        $message = $data['post_message'];
-                        if ($data['post_smileys']) {
-                            $message = parsesmileys($message);
-                        }
-                        $message = parseubb($message);
-                        echo "<tr>\n<td class='tbl2 forum_thread_user_name' style='width:10%'><!--forum_thread_user_name-->".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
-                        echo "<td class='tbl2 forum_thread_post_date'>\n";
-                        echo "<div style='float:right' class='small'>\n";
-                        echo $i.($i == $forum_settings['forum_last_posts_reply'] ? " (".$locale['forum_0525'].")" : "");
-                        echo "</div>\n";
-                        echo "<div class='small'>".$locale['forum_0524'].showdate("forumdate", $data['post_datestamp'])."</div>\n";
-                        echo "</td>\n";
-                        echo "</tr>\n<tr>\n<td valign='top' class='tbl2 forum_thread_user_info' style='width:10%'>\n";
-                        echo display_avatar($data, '50px');
-                        echo "</td>\n<td valign='top' class='tbl1 forum_thread_user_post'>\n";
-                        echo nl2br($message);
-                        echo "</td>\n</tr>\n";
-                        $i--;
+                        $info['last_post_items'][] = $data;
                     }
 
-                    echo "</table></div>\n";
-                    $info['last_posts_reply'] = ob_get_contents();
-                    ob_end_clean();
+                    $info['last_posts_reply'] = fusion_get_function('render_last_posts_reply', $info);
                 }
             }
 
