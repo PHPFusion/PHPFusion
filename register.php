@@ -115,10 +115,10 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                   callback.apply(context, args);
                 }, ms || 0);
               };
-            }           
+            }
                 let r_username = $("#userfieldsform #user_name");
-                let r_username_field = $("#userfieldsform #user_name-field");                                                
-                r_username.keyup(delayKeyupTimer(function (e) {                                
+                let r_username_field = $("#userfieldsform #user_name-field");
+                r_username.keyup(delayKeyupTimer(function (e) {
                     $.ajax({
                         url: "'.INCLUDES.'api/?api=username-check",
                         method: "GET",
@@ -129,17 +129,17 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                                 r_username.addClass("is-valid").removeClass("is-invalid");
                                 r_username_field.addClass("has-success").removeClass("has-error");
                                 let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-success p-5 display-inline-block\">Username is available.</div></div>";
-                                 $(".username-checker").remove();     
+                                 $(".username-checker").remove();
                                 $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             } else if (e.result == "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
                                 r_username_field.addClass("has-error").removeClass("has-success");
                                 let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-danger p-5 display-inline-block\">Username is not available.</div></div>";
-                                 $(".username-checker").remove();                                           
-                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));                                                          
+                                 $(".username-checker").remove();
+                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             }
                         }
-                    });                  
+                    });
                 }, 500));
             ');
         }
