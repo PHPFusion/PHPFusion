@@ -710,7 +710,6 @@ class ForumThreads extends ForumServer {
                     ];
 
                     if (\defender::safe()) { // post message is invalid or whatever is invalid
-
                         $update_forum_lastpost = FALSE;
 
                         // Prepare forum merging action
@@ -719,14 +718,14 @@ class ForumThreads extends ForumServer {
                             $last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$this->thread_data['thread_id']."' ORDER BY post_id DESC"));
                             $post_data['post_id'] = $last_message['post_id'];
                             $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id']);
+                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
 
                             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$this->thread_data['forum_id']."'");
                             // update current thread
                             dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost='".time()."', thread_lastpostid='".$post_data['post_id']."', thread_lastuser='".$post_data['post_author']."' WHERE thread_id='".$this->thread_data['thread_id']."'");
                         } else {
                             $update_forum_lastpost = TRUE;
-                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', ['primary_key' => 'post_id']);
+                            dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
                             $post_data['post_id'] = dblastid();
                             dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
                         }
@@ -735,10 +734,8 @@ class ForumThreads extends ForumServer {
                             && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])
                             && $thread->getThreadPermission("can_upload_attach")
                         ) {
-
                             $upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
                             if ($upload['error'] == 0) {
-
                                 foreach ($upload['target_file'] as $arr => $file_name) {
                                     $attach_data = [
                                         'thread_id'    => intval($this->thread_data['thread_id']),
