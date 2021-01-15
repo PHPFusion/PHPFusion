@@ -107,9 +107,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
         if ($gallery_settings['photo_watermark']) {
             if ($gallery_settings['photo_watermark_save']) {
-                $parts = explode(".", $data['photo_filename']);
-                $wm_file1 = $parts[0]."_w1.".$parts[1];
-                $wm_file2 = $parts[0]."_w2.".$parts[1];
+                $parts = pathinfo($photo_path['photo_filename']);
+                $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+                $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
                 if (!file_exists(IMAGES_G.$wm_file1) || !file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1)) {
                     if ($data['photo_thumb1']) {
                         $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];

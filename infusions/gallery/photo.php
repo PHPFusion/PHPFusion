@@ -80,17 +80,18 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     $image = '';
 
     if (checkgroup($data['album_access'])) {
-        $parts = explode(".", $data['photo_filename']);
-        $wm_file1 = $parts[0]."_w1.".$parts[1];
-        $wm_file2 = $parts[0]."_w2.".$parts[1];
+        $photo_path = return_photo_paths($data);
+        $parts = pathinfo($photo_path['photo_filename']);
+        $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+        $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
         if (!isset($_GET['full'])) {
-            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1; //w1 - full
+            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename']) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1; //w1 - full
         } else {
-            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2; //w2 - normal
+            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_filename']) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2; //w2 - normal
         }
 
         header("Content-type: image/jpeg");
-        $photo_path = return_photo_paths($data);
+
         $img = $photo_path['photo_filename'];
         $cop = BASEDIR.$gallery_settings['photo_watermark_image'];
         $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));

@@ -388,6 +388,27 @@ function purgeAlbumImage($albumData) {
  * @param $photoData
  */
 function purgePhotoImage($photoData) {
+    $photo_path = return_photo_paths($photoData);
+    $parts = pathinfo($photo_path['photo_filename']);
+    $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+    $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
+
+    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1)) {
+        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1);
+    } else if (file_exists(file_exists(IMAGES_G.$wm_file1))) {
+        unlink(file_exists(IMAGES_G.$wm_file1));
+    }
+
+    sleep(0.3);
+
+    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2)) {
+        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2);
+    } else if (file_exists(file_exists(IMAGES_G.$wm_file2))) {
+        unlink(file_exists(IMAGES_G.$wm_file2));
+    }
+
+    sleep(0.3);
+
     if (!empty($photoData['photo_filename'])) {
         if (file_exists(IMAGES_G.$photoData['photo_filename'])) {
             unlink(IMAGES_G.$photoData['photo_filename']);
@@ -414,26 +435,6 @@ function purgePhotoImage($photoData) {
         } else if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb2'])) {
             unlink(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb2']);
         }
-    }
-
-    sleep(0.3);
-
-    $parts = explode(".", $photoData['photo_filename']);
-    $wm_file1 = $parts[0]."_w1.".$parts[1];
-    $wm_file2 = $parts[0]."_w2.".$parts[1];
-
-    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1)) {
-        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1);
-    } else if (file_exists(file_exists(IMAGES_G.$wm_file1))) {
-        unlink(file_exists(IMAGES_G.$wm_file1));
-    }
-
-    sleep(0.3);
-
-    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2)) {
-        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2);
-    } else if (file_exists(file_exists(IMAGES_G.$wm_file2))) {
-        unlink(file_exists(IMAGES_G.$wm_file2));
     }
 }
 
