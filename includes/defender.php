@@ -471,7 +471,6 @@ class Defender {
                         $val[$lang] = $this->validate();
                     }
                 }
-
                 if (!empty($this->field_config['required']) && (!$value[LANGUAGE])) {
 
                     fusion_stop();
@@ -926,11 +925,11 @@ function environment($key, $type = FILTER_DEFAULT) {
  *
  * @return mixed|string|string[]
  */
-function cookie(string $key, $type = FILTER_DEFAULT) {
+function cookie($key, $type = FILTER_DEFAULT) {
     if (filter_has_var(INPUT_COOKIE, $key)) {
         $filtered_input = filter_input(INPUT_COOKIE, $key, $type);
     } else {
-        $filtered_input = isset($_COOKIE[$key]) ? filter_var($_COOKIE[$key], $type) : NULL;
+        $filtered_input = (isset($_COOKIE[$key]) ? filter_var($_COOKIE[$key], $type) : NULL);
     }
 
     return stripinput($filtered_input);
@@ -943,7 +942,7 @@ function cookie(string $key, $type = FILTER_DEFAULT) {
  *
  * @return mixed
  */
-function cookie_remove(string $key) {
+function cookie_remove($key) {
     unset($_COOKIE[$key]);
     return $_COOKIE;
 }
@@ -1027,11 +1026,11 @@ function session_remove($key) {
 /**
  * Converts an array/string to string
  *
- * @param string $value
+ * @param string|array $value
  *
  * @return string
  */
-function fusion_encode(string $value): string {
+function fusion_encode($value) {
     return Defender::encode($value);
 }
 
@@ -1042,7 +1041,7 @@ function fusion_encode(string $value): string {
  *
  * @return mixed
  */
-function fusion_decode(string $value) {
+function fusion_decode($value) {
     return Defender::decode($value);
 }
 
@@ -1051,7 +1050,7 @@ function fusion_decode(string $value) {
  *
  * @return bool
  */
-function fusion_safe(): bool {
+function fusion_safe() {
     return Defender::getInstance()->safe();
 }
 
@@ -1072,7 +1071,7 @@ function fusion_stop($error_message = "") {
  *
  * @return null|string
  */
-function fusion_decrypt(string $value, string $password) {
+function fusion_decrypt($value, $password) {
     return Defender::decrypt_string($value, $password);
 }
 
@@ -1084,7 +1083,7 @@ function fusion_decrypt(string $value, string $password) {
  *
  * @return string
  */
-function fusion_encrypt(string $value, string $password): string {
+function fusion_encrypt($value, $password) {
     return Defender::encrypt_string($value, $password);
 }
 
