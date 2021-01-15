@@ -62,20 +62,26 @@ spl_autoload_register(function ($className) {
     }
 });
 
-// Load infusions autoloader.
-// File naming convention:
-// Class_Name        class.name.php
-// ClassName         classname.php
+/**
+ * Infusions Autoloading
+ * All class files must be lowercase and end with .class.php in infusions global namespace
+ *
+ * Class_Name        class_name.class.php
+ * ClassName         classname.class.php
+ */
 spl_autoload_register(function ($className) {
     if (stristr($className, 'PHPFusion\\Infusions')) {
-        //print_p($className);
+
         $className = str_replace('PHPFusion\\Infusions\\', '', $className);
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-        $className = explode('_', $className);
-        $className = implode(".", $className);
-        $className = strtolower($className);
 
-        $fullPath = BASEDIR.'infusions/'.$className.'.php';
+        $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
+        if (is_file($fullPath)) {
+            require $fullPath;
+        }
+        // Files with all lowercase accepted
+        $className = strtolower($className);
+        $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
         if (is_file($fullPath)) {
             require $fullPath;
         }
