@@ -120,7 +120,7 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
 function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
     $type = $removeAfterAccess ? 'once' : 'persist';
     if (is_array($value)) {
-        $return = "<ol style='list-style: decimal'>\n";
+        $return = "<ol style='list-style: decimal;'>\n";
         foreach ($value as $text) {
             $return .= "<li>".$text."</li>";
         }

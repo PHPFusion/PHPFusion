@@ -112,7 +112,7 @@ class UserFieldsInput {
             $this->_setValidationError();
         }
 
-        if (defender::safe()) {
+        if (fusion_safe()) {
 
             if ($this->emailVerification) {
                 $this->_setEmailVerification();
@@ -149,8 +149,9 @@ class UserFieldsInput {
 
             }
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
+
             if ($this->_completeMessage) {
-                addNotice("success", $this->_completeMessage, 'all');
+                addNotice("success", $this->_completeMessage, fusion_get_settings("opening_page"));
             }
 
             return TRUE;

@@ -65,9 +65,9 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
             $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
 
             if ($settings['admin_activation'] == 1) {
-                addNotice("success", $locale['u171']." - ".$locale['u162'], 'all');
+                addNotice("success", $locale['u171']." - ".$locale['u162'], $settings["opening_page"]);
             } else {
-                addNotice("success", $locale['u171']." - ".$locale['u161'], 'all');
+                addNotice("success", $locale['u171']." - ".$locale['u161'], $settings["opening_page"]);
             }
             redirect($settings['opening_page']);
 
@@ -84,7 +84,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userInput->registration = TRUE;
         $insert = $userInput->saveInsert();
 
-        if ($insert && \defender::safe()) {
+        if ($insert && fusion_safe()) {
             redirect($settings['opening_page']);
         }
         unset($userInput);
@@ -106,10 +106,19 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         if (!defined('USERNAME_CHECK')) {
             define('USERNAME_CHECK', TRUE);
             add_to_jquery('
+            function delayKeyupTimer(callback, ms) {
+              var timer = 0;
+              return function() {
+                var context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                  callback.apply(context, args);
+                }, ms || 0);
+              };
+            }           
                 let r_username = $("#userfieldsform #user_name");
-                let r_username_field = $("#userfieldsform #user_name-field");
-                let r_register = $("#userfieldsform #register");
-                r_username.bind("keyup", function () {
+                let r_username_field = $("#userfieldsform #user_name-field");                                                
+                r_username.keyup(delayKeyupTimer(function (e) {                                
                     $.ajax({
                         url: "'.INCLUDES.'api/?api=username-check",
                         method: "GET",
@@ -119,15 +128,19 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                             if (e.result == "valid") {
                                 r_username.addClass("is-valid").removeClass("is-invalid");
                                 r_username_field.addClass("has-success").removeClass("has-error");
-                                r_register.removeAttr("disabled");
+                                let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-success p-5 display-inline-block\">Username is available.</div></div>";
+                                 $(".username-checker").remove();     
+                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             } else if (e.result == "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
                                 r_username_field.addClass("has-error").removeClass("has-success");
-                                r_register.prop("disabled", true);
+                                let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-danger p-5 display-inline-block\">Username is not available.</div></div>";
+                                 $(".username-checker").remove();                                           
+                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));                                                          
                             }
                         }
-                    });
-                });
+                    });                  
+                }, 500));
             ');
         }
     }

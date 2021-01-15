@@ -102,8 +102,6 @@ class UserFields extends QuantumFields {
         return in_array($field_name, $list);
     }
 
-    /* Page Navigation with UF Cats */
-
     public function setUserNameChange($value) {
         $this->username_change = $value;
     }
@@ -133,8 +131,6 @@ class UserFields extends QuantumFields {
      * Display Input Fields
      *
      * @param array $input
-     *
-     * @throws \Exception
      */
     public function display_profile_input(array $input = []) {
         $this->method = 'input';
@@ -293,16 +289,18 @@ class UserFields extends QuantumFields {
             if (!$this->registration) {
 
                 if (isset($this->userData['user_avatar']) && $this->userData['user_avatar'] != "") {
-                    $this->info['user_avatar'] = "
-                    <div class='row'>\n
-                    <div class='col-xs-12 col-sm-3'><strong>".$locale['u185']."</strong></div>
-                    <div class='col-xs-12 col-sm-9'>
+                    $this->info['user_avatar'] = "<div class='row'><div class='col-xs-12 col-sm-3'>
+                        <strong>".$locale['u185']."</strong></div>
+                        <div class='col-xs-12 col-sm-9'>
                         <div class='p-l-10'>
-                        <label for='user_avatar_upload'>".display_avatar($this->userData, '150px', '', FALSE, 'img-thumbnail')."</label>\n<br />\n".form_checkbox("delAvatar", $locale['delete'], '', ['reverse_label' => TRUE])."
+                        <label for='user_avatar_upload'>".display_avatar($this->userData, '150px', '', FALSE, 'img-thumbnail')."</label>
+                        <br>
+                        ".form_checkbox("delAvatar", $locale['delete'], '', ['reverse_label' => TRUE])."
                         </div>
-                    </div></div>
-                    ";
+                        </div></div>
+                        ";
                 } else {
+
                     $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', [
                             'upload_path'     => IMAGES."avatars/",
                             'input_id'        => 'user_avatar_upload',
@@ -426,17 +424,16 @@ class UserFields extends QuantumFields {
      * Display Captcha
      *
      * @return string
-     * @todo: remove locale.
      */
     private function renderValidation() {
         $locale = fusion_get_locale();
-        $_CAPTCHA_HIDE_INPUT = FALSE;
-        include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
-        $html = "<div class='form-group m-t-20'>\n";
-        if (!$_CAPTCHA_HIDE_INPUT) {
-            $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>\n".$locale['u190']." <span class='required'>*</span></label>\n";
-        }
 
+        $_CAPTCHA_HIDE_INPUT = FALSE;
+
+        include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
+
+        $html = "<div class='form-group m-t-20'>";
+        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u190']." <span class='required'>*</span></label>";
         $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
 
         $html .= display_captcha([
@@ -444,7 +441,8 @@ class UserFields extends QuantumFields {
             'input_id'   => 'captcha_code_userfields',
             'image_id'   => 'captcha_image_userfields'
         ]);
-        if (!$_CAPTCHA_HIDE_INPUT) {
+
+        if ($_CAPTCHA_HIDE_INPUT === FALSE) {
             $html .= form_text('captcha_code', '', '', [
                 'inline'           => 1,
                 'required'         => 1,
@@ -454,8 +452,8 @@ class UserFields extends QuantumFields {
                 'placeholder'      => $locale['u191']
             ]);
         }
-        $html .= "</div>\n";
-        $html .= "</div>\n";
+        $html .= "</div>";
+        $html .= "</div>";
 
         return (string)$html;
     }
@@ -464,7 +462,6 @@ class UserFields extends QuantumFields {
      * Display Terms of Agreement Field
      *
      * @return string
-     * @todo: remove locale.
      */
     private function renderTerms() {
         $locale = fusion_get_locale();
@@ -724,7 +721,7 @@ class UserFields extends QuantumFields {
         $this->info['core_field']['profile_user_group']['value'] = '';
         $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
-        $user_groups = array_filter($user_groups);
+        $user_groups = (array)array_filter($user_groups);
         $group_info = [];
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
@@ -803,7 +800,6 @@ class UserFields extends QuantumFields {
 
         return $html;
     }
-
 
     /**
      * Get User Data of the current page.
