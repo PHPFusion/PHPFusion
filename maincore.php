@@ -43,7 +43,7 @@ dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 
-if ($settings['error_logging_enabled'] == 1) {
+if (!empty($settings['error_logging_enabled']) && $settings['error_logging_enabled'] == 1) {
     ini_set('display_errors', '1');
 } else {
     error_reporting(0);

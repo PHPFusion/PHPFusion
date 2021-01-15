@@ -55,7 +55,7 @@ class Panels {
      *
      * @return Panels|null
      */
-    public static function getInstance($set_info = TRUE, $panel_id = 0): ?Panels {
+    public static function getInstance($set_info = TRUE, $panel_id = 0) {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
             if ($set_info) {
@@ -156,7 +156,7 @@ class Panels {
                         } else {
                             addNotice("error", sprintf($locale["global_130"], $panelData["panel_name"]));
                         }
-                     } else {
+                    } else {
                         if (fusion_get_settings("allow_php_exe")) {
                             eval(stripslashes($panelData['panel_content']));
                         } else {
@@ -362,7 +362,7 @@ class Panels {
                 $html .= $content;
                 $html .= "</div>\n";
 
-                define($p_side['name'], (!empty($content) ? $html : 'Unable to get content'));
+                define($p_side['name'], (!empty($content) ? $html : ''));
                 ob_end_clean();
 
             } else {

@@ -1090,6 +1090,7 @@ function fusion_encrypt(string $value, string $password): string {
 
 /**
  * Fetches field configurations
+ *
  * @param $field_name
  *
  * @return array|false|mixed|null
@@ -1100,6 +1101,7 @@ function get_fusion_field_config($field_name) {
 
 /**
  * Sets field configurations
+ *
  * @param $field_config
  */
 function set_fusion_field_config($field_config) {

@@ -48,7 +48,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             "blog_cat"      => form_sanitizer($_POST['blog_cat'], "", "blog_cat"),
             "blog_blog"     => form_sanitizer($blog_blog, "", "blog_blog"),
             "blog_body"     => form_sanitizer($blog_extended, "", "blog_body"),
-            "blog_language" => form_sanitizer($_POST['blog_language'], "", "blog_language"),
+            "blog_language" => form_sanitizer($_POST['blog_language'], LANGUAGE, "blog_language"),
             "blog_keywords" => form_sanitizer($_POST['blog_keywords'], "", "blog_keywords"),
         ];
         if ($blog_settings['blog_allow_submission_files']) {
@@ -100,7 +100,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission']) {
             "blog_image_t1" => isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "",
             "blog_image_t2" => isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "",
             "blog_ialign"   => (isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : "pull-left"),
-            "blog_language" => form_sanitizer($_POST['blog_language'], "", "blog_language"),
+            "blog_language" => form_sanitizer($_POST['blog_language'], LANGUAGE, "blog_language"),
         ];
     }
     $criteriaArray['submitted'] = FALSE;

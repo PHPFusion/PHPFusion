@@ -23,19 +23,17 @@
  * @param string $album_thumb2
  * @param string $link
  * @param int    $album_id
- * @param bool   $latest_photo
  *
  * @return string
  */
-function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $album_id = 0, $latest_photo = FALSE) {
+function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $album_id = 0) {
     $gallery_settings = get_settings("gallery");
-    // include generation of watermark which requires photo_id. but album doesn't have id.
-    // Thumb will have 2 possible path following v7
-    if ($latest_photo) {
+
+    if (defined('GALLERY_ALBUM_LATEST_PHOTO')) {
         $result = dbquery("
             SELECT ph.photo_id, ph.photo_title, ph.photo_datestamp, ph.photo_filename, ph.photo_thumb1, ph.photo_thumb2, pa.album_id, pa.album_access FROM ".DB_PHOTOS." ph
             LEFT JOIN ".DB_PHOTO_ALBUMS." AS pa USING (album_id)
-            WHERE ".groupaccess('pa.album_access')." ORDER BY ph.photo_datestamp DESC LIMIT 1
+            WHERE album_id=".$album_id." AND ".groupaccess('pa.album_access')." ORDER BY ph.photo_datestamp DESC LIMIT 1
         ");
 
         if (dbrows($result) > 0) {

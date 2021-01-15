@@ -1973,7 +1973,7 @@ function fusion_get_username($user_id) {
 function fusion_get_userdata($key = NULL) {
     global $userdata;
     if (empty($userdata)) {
-        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip"=>USER_IP];
+        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip" => USER_IP];
     }
     $userdata = $userdata + [
             "user_id"     => 0,
@@ -2424,8 +2424,8 @@ function fusion_load_script(string $file_path, $file_type = "script", $html = FA
         $file_info = pathinfo($file_path);
         try {
             if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
-                $file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['basename'];
-                $min_file = $file_info['dirname'].DIRECTORY_SEPARATOR.$file_info['filename'].'.min.'.$file_info['extension'];
+                $file = $file_info['dirname'].'/'.$file_info['basename'];
+                $min_file = $file_info['dirname'].'/'.$file_info['filename'].'.min.'.$file_info['extension'];
                 $return_file = $file;
                 if (file_exists($min_file) && !fusion_get_settings("devmode")) {
                     $return_file = $min_file;
@@ -2448,14 +2448,14 @@ function fusion_load_script(string $file_path, $file_type = "script", $html = FA
 
         if ($file_type == "script") {
 
-            $html_tag = "<script src='$file_path'></script>\n";
+            $html_tag = "<script src='$file_path'></script>";
             if ($html === TRUE) {
                 return $html_tag;
             }
             add_to_footer($html_tag);
 
         } else if ($file_type == "css") {
-            $html_tag = "<link rel='stylesheet' href='$file_path' />\n";
+            $html_tag = "<link rel='stylesheet' href='$file_path'>";
             if ($html === TRUE) {
                 return $html_tag;
             }

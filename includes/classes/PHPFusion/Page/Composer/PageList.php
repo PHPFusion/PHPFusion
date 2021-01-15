@@ -177,7 +177,7 @@ class PageList extends PageAdmin {
                 "page_status"   => !empty($_POST['page_status']) ? form_sanitizer($_POST['page_status'], "", "page_status") : "",
                 "page_cat"      => !empty($_POST['page_cat']) ? form_sanitizer($_POST['page_cat'], "", "page_cat") : "",
                 "page_access"   => !empty($_POST['page_access']) ? form_sanitizer($_POST['page_access'], "", "page_access") : "",
-                "page_language" => !empty($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : "",
+                "page_language" => !empty($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
                 "page_user"     => !empty($_POST['page_user']) ? form_sanitizer($_POST['page_user'], "", "page_user") : "",
             ];
 

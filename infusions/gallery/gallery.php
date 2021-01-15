@@ -105,42 +105,40 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
         $photo_path = return_photo_paths($data);
 
-        // broken watermaking. how to do this?
-        /*if ($gallery_settings['photo_watermark']) {
-            // how does watermarking do?
+        if ($gallery_settings['photo_watermark']) {
             if ($gallery_settings['photo_watermark_save']) {
-                $parts = explode(".", $data['photo_filename']);
-                $wm_file1 = $parts[0]."_w1.".$parts[1];
-                $wm_file2 = $parts[0]."_w2.".$parts[1];
-                if (!file_exists(IMAGES_G_T.$wm_file1)) {
-                    if ($data['photo_thumb2']) {
-                        $info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
+                $parts = pathinfo($photo_path['photo_filename']);
+                $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+                $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
+                if (!file_exists(IMAGES_G.$wm_file1) || !file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1)) {
+                    if ($data['photo_thumb1']) {
+                        $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
                     }
                     $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
                 } else {
-                    if ($data['photo_thumb2']) {
-                        $info['photo_thumb'] = IMAGES_G."/".$wm_file1;
+                    if ($data['photo_thumb1']) {
+                        $info['photo_thumb1'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1;
                     }
-                    $info['photo_filename'] = IMAGES_G."/".$wm_file2;
+                    $info['photo_filename'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2;
                 }
             } else {
-                if ($data['photo_thumb2']) {
-                    $info['photo_thumb'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
+                if ($data['photo_thumb1']) {
+                    $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
                 }
                 $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
             }
             $info['photo_size'] = @getimagesize($photo_path['photo_filename']);
-        } else {*/
+        } else {
             $info += [
                 'photo_thumb2'   => $photo_path['photo_thumb2'],
                 'photo_thumb1'   => $photo_path['photo_thumb1'],
                 'photo_filename' => $photo_path['photo_filename'],
                 'photo_size'     => getimagesize($photo_path['photo_filename'])
             ];
-        //}
+        }
         $info += [
             'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
-            'photo_byte'        => parsebytesize($gallery_settings['photo_watermark'] ? filesize($photo_path['photo_filename']) : ''),
+            'photo_byte'        => parsebytesize(filesize($photo_path['photo_filename'])),
             'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['count_comment']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
         ];
@@ -337,7 +335,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                         'name' => $locale['delete']
                     ];
                 }
-                $photo_directory = !SAFEMODE ? "album_".$data['album_id'] : '';
 
                 $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], $data['album_id']);
 

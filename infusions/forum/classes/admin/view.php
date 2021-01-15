@@ -211,7 +211,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'forum_description'  => form_sanitizer($_POST['forum_description'], '', 'forum_description'),
                 'forum_cat'          => form_sanitizer($_POST['forum_cat'], 0, 'forum_cat'),
                 'forum_type'         => form_sanitizer($_POST['forum_type'], '', 'forum_type'),
-                'forum_language'     => form_sanitizer($_POST['forum_language'], '', 'forum_language'),
+                'forum_language'     => form_sanitizer($_POST['forum_language'], LANGUAGE, 'forum_language'),
                 'forum_alias'        => form_sanitizer($_POST['forum_alias'], '', 'forum_alias'),
                 'forum_meta'         => form_sanitizer($_POST['forum_meta'], '', 'forum_meta'),
                 'forum_rules'        => form_sanitizer($_POST['forum_rules'], '', 'forum_rules'),
