@@ -84,7 +84,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
  *
  * @return bool
  */
-function theme_exists($theme) {
+function theme_exists(string $theme) {
     if ($theme == "Default") {
         $theme = fusion_get_settings('theme');
     }
@@ -98,7 +98,7 @@ function theme_exists($theme) {
  *
  * @param string $theme
  */
-function set_theme($theme) {
+function set_theme(string $theme) {
     $locale = fusion_get_locale();
     if (defined("THEME")) {
         return;
@@ -140,7 +140,7 @@ function set_theme($theme) {
  *
  * @return bool
  */
-function set_admin_pass($password) {
+function set_admin_pass(string $password): bool {
     return Authenticate::setAdminCookie($password);
 }
 
@@ -151,7 +151,7 @@ function set_admin_pass($password) {
  *
  * @return bool
  */
-function check_admin_pass($password) {
+function check_admin_pass(string $password): bool {
     return Authenticate::validateAuthAdmin($password);
 }
 
@@ -163,9 +163,9 @@ function check_admin_pass($password) {
  * @param bool   $script   true if you want to redirect via javascript
  * @param int    $code
  */
-function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
+function redirect(string $location, $delay = FALSE, $script = FALSE, $code = 200) {
     //define('STOP_REDIRECT', true);
-    //$location = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? FUSION_ROOT.$location : $location;
+    //debug_print_backtrace();
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
@@ -181,10 +181,6 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
             }
         }
     }
-    //elseif (fusion_get_settings("devmode")) {
-    //    debug_print_backtrace();
-    //    echo "redirected to ".$location;
-    //}
 }
 
 /**
@@ -194,7 +190,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
  *
  * @return bool whether header was sent
  */
-function set_status_header($code = 200) {
+function set_status_header($code = 200): bool {
     if (headers_sent()) {
         return FALSE;
     }
@@ -292,7 +288,7 @@ function get_http_response_code($url) {
  *
  * @return string
  */
-function cleanurl($url) {
+function cleanurl($url): string {
     $bad_entities = ["&", "\"", "'", '\"', "\'", "<", ">", "", "", "*"];
     $safe_entities = ["&amp;", "", "", "", "", "", "", "", "", ""];
 
@@ -320,11 +316,11 @@ function stripinput($text) {
 /**
  * Prevent any possible XSS attacks via $_GET
  *
- * @param string $check_url
+ * @param array|string $check_url
  *
  * @return bool True if the URL is not secure
  */
-function stripget($check_url) {
+function stripget($check_url): bool {
     if (is_array($check_url)) {
         foreach ($check_url as $value) {
             if (stripget($value) == TRUE) {
@@ -347,7 +343,7 @@ function stripget($check_url) {
  *
  * @return string
  */
-function stripfilename($filename) {
+function stripfilename(string $filename): string {
     $patterns = [
         '/\s+/'              => '_',
         '/[^a-z0-9_-]|^\W/i' => '',
@@ -364,7 +360,7 @@ function stripfilename($filename) {
  *
  * @return string
  */
-function stripslash($text) {
+function stripslash(string $text): string {
     if (QUOTES_GPC) {
         $text = stripslashes($text);
     }
@@ -1472,10 +1468,10 @@ function user_blacklisted($user_id) {
  *
  * @return array
  */
-function makefilelist($folder, $filter = '', $sort = TRUE, $type = "files", $ext_filter = "") {
+function makefilelist(string $folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = ""): array {
     $res = [];
 
-    $default_filters = '.|..|.DS_Store';
+    $default_filters = '.|..|.htaccess|index.php|._DS_STORE|.tmp';
     if ($filter === FALSE) {
         $filter = $default_filters;
     }
@@ -1484,7 +1480,6 @@ function makefilelist($folder, $filter = '', $sort = TRUE, $type = "files", $ext
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
     }
-
     if (file_exists($folder)) {
         $temp = opendir($folder);
         while ($file = readdir($temp)) {
@@ -1498,7 +1493,8 @@ function makefilelist($folder, $filter = '', $sort = TRUE, $type = "files", $ext
                         $res[] = $file;
                     }
                 }
-            } else if ($type == "folders" && !in_array($file, $filter)) {
+            } else if
+            ($type == "folders" && !in_array($file, $filter)) {
                 if (is_dir($folder.$file)) {
                     $res[] = $file;
                 }
@@ -2358,22 +2354,6 @@ function rrmdir($dir) {
 }
 
 /**
- * Alternative to rename() that works on Windows
- *
- * @param string $origin
- * @param string $target
- */
-function fusion_rename($origin, $target) {
-    if ($origin != "." && $origin != ".." && !is_dir($origin)) {
-        if (TRUE !== @rename($origin, $target)) {
-            copy($origin, $target);
-            unlink($origin);
-        }
-    }
-}
-
-
-/**
  * cURL method to get any contents for Apache that does not support SSL for remote paths
  *
  * @param $url
@@ -2415,7 +2395,7 @@ function isJson($string) {
  *
  * @return string
  */
-function fusion_load_script(string $file_path, $file_type = "script", $html = FALSE, $cached = TRUE, $show_warnings = FALSE): string {
+function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE, $show_warnings = FALSE) {
     static $paths = [];
     // v10
     if (function_exists("auto_file")) {
@@ -2427,22 +2407,25 @@ function fusion_load_script(string $file_path, $file_type = "script", $html = FA
                 $file = $file_info['dirname'].'/'.$file_info['basename'];
                 $min_file = $file_info['dirname'].'/'.$file_info['filename'].'.min.'.$file_info['extension'];
                 $return_file = $file;
-                if (file_exists($min_file) && !fusion_get_settings("devmode")) {
+                if (is_file($min_file)) {
                     $return_file = $min_file;
                 }
-                $mtime = filemtime($return_file);
-                $file_path = $return_file."?v=".$mtime;
-                if (!$cached) {
-                    $file_path = $return_file;
+                if (is_file($return_file)) {
+                    $mtime = filemtime($return_file);
+                    $file_path = $return_file."?v=".$mtime;
+                    if (!$cached) {
+                        $file_path = $return_file;
+                    }
+                } else {
+                    $file_path = "";
                 }
             }
-
         } catch (Exception $e) {
             setError(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
         }
     }
 
-    if (empty($paths[$file_path])) {
+    if ($file_path && empty($paths[$file_path])) {
 
         $paths[$file_path] = $file_path;
 
