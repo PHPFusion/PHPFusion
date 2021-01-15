@@ -117,8 +117,13 @@ require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.php";
-// Always put this last file
-if (is_file(__DIR__.'/custom_includes.php')) {
-    require_once __DIR__.'/custom_includes.php';
+require_once __DIR__."/hooks_include.php";
+
+if (is_file(__DIR__."/vendor/autoload.php")) {
+    require_once __DIR__."/vendor/autoload.php";
+}
+
+if (is_file(__DIR__."/custom_includes.php")) {
+    require_once __DIR__."/custom_includes.php";
 }
 //require_once __DIR__.'/db_handlers/all_functions_include.php';

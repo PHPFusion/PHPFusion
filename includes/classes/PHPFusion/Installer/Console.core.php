@@ -116,6 +116,19 @@ class Console_Core extends Install_Core {
         $html .= "<link rel='stylesheet' href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."'>\n";
         $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
         $html .= OutputHandler::$pageHeadTags;
+
+
+        $core_css_files = fusion_filter_hook("fusion_core_styles");
+        if (is_array($core_css_files)) {
+            $core_css_files = array_filter($core_css_files);
+            foreach($core_css_files as $css_file) {
+                if (is_file($css_file)) {
+                    $script = fusion_load_script($css_file, "css", TRUE);
+                    $html .= $script;
+                }
+            }
+        }
+
         $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryTags;

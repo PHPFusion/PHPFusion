@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
+use Dynamics;
 use PHPFusion\Installer\Steps\InstallerPermissions;
 use PHPFusion\OutputHandler;
 use PHPFusion\Steps\InstallerAdminSetup;
@@ -46,6 +47,7 @@ class Install_Core extends Infusion_Core {
     const BUILD_VERSION = '9.03.100';
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'AD.APWR.B.BB.C.CP.DB.ERRO.FM.I.IM.IP.LANG.M.MAIL.MI.P.PI.PL.ROB.S1.S2.S3.S4.S6.S7.S9.S12.SB.SL.SM.TS.U.UF.UG.UL';
+    const IN_SETUP = TRUE;
     protected static $locale = [];
     protected static $localeset = 'English';
     protected static $allow_delete = FALSE;
@@ -131,11 +133,10 @@ class Install_Core extends Infusion_Core {
 
             session_start();
 
-            define('IN_SETUP', TRUE);
-
             require_once BASEDIR.'includes/dynamics.php';
             require_once BASEDIR.'includes/autoloader.php';
-            \Dynamics::getInstance();
+
+            Dynamics::getInstance();
 
             self::installer_step();
             self::verify_requirements();
@@ -152,7 +153,7 @@ class Install_Core extends Infusion_Core {
             self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
             self::$locale_files = fusion_get_detected_language();
 
-            self::detect_upgrade();
+            self::detectSystemUpgrade();
 
             // set timezone for PDO
             date_default_timezone_set('Europe/London');
@@ -201,7 +202,7 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    private static function detect_upgrade() {
+    private static function detectSystemUpgrade() {
 
         // Read the config_temp.php
         self::set_empty_prefix();
@@ -271,7 +272,7 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    public static function fusion_get_config($config_path) {
+    public static function fusion_get_config($config_path): array {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
             $default_path = [];

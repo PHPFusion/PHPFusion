@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+(defined('IN_FUSION') || exit);
 
 // Better to call this file as core_runtime_include.php
 use PHPFusion\Database\DatabaseFactory;
@@ -47,6 +47,7 @@ DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID()
     'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
 ]);
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
+
 require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
@@ -54,4 +55,4 @@ require_once __DIR__."/translate_include.php";
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/defender.php";
 require_once __DIR__."/dynamics.php";
-require_once __DIR__."/hooks_include.php";
+
