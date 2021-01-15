@@ -63,17 +63,19 @@ spl_autoload_register(function ($className) {
 });
 
 // Load infusions autoloader.
-// @todo: Rename all infusions namespace with "PHPFusion\Infusions\{Infusion_name};
-// @todo: then remove all infusions autoloader and complete check the file structure.
+// File naming convention:
+// Class_Name        class.name.php
+// ClassName         classname.php
 spl_autoload_register(function ($className) {
     if (stristr($className, 'PHPFusion\\Infusions')) {
         //print_p($className);
         $className = str_replace('PHPFusion\\Infusions\\', '', $className);
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $className = explode('_', $className);
+        $className = implode(".", $className);
         $className = strtolower($className);
-        //print_P($className);
+
         $fullPath = BASEDIR.'infusions/'.$className.'.php';
-        //print_p($fullPath);
         if (is_file($fullPath)) {
             require $fullPath;
         }
