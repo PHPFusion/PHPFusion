@@ -221,7 +221,7 @@ function gallery_photo_listing() {
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
                 echo "<div class='panel-image-wrapper'>\n";
-                echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], IMAGES_G.$data['photo_filename'], $data['album_id']);
+                echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], '', $data['album_id']);
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
                 echo "<div class='dropdown pull-right spacer-xs'>\n";
