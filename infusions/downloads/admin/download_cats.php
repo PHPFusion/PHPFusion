@@ -46,7 +46,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             "download_cat_hidden"      => [],
             "download_cat_name"        => form_sanitizer($_POST['download_cat_name'], "", "download_cat_name"),
             "download_cat_description" => form_sanitizer($_POST['download_cat_description'], "", "download_cat_description"),
-            "download_cat_language"    => form_sanitizer($_POST['download_cat_language'], "", "download_cat_language"),
+            "download_cat_language"    => form_sanitizer($_POST['download_cat_language'], LANGUAGE, "download_cat_language"),
             "download_cat_sort_by"     => form_sanitizer($_POST['download_cat_sort_by'], "", "download_cat_sort_by"),
             "download_cat_sort_order"  => form_sanitizer($_POST['download_cat_sort_order'], "DESC", "download_cat_sort_order"),
         ];

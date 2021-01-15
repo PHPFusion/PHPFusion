@@ -291,7 +291,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 "link_name"        => sanitizer('link_name', '', 'link_name'),
                 "link_url"         => sanitizer('link_url', '', 'link_url'),
                 "link_icon"        => sanitizer('link_icon', '', 'link_icon'),
-                "link_language"    => sanitizer('link_language', '', 'link_language'),
+                "link_language"    => sanitizer('link_language', LANGUAGE, 'link_language'),
                 "link_visibility"  => sanitizer('link_visibility', '', 'link_visibility'),
                 "link_position"    => sanitizer('link_position', '', 'link_position'),
                 'link_status'      => sanitizer('link_status', 0, 'link_status'),

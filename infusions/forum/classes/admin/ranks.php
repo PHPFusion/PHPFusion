@@ -201,7 +201,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 'rank_id'            => form_sanitizer($_POST['rank_id'], '0', 'rank_id'),
                 'rank_title'         => form_sanitizer($_POST['rank_title'], '', 'rank_title'),
                 'rank_image'         => form_sanitizer($_POST['rank_image'], "", "rank_image"),
-                'rank_language'      => form_sanitizer($_POST['rank_language'], "", "rank_language"),
+                'rank_language'      => form_sanitizer($_POST['rank_language'], LANGUAGE, "rank_language"),
                 'rank_posts'         => isset($_POST['rank_posts']) && isnum($_POST['rank_posts']) ? $_POST['rank_posts'] : 0,
                 'rank_type'          => isset($_POST['rank_type']) && isnum($_POST['rank_type']) ? $_POST['rank_type'] : 0,
                 'rank_apply_normal'  => isset($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER,

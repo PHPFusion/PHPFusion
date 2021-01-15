@@ -41,7 +41,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             'news_cat'         => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
             'news_news'        => form_sanitizer($_POST['news_news'], '', 'news_news'),
             'news_extended'    => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
-            'news_language'    => form_sanitizer($_POST['news_language'], '', 'news_language'),
+            'news_language'    => form_sanitizer($_POST['news_language'], LANGUAGE, 'news_language'),
             'news_keywords'    => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
             'news_image_align' => form_sanitizer($_POST['news_image_align'], '', 'news_image_align')
         ];
@@ -87,7 +87,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             'news_cat'         => form_sanitizer($_POST['news_cat'], '', 'news_cat'),
             'news_news'        => form_sanitizer($_POST['news_news'], '', 'news_news'),
             'news_extended'    => form_sanitizer($_POST['news_extended'], '', 'news_extended'),
-            'news_language'    => form_sanitizer($_POST['news_language'], '', 'news_language'),
+            'news_language'    => form_sanitizer($_POST['news_language'], LANGUAGE, 'news_language'),
             'news_keywords'    => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
             'news_image_align' => !empty($_POST['news_image_align']) ? form_sanitizer($_POST['news_image_align'], '', 'news_image_align') : "",
         ];

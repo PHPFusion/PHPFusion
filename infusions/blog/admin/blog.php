@@ -86,7 +86,7 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         'blog_breaks'         => isset($_POST['blog_breaks']) ? 'y' : 'n',
         'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? "1" : "0",
         'blog_allow_ratings'  => isset($_POST['blog_allow_ratings']) ? "1" : "0",
-        'blog_language'       => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
+        'blog_language'       => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language'),
         'blog_datestamp'      => form_sanitizer($_POST['blog_datestamp'], '', 'blog_datestamp'),
     ];
 

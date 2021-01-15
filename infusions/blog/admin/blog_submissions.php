@@ -44,7 +44,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 'blog_sticky'         => isset($_POST['blog_sticky']) ? "1" : "0",
                 'blog_allow_comments' => 0,
                 'blog_allow_ratings'  => 0,
-                'blog_language'       => form_sanitizer($_POST['blog_language'], '', 'blog_language')
+                'blog_language'       => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language')
             ];
             if (isset($_FILES['blog_image'])) { // when files is uploaded.
                 $upload = form_sanitizer($_FILES['blog_image'], '', 'blog_image');
@@ -164,7 +164,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $callback_data = [
                     "blog_subject"    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
                     "blog_cat"        => isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : 0,
-                    "blog_language"   => form_sanitizer($_POST['blog_language'], '', 'blog_language'),
+                    "blog_language"   => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language'),
                     "blog_blog"       => form_sanitizer($blog_blog, "", "blog_blog"),
                     "blog_extended"   => form_sanitizer($blog_extended, "", "blog_extended"),
                     "blog_keywords"   => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),

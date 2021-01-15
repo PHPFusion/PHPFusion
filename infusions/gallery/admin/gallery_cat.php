@@ -40,7 +40,7 @@ if (isset($_POST['save_album'])) {
         'album_keywords'    => form_sanitizer($_POST['album_keywords'], '', 'album_keywords'),
         'album_description' => form_sanitizer($_POST['album_description'], '', 'album_description'),
         'album_access'      => form_sanitizer($_POST['album_access'], '', 'album_access'),
-        'album_language'    => form_sanitizer($_POST['album_language'], '', 'album_language'),
+        'album_language'    => form_sanitizer($_POST['album_language'], LANGUAGE, 'album_language'),
         'album_order'       => form_sanitizer($_POST['album_order'], '', 'album_order'),
         'album_image'       => '',
         'album_thumb1'      => '',
