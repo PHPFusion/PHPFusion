@@ -17,8 +17,12 @@
 +--------------------------------------------------------*/
 (defined('IN_FUSION') || exit);
 
+use Defender\Token;
 use PHPFusion\Authenticate;
-use PHPFusion\OutputHandler;
+use PHPFusion\ImageRepo;
+use PHPFusion\Minify\JS;
+use PHPFusion\PrivateMessages;
+use PHPFusion\QuantumFields;
 
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
@@ -84,7 +88,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
  *
  * @return bool
  */
-function theme_exists(string $theme) {
+function theme_exists($theme) {
     if ($theme == "Default") {
         $theme = fusion_get_settings('theme');
     }
@@ -98,7 +102,7 @@ function theme_exists(string $theme) {
  *
  * @param string $theme
  */
-function set_theme(string $theme) {
+function set_theme($theme) {
     $locale = fusion_get_locale();
     if (defined("THEME")) {
         return;
@@ -140,7 +144,7 @@ function set_theme(string $theme) {
  *
  * @return bool
  */
-function set_admin_pass(string $password): bool {
+function set_admin_pass($password) {
     return Authenticate::setAdminCookie($password);
 }
 
@@ -151,7 +155,7 @@ function set_admin_pass(string $password): bool {
  *
  * @return bool
  */
-function check_admin_pass(string $password): bool {
+function check_admin_pass($password) {
     return Authenticate::validateAuthAdmin($password);
 }
 
@@ -163,8 +167,8 @@ function check_admin_pass(string $password): bool {
  * @param bool   $script   true if you want to redirect via javascript
  * @param int    $code
  */
-function redirect(string $location, $delay = FALSE, $script = FALSE, $code = 200) {
-    //define('STOP_REDIRECT', true);
+function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
+    define('STOP_REDIRECT', TRUE);
     //debug_print_backtrace();
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
@@ -190,7 +194,7 @@ function redirect(string $location, $delay = FALSE, $script = FALSE, $code = 200
  *
  * @return bool whether header was sent
  */
-function set_status_header($code = 200): bool {
+function set_status_header($code = 200) {
     if (headers_sent()) {
         return FALSE;
     }
@@ -288,7 +292,7 @@ function get_http_response_code($url) {
  *
  * @return string
  */
-function cleanurl($url): string {
+function cleanurl($url) {
     $bad_entities = ["&", "\"", "'", '\"', "\'", "<", ">", "", "", "*"];
     $safe_entities = ["&amp;", "", "", "", "", "", "", "", "", ""];
 
@@ -320,7 +324,7 @@ function stripinput($text) {
  *
  * @return bool True if the URL is not secure
  */
-function stripget($check_url): bool {
+function stripget($check_url) {
     if (is_array($check_url)) {
         foreach ($check_url as $value) {
             if (stripget($value) == TRUE) {
@@ -343,7 +347,7 @@ function stripget($check_url): bool {
  *
  * @return string
  */
-function stripfilename(string $filename): string {
+function stripfilename($filename) {
     $patterns = [
         '/\s+/'              => '_',
         '/[^a-z0-9_-]|^\W/i' => '',
@@ -360,7 +364,7 @@ function stripfilename(string $filename): string {
  *
  * @return string
  */
-function stripslash(string $text): string {
+function stripslash($text) {
     if (QUOTES_GPC) {
         $text = stripslashes($text);
     }
@@ -446,9 +450,7 @@ function trim_text($str, $length = 300) {
         $spacetest = substr("$str", $i, 1);
         if ($spacetest == " ") {
             $spaceok = substr("$str", 0, $i);
-
             return ($spaceok."...");
-            break;
         }
     }
 
@@ -642,7 +644,7 @@ function clean_request($request_addition = '', $filter_array = [], $keep_filtere
  * @return array
  */
 function cache_smileys() {
-    return \PHPFusion\ImageRepo::cache_smileys();
+    return ImageRepo::cache_smileys();
 }
 
 /**
@@ -710,7 +712,7 @@ function cache_bbcode() {
     static $bbcode_cache = [];
     if (empty($bbcode_cache)) {
         $bbcode_cache = [];
-        $result = dbquery("SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order ASC");
+        $result = dbquery("SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order");
         while ($data = dbarray($result)) {
             $bbcode_cache[] = $data['bbcode_name'];
         }
@@ -820,6 +822,9 @@ function parseubb($text, $selected = "", $descript = TRUE) {
             }
         }
     }
+
+    // Added to fix code sniffer reported error
+    unset($locale);
 
     return $text;
 }
@@ -1033,7 +1038,7 @@ function highlight_words($words, $subject) {
         ], "", $words[$i]);
         if (!empty($words[$i])) {
             $subject = preg_replace("#($words[$i])(?![^<]*>)#i",
-                "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px'>\${1}</span>",
+                "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px;'>\${1}</span>",
                 $subject);
         }
     }
@@ -1304,7 +1309,7 @@ function cache_groups() {
     static $groups_cache = NULL;
     if ($groups_cache === NULL) {
         $groups_cache = [];
-        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id ASC");
+        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id");
         while ($data = dbarray($result)) {
             $groups_cache[] = $data;
         }
@@ -1468,7 +1473,7 @@ function user_blacklisted($user_id) {
  *
  * @return array
  */
-function makefilelist(string $folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = ""): array {
+function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = "") {
     $res = [];
 
     $default_filters = '.|..|.htaccess|index.php|._DS_STORE|.tmp';
@@ -1719,8 +1724,8 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
             if (isset($tree_index[get_parent($tree_index, $id)])) {
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
-                    'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"], TRUE) : "",
-                    'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
+                    'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"]) : "",
+                    'title' => isset($_name[$title_col]) ? QuantumFields::parse_label($_name[$title_col]) : "",
                 ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
@@ -1747,10 +1752,10 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     }
     if ($title_count) {
         foreach ($crumb['title'] as $i => $value) {
-            \PHPFusion\BreadCrumbs::getInstance($key)->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+            add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
                 add_to_title($value);
-                OutputHandler::addToMeta($value);
+                add_to_meta($value);
             }
         }
     } else if (isset($crumb['title'])) {
@@ -1786,27 +1791,31 @@ function showdate($format, $val, $options = []) {
         $tz_client = 'Europe/London';
     }
 
-    $client_dtz = new DateTimeZone($tz_client);
-    $client_dt = new DateTime('now', $client_dtz);
-    $offset = $client_dtz->getOffset($client_dt);
+    $offset = (int)0;
+
+    try {
+        $client_dtz = new DateTimeZone($tz_client);
+        $client_dt = new DateTime('now', $client_dtz);
+        $offset = (int)$client_dtz->getOffset($client_dt);
+    } catch (Exception $e) {
+        set_error(E_CORE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+    }
 
     if (!empty($val)) {
+        $offset = (int)$val + $offset;
         if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
             $format = fusion_get_settings($format);
-            $offset = intval($val) + $offset;
-
-            return strftime($format, $offset);
-        } else {
-            $offset = intval($val) + $offset;
-
             return strftime($format, $offset);
         }
-    } else {
-        $format = fusion_get_settings($format);
-        $offset = intval(TIME) + $offset;
 
         return strftime($format, $offset);
+
     }
+
+    $format = fusion_get_settings($format);
+    $offset = time() + $offset;
+
+    return strftime($format, $offset);
 }
 
 /**
@@ -1937,7 +1946,7 @@ function fusion_get_settings($key = NULL) {
  * @return string|array
  */
 function fusion_get_locale($key = NULL, $include_file = '') {
-    $locale = \PHPFusion\Locale::getInstance('default');
+    $locale = \PHPFusion\Locale::getInstance();
     if ($include_file) {
         $locale::setLocale($include_file);
     }
@@ -2027,7 +2036,7 @@ function fusion_get_aidlink() {
  * @return string
  */
 function fusion_get_token($form_id, $max_tokens = 5) {
-    return \defender\Token::generate_token($form_id, $max_tokens);
+    return Token::generate_token($form_id, $max_tokens);
 }
 
 /**
@@ -2039,7 +2048,7 @@ function fusion_get_token($form_id, $max_tokens = 5) {
  * @return array|bool|null
  */
 function user_pm_settings($user_id, $key = NULL) {
-    return \PHPFusion\PrivateMessages::get_pm_settings($user_id, $key);
+    return PrivateMessages::get_pm_settings($user_id, $key);
 }
 
 /**
@@ -2281,8 +2290,7 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
  * @return string
  */
 function jsminify($code) {
-    $minifier = new \PHPFusion\Minify\JS($code);
-
+    $minifier = new JS($code);
     return $minifier->minify();
 }
 
@@ -2302,12 +2310,12 @@ function jsminify($code) {
 function write_file($file, $data, $flags = NULL) {
     $bytes = NULL;
     if ($flags === NULL) {
-        $bytes = \file_put_contents($file, $data);
+        $bytes = file_put_contents($file, $data);
     } else {
-        $bytes = \file_put_contents($file, $data, $flags);
+        $bytes = file_put_contents($file, $data, $flags);
     }
     if (function_exists('opcache_invalidate')) {
-        \opcache_invalidate($file, TRUE);
+        opcache_invalidate($file, TRUE);
     }
 
     return $bytes;
