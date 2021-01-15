@@ -35,9 +35,7 @@ if (fusion_get_settings('error_logging_enabled') == 1) {
 function set_error($error_level, $error_message, $error_file, $error_line) {
     if (fusion_get_settings('error_logging_method') == 'database') {
         $errors = PHPFusion\Errors::getInstance();
-        if (method_exists($errors, "setError")) {
-            $errors->setError($error_level, $error_message, $error_file, $error_line);
-        }
+        $errors->setError($error_level, $error_message, $error_file, $error_line);
     } else {
         write_error($error_message, $error_file, $error_line);
     }

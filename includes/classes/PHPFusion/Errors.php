@@ -121,10 +121,9 @@ class Errors {
      */
     public function setError($error_level, $error_message, $error_file, $error_line) {
         $userdata = fusion_get_userdata();
-        $showLiveError = TRUE; // directly show error - push to another instance
+        //$showLiveError = TRUE; // directly show error - push to another instance
 
         $db = DatabaseFactory::getConnection();
-
         $result = $db->query(
             "SELECT error_id, error_status FROM ".DB_ERRORS."
             WHERE error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
@@ -135,7 +134,6 @@ class Errors {
         ]);
 
         if ($db->countRows($result) == 0) {
-
             $db->query("INSERT INTO ".DB_ERRORS." (
                 error_level, error_message, error_file, error_line, error_page,
                 error_user_level, error_user_ip, error_user_ip_type, error_status, error_timestamp
@@ -150,11 +148,11 @@ class Errors {
                 ':page'    => FUSION_REQUEST,
                 ':line'    => $error_line,
             ]);
-            $errorId = $db->getLastId();
+            //$errorId = $db->getLastId();
 
-        } else {
+        } /*else {
 
-            $data = $db->fetchAssoc($result);
+            /*$data = $db->fetchAssoc($result);
 
             $errorId = $data['error_id'];
 
@@ -174,7 +172,7 @@ class Errors {
                 "error_timestamp" => time(),
                 "error_status"    => 0,
             ];
-        }
+        }*/
     }
 
     private function showErrorRows($data) {
