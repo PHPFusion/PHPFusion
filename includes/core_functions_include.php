@@ -168,7 +168,7 @@ function check_admin_pass($password) {
  * @param int    $code
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
-    define('STOP_REDIRECT', TRUE);
+    //define('STOP_REDIRECT', TRUE);
     //debug_print_backtrace();
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
