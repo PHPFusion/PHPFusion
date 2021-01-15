@@ -2354,6 +2354,21 @@ function rrmdir($dir) {
 }
 
 /**
+ * Alternative to rename() that works on Windows
+ *
+ * @param string $origin
+ * @param string $target
+ */
+function fusion_rename($origin, $target) {
+    if ($origin != "." && $origin != ".." && !is_dir($origin)) {
+        if (TRUE !== @rename($origin, $target)) {
+            copy($origin, $target);
+            unlink($origin);
+        }
+    }
+}
+
+/**
  * cURL method to get any contents for Apache that does not support SSL for remote paths
  *
  * @param $url
