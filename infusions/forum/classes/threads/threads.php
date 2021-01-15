@@ -236,10 +236,10 @@ class ForumThreads extends ForumServer {
                         ],
                         "thread_last"         => [
                             'user'         => $lastuser,
-                            'avatar'       => display_avatar($lastuser, '35px', '', FALSE, ''),
+                            'avatar'       => display_avatar($lastuser, '35px', '', FALSE),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time'         => $threads['thread_lastpost'],
-                            "formatted"    => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
+                            "formatted"    => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '')."</div>
                                                                                 <div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
                                                                                 ".timer($threads['thread_lastpost'])."
                                                                                 </div>"
@@ -435,7 +435,7 @@ class ForumThreads extends ForumServer {
                 ];
 
                 $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
-                $this->thread_info['mod_form'] .= form_hidden('delete_item_post', '', '');
+                $this->thread_info['mod_form'] .= form_hidden('delete_item_post');
                 $this->thread_info['mod_form'] .= "<div class='btn-group m-r-10'>\n
                         ".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], ['class' => 'btn-default', "type" => "button"])."
                         ".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], ['class' => 'btn-default', "type" => "button"])."
@@ -680,11 +680,9 @@ class ForumThreads extends ForumServer {
      * Handle post of Quick Reply Form
      */
     private function handle_quick_reply() {
-
         $forum_settings = self::get_forum_settings();
-
         $locale = fusion_get_locale();
-
+        $thread = self::thread();
         $userdata = fusion_get_userdata();
 
         if (isset($_POST['post_quick_reply'])) {
@@ -699,8 +697,7 @@ class ForumThreads extends ForumServer {
                         'thread_id'       => $this->thread_data['thread_id'],
                         'post_message'    => form_sanitizer($_POST['post_message'], '', 'post_message'),
                         'post_showsig'    => isset($_POST['post_showsig']) ? 1 : 0,
-                        'post_smileys'    => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
-                            $_POST['post_message']) ? 1 : 0,
+                        'post_smileys'    => isset($_POST['post_smileys']) || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? 1 : 0,
                         'post_author'     => $userdata['user_id'],
                         'post_datestamp'  => time(),
                         'post_ip'         => USER_IP,
@@ -721,8 +718,7 @@ class ForumThreads extends ForumServer {
                         if ($last_post_author['post_author'] == $post_data['post_author'] && $this->thread_data['forum_merge']) {
                             $last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$this->thread_data['thread_id']."' ORDER BY post_id DESC"));
                             $post_data['post_id'] = $last_message['post_id'];
-                            $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate",
-                                    time()).":\n".$post_data['post_message'];
+                            $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
                             dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id']);
 
                             dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost='".time()."', forum_lastpostid='".$post_data['post_id']."', forum_lastuser='".$post_data['post_author']."' WHERE forum_id='".$this->thread_data['forum_id']."'");
@@ -733,6 +729,29 @@ class ForumThreads extends ForumServer {
                             dbquery_insert(DB_FORUM_POSTS, $post_data, 'save', ['primary_key' => 'post_id']);
                             $post_data['post_id'] = dblastid();
                             dbquery("UPDATE ".DB_USERS." SET user_posts=user_posts+1 WHERE user_id='".$post_data['post_author']."'");
+                        }
+
+                        if (!empty($_FILES)
+                            && is_uploaded_file($_FILES['file_attachments']['tmp_name'][0])
+                            && $thread->getThreadPermission("can_upload_attach")
+                        ) {
+
+                            $upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
+                            if ($upload['error'] == 0) {
+
+                                foreach ($upload['target_file'] as $arr => $file_name) {
+                                    $attach_data = [
+                                        'thread_id'    => intval($this->thread_data['thread_id']),
+                                        'post_id'      => $post_data['post_id'],
+                                        'attach_name'  => $file_name,
+                                        'attach_mime'  => $upload['type'][$arr],
+                                        'attach_size'  => $upload['source_size'][$arr],
+                                        'attach_count' => 0, // downloaded times
+                                    ];
+                                    dbquery_insert(DB_FORUM_ATTACHMENTS, $attach_data, "save", ['keep_session' => TRUE]);
+                                }
+
+                            }
                         }
 
                         // Update stats in forum and threads
@@ -759,7 +778,9 @@ class ForumThreads extends ForumServer {
                         }
                     }
 
-                    redirect(INFUSIONS."forum/postify.php?post=reply&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
+                    if (\defender::safe()) {
+                        redirect(INFUSIONS."forum/postify.php?post=reply&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
+                    }
                 }
             }
         }
@@ -1231,8 +1252,6 @@ class ForumThreads extends ForumServer {
                 $pdata['post_edit_reason'] = '';
                 if ($pdata['post_edittime']) {
                     $e_user = fusion_get_user($pdata['post_edituser']);
-                    $edit_user = [];
-
                     $edit_reason = "<div class='edit_reason small'>".$locale['forum_0164']." ";
                     if (!empty($e_user)) {
                         $edit_user = [

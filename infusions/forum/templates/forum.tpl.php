@@ -802,14 +802,38 @@ if (!function_exists('display_form_bountyform')) {
  */
 if (!function_exists("display_quick_reply")) {
     function display_quick_reply($info) {
-        return '<h4 class="spacer-sm">'.$info['description'].'</h4>
-            '.$info['field']['message'].'
-            <div class="clearfix spacer-sm">
-                <div class="pull-right">'.$info['field']['button'].'</div>
-                <div class="overflow-hide">
-                    '.$info['field']['options'].'
-                </div>
-            </div>';
+        $locale = fusion_get_locale();
+
+        $html = '<h4 class="spacer-sm">'.$info['description'].'</h4>';
+
+        $html .= $info['field']['message'];
+
+        $tab_title['title'][0] = $locale['forum_0602'];
+        $tab_title['id'][0] = 'replyopts';
+        $tab_title['icon'][0] = '';
+        $tab_active = tab_active($tab_title, 0);
+        $tab_content = opentabbody($tab_title['title'][0], 'replyopts', $tab_active);
+        $tab_content .= '<div class="well m-t-20">'.$info['field']['options'].'</div>';
+        $tab_content .= closetabbody();
+
+        if (!empty($info['field']['attachment'])) {
+            $tab_title['title'][1] = $locale['forum_0557'];
+            $tab_title['id'][1] = 'attachtab';
+            $tab_title['icon'][1] = '';
+            $tab_content .= opentabbody($tab_title['title'][1], 'attachtab', $tab_active);
+            $tab_content .= '<div class="well m-t-20">';
+            $tab_content .= $info['field']['attachment'];
+            $tab_content .= '</div>';
+            $tab_content .= closetabbody();
+        }
+
+        $html .= opentab($tab_title, $tab_active, 'quickreplyfoem');
+        $html .= $tab_content;
+        $html .= closetab();
+
+        $html .= $info['field']['button'];
+
+        return $html;
     }
 }
 

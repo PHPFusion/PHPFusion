@@ -348,25 +348,21 @@ class NewThread extends ForumServer {
                                 'height'     => '500px'
                             ]),
                         'attachment_field'  => self::getPermission("can_upload_attach") ?
-                            form_fileinput('file_attachments[]',
-                                self::$locale['forum_0557'],
-                                '', [
-                                    'input_id'       => 'file_attachments',
-                                    'upload_path'    => INFUSIONS.'forum/attachments/',
-                                    'type'           => 'object',
-                                    'preview_off'    => TRUE,
-                                    'multiple'       => TRUE,
-                                    'inline'         => FALSE,
-                                    'max_count'      => $forum_settings['forum_attachmax_count'],
-                                    'valid_ext'      => $forum_settings['forum_attachtypes'],
-                                    'class'          => 'm-b-0',
-                                    'replace_upload' => TRUE,
-                                    'max_width'      => $forum_settings['forum_attachmax_w'],
-                                    'max_height'     => $forum_settings['forum_attachmax_h'],
-                                    'max_byte'       => $forum_settings['forum_attachmax'],
-                                ]
-                            )." <div class='m-b-20'>\n<small>
-                            ".sprintf(self::$locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : '',
+                            form_fileinput('file_attachments[]', self::$locale['forum_0557'], '', [
+                                'input_id'       => 'file_attachments',
+                                'upload_path'    => INFUSIONS.'forum/attachments/',
+                                'type'           => 'object',
+                                'preview_off'    => TRUE,
+                                'multiple'       => TRUE,
+                                'inline'         => FALSE,
+                                'max_count'      => $forum_settings['forum_attachmax_count'],
+                                'valid_ext'      => $forum_settings['forum_attachtypes'],
+                                'class'          => 'm-b-0',
+                                'replace_upload' => TRUE,
+                                'max_width'      => $forum_settings['forum_attachmax_w'],
+                                'max_height'     => $forum_settings['forum_attachmax_h'],
+                                'max_byte'       => $forum_settings['forum_attachmax']
+                            ])." <div class='m-b-20'>\n<small>".sprintf(self::$locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : '',
                         'poll_form'         => $poll_form,
                         'smileys_field'     => form_checkbox('post_smileys', self::$locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', self::$locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',

@@ -183,8 +183,6 @@ class ViewThread extends ForumServer {
 
         $userdata = fusion_get_userdata();
 
-        //$thread_data1 = $thread_info['thread'];
-
         if ((!iMOD or !iSUPERADMIN) && $thread_data['thread_locked'])
             redirect(INFUSIONS.'forum/index.php');
 
@@ -269,12 +267,13 @@ class ViewThread extends ForumServer {
                             if ($upload['error'] == 0) {
 
                                 foreach ($upload['target_file'] as $arr => $file_name) {
-                                    $attach_data = ['thread_id'    => intval($thread_data['thread_id']),
-                                                    'post_id'      => $post_data['post_id'],
-                                                    'attach_name'  => $file_name,
-                                                    'attach_mime'  => $upload['type'][$arr],
-                                                    'attach_size'  => $upload['source_size'][$arr],
-                                                    'attach_count' => 0, // downloaded times
+                                    $attach_data = [
+                                        'thread_id'    => intval($thread_data['thread_id']),
+                                        'post_id'      => $post_data['post_id'],
+                                        'attach_name'  => $file_name,
+                                        'attach_mime'  => $upload['type'][$arr],
+                                        'attach_size'  => $upload['source_size'][$arr],
+                                        'attach_count' => 0, // downloaded times
                                     ];
                                     dbquery_insert(DB_FORUM_ATTACHMENTS, $attach_data, "save", ['keep_session' => TRUE]);
                                 }
@@ -388,20 +387,22 @@ class ViewThread extends ForumServer {
                 'delete_field'      => '',
                 'edit_reason_field' => '',
                 'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
-                    form_fileinput('file_attachments[]', $locale['forum_0557'], "",
-                        ['input_id'    => 'file_attachments',
-                         'upload_path' => INFUSIONS.'forum/attachments/',
-                         'type'        => 'object',
-                         'template'    => 'modern',
-                         "multiple"    => TRUE,
-                         "inline"      => FALSE,
-                         'max_count'   => $forum_settings['forum_attachmax_count'],
-                         'valid_ext'   => $forum_settings['forum_attachtypes'],
-                         'max_byte'    => $forum_settings['forum_attachmax'],
-                         'class'       => 'm-b-0',
-                        ])."
-                        <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
-                    : "",
+                    form_fileinput('file_attachments[]', $locale['forum_0557'], "", [
+                        'input_id'       => 'file_attachments',
+                        'upload_path'    => INFUSIONS.'forum/attachments/',
+                        'type'           => 'object',
+                        'preview_off'    => TRUE,
+                        'multiple'       => TRUE,
+                        'inline'         => FALSE,
+                        'max_count'      => $forum_settings['forum_attachmax_count'],
+                        'valid_ext'      => $forum_settings['forum_attachtypes'],
+                        'class'          => 'm-b-0',
+                        'replace_upload' => TRUE,
+                        'max_width'      => $forum_settings['forum_attachmax_w'],
+                        'max_height'     => $forum_settings['forum_attachmax_h'],
+                        'max_byte'       => $forum_settings['forum_attachmax']
+                    ])."
+                        <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : "",
                 "poll_form"         => '',
                 'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                 'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
@@ -594,12 +595,13 @@ class ViewThread extends ForumServer {
                                     $upload = form_sanitizer($_FILES['file_attachments'], '', 'file_attachments');
                                     if ($upload['error'] == 0) {
                                         foreach ($upload['target_file'] as $arr => $file_name) {
-                                            $attachment = ['thread_id'    => $thread_data['thread_id'],
-                                                           'post_id'      => $post_data['post_id'],
-                                                           'attach_name'  => $file_name,
-                                                           'attach_mime'  => $upload['type'][$arr],
-                                                           'attach_size'  => $upload['source_size'][$arr],
-                                                           'attach_count' => '0', // downloaded times?
+                                            $attachment = [
+                                                'thread_id'    => $thread_data['thread_id'],
+                                                'post_id'      => $post_data['post_id'],
+                                                'attach_name'  => $file_name,
+                                                'attach_mime'  => $upload['type'][$arr],
+                                                'attach_size'  => $upload['source_size'][$arr],
+                                                'attach_count' => '0', // downloaded times?
                                             ];
                                             dbquery_insert(DB_FORUM_ATTACHMENTS, $attachment, 'save', ['keep_session' => TRUE]);
                                         }
