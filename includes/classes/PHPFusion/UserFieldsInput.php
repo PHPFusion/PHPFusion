@@ -67,7 +67,6 @@ class UserFieldsInput {
      * Save User Fields
      *
      * @return bool
-     * @throws \Exception
      */
     public function saveInsert() {
 
@@ -80,7 +79,7 @@ class UserFieldsInput {
         $this->data = $this->_setEmptyFields();
 
         if ($this->username_change) {
-            $this->_settUserName();
+            $this->_setUserName();
         }
 
         $this->_setPassword();
@@ -151,7 +150,7 @@ class UserFieldsInput {
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if ($this->_completeMessage) {
-                addNotice("success", $this->_completeMessage, fusion_get_settings("opening_page"));
+                addNotice("info", $this->_completeMessage, fusion_get_settings("opening_page"));
             }
 
             return TRUE;
@@ -206,7 +205,7 @@ class UserFieldsInput {
     /**
      * Handle User Name Input and Validation
      */
-    private function _settUserName() {
+    private function _setUserName() {
         $locale = fusion_get_locale();
         $uban = explode(',', fusion_get_settings('username_ban'));
 
@@ -679,7 +678,7 @@ class UserFieldsInput {
 
         $this->_method = "validate_update";
 
-        $this->_settUserName();
+        $this->_setUserName();
 
         $this->_setPassword();
 
