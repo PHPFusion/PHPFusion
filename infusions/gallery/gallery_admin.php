@@ -415,6 +415,26 @@ function purgePhotoImage($photoData) {
             unlink(IMAGES_G.'album_'.$photoData['album_id'].'/thumbs/'.$photoData['photo_thumb2']);
         }
     }
+
+    sleep(0.3);
+
+    $parts = explode(".", $photoData['photo_filename']);
+    $wm_file1 = $parts[0]."_w1.".$parts[1];
+    $wm_file2 = $parts[0]."_w2.".$parts[1];
+
+    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1)) {
+        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1);
+    } else if (file_exists(file_exists(IMAGES_G.$wm_file1))) {
+        unlink(file_exists(IMAGES_G.$wm_file1));
+    }
+
+    sleep(0.3);
+
+    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2)) {
+        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2);
+    } else if (file_exists(file_exists(IMAGES_G.$wm_file2))) {
+        unlink(file_exists(IMAGES_G.$wm_file2));
+    }
 }
 
 /**
@@ -428,10 +448,12 @@ function purgeSubmissionsPhotoImage($photoData) {
     if (!empty($photoData['photo_filename']) && file_exists($submissions_dir.$photoData['photo_filename'])) {
         unlink($submissions_dir.$photoData['photo_filename']);
     }
+
     sleep(0.3);
     if (!empty($photoData['photo_thumb1']) && file_exists($submissions_dir_t.$photoData['photo_thumb1'])) {
         unlink($submissions_dir_t.$photoData['photo_thumb1']);
     }
+
     sleep(0.3);
     if (!empty($photoData['photo_thumb2']) && file_exists($submissions_dir_t.$photoData['photo_thumb2'])) {
         unlink($submissions_dir_t.$photoData['photo_thumb2']);

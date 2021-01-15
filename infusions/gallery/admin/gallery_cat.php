@@ -139,18 +139,11 @@ echo form_textarea('album_description', $locale['album_0003'], $data['album_desc
     'form_name'   => 'albumform'
 ]);
 if ($data['album_image'] || $data['album_thumb1']) {
-    echo "<div class='col-sm-offset-3'>\n";
     echo form_hidden('album_image', '', $data['album_image']);
     echo form_hidden('album_thumb2', '', $data['album_thumb2']);
     echo form_hidden('album_thumb1', '', $data['album_thumb1']);
-    echo "<label for='del_image clearfix'>\n";
-    echo "<div class='row m-0' style='height:".$gll_settings['thumb_h']."px;'>\n";
-    echo "<div class='col-xs-12' style='height: 100%; position:relative;'>\n";
     echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
-    echo "</div></div>\n";
-    echo "</label>\n";
-    echo form_checkbox('del_image', $locale['album_0016'], '', ['class' => 'p-l-15', 'reverse_label' => TRUE]);
-    echo "</div>\n";
+    echo form_checkbox('del_image', $locale['album_0016']);
 } else {
     $extip = sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'],  $gll_settings['photo_max_h']);
     $album_upload_settings = [

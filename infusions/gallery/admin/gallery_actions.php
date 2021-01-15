@@ -127,6 +127,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 purgeAlbumImage($albumData);
                 rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
+                redirect(clean_request("", ["aid"], TRUE));
             } else {
                 // Confirmation form
                 echo openmodal('confirm_steps', $locale['album_0027']);
@@ -149,9 +150,8 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
             rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
             dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
             addNotice("success", $locale['album_0030']);
+            redirect(clean_request("", ["aid"], TRUE));
         }
-
-        redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
     } else {
         redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
     }
@@ -170,6 +170,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
         redirect(clean_request("", ["aid"], TRUE));
     }
 }
+
 // purge photos
 if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
     $result = dbquery("select * from ".DB_PHOTO_ALBUMS." where album_id='".intval($_GET['cat_id'])."'");

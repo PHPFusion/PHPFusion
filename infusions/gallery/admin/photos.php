@@ -83,38 +83,35 @@ function photo_form() {
                 if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
                     $upload_dir = is_dir(IMAGES_G.'album_'.$data['album_id'].'/') && $data['album_id'] > 0 ? IMAGES_G.'album_'.$data['album_id'].'/' : IMAGES_G;
 
-                    $upload_settings = [
+                    \Defender::getInstance()->add_field_session([
                         'input_name'        => 'photo_image',
                         'type'              => 'image',
                         'title'             => $locale['photo_0004'],
                         'id'                => 'photo_image',
-                        'path'              => $upload_dir,
                         'required'          => TRUE,
+                        'safemode'          => FALSE,
+                        'error_text'        => $locale['photo_0014'],
+                        'path'              => $upload_dir,
                         'thumbnail_folder'  => 'thumbs',
                         'thumbnail'         => TRUE,
-                        'thumbnail_ratio'   => 0,
+                        'thumbnail_suffix'  => '_t1',
                         'thumbnail_w'       => $gallery_settings['thumb_w'],
                         'thumbnail_h'       => $gallery_settings['thumb_h'],
-                        'thumbnail_suffix'  => '_t1',
+                        'thumbnail_ratio'   => 0,
                         'thumbnail2'        => TRUE,
                         'thumbnail2_w'      => $gallery_settings['photo_w'],
                         'thumbnail2_h'      => $gallery_settings['photo_h'],
                         'thumbnail2_suffix' => '_t2',
                         'thumbnail2_ratio'  => 0,
+                        'delete_original'   => FALSE,
                         'max_width'         => $gallery_settings['photo_max_w'],
                         'max_height'        => $gallery_settings['photo_max_h'],
+                        'max_count'         => 1,
                         'max_byte'          => $gallery_settings['photo_max_b'],
-                        'replace_upload'    => FALSE,
                         'multiple'          => FALSE,
-                        'delete_original'   => FALSE,
-                        'inline'            => FALSE,
-                        'template'          => "modern",
-                        'error_text'        => $locale['photo_0014'],
                         'valid_ext'         => $gallery_settings['gallery_file_types'],
-                        'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
-                    ];
-
-                    \Defender::getInstance()->add_field_session($upload_settings);
+                        'replace_upload'    => FALSE
+                    ]);
 
                     $upload = form_sanitizer($_FILES['photo_image'], '', 'photo_image');
                     if (empty($upload['error'])) {
@@ -231,26 +228,9 @@ function photo_form() {
             echo "</div>\n";
         } else {
             $upload_settings = [
-                'required'          => TRUE,
-                'thumbnail_folder'  => 'thumbs',
-                'thumbnail'         => TRUE,
-                'thumbnail_w'       => $gallery_settings['thumb_w'],
-                'thumbnail_h'       => $gallery_settings['thumb_h'],
-                'thumbnail_suffix'  => '_t1',
-                'thumbnail2'        => TRUE,
-                'thumbnail2_w'      => $gallery_settings['photo_w'],
-                'thumbnail2_h'      => $gallery_settings['photo_h'],
-                'thumbnail2_suffix' => '_t2',
-                'max_width'         => $gallery_settings['photo_max_w'],
-                'max_height'        => $gallery_settings['photo_max_h'],
-                'max_byte'          => $gallery_settings['photo_max_b'],
-                'multiple'          => FALSE,
-                'delete_original'   => FALSE,
-                'inline'            => FALSE,
-                'template'          => "modern",
-                'error_text'        => $locale['photo_0014'],
-                'valid_ext'         => $gallery_settings['gallery_file_types'],
-                'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
+                'inline'   => FALSE,
+                'template' => 'modern',
+                'ext_tip'  => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
             ];
 
             echo form_fileinput('photo_image', $locale['photo_0004'], '', $upload_settings);
@@ -318,6 +298,38 @@ function mass_photo_form() {
         if (isset($_POST['upload_photo'])) {
             $data['album_id'] = form_sanitizer($_POST['album_id'], 0, 'album_id');
             if (\defender::safe()) {
+                $upload_dir = is_dir(IMAGES_G.'album_'.$data['album_id'].'/') && $data['album_id'] > 0 ? IMAGES_G.'album_'.$data['album_id'].'/' : IMAGES_G;
+
+                \Defender::getInstance()->add_field_session([
+                    'input_name'        => 'photo_mass_image',
+                    'type'              => 'image',
+                    'title'             => $locale['photo_0004'],
+                    'id'                => 'photo_mass_image',
+                    'required'          => TRUE,
+                    'safemode'          => FALSE,
+                    'error_text'        => $locale['photo_0014'],
+                    'path'              => $upload_dir,
+                    'thumbnail_folder'  => 'thumbs',
+                    'thumbnail'         => TRUE,
+                    'thumbnail_suffix'  => '_t1',
+                    'thumbnail_w'       => $gallery_settings['thumb_w'],
+                    'thumbnail_h'       => $gallery_settings['thumb_h'],
+                    'thumbnail_ratio'   => 0,
+                    'thumbnail2'        => TRUE,
+                    'thumbnail2_w'      => $gallery_settings['photo_w'],
+                    'thumbnail2_h'      => $gallery_settings['photo_h'],
+                    'thumbnail2_suffix' => '_t2',
+                    'thumbnail2_ratio'  => 0,
+                    'delete_original'   => FALSE,
+                    'max_width'         => $gallery_settings['photo_max_w'],
+                    'max_height'        => $gallery_settings['photo_max_h'],
+                    'max_count'         => 20,
+                    'max_byte'          => $gallery_settings['photo_max_b'],
+                    'multiple'          => TRUE,
+                    'valid_ext'         => $gallery_settings['gallery_file_types'],
+                    'replace_upload'    => FALSE
+                ]);
+
                 $upload = form_sanitizer($_FILES['photo_mass_image'], '', 'photo_mass_image');
                 $success_upload = 0;
                 $failed_upload = 0;
@@ -338,9 +350,7 @@ function mass_photo_form() {
                                 'photo_allow_comments' => 1,
                                 'photo_allow_ratings'  => 1
                             ];
-                            dbquery("INSERT INTO ".DB_PHOTOS." (".implode(", ", array_keys($current_photos)).")
-                             VALUES ('".implode("','", array_values($current_photos))."')
-                            ");
+                            dbquery("INSERT INTO ".DB_PHOTOS." (".implode(", ", array_keys($current_photos)).") VALUES ('".implode("','", array_values($current_photos))."')");
                             $success_upload++;
                         } else {
                             $failed_upload++;
@@ -363,29 +373,11 @@ function mass_photo_form() {
         ]);
 
         $upload_settings = [
-            'upload_path'       => IMAGES_G,
-            'required'          => TRUE,
-            'thumbnail_folder'  => 'thumbs',
-            'thumbnail'         => TRUE,
-            'thumbnail_w'       => $gallery_settings['thumb_w'],
-            'thumbnail_h'       => $gallery_settings['thumb_h'],
-            'thumbnail_suffix'  => '_t1',
-            'thumbnail2'        => TRUE,
-            'thumbnail2_w'      => $gallery_settings['photo_w'],
-            'thumbnail2_h'      => $gallery_settings['photo_h'],
-            'thumbnail2_suffix' => '_t2',
-            'max_width'         => $gallery_settings['photo_max_w'],
-            'max_height'        => $gallery_settings['photo_max_h'],
-            'max_byte'          => $gallery_settings['photo_max_b'],
-            'delete_original'   => FALSE,
-            'template'          => 'modern',
-            'multiple'          => TRUE,
-            'inline'            => FALSE,
-            'max_count'         => 20,
-            'error_text'        => $locale['photo_0014'],
-            'valid_ext'         => $gallery_settings['gallery_file_types'],
-            'ext_tip'           => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'],
-                $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h']),
+            'inline'    => FALSE,
+            'multiple'  => TRUE,
+            'max_count' => 20,
+            'template'  => 'modern',
+            'ext_tip'   => sprintf($locale['album_0010'], parsebytesize($gallery_settings['photo_max_b']), $gallery_settings['gallery_file_types'], $gallery_settings['photo_max_w'], $gallery_settings['photo_max_h'])
         ];
         echo form_fileinput('photo_mass_image[]', $locale['photo_0004'], '', $upload_settings);
         echo form_button('upload_photo', $locale['photo_0020'], $locale['photo_0020'], ['class' => 'btn-primary']);

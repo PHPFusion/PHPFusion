@@ -21,6 +21,7 @@ if (!defined('GALLERY_EXISTS')) {
 }
 
 require_once INCLUDES."infusions_include.php";
+include INFUSIONS."gallery/functions.php";
 $gallery_settings = get_settings("gallery");
 /**
  * Converts Hex to RGB
@@ -52,8 +53,6 @@ function convert_color($hex) {
 
 function RGBtoArray($rgb) {
     if (stristr($rgb, "rgb(")) {
-        $rgb_value = str_replace("rgb(", "", $rgb);
-        $rgb_value = str_replace(")", "", $rgb);
         $rgb_value = explode(",", $rgb);
         if (count($rgb_value) == 3) {
             return [
@@ -85,9 +84,9 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         $wm_file1 = $parts[0]."_w1.".$parts[1];
         $wm_file2 = $parts[0]."_w2.".$parts[1];
         if (!isset($_GET['full'])) {
-            $wm_file = IMAGES_G.$wm_file1; //w1 - full
+            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1; //w1 - full
         } else {
-            $wm_file = IMAGES_G.$wm_file2; //w2 - normal
+            $wm_file = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2; //w2 - normal
         }
 
         header("Content-type: image/jpeg");
