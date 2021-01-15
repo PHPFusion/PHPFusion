@@ -41,7 +41,7 @@ spl_autoload_register(function ($className) {
         $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
         $fullPath = $baseDir.$path.'.php';
         if (is_file($fullPath)) {
-            require $fullPath;
+            require_once $fullPath;
         }
     }
 });
@@ -58,7 +58,7 @@ spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $fullPath = $baseDir.$className.'.class.php';
     if (is_file($fullPath)) {
-        require $fullPath;
+        require_once $fullPath;
     }
 });
 
@@ -66,8 +66,8 @@ spl_autoload_register(function ($className) {
  * Infusions Autoloading
  * All class files must be lowercase and end with .class.php in infusions global namespace
  *
- * Class_Name        class_name.class.php
- * ClassName         classname.class.php
+ * Class_Name        class_name.class.php, Class_Name.php
+ * ClassName         classname.class.php, className.php
  */
 spl_autoload_register(function ($className) {
     if (stristr($className, 'PHPFusion\\Infusions')) {
@@ -77,13 +77,14 @@ spl_autoload_register(function ($className) {
 
         $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
         if (is_file($fullPath)) {
-            require $fullPath;
-        }
-        // Files with all lowercase accepted
-        $className = strtolower($className);
-        $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
-        if (is_file($fullPath)) {
-            require $fullPath;
+            require_once $fullPath;
+        } else {
+            // Files with all lowercase accepted
+            $className = strtolower($className);
+            $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
+            if (is_file($fullPath)) {
+                require_once $fullPath;
+            }
         }
     }
 });
