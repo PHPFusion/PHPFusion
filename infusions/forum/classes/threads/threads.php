@@ -1234,16 +1234,12 @@ class ForumThreads extends ForumServer {
                             "title"  => $locale['forum_0511'],
                             'active' => $pdata['has_voted'] && $pdata['has_voted_points'] < 0,
                         ];
-                        $pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_up']['link']."' class='text-center vote_up".($pdata['vote_up']['active'] ? " text-warning" : '')."' title='".$locale['forum_0510']."'>\n<i class='fa fa-caret-up fa-2x'></i></a>";
-                        $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                        $pdata['post_votebox'] .= "<a href='".$pdata['vote_down']['link']."' class='text-center vote_down".($pdata['vote_down']['active'] ? " text-warning" : '')."' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
-                        $pdata['post_votebox'] .= "</div>\n";
-                    } else {
-                        $pdata['post_votebox'] = "<div class='text-center'>\n";
-                        $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
-                        $pdata['post_votebox'] .= "</div>\n";
                     }
+                    $pdata['post_votebox'] = "<div class='text-center post_vote_box'>\n";
+                    $pdata['post_votebox'] .= "<a ".(!empty($pdata['vote_up']['link']) ? "href='".$pdata['vote_up']['link']."'" : 'disabled')." class='text-center vote_up".(!empty($pdata['vote_up']['active']) && $pdata['vote_up']['active'] ? " text-warning" : ' disabled')."' title='".$locale['forum_0510']."'>\n<i class='fa fa-caret-up fa-2x'></i></a>";
+                    $pdata['post_votebox'] .= "<h3 class='m-0'>".(!empty($pdata['vote_points']) ? $pdata['vote_points'] : 0)."</h3>\n";
+                    $pdata['post_votebox'] .= "<a ".(!empty($pdata['vote_down']['link']) ? "href='".$pdata['vote_down']['link']."'" : 'disabled')." class='text-center vote_down".(!empty($pdata['vote_down']['active']) && $pdata['vote_down']['active'] ? " text-warning" : ' disabled')."' title='".$locale['forum_0511']."'>\n<i class='fa fa-caret-down fa-2x'></i></a>";
+                    $pdata['post_votebox'] .= "</div>\n";
                 }
 
                 $pdata['post_edit_reason'] = '';
