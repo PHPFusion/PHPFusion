@@ -32,7 +32,6 @@ if (isset($_POST['savesettings'])) {
         'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
         'email_verification'  => form_sanitizer($_POST['email_verification'], '0', 'email_verification'),
         'admin_activation'    => form_sanitizer($_POST['admin_activation'], '0', 'admin_activation'),
-        'display_validation'  => form_sanitizer($_POST['display_validation'], '0', 'display_validation'),
         'enable_terms'        => form_sanitizer($_POST['enable_terms'], '0', 'enable_terms'),
         'license_lastupdate'  => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
     ];
@@ -79,7 +78,6 @@ openside('');
 echo form_select('enable_registration', $locale['551'], $settings['enable_registration'], ['options' => $opts]);
 echo form_select('email_verification', $locale['552'], $settings['email_verification'], ['options' => $opts]);
 echo form_select('admin_activation', $locale['557'], $settings['admin_activation'], ['options' => $opts]);
-echo form_select('display_validation', $locale['553'], $settings['display_validation'], ['options' => $opts]);
 $opts = ['0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']];
 echo form_select('login_method', $locale['699'], $settings['login_method'], ['options' => $opts]);
 

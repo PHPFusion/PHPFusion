@@ -35,9 +35,9 @@ if (isset($_POST['savesettings'])) {
         'avatar_height'         => form_sanitizer($_POST['avatar_height'], '100', 'avatar_height'),
         'avatar_ratio'          => form_sanitizer($_POST['avatar_ratio'], '0', 'avatar_ratio'),
         'username_change'       => form_sanitizer($_POST['username_change'], '0', 'username_change'),
+        'username_ban'          => stripinput($_POST['username_ban']),
         'userthemes'            => form_sanitizer($_POST['userthemes'], '0', 'userthemes'),
-        'multiple_logins'       => form_sanitizer($_POST['multiple_logins'], '0', 'multiple_logins')
-
+        'multiple_logins'       => form_sanitizer($_POST['multiple_logins'], '0', 'multiple_logins'),
     ];
 
     if (\defender::safe()) {
@@ -142,6 +142,12 @@ openside('');
 echo form_select('username_change', $locale['691'], $settings['username_change'], ['options' => $choice_opts]);
 echo form_select('userthemes', $locale['668'], $settings['userthemes'], ['options' => $choice_opts]);
 echo form_select('multiple_logins', $locale['1014'], $settings['multiple_logins'], ['options' => $choice_opts, 'ext_tip' => $locale['1014a']]);
+closeside();
+openside('');
+echo form_textarea('username_ban', $locale['649'], $settings['username_ban'], [
+    'placeholder' => $locale['411'],
+    'autosize'    => TRUE
+]);
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);

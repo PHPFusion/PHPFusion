@@ -50,6 +50,7 @@ if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
         'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
+        'display_validation'  => form_sanitizer($_POST['display_validation'], '0', 'display_validation'),
         'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
         'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
@@ -60,7 +61,6 @@ if (isset($_POST['savesettings'])) {
         'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
         'bad_words'             => stripinput($_POST['bad_words']),
         'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'username_ban'          => stripinput($_POST['username_ban']),
         'database_sessions'     => form_sanitizer($_POST['database_sessions'], 0, 'database_sessions'),
         'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
         'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
@@ -182,12 +182,8 @@ if (!$settings['recaptcha_public']) {
         'end'   => "</a>\n",
     ];
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
-    echo "<div class='alert alert-warning m-t-10 col-sm-offset-3'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
+    echo "<div class='alert alert-warning m-t-10'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
 }
-echo "<div class='row'>\n";
-echo "<div class='hidden-xs col-sm-3 text-right'>\n";
-echo thumbnail(INCLUDES."captchas/grecaptcha/grecaptcha.png", "196px");
-echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], $settings['recaptcha_public'], [
     'placeholder' => $locale['grecaptcha_placeholder_1'],
     'required'    => FALSE
@@ -214,8 +210,9 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
     'width'       => '100%',
     'required'    => TRUE
 ]);
-echo "</div>\n</div>\n";
 echo "</div>\n";
+
+echo form_select('display_validation', $locale['553'], $settings['display_validation'], ['options' => $yes_no_array, 'class' => 'm-t-10']);
 closeside();
 
 openside('');
@@ -281,10 +278,6 @@ echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabl
 echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
     'placeholder' => $locale['652'],
-    'autosize'    => TRUE
-]);
-echo form_textarea('username_ban', $locale['649'], $settings['username_ban'], [
-    'placeholder' => $locale['411'],
     'autosize'    => TRUE
 ]);
 closeside();
