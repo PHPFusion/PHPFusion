@@ -15,89 +15,141 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Rewrite\Router;
+
 defined('IN_FUSION') || exit;
 
 openside(fusion_get_locale('global_001'));
 echo '<div class="fusion_css_navigation_panel">';
 echo '<ul class="main-nav block">';
-
-$data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
-
-if (!empty($data[0])) {
-    $i = 0;
-    foreach ($data[0] as $id => $link_data) {
-        if ($link_data['link_name'] != '---' && $link_data['link_name'] != '===') {
-            echo '<li>';
-            create_link($link_data, $i, $id);
-
-            if (isset($data[$id])) {
-                $sub_i = 0;
-                echo '<ul class="sub-nav p-l-10 block" style="display:none;">';
-                if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                    echo '<li>';
-                    create_link($link_data, $i, $id);
-                    echo '</li>';
-                }
-                foreach ($data[$id] as $sub_id => $sub_link_data) {
-                    echo '<li>';
-                    create_link($sub_link_data, $sub_i, $sub_id);
-                    echo '</li>';
-                }
-                echo '</ul>';
-            }
-            echo '</li>';
-        } else {
-            echo '<li class="divider"></li>';
-        }
-    }
-}
-
+echo show_nab_sublinks();
 echo '</ul>';
 echo '</div>';
 closeside();
 
-function create_link($data, $i, $id) {
+
+function show_nab_sublinks($id = 0) {
+    $res = '';
+
+    if (empty($id)) {
+        $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
+
+        $res = show_nav_links($id, $data);
+    }
+
+    return $res;
+}
+
+function show_nav_links($id, $data) {
+    $res = '';
+
     $pageInfo = pathinfo($_SERVER['REQUEST_URI']);
-    $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], '/').'/' : '';
+    $start_page = $pageInfo['dirname'] !== "/" ? ltrim($pageInfo['dirname'], "/")."/" : "";
     $site_path = ltrim(fusion_get_settings("site_path"), "/");
     $start_page = str_replace([$site_path, '\/'], ['', ''], $start_page);
     $start_page .= $pageInfo['basename'];
 
-    if ($start_page == $data['link_url']) {
-        $link_is_active = TRUE;
-    } else if (fusion_get_settings('site_path').$start_page == $data['link_url']) {
-        $link_is_active = TRUE;
-    } else if (($start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
-        $link_is_active = TRUE;
-    } else {
-        $link_is_active = FALSE;
+    if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
+        $filepath = Router::getRouterInstance()->getFilePath();
+        $start_page = $filepath;
     }
 
-    if (preg_match("!^(ht|f)tp(s)?://!i", $data['link_url'])) {
-        $item_link = $data['link_url'];
-    } else {
-        $item_link = BASEDIR.$data['link_url'];
+    if (!empty($data[$id])) {
+        $i = 0;
+
+        foreach ($data[$id] as $link_id => $link_data) {
+            $li_class = [];
+
+            if (empty($link_data['link_url'])) {
+                $li_class[] = "no-link";
+            }
+
+            $link_is_active = FALSE;
+            $secondary_active = FALSE;
+
+            if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
+
+                $link_data['link_name'] = fusion_get_settings('link_bbcode') ? parseubb($link_data['link_name']) : $link_data['link_name'];
+                $link_data["link_name"] = html_entity_decode($link_data["link_name"], ENT_QUOTES);
+
+                $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
+                if ($secondary_active) {
+                    $link_is_active = TRUE;
+                } else if (strtr(FUSION_REQUEST, [fusion_get_settings('site_path') => '', '&amp;' => '&']) == str_replace('../', '', $link_data['link_url'])) {
+                    $link_is_active = TRUE;
+                } else if ($start_page == $link_data['link_url']) {
+                    $link_is_active = TRUE;
+                } else if (fusion_get_settings('site_path').$start_page == $link_data['link_url']) {
+                    $link_is_active = TRUE;
+                } else if (($start_page == fusion_get_settings("opening_page") && $i == 0 && $id === 0)) {
+                    $link_is_active = TRUE;
+                } else if ($link_data['link_url'] === '#') {
+                    $link_is_active = FALSE;
+                }
+                if ($link_is_active) {
+                    $li_class[] = "current-link active";
+                }
+                $itemlink = '';
+                if (!empty($link_data['link_url'])) {
+                    $itemlink = " href='".BASEDIR.$link_data['link_url']."' ";
+                    // if link has site protocol
+                    if (preg_match("!^(ht|f)tp(s)?://!i", $link_data['link_url'])
+                        or (BASEDIR !== '' && stristr($link_data['link_url'], BASEDIR))
+                    ) {
+                        $itemlink = " href='".$link_data['link_url']."' ";
+                    }
+                }
+
+                $itemlink = str_replace('%aidlink%', fusion_get_aidlink(), $itemlink);
+
+                $has_child = FALSE;
+                $l_1 = "";
+                $l_2 = "";
+
+                if (isset($data[$link_id])) {
+                    $has_child = TRUE;
+                    $link_class = " class='dropdown-toggle'";
+                    $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
+                    $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
+                    $l_2 = (empty($id) ? "<span class='fa fa-caret-down'></i>" : "");
+                    $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
+                } else {
+                    $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
+                }
+
+                $li_class = array_filter($li_class);
+
+                $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">";
+
+                $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.">" : "");
+                $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
+                $res .= $link_data['link_name']." ".$l_2;
+                $res .= ($itemlink ? "</a>" : '');
+                if ($has_child) {
+                    $res .= "\n<ul id='menu-".$link_data['link_id']."' aria-labelledby='ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
+                    if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
+                        $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n";
+                        $link_class = strtr($link_class, [
+                            'nav-link'        => 'dropdown-item',
+                            'dropdown-toggle' => ''
+                        ]);
+                        $res .= ($itemlink ? "<a ".$itemlink.$link_target.$link_class.">\n" : '');
+                        $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
+                        $res .= $link_data['link_name'];
+                        $res .= ($itemlink ? "\n</a>\n" : '');
+                        $res .= "</li>\n";
+                    }
+                    $res .= show_nav_links($link_data['link_id'], $data);
+                    $res .= "</ul>\n";
+                }
+                $res .= "</li>\n";
+            } else {
+                $res .= "<li class='divider'></li>\n";
+            }
+            $i++;
+        }
     }
 
-    $item_link = str_replace('%aidlink%', fusion_get_aidlink(), $item_link);
-    $link_target = $data['link_window'] == 1 ? ' target="_blank"' : '';
-    $active = $link_is_active ? ' current-link active' : '';
-
-    echo '<a class="display-block p-5 p-l-0 p-r-0'.$active.'" href="'.$item_link.'"'.$link_target.'>';
-        echo $data['link_icon'] ? ' <i class="'.$data['link_icon'].'"></i>' : '';
-        echo $data['link_name'];
-    echo '</a>';
+    return $res;
 }
-
-add_to_jquery("
-    $('.fusion_css_navigation_panel li:has(ul)').on('click', function(e) {
-        e.preventDefault();
-        $(this).find('.sub-nav').slideToggle('fast');
-    });
-
-    $('.fusion_css_navigation_panel').find('.sub-nav li').click(function(e) {
-        e.stopPropagation();
-    });
-
-    $('.fusion_css_navigation_panel li:has(ul)').find('a:first').append(' »');
-");
