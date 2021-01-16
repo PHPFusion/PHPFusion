@@ -128,13 +128,13 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                             if (e.result == "valid") {
                                 r_username.addClass("is-valid").removeClass("is-invalid");
                                 r_username_field.addClass("has-success").removeClass("has-error");
-                                let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-success p-5 display-inline-block\">Username is available.</div></div>";
+                                let feedback_html = "<div class=\"input-error username-checker m-t-5\"><div id=\"user_name-help\" class=\"label label-success p-5 display-inline-block\">'.$locale['global_413'].'</div></div>";
                                  $(".username-checker").remove();
                                 $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             } else if (e.result == "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
                                 r_username_field.addClass("has-error").removeClass("has-success");
-                                let feedback_html = "<div class=\"input-error username-checker\"><div id=\"user_name-help\" class=\"label label-danger p-5 display-inline-block\">Username is not available.</div></div>";
+                                let feedback_html = "<div class=\"input-error username-checker m-t-5\"><div id=\"user_name-help\" class=\"label label-danger p-5 display-inline-block\">'.$locale['global_414'].'</div></div>";
                                  $(".username-checker").remove();
                                 $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             }

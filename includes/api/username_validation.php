@@ -18,14 +18,15 @@
 defined('IN_FUSION') || exit;
 
 function xhttp_usernamecheck() {
-    $input_string = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
+    $username = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
     $result = [];
-    if (!empty($input_string)) {
-        $name_active = dbcount("(user_id)", DB_USERS, "user_name=:name", [':name' => $input_string]);
-        $name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name=:name", [':name' => $input_string]);
-        $check_string = preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $input_string);
+    if (!empty($username)) {
+        $available = dbcount("(user_id)", DB_USERS, "user_name=:name", [':name' => $username]);
+        $is_used = dbcount("(user_code)", DB_NEW_USERS, "user_name=:name", [':name' => $username]);
+        $check_string = preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $username);
+        $username_ban = explode(',', fusion_get_settings('username_ban'));
 
-        if ($name_active == 0 && $name_inactive == 0 && $check_string) {
+        if ($available == 0 && $is_used == 0 && $check_string && !in_array($username, $username_ban)) {
             $result['result'] = 'valid';
         } else {
             $result['result'] = 'invalid';
