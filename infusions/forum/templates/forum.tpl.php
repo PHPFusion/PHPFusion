@@ -1135,7 +1135,7 @@ if (!function_exists('render_post_item')) {
                     echo '<a href="'.$data['post_edit']['link'].'" title="'.$locale['forum_0507'].'" class="m-l-5"><i class="fa fa-pen"></i></a>';
                 }
 
-                if ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) {
+                if ($data['user_level'] > USER_LEVEL_SUPER_ADMIN && $data['user_id'] !== fusion_get_userdata('user_id')) {
                     if (iSUPERADMIN || (iADMIN && checkrights('M'))) {
                         $aidlink = fusion_get_aidlink();
 
