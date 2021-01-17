@@ -288,19 +288,17 @@ class Admins {
     }
 
     public function setAdmin() {
-        if (!defined('IN_SETUP')) {
-            self::$admin_pages = $this->getAdminPages();
-            $this->admin_sections = array_filter(array_merge([
-                0 => self::$locale['ac00'],
-                1 => self::$locale['ac01'],
-                2 => self::$locale['ac02'],
-                3 => self::$locale['ac03'],
-                4 => self::$locale['ac04'],
-                5 => self::$locale['ac05'],
-            ], $this->admin_sections));
-            $this->admin_sections = array_values($this->admin_sections);
-            $this->current_page = $this->_currentPage();
-        }
+        self::$admin_pages = $this->getAdminPages();
+        $this->admin_sections = array_filter(array_merge([
+            0 => self::$locale['ac00'],
+            1 => self::$locale['ac01'],
+            2 => self::$locale['ac02'],
+            3 => self::$locale['ac03'],
+            4 => self::$locale['ac04'],
+            5 => self::$locale['ac05'],
+        ], $this->admin_sections));
+        $this->admin_sections = array_values($this->admin_sections);
+        $this->current_page = $this->_currentPage();
     }
 
     /**

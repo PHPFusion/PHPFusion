@@ -47,7 +47,6 @@ class Install_Core extends Infusion_Core {
     const BUILD_VERSION = '9.03.100';
     const INSTALLER_ALGO = 'sha256';
     const USER_RIGHTS_SA = 'AD.APWR.B.BB.C.CP.DB.ERRO.FM.I.IM.IP.LANG.M.MAIL.MI.P.PI.PL.ROB.S1.S2.S3.S4.S6.S7.S9.S12.SB.SL.SM.TS.U.UF.UG.UL';
-    const IN_SETUP = TRUE;
     protected static $locale = [];
     protected static $localeset = 'English';
     protected static $allow_delete = FALSE;
@@ -272,7 +271,7 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    public static function fusion_get_config($config_path): array {
+    public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
             $default_path = [];

@@ -293,9 +293,6 @@ class Requirements extends Install_Core {
         $locale = self::$locale;
 
         if (!empty($system['db_host']) && !empty($system['db_user']) && !empty($system['db_name'])) {
-
-            require_once INCLUDES."db_handlers/all_functions_include.php";
-
             $validation[1] = [
                 'result'      => 1,
                 'description' => self::$locale['setup_0144'],
