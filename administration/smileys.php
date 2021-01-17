@@ -95,10 +95,7 @@ class SmileysAdministration {
 
     static function load_smileys($id) {
         if (isnum($id)) {
-            $result = dbquery("SELECT smiley_id, smiley_code, smiley_image, smiley_text
-            FROM ".DB_SMILEYS."
-            WHERE smiley_id=:smileyid", [':smileyid' => intval($id)]
-            );
+            $result = dbquery("SELECT * FROM ".DB_SMILEYS." WHERE smiley_id=:smileyid", [':smileyid' => intval($id)]);
             if (dbrows($result) > 0) {
                 return dbarray($result);
             }
@@ -157,17 +154,15 @@ class SmileysAdministration {
             $error = "";
             $error .= empty($this->data['smiley_image']) ? self::$locale['SMLY_418'] : "";
             $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_code=:smileycode", [':smileyid' => intval($this->data['smiley_id']), ':smileycode' => $this->data['smiley_code']]) ? self::$locale['SMLY_415'] : "";
-            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_text=:smileytext", [':smileyid' => intval($this->data['smiley_id']), ':smileytext' => $this->data['smiley_text']]) ? self::$locale['SMLY_414'] : "";
+            $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_text=:smileytext", [':smileyid' => intval($this->data['smiley_id']), ':smileytext' => $this->data['smiley_text']]) ? '<br>'.self::$locale['SMLY_414'] : "";
 
             if (\defender::safe()) {
                 if ($error == "") {
                     dbquery_insert(DB_SMILEYS, $this->data, empty($this->data['smiley_id']) ? 'save' : 'update');
                     addNotice('success', empty($this->data['smiley_id']) ? self::$locale['SMLY_410'] : self::$locale['SMLY_411']);
                     redirect(clean_request('', ['section=smiley_list', 'aid'], TRUE));
-
                 } else {
                     addNotice('danger', $error);
-
                 }
             }
         }
@@ -284,25 +279,16 @@ class SmileysAdministration {
         echo openform('smiley_form', 'post', $this->formaction, ['enctype' => TRUE]);
 
         echo form_hidden('smiley_id', '', $this->data['smiley_id']);
-        $image_opts = [];
-        $image_opts_ = [];
         $image_files = makefilelist(IMAGES."smiley/", ".|..|index.php", TRUE);
-        $result = dbquery("SELECT smiley_image FROM ".DB_SMILEYS);
-        while ($data = dbarray($result)) {
-            $name = explode(".", $data['smiley_image']);
-            $image_opts_[$data['smiley_image']] = ucwords($name[0]);
-        }
-
+        $image_opts = [];
         foreach ($image_files as $filename) {
             $name = explode(".", $filename);
             $image_opts[$filename] = ucwords($name[0]);
         }
 
-        $smileys_opts = array_diff($image_opts, $image_opts_);
-
         if ($this->data['smiley_image']) {
             echo form_select('smiley_image', self::$locale['SMLY_421'], $this->data['smiley_image'], [
-                'options'    => $smileys_opts,
+                'options'    => $image_opts,
                 'required'   => TRUE,
                 'inline'     => TRUE,
                 'error_text' => self::$locale['SMLY_438'],
