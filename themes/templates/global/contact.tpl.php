@@ -27,7 +27,7 @@ if (!function_exists("render_contact_form")) {
         $locale = fusion_get_locale();
 
         opentable($locale['CT_400']);
-        echo '<div class="text-center well">'.$info['message'].'</div>';
+        //echo '<div class="text-center well">'.$info['message'].'</div>';
 
         echo form_text('mailname', $locale['CT_402'], $info['input']['mailname'], ['required' => TRUE, 'error_text' => $locale['CT_420'], 'max_length' => 64]);
         echo form_text('email', $locale['CT_403'], $info['input']['email'], ['required' => TRUE, 'error_text' => $locale['CT_421'], 'type' => 'email', 'max_length' => 64]);
