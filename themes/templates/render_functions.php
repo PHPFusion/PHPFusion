@@ -137,7 +137,7 @@ if (!function_exists('render_user_tags')) {
             $content = $tooltip."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
             $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
             $html .= "<span class='user-label'>".$m[0]."</span>";
-            $html .= "</a>\n";
+            $html .= "</a>";
             return $html;
         }
 

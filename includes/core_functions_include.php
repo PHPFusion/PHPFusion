@@ -765,10 +765,10 @@ function parse_textarea($value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $de
     if ($parse_smileys) {
         $value = parsesmileys($value);
     }
-    $value = fusion_parse_user($value);
     if ($add_line_breaks === TRUE) {
         $value = nl2br($value);
     }
+    $value = fusion_parse_user($value);
     if ($decode === TRUE) {
         $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
         $value = encode_code($value);
