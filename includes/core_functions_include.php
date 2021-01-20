@@ -1868,12 +1868,7 @@ function profile_link($user_id, $user_name, $user_status, $class = "profile-link
     $settings = fusion_get_settings();
     $class = ($class ? "class='$class'" : "");
 
-    if ((in_array($user_status, [
-                0,
-                3,
-                7
-            ]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE
-    ) {
+    if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
         $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."' ".$class.">".$user_name."</a>";
     } else if ($user_status == "5" || $user_status == "6") {
         $link = $locale['user_anonymous'];
