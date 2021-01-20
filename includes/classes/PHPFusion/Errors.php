@@ -295,7 +295,8 @@ class Errors {
             <div class='m-t-20'>
                 <h2><?php echo $data['error_message'] ?></h2>
 
-                <h3 style='border-bottom:0;' class='display-inline'><label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
+                <h3 style='border-bottom:0;' class='display-inline'>
+                    <label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
                 </h3>
 
                 <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
@@ -311,11 +312,15 @@ class Errors {
                     <span class='text-lighter'><?php echo $locale['ERROR_463'] ?></span>
 
                     <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
-                        <strong><?php echo $locale['ERROR_412']."-".$locale['ERROR_416']; echo $data['error_user_level']; ?> -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'] ?></strong>
+                        <strong><?php
+                            echo $locale['ERROR_412']."-".$locale['ERROR_416'];
+                            echo $data['error_user_level']; ?> -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'];
+                            ?></strong>
                     </div>
                     <span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
 
-                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'><strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
+                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
+                        <strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
                     </div>
                 </div>
                 <div class='m-t-10 display-inline-block' style='width:300px'>
@@ -371,7 +376,7 @@ class Errors {
         $html .= '<div class="text-center well m-t-5 m-b-5">';
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', '', '0', ['allowclear' => TRUE, 'options' => $this->getErrorLogTypes(), 'select2_disabled'=>TRUE, 'inline' => TRUE]);
+        $html .= form_select('delete_status', '', '0', ['allowclear' => TRUE, 'options' => $this->getErrorLogTypes(), 'select2_disabled' => TRUE, 'inline' => TRUE]);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
         $html .= "</div>\n";
         $html .= "</div>\n";
