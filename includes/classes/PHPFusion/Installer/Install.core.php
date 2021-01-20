@@ -132,8 +132,10 @@ class Install_Core extends Infusion_Core {
 
             session_start();
 
+            //require_once BASEDIR.'includes/autoloader.php';
+            require_once DB_HANDLERS."all_functions_include.php";
+            require_once BASEDIR."includes/defender.php";
             require_once BASEDIR.'includes/dynamics.php';
-            require_once BASEDIR.'includes/autoloader.php';
 
             Dynamics::getInstance();
 

@@ -363,7 +363,7 @@ class Errors {
         $aidlink = fusion_get_aidlink();
         $locale = self::$locale;
 
-        add_to_footer('<script src="'.INCLUDES.'jscripts/clipboard.min.js"></script>');
+        fusion_load_script(INCLUDES."jscripts/clipboard.js");
         add_to_jquery('new ClipboardJS(".copy-error");');
 
         // Use clean request for absolute escape from SEO converging form path
@@ -371,7 +371,7 @@ class Errors {
         $html .= '<div class="text-center well m-t-5 m-b-5">';
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', '', '', ['allowclear' => TRUE, 'options' => $this->getErrorLogTypes(), 'inline' => TRUE]);
+        $html .= form_select('delete_status', '', '0', ['allowclear' => TRUE, 'options' => $this->getErrorLogTypes(), 'select2_disabled'=>TRUE, 'inline' => TRUE]);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
         $html .= "</div>\n";
         $html .= "</div>\n";
