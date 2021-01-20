@@ -471,9 +471,9 @@ class UserFields extends QuantumFields {
             ]
         );
 
-        $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement', 'class'=>"modal-lg"]);
+        $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
         $modal .= parse_textarea(self::parse_label(fusion_get_settings('license_agreement')));
-        $modal_content = '<div class="pull-left"><small>'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</small></div>';
+        $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
         $modal .= modalfooter($modal_content, TRUE);
         $modal .= closemodal();
@@ -490,17 +490,16 @@ class UserFields extends QuantumFields {
         $html .= "<div class='col-xs-12 col-sm-9'>\n";
         $html .= form_checkbox('agreement', $agreement, '', ["required" => TRUE, "reverse_label" => TRUE]);
         $html .= "</div>\n</div>\n";
-        add_to_footer("
-        $(function() {
-        $('#agreement').on('click', function() {
-            let regBtn = $('#register');
+        add_to_head("<script type='text/javascript'>$(function() {
+        $('#agreement').bind('click', function() {
+            var regBtn = $('#register');
             if ($(this).is(':checked')) {
                 regBtn.attr('disabled', false).removeClass('disabled');
             } else {
                 regBtn.attr('disabled', true).addClass('disabled');
             }
         });
-        });");
+        });</script>");
 
         return $html;
     }

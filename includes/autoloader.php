@@ -135,3 +135,4 @@ if (is_file(__DIR__."/vendor/autoload.php")) {
 if (is_file(__DIR__."/custom_includes.php")) {
     require_once __DIR__."/custom_includes.php";
 }
+//require_once __DIR__.'/db_handlers/all_functions_include.php';

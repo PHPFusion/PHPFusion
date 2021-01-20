@@ -52,12 +52,12 @@ class ImageValidation {
                                                 }
                                             }
                                             if (!$valid_mimetype) {
-                                                die('Prevented an unwanted file upload attempt!');
+                                                die('Prevented an unwanted file upload attempt - 1!');
                                             }
                                             unset($valid_mimetype);
                                         } else {
                                             if ($mime_types[$extension] != $each['type']) {
-                                                die('Prevented an unwanted file upload attempt!');
+                                                die('Prevented an unwanted file upload attempt - 2!');
                                             }
                                         }
                                     }
@@ -78,12 +78,12 @@ class ImageValidation {
                                             }
                                         }
                                         if (!$valid_mimetype) {
-                                            die('Prevented an unwanted file upload attempt!');
+                                            die('Prevented an unwanted file upload attempt - 3!');
                                         }
                                         unset($valid_mimetype);
                                     } else {
                                         if ($mime_types[$extension] != $each['type']) {
-                                            die('Prevented an unwanted file upload attempt!');
+                                            die('Prevented an unwanted file upload attempt- 4!');
                                         }
                                     }
                                 }

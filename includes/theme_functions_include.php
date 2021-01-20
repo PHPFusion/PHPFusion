@@ -672,6 +672,10 @@ if (!function_exists('display_avatar')) {
         $name = !empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest';
 
         if ($hasAvatar) {
+            // Check if remote load avatar will break image paths or not
+            //$user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
+            //$imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
+            //$img = sprintf($imgTpl, $user_avatar);
             $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
             $img = sprintf($imgTpl, IMAGES."avatars/".$userdata['user_avatar']);
         } else {
@@ -1122,8 +1126,16 @@ if (!function_exists("tab_active")
                 if ($link) {
                     $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
                     if ($link === TRUE) {
-                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, FALSE);
+
+                        $keep_filtered = FALSE;
+                        if (in_array("*", $cleanup_GET)) {
+                            $getArray = [];
+                            $keep_filtered = TRUE;
+                        }
+
+                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, $keep_filtered);
                     }
+
                     $active = ($link_active_arrkey == $tab_id) ? ' active' : '';
                 } else {
                     $active = ($link_active_arrkey == "".$tab_id) ? ' active' : '';
@@ -1270,6 +1282,7 @@ if (!function_exists("tab_active")
      *
      * PHP:
      * echo opentab($tab_title, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
+     * echo opentab($tab_title, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['*']); // clear all
      *
      * @return string
      */
