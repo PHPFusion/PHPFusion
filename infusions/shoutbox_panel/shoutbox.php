@@ -51,7 +51,7 @@ class ShoutBox {
         if (!session_get("shout_token_hash") || (session_get("shout_page") !== $current_path) && (FUSION_SELF !== "shoutbox_archive.php")) {
             session_add("shout_token_hash", "shoutbox_".random_string());
             session_add("shout_page", $current_path);
-            addNotice("success", "Shoutbox token has been updated. Crack it.");
+            //addNotice("success", "Shoutbox token has been updated. Crack it.");
         }
 
         self::$locale = fusion_get_locale("", SHOUTBOX_LOCALE);
