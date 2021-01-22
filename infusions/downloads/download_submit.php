@@ -59,7 +59,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         /**
          * Download File Section
          */
-        if (\defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+        if (fusion_safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
 
             $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
             $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
@@ -71,7 +71,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 } else if (!empty($upload['target_file'])) {
                     $criteriaArray['download_file'] = $upload['target_file'];
                 } else {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('warning', $locale['download_0113']);
                 }
             }
@@ -79,24 +79,27 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
         } else if (!empty($_POST['download_url']) && empty($data['download_file'])) {
             $criteriaArray['download_url'] = form_sanitizer($_POST['download_url'], '', 'download_url');
         } else if (empty($data['download_file']) && empty($data['download_url'])) {
-            \defender::stop();
+            fusion_stop();
             addNotice('danger', $locale['download_0111']);
         }
         // Screenshot submissions
-        if (\defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
-            $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
-            if (empty($upload['error'])) {
-                $criteriaArray['download_image'] = $upload['image_name'];
-                $criteriaArray['download_image_thumb'] = $upload['thumb1_name'];
-                unset($upload);
-            }
-        } else {
-            if ($dl_settings['download_screenshot_required']) {
-                \defender::stop();
-                \defender::setInputError("download_image");
+        if ($dl_settings['download_screenshot']) {
+            if (fusion_safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+                $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
+                if (empty($upload['error'])) {
+                    $criteriaArray['download_image'] = $upload['image_name'];
+                    $criteriaArray['download_image_thumb'] = $upload['thumb1_name'];
+                    unset($upload);
+                }
+            } else {
+                if ($dl_settings['download_screenshot_required']) {
+                    fusion_stop();
+                    \defender::setInputError("download_image");
+                }
             }
         }
-        if (defender::safe()) {
+
+        if (fusion_safe()) {
             $inputArray = [
                 'submit_type'      => 'd',
                 'submit_user'      => $userdata['user_id'],
@@ -119,8 +122,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
          */
         // must have category
         if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, multilang_table("DL") ? in_group('download_cat_language', LANGUAGE) : "")) {
-            echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"),
-                    $locale['download_0044'])."</div>\n";
+            echo "<div class='alert alert-info m-b-20 submission-guidelines'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['download_0044'])."</div>\n";
             echo openform('submit_form', 'post', BASEDIR."submit.php?stype=d", ['enctype' => TRUE]);
             echo form_text('download_title', $locale['download_0200'], $criteriaArray['download_title'], [
                 'required'   => TRUE,
@@ -150,14 +152,14 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 "form_name"  => "submit_form",
             ];
             $textArea_opts = [
-                "required"   => TRUE,
-                "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-                "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "required"      => TRUE,
+                "type"          => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce"       => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
                 'tinymce_image' => FALSE,
-                "autosize"   => TRUE,
-                "error_text" => $locale['download_0112'],
-                "form_name"  => "submit_form",
-                'path'       => IMAGES_D
+                "autosize"      => TRUE,
+                "error_text"    => $locale['download_0112'],
+                "form_name"     => "submit_form",
+                'path'          => IMAGES_D
             ];
 
             echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts_short);
