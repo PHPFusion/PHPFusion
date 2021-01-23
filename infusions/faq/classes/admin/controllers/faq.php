@@ -150,13 +150,10 @@ class FaqAdmin extends FaqAdminModel {
     private function execute_Delete() {
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['faq_id']) && isnum($_GET['faq_id'])) {
             $faq_id = intval($_GET['faq_id']);
-            if (dbcount("(faq_id)", DB_FAQS, "faq_id=:faqid", [':faqid' => $faq_id]) && !dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $faq_id])) {
-                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
-                addNotice('success', $this->locale['faq_0032']);
-            } else {
-                addNotice('warning', $this->locale['faq_0035']);
-                addNotice('warning', $this->locale['faq_0036']);
-            }
+
+            dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+            addNotice('success', $this->locale['faq_0032']);
+
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
     }
@@ -391,9 +388,15 @@ class FaqAdmin extends FaqAdminModel {
         // delete category
         if (isset($_POST['delete_faq_cat']) && isset($_POST['faq_cat_id']) && isnum($_POST['faq_cat_id'])) {
             // move everything to uncategorized.
-            dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id'], ':uncategorized' => 0]);
-            dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id']]);
-            addNotice('success', $this->locale['faq_0041']);
+            if (dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $_POST['faq_cat_id']]) == 0) {
+                dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id'], ':uncategorized' => 0]);
+                dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id']]);
+                addNotice('success', $this->locale['faq_0041']);
+            } else {
+                addNotice('warning', $this->locale['faq_0035']);
+                addNotice('warning', $this->locale['faq_0036']);
+            }
+
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
