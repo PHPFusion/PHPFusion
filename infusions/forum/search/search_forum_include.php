@@ -20,7 +20,8 @@ namespace PHPFusion\Search;
 use PHPFusion\ImageRepo;
 use PHPFusion\Search;
 
-defined('IN_FUSION') || exit;
+(defined('IN_FUSION') || exit);
+
 if (defined('FORUM_EXISTS')) {
 
     if (Search_Engine::get_param('stype') == 'forum' || Search_Engine::get_param('stype') == 'all') {
@@ -42,7 +43,7 @@ if (defined('FORUM_EXISTS')) {
         ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
-        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND tp.post_datestamp >='.(TIME - Search_Engine::get_param('datelimit')) : '');
+        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND tp.post_datestamp >='.(time() - Search_Engine::get_param('datelimit')) : '');
 
         switch (Search_Engine::get_param('fields')) {
             case 2:
@@ -70,8 +71,11 @@ if (defined('FORUM_EXISTS')) {
             ".(multilang_table("FR") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").groupaccess('forum_access')
                 .(Search_Engine::get_param('forum_id') != 0 ? " AND tf.forum_id=".Search_Engine::get_param('forum_id') : "")."
             AND ".Search_Engine::search_conditions('forum')." GROUP BY tt.thread_id ".$date_search." LIMIT 100";
+
             $result = dbquery($query, Search_Engine::get_param('search_param'));
+
             $rows = dbrows($result);
+
         } else {
             $rows = 0;
         }
@@ -81,9 +85,7 @@ if (defined('FORUM_EXISTS')) {
             $item_count = "<a href='".BASEDIR."search.php?stype=forum&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars')."'>".$rows." ".($rows == 1 ? $locale['f402'] : $locale['f403'])." ".$locale['522']."</a><br  />\n";
 
             // Change from forum post to forum thread searching.
-
-            $query = "
-            SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tp.post_datestamp, tt.thread_subject, tt.thread_postcount,
+            $query = "SELECT tp.forum_id, tp.thread_id, tp.post_id, tp.post_message, tp.post_datestamp, tt.thread_subject, tt.thread_postcount,
             tt.thread_sticky, tf.forum_access, tu.user_id, tu.user_name, tu.user_status, tu.user_avatar
             FROM ".DB_FORUM_POSTS." tp
             LEFT JOIN ".DB_FORUM_THREADS." tt ON tp.thread_id = tt.thread_id
@@ -95,13 +97,18 @@ if (defined('FORUM_EXISTS')) {
 
             $result = dbquery($query, Search_Engine::get_param('search_param'));
 
-            $search_result = '';
+            $search_result = "";
 
             while ($data = dbarray($result)) {
+
                 $data['post_message'] = strip_tags(htmlspecialchars_decode($data['post_message']));
+
                 $text_all = Search_Engine::search_striphtmlbbcodes(iADMIN ? $data['post_message'] : preg_replace("#\[hide\](.*)\[/hide\]#si", '', $data['post_message']));
+
                 $text_frag = Search_Engine::search_textfrag($text_all);
+
                 $subj_c = Search_Engine::search_stringscount($data['thread_subject']);
+
                 $text_c = Search_Engine::search_stringscount($data['post_message']);
 
                 $context = "<div class='text-normal'>".$text_frag."</div>";
@@ -114,11 +121,16 @@ if (defined('FORUM_EXISTS')) {
 
                 $thread_rowstart = '';
                 if (!empty($inf_settings['posts_per_page']) && $data['thread_postcount'] > $inf_settings['posts_per_page']) {
+
                     $thread_posts = dbquery("SELECT p.post_id, p.forum_id, p.thread_id, p.post_author, p.post_datestamp
                                     FROM ".DB_FORUM_POSTS." p
                                     LEFT JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id
-                                    WHERE p.forum_id='".$data['forum_id']."' AND p.thread_id='".$data['thread_id']."' AND thread_hidden='0' AND post_hidden='0'
-                                    ORDER BY post_datestamp ASC");
+                                    WHERE p.forum_id=:forum AND p.thread_id=:thread AND thread_hidden=0 AND post_hidden=0
+                                    ORDER BY post_datestamp", [
+                        ":forum"  => (int)$data['forum_id'],
+                        ":thread" => (int)$data["thread_id"]
+                    ]);
+
                     if (dbrows($thread_posts)) {
                         $counter = 1;
                         while ($thread_post_data = dbarray($thread_posts)) {
