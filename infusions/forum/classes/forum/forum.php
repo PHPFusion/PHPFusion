@@ -457,29 +457,30 @@ class Forum extends ForumServer {
                                         }
                                         $i = 0;
                                         while ($data = dbarray($result)) {
-                                            $user = fusion_get_user($data['post_author']);
-                                            $data['post_author'] = [
-                                                'user_id'     => $user['user_id'],
-                                                'user_name'   => $user['user_name'],
-                                                'user_status' => $user['user_status'],
-                                                'user_level'  => getuserlevel($user['user_level']),
-                                                'user_avatar' => $user['user_avatar']
-                                            ];
-                                            $data['thread_link'] = [
-                                                'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'],
-                                                'title' => $data['thread_subject']
-                                            ];
-                                            if (!$i) {
-                                                $this->forum_info['last_activity'] = [
-                                                    'time'    => $data['post_datestamp'],
-                                                    'subject' => $data['thread_subject'],
-                                                    'link'    => $data['thread_link']['link'],
-                                                    'title'   => $data['thread_link']['title'],
-                                                    'user'    => $data['post_author']
+                                            if ($user = fusion_get_user($data['post_author'])) {
+                                                $data['post_author'] = [
+                                                    'user_id'     => $user['user_id'],
+                                                    'user_name'   => $user['user_name'],
+                                                    'user_status' => $user['user_status'],
+                                                    'user_level'  => getuserlevel($user['user_level']),
+                                                    'user_avatar' => $user['user_avatar']
                                                 ];
+                                                $data['thread_link'] = [
+                                                    'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'],
+                                                    'title' => $data['thread_subject']
+                                                ];
+                                                if (!$i) {
+                                                    $this->forum_info['last_activity'] = [
+                                                        'time'    => $data['post_datestamp'],
+                                                        'subject' => $data['thread_subject'],
+                                                        'link'    => $data['thread_link']['link'],
+                                                        'title'   => $data['thread_link']['title'],
+                                                        'user'    => $data['post_author']
+                                                    ];
+                                                }
+                                                $this->forum_info['item'][$data['post_id']] = $data;
+                                                $i++;
                                             }
-                                            $this->forum_info['item'][$data['post_id']] = $data;
-                                            $i++;
                                         }
                                     }
                                 }
