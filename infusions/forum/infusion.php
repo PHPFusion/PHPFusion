@@ -241,7 +241,7 @@ if (!column_exists('users', 'user_reputation')) {
 }
 
 // Insert settings
-$settings = [
+$forum_settings = [
     'forum_ips'                  => USER_LEVEL_SUPER_ADMIN,
     'forum_attachmax_w'          => 5048,
     'forum_attachmax_h'          => 5365,
@@ -271,8 +271,12 @@ $settings = [
     'forum_show_reputation'      => 1
 ];
 
-foreach ($settings as $name => $value) {
+foreach ($forum_settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
+
+if (column_exists('users', 'user_reputation')) {
+    $inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."'";
 }
 
 // Insert panels

@@ -85,7 +85,7 @@ function antiflood_countaccess() {
     // counting requests and last access time
     $control = [];
 
-    if (file_exists(CONTROL_DB)) {
+    if (is_file(CONTROL_DB) && filesize(CONTROL_DB) > 0) {
         $fh = fopen(CONTROL_DB, "r");
         $control = array_merge($control, unserialize(fread($fh, filesize(CONTROL_DB))));
         fclose($fh);
