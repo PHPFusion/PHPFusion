@@ -1514,9 +1514,25 @@ class QuantumFields extends SqlHandler {
                 if ($method == 'input') {
                     return form_geo($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
+                    if (!is_array($field_value)) {
+                        $field_value = explode("|", $field_value);
+                        if (count($field_value) === 6) {
+                            list($address, $address2, $country, $region, $city, $postcode) = $field_value;
+                            $addresses = [
+                                [$address, $address2],
+                                [$city, $region, $country],
+                                [$postcode]
+                            ];
+                            foreach ($addresses as $adds) {
+                                $values[] = implode(",", $adds);
+                            }
+                            $field_value = implode(",<br>", $values);
+                        }
+                    }
+
                     return [
                         'title' => self::parse_label($data['field_title']),
-                        'value' => implode('|', $field_value)
+                        'value' => $field_value
                     ];
                 }
                 break;
