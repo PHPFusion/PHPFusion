@@ -50,7 +50,7 @@ class AdminPanel {
 
         echo '<header class="main-header">';
             echo '<a href="'.ADMIN.'index.php'.$aidlink.'" class="logo">';
-                echo '<span class="logo-mini"><i class="php-fusion"></i></span>';
+                echo '<span class="logo-mini"><i class="phpfusion-icon"></i></span>';
                 echo '<span class="logo-lg">PHPFusion</span>';
             echo '</a>';
 
