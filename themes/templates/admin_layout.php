@@ -111,16 +111,18 @@ if (!check_admin_pass('')) {
         render_admin_login();
     }
 } else {
-    add_to_jquery('
-        $.ajax({
-            url: "'.ADMIN.'includes/?api=update-checker",
-            method: "get",
-            dataType: "json",
-            success: function (e) {
-                $("#updatechecker_result").html(e.result).show();
-            }
-        });
-    ');
+    if ($settings['update_checker'] == 1) {
+        add_to_jquery('
+            $.ajax({
+                url: "'.ADMIN.'includes/?api=update-checker",
+                method: "get",
+                dataType: "json",
+                success: function (e) {
+                    $("#updatechecker_result").html(e.result).show();
+                }
+            });
+        ');
+    }
 
     render_admin_panel();
 }
