@@ -29,20 +29,23 @@ if (file_exists(LOCALE.LOCALESET."admin/upgrade.php")) {
     include LOCALE."English/admin/upgrade.php";
 }
 
-/**
- * Remove folder and all files/subdirectories
- *
- * @param string $dir
- */
+
 if (!function_exists('rrmdir')) {
+    /**
+     * Remove folder and all files/subdirectories
+     *
+     * @param string $dir
+     */
     function rrmdir($dir) {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
-                    if (filetype($dir.'/'.$object) == 'dir')
+                    if (filetype($dir.'/'.$object) == 'dir') {
                         rrmdir($dir.'/'.$object);
-                    else unlink($dir.'/'.$object);
+                    } else {
+                        unlink($dir.'/'.$object);
+                    }
                 }
             }
             reset($objects);
