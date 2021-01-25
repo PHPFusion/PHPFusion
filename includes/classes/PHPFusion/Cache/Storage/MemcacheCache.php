@@ -32,6 +32,11 @@ class MemcacheCache implements ICache {
     private $memcache;
 
     /**
+     * @var bool
+     */
+    private $is_memcached = FALSE;
+
+    /**
      * MemcacheCache constructor.
      *
      * @param array $config
@@ -41,6 +46,7 @@ class MemcacheCache implements ICache {
     public function __construct($config) {
         if (class_exists('\Memcached')) {
             $this->memcache = new \Memcached();
+            $this->is_memcached = TRUE;
         } else if (class_exists('\Memcache')) {
             $this->memcache = new \Memcache();
         } else {
@@ -89,11 +95,20 @@ class MemcacheCache implements ICache {
             }
 
             if (($time + $seconds) < time()) {
-                $this->memcache->set($key.'_time', time(), NULL, $seconds);
-                $this->memcache->set($key, $data, NULL, $seconds);
+                if ($this->is_memcached) {
+                    $this->memcache->set($key.'_time', time(), $seconds);
+                    $this->memcache->set($key, $data, $seconds);
+                } else {
+                    $this->memcache->set($key.'_time', time(), NULL, $seconds);
+                    $this->memcache->set($key, $data, NULL, $seconds);
+                }
             }
         } else {
-            $this->memcache->set($key, $data, NULL, $seconds);
+            if ($this->is_memcached) {
+                $this->memcache->set($key, $data, $seconds);
+            } else {
+                $this->memcache->set($key, $data, NULL, $seconds);
+            }
         }
     }
 
