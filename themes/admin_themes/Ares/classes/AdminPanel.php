@@ -167,9 +167,7 @@ class AdminPanel {
             $html .= render_breadcrumbs();
 
             $html .= '<div class="notice">';
-                if (function_exists('renderNotices') && function_exists('getNotices')) {
-                    $html .= renderNotices(getNotices());
-                }
+            $html .= '<div id="updatechecker_result" class="alert alert-info m-b-0" style="display:none;"></div>';
             $html .= '</div>';
 
             $html .= '<div class="main-content">';

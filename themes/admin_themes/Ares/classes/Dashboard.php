@@ -32,7 +32,7 @@ class Dashboard {
 
     private function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos,
-               $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $new_update, $settings;
+               $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $settings;
 
         $locale = fusion_get_locale('', ARS_LOCALE);
         $aidlink = fusion_get_aidlink();
@@ -48,10 +48,6 @@ class Dashboard {
             'unactivated'  => ['link' => 'status=2', 'title' => $locale['252'], 'icon' => 'user-secret'],
             'security_ban' => ['link' => 'status=4', 'title' => $locale['253'], 'icon' => 'user-slash']
         ];
-
-        if ($new_update) {
-            echo '<div class="alert alert-info">'.$new_update.'</div>';
-        }
 
         $html .= '<div class="panel panel-ares">';
             $html .= '<div class="panel-heading"><i class="fa fa-users"></i> '.$locale['ares_003'].'</div>';

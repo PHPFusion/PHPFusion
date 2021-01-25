@@ -20,11 +20,7 @@ namespace AdminLTE;
 class Dashboard {
     private static function RenderDashboard() {
         global $members, $forum, $download, $news, $articles, $weblinks, $photos,
-               $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $global_infusions, $infusions_count, $new_update, $settings, $locale, $aidlink;
-
-        if ($new_update) {
-            echo '<div class="alert alert-info" style="border-radius:0;">'.$new_update.'</div>';
-        }
+               $global_comments, $global_ratings, $global_submissions, $link_type, $submit_type, $comments_type, $global_infusions, $infusions_count, $settings, $locale, $aidlink;
 
         opentable($locale['250'], '', FALSE);
             $mobile  = 12;

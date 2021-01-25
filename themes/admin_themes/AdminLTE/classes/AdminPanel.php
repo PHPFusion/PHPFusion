@@ -33,6 +33,7 @@ class AdminPanel {
             $this->MainSidebar();
 
             echo '<div class="content-wrapper">';
+                echo '<div id="updatechecker_result" class="alert alert-info m-b-0" style="display:none;"></div>';
                 echo CONTENT;
             echo '</div>';
 

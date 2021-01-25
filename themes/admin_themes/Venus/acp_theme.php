@@ -37,7 +37,7 @@ function render_admin_dashboard() {
 }
 
 function render_dashboard() {
-    global $locale, $members, $forum, $download, $news, $blog, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings, $new_update;
+    global $locale, $members, $forum, $download, $news, $blog, $articles, $weblinks, $photos, $global_comments, $global_ratings, $global_submissions, $link_type, $submit_data, $submit_type, $comments_type, $infusions_count, $global_infusions, $aidlink, $settings;
 
     $mobile = '12';
     $tablet = '6';
@@ -73,10 +73,6 @@ function render_dashboard() {
         'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
         'PH' => $settings['siteurl']."photogallery.php?photo_id=%s",
     ];
-
-    if ($new_update) {
-        echo '<div class="alert alert-info">'.$new_update.'</div>';
-    }
 
     opentable($locale['250']);
 
@@ -611,6 +607,7 @@ function render_admin_panel() {
         echo "<div id='acp-main' class='display-block acp ".(isset($_COOKIE['Venus']) && $_COOKIE['Venus'] ? 'in' : '')."' style='margin-top:50px; min-height:1125px; width:100%; height:100%; vertical-align:top;'>\n";
         echo "<div id='acp-content' class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
         echo render_breadcrumbs();
+        echo '<div id="updatechecker_result" class="alert alert-info" style="display:none;"></div>';
         echo CONTENT;
         echo "</div>\n";
         echo "<footer>";
