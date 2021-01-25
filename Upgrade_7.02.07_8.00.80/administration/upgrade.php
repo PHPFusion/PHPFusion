@@ -50,7 +50,7 @@ opentable($locale['400']);
 
 echo "<div style='text-align:center' class='text-center' ><br />\n";
 
-if (str_replace(".", "", $settings['version']) < "80022") {
+if (str_replace(".", "", $settings['version']) < $current_version) {
     echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
     $content = "";
     if ($settings['maintenance'] == 0) {
