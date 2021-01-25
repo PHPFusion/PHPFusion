@@ -190,7 +190,7 @@ if (!check_admin_pass('') && !stristr($_SERVER['PHP_SELF'], $settings['site_path
     if ($settings['update_checker'] == 1) {
         add_to_jquery('
             $.ajax({
-                url: "'.ADMIN.'includes/update-checker.php",
+                url: "'.ADMIN.'includes/update_checker.php",
                 method: "get",
                 dataType: "json",
                 success: function (e) {
