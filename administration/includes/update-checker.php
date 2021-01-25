@@ -27,7 +27,6 @@ if ($settings['update_checker'] == 1) {
         $array = explode("\n", $file);
         $version = $array[0];
 
-        $settings['version'] = '9.03.70';
         if (version_compare($version, $settings['version'], '>')) {
             $result = str_replace(['[LINK]', '[/LINK]', '[VERSION]'], ['<a href="'.$array[1].'" target="_blank">', '</a>', $version], $locale['new_update_avalaible']);
 
