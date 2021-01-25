@@ -21,6 +21,7 @@ if (iADMIN) {
     $endpoints = [
         "sitelinks"       => "sitelinks/sitelinks.php",
         "sitelinks-order" => "sitelinks/sitelinks-order.php",
+        "update-checker"  => "update-checker.php",
     ];
     if ($api = get("api")) {
         if (isset($endpoints[$api])) {
