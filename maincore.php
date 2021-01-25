@@ -1602,6 +1602,25 @@ function rrmdir($dir) {
     }
 }
 
+/**
+ * Get HTTP response code
+ *
+ * @param $url
+ *
+ * @return false|string
+ */
+function get_http_response_code($url) {
+    stream_context_set_default([
+        'ssl' => [
+            'verify_peer'      => FALSE,
+            'verify_peer_name' => FALSE
+        ],
+    ]);
+
+    $headers = @get_headers($url);
+    return substr($headers[0], 9, 3);
+}
+
 include INCLUDES."system_images.php";
 
 $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
