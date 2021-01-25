@@ -87,13 +87,17 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['captcha'])."' WHERE settings_name='captcha'");
+    if (!$result) {
+        $error = 1;
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['display_validation']) ? $_POST['display_validation'] : "1")."' WHERE settings_name='display_validation'");
+    if (!$result) {
+        $error = 1;
+    }
     if ($_POST['captcha'] == "recaptcha" && ($_POST['recaptcha_public'] == "" || $_POST['recaptcha_private'] == "")) {
         $error = 2;
     } else {
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['captcha'])."' WHERE settings_name='captcha'");
-        if (!$result) {
-            $error = 1;
-        }
         $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['recaptcha_public'])."' WHERE settings_name='recaptcha_public'");
         if (!$result) {
             $error = 1;
@@ -106,10 +110,10 @@ if (isset($_POST['savesettings'])) {
         if (!$result) {
             $error = 1;
         }
-        $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['allow_php_exe'])."' WHERE settings_name='allow_php_exe'");
-        if (!$result) {
-            $error = 1;
-        }
+    }
+    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".stripinput($_POST['allow_php_exe'])."' WHERE settings_name='allow_php_exe'");
+    if (!$result) {
+        $error = 1;
     }
     redirect(FUSION_SELF.$aidlink."&error=".$error);
 }
@@ -180,6 +184,12 @@ echo "<option value='clean'".($settings['recaptcha_theme'] == "clean" ? " select
 echo "<option value='white'".($settings['recaptcha_theme'] == "white" ? " selected='selected'" : "").">".$locale['697w']."</option>\n";
 echo "</select>\n</div>";
 echo "</td>\n";
+echo "</tr>\n<tr>\n";
+echo "<td width='50%' class='tbl'>".$locale['553']."</td>\n";
+echo "<td width='50%' class='tbl'><select name='display_validation' class='textbox'>\n";
+echo "<option value='1'".($settings['display_validation'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
+echo "<option value='0'".($settings['display_validation'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
+echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl2' align='center' colspan='2'>".$locale['682']."</td>\n";
 echo "</tr>\n<tr>\n";

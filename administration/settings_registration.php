@@ -67,10 +67,6 @@ if (isset($_POST['savesettings'])) {
     if (!$result) {
         $error = 1;
     }
-    $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['display_validation']) ? $_POST['display_validation'] : "1")."' WHERE settings_name='display_validation'");
-    if (!$result) {
-        $error = 1;
-    }
     $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".(isnum($_POST['enable_terms']) ? $_POST['enable_terms'] : "0")."' WHERE settings_name='enable_terms'");
     if (!$result) {
         $error = 1;
@@ -106,12 +102,6 @@ echo "<td width='50%' class='tbl'>".$locale['557']."</td>\n";
 echo "<td width='50%' class='tbl'><select name='admin_activation' class='textbox'>\n";
 echo "<option value='1'".($settings2['admin_activation'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
 echo "<option value='0'".($settings2['admin_activation'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
-echo "</select></td>\n";
-echo "</tr>\n<tr>\n";
-echo "<td width='50%' class='tbl'>".$locale['553']."</td>\n";
-echo "<td width='50%' class='tbl'><select name='display_validation' class='textbox'>\n";
-echo "<option value='1'".($settings2['display_validation'] == "1" ? " selected='selected'" : "").">".$locale['518']."</option>\n";
-echo "<option value='0'".($settings2['display_validation'] == "0" ? " selected='selected'" : "").">".$locale['519']."</option>\n";
 echo "</select></td>\n";
 echo "</tr>\n<tr>\n";
 echo "<td width='50%' class='tbl'>".$locale['558']."</td>\n";
