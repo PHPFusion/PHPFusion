@@ -283,6 +283,11 @@ $fusion_css_tags = &OutputHandler::$cssTags;
 // Set theme
 $_session_theme = session_get(COOKIE_PREFIX.'theme');
 $theme_session = $_session_theme && theme_exists($_session_theme) ? $_session_theme : FALSE;
+
+if ($_session_theme == fusion_get_settings('theme')) {
+    session_remove(COOKIE_PREFIX.'theme');
+}
+
 $theme = $theme_session !== FALSE ? $theme_session : (empty($userdata['user_theme']) ? fusion_get_settings('theme') : $userdata['user_theme']);
 set_theme($theme);
 
