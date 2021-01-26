@@ -345,7 +345,6 @@ if ($_get_download_id) {
 
 if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_settings['download_pagination']) && !check_get("download_id")) {
     $page_nav_link = (!empty($info["get"]["type"]) ? INFUSIONS."downloads/downloads.php?type=$_get_type&amp;" : '');
-    $rowstart = get_rowstart("rowstart", $info["download_max_rows"]);
 
     if (!empty($_get_cat_id) && isnum($_get_cat_id)) {
         $page_nav_link = INFUSIONS."downloads/downloads.php?cat_id=".$_get_cat_id.(!empty($_get_type) ? "&amp;type=".$_get_type : '')."&amp;";
@@ -353,6 +352,8 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
         $info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_user='".$_get_author."' AND ".groupaccess('download_visibility'));
         $page_nav_link = INFUSIONS."downloads/downloads.php?author=".$_get_author."&amp;";
     }
+
+    $rowstart = get_rowstart("rowstart", $info["download_max_rows"]);
     $info['download_nav'] = makepagenav($rowstart, $dl_settings['download_pagination'], $info['download_max_rows'], 3, $page_nav_link);
 }
 
