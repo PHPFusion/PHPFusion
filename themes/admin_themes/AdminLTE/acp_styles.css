@@ -205,20 +205,6 @@ a:focus {
     border-radius: 0;
 }
 
-#error_logform {
-    margin-bottom: 20px !important;
-    padding-bottom: 10px;
-}
-
-#error_logform #delete_entries {
-    padding: 5px 10px;
-    font-size: 12px;
-}
-
-#error_logform #delete_status-field {
-    margin-top: 1.5px;
-}
-
 #site-links {
     list-style: none;
     min-height: 20px;
