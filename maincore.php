@@ -329,12 +329,12 @@ function theme_exists($theme) {
 
 // Set a valid theme
 function set_theme($theme) {
-    global $settings, $locale;
+    global $locale;
 
     if (!defined("THEME")) {
         // If the theme is valid set it
         if (theme_exists($theme)) {
-            define("THEME", THEMES.($theme == "Default" ? $settings['theme'] : $theme)."/");
+            define("THEME", THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
             // The theme is invalid, search for a valid one inside themes folder and set it
         } else {
             $dh = opendir(THEMES);
