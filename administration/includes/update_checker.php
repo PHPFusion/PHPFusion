@@ -23,7 +23,7 @@ if (iADMIN) {
 
     if ($settings['update_checker'] == 1) {
         $url = 'https://www.php-fusion.co.uk/updates/8.txt';
-        if (get_http_response_code($url) == 200) {
+        if (@get_http_response_code($url) == 200) {
             $file = @file_get_contents($url);
             $array = explode("\n", $file);
             $version = $array[0];
