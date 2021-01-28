@@ -1581,9 +1581,8 @@ a:focus {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
-    height: 33px;
+    height: 30px;
     font-size: 14px;
-    padding-top: 2px;
 }
 
 .select2-container .select2-choice .select2-arrow {
