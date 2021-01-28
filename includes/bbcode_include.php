@@ -97,7 +97,7 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
         $dropdown = '';
         if (array_key_exists('dropdown', $bbdata) && $bbdata['dropdown'] == TRUE) {
             $dropdown = 'data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"';
-            $bbcodes .= '<div class="dropdown display-inline">';
+            $bbcodes .= '<div class="dropdown display-inline-block">';
         }
 
         $id = '';
