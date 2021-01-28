@@ -52,6 +52,7 @@ class PageList extends PageAdmin {
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
+                                dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url=:pageurl", [':pageurl' => 'viewpage.php?page_id='.intval($page_id)]);
                                 addNotice('success', self::$locale['page_0400']);
                                 break;
                             default:
