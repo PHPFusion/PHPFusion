@@ -42,21 +42,24 @@ class PageList extends PageAdmin {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '1', ':pageid' => intval($page_id)]);
+                                addNotice('success', self::$locale['page_0402']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '0', ':pageid' => intval($page_id)]);
+                                addNotice('success', self::$locale['page_0402']);
                                 break;
                             case "delete":
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
+                                addNotice('success', self::$locale['page_0400']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);
                         }
                     }
                 }
-                addNotice('success', self::$locale['page_0402']);
+
                 redirect(FUSION_REQUEST);
             }
             addNotice('warning', self::$locale['page_0442']);
@@ -177,7 +180,7 @@ class PageList extends PageAdmin {
                 "page_status"   => !empty($_POST['page_status']) ? form_sanitizer($_POST['page_status'], "", "page_status") : "",
                 "page_cat"      => !empty($_POST['page_cat']) ? form_sanitizer($_POST['page_cat'], "", "page_cat") : "",
                 "page_access"   => !empty($_POST['page_access']) ? form_sanitizer($_POST['page_access'], "", "page_access") : "",
-                "page_language" => !empty($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
+                "page_language" => !empty($_POST['page_language']) ? form_sanitizer($_POST['page_language'], LANGUAGE, "page_language") : "",
                 "page_user"     => !empty($_POST['page_user']) ? form_sanitizer($_POST['page_user'], "", "page_user") : "",
             ];
 
