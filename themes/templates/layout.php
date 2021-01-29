@@ -19,10 +19,8 @@ $locale = fusion_get_locale();
 $settings = fusion_get_settings();
 
 if (!headers_sent()) {
-    header('Expires: Thu, 23 Mar 1972 07:00:00 GMT');
     header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
     header('Cache-Control: no-cache, must-revalidate, max-age=0');
-    header('Pragma: no-cache');
     header("Content-Type: text/html; charset=".$locale['charset']);
 }
 
