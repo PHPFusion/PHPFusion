@@ -216,12 +216,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '0', ':catid' => (int)$weblink_cat_id]);
-                                addNotice('warning', $this->locale['WLS_0050']);
+                                addNotice('success', $this->locale['WLS_0050']);
                                 break;
                             case "delete":
                                 if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat=:catid", [':catid' => (int)$weblink_cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent=:catparent", [':catparent' => (int)$weblink_cat_id])) {
                                     dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]);
-                                    addNotice('warning', $this->locale['WLS_0042']);
+                                    addNotice('success', $this->locale['WLS_0042']);
                                 } else {
                                     addNotice('warning', $this->locale['WLS_0046']);
                                     addNotice('warning', $this->locale['WLS_0044']);
