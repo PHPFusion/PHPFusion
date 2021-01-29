@@ -106,16 +106,17 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         if (!defined('USERNAME_CHECK')) {
             define('USERNAME_CHECK', TRUE);
             add_to_jquery('
-            function delayKeyupTimer(callback, ms) {
-              var timer = 0;
-              return function() {
-                var context = this, args = arguments;
-                clearTimeout(timer);
-                timer = setTimeout(function () {
-                  callback.apply(context, args);
-                }, ms || 0);
-              };
-            }
+                function delayKeyupTimer(callback, ms) {
+                    let timer = 0;
+                    return function () {
+                        let context = this, args = arguments;
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            callback.apply(context, args);
+                        }, ms || 0);
+                    };
+                }
+                
                 let r_username = $("#userfieldsform #user_name");
                 let r_username_field = $("#userfieldsform #user_name-field");
                 r_username.keyup(delayKeyupTimer(function (e) {
@@ -125,17 +126,17 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                         data: $.param({"name": $(this).val()}),
                         dataType: "json",
                         success: function (e) {
-                            if (e.result == "valid") {
+                            if (e.result === "valid") {
                                 r_username.addClass("is-valid").removeClass("is-invalid");
                                 r_username_field.addClass("has-success").removeClass("has-error");
-                                let feedback_html = "<div class=\"input-error username-checker m-t-5\"><div id=\"user_name-help\" class=\"label label-success p-5 display-inline-block\">'.$locale['global_413'].'</div></div>";
-                                 $(".username-checker").remove();
+                                let feedback_html = "<div class=\"username-checker valid-feedback help-block\">'.$locale['global_413'].'</div>";
+                                $(".username-checker").remove();
                                 $(feedback_html).insertAfter($("#userfieldsform #user_name"));
-                            } else if (e.result == "invalid") {
+                            } else if (e.result === "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
                                 r_username_field.addClass("has-error").removeClass("has-success");
-                                let feedback_html = "<div class=\"input-error username-checker m-t-5\"><div id=\"user_name-help\" class=\"label label-danger p-5 display-inline-block\">'.$locale['global_414'].'</div></div>";
-                                 $(".username-checker").remove();
+                                let feedback_html = "<div class=\"username-checker invalid-feedback help-block\">'.$locale['global_414'].'</div>";
+                                $(".username-checker").remove();
                                 $(feedback_html).insertAfter($("#userfieldsform #user_name"));
                             }
                         }
