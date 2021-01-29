@@ -125,7 +125,7 @@ class PageController extends PageModel {
 
             self::$data = dbarray($cp_result);
 
-            if (self::$data['page_status'] == 1 || (iSUPERADMIN || iADMIN && checkrights('CP'))) {
+            if (self::$data['page_status'] == 1 || checkrights('CP')) {
 
                 if (empty(self::$data['page_left_panel'])) {
                     Panels::getInstance()->hide_panel('LEFT');
