@@ -701,15 +701,19 @@ class NewsAdmin extends NewsAdminModel {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_NEWS." SET news_draft='0' WHERE news_id='".intval($news_id)."'");
+                                addNotice("success", self::$locale['news_0101']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_NEWS." SET news_draft='1' WHERE news_id='".intval($news_id)."'");
+                                addNotice("success", self::$locale['news_0101']);
                                 break;
                             case "sticky":
                                 dbquery("UPDATE ".DB_NEWS." SET news_sticky='1' WHERE news_id='".intval($news_id)."'");
+                                addNotice("success", self::$locale['news_0101']);
                                 break;
                             case "unsticky":
                                 dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_id='".intval($news_id)."'");
+                                addNotice("success", self::$locale['news_0101']);
                                 break;
                             case "delete":
                                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
@@ -730,13 +734,13 @@ class NewsAdmin extends NewsAdminModel {
                                 }
                                 dbquery("DELETE FROM  ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
                                 dbquery("DELETE FROM  ".DB_NEWS." WHERE news_id='".intval($news_id)."'");
+                                addNotice("success", self::$locale['news_0102']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);
                         }
                     }
                 }
-                addNotice("success", self::$locale['news_0101']);
                 redirect(FUSION_REQUEST);
             }
             addNotice("warning", self::$locale['news_0108']);
