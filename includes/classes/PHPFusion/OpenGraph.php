@@ -99,7 +99,7 @@ class OpenGraph {
             OpenGraph::$data['site_name'] = $settings['sitename'];
             if (!empty($values['title']) && !empty($values['description']) && !empty($values['url']) && !empty($values['keywords'])) {
                 OpenGraph::$data['title'] = $values['title'];
-                OpenGraph::$data['description'] = $values['description'];
+                OpenGraph::$data['description'] = str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($values['description'])));
                 OpenGraph::$data['url'] = $values['url'];
                 OpenGraph::$data['keywords'] = $values['keywords'];
                 if (!empty($values['image']))
@@ -120,7 +120,7 @@ class OpenGraph {
 
         OpenGraph::$data = [
             'title'       => $settings['sitename'],
-            'description' => $settings['description'],
+            'description' => str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($settings['description']))),
             'url'         => $settings['siteurl'],
             'keywords'    => $settings['keywords'],
             'image'       => defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png',

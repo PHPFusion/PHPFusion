@@ -31,7 +31,7 @@ echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".
 echo "<head>\n";
 echo "<title>".$settings['sitename']."</title>\n";
 echo "<meta charset='".$locale['charset']."'>\n";
-echo "<meta name='description' content='".$settings['description']."'>\n";
+echo "<meta name='description' content='".str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($settings['description'])))."'>\n";
 echo "<meta name='url' content='".$settings['siteurl']."'>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
