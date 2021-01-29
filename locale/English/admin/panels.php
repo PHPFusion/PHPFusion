@@ -78,8 +78,8 @@ $locale['484'] = "Could not add new Panel";
 $locale['485'] = "New Panel Added";
 $locale['486'] = "Return to Panel Management";
 $locale['487'] = "Return to Admin Index";
-$locale['488'] = "Panels order updated.";
-$locale['489'] = "Panels deleted.";
+$locale['488'] = "Panel order updated.";
+$locale['489'] = "Panel deleted.";
 //Visual Panel
 $locale['600'] = "Panel Management Interface";
 $locale['602'] = "Unused panels";
