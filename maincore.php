@@ -97,7 +97,7 @@ if (empty($settings)) {
     die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
-header('X-PHPFusion: v'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+header('X-Powered-By: PHPFusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
 
 //ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
 ob_start();
