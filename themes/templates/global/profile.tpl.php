@@ -61,7 +61,7 @@ if (!function_exists('display_profile_form')) {
         $opentab = '';
         $closetab = '';
         if (!empty($info['tab_info'])) {
-            $opentab = opentab($info['tab_info'], get('section'), 'user-profile-form', TRUE);
+            $opentab = opentab($info['tab_info'], check_get('section') ? get('section') : 1, 'user-profile-form', TRUE);
             $closetab = closetab();
         }
         opentable('');

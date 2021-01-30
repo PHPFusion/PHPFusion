@@ -118,6 +118,7 @@ class UserFields extends QuantumFields {
 
     /**
      * Check for input value of profile form
+     *
      * @param $key
      *
      * @return int|mixed|string|null
@@ -365,7 +366,7 @@ class UserFields extends QuantumFields {
 
         $this->info += [
             'register'  => $this->registration,
-            'pages'     => ($this->paginate && !$this->registration) ? $_GET['section'] : '',
+            'pages'     => ($this->paginate && !$this->registration) ? get('section') : '',
             'openform'  => openform($this->formname, 'post', FUSION_REQUEST, [
                 'enctype' => $this->showAvatarInput,
             ]),
