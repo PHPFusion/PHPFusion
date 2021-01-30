@@ -15,87 +15,84 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-/**
- * Default template for User Info Panel
- */
+
 if (!function_exists('display_user_info_panel')) {
     /**
      * Default User Info Panel Template
      *
      * @param array $info
      */
-    function display_user_info_panel(array $info = []) {
-        if (iMEMBER) : ?>
+    function display_user_info_panel($info = []) {
+        $locale = fusion_get_locale();
 
-            {%openside%}
-            <!---member-->
-            <div class='clearfix'>
-                <div class='uip_avatar text-center'>
-                    <div class='pull-left m-r-10'>{%user_avatar%}</div>
-                </div>
-                <h4 class='uip_username'><strong>{%user_name%}</strong></h4>
-                <span>{%user_level%}</span><br/>
-                <?php if ($info['show_reputation'] == 1) : ?>
-                    <span>{%user_reputation_icon%}{%user_reputation%}</span><?php endif; ?>
-            </div>
-            <div class='user_pm_notice'>{%user_pm_notice%}</div>
-            <div class='user_pm_progressbar'>{%user_pm_progressbar%}</div>
-            <div id='navigation-user' class="m-t-10">
-                <strong>{%user_nav_title%}</strong><br/>
-                <ul class='block'>
-                    <li><a href='{%edit_profile_link%}'>{%edit_profile_title%}
-                            <i class='pull-right fa fa-user-circle-o fa-pull-right'></i></a></li>
-                    <li><a href='{%pm_link%}'>{%pm_title%} <i class='fa fa-envelope-o fa-pull-right'></i></a></li>
-                    <?php if ($info['forum_exists']) : ?>
-                        <li><a href='{%track_link%}'>{%track_title%}
-                                <i class='fa fa-commenting-o fa-pull-right'></i></a></li>
-                    <?php endif; ?>
-                    <li><a href='{%member_link%}'>{%member_title%} <i class='fa fa-users fa-pull-right'></i></a></li>
-                    <?php if (iADMIN) : ?>
-                        <li><a href='{%acp_link%}'>{%acp_title%} <i class='fa fa-dashboard fa-pull-right'></i></a></li>
-                    <?php endif; ?>
-                    <?php if (session_get("login_as")) : ?>
-                        <li><a href='{%logoff_link%}'>{%logoff_title%}</a></div>
-                    <?php endif; ?>
-                    <?php if (!empty($info['submissions'])) : ?>
+        if (iMEMBER) {
+            openside($locale['UM096'].$info['user_name']);
 
-                        <li>
-                            <a data-toggle='collapse' data-parent='#navigation-user' href='#uipcollapse' aria-expanded='false' aria-controls='#uipcollapse'><?php echo fusion_get_locale('UM089') ?>
-                                <i class='fa fa-cloud-upload pull-right'></i></a>
-                            <ul id='uipcollapse' class='panel-collapse collapse block m-l-10'>
-                                <?php
+            echo '<div class="clearfix m-b-10">';
+                echo '<div class="uip_avatar pull-left m-r-10">'.$info['user_avatar'].'</div>';
+                echo $info['user_level'];
+
+                if ($info['forum_exists'] && $info['show_reputation']) {
+                    echo '<span class="display-block" title="'.fusion_get_locale('forum_0014', INFUSIONS.'forum/locale/'.LOCALESET.'forum.php').'"><i class="fa fa-dot-circle-o"></i> '.$info['userdata']['user_reputation'].'</span>';
+                }
+            echo '</div>';
+
+            if ($info['pm_msg_count'] > 0) {
+                echo '<div class="user_pm_notice"><a href="'.$info['user_pm_link'].'"><i class="fa fa-envelope-o"></i> '.$info['user_pm_title'].'</a></div>';
+            }
+
+            if (!empty($info['pm_progress'])) {
+                echo '<div class="user_pm_progressbar">'.$info['pm_progress'].'</div>';
+            }
+
+            echo '<div id="navigation-user">';
+                echo '<strong>'.$locale['UM097'].'</strong>';
+
+                echo '<ul class="block">';
+                    echo '<li><a href="'.BASEDIR.'edit_profile.php">'.$locale['UM080'].' <i class="fa fa-user-circle-o fa-pull-right"></i></a></li>';
+                    echo '<li><a href="'.BASEDIR.'messages.php">'.$locale['UM081'].' <i class="fa fa-envelope-o  fa-pull-right"></i></a></li>';
+
+                    if ($info['forum_exists']) {
+                        echo '<li><a href="'.INFUSIONS.'forum_threads_list_panel/my_tracked_threads.php">'.$locale['UM088'].' <i class="fa fa-commenting-o fa-pull-right"></i></a></li>';
+                    }
+
+                    echo '<li><a href="'.BASEDIR.'members.php">'.$locale['UM082'].' <i class="fa fa-users fa-pull-right"></i></a></li>';
+
+                    if (iADMIN) {
+                        echo '<li><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&pagenum=0">'.$locale['UM083'].' <i class="fa fa-dashboard fa-pull-right"></i></a></li>';
+                    }
+
+                    if ($info['login_session']) {
+                        echo '<li><a href="'.BASEDIR.'index.php?logoff='.$info['userdata']['user_id'].'">'.$locale['UM103'].' <i class="fa fa-sign-out fa-pull-right"></i></a></li>';
+                    }
+
+                    if (!empty($info['submissions'])) {
+                        echo '<li>';
+                            echo '<a data-toggle="collapse" data-parent="#navigation-user" href="#uipcollapse" aria-expanded="false" aria-controls="#uipcollapse">'.$locale['UM089'].' <i class="fa fa-cloud-upload fa-pull-right"></i></a>';
+
+                            echo '<ul id="uipcollapse" class="panel-collapse collapse block">';
                                 foreach ($info['submissions'] as $modules) {
-                                    ?>
-                                    <li>
-                                        <a class='side pl-l-15' href='<?php echo $modules['link'] ?>'><?php echo $modules['title'] ?></a>
-                                    </li>
-                                    <?php
+                                    echo '<li><a class="side p-l-15" href="'.$modules['link'].'">'.$modules['title'].'</a></li>';
                                 }
-                                ?>
-                            </ul>
-                        </li>
+                            echo '</ul>';
+                        echo '</li>';
+                    }
+                echo '</ul>';
+            echo '</div>';
 
-                    <?php endif; ?>
-                </ul>
-            </div>
-            <div class='spacer-xs'><a class='btn btn-block btn-primary' href='{%logout_link%}'>{%logout_title%}</a></div>
+            echo '<a class="btn btn-primary btn-block" href="'.BASEDIR.'index.php?logout=yes">'.$locale['UM084'].'</a>';
+            closeside();
+        } else {
+            openside($locale['global_100']);
+            echo $info['login_name_field'];
+            echo $info['login_pass_field'];
+            echo $info['login_remember_field'];
 
-            {%closeside%}
-
-        <?php else : ?>
-
-            <!---guest-->
-            {%openside%}
-            <div class='spacer-xs'>
-                {%login_name_field%}
-                {%login_pass_field%}
-                {%login_remember_field%}
-                {%login_submit%}
-                <div class='spacer-xs'>{%registration_%}</div>
-                <div class='spacer-xs'>{%lostpassword_%}</div>
-            </div>
-            {%closeside%}
-
-        <?php endif;
+            echo $info['login_submit'];
+            echo $info['registration'];
+            echo '<br>';
+            echo $info['lostpassword'];
+            closeside();
+        }
     }
 }
