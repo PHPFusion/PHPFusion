@@ -102,10 +102,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
         $options['toggle'] = FALSE; // force toggle to be false if options existed
 
-        if (!empty($input_value)) {
-
+        if (!empty($input_value) && !is_array($input_value)) {
             $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
-
         }
 
         // if there are options, and i want the options to be having input value.
