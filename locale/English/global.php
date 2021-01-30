@@ -226,13 +226,13 @@ $locale['UM102'] = "Submit FAQ";
 $locale['UM096'] = "Welcome: ";
 $locale['UM097'] = "Personal menu";
 $locale['UM101'] = "Switch Language";
+$locale['UM103'] = "Logoff as User";
 // Gauges
 $locale['UM098'] = "PM Inbox:";
 $locale['UM099'] = "PM Outbox:";
 $locale['UM100'] = "PM Archive:";
-// Keywords and Meta
-$locale['UM103'] = "Logoff as User";
 
+// Keywords and Meta
 $locale['tags'] = "Tags";
 // Captcha
 $locale['global_150'] = "Validation Code:";
