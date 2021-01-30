@@ -61,7 +61,7 @@ if (!function_exists('display_profile_form')) {
         $opentab = '';
         $closetab = '';
         if (!empty($info['tab_info'])) {
-            $opentab = opentab($info['tab_info'], $_GET['section'], 'user-profile-form', TRUE);
+            $opentab = opentab($info['tab_info'], get('section'), 'user-profile-form', TRUE);
             $closetab = closetab();
         }
         opentable('');
@@ -184,13 +184,13 @@ if (!function_exists('display_user_profile')) {
                 $tab_title['icon'][$page_section['id']] = $page_section['icon'];
             }
 
-            $tab_active = tab_active($tab_title, $_GET['section']);
+            $tab_active = tab_active($tab_title, get('section'));
 
             echo '<div class="profile-section">';
-                echo opentab($tab_title, $_GET['section'], 'profile_tab', TRUE, 'nav-tabs m-b-20', 'section', ['section']);
-                    echo opentabbody($tab_title['title'][$_GET['section']], $tab_title['id'][$_GET['section']], $tab_active, TRUE);
+                echo opentab($tab_title, get('section'), 'profile_tab', TRUE, 'nav-tabs m-b-20', 'section', ['section']);
+                    echo opentabbody($tab_title['title'][get('section')], $tab_title['id'][get('section')], $tab_active, TRUE);
 
-                    if ($tab_title['id'][$_GET['section']] == $tab_title['id'][1]) {
+                    if ($tab_title['id'][get('section')] == $tab_title['id'][1]) {
                         if (!empty($info['group_admin'])) {
                             $group = $info['group_admin'];
 
