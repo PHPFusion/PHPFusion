@@ -19,7 +19,7 @@ namespace Administration\Members;
 
 class Members_View {
 
-    public static function display_members(): string {
+    public static function display_members() {
 
         return "<div class='display-block clearfix'>
         <div class='pull-right'>{%action_button%}</div>

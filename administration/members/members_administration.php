@@ -97,7 +97,7 @@ class Members_Admin {
             'view'                  => $base_url.'&amp;ref=view&amp;lookup=',
             'edit'                  => $base_url.'&amp;ref=edit&amp;lookup=',
             'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
-            'login_as'                => $base_url."&amp;ref=login&amp;lookup=",
+            'login_as'              => $base_url."&amp;ref=login&amp;lookup=",
             'inactive'              => $base_url.'&amp;ref=inactive',
             'resend'                => $base_url.'&amp;ref=resend&amp;lookup=',
             'activate'              => $base_url.'&amp;ref=activate&amp;lookup=',
@@ -117,7 +117,7 @@ class Members_Admin {
 
     }
 
-    public static function getInstance(): ?Members_Admin {
+    public static function getInstance() {
         if (self::$instance == NULL) {
             pageAccess('M');
             self::$instance = new static();

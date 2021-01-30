@@ -35,7 +35,7 @@ class Members_Display extends Members_Admin {
      *
      * @return string
      */
-    public static function render_listing(): string {
+    public static function render_listing() {
 
         fusion_load_script(ADMIN."members/js/user_display.js");
 
@@ -207,7 +207,7 @@ class Members_Display extends Members_Admin {
         $newrows = 0;
         $newrowsCount = 0;
         if (in_array(2, $selected_status)) {
-            $newrowsCount = dbcount('(user_name)', DB_NEW_USERS, '');
+            $newrowsCount = dbcount('(user_name)', DB_NEW_USERS);
             $nquery = "SELECT * FROM ".DB_NEW_USERS;
             $nresult = dbquery($nquery);
             $i = 999999;
@@ -216,7 +216,7 @@ class Members_Display extends Members_Admin {
                 $list[$data['user_name']] = [
                     'user_id'      => $i,
                     'checkbox'     => '',
-                    'user_name'    => "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>
+                    'user_name'    => "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE)."</div>
                         <div class='overflow-hide'>".$data['user_name']."<br/>".getsuspension(2)."</div></div>",
                     'user_status'  => getsuspension(2),
                     'user_level'   => self::$locale['ME_562'],
@@ -272,7 +272,7 @@ class Members_Display extends Members_Admin {
 
                 $list[$data['user_id']]['checkbox'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN) ? form_checkbox('user_id[]', '', '', ['input_id' => 'user_id_'.$data['user_id'], 'value' => $data['user_id']]) : '';
 
-                $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE, '')."</div>\n
+                $list[$data['user_id']]['user_name'] = "<div class='clearfix'>\n<div class='pull-left m-r-10'>".display_avatar($data, '35px', '', FALSE)."</div>\n
                 <div class='overflow-hide'><a href='".self::$status_uri['view'].$data['user_id']."'>".$data['user_name']."</a><br/>".getsuspension($data['user_status'])."</div>
                 </div>\n";
 
@@ -388,7 +388,7 @@ class Members_Display extends Members_Admin {
      *
      * @return string
      */
-    private static function list_func($user_id, $list, $selected_fields): string {
+    private static function list_func($user_id, $list, $selected_fields) {
         $html = "<tr id='user-".$user_id."'>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
                 <td class='col-xs-2'>".$list[$user_id]['user_name']."</td>\n
