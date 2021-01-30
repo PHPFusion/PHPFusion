@@ -62,7 +62,7 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'sitebanner',
-                'settings_value' => 'images/phpfusion-logo.svg'
+                'settings_value' => 'images/phpfusion-logo-d.svg'
             ],
             [
                 'settings_name'  => 'logoposition_xs',
