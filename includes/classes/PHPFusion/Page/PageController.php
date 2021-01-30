@@ -113,10 +113,9 @@ class PageController extends PageModel {
 
         OpenGraph::ogCustomPage($page_id);
 
-        $query = "SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id=:page_id AND page_status=:page_status AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
+        $query = "SELECT * FROM ".DB_CUSTOM_PAGES." WHERE page_id=:page_id AND ".groupaccess('page_access')." ".(multilang_table("CP") ? "AND ".in_group("page_language", LANGUAGE) : "");
         $parameters = [
-            ':page_id'     => $page_id,
-            ':page_status' => 1,
+            ':page_id' => $page_id
         ];
         $cp_result = dbquery($query, $parameters);
 
@@ -126,38 +125,44 @@ class PageController extends PageModel {
 
             self::$data = dbarray($cp_result);
 
-            if (empty(self::$data['page_left_panel'])) {
-                Panels::getInstance()->hide_panel('LEFT');
-            }
-            if (empty(self::$data['page_right_panel'])) {
-                Panels::getInstance()->hide_panel('RIGHT');
-            }
-            if (empty(self::$data['page_header_panel'])) {
-                Panels::getInstance()->hide_panel('AU_CENTER');
-            }
-            if (empty(self::$data['page_footer_panel'])) {
-                Panels::getInstance()->hide_panel('BL_CENTER');
-            }
-            if (empty(self::$data['page_top_panel'])) {
-                Panels::getInstance()->hide_panel('U_CENTER');
-            }
-            if (empty(self::$data['page_bottom_panel'])) {
-                Panels::getInstance()->hide_panel('L_CENTER');
-            }
+            if (self::$data['page_status'] == 1 || checkrights('CP')) {
 
-            self::load_ComposerData();
-            self::cache_widget();
+                if (empty(self::$data['page_left_panel'])) {
+                    Panels::getInstance()->hide_panel('LEFT');
+                }
+                if (empty(self::$data['page_right_panel'])) {
+                    Panels::getInstance()->hide_panel('RIGHT');
+                }
+                if (empty(self::$data['page_header_panel'])) {
+                    Panels::getInstance()->hide_panel('AU_CENTER');
+                }
+                if (empty(self::$data['page_footer_panel'])) {
+                    Panels::getInstance()->hide_panel('BL_CENTER');
+                }
+                if (empty(self::$data['page_top_panel'])) {
+                    Panels::getInstance()->hide_panel('U_CENTER');
+                }
+                if (empty(self::$data['page_bottom_panel'])) {
+                    Panels::getInstance()->hide_panel('L_CENTER');
+                }
 
-            // Construct Meta
-            add_to_title(self::$data['page_title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
-            if (!empty(self::$data['page_keywords'])) {
-                set_meta("keywords", self::$data['page_keywords']);
+                self::load_ComposerData();
+                self::cache_widget();
+
+                // Construct Meta
+                add_to_title(self::$data['page_title']);
+                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
+                if (!empty(self::$data['page_keywords'])) {
+                    set_meta("keywords", self::$data['page_keywords']);
+                }
+                self::$info['title'] = self::$data['page_title'];
+                self::$info['line_breaks'] = self::$data['page_breaks'];
+                self::$info['body'] = PageView::display_Composer();
+            } else {
+                add_to_title($locale['page_401']);
+                self::$info['title'] = $locale['page_401'];
+                self::$info['error'] = $locale['page_402'];
             }
-            self::$info['title'] = self::$data['page_title'];
-            self::$info['line_breaks'] = self::$data['page_breaks'];
-            self::$info['body'] = PageView::display_Composer();
-
         } else {
             add_to_title($locale['page_401']);
             self::$info['title'] = $locale['page_401'];

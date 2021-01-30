@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../../../maincore.php';
 require_once THEMES.'templates/header.php';
-require_once INFUSIONS.'news/templates/news.php';
+require_once INFUSIONS.'news/templates/news.tpl.php';
 require_once NEWS_CLASS.'/autoloader.php';
 render_news_item(\PHPFusion\News\News_Preview::get_PreviewInfo());
 require_once THEMES.'templates/footer.php';

@@ -404,7 +404,7 @@ class CustomPage {
         if (isnum($page_id) && self::verify_customPage($page_id)) {
             $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
             if ($result) {
-                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url='viewpage.php?page_id=:pageid", [':pageid' => $page_id]);
+                $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url=:pageurl", [':pageurl' => 'viewpage.php?page_id='.intval($page_id)]);
             }
             if ($result) {
                 addNotice('success', $locale['413']);

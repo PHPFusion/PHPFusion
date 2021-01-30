@@ -205,20 +205,6 @@ a:focus {
     border-radius: 0;
 }
 
-#error_logform {
-    margin-bottom: 20px !important;
-    padding-bottom: 10px;
-}
-
-#error_logform #delete_entries {
-    padding: 5px 10px;
-    font-size: 12px;
-}
-
-#error_logform #delete_status-field {
-    margin-top: 1.5px;
-}
-
 #site-links {
     list-style: none;
     min-height: 20px;
@@ -1595,9 +1581,8 @@ a:focus {
     background: #fff;
     border-color: #d2d6de;
     border-radius: 0;
-    height: 33px;
+    height: 30px;
     font-size: 14px;
-    padding-top: 2px;
 }
 
 .select2-container .select2-choice .select2-arrow {

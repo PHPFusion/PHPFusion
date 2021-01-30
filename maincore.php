@@ -38,7 +38,9 @@ if (stripget($_GET)) {
 }
 
 // Establish mySQL database connection
-dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name)) {
+    dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+}
 
 // Fetch the settings from the database
 $settings = fusion_get_settings();
@@ -118,7 +120,7 @@ if ($settings['site_protocol'] == 'https' && (!(isset($_SERVER['HTTPS']) && ($_S
 
 // Redirect to correct path if there are double // in the current uri
 if (substr_count($_SERVER['REQUEST_URI'], '//')) {
-    $site_path = preg_replace('/(\/+)/','/', $_SERVER['REQUEST_URI']);
+    $site_path = preg_replace('/(\/+)/', '/', $_SERVER['REQUEST_URI']);
     redirect(rtrim($settings['siteurl'], '/').$site_path);
 }
 
@@ -278,17 +280,16 @@ $fusion_page_footer_tags = &OutputHandler::$pageFooterTags;
 $fusion_jquery_tags = &OutputHandler::$jqueryTags;
 $fusion_css_tags = &OutputHandler::$cssTags;
 
-// Set theme using $_GET as well.
 // Set theme
-if ($userdata['user_level'] == USER_LEVEL_SUPER_ADMIN && isset($_GET['themes']) && theme_exists($_GET['themes'])) {
-    $newUserTheme = [
-        "user_id"    => $userdata['user_id'],
-        "user_theme" => stripinput($_GET['themes']),
-    ];
-    dbquery_insert(DB_USERS, $newUserTheme, "update");
-    redirect(clean_request("", ["themes"], FALSE));
+$_session_theme = session_get(COOKIE_PREFIX.'theme');
+$theme_session = $_session_theme && theme_exists($_session_theme) ? $_session_theme : FALSE;
+
+if ($_session_theme == fusion_get_settings('theme')) {
+    session_remove(COOKIE_PREFIX.'theme');
 }
-set_theme(empty($userdata['user_theme']) ? fusion_get_settings("theme") : $userdata['user_theme']);
+
+$theme = $theme_session !== FALSE ? $theme_session : (empty($userdata['user_theme']) ? fusion_get_settings('theme') : $userdata['user_theme']);
+set_theme($theme);
 
 $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
 if (dbrows($result)) {

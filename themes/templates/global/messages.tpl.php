@@ -163,16 +163,16 @@ if (!function_exists('display_pm_inbox')) {
                         echo '<div class="table-responsive"><table id="unread_tbl" class="table table-hover table-striped">';
                             foreach ($unread as $id => $message_data) {
                                 echo '<tr>';
-                                    echo '<td class="col-xs-1 align-middle">'.form_checkbox('pmID', '', '', [
+                                    echo '<td class="col-xs-12 col-sm-1 align-middle">'.form_checkbox('pmID', '', '', [
                                         'input_id' => 'pmID-'.$id,
                                         'value'    => $id,
                                         'class'    => 'm-b-0'
                                     ]).'</td>';
-                                    echo '<td class="col-xs-2 align-middle"><b>'.$message_data['contact_user']['user_name'].'</b></td>';
-                                    echo '<td class="col-xs-7">';
+                                    echo '<td class="col-xs-12 col-sm-2 align-middle"><b>'.$message_data['contact_user']['user_name'].'</b></td>';
+                                    echo '<td class="col-xs-12 col-sm-6">';
                                         echo '<a class="display-block" href="'.$message_data['message']['link'].'"><b>'.$message_data['message']['name'].'</b></a>';
                                     echo'</td>';
-                                    echo '<td class="col-xs-2 align-middle">'.timer($message_data['message_datestamp']).'</td>';
+                                    echo '<td class="col-xs-12 col-sm-3 align-middle">'.timer($message_data['message_datestamp']).'</td>';
                                 echo '</tr>';
                             }
                         echo '</table></div>';
@@ -187,14 +187,14 @@ if (!function_exists('display_pm_inbox')) {
                         echo '<div class="table-responsive"><table id="read_tbl" class="table table-hover table-striped">';
                             foreach ($read as $id => $message_data) {
                                 echo '<tr>';
-                                    echo '<td class="col-xs-1">'.form_checkbox('pmID', '', '', [
+                                    echo '<td class="col-xs-12 col-sm-1">'.form_checkbox('pmID', '', '', [
                                         'input_id' => 'pmID-'.$id,
                                         'value'    => $id,
                                         'class'    => 'm-b-0'
                                     ]).'</td>';
-                                    echo '<td class="col-xs-2">'.$message_data['contact_user']['user_name'].'</td>';
-                                    echo '<td class="col-xs-7"><a href="'.$message_data['message']['link'].'">'.$message_data['message']['name'].'</a></td>';
-                                    echo '<td class="col-xs-2">'.timer($message_data['message_datestamp']).'</td>';
+                                    echo '<td class="col-xs-12 col-sm-2">'.$message_data['contact_user']['user_name'].'</td>';
+                                    echo '<td class="col-xs-12 col-sm-6"><a href="'.$message_data['message']['link'].'">'.$message_data['message']['name'].'</a></td>';
+                                    echo '<td class="col-xs-12 col-sm-3">'.timer($message_data['message_datestamp']).'</td>';
                                 echo '</tr>';
                             }
                         echo '</table></div>';

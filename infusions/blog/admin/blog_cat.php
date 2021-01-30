@@ -24,17 +24,24 @@ $aidlink = fusion_get_aidlink();
  * Delete category images
  */
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
-    $result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS,
-            "blog_cat_parent='".$_GET['cat_id']."'");
+    $result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
     if (!empty($result)) {
-        addNotice("danger", $locale['blog_0522']."-<span class='small'>".$locale['blog_0523']."</span>");
+        addNotice("danger", $locale['blog_0522']." - <span class='small'>".$locale['blog_0523']."</span>");
         redirect(FUSION_SELF.$aidlink);
     } else {
-        $result = dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
+        $result = dbquery("SELECT blog_cat_image FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
+        if (dbrows($result) > 0) {
+            $photo = dbarray($result);
+            if (!empty($photo['blog_cat_image']) && file_exists(IMAGES_BC.$photo['blog_cat_image'])) {
+                unlink(IMAGES_BC.$photo['blog_cat_image']);
+            }
+        }
+
+         dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
         addNotice("success", $locale['blog_0524b']);
         redirect(FUSION_SELF.$aidlink);
     }
-    redirect(clean_request("", ["action"], FALSE));
+    redirect(clean_request("", ["action", "ref", "cat_id"], FALSE));
 }
 $data = [
     "blog_cat_id"       => 0,

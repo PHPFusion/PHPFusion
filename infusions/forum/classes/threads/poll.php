@@ -125,24 +125,29 @@ class Poll {
             // counter of lengths
             $option_data[1] = '';
             $option_data[2] = '';
+
             // calculate poll lengths
-            if (isset($_POST['poll_options'])) {
-                // callback on post.
-                foreach ($_POST['poll_options'] as $i => $value) {
-                    $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+            if (post(['poll_options']) && is_array(post(['poll_options']))) {
+                foreach (post(['poll_options']) as $i => $value) {
+                    $option_data[$i] = form_sanitizer($value, '', "poll_options");
                 }
+            }
+
+            if (isset($_POST['add_poll_option']) && post(['poll_options'])) {
                 // reindex the whole array with blank values.
+                foreach (post(['poll_options']) as $i => $value) {
+                    $option_data[$i] = form_sanitizer($value, '', "poll_options");
+                }
+
                 if (\defender::safe()) {
                     $option_data = array_values(array_filter($option_data));
                     array_unshift($option_data, NULL);
                     unset($option_data[0]);
                     $poll_data['forum_poll_length'] = count($option_data);
                 }
-            }
-            // add a Blank Poll option
-            if (isset($_POST['add_poll_option']) && \defender::safe()) {
                 array_push($option_data, '');
             }
+
 
             if ($edit === TRUE) {
 

@@ -101,17 +101,17 @@ class NewThread extends ForumServer {
                                 'forum_poll_votes'  => 0, // how many vote this poll has
                             ];
                             // calculate poll lengths
-                            if (!empty($_POST['poll_options']) && is_array($_POST['poll_options'])) {
-                                foreach ($_POST['poll_options'] as $i => $value) {
-                                    $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+                            if (post(['poll_options']) && is_array(post(['poll_options']))) {
+                                foreach (post(['poll_options']) as $i => $value) {
+                                    $option_data[$i] = form_sanitizer($value, '', "poll_options");
                                 }
                             }
                         }
 
-                        if (isset($_POST['add_poll_option']) && isset($_POST['poll_options'])) {
+                        if (isset($_POST['add_poll_option']) && post(['poll_options'])) {
                             // reindex the whole array with blank values.
-                            foreach ($_POST['poll_options'] as $i => $value) {
-                                $option_data[$i] = form_sanitizer($value, '', "poll_options[$i]");
+                            foreach (post(['poll_options']) as $i => $value) {
+                                $option_data[$i] = form_sanitizer($value, '', "poll_options");
                             }
 
                             if (\defender::safe()) {
@@ -122,6 +122,7 @@ class NewThread extends ForumServer {
                             }
                             array_push($option_data, '');
                         }
+
                         $poll_field = [];
                         $poll_field['poll_field'] = form_text('forum_poll_title', self::$locale['forum_0604'],
                             $pollData['forum_poll_title'], [
@@ -349,18 +350,18 @@ class NewThread extends ForumServer {
                             ]),
                         'attachment_field'  => self::getPermission("can_upload_attach") ?
                             form_fileinput('file_attachments[]', self::$locale['forum_0557'], '', [
-                                'input_id'       => 'file_attachments',
-                                'upload_path'    => INFUSIONS.'forum/attachments/',
-                                'type'           => 'object',
-                                'preview_off'    => TRUE,
-                                'multiple'       => TRUE,
-                                'inline'         => FALSE,
-                                'max_count'      => $forum_settings['forum_attachmax_count'],
-                                'valid_ext'      => $forum_settings['forum_attachtypes'],
-                                'class'          => 'm-b-0',
-                                'max_width'      => $forum_settings['forum_attachmax_w'],
-                                'max_height'     => $forum_settings['forum_attachmax_h'],
-                                'max_byte'       => $forum_settings['forum_attachmax']
+                                'input_id'    => 'file_attachments',
+                                'upload_path' => INFUSIONS.'forum/attachments/',
+                                'type'        => 'object',
+                                'preview_off' => TRUE,
+                                'multiple'    => TRUE,
+                                'inline'      => FALSE,
+                                'max_count'   => $forum_settings['forum_attachmax_count'],
+                                'valid_ext'   => $forum_settings['forum_attachtypes'],
+                                'class'       => 'm-b-0',
+                                'max_width'   => $forum_settings['forum_attachmax_w'],
+                                'max_height'  => $forum_settings['forum_attachmax_h'],
+                                'max_byte'    => $forum_settings['forum_attachmax']
                             ])." <div class='m-b-20'>\n<small>".sprintf(self::$locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : '',
                         'poll_form'         => $poll_form,
                         'smileys_field'     => form_checkbox('post_smileys', self::$locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),

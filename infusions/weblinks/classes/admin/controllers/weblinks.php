@@ -393,12 +393,17 @@ class WeblinksAdmin extends WeblinksAdminModel {
             <div class="clearfix">
                 <div class="pull-right">
                     <?php if ($weblink_cats) { ?>
-                        <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?></a>
+                        <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblinkform", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0002']; ?>
+                        </a>
                     <?php } ?>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('verify', '#table_action', '#weblink_table');"><i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#weblink_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#weblink_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#weblink_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('verify', '#table_action', '#weblink_table');">
+                        <i class="fa fa-fw fa-globe"></i> <?php echo $this->locale['WLS_0261']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#weblink_table');">
+                        <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#weblink_table');">
+                        <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#weblink_table');">
+                        <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <div class="display-inline-block pull-left m-r-10">
@@ -507,8 +512,12 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         <tr id="link-<?php echo $data['weblink_id']; ?>" data-id="<?php echo $data['weblink_id']; ?>">
                             <td class="hidden-xs"><?php echo form_checkbox("weblink_id[]", "", "", ["value" => $data['weblink_id'], "class" => "m-0", 'input_id' => 'link-id-'.$data['weblink_id']]) ?></td>
                             <td><span class="text-dark"><?php echo $data['weblink_name']; ?></span></td>
-                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a></td>
-                            <td><span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span></td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['weblink_cat_name']; ?></a>
+                            </td>
+                            <td>
+                                <span class="badge"><?php echo $data['weblink_status'] ? $this->locale['yes'] : $this->locale['no']; ?></span>
+                            </td>
                             <td><span class="badge"><?php echo getgroupname($data['weblink_visibility']); ?></span></td>
                             <td>
                                 <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
@@ -541,7 +550,9 @@ class WeblinksAdmin extends WeblinksAdminModel {
                         ");
                         ?></th>
                 <?php else: ?>
-                    <tr><td colspan="6" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td></tr>
+                    <tr>
+                        <td colspan="6" class="text-center"><?php echo($weblink_cats ? ($filter_empty ? $this->locale['WLS_0112'] : $this->locale['WLS_0113']) : $this->locale['WLS_0114']); ?></td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -553,7 +564,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             </div>
         <?php endif; ?>
         <?php
-        closeform();
+        echo closeform();
 
         // jQuery
         add_to_jquery("
@@ -583,15 +594,52 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
         if (dbrows($result) > 0) {
             $i = 0;
-            while ($cdata = dbarray($result)) {
-                dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status='0' WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$cdata['weblink_id']]);
-                $i++;
+            while ($data = dbarray($result)) {
+                if (self::validateUrl($data['weblink_url']) == FALSE) {
+                    dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status='0' WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$data['weblink_id']]);
+                    $i++;
+                }
             }
-            addNotice('success', sprintf($this->locale['WLS_0115'], $i));
+            addNotice('warning', sprintf($this->locale['WLS_0115'], $i));
             if ($i > 0) {
-                addNotice('success', $this->locale['WLS_0116']);
+                addNotice('warning', $this->locale['WLS_0116']);
             }
         }
+    }
+
+    protected static function validateUrl($url) {
+        if (function_exists('curl_version')) {
+            $ch = curl_init($url);
+
+            curl_setopt_array($ch, [
+                CURLOPT_TIMEOUT        => 20,
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_NOBODY         => 1,
+                CURLOPT_HEADER         => 0,
+                CURLOPT_RETURNTRANSFER => 0,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                //CURLOPT_SSL_VERIFYPEER => 0 // PHP 7.1
+            ]);
+
+            curl_exec($ch);
+
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $allowed_http = array_flip([301, 302, 200]);
+
+            if (isset($allowed_http[$http_code])) {
+                return $url;
+            } else {
+                return FALSE;
+            }
+
+            curl_close($ch);
+        } else if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            return $url;
+        }
+
+        return FALSE;
     }
 
     // Weblinks Delete Function

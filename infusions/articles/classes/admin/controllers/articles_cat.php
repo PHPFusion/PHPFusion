@@ -234,13 +234,16 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '1', ':catid' => intval($article_cat_id)]);
+                                addNotice('success', $this->locale['article_0045']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_ARTICLE_CATS." SET article_cat_status=:catstatus WHERE article_cat_id=:catid", [':catstatus' => '0', ':catid' => intval($article_cat_id)]);
+                                addNotice('success', $this->locale['article_0045']);
                                 break;
                             case "delete":
                                 if (!dbcount("(article_id)", DB_ARTICLES, "article_cat=:articlecat", [':articlecat' => $article_cat_id]) && !dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_parent=:catparent", [':catparent' => $article_cat_id])) {
                                     dbquery("DELETE FROM  ".DB_ARTICLE_CATS." WHERE article_cat_id=:articlecatid", [':articlecatid' => intval($article_cat_id)]);
+                                    addNotice('success', $this->locale['article_0042']);
                                 } else {
                                     addNotice('warning', $this->locale['article_0046']);
                                     addNotice('warning', $this->locale['article_0044']);
@@ -251,7 +254,6 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
                     }
                 }
-                addNotice('success', $this->locale['article_0045']);
                 redirect(FUSION_REQUEST);
             } else {
                 addNotice('warning', $this->locale['article_0048']);

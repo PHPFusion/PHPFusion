@@ -1151,7 +1151,7 @@ if (!function_exists("tab_active")
             if (empty($link) && $this->remember) {
                 if (!defined('JS_COOKIES')) {
                     define('JS_COOKIES', TRUE);
-                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jquery/jquery.cookie.js"></script>');
+                    OutputHandler::addToFooter('<script type="text/javascript" src="'.INCLUDES.'jscripts/js.cookie.min.js"></script>');
                 }
                 OutputHandler::addToJQuery("
                 $('#".$id." > li').on('click', function() {

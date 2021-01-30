@@ -110,7 +110,7 @@ function show_nav_links($id, $data) {
                 if (isset($data[$link_id])) {
                     $has_child = TRUE;
                     $link_class = " class='dropdown-toggle'";
-                    $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
+                    $l_1 = " id='nav_ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
                     $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                     $l_2 = (empty($id) ? "<span class='fa fa-caret-down'></i>" : "");
                     $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
@@ -127,7 +127,7 @@ function show_nav_links($id, $data) {
                 $res .= $link_data['link_name']." ".$l_2;
                 $res .= ($itemlink ? "</a>" : '');
                 if ($has_child) {
-                    $res .= "\n<ul id='menu-".$link_data['link_id']."' aria-labelledby='ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
+                    $res .= "\n<ul id='nav_menu-".$link_data['link_id']."' aria-labelledby='nav_ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
                     if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                         $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n";
                         $link_class = strtr($link_class, [

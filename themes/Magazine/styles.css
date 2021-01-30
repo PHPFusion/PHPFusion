@@ -245,10 +245,6 @@ a.bg-danger:focus {
     display: none;
 }
 
-.select2-container {
-    width: 100% !important;
-}
-
 #user-info > ul.login-menu {
     width: 200px;
 }

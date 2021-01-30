@@ -60,6 +60,10 @@ function write_htaccess() {
     $htc .= "    deny from all".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
+    $htc .= "<ifModule mod_headers.c>".PHP_EOL;
+    $htc .= "    Header set X-Content-Type-Options \"nosniff\"".PHP_EOL;
+    $htc .= "</ifModule>".PHP_EOL.PHP_EOL;
+
     // Error pages
     $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
     $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;

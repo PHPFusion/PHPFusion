@@ -56,6 +56,14 @@ class NewsCategoryAdmin extends NewsAdminModel {
             if (!empty($result)) {
                 addNotice("success", self::$locale['news_0152'].self::$locale['news_0153']);
             } else {
+                $result = dbquery("SELECT news_cat_image FROM ".DB_NEWS_CATS." WHERE news_cat_id='".intval($_GET['cat_id'])."'");
+                if (dbrows($result) > 0) {
+                    $photo = dbarray($result);
+                    if (!empty($photo['news_cat_image']) && file_exists(IMAGES_NC.$photo['news_cat_image'])) {
+                        unlink(IMAGES_NC.$photo['news_cat_image']);
+                    }
+                }
+
                 dbquery("DELETE FROM ".DB_NEWS_CATS." WHERE news_cat_id='".$_GET['cat_id']."'");
                 addNotice("success", self::$locale['news_0154']);
             }
@@ -235,15 +243,19 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_draft='0' WHERE news_cat_id='".intval($news_cat_id)."'");
+                                addNotice("success", self::$locale['news_0151']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_draft='1' WHERE news_cat_id='".intval($news_cat_id)."'");
+                                addNotice("success", self::$locale['news_0151']);
                                 break;
                             case "sticky":
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_sticky='1' WHERE news_cat_id='".intval($news_cat_id)."'");
+                                addNotice("success", self::$locale['news_0151']);
                                 break;
                             case "unsticky":
                                 dbquery("UPDATE ".DB_NEWS_CATS." SET news_cat_sticky='0' WHERE news_cat_id='".intval($news_cat_id)."'");
+                                addNotice("success", self::$locale['news_0151']);
                                 break;
                             case "delete":
                                 if (!dbcount("('news_id')", DB_NEWS, "news_cat='".$news_cat_id."'")) {
@@ -255,6 +267,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                                         }
                                     }
                                     dbquery("DELETE FROM  ".DB_NEWS_CATS." WHERE news_cat_id='".intval($news_cat_id)."'");
+                                    addNotice("success", self::$locale['news_0154']);
                                 } else {
                                     addNotice("warning", self::$locale['news_0153']);
                                 }
@@ -265,7 +278,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         }
                     }
                 }
-                addNotice("success", self::$locale['news_0151']);
                 redirect(FUSION_REQUEST);
             }
             addNotice("warning", self::$locale['news_0155']);
