@@ -44,7 +44,7 @@ class Home {
                 }
                 echo '</div>';
             } else {
-                echo $content['norecord'];
+                echo '<div class="m-t-10 m-b-10">'.$content['norecord'].'</div>';
             }
         }
     }

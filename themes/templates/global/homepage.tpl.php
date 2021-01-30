@@ -106,7 +106,7 @@ if (!function_exists('display_home')) {
                         }
                         echo '</div>';
                     } else {
-                        echo $content['norecord'];
+                        echo '<div class="m-t-10 m-b-10">'.$content['norecord'].'</div>';
                     }
                     closetable();
                 }
