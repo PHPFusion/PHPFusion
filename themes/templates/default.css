@@ -158,8 +158,8 @@ Grids
     flex-wrap: wrap;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -webkit-flex-direction: row;
     flex-direction: column;
+    -webkit-flex-direction: row;
 }
 
 .row.equal-height:before,
