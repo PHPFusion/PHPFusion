@@ -67,17 +67,14 @@ class UserFields extends QuantumFields {
     public $paginate = TRUE;
 
     public $admin_mode = FALSE;
-
+    public $options = [];
     private $username_change = TRUE;
-
     private $info = [
         'terms'               => '',
         'validate'            => '',
         'user_avatar'         => '',
         'user_admin_password' => '',
     ];
-
-    public $options = [];
     private $default_options = [
         'btn_post_class' => 'btn-default spacer-sm',
         'btn_class'      => 'btn btn-default',
@@ -102,29 +99,34 @@ class UserFields extends QuantumFields {
         return in_array($field_name, $list);
     }
 
+    protected static function list_func($user_id, $list, $selected_fields) {
+        $html = "<tr>\n
+                <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
+                <td>".$list[$user_id]['user_name']."</td>\n
+                <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
+                <td>\n".$list[$user_id]['user_email']."</td>\n";
+        foreach ($selected_fields as $column) {
+            $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
+        }
+
+        return $html;
+    }
+
     public function setUserNameChange($value) {
         $this->username_change = $value;
     }
 
-    private function getProfileSections() {
-        $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
-        $section = [];
-        if (dbrows($result) > 0) {
-            $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
-            $i = 0;
-            while ($data = dbarray($result)) {
-                $section[$data['field_cat_id']] = [
-                    "id"     => $data['field_cat_id'],
-                    'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
-                    'link'   => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], ['section'], FALSE),
-                    'name'   => ucwords(self::parse_label($data['field_cat_name'])),
-                    'icon'   => $data['field_cat_class']
-                ];
-                $i++;
-            }
+    /**
+     * Check for input value of profile form
+     * @param $key
+     *
+     * @return int|mixed|string|null
+     */
+    function getInputValue($key) {
+        if (check_post($key)) {
+            return post($key);
         }
-
-        return (array)$section;
+        return (isset($this->userData[$key]) ? $this->userData[$key] : "");
     }
 
     /**
@@ -136,6 +138,7 @@ class UserFields extends QuantumFields {
         $this->method = 'input';
 
         $locale = fusion_get_locale();
+
         $this->info = [
             'section'             => $this->getProfileSections(),
             'user_id'             => form_hidden('user_id', '', $this->userData["user_id"]),
@@ -149,19 +152,16 @@ class UserFields extends QuantumFields {
             'terms'               => ''
         ];
 
-        $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : 1;
+        $is_core_page = (get("section") == 1 || !check_get("section"));
 
         $this->options += $this->default_options;
 
-        if ($_GET['section'] == 1) {
+        if ($is_core_page) {
 
-            $user_name = isset($_POST['user_name']) ? form_sanitizer($_POST['user_name'], '', 'user_name') : $this->userData['user_name'];
-            $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : $this->userData['user_email'];
-            $user_hide_email = isset($_POST['user_hide_email']) ? $_POST['user_hide_email'] : $this->userData['user_hide_email'];
             $this->info['user_name'] = form_para($locale['u129'], 'account', 'profile_category_name');
 
             if (iADMIN || $this->username_change) {
-                $this->info['user_name'] .= form_text('user_name', $locale['u127'], $user_name, [
+                $this->info['user_name'] .= form_text('user_name', $locale['u127'], $this->getInputValue("user_name"), [
                     'max_length' => 30,
                     'required'   => 1,
                     'error_text' => $locale['u122'],
@@ -221,6 +221,7 @@ class UserFields extends QuantumFields {
                 );
                 $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password'], ['input_id' => 'userhash']);
             }
+
             $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
 
             // Admin Password - not available for everyone except edit profile.
@@ -326,7 +327,7 @@ class UserFields extends QuantumFields {
                 $ext_tip = (iADMIN && checkrights('M')) ? '' : $locale['u100'];
             }
 
-            $this->info['user_email'] = form_text('user_email', $locale['u128'], $user_email, [
+            $this->info['user_email'] = form_text('user_email', $locale['u128'], $this->getInputValue("user_email"), [
                     'type'       => 'email',
                     "required"   => TRUE,
                     'inline'     => TRUE,
@@ -336,7 +337,7 @@ class UserFields extends QuantumFields {
                 ]
             );
 
-            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $user_hide_email,
+            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"),
                 [
                     'inline'         => TRUE,
                     'inline_options' => TRUE,
@@ -418,6 +419,27 @@ class UserFields extends QuantumFields {
         });
         ");
         */
+    }
+
+    private function getProfileSections() {
+        $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
+        $section = [];
+        if (dbrows($result) > 0) {
+            $aid = isset($_GET['aid']) ? fusion_get_aidlink() : '';
+            $i = 0;
+            while ($data = dbarray($result)) {
+                $section[$data['field_cat_id']] = [
+                    "id"     => $data['field_cat_id'],
+                    'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
+                    'link'   => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], ['section'], FALSE),
+                    'name'   => ucwords(self::parse_label($data['field_cat_name'])),
+                    'icon'   => $data['field_cat_class']
+                ];
+                $i++;
+            }
+        }
+
+        return (array)$section;
     }
 
     /**
@@ -613,6 +635,10 @@ class UserFields extends QuantumFields {
         return (array)$fields;
     }
 
+    /*
+     * Render Listing Functions
+     */
+
     /***
      * Fetch profile output data
      * - Display Profile (View)
@@ -783,22 +809,6 @@ class UserFields extends QuantumFields {
 
         // Display Template
         echo display_user_profile($this->info);
-    }
-
-    /*
-     * Render Listing Functions
-     */
-    protected static function list_func($user_id, $list, $selected_fields) {
-        $html = "<tr>\n
-                <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
-                <td>".$list[$user_id]['user_name']."</td>\n
-                <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
-                <td>\n".$list[$user_id]['user_email']."</td>\n";
-        foreach ($selected_fields as $column) {
-            $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
-        }
-
-        return $html;
     }
 
     /**

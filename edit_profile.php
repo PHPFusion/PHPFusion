@@ -28,9 +28,9 @@ add_to_title($locale['u102']);
 
 $info = [];
 $errors = [];
-$_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
+//$_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
-if (isset($_POST['update_profile'])) {
+if (check_post("update_profile")) {
 
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->setUserNameChange(fusion_get_settings('username_change')); // accept or not username change.
