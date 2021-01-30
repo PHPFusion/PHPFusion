@@ -193,6 +193,10 @@ class Main {
                         echo iADMIN ? '<li role="separator" class="divider"></li>' : '';
                         echo iADMIN ? '<li><a href="'.ADMIN.'index.php'.fusion_get_aidlink().'&pagenum=0"><i class="m-r-5 fa fa-fw fa-dashboard"></i> '.$locale['global_123'].'</a></li>' : '';
                         echo '<li role="separator" class="divider"></li>';
+
+                        if (session_get('login_as')) {
+                            echo '<li><a href="'.BASEDIR.'index.php?logoff='.$userdata['user_id'].'"><i class="m-r-5 fa fa-fw fa-sign-out"></i> '.$locale['UM103'].'</a></li>';
+                        }
                         echo '<li><a href="'.BASEDIR.'index.php?logout=yes"><i class="m-r-5 fa fa-fw fa-sign-out"></i> '.$locale['logout'].'</a></li>';
                     echo '</ul>';
                 } else {
