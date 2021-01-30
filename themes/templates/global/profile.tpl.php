@@ -26,15 +26,10 @@ if (!function_exists('display_register_form')) {
      * @param $info - the array output that is accessible for your custom requirements
      */
     function display_register_form(array $info = []) {
-        $opentab = "";
-        $closetab = "";
-        if (!empty($info["tab_info"])) {
-            $opentab = opentab($info["tab_info"], $_GET["section"], "user-profile-form", TRUE);
-            $closetab = closetab();
-        }
+
         echo "<!--HTML-->";
         opentable();
-        echo $opentab;
+        //echo $opentab;
         echo "<!--register_pre_idx--><div class='spacer-sm'><div id='register_form' class='row'><div class='col-xs-12 col-sm-12'>";
         echo $info["openform"].
             $info["user_id"].
@@ -49,7 +44,6 @@ if (!function_exists('display_register_form')) {
             $info["terms"].
             $info["button"];
         echo "</div></div></div><!--register_sub_idx-->";
-        echo $closetab;
         closetable();
         echo "<!--//HTML-->";
     }

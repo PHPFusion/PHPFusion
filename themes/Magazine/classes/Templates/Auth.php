@@ -103,21 +103,6 @@ class Auth {
             echo '</div>';
 
             echo '<div class="panel-body">';
-                $open = '';
-                $close = '';
-                $tab_title = [];
-
-                if (isset($info['section']) && count($info['section']) > 1) {
-                    foreach ($info['section'] as $page_section) {
-                        $tab_title['title'][$page_section['id']] = $page_section['name'];
-                        $tab_title['id'][$page_section['id']] = $page_section['id'];
-                        $tab_title['icon'][$page_section['id']] = '';
-                    }
-                    $open = opentab($tab_title, $_GET['section'], 'user-profile-form', TRUE);
-                    $close = closetab();
-                }
-
-                echo $open;
 
                 if (empty($info['user_name']) && empty($info['user_field'])) {
                     echo '<div class="text-white text-center">'.$locale['uf_108'].'</div>';
@@ -147,7 +132,6 @@ class Auth {
                     echo !empty($info['closeform']) ? $info['closeform'] : '';
                 }
 
-                echo $close;
             echo '</div>';
         echo '</div>';
     }
