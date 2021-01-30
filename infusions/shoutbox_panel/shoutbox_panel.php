@@ -18,5 +18,6 @@
 defined('IN_FUSION') || exit;
 
 require_once INFUSIONS.'shoutbox_panel/shoutbox.php';
+require_once INFUSIONS.'shoutbox_panel/templates/shoutbox.tpl.php';
 
 ShoutBox::getInstance()->DisplayShouts();
