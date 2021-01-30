@@ -52,7 +52,7 @@ if (defined('FAQ_EXISTS')) {
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT faq_question, faq_answer, faq_cat_id
                 FROM ".DB_FAQS."
-                ".(multilang_table("FQ") ? "WHERE ".in_group('faq_language', LANGUAGE)." AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby;
+                ".(multilang_table("FQ") ? "WHERE ".in_group('faq_language', LANGUAGE)." AND " : "WHERE ").Search_Engine::search_conditions('faqs').$sortby." LIMIT 100";
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {

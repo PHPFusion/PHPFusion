@@ -65,7 +65,7 @@ if (defined('DOWNLOADS_EXISTS')) {
             FROM ".DB_DOWNLOADS." td
             INNER JOIN ".DB_DOWNLOAD_CATS." tdc ON td.download_cat=tdc.download_cat_id
             ".(multilang_table("DL") ? "WHERE ".in_group('tdc.download_cat_language', LANGUAGE)." AND " : "WHERE ")
-                .groupaccess('download_visibility')." AND ".Search_Engine::search_conditions('downloads').$date_search;
+                .groupaccess('download_visibility')." AND ".Search_Engine::search_conditions('downloads').$date_search." LIMIT 100";
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {

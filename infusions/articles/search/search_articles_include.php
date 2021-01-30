@@ -68,7 +68,7 @@ if (defined('ARTICLES_EXISTS')) {
             ".(multilang_table('AR') ? "WHERE ".in_group('tac.article_cat_language', LANGUAGE)." AND " : "WHERE ")
                 .groupaccess('article_visibility')." AND article_cat_status=1 AND article_draft='0' AND ".Search_Engine::search_conditions('article')
                 .$date_search;
-            $result = dbquery($query, Search_Engine::get_param('search_param'));
+            $result = dbquery($query." LIMIT 100", Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {
             $rows = 0;

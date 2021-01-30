@@ -52,7 +52,7 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
             $sortby = !empty(Search_Engine::get_param('order')) ? 'ORDER BY user_name'.$order_by[Search_Engine::get_param('order')] : '';
             $limit = (Search_Engine::get_param('stype') != 'all' ? ' LIMIT '.Search_Engine::get_param('rowstart').',10' : '');
             $result = dbquery("SELECT user_id, user_name, user_status, user_level, user_avatar FROM ".DB_USERS."
-            WHERE user_status=:user_status AND user_name LIKE :user_name ".$sortby.$limit
+            WHERE user_status=:user_status AND user_name LIKE :user_name ".$sortby.(!empty($limit) ? $limit : " LIMIT 100")
                 , [
                     ':user_status' => 0,
                     ':user_name'   => '%'.Search_Engine::get_param('stext').'%'

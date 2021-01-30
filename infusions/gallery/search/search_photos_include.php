@@ -74,7 +74,7 @@ if (defined('GALLERY_EXISTS')) {
             ".(multilang_table("PG") ? "WHERE ".in_group('ta.album_language', LANGUAGE)." AND " : "WHERE ").groupaccess('album_access')." AND
             ".Search_Engine::search_conditions('gallery');
             $param = Search_Engine::get_param('search_param');
-            $result = dbquery($query, $param);
+            $result = dbquery($query." LIMIT 100", $param);
 
             $rows = dbrows($result);
         } else {

@@ -58,7 +58,7 @@ if (defined('BLOG_EXISTS')) {
         if (!empty(Search_Engine::get_param('search_param'))) {
             $query = "SELECT blog_id FROM ".DB_BLOG."
             ".(multilang_table('BL') ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')."
-            AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search;
+            AND ".Search_Engine::search_conditions('blog')." AND (blog_start='0'||blog_start<=NOW())".$date_search." LIMIT 100";
             $result = dbquery($query, Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
         } else {

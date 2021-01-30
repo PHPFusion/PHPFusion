@@ -67,7 +67,7 @@ if (defined('WEBLINKS_EXISTS')) {
             ".(multilang_table("WL") ? "WHERE ".in_group('twc.weblink_cat_language', LANGUAGE)." AND ".in_group('tw.weblink_language', LANGUAGE)." AND " : "WHERE ").groupaccess('weblink_visibility')."
             AND ".Search_Engine::search_conditions('weblinks').$date_search;
 
-            $result = dbquery($query, Search_Engine::get_param('search_param'));
+            $result = dbquery($query." LIMIT 100", Search_Engine::get_param('search_param'));
             $rows = dbrows($result);
 
         } else {

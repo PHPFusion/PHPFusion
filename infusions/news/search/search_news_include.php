@@ -76,8 +76,8 @@ if (defined('NEWS_EXISTS')) {
                 LEFT JOIN ".DB_NEWS_IMAGES." ni ON ni.news_id=tn.news_id AND tn.news_image_front_default=ni.news_image_id
                 ".(multilang_table("NS") ? "WHERE ".in_group('tn.news_language', LANGUAGE)." AND " : "WHERE ").groupaccess('news_visibility')."
                 AND (news_start='0'||news_start<=NOW())
-                AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions('news').$date_search.$sortby.$limit
-                , Search_Engine::get_param('search_param')
+                AND (news_end='0'||news_end>=NOW()) AND ".Search_Engine::search_conditions('news').$date_search.$sortby.(!empty($limit) ? $limit : " LIMIT 100"),
+                Search_Engine::get_param('search_param')
             );
 
             $search_result = '';

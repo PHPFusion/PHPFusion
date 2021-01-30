@@ -58,7 +58,7 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
 
         $param = Search_Engine::get_param('search_param');
 
-        $result = dbquery($query, $param);
+        $result = dbquery($query." LIMIT 100", $param);
 
         if (dbrows($result)) {
             $rows = dbrows($result);
