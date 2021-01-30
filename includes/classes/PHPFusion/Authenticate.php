@@ -352,25 +352,48 @@ class Authenticate {
 
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale("", LOCALE.$settings["locale"]."/global.php");
+
+        if ($user_logoff = get("logoff", FILTER_VALIDATE_INT)) {
+            session_remove("login_as");
+            addNotice("success", $locale["global_185"], BASEDIR.$settings["opening_page"]);
+            redirect(BASEDIR.$settings["opening_page"]);
+        }
+
         if (isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
                 list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
-                if ($cookieExpiration > TIME) {
+                if ($cookieExpiration > time()) {
                     // must update user_salt
                     $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
                     if (dbrows($result) == 1) {
                         $user = dbarray($result);
-                        Authenticate::_setUserTheme($user);
+
                         if (!$user["user_session"]) {
                             // here we need to add a notice
-                            addNotice("danger", fusion_get_locale("global_183", LOCALE.fusion_get_settings('locale').'/global.php'));
+                            addNotice("danger", $locale["global_183"]);
                             self::logOut();
                         }
+
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
                         $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
                         $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
                         if ($cookieHash === $hash) {
+
+                            if ($login_id = session_get("login_as")) {
+                                if (isnum($login_id)) {
+                                    $login_user = fusion_get_user(session_get("login_as"));
+                                    if (!empty($login_user["user_id"]) && $login_user["user_status"] == 0 && $login_user["user_actiontime"] == 0) {
+                                        addNotice("success", sprintf($locale["global_184"], $login_user["user_name"]));
+                                        $user = $login_user;
+                                    }
+                                }
+                            }
+
+                            Authenticate::_setUserTheme($user);
+
                             return $user;
                         } else {
                             // Cookie has been tampered with!

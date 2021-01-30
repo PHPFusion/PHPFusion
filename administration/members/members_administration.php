@@ -23,25 +23,6 @@ use Administration\Members\Sub_Controllers\Members_Profile;
 use PHPFusion\BreadCrumbs;
 
 class Members_Admin {
-    private static $instance = NULL;
-    protected static $locale = [];
-    protected static $settings = [];
-    protected static $rowstart = 0;
-    protected static $sortby = 'all';
-    protected static $status = 0;
-    protected static $usr_mysql_status = 0;
-    protected static $user_id = 0;
-    protected static $user_data = [];
-
-    /*
-     * Status filter links
-     */
-    protected static $status_uri = [];
-    protected static $exit_link = '';
-    protected static $is_admin = FALSE;
-    protected static $time_overdue = 0;
-    protected static $response_required = 0;
-    protected static $deactivation_period = 0;
 
     const USER_MEMBER = 0;
     const USER_BAN = 1;
@@ -52,6 +33,25 @@ class Members_Admin {
     const USER_ANON = 6;
     const USER_DEACTIVATE = 7;
     const USER_UNACTIVATED = 2;
+
+    /*
+     * Status filter links
+     */
+    protected static $locale = [];
+    protected static $settings = [];
+    protected static $rowstart = 0;
+    protected static $sortby = 'all';
+    protected static $status = 0;
+    protected static $usr_mysql_status = 0;
+    protected static $user_id = 0;
+    protected static $user_data = [];
+    protected static $status_uri = [];
+    protected static $exit_link = '';
+    protected static $is_admin = FALSE;
+    protected static $time_overdue = 0;
+    protected static $response_required = 0;
+    protected static $deactivation_period = 0;
+    private static $instance = NULL;
 
     public function __construct() {
 
@@ -97,6 +97,7 @@ class Members_Admin {
             'view'                  => $base_url.'&amp;ref=view&amp;lookup=',
             'edit'                  => $base_url.'&amp;ref=edit&amp;lookup=',
             'delete'                => $base_url.'&amp;ref=delete&amp;lookup=',
+            'login_as'                => $base_url."&amp;ref=login&amp;lookup=",
             'inactive'              => $base_url.'&amp;ref=inactive',
             'resend'                => $base_url.'&amp;ref=resend&amp;lookup=',
             'activate'              => $base_url.'&amp;ref=activate&amp;lookup=',
@@ -104,18 +105,19 @@ class Members_Admin {
 
         self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
 
+        self::$is_admin = FALSE;
+
         if (dbcount("(user_id)", DB_USERS, "user_id=:user_id AND user_level<:user_level", [
                 ':user_id'    => self::$user_id,
                 ':user_level' => USER_LEVEL_MEMBER,
             ]) > 0
         ) {
             self::$is_admin = TRUE;
-        } else {
-            self::$is_admin = FALSE;
         }
+
     }
 
-    public static function getInstance() {
+    public static function getInstance(): ?Members_Admin {
         if (self::$instance == NULL) {
             pageAccess('M');
             self::$instance = new static();
@@ -126,20 +128,38 @@ class Members_Admin {
 
     public function display_admin() {
 
-        if (isset($_POST['cancel'])) {
+        $settings = fusion_get_settings();
+
+        $aidlink = fusion_get_aidlink();
+
+        if (post("cancel")) {
             redirect(self::$exit_link);
         }
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['ME_400']]);
+        add_breadcrumb(['link' => ADMIN.'members.php'.fusion_get_aidlink(), 'title' => self::$locale['ME_400']]);
 
-        if (isset($_GET['ref'])) {
-            switch ($_GET['ref']) {
-                case 'log': // Show Logs
+        if (check_get("ref")) {
+
+            switch (get("ref")) {
+
+                case "log": // Show Logs
                     if (!self::$is_admin) {
                         display_suspend_log(self::$user_id, "all", self::$rowstart);
                     }
                     break;
+                case "login":
+                    if ($user = fusion_get_user(self::$user_id)) {
+                        if ($user["user_id"]) {
+                            if (fusion_get_userdata("user_level") <= $user["user_level"] && fusion_get_userdata("user_id") != $user["user_id"]) {
+                                session_add("login_as", $user["user_id"]);
+                                redirect(BASEDIR.$settings["opening_page"]);
+                            }
+                        }
+                    }
+                    redirect(FUSION_REQUEST);
+                    break;
                 case 'inactive':
+
                     if (!self::$user_id && fusion_get_settings('enable_deactivation') && self::$is_admin) {
                         $inactive = dbcount("(user_id)", DB_USERS,
                             "user_status='0' AND user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit <:last_visited AND user_actiontime=:action_time",
@@ -210,7 +230,7 @@ class Members_Admin {
                     }
                     break;
                 case 'add':
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
+                    add_breadcrumb(['link' => self::$status_uri['add_user'], 'title' => self::$locale['ME_450']]);
                     opentable(self::$locale['ME_450']);
                     Members_Profile::display_new_user_form();
                     closetable();
@@ -228,12 +248,12 @@ class Members_Admin {
                         ];
                         self::$user_data = dbarray(dbquery($query, $bind));
                         $title = sprintf(self::$locale['ME_451'], self::$user_data['user_name']);
-                        BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
+                        add_breadcrumb(['link' => self::$status_uri['view'].self::$user_id, 'title' => $title]);
                         opentable($title);
                         Members_Profile::display_user_profile();
                         closetable();
                     } else {
-                        redirect(FUSION_SELF.fusion_get_aidlink());
+                        redirect(FUSION_SELF.$aidlink);
                     }
                     break;
                 case 'edit': // Edit User Profile
@@ -243,12 +263,12 @@ class Members_Admin {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
                         $title = sprintf(self::$locale['ME_452'], self::$user_data['user_name']);
-                        BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['view'].$_GET['lookup'], 'title' => $title]);
+                        add_breadcrumb(['link' => self::$status_uri['view'].self::$user_id, 'title' => $title]);
                         opentable($title);
                         Members_Profile::edit_user_profile();
                         closetable();
                     } else {
-                        redirect(FUSION_SELF.fusion_get_aidlink());
+                        redirect(FUSION_SELF.$aidlink);
                     }
                     break;
                 case 'delete':
@@ -260,7 +280,7 @@ class Members_Admin {
                     } else if (!empty(self::$user_id)) {
                         self::$user_data = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => self::$user_id]));
                         if (empty(self::$user_data) || self::$user_data['user_level'] <= USER_LEVEL_SUPER_ADMIN) {
-                            redirect(FUSION_SELF.fusion_get_aidlink());
+                            redirect(FUSION_SELF.$aidlink);
                         }
                         opentable(sprintf(self::$locale['ME_453'], self::$user_data['user_name']));
                         Members_Profile::delete_user();
@@ -270,20 +290,21 @@ class Members_Admin {
                     }
                     break;
                 case 'resend':
-                    if (!empty($_GET['lookup']) && !isnum($_GET['lookup'])) {
+                    if (get("lookup", FILTER_VALIDATE_INT)) {
                         Members_Profile::resend_email();
                     } else {
-                        redirect(FUSION_SELF.fusion_get_aidlink());
+                        redirect(FUSION_SELF.$aidlink);
                     }
                     break;
                 case 'activate':
-                    if (!empty($_GET['lookup']) && !empty($_GET['code'])) {
+                    if (get("lookup", FILTER_VALIDATE_INT) && get("code")) {
                         Members_Profile::activate_user();
                     } else {
-                        redirect(FUSION_SELF.fusion_get_aidlink());
+                        redirect(FUSION_SELF.$aidlink);
                     }
             }
         } else {
+
             if (isset($_REQUEST['action']) && isset($_REQUEST['user_id']) || isset($_REQUEST['lookup'])) {
                 $user_action = new Members_Action();
                 if (isset($_REQUEST['lookup']) && !is_array($_REQUEST['lookup'])) {

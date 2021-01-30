@@ -231,6 +231,8 @@ $locale['UM098'] = "PM Inbox:";
 $locale['UM099'] = "PM Outbox:";
 $locale['UM100'] = "PM Archive:";
 // Keywords and Meta
+$locale['UM103'] = "Logoff as User";
+
 $locale['tags'] = "Tags";
 // Captcha
 $locale['global_150'] = "Validation Code:";
@@ -248,6 +250,9 @@ $locale['global_180'] = "Admin Home";
 $locale['global_181'] = "Return to Site";
 $locale['global_182'] = "Admin Password not entered or incorrect.";
 $locale['global_183'] = "Your login session has expired. Please login again.";
+$locale['global_184'] = "You are now logged in as %s";
+$locale['global_185'] = "You are now switched back to your own account.";
+
 // Do not add anything within global_183-190. To be reserved for code verification development.
 
 // Miscellaneous

@@ -15,13 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 defined('IN_FUSION') || exit;
 
 require_once __DIR__.'/templates/user_info.tpl.php';
 $userdata = fusion_get_userdata();
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale();
-$modules = \PHPFusion\Admins::getInstance()->getSubmitData();
+$modules = Admins::getInstance()->getSubmitData();
 
 if (iMEMBER) {
     $messages_count = dbquery("SELECT
@@ -85,6 +88,8 @@ if (iMEMBER) {
             'submissions'          => $submissions_link_arr
         ] + $userdata;
 
+    $login_session = session_get("login_as");
+
     ob_start();
     display_user_info_panel($info);
     echo strtr(ob_get_clean(), [
@@ -109,7 +114,9 @@ if (iMEMBER) {
         '{%acp_link%}'             => (iADMIN ? ADMIN."index.php".fusion_get_aidlink()."&amp;pagenum=0" : ''),
         '{%acp_title%}'            => (iADMIN ? $locale['UM083'] : ''),
         '{%logout_link%}'          => BASEDIR."index.php?logout=yes",
-        '{%logout_title%}'         => $locale['UM084']
+        '{%logout_title%}'         => $locale['UM084'],
+        '{%logoff_link%}'          => ($login_session ? BASEDIR."index.php?logoff=".$userdata["user_id"] : ""),
+        '{%logoff_title%}'         => ($login_session ? $locale["UM103"] : ""),
     ]);
 
 } else {
