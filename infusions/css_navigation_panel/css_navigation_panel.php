@@ -109,13 +109,13 @@ function show_nav_links($id, $data) {
 
                 if (isset($data[$link_id])) {
                     $has_child = TRUE;
-                    $link_class = " class='dropdown-toggle'";
+                    $link_class = " class='display-block p-5 p-l-0 p-r-0 dropdown-toggle'";
                     $l_1 = " id='nav_ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
                     $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                     $l_2 = (empty($id) ? "<span class='fa fa-caret-down'></i>" : "");
                     $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                 } else {
-                    $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
+                    $link_class = " class='display-block p-5 p-l-0 p-r-0 ".(!empty($link_data['link_class']) ? $link_data['link_class'] : '')."'";
                 }
 
                 $li_class = array_filter($li_class);
