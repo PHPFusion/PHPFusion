@@ -17,18 +17,19 @@
 +--------------------------------------------------------*/
 $inf_version = '2.1.0';
 
-$check_array = [
+$new_settings = [
     'forum_attachmax_w' => 5048,
     'forum_attachmax_h' => 5365,
     'default_points'    => 10,
 ];
 
 $settings = get_settings('forum');
-foreach ($check_array as $key => $value) {
+foreach ($new_settings as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'forum')";
     }
 }
 
-$forum_settings = get_settings('forum');
-$inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."' WHERE user_reputation='0'";
+if (column_exists('users', 'user_reputation')) {
+    dbquery("UPDATE ".DB_USERS." SET user_reputation='".$new_settings['default_points']."' WHERE user_reputation='0'");
+}
