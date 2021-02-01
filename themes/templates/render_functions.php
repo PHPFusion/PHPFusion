@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\BreadCrumbs;
-
 defined('IN_FUSION') || exit;
 
 /**
@@ -129,7 +127,7 @@ if (!function_exists('render_user_tags')) {
         ]);
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $avatar = !empty($data['user_avatar']) ? "<div class='pull-left m-r-10'>".display_avatar($data, '50px', '', FALSE, '')."</div>" : '';
+            $avatar = !empty($data['user_avatar']) ? "<div class='pull-left m-r-10'>".display_avatar($data, '32px', '', FALSE, 'icon-sm')."</div>" : '';
             $title = "<div class='user-tooltip'>".$avatar."<div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/><span class='user_level'>".getuserlevel($data['user_level'])."</span></div>";
             $content = $tooltip."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
             $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
