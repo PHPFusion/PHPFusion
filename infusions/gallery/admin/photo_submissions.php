@@ -56,30 +56,32 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $thumb1_name = $callback_data['photo_thumb1'];
                 $thumb2_name = $callback_data['photo_thumb2'];
 
+                $upload_dir = is_dir(IMAGES_G.'album_'.$callback_data['album_id'].'/') && $callback_data['album_id'] > 0 ? IMAGES_G.'album_'.$callback_data['album_id'].'/' : IMAGES_G;
+
                 if (file_exists(INFUSIONS."gallery/submissions/".$photo_name) &&
                     !is_dir(INFUSIONS."gallery/submissions/".$photo_name)
                 ) {
-                    $callback_data['photo_filename'] = filename_exists(IMAGES_G, $photo_name);
-                    copy(INFUSIONS."gallery/submissions/".$photo_name, IMAGES_G.$callback_data['photo_filename']);
-                    chmod(IMAGES_G.$callback_data['photo_filename'], 0644);
+                    $callback_data['photo_filename'] = filename_exists($upload_dir, $photo_name);
+                    copy(INFUSIONS."gallery/submissions/".$photo_name, $upload_dir.$callback_data['photo_filename']);
+                    chmod($upload_dir.$callback_data['photo_filename'], 0644);
                     unlink(INFUSIONS."gallery/submissions/".$photo_name);
                 }
 
                 if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name) &&
                     !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name)
                 ) {
-                    $callback_data['photo_thumb1'] = filename_exists(IMAGES_G_T, $thumb1_name);
-                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name, IMAGES_G_T.$callback_data['photo_thumb1']);
-                    chmod(IMAGES_G_T.$callback_data['photo_thumb1'], 0644);
+                    $callback_data['photo_thumb1'] = filename_exists($upload_dir.'thumbs/', $thumb1_name);
+                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name, $upload_dir.'thumbs/'.$callback_data['photo_thumb1']);
+                    chmod($upload_dir.'thumbs/'.$callback_data['photo_thumb1'], 0644);
                     unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb1_name);
                 }
 
                 if (file_exists(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name) &&
                     !is_dir(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name)
                 ) {
-                    $callback_data['photo_thumb2'] = filename_exists(IMAGES_G_T, $thumb2_name);
-                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name, IMAGES_G_T.$callback_data['photo_thumb2']);
-                    chmod(IMAGES_G_T.$callback_data['photo_thumb2'], 0644);
+                    $callback_data['photo_thumb2'] = filename_exists($upload_dir.'thumbs/', $thumb2_name);
+                    copy(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name, $upload_dir.'thumbs/'.$callback_data['photo_thumb2']);
+                    chmod($upload_dir.'thumbs/'.$callback_data['photo_thumb2'], 0644);
                     unlink(INFUSIONS."gallery/submissions/thumbs/".$thumb2_name);
                 }
 
