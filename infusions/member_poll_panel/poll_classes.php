@@ -183,7 +183,7 @@ class MemberPoll {
         }
     }
 
-    public static function getInstance(): ?MemberPoll {
+    public static function getInstance() {
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
