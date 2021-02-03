@@ -104,14 +104,15 @@ if (defined('GALLERY_EXISTS')) {
 
                 $image_link = INFUSIONS.'gallery/gallery.php?photo_id='.$data['photo_id'];
 
-                if ($data['photo_thumb1'] != "" && file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
-                    $image = "<img src='".IMAGES_G_T.$data['photo_thumb1']."' style='border:none' alt='".$data['photo_title']."' />";
+                require_once INFUSIONS.'gallery/functions.php';
+
+                $img_path = return_photo_paths($data);
+                if (!empty($img_path['photo_thumb2'])) {
+                    $img_path = $img_path['photo_thumb2'];
+                } else if (!empty($img_path['photo_thumb1'])) {
+                    $img_path = $img_path['photo_thumb1'];
                 } else {
-                    if ($data['photo_thumb2'] != "" && file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
-                        $image = "<img src='".IMAGES_G_T.$data['photo_thumb2']."' style='border:none' alt='".$data['photo_title']."' />";
-                    } else {
-                        $image = "<img src='".get_image("imagenotfound")."' style='border:none' alt='".$data['photo_title']."' />";
-                    }
+                    $img_path = $img_path['photo_filename'];
                 }
 
                 $desc = '';
@@ -123,7 +124,7 @@ if (defined('GALLERY_EXISTS')) {
                 $search_result .= strtr(Search::render_search_item_image(), [
                         '{%item_url%}'             => $image_link,
                         '{%item_target%}'          => '',
-                        '{%item_image%}'           => $image,
+                        '{%item_image%}'           => "<img src='".$img_path."' class='img-responsive' style='border:none' alt='".$data['photo_title']."'>",
                         '{%item_title%}'           => $data['photo_title']."</a>".$new." ".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],
                         '{%item_description%}'     => $desc,
                         '{%item_search_criteria%}' => '',
