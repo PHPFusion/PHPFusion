@@ -20,14 +20,6 @@ use PHPFusion\Rewrite\Router;
 
 defined('IN_FUSION') || exit;
 
-openside(fusion_get_locale('global_001'));
-echo '<div class="fusion_css_navigation_panel">';
-echo '<ul class="main-nav block">';
-echo show_nav_sublinks();
-echo '</ul>';
-echo '</div>';
-closeside();
-
 if (!function_exists('show_nav_sublinks')) {
     function show_nav_sublinks($id = 0) {
         $res = '';
@@ -156,3 +148,12 @@ if (!function_exists('show_nav_links')) {
         return $res;
     }
 }
+
+
+openside(fusion_get_locale('global_001'));
+echo '<div class="fusion_css_navigation_panel">';
+    echo '<ul class="main-nav block">';
+    echo show_nav_sublinks();
+    echo '</ul>';
+echo '</div>';
+closeside();
