@@ -113,8 +113,8 @@ abstract class Search_Model {
         }
         $last_sword_index = self::$c_swords - 1;
         for ($i = 0; $i < self::$c_swords; $i++) {
-            if (isset(self::$swords_keys_for_query[$i * self::$fields_count + self::$search_index])) {
-                $sword_var = self::$swords_keys_for_query[$i * self::$fields_count + self::$search_index];
+            if (isset(self::$swords_keys_for_query[$i])) {
+                $sword_var = self::$swords_keys_for_query[$i];
                 self::$conditions[$field_module][$field][] = $field." LIKE {$sword_var}".($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
             }
         }
