@@ -328,13 +328,13 @@ class Members_Display extends Members_Admin {
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
 
-        $table_id = fusion_table("user_table");
+        //$table_id = fusion_table("user_table");
 
         $tpl = Template::getInstance('member_listing');
 
         $tpl->set_locale(self::$locale);
 
-        $tpl->set_tag("user_table_id", $table_id);
+        //$tpl->set_tag("user_table_id", $table_id);
 
         $tpl->set_tag('filter_text', form_text('search_text', '', $search_text, [
             'placeholder'        => self::$locale['ME_401'],

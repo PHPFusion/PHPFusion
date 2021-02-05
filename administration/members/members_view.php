@@ -42,7 +42,7 @@ class Members_View {
         <div class='clearfix spacer-xs display-block'>{%page_count%} <div class='pull-right'>{%page_nav%}</div></div>
 
         <div id='user_action_bar' class='m-b-10 display-block' style='display:none;'><div class='btn-group btn-group-sm'>{%user_actions%}</div></div>
-        <div class='table-responsive'><table id='{%user_table_id%}' class='table table-hover table-striped'>
+        <div class='table-responsive'><table id='user_table' class='table table-hover table-striped ".fusion_sort_table('user_table')."'>
             <thead>
                 {%list_head%}
                 {%list_column%}
