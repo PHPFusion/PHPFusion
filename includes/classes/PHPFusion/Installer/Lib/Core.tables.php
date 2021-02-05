@@ -183,32 +183,6 @@ function get_core_tables($localeset) {
             'unsigned' => TRUE,
         ] //blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     ];
-    $table_package['captcha'] = [
-        'captcha_datestamp' => [
-            'type'     => 'INT',
-            'length'   => 10,
-            'key'      => 2, //KEY captcha_datestamp (captcha_datestamp)
-            'unsigned' => TRUE,
-        ], //captcha_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-        'captcha_ip'        => [
-            'type'   => 'VARCHAR',
-            'length' => 45
-        ], //captcha_ip VARCHAR(45) NOT NULL DEFAULT '',
-        'captcha_ip_type'   => [
-            'type'     => 'TINYINT',
-            'length'   => 1,
-            'default'  => 4,
-            'unsigned' => TRUE,
-        ], //captcha_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-        'captcha_encode'    => [
-            'type'   => 'VARCHAR',
-            'length' => 32
-        ], //captcha_encode VARCHAR(32) NOT NULL DEFAULT '',
-        'captcha_string'    => [
-            'type'   => 'VARCHAR',
-            'length' => 15
-        ] //captcha_string VARCHAR(15) NOT NULL DEFAULT '',
-    ];
     $table_package['custom_pages'] = [
         'page_id'           => [
             'type'           => 'MEDIUMINT',

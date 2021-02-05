@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 9.03.100.upgrade.inc
+| Filename: 9.03.110.upgrade.inc
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,7 +18,7 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version' => '9.03.100'
+    'version' => '9.03.110'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
