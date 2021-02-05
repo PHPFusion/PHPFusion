@@ -99,7 +99,7 @@ if (!function_exists('display_user_profile')) {
     function display_user_profile($info) {
         $locale = fusion_get_locale();
 
-        add_to_css('.cat-field img{max-width:25px;}');
+        add_to_css('.cat-field .field-title > img{max-width:25px;}');
 
         opentable('');
         echo '<section id="user-profile">';
@@ -137,7 +137,7 @@ if (!function_exists('display_user_profile')) {
                     switch ($field_id) {
                         case 'profile_user_group':
                             echo '<div class="row cat-field">';
-                                echo '<div class="col-xs-12 col-sm-3"><strong>'.$locale['u057'].'</strong></div>';
+                                echo '<div class="col-xs-12 col-sm-3"><strong class="field-title">'.$locale['u057'].'</strong></div>';
                                 echo '<div class="col-xs-12 col-sm-9">';
                                 if (!empty($field_data['value']) && is_array($field_data['value'])) {
                                     $i = 0;
@@ -165,7 +165,7 @@ if (!function_exists('display_user_profile')) {
                         default:
                             if (!empty($field_data['value'])) {
                                 echo '<div id="'.$field_id.'" class="row cat-field">';
-                                    echo '<div class="col-xs-12 col-sm-3"><strong>'.$field_data['title'].'</strong></div>';
+                                    echo '<div class="col-xs-12 col-sm-3"><strong class="field-title">'.$field_data['title'].'</strong></div>';
                                     echo '<div class="col-xs-12 col-sm-9">'.$field_data['value'].'</div>';
                                 echo '</div>';
                             }
@@ -221,7 +221,7 @@ if (!function_exists('display_user_profile')) {
                                         if (isset($category_data['fields'])) {
                                             foreach ($category_data['fields'] as $field_id => $field_data) {
                                                 echo '<div id="field-'.$field_id.'" class="row cat-field m-b-5">';
-                                                    echo '<div class="col-xs-12 col-sm-3"><strong>'.(!empty($field_data['icon']) ? $field_data['icon'] : '').' '.$field_data['title'].'</strong></div>';
+                                                    echo '<div class="col-xs-12 col-sm-3"><strong class="field-title">'.(!empty($field_data['icon']) ? $field_data['icon'] : '').' '.$field_data['title'].'</strong></div>';
                                                     echo '<div class="col-xs-12 col-sm-9">'.$field_data['value'].'</div>';
                                                 echo '</div>';
                                             }
