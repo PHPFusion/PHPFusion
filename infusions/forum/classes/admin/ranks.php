@@ -104,7 +104,7 @@ class ForumAdminRanks extends ForumAdminInterface {
         $groups_except = [USER_LEVEL_PUBLIC, USER_LEVEL_MEMBER, USER_LEVEL_ADMIN, USER_LEVEL_SUPER_ADMIN];
         $group_opts = [];
         foreach ($groups_arr as $group) {
-            if (in_array($group[0], $groups_except)) {
+            if (!in_array($group[0], $groups_except)) {
                 $group_opts[$group[0]] = $group[1];
             }
         }
@@ -173,17 +173,17 @@ class ForumAdminRanks extends ForumAdminInterface {
                 ]
             ).
 
-            "<span id='select_normal' ".($this->data['rank_type'] == 2 ? "class='display-none'" : "")." >".
+            "<div id='select_normal' ".($this->data['rank_type'] == 2 ? "style='display:none;'" : "").">".
 
             form_select('rank_apply_normal', self::$locale['forum_rank_423'], $this->data['rank_apply'],
                 ['inline' => TRUE, 'options' => $array_apply_normal_opts, 'placeholder' => self::$locale['choose']]).
 
-            "</span>\n<span id='select_special' ".($this->data['rank_type'] != 2 ? " class='display-none'" : "").">".
+            "</div>\n<div id='select_special' ".($this->data['rank_type'] != 2 ? " style='display:none;'" : "").">".
 
             form_select('rank_apply_special', self::$locale['forum_rank_423'], $this->data['rank_apply'],
                 ['inline' => TRUE, 'options' => $group_opts, 'placeholder' => self::$locale['choose']]).
 
-            "</span>\n".
+            "</div>\n".
 
             form_button('save_rank', self::$locale['save'], self::$locale['save'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']).
             form_button('cancel_rank', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default', 'icon' => 'fa fa-times']).
