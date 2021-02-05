@@ -741,11 +741,11 @@ class UserFieldsInput {
 
             if ($is_core_page) {
                 // Logs Username change
-                if ($this->_userName != $this->userData['user_name']) {
+                if ($this->_userName !== $this->userData['user_name']) {
                     save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
                 }
                 // Logs Email change
-                if ($this->_userEmail != $this->userData['user_email']) {
+                if ($this->_userEmail !== $this->userData['user_email']) {
                     save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
                 }
             }
