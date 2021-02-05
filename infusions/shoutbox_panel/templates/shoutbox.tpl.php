@@ -46,7 +46,7 @@ if (!function_exists('render_shoutbox')) {
                             echo timer($item['shout_datestamp']);
                         echo '</div>';
 
-                        echo '<div class="shoutbox-message">'.$item['message'].'</div>';
+                        echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
                     echo '</div>';
                 }
                 echo '</div>';
