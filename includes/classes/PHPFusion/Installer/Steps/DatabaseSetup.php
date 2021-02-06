@@ -69,6 +69,7 @@ class InstallerDbSetup extends Install_Core {
             }
             // Force underscore for these two values
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
+
             self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
 
             if (!defined('DB_PREFIX'))
@@ -273,8 +274,9 @@ class InstallerDbSetup extends Install_Core {
                 /*
                  * Generate final message
                  */
-                $errors = Batch_Core::getInstance()->ProgressHasError();
-                //print_p($errors);
+                if (!isset($errors)) {
+                    $errors = Batch_Core::getInstance()->ProgressHasError();
+                }
 
                 if (!$errors) {
                     if ($debug_process === FALSE) {
@@ -389,6 +391,7 @@ class InstallerDbSetup extends Install_Core {
                 redirect(FUSION_REQUEST);
             }
         }
+
         self::set_empty_prefix();
 
         if (!empty($_SESSION['db_config_connection'])) {

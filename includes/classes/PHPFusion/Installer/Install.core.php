@@ -241,35 +241,40 @@ class Install_Core extends Infusion_Core {
     }
 
     protected static function set_empty_prefix() {
+
         $default_init = [
-            'db_host'   => '',
-            'db_port'   => '',
-            'db_name'   => '',
-            'db_user'   => '',
-            'db_pass'   => '',
-            'db_prefix' => ''
+            'db_host'       => '',
+            'db_port'       => '',
+            'db_name'       => '',
+            'db_user'       => '',
+            'db_pass'       => '',
+            'db_prefix'     => '',
+            'cookie_prefix' => '',
         ];
 
-        if (file_exists(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
-            self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
-        }
+        if (empty(self::$connection["db_host"])) {
 
-        self::$connection = self::$connection + $default_init;
+            if (is_file(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
+                self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
+            }
 
-        if (empty(self::$connection['db_prefix'])) {
-            self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-        }
+            self::$connection = self::$connection + $default_init;
 
-        if (empty(self::$connection['cookie_prefix'])) {
-            self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-        }
+            if (empty(self::$connection['db_prefix'])) {
+                self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+            }
 
-        if (empty(self::$connection['secret_key'])) {
-            self::$connection['secret_key'] = self::createRandomPrefix(32);
-        }
+            if (empty(self::$connection['cookie_prefix'])) {
+                self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+            }
 
-        if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
-            self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+            if (empty(self::$connection['secret_key'])) {
+                self::$connection['secret_key'] = self::createRandomPrefix(32);
+            }
+
+            if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
+                self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+            }
         }
     }
 

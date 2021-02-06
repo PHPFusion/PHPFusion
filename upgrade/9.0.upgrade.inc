@@ -46,7 +46,7 @@ while ($data = dbarray($result)) {
         $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
         foreach ($new_rights as $add) {
             if (!in_array($add, $current_rights, TRUE)) {
-                array_push($current_rights, $add);
+                $current_rights[] = $add;
             }
         }
     }
@@ -170,6 +170,7 @@ if (db_exists(DB_LANGUAGE_TABLES)) {
 }
 
 if (db_exists(DB_ADMIN)) {
+
     // Remove the deprecated administration links
     $del_table = [
         'S5'   => 'settings_photo.php',
@@ -244,6 +245,16 @@ if (db_exists(DB_ADMIN)) {
     foreach ($new_icon_array as $admin_rights => $icon_file) {
         $inf_updatedbrow[] = DB_ADMIN." SET admin_image='".$icon_file."' WHERE admin_rights='".$admin_rights."'";
     }
+
+    // Fix all admin images prior to v9
+    $result = dbquery("SELECT admin_id, admin_image, admin_link FROM ".DB_ADMIN." WHERE admin_rights NOT IN ('".implode("','", array_keys($new_icon_array))."')");
+    if (dbrows($result)) {
+        while ($data = dbarray($result)) {
+            $admin_image = "../".str_replace("../", "", $data["admin_image"]);
+            $inf_updatedbrow[] = DB_ADMIN." SET `admin_image`='".$admin_image."' WHERE `admin_id`='".$data["admin_id"]."'";
+        }
+    }
+
 }
 
 if (db_exists(DB_PREFIX.'custom_pages')) {

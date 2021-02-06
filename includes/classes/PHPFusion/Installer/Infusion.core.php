@@ -231,7 +231,7 @@ class Infusion_Core {
         }
 
         if (fusion_safe()) {
-            redirect(FUSION_REQUEST);
+            //redirect(FUSION_REQUEST);
         }
 
         return NULL;
@@ -731,7 +731,7 @@ class Infusion_Core {
      */
     protected function updatedbrow_infuse($inf): bool {
         $error = FALSE;
-        print_p($inf);
+
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
             foreach ($inf['updatedbrow'] as $updatedbrow) {
                 try {
