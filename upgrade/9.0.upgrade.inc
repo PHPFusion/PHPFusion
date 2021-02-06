@@ -266,6 +266,8 @@ if (db_exists(DB_PREFIX.'custom_pages')) {
 $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
+        $inf_updatedbrow[] = DB_CUSTOM_PAGES." SET page_breaks='n', page_grid_id='".$data['page_id']."', page_content_id='".$data['page_id']."', page_left_panel=1, page_right_panel=1, page_header_panel=1, page_footer_panel=1, page_top_panel=1, page_bottom_panel=1, page_user=1 WHERE page_id='".$data['page_id']."'";
+
         $data_content = [
             'page_id'           => $data['page_id'],
             'page_grid_id'      => $data['page_id'],
