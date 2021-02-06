@@ -866,6 +866,16 @@ dl, dt, dd {
 }
 
 /* List group item */
+.list-group-item {
+    color:#444;
+}
+.list-group-item label.label-default,
+.list-group-item label.label-warning,
+.list-group-item label.label-info,
+.list-group-item label.label-success,
+.list-group-item label.label-danger {
+    color:#fff;
+}
 .list-group-item.active {
     background-color: rgba(204, 204, 204, .35);
 }
