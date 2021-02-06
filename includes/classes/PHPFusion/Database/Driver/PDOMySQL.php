@@ -175,6 +175,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
         return NULL;
     }
 
+    public function rowCount($statement) {
+        if ($statement !== FALSE) {
+            return $statement->rowCount();
+        }
+        return 0;
+    }
+
     /**
      * Get the last inserted auto increment id
      *

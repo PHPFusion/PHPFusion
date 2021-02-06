@@ -248,3 +248,12 @@ function dbconnection() {
         return NULL;
     }
 }
+
+/**
+ * @param $result
+ *
+ * @return int
+ */
+function dbaffected($result) {
+    return (int) DatabaseFactory::getConnection('default')->rowCount($result);
+}
