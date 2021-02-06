@@ -351,9 +351,9 @@ class PageList extends PageAdmin {
 
             if ($max_pages > $rowCount) {
                 $page_uri = clean_request('', ['aid'], TRUE);
-                echo "<div class='pull-right'>\n";
+                echo "<div class='clearfix'><div class='pull-right'>\n";
                 echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;', 'rowstart');
-                echo "</div>\n";
+                echo "</div></div>";
             }
 
         } else {
