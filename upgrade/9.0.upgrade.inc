@@ -263,6 +263,29 @@ if (db_exists(DB_PREFIX.'custom_pages')) {
     }
 }
 
+$result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES);
+if (dbrows($result) > 0) {
+    while ($data = dbarray($result)) {
+        $data_content = [
+            'page_id'           => $data['page_id'],
+            'page_grid_id'      => $data['page_id'],
+            'page_content_id'   => $data['page_id'],
+            'page_content_type' => 'content',
+            'page_content'      => $data['page_content']
+        ];
+
+        dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data_content, 'save');
+
+        $data_content_grid = [
+            'page_id'                => $data['page_id'],
+            'page_grid_id'           => $data['page_id'],
+            'page_grid_column_count' => 1
+        ];
+
+        dbquery_insert(DB_CUSTOM_PAGES_GRID, $data_content_grid, 'save');
+    }
+}
+
 if (db_exists(DB_PREFIX.'site_links')) {
     $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url ='news_cats.php'";
     $inf_updatedbrow[] = DB_SITE_LINKS." SET link_visibility='-103' WHERE link_visibility='103'";
