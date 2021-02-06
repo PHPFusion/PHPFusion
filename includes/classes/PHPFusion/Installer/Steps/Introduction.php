@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Steps;
 
-use Exception;
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
 
@@ -32,18 +31,22 @@ class InstallerIntroduction extends Install_Core {
      * @return string
      */
     public function __view(): string {
-        try {
-            return $this->__recovery();
-        } catch (Exception $e) {
-            return $this->__Index();
+        if ($mode = $this->__recovery()) {
+            return $mode;
+        } elseif ($mode = $this->__Index()) {
+            return $mode;
         }
-
+        return "";
     }
 
     /**
      * @return string
      */
     public function __recovery(): string {
+
+        // Reset connection session if any during the initialization step.
+        session_remove("db_config_connection");
+
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
             $validation = Requirements::get_system_validation();
             $current_version = fusion_get_settings('version');
@@ -62,7 +65,8 @@ class InstallerIntroduction extends Install_Core {
             }
         }
 
-        die("No configuration exists");
+        return FALSE;
+
     }
 
     /**

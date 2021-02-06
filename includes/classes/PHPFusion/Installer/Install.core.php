@@ -203,7 +203,7 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    private static function detectSystemUpgrade() {
+    private static function detectSystemUpgrade(): bool {
 
         // Read the config_temp.php
         self::set_empty_prefix();
@@ -276,9 +276,10 @@ class Install_Core extends Infusion_Core {
                 self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
             }
         }
+
     }
 
-    public static function fusion_get_config($config_path) {
+    public static function fusion_get_config($config_path): array {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
             $default_path = [];

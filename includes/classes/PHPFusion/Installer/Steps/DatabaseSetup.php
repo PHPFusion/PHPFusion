@@ -369,13 +369,20 @@ class InstallerDbSetup extends Install_Core {
                     }
                     $sql .= $sql_head;
                     if (!empty($syntax)) {
-                        foreach ($syntax as $code) {
-                            $sql_code = $code.PHP_EOL;
-                            if ($_SDK) {
-                                $sql_code .= "##-Skipping--".$code.PHP_EOL;
+
+                        if (is_array($syntax)) {
+                            foreach ($syntax as $code) {
+                                $sql_code = $code.PHP_EOL;
+                                if ($_SDK) {
+                                    $sql_code .= "##-Skipping--".$code.PHP_EOL;
+                                }
+                                $sql .= $sql_code;
                             }
-                            $sql .= $sql_code;
+                        } else {
+                            // new install requires this
+                            $sql .= $syntax.PHP_EOL;
                         }
+
                     }
                 }
             }
@@ -394,7 +401,7 @@ class InstallerDbSetup extends Install_Core {
 
         self::set_empty_prefix();
 
-        if (!empty($_SESSION['db_config_connection'])) {
+        if (!empty(session_get("db_config_connection"))) {
             self::$connection = $_SESSION['db_config_connection'];
         }
 
