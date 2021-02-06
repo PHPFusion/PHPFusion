@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
+use Exception;
+use PHPFusion\Database\DatabaseFactory;
+
 /**
  * Class Infusion_Core
  *
@@ -62,7 +65,12 @@ class Infusion_Core {
         return self::$instance;
     }
 
-    protected static function adminpanel_infuse($inf) {
+    /**
+     * @param $inf
+     *
+     * @return bool
+     */
+    protected static function adminpanel_infuse($inf): bool {
         $error = FALSE;
 
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
@@ -115,15 +123,34 @@ class Infusion_Core {
      * Execute Installation according to Infusion Standard Developer Kit
      *
      * @param $folder
+     *
+     * @return mixed|null
+     *
+     * @uses adminpanel_infuse
+     * @uses dropcol_infuse
+     * @uses sitelink_infuse
+     * @uses mlt_insertdbrow_infuse
+     * @uses mlt_adminpanel_infuse
+     * @uses mlt_infuse
+     * @uses altertable_infuse
+     * @uses updatedbrow_infuse
+     * @uses newtable_infuse
+     * @uses newcol_infuse
+     * @uses insertdbrow_infuse
+     * @uses deldbrow_infuse
      */
     public function infuse($folder) {
         $error = FALSE;
         if ((self::$inf = self::load_infusion($folder))) {
             $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
-            if (dbrows($result) > 0) {
+            if (dbrows($result)) {
+
                 $data = dbarray($result);
+
                 if (self::$inf['version'] > $data['inf_version']) {
+
                     $upgrade_folder_path = INFUSIONS.self::$inf['folder']."/upgrade/";
+
                     if (file_exists($upgrade_folder_path)) {
                         $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
                         if (!empty($upgrade_files) && is_array($upgrade_files)) {
@@ -174,18 +201,25 @@ class Infusion_Core {
                         }
                     }
                 }
+
             } else {
+
                 foreach (self::$inf as $callback_method => $statement_type) {
+
                     $method = $callback_method."_infuse";
+
                     if (method_exists($this, $method)) {
+
                         $error = $this->$method(self::$inf);
                     }
+
                     if ($error) {
                         addNotice('danger', self::$locale['403']);
 
                         return $error;
                     }
                 }
+
                 if ($error === FALSE) {
                     if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
                         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
@@ -196,7 +230,7 @@ class Infusion_Core {
             }
         }
 
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             redirect(FUSION_REQUEST);
         }
 
@@ -210,7 +244,7 @@ class Infusion_Core {
      *
      * @return array
      */
-    public static function load_infusion($folder) {
+    public static function load_infusion(string $folder): array {
         $infusion = [];
         $inf_title = "";
         $inf_description = "";
@@ -263,8 +297,6 @@ class Infusion_Core {
                 'newtable'        => $inf_newtable,
                 'newcol'          => $inf_newcol,
                 'dropcol'         => $inf_dropcol,
-                'insertdbrow'     => $inf_insertdbrow,
-                'updatedbrow'     => $inf_updatedbrow,
                 'droptable'       => $inf_droptable,
                 'altertable'      => $inf_altertable,
                 'deldbrow'        => $inf_deldbrow,
@@ -274,7 +306,9 @@ class Infusion_Core {
                 'mlt'             => $inf_mlt,
                 'mlt_insertdbrow' => $mlt_insertdbrow,
                 'mlt_deldbrow'    => $mlt_deldbrow,
-                'delfiles'        => $inf_delfiles
+                'delfiles'        => $inf_delfiles,
+                'insertdbrow'     => $inf_insertdbrow,
+                'updatedbrow'     => $inf_updatedbrow,
             ];
             $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
             /*
@@ -297,7 +331,7 @@ class Infusion_Core {
      *
      * @return array
      */
-    public static function load_upgrade($folder, $upgrade_file_path) {
+    public static function load_upgrade($folder, $upgrade_file_path): array {
         $infusion = [];
         $inf_title = "";
         $inf_description = "";
@@ -493,7 +527,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function dropcol_infuse($inf) {
+    protected function dropcol_infuse($inf): bool {
         $error = FALSE;
         if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
             foreach ($inf['dropcol'] as $dropCol) {
@@ -518,7 +552,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function sitelink_infuse($inf) {
+    protected function sitelink_infuse($inf): bool {
         $error = FALSE;
         if ($inf['sitelink'] && is_array($inf['sitelink'])) {
             $last_id = 0;
@@ -574,7 +608,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function mlt_insertdbrow_infuse($inf) {
+    protected function mlt_insertdbrow_infuse($inf): bool {
         $error = FALSE;
         if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
             foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
@@ -605,7 +639,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function mlt_adminpanel_infuse($inf) {
+    protected function mlt_adminpanel_infuse($inf): bool {
         $error = FALSE;
         if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
             foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
@@ -649,7 +683,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function mlt_infuse($inf) {
+    protected function mlt_infuse($inf): bool {
         $error = FALSE;
         if ($inf['mlt'] && is_array($inf['mlt'])) {
             foreach ($inf['mlt'] as $mlt) {
@@ -673,7 +707,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function altertable_infuse($inf) {
+    protected function altertable_infuse($inf): bool {
         $error = FALSE;
         if ($inf['altertable'] && is_array($inf['altertable'])) {
             foreach ($inf['altertable'] as $altertable) {
@@ -695,13 +729,23 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function updatedbrow_infuse($inf) {
+    protected function updatedbrow_infuse($inf): bool {
         $error = FALSE;
+        print_p($inf);
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
             foreach ($inf['updatedbrow'] as $updatedbrow) {
-                $result = dbquery("UPDATE ".$updatedbrow);
-                if (!$result) {
+                try {
+
+                    $result = dbquery("UPDATE ".$updatedbrow);
+                    $affected = dbaffected($result);
+
+                } catch (Exception $e) {
                     $error = TRUE;
+                    if (!is_file(BASEDIR."installer_".date("d-M-Y").".errors.log")) {
+                        touch(BASEDIR."installer_".date("d-M-Y").".errors.log");
+                    }
+                    write_file(BASEDIR."installer_".date("d-M-Y").".log.txt", "UPDATE ".$updatedbrow.PHP_EOL.$e->getMessage(), FILE_APPEND);
+                    break;
                 }
             }
         }
@@ -716,7 +760,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function newtable_infuse($inf) {
+    protected function newtable_infuse($inf): bool {
         $error = FALSE;
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
@@ -749,7 +793,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function newcol_infuse($inf) {
+    protected function newcol_infuse($inf): bool {
         $error = FALSE;
         static $table_schema = [];
         if (!empty($inf['newcol']) && is_array($inf['newcol'])) {
@@ -779,7 +823,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function insertdbrow_infuse($inf) {
+    protected function insertdbrow_infuse($inf): bool {
         $error = FALSE;
         if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
             $last_id = 0;
@@ -806,7 +850,7 @@ class Infusion_Core {
      *
      * @return bool
      */
-    protected function deldbrow_infuse($inf) {
+    protected function deldbrow_infuse($inf): bool {
         $error = FALSE;
         if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {
             foreach ($inf['deldbrow'] as $deldbrow) {

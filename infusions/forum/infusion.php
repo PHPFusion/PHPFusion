@@ -275,9 +275,10 @@ foreach ($forum_settings as $name => $value) {
     $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
 }
 
-if (column_exists('users', 'user_reputation')) {
+// During loading of infusion.php - column user_reputation does not exist, and therefore this statement is always FALSE and rule is not loaded
+//if (column_exists('users', 'user_reputation')) { // this will fail because when not infused, the user_reputation does not exist.
     $inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."'";
-}
+//}
 
 // Insert panels
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";

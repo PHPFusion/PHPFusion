@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Installer\Infusion_Core;
+
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageAccess('I');
@@ -22,14 +25,12 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 $settings = fusion_get_settings();
 
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+add_breadcrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
-if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-    \PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
-    redirect(FUSION_REQUEST);
-} else if ($folder = filter_input(INPUT_POST, 'defuse')) {
-    \PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
-    redirect(FUSION_REQUEST);
+if ($folder = post("infuse")) {
+    Infusion_Core::getInstance()->infuse($folder);
+} else if ($folder = post("defuse")) {
+    Infusion_Core::getInstance()->defuse($folder);
 }
 
 opentable($locale['400']);
@@ -40,7 +41,7 @@ echo "</div>\n";
 $infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
-    $inf = \PHPFusion\Installer\Infusion_Core::load_infusion($folders);
+    $inf = Infusion_Core::load_infusion($folders);
     if (!empty($inf)) {
         $infs[$folders] = $inf;
     }
