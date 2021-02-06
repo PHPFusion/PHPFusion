@@ -104,7 +104,14 @@ function display_sitelinks() {
                 //}
                 //}
 
-                $admin_links = "<a class='text-muted' href='".$data["link_url"]."' target='_blank'>".$locale["view"]."</a> - ";
+                $itemlink = BASEDIR.$data['link_url'];
+                if (preg_match("!^(ht|f)tp(s)?://!i", $data['link_url']) or (BASEDIR !== '' && stristr($data['link_url'], BASEDIR))) {
+                    $itemlink = $data['link_url'];
+                }
+
+                $itemlink = str_replace('%aidlink%', fusion_get_aidlink(), $itemlink);
+
+                $admin_links = "<a class='text-muted' href='".$itemlink."' target='_blank'>".$locale["view"]."</a> - ";
                 $admin_links .= "<a class='text-muted' href='".fusion_get_settings('siteurl')."administration/site_links.php".$aidlink."&refs=form&action=edit&id=".$data["link_id"]."'>".$locale["edit"]."</a> - ";
                 $admin_links .= "<a class='text-danger del-warn' href='".fusion_get_settings('siteurl')."administration/site_links.php".$aidlink."&refs=form&action=del&&id=".$data["link_id"]."'>".$locale["delete"]."</a>";
 
