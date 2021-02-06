@@ -252,30 +252,29 @@ class Install_Core extends Infusion_Core {
             'cookie_prefix' => '',
         ];
 
-        if (empty(self::$connection["db_host"])) {
 
-            if (is_file(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
-                self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
-            }
-
-            self::$connection = self::$connection + $default_init;
-
-            if (empty(self::$connection['db_prefix'])) {
-                self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-            }
-
-            if (empty(self::$connection['cookie_prefix'])) {
-                self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
-            }
-
-            if (empty(self::$connection['secret_key'])) {
-                self::$connection['secret_key'] = self::createRandomPrefix(32);
-            }
-
-            if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
-                self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
-            }
+        if (is_file(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
+            self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
         }
+
+        self::$connection = self::$connection + $default_init;
+
+        if (empty(self::$connection['db_prefix'])) {
+            self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        }
+
+        if (empty(self::$connection['cookie_prefix'])) {
+            self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        }
+
+        if (empty(self::$connection['secret_key'])) {
+            self::$connection['secret_key'] = self::createRandomPrefix(32);
+        }
+
+        if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
+            self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+        }
+
 
     }
 
