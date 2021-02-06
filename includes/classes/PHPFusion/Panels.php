@@ -75,7 +75,7 @@ class Panels {
      *
      * @return array
      */
-    public static function cachePanels(): array {
+    public static function cachePanels() {
         $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side, panel_order";
         $param = [
             ':panel_status' => 1,
@@ -142,7 +142,7 @@ class Panels {
      *
      * @return string
      */
-    public static function display_panel($panel_id): string {
+    public static function display_panel($panel_id) {
         $locale = fusion_get_locale();
         $html = "";
         if (!empty(self::$panels_cache)) {
@@ -179,7 +179,7 @@ class Panels {
      *
      * @return array
      */
-    public static function getPanelExcluded(): array {
+    public static function getPanelExcluded() {
         return (array)self::$panel_excluded;
     }
 
@@ -190,7 +190,7 @@ class Panels {
      *
      * @return array
      */
-    public static function get_available_panels($excluded_panels = []): array {
+    public static function get_available_panels($excluded_panels = []) {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
@@ -381,7 +381,7 @@ class Panels {
      *
      * @return bool
      */
-    public static function check_panel_status(string $side): bool {
+    public static function check_panel_status($side) {
         $settings = fusion_get_settings();
 
         $exclude_list = "";

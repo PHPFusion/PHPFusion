@@ -227,3 +227,33 @@ function getcategory($cat) {
 
     return [];
 }
+
+
+if (!function_exists('tablebreak')) {
+    /**
+     * @deprecated
+     */
+    function tablebreak() {
+        echo "<div class='spacer-md'></div>";
+    }
+}
+
+if (!function_exists('opensidex')) {
+    /**
+     * @param null $title
+     *
+     * @deprecated use openside()
+     */
+    function opensidex($title = NULL) {
+        openside($title);
+    }
+}
+
+if (!function_exists('closesidex')) {
+    /**
+     * @deprecated use closeside()
+     */
+    function closesidex() {
+        closeside();
+    }
+}

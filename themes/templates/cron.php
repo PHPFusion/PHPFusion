@@ -16,6 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $locale = fusion_get_locale();
+$settings = fusion_get_settings();
 
 /**
  * Cron Job (6 minutes)

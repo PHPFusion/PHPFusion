@@ -29,7 +29,7 @@ require_once __DIR__."/../../maincore.php";
  *
  * @return array
  */
-function get_extended_endpoints(): array {
+function get_extended_endpoints() {
     if ($extended_endpoints = fusion_filter_hook("fusion_register_hook_paths")) {
         return flatten_array($extended_endpoints);
     }

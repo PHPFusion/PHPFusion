@@ -38,14 +38,16 @@ require_once __DIR__.'/multisite_include.php';
  *        "inline"=>true)); into administration/security_settings.php
  */
 DatabaseFactory::setDefaultDriver((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1) ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
-DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), [
-    'host'     => $db_host,
-    'user'     => $db_user,
-    'password' => $db_pass,
-    'database' => $db_name,
-    'charset'  => 'utf8mb4',
-    'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
-]);
+if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name)) {
+    DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionID(), [
+        'host'     => $db_host,
+        'user'     => $db_user,
+        'password' => $db_pass,
+        'database' => $db_name,
+        'charset'  => 'utf8mb4',
+        'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionID())
+    ]);
+}
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 
 require_once DB_HANDLERS."all_functions_include.php";

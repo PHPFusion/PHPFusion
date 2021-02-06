@@ -135,7 +135,7 @@ class UserFields extends QuantumFields {
      *
      * @param array $input
      */
-    public function display_profile_input(array $input = []) {
+    public function display_profile_input($input = []) {
         $this->method = 'input';
 
         $locale = fusion_get_locale();

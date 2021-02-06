@@ -1038,7 +1038,7 @@ class NewsAdmin extends NewsAdminModel {
             </div>
         <?php endif; ?>
         <?php
-        closeform();
+        echo closeform();
     }
 
     // News Delete Function

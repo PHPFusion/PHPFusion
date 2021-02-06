@@ -282,7 +282,7 @@ class CustomPage {
 
             foreach (fusion_get_enabled_languages() as $language => $language_name) {
 
-                echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang) ? TRUE : FALSE, [
+                echo form_checkbox('page_language[]', $language_name, in_array($language, $page_lang), [
                     'class'         => 'm-b-0',
                     'value'         => $language,
                     'input_id'      => 'page_lang-'.$language,

@@ -647,7 +647,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             <?php endif; ?>
         </div>
         <?php
-        closeform();
+        echo closeform();
 
         // jQuery
         add_to_jquery("

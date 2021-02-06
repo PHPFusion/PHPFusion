@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\Locale;
 use PHPFusion\QuantumFields;
 
 /**
@@ -43,14 +42,23 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         $tab['title']['general'] = self::$locale['forum_137'];
         $tab['id']['general'] = 'general';
+        /**
+         * @uses ForumAdminSettings::display_general_settings();
+         */
         $tab['callback']['general'] = 'display_general_settings';
 
         $tab['title']['post'] = self::$locale['forum_138'];
         $tab['id']['post'] = 'post';
+        /**
+         * @uses ForumAdminSettings::display_post_settings();
+         */
         $tab['callback']['post'] = 'display_post_settings';
 
         $tab['title']['ufields'] = self::$locale['forum_139'];
         $tab['id']['ufields'] = 'ufields';
+        /**
+         * @uses ForumAdminSettings::display_uf_settings();
+         */
         $tab['callback']['ufields'] = 'display_uf_settings';
 
         $_GET['ref'] = (isset($_GET['ref']) && method_exists($this, $tab['callback'][$_GET['ref']]) ? $_GET['ref'] : 'general');

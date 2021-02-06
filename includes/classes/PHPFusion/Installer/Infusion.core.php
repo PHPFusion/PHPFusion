@@ -736,7 +736,7 @@ class Infusion_Core {
                 try {
 
                     $result = dbquery("UPDATE ".$updatedbrow);
-                    $affected = dbaffected($result);
+                    $affected = dbrows($result);
 
                 } catch (Exception $e) {
                     $error = TRUE;

@@ -82,7 +82,7 @@ class Defender {
     /**
      * @param string $value
      *
-     * @return string
+     * @return mixed
      */
     public static function encode($value) {
         return base64_encode(json_encode($value));

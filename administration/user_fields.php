@@ -19,7 +19,7 @@ require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 $user_field = new PHPFusion\QuantumFields();
 $user_field->setLocale(fusion_get_locale('', LOCALE.LOCALESET."admin/fields.php"));
-$user_field->setSystemTitle($user_field->setLocale(fusion_get_locale('202')));
+$user_field->setSystemTitle(fusion_get_locale('202'));
 $user_field->setAdminRights('UF');
 $user_field->setCategoryDb(DB_USER_FIELD_CATS);
 $user_field->setFieldDb(DB_USER_FIELDS);

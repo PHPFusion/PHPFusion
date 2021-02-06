@@ -56,7 +56,7 @@
  *
  * @package dynamics/select2
  */
-function form_select($input_name, string $label, $input_value, array $options = []) {
+function form_select($input_name, $label, $input_value, $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

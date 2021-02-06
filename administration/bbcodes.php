@@ -87,7 +87,7 @@ function bbcode_list() {
     echo form_button('post_test', $locale['BBCA_401'], $locale['BBCA_401'], ['class' => 'btn-primary']);
     echo "</div>\n";
     echo "</div>\n";
-    closeform();
+    echo closeform();
 }
 
 function bbcode_form() {
@@ -142,7 +142,7 @@ function bbcode_form() {
         redirect(clean_request('', ['section', 'disable'], FALSE));
     }
 
-    $bbcode_folder = makefilelist(INCLUDES."bbcodes/", '.|..|index.php|.js', TRUE, 'files');
+    $bbcode_folder = makefilelist(INCLUDES."bbcodes/", '.|..|index.php|.js');
     if (!empty($bbcode_folder)) {
         foreach ($bbcode_folder as $bbcode_folders) {
             if (preg_match("/_include.php/i", $bbcode_folders)) {

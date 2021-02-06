@@ -94,7 +94,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
         $text = preg_replace_callback('#(^|[\n ])((http|https|ftp|ftps)://[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si',
             __NAMESPACE__.'\callbackURLWithProtocol', $text);
         $text = preg_replace_callback('#(^|\s)((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithoutProtocol', $text);
-        $text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
+        //$text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
         if ($containsCode) {
             $text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPostCode', $text);
         }

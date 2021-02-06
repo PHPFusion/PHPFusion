@@ -209,7 +209,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
 
         echo "</div>\n<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-4 col-md-offset-0 col-lg-4'>\n";
 
-        echo openside('');
+        openside('');
         echo form_select('news_image_link', $locale['news_951'], $news_settings['news_image_link'], ['options' => $opts, 'width' => '100%', 'inner_width' => '100%']);
         echo form_select('news_image_frontpage', $locale['news_957'], $news_settings['news_image_frontpage'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
         echo form_select('news_image_readmore', $locale['news_958'], $news_settings['news_image_readmore'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
@@ -232,7 +232,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 'width'       => '100%',
                 'inner_width' => '100%'
             ]);
-        echo closeside();
+        closeside();
 
         echo "</div></div>\n";
         echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);

@@ -393,11 +393,4 @@ abstract class AbstractDatabaseDriver {
      * @return string
      */
     abstract public function getServerVersion();
-
-    /**
-     * @param $statement
-     *
-     * @return mixed
-     */
-    abstract public function rowCount($statement);
 }

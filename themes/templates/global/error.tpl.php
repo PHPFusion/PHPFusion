@@ -25,7 +25,7 @@ if (!function_exists("display_error_page")) {
         ?>
         <div class='row spacer-sm'>
             <div class='col-xs-12 col-sm-3 text-center'>
-                <img class='img-responsive' src='{%image_src%}' alt='{%title%}' border='0'/>
+                <img class='img-responsive' src='{%image_src%}' alt='{%title%}'>
             </div>
             <div class='col-xs-12 col-sm-9'>
                 <span class='va' style='height:160px'></span>

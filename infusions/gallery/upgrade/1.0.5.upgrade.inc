@@ -113,11 +113,17 @@ if (!empty($enabled_languages)) {
 }
 
 // Move all photos
-if (file_exists(IMAGES."photoalbum/")) {
+if (is_dir(IMAGES."photoalbum/")) {
     $files = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE);
     foreach ($files as $file) {
         fusion_rename(IMAGES."photoalbum/".$file, INFUSIONS.'gallery/photos/'.$file);
     }
+
+    $folders = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE, 'folders');
+    foreach ($folders as $folder) {
+        fusion_rename(IMAGES."photoalbum/".$folder, INFUSIONS.'gallery/photos/'.$folder);
+    }
+
     // Remove the whole old dir including rouge files
     rrmdir(IMAGES.'photoalbum');
 }

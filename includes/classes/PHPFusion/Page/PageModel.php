@@ -115,16 +115,13 @@ class PageModel {
     }
 
     public static function query_customPage($id = NULL) {
-
-        $result = dbquery("
-                    SELECT cp.*, link.link_id, link.link_order
-                    FROM ".DB_CUSTOM_PAGES." cp
-                    LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND ".in_group("link.link_url", "viewpage.php?page_id=")."
-                     AND ".in_group("link.link_url", "cp.page_id").")
-                    ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
-                    ");
-
-        return $result;
+        return dbquery("
+            SELECT cp.*, link.link_id, link.link_order
+            FROM ".DB_CUSTOM_PAGES." cp
+            LEFT JOIN ".DB_SITE_LINKS." link on (cp.page_link_cat = link.link_cat AND ".in_group("link.link_url", "viewpage.php?page_id=")."
+             AND ".in_group("link.link_url", "cp.page_id").")
+            ".($id !== NULL && isnum($id) ? " WHERE page_id= '".intval($id)."' " : "")."
+        ");
     }
 
     /**
