@@ -1191,7 +1191,7 @@ if (!function_exists('render_post_item')) {
                 }
 
                 if ($data['post_attachments']) {
-                    echo '<div class="forum_attachments clearfix">'.$data['post_attachments'].'</div>';
+                    echo '<div class="forum_attachments clearfix m-t-10">'.$data['post_attachments'].'</div>';
                 }
             echo '</div>';
         echo '</div>';
