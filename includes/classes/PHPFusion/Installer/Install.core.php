@@ -117,7 +117,7 @@ class Install_Core extends Infusion_Core {
     /**
      * @return null|static
      */
-    public static function getInstallInstance(): Install_Core {
+    public static function getInstallInstance() {
         $settings = fusion_get_settings();
 
         if (self::$setup_instance == NULL) {
@@ -203,7 +203,7 @@ class Install_Core extends Infusion_Core {
         }
     }
 
-    private static function detectSystemUpgrade(): bool {
+    private static function detectSystemUpgrade() {
 
         // Read the config_temp.php
         self::set_empty_prefix();
@@ -278,7 +278,7 @@ class Install_Core extends Infusion_Core {
 
     }
 
-    public static function fusion_get_config($config_path): array {
+    public static function fusion_get_config($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
             $default_path = [];
@@ -406,7 +406,7 @@ class Install_Core extends Infusion_Core {
      * Installer system checks
      * Redirect to step 1 if the database has been intentionally dropped during the installation.
      */
-    protected function tableCheck(): bool {
+    protected function tableCheck() {
         if (!empty(self::$connection['db_name'])) {
             $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
             if ($rows = dbrows($result)) {
