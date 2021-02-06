@@ -220,8 +220,6 @@ class UserFieldsInput {
 
             $uban = explode(',', fusion_get_settings('username_ban'));
 
-            $this->userData["user_name"] = fusion_get_userdata("user_name");
-
             if ($this->_userName != $this->userData['user_name']) {
 
                 $defender = Defender::getInstance();
