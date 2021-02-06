@@ -184,7 +184,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $images = '';
 
         if ($options['tinymce_image']) {
-            $images = "file_picker_callback : mceElf.browser, images_upload_handler: mceElf.uploadHandler,";
+            $images = "file_picker_callback : mceElf.browser,";
         }
 
         // Mode switching for TinyMCE
