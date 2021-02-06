@@ -17,20 +17,33 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Steps;
 
+use Exception;
 use PHPFusion\Installer\Install_Core;
 use PHPFusion\Installer\Requirements;
 
+/**
+ * Class InstallerIntroduction
+ *
+ * @package PHPFusion\Steps
+ */
 class InstallerIntroduction extends Install_Core {
 
-    public function __view() {
+    /**
+     * @return string
+     */
+    public function __view(): string {
         try {
             return $this->__recovery();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->__Index();
         }
+
     }
 
-    public function __recovery() {
+    /**
+     * @return string
+     */
+    public function __recovery(): string {
         if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
             $validation = Requirements::get_system_validation();
             $current_version = fusion_get_settings('version');
@@ -42,15 +55,20 @@ class InstallerIntroduction extends Install_Core {
                         return $this->__RecoveryConsole();
                     }
                 }
-                throw new \Exception('Not a valid Super Administrator');
+                die("Not a valid Super Administrator");
+
             } else {
-                throw new \Exception('No table to upgrade or recover from');
+                die("No table to upgrade or recover from");
             }
         }
-        throw new \Exception('No config');
+
+        die("No configuration exists");
     }
 
-    private function step_Upgrade() {
+    /**
+     * @return string
+     */
+    private function step_Upgrade(): string {
         /*
          * Here we already have a working database, but config is not done so there will be errors.
          * Now I've already cured the config_temp.php to PF9 standard config_temp.php
@@ -62,7 +80,10 @@ class InstallerIntroduction extends Install_Core {
         return $this->__Index();
     }
 
-    private function __Index() {
+    /**
+     * @return string
+     */
+    private function __Index(): string {
 
         if (isset($_POST['step']) && $_POST['step'] == 1) {
             if (isset($_POST['license'])) {
@@ -124,19 +145,24 @@ class InstallerIntroduction extends Install_Core {
         return $content;
     }
 
-    private function __RecoveryConsole() {
+    /**
+     * @return string
+     */
+    private function __RecoveryConsole(): string {
 
         $content = "<h4 class='title'>".self::$locale['setup_1002']."</h4>\n";
 
-        if (isset($_POST['htaccess'])) {
+        if (check_post("htaccess")) {
+
             require_once(INCLUDES.'htaccess_include.php');
             write_htaccess();
             addNotice('success', self::$locale['setup_1020']);
             $this->installer_step(self::STEP_INTRO);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
+
         }
 
-        if (isset($_POST['uninstall'])) {
+        if (check_post("uninstall")) {
             require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.php'; // See below previous comment
             $coretables = get_core_tables(self::$localeset);
             $i = 0;

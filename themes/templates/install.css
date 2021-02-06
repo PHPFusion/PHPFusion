@@ -18,10 +18,23 @@ body {
 
 body.upgrade {
     background-color: #0a4480;
+    color: #fff;
 }
 
 body.upgrade .left-side > div {
     background-color: #052341;
+}
+
+body.upgrade label {
+    color: #444;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #000;
+}
+
+.left-side h3 {
+    color: #fff;
 }
 
 a {
@@ -172,4 +185,8 @@ html[dir="rtl"] .menu > li.active:before {
     border-top: 10px solid transparent;
     border-right: none;
     border-left: 10px solid #DCDCDC;
+}
+
+table td {
+    color:#444;
 }

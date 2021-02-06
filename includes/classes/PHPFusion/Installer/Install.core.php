@@ -117,7 +117,7 @@ class Install_Core extends Infusion_Core {
     /**
      * @return null|static
      */
-    public static function getInstallInstance() {
+    public static function getInstallInstance(): Install_Core {
         $settings = fusion_get_settings();
 
         if (self::$setup_instance == NULL) {
@@ -401,7 +401,7 @@ class Install_Core extends Infusion_Core {
      * Installer system checks
      * Redirect to step 1 if the database has been intentionally dropped during the installation.
      */
-    protected function tableCheck() {
+    protected function tableCheck(): bool {
         if (!empty(self::$connection['db_name'])) {
             $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
             if ($rows = dbrows($result)) {
