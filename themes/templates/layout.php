@@ -20,7 +20,7 @@ $settings = fusion_get_settings();
 
 if (!headers_sent()) {
     header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-    header('Cache-Control: no-cache, max-age=0');
+    header('Cache-Control: no-cache');
     header("Content-Type: text/html; charset=".$locale['charset']);
 }
 
