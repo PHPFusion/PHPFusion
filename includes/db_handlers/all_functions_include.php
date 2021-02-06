@@ -255,5 +255,5 @@ function dbconnection() {
  * @return int
  */
 function dbaffected($result) {
-    return (int) DatabaseFactory::getConnection('default')->rowCount($result);
+    return (int)DatabaseFactory::getConnection('default')->rowCount($result);
 }

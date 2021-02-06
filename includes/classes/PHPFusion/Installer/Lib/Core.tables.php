@@ -18,11 +18,12 @@
 
 /**
  * Core table configurations
+ *
  * @param $localeset
  *
  * @return array
  */
-function get_core_tables($localeset): array {
+function get_core_tables($localeset) {
     /*
      * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
      * rather than maintaining files after files
@@ -1348,7 +1349,7 @@ function get_core_tables($localeset): array {
             'type'     => 'TINYINT',
             'length'   => 1,
             'unsigned' => TRUE,
-            'key'=>2
+            'key'      => 2
         ], //user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
         'user_inbox'           => [
             'type'     => 'SMALLINT',

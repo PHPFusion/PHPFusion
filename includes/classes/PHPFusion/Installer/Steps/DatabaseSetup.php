@@ -29,7 +29,7 @@ use PHPFusion\Installer\Requirements;
  */
 class InstallerDbSetup extends Install_Core {
 
-    public function __view(): string {
+    public function __view() {
         return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatch_tables() : $this->step_form();
     }
 
@@ -38,7 +38,7 @@ class InstallerDbSetup extends Install_Core {
      *
      * @return string
      */
-    private function dispatch_tables(): string {
+    private function dispatch_tables() {
         $debug_process = FALSE;
         $debug_batching = FALSE;
         $log_file = TRUE;
@@ -335,7 +335,7 @@ class InstallerDbSetup extends Install_Core {
      *
      * @return bool
      */
-    protected function doUpgradeBatch($method, $code_array): bool {
+    protected function doUpgradeBatch($method, $code_array) {
         try {
 
             $method = $method."_infuse";
@@ -358,7 +358,7 @@ class InstallerDbSetup extends Install_Core {
      *
      * @return string
      */
-    protected function makeSQLImportLog($comment_message, $array, $_SDK = FALSE): string {
+    protected function makeSQLImportLog($comment_message, $array, $_SDK = FALSE) {
         $sql = "";
         if (!empty($array)) {
             foreach ($array as $table => $syntax) { // table is method
@@ -390,7 +390,7 @@ class InstallerDbSetup extends Install_Core {
         return $sql;
     }
 
-    private function step_form(): string {
+    private function step_form() {
         // Back button prevention
         if (!empty(self::$connection)) {
             if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), "==")) {

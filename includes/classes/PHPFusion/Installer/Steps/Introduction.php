@@ -30,10 +30,10 @@ class InstallerIntroduction extends Install_Core {
     /**
      * @return string
      */
-    public function __view(): string {
+    public function __view() {
         if ($mode = $this->__recovery()) {
             return $mode;
-        } elseif ($mode = $this->__Index()) {
+        } else if ($mode = $this->__Index()) {
             return $mode;
         }
         return "";
@@ -42,7 +42,7 @@ class InstallerIntroduction extends Install_Core {
     /**
      * @return string
      */
-    public function __recovery(): string {
+    public function __recovery() {
 
         // Reset connection session if any during the initialization step.
         session_remove("db_config_connection");
@@ -72,7 +72,7 @@ class InstallerIntroduction extends Install_Core {
     /**
      * @return string
      */
-    private function step_Upgrade(): string {
+    private function step_Upgrade() {
         /*
          * Here we already have a working database, but config is not done so there will be errors.
          * Now I've already cured the config_temp.php to PF9 standard config_temp.php
@@ -87,7 +87,7 @@ class InstallerIntroduction extends Install_Core {
     /**
      * @return string
      */
-    private function __Index(): string {
+    private function __Index() {
 
         if (isset($_POST['step']) && $_POST['step'] == 1) {
             if (isset($_POST['license'])) {
@@ -152,7 +152,7 @@ class InstallerIntroduction extends Install_Core {
     /**
      * @return string
      */
-    private function __RecoveryConsole(): string {
+    private function __RecoveryConsole() {
 
         $content = "<h4 class='title'>".self::$locale['setup_1002']."</h4>\n";
 

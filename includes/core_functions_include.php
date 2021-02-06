@@ -2302,7 +2302,7 @@ function jsminify($code) {
  *
  * @return int Number of written bytes
  */
-function write_file(string $file, $data, $flags = NULL): int {
+function write_file($file, $data, $flags = NULL) {
     $bytes = NULL;
     if ($flags === NULL) {
         $bytes = file_put_contents($file, $data);
