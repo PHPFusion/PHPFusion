@@ -127,7 +127,6 @@ Grids
 /** adding .flexbox class to .row will equalize all child column height */
 .row.flexbox {
     display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
     overflow: hidden;
 }
@@ -135,15 +134,12 @@ Grids
 /** adding .flexbox and .auto_width to .row will euqalize all child column height AND clumn width **/
 .row.flexbox.auto_width > div {
     -webkit-box-flex: 1;
-    -webkit-flex: 1;
     flex: 1;
 }
 
 .row.equal-height {
     display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
 }
 
@@ -152,14 +148,11 @@ Grids
     -o-background-clip: content-box;
     background-clip: content-box;
     display: -webkit-box;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
-    -webkit-flex-direction: row;
 }
 
 .row.equal-height:before,
@@ -865,21 +858,6 @@ dl, dt, dd {
     transition: height 0.2s;
 }
 
-/* List group item */
-.list-group-item {
-    color:#444;
-}
-.list-group-item label.label-default,
-.list-group-item label.label-warning,
-.list-group-item label.label-info,
-.list-group-item label.label-success,
-.list-group-item label.label-danger {
-    color:#fff;
-}
-.list-group-item.active {
-    background-color: rgba(204, 204, 204, .35);
-}
-
 /* Parse Users */
 .user-tooltip {
     width: 250px;
@@ -1110,7 +1088,6 @@ th.min, td.min {
 }
 
 .comment-actions > .btn-group {
-    display: -webkit-inline-flex;
     display: -webkit-inline-box;
     display: inline-flex;
 }
