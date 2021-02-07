@@ -295,11 +295,11 @@ abstract class ForumServer {
         foreach ($ranks as $rank) {
             if ($image) {
                 if (isset($rank['rank_title']) && isset($rank['rank_image'])) {
-                    $res .= "<div class='rank_title'>".$rank['rank_title']."</div>\n<img src='".RANKS.$rank['rank_image']."' alt='' style='border:0' />";
+                    $res .= "<div class='rank-image'><div class='rank_title'>".$rank['rank_title']."</div>\n<img src='".RANKS.$rank['rank_image']."' alt='".$rank['rank_title']."'></div>";
                 }
             } else {
                 if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
-                    $res .= "<label class='forum label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</label>\n";
+                    $res .= "<label class='rank-label forum label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</label>\n";
                 }
             }
         }

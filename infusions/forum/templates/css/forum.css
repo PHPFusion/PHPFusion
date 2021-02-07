@@ -15,7 +15,6 @@
 
 .forum-description {
     font-size: 13px;
-    color: #444;
     text-transform: none;
 }
 
@@ -67,8 +66,7 @@
 }
 
 .forum_profile_link > a {
-    color: #444;
-    font-weight: 600;
+    font-size: 13px;
 }
 
 .forum-pages > nav > .btn-group > a {
@@ -76,10 +74,6 @@
     box-shadow: none;
     padding: 0 5px;
     font-size: 11px;
-}
-
-.forum-icon {
-    color: #222;
 }
 
 .lastpost-title {
@@ -93,10 +87,6 @@
 
 .thread-item {
     padding: 10px;
-}
-
-.thread-item:hover {
-    background-color: #f3f6f9;
 }
 
 .filter {
@@ -135,19 +125,11 @@
     display: inline-block;
 }
 
-.post-item .post_info {
-    color: #7089a9;
-}
-
 .forum_rank, .forum_poster {
     display: inline-block;
     margin-right: 10px;
     font-weight: 600;
     font-size: 15px;
-}
-
-.forum_poster a {
-    color: #000;
 }
 
 .forum_poster a:hover {
@@ -160,7 +142,6 @@
 }
 
 .display-inline-block > .fusion_count, .count > .fusion_count {
-    color: #000;
     font-size: 20px;
     text-align: center;
 }
@@ -176,7 +157,6 @@
     text-align: center;
     display: block;
     text-transform: uppercase;
-    color: #777;
     font-weight: 300;
     font-size: 12px;
 }
@@ -203,10 +183,6 @@
 .post-item, .forum-list, .polls-block {
     margin: 25px 0 10px;
     padding: 10px;
-    border: 1px solid #DDD;
-    border-radius: 5px;
-    transition: border 0.3s ease-in-out;
-    background: #fff;
 }
 
 .post-item {
@@ -226,7 +202,7 @@
     display: block;
     list-style: none;
     padding: 15px;
-    background: #f7f7f7;
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 5px;
     margin-bottom: 5px;
 }
@@ -245,10 +221,6 @@
     margin-bottom: 10px;
 }
 
-.post-item .post_profiles .social-link {
-    display: inline-block;
-}
-
 .post-item .post_profiles .social-link > img {
     width: 20px;
     height: 20px;
@@ -262,8 +234,6 @@
 }
 
 .quote {
-    border-left: 3px solid #ccc;
-    padding: 10px 20px;
     font-size: 11px;
 }
 
@@ -281,7 +251,20 @@ a.answer_unchecked:focus {
     color: #ccc;
 }
 
+.vote_up.disabled,
+.vote_down.disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    box-shadow: none;
+    pointer-events: none;
+}
+
 .forum_thread_user_post {
     word-wrap: break-word;
     word-break: break-all;
+}
+
+.rank-label {
+    margin: 0 2px;
 }

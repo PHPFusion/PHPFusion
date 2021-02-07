@@ -55,7 +55,7 @@ if (!function_exists('render_forum')) {
 
         if (!empty($thread_tags['tags'])) {
             echo '<h4>'.$locale['forum_0272'].'</h4>';
-            echo '<div class="list-group m-b-20">';
+            echo '<div class="list-group m-t-10 m-b-20">';
             foreach ($thread_tags['tags'] as $tag_id => $tag_data) {
                 $active = isset($_GET['tag_id']) && $_GET['tag_id'] == $tag_id ? ' active' : '';
                 echo '<a href="'.$tag_data['tag_link'].'" class="list-group-item clearfix p-5 p-l-15'.$active.'">';
@@ -82,7 +82,7 @@ if (!function_exists('render_forum')) {
         ]);
 
         echo '<h4>'.(!empty($locale['forum_0273']) ? $locale['forum_0273'] : $locale['forum_0002']).'</h4>';
-        echo '<div class="list-group m-b-20">';
+        echo '<div class="list-group m-t-10 m-b-20">';
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $user = fusion_get_user($data['thread_author']);
@@ -424,9 +424,8 @@ if (!function_exists('render_forum_threads')) {
         if (!empty($data)) {
             echo '<div class="list-group">';
             if (!empty($data['sticky'])) {
-                $i = 0;
                 foreach ($data['sticky'] as $cdata) {
-                    echo '<div class="list-group-item clearfix" style="background-color: #ffdca9;'.(++$i == count($data['sticky']) ? ' border-bottom: 2px solid #989898;' : '').'">';
+                    echo '<div class="list-group-item clearfix sticky">';
                     render_thread_item($cdata);
                     echo '</div>';
                 }
@@ -497,7 +496,6 @@ if (!function_exists('render_thread_item')) {
 
 if (!function_exists('forum_filter')) {
     function forum_filter($info) {
-        // Put into core views
         $locale = fusion_get_locale();
         // This one need to push to core.
         $selector = [
@@ -1005,9 +1003,8 @@ if (!function_exists('render_thread')) {
                 echo '<a class="btn btn-primary btn-sm'.$active.'" href="'.$buttons['newthread']['link'].'">'.$buttons['newthread']['title'].'</a>';
             }
 
+            echo !empty($info['page_nav']) ? '<div class="pull-right">'.$info['page_nav'].'</div>' : '';
         echo '</div>';
-
-        echo !empty($info['page_nav']) ? '<div class="pull-right m-t-10 clearfix">'.$info['page_nav'].'</div>' : '';
 
         if (!empty($pdata)) {
             $i = 1;
@@ -1102,7 +1099,7 @@ if (!function_exists('render_post_item')) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
 
         echo '<!-- forum-thread-prepost-'.$data['marker']['id'].' -->';
-        echo '<div class="post-item m-t-20" id="'.$data['marker']['id'].'">';
+        echo '<div class="panel panel-default post-item m-t-20" id="'.$data['marker']['id'].'">';
             echo '<div class="clearfix">';
                 echo '<div class="forum_avatar">';
                     echo display_avatar($data, '30px', FALSE, FALSE, 'img-rounded m-r-10 avatar');
