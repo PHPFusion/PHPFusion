@@ -28,7 +28,7 @@ if (!function_exists('display_register_form')) {
     function display_register_form(array $info = []) {
 
         echo "<!--HTML-->";
-        opentable();
+        opentable('');
         //echo $opentab;
         echo "<!--register_pre_idx--><div class='spacer-sm'><div id='register_form' class='row'><div class='col-xs-12 col-sm-12'>";
         echo $info["openform"].
