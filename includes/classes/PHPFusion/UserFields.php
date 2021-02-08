@@ -168,6 +168,8 @@ class UserFields extends QuantumFields {
                     'error_text' => $locale['u122'],
                     'inline'     => TRUE
                 ]);
+            } else {
+                $this->info["user_name"] = form_hidden("user_name", "", $this->userData["user_id"]);
             }
 
             $this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
