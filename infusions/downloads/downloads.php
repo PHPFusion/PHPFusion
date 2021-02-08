@@ -63,7 +63,7 @@ $result = NULL;
 if ($_get_file_id) {
     $res = 0;
     $data = dbarray(dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id=$_get_file_id"));
-    if (checkgroup($data['download_visibility'])) {
+    if (!empty($data['download_visibility']) && checkgroup($data['download_visibility'])) {
         $result = dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id=$_get_file_id");
 
         if (!empty($data['download_file']) && file_exists(DOWNLOADS.'files/'.$data['download_file'])) {
