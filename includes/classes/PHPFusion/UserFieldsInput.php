@@ -228,7 +228,12 @@ class UserFieldsInput {
 
                 $defender = Defender::getInstance();
 
-                if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
+                if (empty($this->_userName)) {
+                    fusion_stop();
+
+                    $defender::setInputError('user_name');
+                    $defender::setErrorText('user_name', $locale['u122']);
+                } else if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
 
                     // Check for invalid characters
                     fusion_stop();
