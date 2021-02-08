@@ -54,6 +54,8 @@ class Members_View {
             {%list_footer%}
             </tfoot>
         </table></div>
+        
+        <div class='clearfix'><div class='pull-right'>{%page_nav%}</div></div>
         ";
     }
 

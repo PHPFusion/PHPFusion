@@ -304,7 +304,7 @@ class Members_Display extends Members_Admin {
         }
 
         $table_subheader = "<tr>$table_subheader</tr>\n";
-        $table_footer = "<tr><th class='p-10 min' colspan='5'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th><th colspan='$detail_span' class='text-right'>$page_nav</th></tr>\n";
+        $table_footer = "<tr><th colspan='".($detail_span + 5)."'>".form_checkbox('check_all', self::$locale['ME_414'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</th></tr>\n";
 
         $list_result = "<tr>\n<td colspan='".(count($selected_fields) + 5)."' class='text-center'>".self::$locale['ME_405']."</td>\n</tr>\n";
         if (!empty($list)) {

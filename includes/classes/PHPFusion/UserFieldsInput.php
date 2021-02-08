@@ -220,7 +220,7 @@ class UserFieldsInput {
 
             $uban = explode(',', fusion_get_settings('username_ban'));
 
-            if (!defined('ADMIN_PANEL')) {
+            if (!defined('ADMIN_PANEL') && $this->registration) {
                 $this->userData["user_name"] = fusion_get_userdata("user_name");
             }
 
