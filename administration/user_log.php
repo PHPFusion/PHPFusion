@@ -120,7 +120,7 @@ function userFieldOptions() {
 
 opentable($locale['UL_001']);
 
-openside();
+openside('');
 echo openform('userlog_search', 'post', FUSION_REQUEST);
 echo form_hidden('aid', '', iAUTH);
 echo form_select('orderby', $locale['UL_008'], $orderby, [

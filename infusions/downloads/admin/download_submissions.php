@@ -218,7 +218,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 
             closeside();
             // end package
-            openside();
+            openside('');
             if (fusion_get_settings('comments_enabled') == "0" || fusion_get_settings('ratings_enabled') == "0") {
                 $sys = "";
                 if (fusion_get_settings('comments_enabled') == "0" && fusion_get_settings('ratings_enabled') == "0") {
@@ -252,7 +252,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_checkbox('update_datestamp', $locale['download_0213'], '', ['class' => 'm-b-0']);
             }
             closeside();
-            openside();
+            openside('');
             echo form_text('download_license', $locale['download_0208'], $callback_data['download_license']);
             echo form_text('download_copyright', $locale['download_0222'], $callback_data['download_copyright']);
             echo form_text('download_os', $locale['download_0209'], $callback_data['download_os']);

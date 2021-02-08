@@ -55,7 +55,7 @@ opentable($locale['message_settings']);
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
-openside();
+openside('');
 echo form_text('pm_inbox_limit', $locale['701'], $settings['pm_inbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
@@ -78,7 +78,7 @@ echo form_text('pm_archive_limit', $locale['703'], $settings['pm_archive_limit']
 closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
-openside();
+openside('');
 echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'

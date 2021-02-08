@@ -885,7 +885,7 @@ class ForumAdminView extends ForumAdminInterface {
         ]);
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
 
-            openside();
+            openside('');
             echo "<div class='pull-left m-r-10'>\n";
             echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px');
             echo "</div>\n<div class='overflow-hide'>\n";
@@ -1012,7 +1012,7 @@ class ForumAdminView extends ForumAdminInterface {
         echo '<h4>'.self::$locale['forum_030'].'</h4>';
         echo openform('permissionsForm', 'post', FUSION_REQUEST);
         echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006'].": ".$data['forum_name']."</span>\n";
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_000']."</span><br/>\n";
         echo form_select('forum_access', self::$locale['forum_031'], $data['forum_access'], [
             'inline'  => TRUE,
@@ -1023,19 +1023,19 @@ class ForumAdminView extends ForumAdminInterface {
         echo form_select('forum_reply', self::$locale['forum_033'], $data['forum_reply'], $optionArray);
         echo form_select('forum_post_ratings', self::$locale['forum_039'], $data['forum_post_ratings'], $optionArray);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_001']."</span><br/>\n";
         echo form_select('forum_poll', self::$locale['forum_036'], $data['forum_poll'], $optionArray);
         echo form_select('forum_vote', self::$locale['forum_037'], $data['forum_vote'], $optionArray);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_004']."</span><br/>\n";
         echo form_select('forum_answer_threshold', self::$locale['forum_040'], $data['forum_answer_threshold'], [
             'options' => $selection,
             'inline'  => TRUE
         ]);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_002']."</span><br/>\n";
         echo form_select('forum_attach', self::$locale['forum_034'], $data['forum_attach'], [
             'options' => $access_opts,
@@ -1046,7 +1046,7 @@ class ForumAdminView extends ForumAdminInterface {
             'inline'  => TRUE
         ]);
         closeside();
-        openside();
+        openside('');
         echo form_hidden('forum_id', '', $data['forum_id']);
         echo form_select("forum_mods[]", self::$locale['forum_desc_003'], $data['forum_mods'], [
             "multiple"  => TRUE,

@@ -227,7 +227,7 @@ class CommentsAdministration {
                 }
             }
         }
-        openside();
+        openside('');
         self::reder_commentAdmin($info);
         closeside();
     }

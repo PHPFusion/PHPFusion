@@ -174,7 +174,7 @@ openside('');
 echo form_select('download_screenshot', $locale['download_938'], $dl_settings['download_screenshot'], ['options' => $choice_opts]);
 echo form_select('download_stats', $locale['download_940'], $dl_settings['download_stats'], ['options' => $choice_opts]);
 closeside();
-openside();
+openside('');
 echo form_select('download_types[]', $locale['download_932'], $dl_settings['download_types'], [
     'options'     => $mime_opts,
     'input_id'    => 'dltype',

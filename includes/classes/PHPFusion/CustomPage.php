@@ -275,7 +275,7 @@ class CustomPage {
 
         closeside();
 
-        openside();
+        openside('');
         if (multilang_table("CP")) {
 
             $page_lang = !empty($data['page_language']) ? explode('.', $data['page_language']) : [];
@@ -296,7 +296,7 @@ class CustomPage {
             echo form_hidden('page_language', '', $data['page_language']);
         }
         closeside();
-        openside();
+        openside('');
         echo form_select('page_access', $locale['423'], $data['page_access'], [
             'options' => fusion_get_groups(),
             'width'   => '100%',

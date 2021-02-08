@@ -909,7 +909,7 @@ class Admin extends ForumServer {
             'width'    => '100%'
         ]);
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
-            openside();
+            openside('');
             echo "<div class='pull-left m-r-10'>\n";
             echo thumbnail(FORUM."images/".$this->data['forum_image'], '80px');
             echo "</div>\n<div class='overflow-hide'>\n";
@@ -1037,7 +1037,7 @@ class Admin extends ForumServer {
         unset($access_opts[0]); // remove public away.
         echo openform('permissionsForm', 'post', FUSION_REQUEST);
         echo "<span class='strong display-inline-block m-b-20'>".$locale['forum_006']." : ".$data['forum_name']."</span>\n";
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_000']."</span><br/>\n";
         echo form_select('forum_access', $locale['forum_031'], $data['forum_access'], [
             'inline'  => TRUE,
@@ -1048,12 +1048,12 @@ class Admin extends ForumServer {
         echo form_select('forum_reply', $locale['forum_033'], $data['forum_reply'], $optionArray);
         echo form_select('forum_post_ratings', $locale['forum_039'], $data['forum_post_ratings'], $optionArray);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_001']."</span><br/>\n";
         echo form_select('forum_poll', $locale['forum_036'], $data['forum_poll'], $optionArray);
         echo form_select('forum_vote', $locale['forum_037'], $data['forum_vote'], $optionArray);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_004']."</span><br/>\n";
         $selection = [
             $locale['forum_041'],
@@ -1073,7 +1073,7 @@ class Admin extends ForumServer {
             'inline'  => TRUE
         ]);
         closeside();
-        openside();
+        openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".$locale['forum_desc_002']."</span><br/>\n";
         echo form_select('forum_attach', $locale['forum_034'], $data['forum_attach'], [
             'options' => $access_opts,
@@ -1084,7 +1084,7 @@ class Admin extends ForumServer {
             'inline'  => TRUE
         ]);
         closeside();
-        openside();
+        openside('');
         echo form_hidden('forum_id', '', $data['forum_id']);
         $options = fusion_get_groups();
         unset($options[0]); //  no public to moderate, unset
