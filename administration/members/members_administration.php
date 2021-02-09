@@ -297,7 +297,7 @@ class Members_Admin {
                     }
                     break;
                 case 'activate':
-                    if (get("lookup", FILTER_VALIDATE_INT) && get("code")) {
+                    if (get("lookup") && get("code")) {
                         Members_Profile::activate_user();
                     } else {
                         redirect(FUSION_SELF.$aidlink);
