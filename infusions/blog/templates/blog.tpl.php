@@ -115,7 +115,23 @@ if (!function_exists('display_blog_item')) {
         }
 
         echo "</div>\n";
-        echo "<div class='m-b-20 well'>".$data['blog_author_info']."</div>";
+        echo "<div class='m-b-20 well'>";
+        $user_contact = '';
+        if (isset($item['user_skype']) && $item['user_skype']) {
+            $user_contact .= "<strong>Skype:</strong> ".$item['user_skype'];
+        }
+        if (isset($item['user_icq']) && $item['user_icq']) {
+            $user_contact .= "<strong>ICQ:</strong> ".$item['user_icq'];
+        }
+        echo  "<h4 class='blog_author_info'>".$locale['about']." ".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</h4>";
+        echo sprintf($locale['testimonial_rank'], getgroupname($data['user_level']));
+        echo (isset($data['user_joined']) && $data['user_joined'] !== '') ? sprintf($locale['testimonial_join'], showdate('shortdate', $data['user_joined'])).". " : '';
+        echo (isset($data['user_location']) && $data['user_location'] !== '') ? sprintf($locale['testimonial_location'], $data['user_location']) : '. ';
+        echo (isset($data['user_web']) && $data['user_web']) ? sprintf($locale['testimonial_web'], $data['user_web']).". " : '';
+        echo (isset($data['user_contact']) && $data['user_contact'] !== '') ? sprintf($locale['testimonial_contact'], $user_contact).". " : '';
+        echo ($data['user_email'] && $data['user_hide_email'] == 0) ? sprintf($locale['testimonial_email'], "<a href='mailto:".$data['user_email']."'>".$data['user_email']."</a>") : '';
+
+        echo "</div>";
 
         echo $data['blog_allow_comments'] ? "<hr/>".$data['blog_show_comments'] : '';
         echo $data['blog_allow_ratings'] ? "<hr/>".$data['blog_show_ratings'] : '';
