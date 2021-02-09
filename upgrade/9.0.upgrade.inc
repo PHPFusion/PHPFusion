@@ -79,6 +79,7 @@ if (db_exists(DB_SETTINGS)) {
         'serveroffset'       => 'Europe/London',
         'opening_page'       => 'home.php',
         'captcha'            => 'securimage3',
+        'admin_theme'        => 'AdminLTE',
     ];
 
     foreach ($update_settings_tbl as $key => $value) {
