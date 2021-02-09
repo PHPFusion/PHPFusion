@@ -22,14 +22,11 @@ function display_sitelinks() {
     if (iADMIN && checkrights("SL")) {
 
         $aidlink = fusion_get_aidlink();
-
         $locale = fusion_get_locale();
-
-        //ini_set("memory_limit", "4000000000");
 
         require_once INCLUDES."theme_functions_include.php";
 
-        $rowstart = (int)(post("rowstart", FILTER_VALIDATE_INT) ?: 0);
+        $rowstart = (int)post("start", FILTER_VALIDATE_INT);
 
         $limit = (int)(post("length", FILTER_VALIDATE_INT) ?: 36);
 
@@ -44,6 +41,7 @@ function display_sitelinks() {
         ];
 
         $orderby = "ORDER BY sl.link_order";
+
         $ordering = [];
         if (!empty($_POST["order"])) {
             foreach ($_POST["order"] as $order) {
@@ -60,10 +58,9 @@ function display_sitelinks() {
 
         $link_cat_sql = (!$search ? "sl.link_cat='$link_cat' AND " : "");
 
-        $count_cond = $link_cat_sql." sl.link_position=$refs";
         $sql_cond = $link_cat_sql." sl.link_position=$refs";
 
-        if ($refs == 1) {
+        if ($refs == 2) {
             $sql_cond = $link_cat_sql." (sl.link_position=1 OR sl.link_position=2)";
         }
 
@@ -142,7 +139,7 @@ function display_sitelinks() {
             }
         }
 
-        echo json_encode(["data" => $list, "recordsTotal" => $rows, "recordsFiltered" => $max_rows, "responsive" => TRUE]);
+        echo json_encode(["data" => $list, "recordsTotal" => $rows, "recordsFiltered" => $max_rows, "query" => $sql_query, "responsive" => TRUE]);
 
     } else {
         die("Not authorized to view the information");
@@ -150,4 +147,7 @@ function display_sitelinks() {
 
 }
 
+/**
+ * @uses display_sitelinks()
+ */
 fusion_add_hook("fusion_admin_hooks", "display_sitelinks");

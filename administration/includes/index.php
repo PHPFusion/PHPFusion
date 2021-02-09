@@ -19,7 +19,7 @@ require_once __DIR__."/../../maincore.php";
 
 if (iADMIN) {
     $endpoints = [
-        "sitelinks"       => "sitelinks/sitelinks.php",
+        "sitelinks-list"  => "sitelinks/sitelinks-list.php",
         "sitelinks-order" => "sitelinks/sitelinks-order.php",
         "update-checker"  => "update_checker.php",
     ];

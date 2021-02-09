@@ -30,9 +30,14 @@ function update_sitelinks_order() {
 
                 echo json_encode(["status" => 200]);
             }
+        } else {
+            echo json_encode(["status"=>400]);
         }
     }
 }
 
+/**
+ * @uses update_sitelinks_order()
+ */
 fusion_add_hook("fusion_admin_hooks", "update_sitelinks_order");
 

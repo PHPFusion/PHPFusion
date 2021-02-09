@@ -64,20 +64,33 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      * Sitelinks constructor.
      */
     private function __construct() {
+
+        fusion_load_script(INCLUDES."jscripts/admin.js");
+
         $this->aidlink = fusion_get_aidlink();
-        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php");
+
+        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/sitelinks.php") + fusion_get_locale("", [LOCALE.LOCALESET."admin/html_buttons.php"]);
+
         $this->language_opts = fusion_get_enabled_languages();
+
         $this->link_index = dbquery_tree(DB_SITE_LINKS, 'link_id', 'link_cat');
+
         $this->link_id = (int)get("id", FILTER_VALIDATE_INT);
+
         $this->link_cat = (int)get("cat", FILTER_VALIDATE_INT);
+
         $this->title = $this->locale['SL_0012'];
+
         $this->refs = get("refs");
+
         $this->section = get("section");
+
         $this->action = get("action");
 
         if (!in_array($this->section, ["form", "settings"])) {
             $this->section = "links";
         }
+
     }
 
     /**
@@ -100,25 +113,10 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             redirect(FUSION_SELF.$this->aidlink);
         }
 
-        add_breadcrumb([
-            "title" => $this->locale['SL_0001'],
-            "link"  => FUSION_SELF.$this->aidlink,
-        ]);
+        // Add sitelinks breadcrumb
+        $this->breadcrumbs();
 
-        if ($this->section == "settings") {
-            add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&section=settings", 'title' => $this->locale["SL_0041"]]);
-        } else {
-
-            if ($this->refs == "form") {
-                if ($this->action == "edit") {
-                    add_breadcrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
-                } else {
-                    $this->title = $this->locale["SL_0010"];
-                    add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&refs=form", 'title' => $this->locale["SL_0010"]]);
-                }
-            }
-        }
-
+        // Link actions
         switch ($this->action) {
             case "edit":
                 if ($this->link_id) {
@@ -161,12 +159,10 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         $master_title['id'][] = "settings";
         $master_title['icon'][] = '';
 
-        $link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
-        $link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
-        make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "cat");
-
         opentable($this->locale["SL_0001"]);
+
         echo opentab($master_title, $this->section, 'link', TRUE, "nav-tabs m-b-10", "section", ['refs', 'action', 'id', 'cat']);
+
         switch ($this->section) {
             case "settings":
                 $this->settings();
@@ -193,7 +189,11 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      * @throws Exception
      */
     private function settings() {
+
+        add_to_jquery(/** @lang JavaScript */ "slAdmin.slsettingsJs();");
+
         add_to_title($this->locale['SL_0041']);
+
         $settings = fusion_get_settings();
 
         if (post("save_settings")) {
@@ -216,21 +216,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             }
         }
 
-        add_to_jquery(/** @lang JavaScript */ "
-        $('#lpp').hide();
-        $(document).on('change', '#links_grouping-0, #links_grouping-1', function(e) {
-            $('#lpp').hide();
-            if ( $(this).val() > 0) {
-                $('#lpp').show();
-            }
-        });
-        let lpp_val_ = $('#links_grouping-1').is(':checked');
-        if (lpp_val_) {
-            $('#lpp').show();
-        }
-        ");
-
         echo openform("slsettingsfrm", "POST");
+
         echo form_checkbox('link_bbcode', $this->locale["SL_0063"], $settings['link_bbcode'], [
             'options' => [
                 '0' => $this->locale['no'],
@@ -313,6 +300,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 if (!empty($this->data['link_id'])) {
 
                     dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
+
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'update');
 
                     $child = get_child($this->link_index, $this->data['link_id']);
@@ -326,6 +314,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 } else {
 
                     dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "save");
+
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'save');
                     // New link will not have child
                     addNotice("success", $this->locale['SL_0015']);
@@ -335,24 +324,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             }
         }
 
-        add_to_jquery(/** @lang JavaScript */ "
-        let elem = $('#link_position');
-        let lps = $('#link_position_id');
-        let pos_val = elem.val();
-        lps.attr('disabled', 'disabled');
-        if (pos_val >3) {
-            lps.removeAttr('disabled');
-        }
-        $(document).on('change', '#link_position', function(ev) {
-            ev.preventDefault();
-            let lpval = $(this).val();
-            lps.attr('disabled', 'disabled');
-            if ( lpval > 3 ) {
-                lps.removeAttr('disabled');
-                lps.focus();
-            }
-        });
-        ");
+        add_to_jquery(/** @lang JavaScript */ "slAdmin.slFormJS();");
 
         echo openform('link_administration_frm', 'POST', $this->form_uri);
 
@@ -449,22 +421,124 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         echo closeform();
     }
 
-    /**
-     * @return array
-     */
-    private function menuList() {
-        $list = [
-            '1' => $this->locale['SL_0025'],
-            '2' => $this->locale['SL_0026'],
-            '3' => $this->locale['SL_0027']
-        ];
-        $result = dbquery("SELECT link_position FROM ".DB_SITE_LINKS." WHERE link_position > 3 ORDER BY link_name");
-        if (dbrows($result)) {
-            while ($data = dbarray($result)) {
-                $list[$data["link_position"]] = "Menu ".$data["link_position"];
+    private function breadcrumbs() {
+        add_breadcrumb([
+            "title" => $this->locale['SL_0001'],
+            "link"  => FUSION_SELF.$this->aidlink,
+        ]);
+
+        if ($this->section == "settings") {
+
+            add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&section=settings", 'title' => $this->locale["SL_0041"]]);
+
+        } else {
+
+            if (!$this->refs) {
+                $this->refs = 2;
+            }
+            // adds current menu navigation
+            switch ($this->refs) {
+                case 3:
+                    $title = $this->locale["SL_0027"];
+                    break;
+                case 1:
+                    $title = $this->locale["SL_0025"];
+                    break;
+                case 2:
+                    $title = $this->locale["SL_0026"];
+                    break;
+                default:
+                    $title = $this->locale["SL_0072"]." ".$this->refs;
+            }
+            add_breadcrumb([
+                "title" => $title,
+                "link"  => FUSION_SELF.$this->aidlink."&refs=".$this->refs
+            ]);
+
+            if ($this->refs == "form") {
+                if ($this->action == "edit") {
+                    add_breadcrumb(['link' => $this->form_action, 'title' => $this->locale['SL_0011']]);
+                } else {
+                    $this->title = $this->locale["SL_0010"];
+                    add_breadcrumb(['link' => FUSION_SELF.$this->aidlink."&refs=form", 'title' => $this->locale["SL_0010"]]);
+                }
             }
         }
-        return $list;
+
+        $link_index = dbquery_tree(DB_SITE_LINKS, "link_id", "link_cat");
+
+        $link_data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat");
+
+        make_page_breadcrumbs($link_index, $link_data, "link_id", "link_name", "cat");
+
+    }
+
+    /**
+     * Form for Listing Menu
+     */
+    private function listing() {
+
+        add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
+
+        $token = fusion_get_token("sitelinks_order", 10);
+
+        add_to_jquery(/** @lang JavaScript */ "slAdmin.slListing({
+        'SL_0080' : '".$this->locale["SL_0080"]."',
+        'SL_0016' : '".$this->locale["SL_0016"]."',
+        'error_preview' : '".$this->locale["error_preview"]."',
+        'error_preview_text' : '".$this->locale["error_preview_text"]."',
+        }, '$token');");
+
+        $this->doMenuAction();
+
+        $menus = $this->menuList();
+
+        $tab = [];
+        foreach ($menus as $pos_id => $menu_name) {
+            $tab["title"][$pos_id] = $menu_name;
+            $tab["id"][$pos_id] = $pos_id;
+        }
+
+        $tab_active = tab_active($tab, 2, "refs");
+        $cat = get("cat", FILTER_VALIDATE_INT) ?: 0;
+
+        echo opentab($tab, $tab_active, "sl-menu", TRUE, "nav-pills m-t-10 m-b-10", "refs", ["cat", "refs"]);
+        echo opentabbody($tab["title"][$tab_active], $tab["id"][$tab_active], $tab_active, TRUE);
+
+        // now do the listing
+        $table_api = fusion_table("sitelink", [
+            "remote_file" => ADMIN."includes/?api=sitelinks-list&refs=".$tab_active."&cat=$cat",
+            "server_side" => TRUE,
+            "processing"  => TRUE,
+            "responsive"  => TRUE,
+            "debug"       => FALSE,
+            "zero_locale" => $this->locale["SL_0062"],
+            "columns"     => [
+                ["data" => "link_checkbox", "width" => "30", "orderable" => FALSE],
+                ["data" => "link_name", "width" => "45%", "className" => "all"],
+                ["data" => "link_count", "width" => "10%", "className" => "not-mobile"],
+                ["data" => "link_status", "width" => "10%", "className" => "not-mobile"],
+                ["data" => "link_window", "width" => "10%"],
+                ["data" => "link_visibility", "className" => "not-mobile"],
+                ["data" => "link_order", "width" => "50"],
+            ]
+        ]);
+        echo openform("fusion_sltable_form", "POST");
+        echo "<table id='$table_api' class='table table-bordered table-striped table-hover'><thead>";
+        echo "<tr>";
+        echo "<th class='text-center'>".form_checkbox('check_all', '', "", ["input_value" => 1, "input_id" => "check_all", "default_checked" => FALSE])."</th>";
+        echo "<th>".$this->locale["SL_0050"]."</th>";
+        echo "<th>".$this->locale["SL_0035"]."</th>";
+        echo "<th>".$this->locale["SL_0031"]."</th>";
+        echo "<th>".$this->locale["SL_0071"]."</th>";
+        echo "<th>".$this->locale["SL_0051"]."</th>";
+        echo "<th>".$this->locale["SL_0052"]."</th>";
+        echo "</tr>";
+        echo "</thead><tbody class='sort'></tbody></table>";
+        echo form_hidden("table_action", "", "");
+        echo closeform();
+        echo closetabbody();
+        echo closetab();
     }
 
     /**
@@ -473,8 +547,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
     private function doMenuAction() {
 
         if ($action = post("table_action")) {
-
-            if (in_array($action, ["link_move", "link_del", 'publish', 'unpublish'])) {
+            if (in_array($action, ["link_move", "move_confirm", "link_del", 'publish', 'unpublish'])) {
 
                 $link_id = sanitizer(["link_id"], "", "link_id");
                 $link_array = explode(",", $link_id);
@@ -543,6 +616,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                                     case "move_confirm":
                                         $link_move_to = (check_post("move_to_id") ? sanitizer('move_to_id', 0, 'move_to_id') : 0);
                                         dbquery("UPDATE ".DB_SITE_LINKS." SET link_cat=:mid WHERE link_id=:id", [":mid" => (int)$link_move_to, "id" => (int)$link_id]);
+
                                         break;
                                     case "link_del":
                                         $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => (int)$link_id]), 0);
@@ -555,163 +629,36 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                             }
                         }
                         addNotice("success", $this->locale['SL_0016']);
+                        redirect(FUSION_REQUEST);
                     }
                 } else {
-                    addNotice("warning", $this->locale['SL_0087']);
+                    addNotice("danger", $this->locale['SL_0087']);
                 }
             } else {
-                addNotice("warning", "Invalid action");
+                addNotice("danger", "Invalid action");
+                redirect(FUSION_REQUEST);
             }
-            redirect(FUSION_REQUEST);
         }
+
+        return "";
     }
 
     /**
-     * Form for Listing Menu
+     * @return array
      */
-    private function listing() {
-        add_to_footer("<script src='".INCLUDES."jquery/jquery-ui/jquery-ui.min.js'></script>");
-
-        $this->doMenuAction();
-        $menus = $this->menuList();
-
-        $tab = [];
-        foreach ($menus as $pos_id => $menu_name) {
-            $tab["title"][$pos_id] = $menu_name;
-            $tab["id"][$pos_id] = $pos_id;
+    private function menuList() {
+        $list = [
+            '1' => $this->locale['SL_0025'],
+            '2' => $this->locale['SL_0026'],
+            '3' => $this->locale['SL_0027']
+        ];
+        $result = dbquery("SELECT link_position FROM ".DB_SITE_LINKS." WHERE link_position > 3 ORDER BY link_name");
+        if (dbrows($result)) {
+            while ($data = dbarray($result)) {
+                $list[$data["link_position"]] = "Menu ".$data["link_position"];
+            }
         }
-
-        $tab_active = tab_active($tab, 2, "refs");
-        $cat = get("cat", FILTER_VALIDATE_INT) ?: 0;
-
-        echo opentab($tab, $tab_active, "sl-menu", TRUE, "nav-pills m-t-10 m-b-10", "refs", ["cat", "refs"]);
-        echo opentabbody($tab["title"][$tab_active], $tab["id"][$tab_active], $tab_active, TRUE);
-
-        add_to_jquery(/** @lang JavaScript */ "
-        // Checkbox -- @todo: More table options
-        $('#check_all').bind('change', function(e) {
-            let check_status = $(this).is(':checked') ? 1 : 0;
-            setChecked('fusion_sltable_form', 'link_id[]', check_status);
-        });
-
-        // Delete warning link
-        $('body').on('click', '.del-warn', function(ev) {
-            if (!confirm('".$this->locale['SL_0080']."')) {
-                return false;
-            }
-        });
-
-        // Movelinks JS.
-        $('#link_move').bind('click', function(ev) {
-            ev.preventDefault();
-            // check if any link is clicked
-            $('#table_action').val('link_move');
-            $('form#fusion_sltable_form').submit();
-        });
-
-        $('#publish').bind('click', function(ev) {
-            ev.preventDefault();
-            // check if any link is clicked
-            $('#table_action').val('publish');
-            $('form#fusion_sltable_form').submit();
-        });
-
-        $('#unpublish').bind('click', function(ev) {
-            ev.preventDefault();
-            // check if any link is clicked
-            $('#table_action').val('unpublish');
-            $('form#fusion_sltable_form').submit();
-        });
-
-        // Delete link JS
-        $('#link_del').bind('click', function(ev) {
-            ev.preventDefault();
-            if (confirm('".$this->locale['SL_0080']."')) {
-                $('#table_action').val('link_del');
-                $('form#fusion_sltable_form').submit();
-            }
-            return false;
-        });
-
-        // Sorting
-        $('.sort').sortable({
-            handle : '.handle',
-            placeholder: 'state-highlight',
-            connectWith: '.connected',
-            scroll: true,
-            axis: 'y',
-            update: function (e, ui) {
-
-                let tableElem = $(this).children('tr');
-                let order_array = [];
-                tableElem.each(function() {
-                    order_array.push($(this).attr('id'));
-                });
-
-                let formData = new FormData();
-                formData.append('fusion_token', '".fusion_get_token('sitelinks_order', '1')."');
-                formData.append('form_id', 'sitelinks_order');
-                formData.append('order', order_array);
-
-                $(this).find('.num').each(function(i) {
-                    $(this).text(i+1);
-                });
-
-                $.ajax({
-                    url: '".ADMIN."includes/?api=sitelinks-order',
-                    type: 'POST',
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    data : formData,
-                    success: function(response) {
-                        if (response.status == 200) {
-                            alert('".fusion_get_locale('SL_0016', LOCALE.LOCALESET."admin/sitelinks.php")."');
-                        }
-                    },
-                    error: function(error) {
-                        alert('".fusion_get_locale('error_preview', LOCALE.LOCALESET."admin/html_buttons.php")."'
-                        + '\\n".fusion_get_locale('error_preview_text', LOCALE.LOCALESET."admin/html_buttons.php")."');
-                    }
-                });
-            }
-        });
-        ");
-
-        // now do the listing
-        $table_api = fusion_table("sitelink", [
-            "remote_file" => ADMIN."includes/?api=sitelinks&refs=".$tab_active."&cat=$cat",
-            "server_side" => TRUE,
-            "processing"  => TRUE,
-            "responsive"  => TRUE,
-            "debug"       => FALSE,
-            "zero_locale" => $this->locale["SL_0062"],
-            "columns"     => [
-                ["data" => "link_checkbox", "width" => "30", "orderable" => FALSE],
-                ["data" => "link_name", "width" => "45%", "className" => "all"],
-                ["data" => "link_count", "width" => "10%", "className" => "not-mobile"],
-                ["data" => "link_status", "width" => "10%", "className" => "not-mobile"],
-                ["data" => "link_window", "width" => "10%"],
-                ["data" => "link_visibility", "className" => "not-mobile"],
-                ["data" => "link_order", "width" => "50"],
-            ]
-        ]);
-        echo openform("fusion_sltable_form", "POST");
-        echo "<table id='$table_api' class='table table-bordered table-striped table-hover'><thead>";
-        echo "<tr>";
-        echo "<th class='text-center'>".form_checkbox('check_all', '', "", ["input_value" => 1, "input_id" => "check_all", "default_checked" => FALSE])."</th>";
-        echo "<th>".$this->locale["SL_0050"]."</th>";
-        echo "<th>".$this->locale["SL_0035"]."</th>";
-        echo "<th>".$this->locale["SL_0031"]."</th>";
-        echo "<th>".$this->locale["SL_0071"]."</th>";
-        echo "<th>".$this->locale["SL_0051"]."</th>";
-        echo "<th>".$this->locale["SL_0052"]."</th>";
-        echo "</tr>";
-        echo "</thead><tbody class='sort'></tbody></table>";
-        echo form_hidden("table_action", "", "");
-        echo closeform();
-        echo closetabbody();
-        echo closetab();
+        return $list;
     }
 }
 

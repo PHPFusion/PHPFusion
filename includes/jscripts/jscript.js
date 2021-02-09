@@ -85,7 +85,7 @@ function copyWidth(source, target) {
  * @returns {*}
  */
 function decodeEntities(encodedString) {
-    var textArea = document.createElement('textarea');
+    let textArea = document.createElement('textarea');
     textArea.innerHTML = encodedString;
     return textArea.value;
 }
@@ -201,15 +201,15 @@ function getStyle(c, b) {
  * Visit http://www.dynamicdrive.com/ for full source code
  ***********************************************/
 function getposOffset(a, d) {
-    var c = (d === "left") ? a.offsetLeft : a.offsetTop;
-    var b = a.offsetParent;
+    let c = (d === "left") ? a.offsetLeft : a.offsetTop;
+    let b = a.offsetParent;
     while (b != null) {
         if (getStyle(b, "position") !== "relative") {
             c = (d === "left") ? c + b.offsetLeft : c + b.offsetTop
         }
-        b = b.offsetParent
+        b = b.offsetParent;
     }
-    return c
+    return c;
 }
 
 /**
@@ -387,8 +387,8 @@ function run_admin(action, table_action, reset_table) {
     $(reset_table).submit();
 }
 
-var BASEDIR = document.location.origin + site_path;
-var INFUSIONS = document.location.origin + "/infusions/";
-var INCLUDES = document.location.origin + "/includes/";
-var THEMES = document.location.origin + "/themes/";
-var CLASSES = document.location.origin + "/includes/classes/";
+let BASEDIR = document.location.origin + site_path;
+let INFUSIONS = document.location.origin + "/infusions/";
+let INCLUDES = document.location.origin + "/includes/";
+let THEMES = document.location.origin + "/themes/";
+let CLASSES = document.location.origin + "/includes/classes/";
