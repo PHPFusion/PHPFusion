@@ -36,7 +36,7 @@ if ($profile_method == "input") {
 
     // Display in profile
 } else if ($profile_method == "display") {
-    if ($field_value != "1900-01-01") {
+    if ($field_value != "1900-01-01" && $field_value != '1970-1-01') {
         $user_birthDate = explode("-", $field_value);
         $lastday = mktime(0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0]);
         $user_fields = [
@@ -46,7 +46,7 @@ if ($profile_method == "input") {
     } else {
         $user_fields = [
             'title' => $locale['uf_birthdate'],
-            'value' => $locale['na']
+            'value' => ''
         ];
     }
 }
