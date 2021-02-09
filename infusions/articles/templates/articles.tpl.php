@@ -172,6 +172,7 @@ if (!function_exists("render_article_item")) {
                 <p>
                     <?php echo $data['article_snippet']; ?>
                     <br>
+                    <br>
                     <?php echo $data['article_article']; ?>
                 </p>
             </div>
