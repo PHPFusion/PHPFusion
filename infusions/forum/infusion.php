@@ -95,7 +95,7 @@ $inf_newtable[] = DB_FORUMS." (
     forum_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     forum_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     forum_branch MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    forum_name VARCHAR(50) NOT NULL DEFAULT '',
+    forum_name TEXT NOT NULL,
     forum_type TINYINT(1) NOT NULL DEFAULT '1',
     forum_answer_threshold TINYINT(3) NOT NULL DEFAULT '15',
     forum_lock TINYINT(1) NOT NULL DEFAULT '0',

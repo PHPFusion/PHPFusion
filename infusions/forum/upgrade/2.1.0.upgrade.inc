@@ -31,5 +31,7 @@ foreach ($new_settings as $key => $value) {
 }
 
 if (column_exists('users', 'user_reputation')) {
-    dbquery("UPDATE ".DB_USERS." SET user_reputation='".$new_settings['default_points']."' WHERE user_reputation='0'");
+    $inf_updatedbrow[] = DB_USERS." SET user_reputation='".$new_settings['default_points']."' WHERE user_reputation='0'";
 }
+
+$inf_altertable[] = DB_FORUMS." MODIFY COLUMN forum_name TEXT NOT NULL";
