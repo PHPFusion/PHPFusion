@@ -94,6 +94,7 @@ $deleted_files = [
     THEMES.'templates/global/messages.php',
     THEMES.'templates/global/profile.php',
     THEMES.'templates/global/register.php',
+    ADMIN.'includes/sitelinks/sitelinks.php',
 ];
 
 foreach ($deleted_files as $file) {

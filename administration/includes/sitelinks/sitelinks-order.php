@@ -31,7 +31,7 @@ function update_sitelinks_order() {
                 echo json_encode(["status" => 200]);
             }
         } else {
-            echo json_encode(["status"=>400]);
+            echo json_encode(["status" => 400]);
         }
     }
 }
