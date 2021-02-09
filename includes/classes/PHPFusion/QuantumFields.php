@@ -1345,8 +1345,8 @@ class QuantumFields extends SqlHandler {
                 $user_data = $callback_data;
                 $profile_method = $method;
                 //print_p($options['plugin_locale_folder']);
-                $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
-                include($options['plugin_folder'].$data['field_name']."_include.php");
+                include $options['plugin_locale_folder'].$data['field_name'].'.php';
+                include (!empty($options['plugin_folder']) ? $options['plugin_folder'] : $this->plugin_folder).$data['field_name']."_include.php";
 
                 if ($method == 'input') {
                     if (isset($user_fields)) {
@@ -2090,8 +2090,6 @@ class QuantumFields extends SqlHandler {
         $this->field_data['field_type'] = isset($_POST['add_field']) ? form_sanitizer($_POST['add_field']) : $this->field_data['field_type'];
 
         if (check_post("save_field")) {
-            print_P($_POST);
-
             $this->field_data = [
                 'field_type'         => (post("add_field") ? sanitizer("add_field") : $this->field_data['field_type']),
                 'field_id'           => sanitizer("field_id", '0', 'field_id'),
@@ -2656,9 +2654,8 @@ class QuantumFields extends SqlHandler {
 
                     $plugin_file_found = TRUE;
 
-                    include($plugin_path);
-
                     include($plugin_locale_path);
+                    include($plugin_path);
 
                     $this->user_field_dbinfo = $user_field_dbinfo;
 
