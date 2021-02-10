@@ -218,6 +218,11 @@ class QuantumFields extends SqlHandler {
                     return FALSE;
             }
         }
+
+        $value = preg_replace_callback('/s:([0-9]+):\"(.*?)\";/', function ($match) {
+            return "s:".strlen($match[2]).':"'.$match[2].'";';
+        }, $value);
+
         if (($result = @unserialize($value)) === FALSE) {
             $result = NULL;
 
@@ -703,7 +708,7 @@ class QuantumFields extends SqlHandler {
                             $field_list[$data['field_cat']][$data['field_id']] = $data['field_name'];
                         }
                     }
-                    if (isset($this->page[$data['field_parent']]) or !empty($field_list) && $field_list[$_GET['cat_id']] > 0) {
+                    if (isset($this->page[$data['field_parent']]) or !empty($field_list) && (!empty($field_list[$_GET['cat_id']]) && $field_list[$_GET['cat_id']] > 0)) {
                         ob_start();
                         echo openmodal("delete", $this->locale['fields_0313'], [
                             'class'  => 'modal-lg modal-center',

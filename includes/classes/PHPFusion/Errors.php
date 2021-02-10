@@ -124,13 +124,12 @@ class Errors {
         $showLiveError = TRUE; // directly show error - push to another instance
 
         $db = DatabaseFactory::getConnection();
-        $result = $db->query(
-            "SELECT error_id, error_status FROM ".DB_ERRORS."
-            WHERE error_file = :file AND error_line = :line AND error_status != '1' AND error_page = :page
+        $result = $db->query("
+            SELECT * FROM ".DB_ERRORS."
+            WHERE error_file = :file AND error_line = :line
             ORDER BY error_timestamp DESC LIMIT 1", [
             ':file' => $error_file,
-            ':page' => FUSION_REQUEST,
-            ':line' => $error_line,
+            ':line' => $error_line
         ]);
 
         if ($db->countRows($result) == 0) {

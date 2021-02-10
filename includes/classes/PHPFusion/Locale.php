@@ -129,7 +129,7 @@ class Locale {
             case 'Romanian':
                 $form = $count == 1 ? 0 : 1;
                 $words_array = explode("|", $words);
-                $result = $words_array[$form];
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Czech':
             case 'Slovak':
@@ -142,7 +142,7 @@ class Locale {
                 }
 
                 $words_array = explode("|", $words);
-                $result = $words_array[$form];
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Russian':
             case 'Ukranian':
@@ -160,7 +160,7 @@ class Locale {
                 }
 
                 $words_array = explode("|", $words);
-                $result = $words_array[$form];
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             default: // never plural language - i.e. chinese is here
                 $words_array = explode("|", $words);
