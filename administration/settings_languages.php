@@ -354,17 +354,22 @@ echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "<div class='alert alert-info'>".$locale['685ML']."</div>";
 echo "</div>\n";
 echo "</div>\n";
-echo "<div class='row m-t-20'>\n";
-echo "<div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='row m-t-20 m-b-20'>\n";
+echo "<div class='col-xs-12 col-sm-3 m-b-10'>\n";
 echo "<strong>".$locale['668ML']."</strong><br />".$locale['669ML'];
 echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-3'>\n";
+echo "<div class='col-xs-12 col-sm-6'>\n";
 $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
 while ($data = dbarray($result)) {
-    echo "<input type='checkbox' value='".$data['mlt_rights']."' id='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> <label for='".$data['mlt_rights']."' class='m-b-0'>".$data['mlt_title']."</label><br />";
+    echo '<div class="checkbox-switch form-group m-b-0">
+        <label class="control-label" data-checked="1" for="'.$data['mlt_rights'].'">'.$data['mlt_title'].'</label>
+        <div class="pull-left m-r-10">
+            <input id="'.$data['mlt_rights'].'" style="margin:0;" name="multilang_tables[]" value="'.$data['mlt_rights'].'" type="checkbox"'.($data['mlt_status'] == 1 ? ' checked' : '').'>
+        </div>
+    </div>';
+
+    //echo "<input type='checkbox' value='".$data['mlt_rights']."' id='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> <label for='".$data['mlt_rights']."' class='m-b-0'>".$data['mlt_title']."</label><br />";
 }
-echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "</div>\n";
 echo "</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
@@ -391,7 +396,8 @@ function form_lang_checkbox(array $language_list) {
             "value"         => $language,
             "class"         => "m-b-0",
             "reverse_label" => TRUE,
-            "deactivate"    => $deactivate
+            "deactivate"    => $deactivate,
+            'toggle'        => TRUE
         ]);
         if ($deactivate == TRUE) {
             $res .= form_hidden('enabled_languages[]', '', $language);

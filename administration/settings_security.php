@@ -50,23 +50,23 @@ if (isset($_POST['savesettings'])) {
     // Save settings after validation
     $inputData = [
         'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
-        'display_validation'  => form_sanitizer($_POST['display_validation'], '0', 'display_validation'),
+        'display_validation'    => post('display_validation') ? 1 : 0,
         'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
-        'allow_php_exe'         => form_sanitizer($_POST['allow_php_exe'], 0, 'allow_php_exe'),
+        'allow_php_exe'         => post('allow_php_exe') ? 1 : 0,
         'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
-        'flood_autoban'         => form_sanitizer($_POST['flood_autoban'], 0, 'flood_autoban'),
-        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], 102, 'maintenance_level'),
-        'maintenance'           => form_sanitizer($_POST['maintenance'], 0, 'maintenance'),
+        'flood_autoban'         => post('flood_autoban') ? 1 : 0,
+        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], -102, 'maintenance_level'),
+        'maintenance'           => post('maintenance') ? 1 : 0,
         'maintenance_message'   => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
-        'bad_words_enabled'     => form_sanitizer($_POST['bad_words_enabled'], 0, 'bad_words_enabled'),
+        'bad_words_enabled'     => post('bad_words_enabled') ? 1 : 0,
         'bad_words'             => stripinput($_POST['bad_words']),
         'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'database_sessions'     => form_sanitizer($_POST['database_sessions'], 0, 'database_sessions'),
         'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'               => form_sanitizer($_POST['gateway'], 0, 'gateway'),
+        'gateway'               => post('gateway') ? 1 : 0,
         'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
-        'mime_check'            => form_sanitizer($_POST['mime_check'], '0', 'mime_check'),
-        'error_logging_enabled' => form_sanitizer($_POST['error_logging_enabled'], 0, 'error_logging_enabled'),
+        'mime_check'            => post('mime_check') ? 1 : 0,
+        'error_logging_enabled' => post('error_logging_enabled') ? 1 : 0,
         'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
     ];
 
@@ -98,8 +98,6 @@ if (isset($_POST['savesettings'])) {
 
     redirect(FUSION_REQUEST);
 }
-
-$yes_no_array = ['1' => $locale['yes'], '0' => $locale['no']];
 
 opentable($locale['683']);
 echo "<div class='well'>".$locale['security_description']."</div>\n";
@@ -139,12 +137,9 @@ echo form_select('maintenance_level', $locale['675'], $settings['maintenance_lev
     'inline'  => TRUE,
     'width'   => '100%'
 ]);
-$opts = ['1' => $locale['on'], '0' => $locale['off']];
-echo form_select('maintenance', $locale['657'], $settings['maintenance'], [
-    'options'     => $opts,
-    'inline'      => TRUE,
-    'width'       => '100%',
-    'inner_width' => '100%'
+
+echo form_checkbox('maintenance', $locale['657'], $settings['maintenance'], [
+    'toggle' => TRUE
 ]);
 echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled'), 'form_name' => 'settingsform']);
 closeside();
@@ -212,22 +207,21 @@ echo form_select('recaptcha_type', $locale['grecaptcha_0103'], $settings['recapt
 ]);
 echo "</div>\n";
 
-echo form_select('display_validation', $locale['553'], $settings['display_validation'], ['options' => $yes_no_array, 'class' => 'm-t-10']);
-closeside();
-
-openside('');
-echo form_select('mime_check', $locale['699f'], $settings['mime_check'], [
-    'options'     => $yes_no_array,
-    'width'       => '100%',
-    'inner_width' => '100%'
+echo form_checkbox('display_validation', $locale['553'], $settings['display_validation'], [
+    'toggle' => TRUE,
+    'class'  => 'm-t-10'
 ]);
 closeside();
 
 openside('');
-echo form_select('gateway', $locale['security_010'], $settings['gateway'], [
-    'options'     => $yes_no_array,
-    'width'       => '100%',
-    'inner_width' => '100%'
+echo form_checkbox('mime_check', $locale['699f'], $settings['mime_check'], [
+    'toggle' => TRUE
+]);
+closeside();
+
+openside('');
+echo form_checkbox('gateway', $locale['security_010'], $settings['gateway'], [
+    'toggle' => TRUE
 ]);
 echo form_select('gateway_method', $locale['security_011'], $settings['gateway_method'], [
     'options'     => [
@@ -242,23 +236,18 @@ echo form_select('gateway_method', $locale['security_011'], $settings['gateway_m
 closeside();
 
 openside('');
-$flood_opts = ['1' => $locale['on'], '0' => $locale['off']];
 echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
     'type'        => 'number',
     'inner_width' => '150px',
     'max_length'  => 2
 ]);
-echo form_select('flood_autoban', $locale['680'], $settings['flood_autoban'], [
-    'options'     => $flood_opts,
-    'width'       => '100%',
-    'inner_width' => '100%'
+echo form_checkbox('flood_autoban', $locale['680'], $settings['flood_autoban'], [
+    'toggle' => TRUE
 ]);
 closeside();
 openside('');
-echo form_select('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
-    'options'     => $yes_no_array,
-    'width'       => '100%',
-    'inner_width' => '100%'
+echo form_checkbox('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
+    'toggle' => TRUE
 ]);
 echo form_select('error_logging_method', $locale['security_016'], $settings['error_logging_method'], [
     'options'     => [
@@ -270,10 +259,8 @@ echo form_select('error_logging_method', $locale['security_016'], $settings['err
 ]);
 closeside();
 openside('');
-echo form_select('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
-    'options'     => $yes_no_array,
-    'inner_width' => '100%',
-    'width'       => '100%'
+echo form_checkbox('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
+    'toggle' => TRUE
 ]);
 echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
@@ -283,10 +270,8 @@ echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
 closeside();
 openside("");
 echo "<div class='alert alert-danger'>".$locale['695']."</div>\n";
-echo form_select('allow_php_exe', $locale['694'], $settings['allow_php_exe'], [
-    'options'     => $yes_no_array,
-    'inner_width' => '100%',
-    'width'       => '100%'
+echo form_checkbox('allow_php_exe', $locale['694'], $settings['allow_php_exe'], [
+    'toggle' => TRUE
 ]);
 closeside();
 echo "</div>\n</div>\n";

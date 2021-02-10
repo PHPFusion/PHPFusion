@@ -28,8 +28,8 @@ if (isset($_POST['save_settings'])) {
         'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
         'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
         'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-        'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
-        'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+        'pm_email_notify'  => post('pm_email_notify') ? 1 : 0,
+        'pm_save_sent'     => post('pm_save_sent') ? 1 : 0,
     ];
 
     if (\defender::safe()) {
@@ -79,13 +79,11 @@ closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
 openside('');
-echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
+echo form_checkbox('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
+    'toggle' => TRUE
 ]);
-echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
+echo form_checkbox('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
+    'toggle' => TRUE
 ]);
 closeside();
 

@@ -29,10 +29,10 @@ if (isset($_POST['savesettings'])) {
     $inputData = [
         'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
         'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
-        'enable_registration' => form_sanitizer($_POST['enable_registration'], '0', 'enable_registration'),
-        'email_verification'  => form_sanitizer($_POST['email_verification'], '0', 'email_verification'),
-        'admin_activation'    => form_sanitizer($_POST['admin_activation'], '0', 'admin_activation'),
-        'enable_terms'        => form_sanitizer($_POST['enable_terms'], '0', 'enable_terms'),
+        'enable_registration' => post('enable_registration') ? 1 : 0,
+        'email_verification'  => post('email_verification') ? 1 : 0,
+        'admin_activation'    => post('admin_activation') ? 1 : 0,
+        'enable_terms'        => post('enable_terms') ? 1 : 0,
         'license_lastupdate'  => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
     ];
 
@@ -51,12 +51,13 @@ if (isset($_POST['savesettings'])) {
 
 opentable($locale['register_settings']);
 echo openform('settingsform', 'post', FUSION_REQUEST);
-$opts = ['1' => $locale['yes'], '0' => $locale['no']];
 echo "<div class='well'>".$locale['register_description']."</div>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_select('enable_terms', $locale['558'], $settings['enable_terms'], ['options' => $opts]);
+echo form_checkbox('enable_terms', $locale['558'], $settings['enable_terms'], [
+    'toggle' => TRUE
+]);
 if ($is_multilang == TRUE) {
     echo \PHPFusion\QuantumFields::quantum_multilocale_fields('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
@@ -75,9 +76,15 @@ if ($is_multilang == TRUE) {
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('enable_registration', $locale['551'], $settings['enable_registration'], ['options' => $opts]);
-echo form_select('email_verification', $locale['552'], $settings['email_verification'], ['options' => $opts]);
-echo form_select('admin_activation', $locale['557'], $settings['admin_activation'], ['options' => $opts]);
+echo form_checkbox('enable_registration', $locale['551'], $settings['enable_registration'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('email_verification', $locale['552'], $settings['email_verification'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('admin_activation', $locale['557'], $settings['admin_activation'], [
+    'toggle' => TRUE
+]);
 $opts = ['0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']];
 echo form_select('login_method', $locale['699'], $settings['login_method'], ['options' => $opts]);
 

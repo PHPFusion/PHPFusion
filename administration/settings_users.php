@@ -25,19 +25,19 @@ $settings = fusion_get_settings();
 
 if (isset($_POST['savesettings'])) {
     $inputData = [
-        'enable_deactivation'   => form_sanitizer($_POST['enable_deactivation'], '0', 'enable_deactivation'),
+        'enable_deactivation'   => post('enable_deactivation') ? 1 : 0,
         'deactivation_period'   => form_sanitizer($_POST['deactivation_period'], '365', 'deactivation_period'),
         'deactivation_response' => form_sanitizer($_POST['deactivation_response'], '14', 'deactivation_response'),
         'deactivation_action'   => form_sanitizer($_POST['deactivation_action'], '0', 'deactivation_action'),
-        'hide_userprofiles'     => form_sanitizer($_POST['hide_userprofiles'], '0', 'hide_userprofiles'),
+        'hide_userprofiles'     => post('hide_userprofiles') ? 1 : 0,
         'avatar_filesize'       => form_sanitizer($_POST['calc_b'], '15', 'calc_b') * form_sanitizer($_POST['calc_c'], '100000', 'calc_c'),
         'avatar_width'          => form_sanitizer($_POST['avatar_width'], '100', 'avatar_width'),
         'avatar_height'         => form_sanitizer($_POST['avatar_height'], '100', 'avatar_height'),
         'avatar_ratio'          => form_sanitizer($_POST['avatar_ratio'], '0', 'avatar_ratio'),
-        'username_change'       => form_sanitizer($_POST['username_change'], '0', 'username_change'),
+        'username_change'       => post('username_change') ? 1 : 0,
         'username_ban'          => stripinput($_POST['username_ban']),
-        'userthemes'            => form_sanitizer($_POST['userthemes'], '0', 'userthemes'),
-        'multiple_logins'       => form_sanitizer($_POST['multiple_logins'], '0', 'multiple_logins'),
+        'userthemes'            => post('userthemes') ? 1 : 0,
+        'multiple_logins'       => post('multiple_logins') ? 1 : 0,
     ];
 
     if (\defender::safe()) {
@@ -48,7 +48,7 @@ if (isset($_POST['savesettings'])) {
             ]);
         }
 
-        if ($_POST['enable_deactivation'] == '0') {
+        if (!post('enable_deactivation')) {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
         }
 
@@ -62,8 +62,8 @@ echo "<div class='well'>".$locale['user_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-$choice_opts = ['0' => $locale['no'], '1' => $locale['yes']];
-echo form_select('enable_deactivation', $locale['1002'], $settings['enable_deactivation'], ['options' => $choice_opts]);
+
+echo form_checkbox('enable_deactivation', $locale['1002'], $settings['enable_deactivation'], ['toggle' => TRUE]);
 echo form_text('deactivation_period', $locale['1003'], $settings['deactivation_period'], [
     'max_length'  => 3,
     'inner_width' => '150px',
@@ -136,12 +136,12 @@ closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('hide_userprofiles', $locale['673'], $settings['hide_userprofiles'], ['options' => $choice_opts]);
+echo form_checkbox('hide_userprofiles', $locale['673'], $settings['hide_userprofiles'], ['toggle' => TRUE]);
 closeside();
 openside('');
-echo form_select('username_change', $locale['691'], $settings['username_change'], ['options' => $choice_opts]);
-echo form_select('userthemes', $locale['668'], $settings['userthemes'], ['options' => $choice_opts]);
-echo form_select('multiple_logins', $locale['1014'], $settings['multiple_logins'], ['options' => $choice_opts, 'ext_tip' => $locale['1014a']]);
+echo form_checkbox('username_change', $locale['691'], $settings['username_change'], ['toggle' => TRUE]);
+echo form_checkbox('userthemes', $locale['668'], $settings['userthemes'], ['toggle' => TRUE]);
+echo form_checkbox('multiple_logins', $locale['1014'], $settings['multiple_logins'], ['toggle' => TRUE, 'ext_tip' => $locale['1014a']]);
 closeside();
 openside('');
 echo form_textarea('username_ban', $locale['649'], $settings['username_ban'], [

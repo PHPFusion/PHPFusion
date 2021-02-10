@@ -25,26 +25,26 @@ $settings = fusion_get_settings();
 
 if (isset($_POST['savesettings'])) {
     $inputData = [
-        'tinymce_enabled'        => form_sanitizer($_POST['tinymce_enabled'], '0', 'tinymce_enabled'),
+        'tinymce_enabled'        => post('tinymce_enabled') ? 1 : 0,
         'smtp_host'              => form_sanitizer($_POST['smtp_host'], '', 'smtp_host'),
         'smtp_port'              => form_sanitizer($_POST['smtp_port'], '', 'smtp_port'),
         'smtp_auth'              => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0,
         'smtp_username'          => form_sanitizer($_POST['smtp_username'], '', 'smtp_username'),
         'smtp_password'          => form_sanitizer($_POST['smtp_password'], '', 'smtp_password'),
         'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
-        'guestposts'             => form_sanitizer($_POST['guestposts'], '0', 'guestposts'),
-        'comments_enabled'       => form_sanitizer($_POST['comments_enabled'], '0', 'comments_enabled'),
+        'guestposts'             => post('guestposts') ? 1 : 0,
+        'comments_enabled'       => post('comments_enabled') ? 1 : 0,
         'comments_per_page'      => form_sanitizer($_POST['comments_per_page'], '10', 'comments_per_page'),
-        'ratings_enabled'        => form_sanitizer($_POST['ratings_enabled'], '0', 'ratings_enabled'),
-        'visitorcounter_enabled' => form_sanitizer($_POST['visitorcounter_enabled'], '0', 'visitorcounter_enabled'),
+        'ratings_enabled'        => post('ratings_enabled') ? 1 : 0,
+        'visitorcounter_enabled' => post('visitorcounter_enabled') ? 1 : 0,
         'rendertime_enabled'     => form_sanitizer($_POST['rendertime_enabled'], '0', 'rendertime_enabled'),
-        'comments_avatar'        => form_sanitizer($_POST['comments_avatar'], '0', 'comments_avatar'),
+        'comments_avatar'        => post('comments_avatar') ? 1 : 0,
         'comments_sorting'       => form_sanitizer($_POST['comments_sorting'], 'DESC', 'comments_sorting'),
-        'index_url_bbcode'       => form_sanitizer($_POST['index_url_bbcode'], '0', 'index_url_bbcode'),
-        'index_url_userweb'      => form_sanitizer($_POST['index_url_userweb'], '0', 'index_url_userweb'),
-        'create_og_tags'         => form_sanitizer($_POST['create_og_tags'], '0', 'create_og_tags'),
-        'devmode'                => form_sanitizer($_POST['devmode'], '0', 'devmode'),
-        'update_checker'         => form_sanitizer($_POST['update_checker'], '0', 'update_checker'),
+        'index_url_bbcode'       => post('index_url_bbcode') ? 1 : 0,
+        'index_url_userweb'      => post('index_url_userweb') ? 1 : 0,
+        'create_og_tags'         => post('create_og_tags') ? 1 : 0,
+        'devmode'                => post('devmode') ? 1 : 0,
+        'update_checker'         => post('update_checker') ? 1 : 0,
         'number_delimiter'       => sanitizer('number_delimiter', '.', 'number_delimiter'),
         'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator')
     ];
@@ -69,10 +69,8 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
 openside('');
 $choice_arr = ['1' => $locale['yes'], '0' => $locale['no']];
-echo form_select('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
-    'options' => $choice_arr,
-    'inline'  => TRUE,
-    'ext_tip' => $locale['663']
+echo form_checkbox('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
+    'toggle' => TRUE
 ]);
 closeside();
 openside('');
@@ -109,9 +107,7 @@ closeside();
 
 openside('');
 echo form_checkbox('comments_enabled', $locale['671'], $settings['comments_enabled'], [
-    'inline'  => TRUE,
-    'options' => $choice_arr,
-    'type'    => 'radio'
+    'toggle' => TRUE
 ]);
 echo form_text('comments_per_page', $locale['913'], $settings['comments_per_page'], [
     'inline'      => TRUE,
@@ -127,9 +123,7 @@ echo form_checkbox('comments_sorting', $locale['684'], $settings['comments_sorti
     'type'    => 'radio'
 ]);
 echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar'], [
-    'inline'  => TRUE,
-    'options' => $choice_arr,
-    'type'    => 'radio'
+    'toggle' => TRUE
 ]);
 closeside();
 
@@ -140,45 +134,38 @@ echo form_select('thumb_compression', $locale['606'], $settings['thumb_compressi
     'options' => $gd_opts,
     'width'   => '100%'
 ]);
-echo form_select('guestposts', $locale['655'], $settings['guestposts'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
+echo form_checkbox('guestposts', $locale['655'], $settings['guestposts'], [
+    'toggle' => TRUE
 ]);
-echo form_select('ratings_enabled', $locale['672'], $settings['ratings_enabled'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
+echo form_checkbox('ratings_enabled', $locale['672'], $settings['ratings_enabled'], [
+    'toggle' => TRUE
 ]);
-echo form_select('visitorcounter_enabled', $locale['679'], $settings['visitorcounter_enabled'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
-]);
-echo form_select('create_og_tags', $locale['1030'], $settings['create_og_tags'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
-]);
-closeside();
-openside('');
-echo form_select('index_url_bbcode', $locale['1031'], $settings['index_url_bbcode'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
-]);
-echo form_select('index_url_userweb', $locale['1032'], $settings['index_url_userweb'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
+echo form_checkbox('visitorcounter_enabled', $locale['679'], $settings['visitorcounter_enabled'], [
+    'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_select('devmode', $locale['609'], $settings['devmode'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
+echo form_checkbox('index_url_bbcode', $locale['1031'], $settings['index_url_bbcode'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('index_url_userweb', $locale['1032'], $settings['index_url_userweb'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('create_og_tags', $locale['1030'], $settings['create_og_tags'], [
+    'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_select('update_checker', $locale['610'], $settings['update_checker'], [
-    'options' => $choice_arr,
-    'width'   => '100%'
+echo form_checkbox('devmode', $locale['609'], $settings['devmode'], [
+    'toggle' => TRUE
+]);
+closeside();
+
+openside('');
+echo form_checkbox('update_checker', $locale['610'], $settings['update_checker'], [
+    'toggle' => TRUE
 ]);
 closeside();
 

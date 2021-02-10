@@ -27,9 +27,9 @@ if (isset($_POST['savesettings'])) {
     $inputData = [
         'admin_theme' => form_sanitizer($_POST['admin_theme'], $settings['admin_theme'], 'admin_theme'),
         'theme'       => form_sanitizer($_POST['theme'], $settings['theme'], 'theme'),
-        'bootstrap'   => form_sanitizer($_POST['bootstrap'], '0', 'bootstrap'),
-        'entypo'      => form_sanitizer($_POST['entypo'], '0', 'entypo'),
-        'fontawesome' => form_sanitizer($_POST['fontawesome'], '0', 'fontawesome'),
+        'bootstrap'   => post('bootstrap') ? 1 : 0,
+        'entypo'      => post('entypo') ? 1 : 0,
+        'fontawesome' => post('fontawesome') ? 1 : 0,
     ];
 
     if (\defender::safe()) {
@@ -80,21 +80,14 @@ echo form_select('admin_theme', $locale['418a'], $settings['admin_theme'], [
     'width'      => '100%'
 ]);
 
-$choice_opts = [
-    0 => $locale['disable'],
-    1 => $locale['enable']
-];
-echo form_select('bootstrap', $locale['437'], $settings['bootstrap'], [
-    'options' => $choice_opts,
-    'inline'  => TRUE
+echo form_checkbox('bootstrap', $locale['437'], $settings['bootstrap'], [
+    'toggle' => TRUE
 ]);
-echo form_select('entypo', $locale['441'], $settings['entypo'], [
-    'options' => $choice_opts,
-    'inline'  => TRUE
+echo form_checkbox('entypo', $locale['441'], $settings['entypo'], [
+    'toggle' => TRUE
 ]);
-echo form_select('fontawesome', $locale['442'], $settings['fontawesome'], [
-    'options' => $choice_opts,
-    'inline'  => TRUE
+echo form_checkbox('fontawesome', $locale['442'], $settings['fontawesome'], [
+    'toggle' => TRUE
 ]);
 
 closeside();
