@@ -61,16 +61,10 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $default_checked = FALSE;
 
-    $switch_class = '';
-
     if ($options['toggle']) {
-        $switch_class = 'is-bootstrap-switch ';
-        if (!defined("BOOTSTRAP_SWITCH_ASSETS")) {
-            define("BOOTSTRAP_SWITCH_ASSETS", TRUE);
-            // http://www.bootstrap-switch.org
-            add_to_head("<link href='".DYNAMICS."assets/switch/css/bootstrap-switch.min.css' rel='stylesheet' />");
-            add_to_footer("<script src='".DYNAMICS."assets/switch/js/bootstrap-switch.min.js'></script>");
-            add_to_jquery("$('.is-bootstrap-switch input[type=checkbox]').bootstrapSwitch();");
+        if (!defined("CHECKBOX_SWITCH_CSS")) {
+            define("CHECKBOX_SWITCH_CSS", TRUE);
+            add_to_head("<link rel='stylesheet' href='".DYNAMICS."assets/switch/switch.min.css'>");
         }
     }
 
@@ -88,14 +82,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             }
             addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
         }
-    }
-
-    //@todo: this can use ksort/uksort
-    $on_label = $options['toggle_text'][1];
-    $off_label = $options['toggle_text'][0];
-    if ($options['keyflip']) {
-        $on_label = $options['toggle_text'][0];
-        $off_label = $options['toggle_text'][1];
     }
 
     if (!empty($options['options']) && is_array($options['options'])) {
@@ -144,13 +130,11 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     } else {
         $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>";
-
-        $checkbox .= "<input id='".$options['input_id']."'".($options['toggle'] ? " data-on-text='".$on_label."' data-off-text='".$off_label."'" : "")." style='margin:0;vertical-align:middle;' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').">";
-
+        $checkbox .= "<input id='".$options['input_id']."' style='margin:0;vertical-align:middle;' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').">";
         $checkbox .= "</div>";
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='$switch_class form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>";
+    $html = "<div id='".$options['input_id']."-field' class='".($options['toggle'] ? 'form-switch ' : '')."form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>";
 
     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">" : "";
 
