@@ -67,17 +67,22 @@ class ShoutBox {
 
         switch (get("s_action")) {
             case 'delete':
-                self::delete_select($this->getSecureShoutID(get("shout_id")));
+                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutID(get("shout_id"));
+                self::delete_select($id);
                 break;
             case 'delete_select':
-                if (empty($_POST['rights'])) {
+                if (empty($_POST['shoutid'])) {
                     fusion_stop(self::$locale["SB_noentries"]);
                     redirect(clean_request("", ["section=shoutbox", "aid"], TRUE));
                 }
-                self::delete_select($_POST['rights']);
+
+                if (isset($_POST['shoutid'])) {
+                    self::delete_select($_POST['shoutid']);
+                }
                 break;
             case 'edit':
-                $this->data = self::_selectedSB($this->getSecureShoutID(get("shout_id")));
+                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutID(get("shout_id"));
+                $this->data = self::_selectedSB($id);
                 break;
             default:
                 break;
@@ -457,7 +462,7 @@ class ShoutBox {
                 echo "<i class='fa fa-trash fa-fw'></i> ".self::$locale['delete'];
                 echo "</a>";
                 echo '</div>';
-                echo form_checkbox("rights[".$data['shout_id']."]", '', '');
+                echo form_checkbox("shoutid[".$data['shout_id']."]", '', '');
                 echo '</div>';
                 echo '</div>';
                 echo "</div>\n";
@@ -511,7 +516,7 @@ class ShoutBox {
         $rows = dbrows($result);
 
         $sdata = [
-            'items' => [],
+            'items'   => [],
             'archive' => []
         ];
 
