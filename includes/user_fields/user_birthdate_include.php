@@ -46,7 +46,7 @@ if ($profile_method == "input") {
     } else {
         $user_fields = [
             'title' => $locale['uf_birthdate'],
-            'value' => ''
+            'value' => $locale['na']
         ];
     }
 }

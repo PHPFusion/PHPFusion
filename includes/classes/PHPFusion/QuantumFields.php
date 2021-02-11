@@ -888,8 +888,7 @@ class QuantumFields extends SqlHandler {
                                 }
 
                                 if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
-
-                                    include $this->plugin_locale_folder.$field_title.".php";
+                                    $locale = fusion_get_locale('', $this->plugin_locale_folder.$field_title.".php");
 
                                     include $folder_name.$field_title."_include_var.php";
 
@@ -943,7 +942,7 @@ class QuantumFields extends SqlHandler {
 
                                             if (is_file($locale_path.$field_title.".php")) {
 
-                                                include($locale_path.$field_title.".php");
+                                                $locale = fusion_get_locale('', $locale_path.$field_title.".php");
 
                                                 include($plugin_path.$field_title."_include_var.php");
 
@@ -989,7 +988,7 @@ class QuantumFields extends SqlHandler {
 
                                 if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
 
-                                    include $this->plugin_locale_folder.$field_title.".php";
+                                    $locale = fusion_get_locale('', $this->plugin_locale_folder.$field_title.".php");
 
                                     include $this->plugin_folder.$field_title."_include_var.php";
 
@@ -1349,8 +1348,7 @@ class QuantumFields extends SqlHandler {
             case 'file':
                 $user_data = $callback_data;
                 $profile_method = $method;
-                //print_p($options['plugin_locale_folder']);
-                include $options['plugin_locale_folder'].$data['field_name'].'.php';
+                $locale = fusion_get_locale('', $options['plugin_locale_folder'].$data['field_name'].'.php');
                 include (!empty($options['plugin_folder']) ? $options['plugin_folder'] : $this->plugin_folder).$data['field_name']."_include.php";
 
                 if ($method == 'input') {
@@ -2659,7 +2657,7 @@ class QuantumFields extends SqlHandler {
 
                     $plugin_file_found = TRUE;
 
-                    include($plugin_locale_path);
+                    $locale = fusion_get_locale('', $plugin_locale_path);
                     include($plugin_path);
 
                     $this->user_field_dbinfo = $user_field_dbinfo;
@@ -2678,7 +2676,7 @@ class QuantumFields extends SqlHandler {
                         // attempt to search.
                         foreach ($folder_list as $folder) {
                             if (file_exists($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include.php') && file_exists($plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php')) {
-                                include($plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php');
+                                $locale = fusion_get_locale('', $plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php');
                                 include($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php');
                                 $this->user_field_dbinfo = $user_field_dbinfo;
                                 if (!isset($user_field_dbinfo)) {
@@ -2698,7 +2696,7 @@ class QuantumFields extends SqlHandler {
             $plugin_path = rtrim($plugin_folder, '/').'/'.$folder."/user_fields/".$this->field_data["add_module"]."_include_var.php";
 
             if (file_exists($plugin_language_path) && file_exists($plugin_path)) {
-                include($plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php');
+                $locale = fusion_get_locale('', $plugin_folder.$folder.'/locale/'.LANGUAGE.'/'.$this->field_data['add_module'].'.php');
                 include($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php');
                 $this->user_field_dbinfo = $user_field_dbinfo;
                 if (!isset($user_field_dbinfo)) {

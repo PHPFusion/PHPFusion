@@ -674,7 +674,7 @@ class UserFields extends QuantumFields {
         $this->info['user_id'] = $this->userData['user_id'];
         $this->info['user_name'] = $this->userData['user_name'];
 
-        $current_section = [['id' => 1]];
+        $current_section = ['id' => 1];
         if (!empty($this->info['section'])) {
             $current_section = current($this->info['section']);
         }
