@@ -760,13 +760,15 @@ function dbquery_insert($table, $inputdata, $mode, $options = []) {
     }
 
     $sqlPatterns = [
-        'save'   => 'INSERT INTO `{table}` SET {values}',
-        'update' => 'UPDATE `{table}` SET {values} {where}',
-        'delete' => 'DELETE FROM `{table}` {where}'
+        'save'   => 'INSERT INTO {table} SET {values}',
+        'update' => 'UPDATE {table} SET {values} {where}',
+        'delete' => 'DELETE FROM {table} {where}'
     ];
 
+    $params = [];
     foreach ($data as $name => $value) {
-        $sanitized_input[] = "`$name` = '$value'";
+        $sanitized_input[] = "$name = :$name";
+        $params[":$name"] = $value;
     }
 
     if (!isset($sqlPatterns[$mode])) {
@@ -777,7 +779,7 @@ function dbquery_insert($table, $inputdata, $mode, $options = []) {
     if ($mode === 'update' or $mode === 'delete') {
         $pkwhere = [];
         foreach ($pkvalues as $name => $pkvalue) {
-            $pkwhere[] = "`$name`='$pkvalue'";
+            $pkwhere[] = "$name=$pkvalue";
         }
         $where = implode(' AND ', $pkwhere);
     }
@@ -790,9 +792,10 @@ function dbquery_insert($table, $inputdata, $mode, $options = []) {
     if ($options['debug']) {
         print_p($where);
         print_p($sanitized_input);
+        print_p($params);
         print_p($sql);
     } else {
-        $result = dbquery($sql);
+        $result = dbquery($sql, $params);
         if (!$options['keep_session']) {
             //print_p('field session unset during '.$sql);
             $defender::unset_field_session();
