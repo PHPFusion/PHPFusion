@@ -48,6 +48,8 @@ class PrivateMessages {
     public $locale = [];
     private static $instances = NULL;
 
+    private static $is_sent = FALSE;
+
     /**
      * @return array
      */
@@ -186,6 +188,7 @@ class PrivateMessages {
                                     'message_folder'    => 0,
                                 ];
                                 dbquery_insert(DB_MESSAGES, $inputData, 'save');
+                                self::$is_sent = TRUE;
 
                                 if ($pmStatus['user_pm_email_notify'] == "2") {
 
@@ -233,6 +236,7 @@ class PrivateMessages {
                                         'message_folder'    => 0,
                                     ];
                                     dbquery_insert(DB_MESSAGES, $inputData, 'save');
+                                    self::$is_sent = TRUE;
 
                                     if ($myStatus['user_pm_save_sent'] == 2 && $save_sent == TRUE) {
                                         // user_outbox.
@@ -830,8 +834,11 @@ class PrivateMessages {
                 } else {
                     self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], FALSE);
                 }
-                addNotice('success', $this->locale['491']);
-                redirect(BASEDIR."messages.php");
+
+                if (self::$is_sent == TRUE) {
+                    addNotice('success', $this->locale['491']);
+                    redirect(BASEDIR."messages.php");
+                }
             }
 
         }
