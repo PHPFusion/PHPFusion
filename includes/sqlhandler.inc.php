@@ -779,7 +779,7 @@ function dbquery_insert($table, $inputdata, $mode, $options = []) {
     if ($mode === 'update' or $mode === 'delete') {
         $pkwhere = [];
         foreach ($pkvalues as $name => $pkvalue) {
-            $pkwhere[] = "$name=$pkvalue";
+            $pkwhere[] = "$name='$pkvalue'";
         }
         $where = implode(' AND ', $pkwhere);
     }
