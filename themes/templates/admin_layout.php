@@ -113,14 +113,18 @@ if (!check_admin_pass('')) {
 } else {
     if ($settings['update_checker'] == 1) {
         add_to_jquery('
-            $.ajax({
-                url: "'.ADMIN.'includes/?api=update-checker",
-                method: "get",
-                dataType: "json",
-                success: function (e) {
-                    $("#updatechecker_result").html(e.result).show();
-                }
-            });
+            function update_checker() {
+                $.ajax({
+                    url: "'.ADMIN.'includes/?api=update-checker",
+                    method: "get",
+                    dataType: "json",
+                    success: function (e) {
+                        $("#updatechecker_result").html(e.result).show();
+                    }
+                });
+            }
+            update_checker();
+            setInterval(update_checker, 30000);
         ');
     }
 
