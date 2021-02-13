@@ -74,125 +74,130 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
     }
 
     addNotice('info', $locale['ADM_401']);
-    redirect(clean_request('', ['user_id'], FALSE));
+    redirect(clean_request('', ['edit'], FALSE));
 }
 
 if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
-    $result = dbquery("
+    $user = fusion_get_user((int)$_GET['edit']);
+    if (fusion_get_userdata('user_level') <= $user['user_level'] && fusion_get_userdata('user_id') != $user['user_id']) {
+        $result = dbquery("
         SELECT user_name, user_rights
         FROM ".DB_USERS."
         WHERE user_id=:userId AND user_level<=:userLevel
         ORDER BY user_id ASC", [
-            ':userId'    => $_GET['edit'],
-            ':userLevel' => USER_LEVEL_ADMIN,
-        ]
-    );
-    if (dbrows($result)) {
-        $data = dbarray($result);
-        $user_rights = explode(".", $data['user_rights']);
-        $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page, admin_language FROM ".DB_ADMIN." WHERE admin_link != 'reserved' AND admin_language='".LANGUAGE."' ORDER BY admin_page ASC, admin_title ASC");
+                ':userId'    => (int)$_GET['edit'],
+                ':userLevel' => USER_LEVEL_ADMIN,
+            ]
+        );
+        if (dbrows($result)) {
+            $data = dbarray($result);
+            $user_rights = explode(".", $data['user_rights']);
+            $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page, admin_language FROM ".DB_ADMIN." WHERE admin_link != 'reserved' AND admin_language='".LANGUAGE."' ORDER BY admin_page ASC, admin_title ASC");
 
-        opentable($locale['ADM_440']." [".$data['user_name']."]");
-        $columns = 2;
-        $counter = 0;
-        $page = 0;
-        $percent = 100 / $columns;
-        $admin_page_titles = [1 => $locale['ADM_441'], $locale['ADM_442'], $locale['ADM_443'], $locale['ADM_449'], $locale['ADM_444']];
-        $admin_pages = array_fill(1, count($admin_page_titles), []);
-        $risky_rights = ['CP', 'AD', 'SB', 'DB', 'IP', 'P', 'S3', 'ERRO'];
+            opentable($locale['ADM_440']." [".$data['user_name']."]");
+            $columns = 2;
+            $counter = 0;
+            $page = 0;
+            $percent = 100 / $columns;
+            $admin_page_titles = [1 => $locale['ADM_441'], $locale['ADM_442'], $locale['ADM_443'], $locale['ADM_449'], $locale['ADM_444']];
+            $admin_pages = array_fill(1, count($admin_page_titles), []);
+            $risky_rights = ['CP', 'AD', 'SB', 'DB', 'IP', 'P', 'S3', 'ERRO'];
 
-        while ($row = dbarray($rights_result)) {
-            $admin_pages[$row['admin_page']][] = $row;
-        }
-
-        echo openform('rightsform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;user_id=".$_GET['edit']);
-        echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
-        echo "<div class='table-responsive'>\n";
-        echo "<table id='links-table' class='table table-striped'>\n";
-        echo "<tbody>\n";
-        foreach ($admin_pages as $page => $admin_page) {
-            echo "<tr>\n<td colspan='$columns' class='info'><strong>".$admin_page_titles[$page]."</strong></td>\n</tr>\n";
-            $mod = count($admin_page) % $columns;
-            if ($mod !== 0) {
-                $admin_page = array_merge($admin_page, array_fill(0, $columns - (count($admin_page) % $columns), ''));
+            while ($row = dbarray($rights_result)) {
+                $admin_pages[$row['admin_page']][] = $row;
             }
-            $admin_page_rows = array_chunk($admin_page, $columns, TRUE);
-            foreach ($admin_page_rows as $row) {
-                echo "<tr>\n";
-                foreach ($row as $cell_num => $cell) {
-                    if ($cell) {
-                        $insecure = in_array($cell['admin_rights'], $risky_rights);
-                        echo "<td class='".($insecure ? 'insecure danger' : 'secure')."' style='width: $percent%'>\n";
-                        echo form_checkbox('rights[]', $cell['admin_title'], in_array($cell['admin_rights'], $user_rights), [
-                            'reverse_label' => TRUE,
-                            'value'         => $cell['admin_rights'],
-                            'required'      => $insecure,
-                            'input_id'      => 'rights-'.$page.'-'.$cell_num,
-                            'class'         => 'm-b-0',
-                            'toggle'        => TRUE
-                        ]);
-                        echo "</td>\n";
-                    }
+
+            echo openform('rightsform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;user_id=".$_GET['edit']);
+            echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
+            echo "<div class='table-responsive'>\n";
+            echo "<table id='links-table' class='table table-striped'>\n";
+            echo "<tbody>\n";
+            foreach ($admin_pages as $page => $admin_page) {
+                echo "<tr>\n<td colspan='$columns' class='info'><strong>".$admin_page_titles[$page]."</strong></td>\n</tr>\n";
+                $mod = count($admin_page) % $columns;
+                if ($mod !== 0) {
+                    $admin_page = array_merge($admin_page, array_fill(0, $columns - (count($admin_page) % $columns), ''));
                 }
-                echo "</tr>\n";
+                $admin_page_rows = array_chunk($admin_page, $columns, TRUE);
+                foreach ($admin_page_rows as $row) {
+                    echo "<tr>\n";
+                    foreach ($row as $cell_num => $cell) {
+                        if ($cell) {
+                            $insecure = in_array($cell['admin_rights'], $risky_rights);
+                            echo "<td class='".($insecure ? 'insecure danger' : 'secure')."' style='width: $percent%'>\n";
+                            echo form_checkbox('rights[]', $cell['admin_title'], in_array($cell['admin_rights'], $user_rights), [
+                                'reverse_label' => TRUE,
+                                'value'         => $cell['admin_rights'],
+                                'required'      => $insecure,
+                                'input_id'      => 'rights-'.$page.'-'.$cell_num,
+                                'class'         => 'm-b-0',
+                                'toggle'        => TRUE
+                            ]);
+                            echo "</td>\n";
+                        }
+                    }
+                    echo "</tr>\n";
+                }
             }
+            echo "</tbody>\n";
+            echo "</table>\n";
+            echo "</div>\n";
+            echo "<div class='text-center row'>\n";
+            echo " <div class='col-xs-6 col-md-2'>\n";
+            echo form_checkbox('check_all', $locale['ADM_445'], '', ['reverse_label' => TRUE]);
+            echo "</div>\n";
+            echo "<div class='col-xs-6 col-md-2'>\n";
+            echo form_checkbox('check_secure', $locale['ADM_450'], '', ['reverse_label' => TRUE]);
+            echo "</div>\n";
+            echo "<div class='col-xs-6 col-md-8 text-left'>\n";
+            echo form_button('update_admin', $locale['ADM_448'], $locale['ADM_448'], ['class' => 'btn-primary']);
+            echo "</div>\n";
+            echo "</div>\n";
+
+            add_to_jquery("
+                var linksTable = $('#links-table');
+                var checkboxes = linksTable.find(':checkbox');
+                var secureBoxes = linksTable.find('.secure :checkbox');
+                var insecureBoxes = linksTable.find('.insecure :checkbox');
+                var checkAll = $('#check_all');
+                var checkSecure = $('#check_secure');
+    
+                var updateCheckAll = function () {
+                    checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
+                };
+                var updateCheckSecure = function () {
+                   var secureNotChecked = secureBoxes.filter(':not(:checked)').length;
+                   var insecureChecked = insecureBoxes.filter(':checked').length;
+                   var checked = (secureNotChecked === 0 && insecureChecked === 0);
+                   checkSecure.prop('checked', checked);
+                };
+                var updateStatus = function () {
+                    var field = $(this).closest('[id$=\"-field\"]');
+                    var td = field.closest('td');
+                    td.toggleClass('active', $(this).is(':checked'));
+                };
+                updateCheckAll();
+                updateCheckSecure();
+                checkboxes.each(updateStatus);
+                checkboxes.on('change', updateCheckAll);
+                checkboxes.on('change', updateCheckSecure);
+                checkboxes.on('change', updateStatus);
+                checkAll.on('click', function () {
+                    var checked = $(this).is(':checked');
+                    checkboxes.prop('checked', checked).change();
+                });
+                checkSecure.on('click', function () {
+                    var checked = $(this).is(':checked');
+                    insecureBoxes.prop('checked', !checked).change();
+                    secureBoxes.prop('checked', checked).change();
+                });
+            ");
+
+            echo closeform();
+            closetable();
         }
-        echo "</tbody>\n";
-        echo "</table>\n";
-        echo "</div>\n";
-        echo "<div class='text-center row'>\n";
-        echo " <div class='col-xs-6 col-md-2'>\n";
-        echo form_checkbox('check_all', $locale['ADM_445'], '', ['reverse_label' => TRUE]);
-        echo "</div>\n";
-        echo "<div class='col-xs-6 col-md-2'>\n";
-        echo form_checkbox('check_secure', $locale['ADM_450'], '', ['reverse_label' => TRUE]);
-        echo "</div>\n";
-        echo "<div class='col-xs-6 col-md-8 text-left'>\n";
-        echo form_button('update_admin', $locale['ADM_448'], $locale['ADM_448'], ['class' => 'btn-primary']);
-        echo "</div>\n";
-        echo "</div>\n";
-
-        add_to_jquery("
-            var linksTable = $('#links-table');
-            var checkboxes = linksTable.find(':checkbox');
-            var secureBoxes = linksTable.find('.secure :checkbox');
-            var insecureBoxes = linksTable.find('.insecure :checkbox');
-            var checkAll = $('#check_all');
-            var checkSecure = $('#check_secure');
-
-            var updateCheckAll = function () {
-                checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
-            };
-            var updateCheckSecure = function () {
-               var secureNotChecked = secureBoxes.filter(':not(:checked)').length;
-               var insecureChecked = insecureBoxes.filter(':checked').length;
-               var checked = (secureNotChecked === 0 && insecureChecked === 0);
-               checkSecure.prop('checked', checked);
-            };
-            var updateStatus = function () {
-                var field = $(this).closest('[id$=\"-field\"]');
-                var td = field.closest('td');
-                td.toggleClass('active', $(this).is(':checked'));
-            };
-            updateCheckAll();
-            updateCheckSecure();
-            checkboxes.each(updateStatus);
-            checkboxes.on('change', updateCheckAll);
-            checkboxes.on('change', updateCheckSecure);
-            checkboxes.on('change', updateStatus);
-            checkAll.on('click', function () {
-                var checked = $(this).is(':checked');
-                checkboxes.prop('checked', checked).change();
-            });
-            checkSecure.on('click', function () {
-                var checked = $(this).is(':checked');
-                insecureBoxes.prop('checked', !checked).change();
-                secureBoxes.prop('checked', checked).change();
-            });
-        ");
-
-        echo closeform();
-        closetable();
+    } else {
+        redirect(clean_request('', ['edit'], FALSE));
     }
 } else {
     opentable($locale['ADM_410']);
@@ -270,10 +275,8 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     echo "</thead>\n";
     echo "<tbody>\n";
     while ($data = dbarray($result)) {
-        $can_edit = (
-            ($data['user_level'] == USER_LEVEL_SUPER_ADMIN && fusion_get_userdata('user_id') == "1")
-            || $data['user_level'] < USER_LEVEL_MEMBER
-        );
+        $can_edit = (fusion_get_userdata('user_level') <= $data['user_level'] && fusion_get_userdata('user_id') != $data['user_id']);
+
         echo "<tr>\n";
         echo "<td><span title='".($data['user_rights'] ? str_replace(".", " ", $data['user_rights']) : $locale['ADM_425'])."' style='cursor:hand;'>".$data['user_name']."</span></td>\n";
         echo "<td class='text-center'>".getuserlevel($data['user_level'])."</td>\n";
