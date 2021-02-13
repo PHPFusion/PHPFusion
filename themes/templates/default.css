@@ -148,11 +148,14 @@ Grids
     -o-background-clip: content-box;
     background-clip: content-box;
     display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
+    -webkit-flex-direction: row;
 }
 
 .row.equal-height:before,
