@@ -161,7 +161,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                 var insecureBoxes = linksTable.find('.insecure :checkbox');
                 var checkAll = $('#check_all');
                 var checkSecure = $('#check_secure');
-    
+
                 var updateCheckAll = function () {
                     checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
                 };
