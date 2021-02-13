@@ -45,10 +45,6 @@ if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name)
 // Fetch the settings from the database
 $settings = fusion_get_settings();
 
-if (empty($settings)) {
-    die("A connection with database server could not be established");
-}
-
 if (!empty($settings['error_logging_enabled']) && $settings['error_logging_enabled'] == 1) {
     ini_set('display_errors', '1');
 } else {
