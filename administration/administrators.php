@@ -90,7 +90,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     if (dbrows($result)) {
         $data = dbarray($result);
         $user_rights = explode(".", $data['user_rights']);
-        $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page, admin_language FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page ASC, admin_title ASC");
+        $rights_result = dbquery("SELECT admin_rights, admin_title, admin_page, admin_language FROM ".DB_ADMIN." WHERE admin_link != 'reserved' AND admin_language='".LANGUAGE."' ORDER BY admin_page ASC, admin_title ASC");
 
         opentable($locale['ADM_440']." [".$data['user_name']."]");
         $columns = 2;
@@ -108,7 +108,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo openform('rightsform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;user_id=".$_GET['edit']);
         echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
         echo "<div class='table-responsive'>\n";
-        echo "<table id='links-table' class='table table-hover table-striped'>\n";
+        echo "<table id='links-table' class='table table-striped'>\n";
         echo "<tbody>\n";
         foreach ($admin_pages as $page => $admin_page) {
             echo "<tr>\n<td colspan='$columns' class='info'><strong>".$admin_page_titles[$page]."</strong></td>\n</tr>\n";
@@ -120,18 +120,19 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             foreach ($admin_page_rows as $row) {
                 echo "<tr>\n";
                 foreach ($row as $cell_num => $cell) {
-                    echo "<td style='width: $percent%'>\n";
                     if ($cell) {
                         $insecure = in_array($cell['admin_rights'], $risky_rights);
+                        echo "<td class='".($insecure ? 'insecure danger' : 'secure')."' style='width: $percent%'>\n";
                         echo form_checkbox('rights[]', $cell['admin_title'], in_array($cell['admin_rights'], $user_rights), [
                             'reverse_label' => TRUE,
                             'value'         => $cell['admin_rights'],
                             'required'      => $insecure,
                             'input_id'      => 'rights-'.$page.'-'.$cell_num,
-                            'class'         => $insecure ? 'insecure' : 'secure',
+                            'class'         => 'm-b-0',
+                            'toggle'        => TRUE
                         ]);
+                        echo "</td>\n";
                     }
-                    echo "</td>\n";
                 }
                 echo "</tr>\n";
             }
@@ -199,9 +200,9 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo openform('searchform', 'post', FUSION_SELF.fusion_get_aidlink());
 
         echo form_user_select('search_criteria', $locale['ADM_411'], '', [
-            'required'    => TRUE,
-            'max_select'  => 1,
-            'allow_self'  => TRUE,
+            'required'   => TRUE,
+            'max_select' => 1,
+            'allow_self' => TRUE,
         ]);
         echo form_button('search_users', $locale['search'], $locale['search']);
         echo closeform();
