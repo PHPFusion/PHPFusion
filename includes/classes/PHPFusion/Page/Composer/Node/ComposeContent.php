@@ -43,7 +43,7 @@ class ComposeContent extends PageAdmin {
                             'tags'        => 1,
                             'multiple'    => 1,
                         ]).
-                    form_textarea('page_content', '', self::$data['page_content'], self::$textarea_options);
+                    form_textarea('page_content', '', stripslashes(self::$data['page_content']), self::$textarea_options);
                 ?>
                 <div class='well'>
                     <div class="row m-b-20">
