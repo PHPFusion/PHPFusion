@@ -1507,8 +1507,9 @@ function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext
         }
         closedir($temp);
         if ($sort) {
-            sort($res);
+            natsort($res);
         }
+
     } else {
         $error_log = debug_backtrace()[1];
         $function = (isset($error_log['class']) ? $error_log['class'] : '').(isset($error_log['type']) ? $error_log['type'] : '').(isset($error_log['function']) ? $error_log['function'] : '');
