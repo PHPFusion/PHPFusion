@@ -234,57 +234,58 @@ class Dashboard {
                         $html .= '</div>'; // #ratings
                     }
 
-                    $html .= '<div id="submissions">';
-                        $html .= fusion_get_function('openside', '<i class="fa fa-cloud-upload"></i> <strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge bg-blue">'.number_format($global_submissions['rows']).'</span>');
-                            if (count($global_submissions['data']) > 0) {
-                                foreach ($global_submissions['data'] as $i => $submit_date) {
-                                    if (isset($submit_data[$submit_date['submit_type']])) {
-                                        $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
+                    if (!empty(\PHPFusion\Admins::getInstance()->getSubmitData())) {
+                        $html .= '<div id="submissions">';
+                            $html .= fusion_get_function('openside', '<i class="fa fa-cloud-upload"></i> <strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge bg-blue">'.number_format($global_submissions['rows']).'</span>');
+                                if (count($global_submissions['data']) > 0) {
+                                    foreach ($global_submissions['data'] as $i => $submit_date) {
+                                        if (isset($submit_data[$submit_date['submit_type']])) {
+                                            $review_link = sprintf($submit_data[$submit_date['submit_type']]['admin_link'], $submit_date['submit_id']);
 
-                                        $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                            $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
-                                            $html .= '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
-                                            $html .= $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
-                                            $html .= timer($submit_date['submit_datestamp']);
-                                            if (!empty($review_link)) {
-                                                $html .= '<a class="btn btn-xs btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
-                                            }
+                                            $html .= '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                                $html .= '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_date, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
+                                                $html .= '<strong>'.profile_link($submit_date['user_id'], $submit_date['user_name'], $submit_date['user_status']).' </strong>';
+                                                $html .= $locale['273b'].' <strong>'.$submit_data[$submit_date['submit_type']]['submit_locale'].'</strong> ';
+                                                $html .= timer($submit_date['submit_datestamp']);
+                                                if (!empty($review_link)) {
+                                                    $html .= '<a class="btn btn-xs btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
+                                                }
+                                            $html .= '</div>';
+                                        }
+                                    }
+
+                                    if (isset($global_submissions['submissions_nav'])) {
+                                        $html .= '<div class="clearfix">';
+                                            $html .= '<span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span>';
                                         $html .= '</div>';
                                     }
+                                } else {
+                                    $html .= '<div class="text-center">'.$global_submissions['nodata'].'</div>';
                                 }
+                            $html .= fusion_get_function('closeside', '');
+                        $html .= '</div>'; // #submissions
+                    }
 
-                                if (isset($global_submissions['submissions_nav'])) {
-                                    $html .= '<div class="clearfix">';
-                                        $html .= '<span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span>';
-                                    $html .= '</div>';
-                                }
-                            } else {
-                                $html .= '<div class="text-center">'.$global_submissions['nodata'].'</div>';
-                            }
-                        $html .= fusion_get_function('closeside', '');
-                    $html .= '</div>'; // #submissions
                 $html .= '</div>';
 
                 $html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-                    $html .= '<div id="infusions">';
-                        $html .= fusion_get_function('openside', '<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
-                            $content = '';
-                            $bg_colors = ['gray', 'red', 'yellow', 'aqua', 'blue', 'light-blue', 'green', 'navy', 'teal', 'olive', 'orange', 'fuschia', 'purple', 'maroon', ''];
-
-                            if ($infusions_count > 0) {
-                                if (!empty($global_infusions)) {
-                                    foreach ($global_infusions as $inf_id => $inf_data) {
-                                        $color = array_rand($bg_colors);
-
-                                        $html .= '<span class="badge bg-'.$bg_colors[$color].' m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
+                    if (checkrights('I')) {
+                        $html .= '<div id="infusions">';
+                            $html .= fusion_get_function('openside', '<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
+                                $content = '';
+                                if ($infusions_count > 0) {
+                                    if (!empty($global_infusions)) {
+                                        foreach ($global_infusions as $inf_id => $inf_data) {
+                                            $html .= '<span class="badge bg-blue m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
+                                        }
                                     }
+                                    $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>' : '';
+                                } else {
+                                    $html .= '<div class="text-center">'.$locale['284'].'</div>';
                                 }
-                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>' : '';
-                            } else {
-                                $html .= '<div class="text-center">'.$locale['284'].'</div>';
-                            }
-                        $html .= fusion_get_function('closeside', $content);
-                    $html .= '</div>'; // #infusins
+                            $html .= fusion_get_function('closeside', $content);
+                        $html .= '</div>'; // #infusins
+                    }
                 $html .= '</div>';
             $html .= '</div>'; // .row
 
