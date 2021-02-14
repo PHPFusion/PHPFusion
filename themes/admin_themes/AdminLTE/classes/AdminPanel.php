@@ -262,7 +262,6 @@ class AdminPanel {
                             echo Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
                             echo '<span class="pull-right-container">';
                                 echo '<i class="fa fa-angle-left pull-right"></i>';
-                                echo ($i > 4 ? '<small class="label pull-right bg-blue">'.count($admin_pages[$i]).'</small>' : '');
                             echo '</span>';
                         echo '</a>';
                         echo '<ul class="treeview-menu">';

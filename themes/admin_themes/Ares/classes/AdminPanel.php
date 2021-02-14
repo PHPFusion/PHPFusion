@@ -122,7 +122,6 @@ class AdminPanel {
                             $html .= '<a class="dropdown-toggle pointer" data-toggle="collapse" data-parent="#aressub" data-target="#aresnavsection'.$i.'">';
                                 $html .= Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
                                 $html .= '<span class="caret"></span>';
-                                $html .= ($i > 4 ? '<small class="badge pull-right m-r-5">'.count($admin_pages[$i]).'</small>' : '');
                             $html .= '</a>';
                             $html .= '<ul class="collapse'.($active ? ' in' : '').'" id="aresnavsection'.$i.'">';
                                 foreach ($admin_pages[$i] as $key => $data) {
