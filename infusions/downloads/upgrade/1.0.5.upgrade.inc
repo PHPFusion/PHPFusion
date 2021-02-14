@@ -121,7 +121,7 @@ if (dbrows($result)) {
     }
 }
 
-if (file_exists(BASEDIR.'downloads/')) {
+if (is_dir(BASEDIR.'downloads/')) {
     $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php", TRUE);
     if (!empty($files)) {
         foreach ($files as $filename) {
@@ -129,7 +129,7 @@ if (file_exists(BASEDIR.'downloads/')) {
         }
     }
 
-    if (file_exists(BASEDIR.'downloads/images/')) {
+    if (is_dir(BASEDIR.'downloads/images/')) {
         // Images folder
         $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php", TRUE);
         if (!empty($files)) {
@@ -140,7 +140,7 @@ if (file_exists(BASEDIR.'downloads/')) {
         rrmdir(BASEDIR.'downloads/images');
     }
 
-    if (file_exists(BASEDIR.'downloads/submissions/')) {
+    if (is_dir(BASEDIR.'downloads/submissions/')) {
         // Images folder
         $files = makefilelist(BASEDIR.'downloads/submissions/', ".|..|index.php", TRUE);
         if (!empty($files)) {
@@ -149,7 +149,7 @@ if (file_exists(BASEDIR.'downloads/')) {
             }
             rrmdir(BASEDIR.'downloads/submissions');
         }
-        if (file_exists(BASEDIR.'downloads/submissions/images/')) {
+        if (is_dir(BASEDIR.'downloads/submissions/images/')) {
             // Images folder
             $files = makefilelist(BASEDIR.'downloads/submissions/images/', ".|..|index.php", TRUE);
             if (!empty($files)) {
@@ -163,4 +163,3 @@ if (file_exists(BASEDIR.'downloads/')) {
 
     rrmdir(BASEDIR.'downloads');
 }
-

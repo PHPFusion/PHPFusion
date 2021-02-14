@@ -337,7 +337,6 @@ class InstallerDbSetup extends Install_Core {
      */
     protected function doUpgradeBatch($method, $code_array) {
         try {
-
             $method = $method."_infuse";
             return $this->$method($code_array);
 
@@ -363,24 +362,27 @@ class InstallerDbSetup extends Install_Core {
         if (!empty($array)) {
             foreach ($array as $table => $syntax) { // table is method
                 if ($comment_message) {
-                    $sql_head = "###--".$comment_message." ".DB_PREFIX.$table."--".PHP_EOL;
+                    $sql_head = "### ".$comment_message." ".DB_PREFIX.$table.PHP_EOL;
                     if ($_SDK) {
-                        $sql_head = "###-- ".$comment_message." ON $table method--".PHP_EOL;
+                        $sql_head = "### ".$comment_message." ON $table method".PHP_EOL;
                     }
                     $sql .= $sql_head;
                     if (!empty($syntax)) {
 
                         if (is_array($syntax)) {
                             foreach ($syntax as $code) {
-                                $sql_code = $code.PHP_EOL;
+                                if (is_array($code)) {
+                                    $code = implode("\n\r", $code);
+                                }
+                                $sql_code = $code.PHP_EOL.PHP_EOL;
                                 if ($_SDK) {
-                                    $sql_code .= "##-Skipping--".$code.PHP_EOL;
+                                    $sql_code .= "### Skipping\n".$code.PHP_EOL;
                                 }
                                 $sql .= $sql_code;
                             }
                         } else {
                             // new install requires this
-                            $sql .= $syntax.PHP_EOL;
+                            $sql .= $syntax.PHP_EOL.PHP_EOL;
                         }
 
                     }

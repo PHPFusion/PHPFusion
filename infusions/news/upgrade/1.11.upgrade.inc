@@ -29,8 +29,7 @@ $check_array = [
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS, $key)) {
-        $alter_table = DB_NEWS.$value;
-        dbquery("ALTER TABLE ".$alter_table);
+        $inf_altertable[] = DB_NEWS.$value;
     }
 }
 
@@ -89,7 +88,7 @@ foreach ($check_array as $key => $value) {
 }
 
 if (!db_exists(DB_NEWS_IMAGES)) {
-    $create_table = DB_NEWS_IMAGES." (
+    $inf_newtable[] = DB_NEWS_IMAGES." (
     news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_image VARCHAR(100) NOT NULL DEFAULT '',
@@ -99,7 +98,6 @@ if (!db_exists(DB_NEWS_IMAGES)) {
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (news_image_id)
     ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-    dbquery("CREATE TABLE ".$create_table);
 }
 
 // Port Photos into New Tables
@@ -122,7 +120,7 @@ if (dbrows($result)) {
     }
 }
 
-if (file_exists(IMAGES."news/thumbs/")) {
+if (is_dir(IMAGES."news/thumbs/")) {
     $files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
     foreach ($files as $file) {
         fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
@@ -131,7 +129,7 @@ if (file_exists(IMAGES."news/thumbs/")) {
     rrmdir(IMAGES.'news/thumbs');
 }
 
-if (file_exists(IMAGES."news/")) {
+if (is_dir(IMAGES."news/")) {
     $files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
     foreach ($files as $file) {
         fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
@@ -140,7 +138,7 @@ if (file_exists(IMAGES."news/")) {
     rrmdir(IMAGES.'news');
 }
 
-if (file_exists(IMAGES."news_cats/")) {
+if (is_dir(IMAGES."news_cats/")) {
     $files = makefilelist(IMAGES."news_cats/", ".|..|index.php", TRUE);
     foreach ($files as $file) {
         fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
@@ -238,4 +236,3 @@ if (!empty($enabled_languages)) {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".LANGUAGE."')";
 }
-

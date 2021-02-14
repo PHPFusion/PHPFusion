@@ -103,6 +103,8 @@ foreach ($deleted_files as $file) {
     if (is_file($file)) {
         @unlink($file);
     } else {
-        rrmdir($file);
+        if (is_dir($file)) {
+            rrmdir($file);
+        }
     }
 }

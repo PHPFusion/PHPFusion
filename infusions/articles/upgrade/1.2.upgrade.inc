@@ -105,7 +105,7 @@ foreach ($check_array as $key => $value) {
     }
 }
 
-if (file_exists(IMAGES."articles/")) {
+if (is_dir(IMAGES."articles/")) {
     $files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
     if (!empty($files)) {
         foreach ($files as $file) {

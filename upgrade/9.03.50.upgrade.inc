@@ -27,4 +27,6 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-rrmdir(INCLUDES.'filemanager');
+if (is_dir(INCLUDES.'filemanager')) {
+    rrmdir(INCLUDES.'filemanager');
+}

@@ -733,18 +733,9 @@ class Infusion_Core {
 
         if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
             foreach ($inf['updatedbrow'] as $updatedbrow) {
-                try {
-
-                    $result = dbquery("UPDATE ".$updatedbrow);
-                    $affected = dbrows($result);
-
-                } catch (Exception $e) {
+                $result = dbquery("UPDATE ".$updatedbrow);
+                if (!$result) {
                     $error = TRUE;
-                    if (!is_file(BASEDIR."installer_".date("d-M-Y").".errors.log")) {
-                        touch(BASEDIR."installer_".date("d-M-Y").".errors.log");
-                    }
-                    write_file(BASEDIR."installer_".date("d-M-Y").".log.txt", "UPDATE ".$updatedbrow.PHP_EOL.$e->getMessage(), FILE_APPEND);
-                    break;
                 }
             }
         }

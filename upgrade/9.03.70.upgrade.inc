@@ -27,6 +27,6 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-if (file_exists(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php')) {
+if (is_file(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php')) {
     unlink(INCLUDES.'classes/PHPFusion/Feedback/Comments.ajax.php');
 }

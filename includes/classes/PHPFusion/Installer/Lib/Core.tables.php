@@ -220,7 +220,7 @@ function get_core_tables($localeset) {
             'length' => 4,
         ], //page_access TINYINT(4) NOT NULL DEFAULT '0',
         'page_content'      => [
-            'type' => 'TEXT'
+            'type' => 'LONGTEXT'
         ], //page_content TEXT NOT NULL,
         'page_keywords'     => [
             'type'   => 'VARCHAR',
@@ -347,7 +347,7 @@ function get_core_tables($localeset) {
             'length' => 50
         ], //page_content_type VARCHAR(50) NOT NULL DEFAULT '',
         'page_content'       => [
-            'type' => 'TEXT',
+            'type' => 'LONGTEXT',
         ], //page_content TEXT NOT NULL,
         'page_options'       => [
             'type' => 'TEXT',

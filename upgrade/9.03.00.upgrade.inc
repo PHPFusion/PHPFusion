@@ -107,8 +107,8 @@ if (db_exists(DB_ADMIN)) {
         $inf_altertable[] = DB_ADMIN." ADD admin_language VARCHAR(50) NOT NULL DEFAULT '".$settings['locale']."' AFTER admin_page";
     }
 
-    dbquery("UPDATE ".DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'");
-    dbquery("UPDATE ".DB_ADMIN." SET admin_link='reserved' WHERE admin_rights='U'");
+    $inf_updatedbrow[] = DB_ADMIN." SET admin_image='comments.png', admin_link='comments.php', admin_page='1' WHERE admin_rights='C'";
+    $inf_updatedbrow[] = DB_ADMIN." SET admin_link='reserved' WHERE admin_rights='U'";
 
     // Add new core administration links
     $check_array = [

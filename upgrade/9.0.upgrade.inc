@@ -24,6 +24,9 @@ $settings = fusion_get_settings();
  */
 dbquery("SET NAMES utf8mb4");
 
+// Delete all old errors
+dbquery("TRUNCATE TABLE ".DB_ERRORS);
+
 if (!dbcount("(user_id)", DB_USERS, "user_level < '-100'")) {
     $inf_updatedbrow[] = DB_USERS." SET user_level='-103' WHERE user_level='103'";
     $inf_updatedbrow[] = DB_USERS." SET user_level='-102' WHERE user_level='102'";
@@ -35,7 +38,7 @@ $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHE
 while ($data = dbarray($result)) {
     $current_rights = explode('.', $data['user_rights']);
 
-    $remove_rights = ['A', 'AC', 'DC', 'FR', 'NC', 'S5', 'S8', 'S10', 'S11', 'S13', 'SU', 'UFC', 'WC'];
+    $remove_rights = ['AC', 'DC', 'FR', 'NC', 'S5', 'S8', 'S10', 'S11', 'S13', 'SU', 'UFC', 'WC'];
     foreach ($remove_rights as $key => $remove) {
         if (($key = array_search($remove, $current_rights)) !== FALSE) {
             unset($current_rights[$key]);
@@ -43,7 +46,7 @@ while ($data = dbarray($result)) {
     }
 
     if ($data['user_level'] == '-103' || $data['user_level'] == '103') {
-        $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL'];
+        $new_rights = ['PL', 'MI', 'LANG', 'TS', 'MAIL', 'FM'];
         foreach ($new_rights as $add) {
             if (!in_array($add, $current_rights, TRUE)) {
                 $current_rights[] = $add;
@@ -114,7 +117,16 @@ if (db_exists(DB_SETTINGS)) {
         'logoposition_xs'   => 'logo-xs-left',
         'logoposition_sm'   => 'logo-sm-left',
         'logoposition_md'   => 'logo-md-left',
-        'logoposition_lg'   => 'logo-lg-left'
+        'logoposition_lg'   => 'logo-lg-left',
+        'link_bbcode'       => 0,
+        'week_start'        => 0,
+        'links_grouping'    => 0,
+        'recaptcha_type'    => 'text',
+        'pm_inbox_limit'    => 20,
+        'pm_outbox_limit'   => 20,
+        'pm_archive_limit'  => 20,
+        'pm_email_notify'   => 2,
+        'pm_save_sent'      => 2
     ];
 
     foreach ($insert_settings_tbl as $key => $value) {
@@ -262,6 +274,22 @@ if (db_exists(DB_PREFIX.'custom_pages')) {
     if (!column_exists(DB_CUSTOM_PAGES, 'page_breaks', FALSE)) {
         $inf_altertable[] = DB_CUSTOM_PAGES." ADD page_breaks CHAR(1) NOT NULL DEFAULT '' AFTER page_status";
     }
+
+    $inf_updatedbrow[] = DB_CUSTOM_PAGES." SET page_access='-103' WHERE page_access='103'";
+    $inf_updatedbrow[] = DB_CUSTOM_PAGES." SET page_access='-102' WHERE page_access='102'";
+    $inf_updatedbrow[] = DB_CUSTOM_PAGES." SET page_access='-101' WHERE page_access='101'";
+    $inf_updatedbrow[] = DB_CUSTOM_PAGES." SET page_status=1";
+
+    $dropcol_aaray = [
+        'page_allow_comments',
+        'page_allow_ratings'
+    ];
+
+    foreach ($dropcol_aaray as $key) {
+        if (column_exists(DB_CUSTOM_PAGES, $key, FALSE)) {
+            $inf_dropcol[] = ['table' => DB_CUSTOM_PAGES, 'column' => $key];
+        }
+    }
 }
 
 $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES);
@@ -274,7 +302,9 @@ if (dbrows($result) > 0) {
             'page_grid_id'      => $data['page_id'],
             'page_content_id'   => $data['page_id'],
             'page_content_type' => 'content',
-            'page_content'      => $data['page_content']
+            'page_content'      => $data['page_content'],
+            'page_options'      => '',
+            'page_widget'       => ''
         ];
 
         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data_content, 'save');
@@ -282,7 +312,9 @@ if (dbrows($result) > 0) {
         $data_content_grid = [
             'page_id'                => $data['page_id'],
             'page_grid_id'           => $data['page_id'],
-            'page_grid_column_count' => 1
+            'page_grid_column_count' => 1,
+            'page_grid_html_id'      => $data['page_id'],
+            'page_grid_class'        => ''
         ];
 
         dbquery_insert(DB_CUSTOM_PAGES_GRID, $data_content_grid, 'save');
@@ -315,6 +347,7 @@ if (db_exists(DB_PREFIX.'panels')) {
     $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='forum_threads_list_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_display='1', panel_restriction='3', panel_status='1' WHERE panel_filename='member_poll_panel'";
     $inf_updatedbrow[] = DB_PANELS." SET panel_languages='".$settings['locale']."'";
+    $inf_updatedbrow[] = DB_PANELS." SET panel_status='0' WHERE panel_type='php' AND panel_content LIKE 'openside(%'"; // disable old php panels
 }
 
 if (db_exists(DB_USER_FIELD_CATS)) {
@@ -354,50 +387,50 @@ if (db_exists(DB_USER_FIELDS)) {
 
     if (column_exists('users', 'user_location')) {
         if (!isset($previous_install['user_location'])) {
-            $uf_to_install[] = "('".$locale['uf_location']."', 'user_location', '3', 'file', '', '', '1')";
+            $uf_to_install[] = "('".$locale['uf_location']."', 'user_location', '3', 'file', '', '', '1', '', '')";
         }
     }
 
     if (column_exists('users', 'user_birthdate')) {
         if (!isset($previous_install['user_birthdate'])) {
-            $uf_to_install[] = "('".$locale['uf_birthdate']."', 'user_birthdate', '3', 'file', '1900-01-01', '', '2')";
+            $uf_to_install[] = "('".$locale['uf_birthdate']."', 'user_birthdate', '3', 'file', '1900-01-01', '', '2', '', '')";
         }
     }
 
     if (column_exists('users', 'user_skype')) {
         if (!isset($previous_install['user_skype'])) {
-            $uf_to_install[] = "('".$locale['uf_skype']."', 'user_skype', '2', 'file', '', '', '1')";
+            $uf_to_install[] = "('".$locale['uf_skype']."', 'user_skype', '2', 'file', '', '', '1', '', '')";
         }
     }
 
     if (column_exists('users', 'user_icq')) {
         if (!isset($previous_install['user_icq'])) {
-            $uf_to_install[] = "('".$locale['uf_icq']."', 'user_icq', '2', 'file', '', '', '3')";
+            $uf_to_install[] = "('".$locale['uf_icq']."', 'user_icq', '2', 'file', '', '', '3', '', '')";
         }
     }
 
     if (column_exists('users', 'user_web')) {
         if (!isset($previous_install['user_web'])) {
-            $uf_to_install[] = "('".$locale['uf_web']."', 'user_web', '2', 'file', '', '', '6')";
+            $uf_to_install[] = "('".$locale['uf_web']."', 'user_web', '2', 'file', '', '', '6', '', '')";
         }
     }
 
     if (column_exists('users', 'user_theme')) {
         $inf_updatedbrow[] = DB_USERS." SET user_theme='Default'";
         if (!isset($previous_install['user_theme'])) {
-            $uf_to_install[] = "('".$locale['uf_theme']."', 'user_theme', '4', 'file', '', '', '2')";
+            $uf_to_install[] = "('".$locale['uf_theme']."', 'user_theme', '4', 'file', '', '', '2', '', '')";
 
         }
     }
 
     if (column_exists('users', 'user_sig')) {
         if (!isset($previous_install['user_sig'])) {
-            $uf_to_install[] = "('".$locale['uf_sig']."', 'user_sig', '4', 'file', '', '', '3')";
+            $uf_to_install[] = "('".$locale['uf_sig']."', 'user_sig', '4', 'file', '', '', '3', '', '')";
         }
     }
 
     if (!empty($uf_to_install)) {
-        $uf_sql = DB_USER_FIELDS." (`field_title`, `field_name`, `field_cat`, `field_type`, `field_default`, `field_options`, `field_order`) VALUES ";
+        $uf_sql = DB_USER_FIELDS." (field_title, field_name, field_cat, field_type, field_default, field_options, field_order, field_error, field_config) VALUES ";
         $uf_sql .= implode(",", $uf_to_install);
 
         $inf_insertdbrow[] = $uf_sql;

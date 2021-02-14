@@ -29,14 +29,25 @@ $check_array = [
     'album_language' => " ADD album_language varchar(50) NOT NULL default '".fusion_get_settings('localeset')."' AFTER album_datestamp",
     'album_keywords' => " ADD album_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER album_description",
     'album_image'    => " ADD album_image VARCHAR(200) NOT NULL DEFAULT '' AFTER album_keywords",
-    'album_thumb1'   => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
-    'album_thumb2'   => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1",
+    //'album_thumb1'   => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
+    'album_thumb2'   => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT ''",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
         dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ".$value);
     }
 }
+
+$change_album = [
+    'album_thumb' => " CHANGE album_thumb album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image"
+];
+
+foreach ($change_album as $key => $value) {
+    if (column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
+        $inf_altertable[] = DB_PHOTO_ALBUMS.$value;
+    }
+}
+
 // Make sure access table are support for new levels
 if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
     $inf_altertable[] = DB_PHOTO_ALBUMS." CHANGE album_access album_access CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
@@ -114,6 +125,8 @@ if (!empty($enabled_languages)) {
 
 // Move all photos
 if (is_dir(IMAGES."photoalbum/")) {
+    rrmdir(IMAGES.'photoalbum/submissions/');
+
     $files = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE);
     foreach ($files as $file) {
         fusion_rename(IMAGES."photoalbum/".$file, INFUSIONS.'gallery/photos/'.$file);
@@ -121,7 +134,7 @@ if (is_dir(IMAGES."photoalbum/")) {
 
     $folders = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE, 'folders');
     foreach ($folders as $folder) {
-        fusion_rename(IMAGES."photoalbum/".$folder, INFUSIONS.'gallery/photos/'.$folder);
+        rename(IMAGES."photoalbum/".$folder, INFUSIONS.'gallery/photos/'.$folder);
     }
 
     // Remove the whole old dir including rouge files
