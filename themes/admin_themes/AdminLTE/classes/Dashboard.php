@@ -260,55 +260,55 @@ class Dashboard {
                         echo '</div>'; // #ratings
                     }
 
-                    echo '<div id="submissions">';
-                        openside('<i class="fa fa-cloud-upload"></i> <strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge bg-blue">'.number_format($global_submissions['rows']).'</span>');
-                            if (count($global_submissions['data']) > 0) {
-                                foreach ($global_submissions['data'] as $i => $submit_data) {
-                                    $review_link = ADMIN.'submissions.php'.$aidlink.'&action=2&t='.$submit_data['submit_type'].'&submit_id='.$submit_data['submit_id'];
+                    if (checkrights('SU')) {
+                        echo '<div id="submissions">';
+                            openside('<i class="fa fa-cloud-upload"></i> <strong class="text-uppercase">'.$locale['279'].'</strong><span class="pull-right badge bg-blue">'.number_format($global_submissions['rows']).'</span>');
+                                if (count($global_submissions['data']) > 0) {
+                                    foreach ($global_submissions['data'] as $i => $submit_data) {
+                                        $review_link = ADMIN.'submissions.php'.$aidlink.'&action=2&t='.$submit_data['submit_type'].'&submit_id='.$submit_data['submit_id'];
 
-                                    echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
-                                        echo '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_data, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
-                                        echo '<strong>'.profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status']).' </strong>';
-                                        echo $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
-                                        echo timer($submit_data['submit_datestamp']);
-                                        if (!empty($review_link)) {
-                                            echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
-                                        }
-                                    echo '</div>';
-                                }
+                                        echo '<div data-id="'.$i.'" class="clearfix p-b-10'.($i > 0 ? ' p-t-10' : '').'"'.($i > 0 ? ' style="border-top: 1px solid #ddd;"' : '').'>';
+                                            echo '<div class="pull-left display-inline-block m-t-5 m-b-0">'.display_avatar($submit_data, '25px', '', FALSE, 'img-circle m-r-5').'</div>';
+                                            echo '<strong>'.profile_link($submit_data['user_id'], $submit_data['user_name'], $submit_data['user_status']).' </strong>';
+                                            echo $locale['273b'].' <strong>'.$submit_type[$submit_data['submit_type']].'</strong> ';
+                                            echo timer($submit_data['submit_datestamp']);
+                                            if (!empty($review_link)) {
+                                                echo '<a class="btn btn-sm btn-default m-l-10 pull-right" href="'.$review_link.'">'.$locale['286'].'</a>';
+                                            }
+                                        echo '</div>';
+                                    }
 
-                                if (isset($global_submissions['submissions_nav'])) {
-                                    echo '<div class="clearfix">';
-                                        echo '<span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span>';
-                                    echo '</div>';
+                                    if (isset($global_submissions['submissions_nav'])) {
+                                        echo '<div class="clearfix">';
+                                            echo '<span class="pull-right text-smaller">'.$global_submissions['submissions_nav'].'</span>';
+                                        echo '</div>';
+                                    }
+                                } else {
+                                    echo '<div class="text-center">'.$global_submissions['nodata'].'</div>';
                                 }
-                            } else {
-                                echo '<div class="text-center">'.$global_submissions['nodata'].'</div>';
-                            }
-                        closeside();
-                    echo '</div>'; // #submissions
+                            closeside();
+                        echo '</div>'; // #submissions
+                    }
                 echo '</div>';
 
                 echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-                    echo '<div id="infusions">';
-                        openside('<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
-                            $content = '';
-                            $bg_colors = ['gray', 'red', 'yellow', 'aqua', 'blue', 'light-blue', 'green', 'navy', 'teal', 'olive', 'orange', 'fuschia', 'purple', 'maroon', ''];
-
-                            if ($infusions_count > 0) {
-                                if (!empty($global_infusions)) {
-                                    foreach ($global_infusions as $inf_id => $inf_data) {
-                                        $color = array_rand($bg_colors);
-
-                                        echo '<span class="badge bg-'.$bg_colors[$color].' m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
+                    if (checkrights('I')) {
+                        echo '<div id="infusions">';
+                            openside('<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
+                                $content = '';
+                                if ($infusions_count > 0) {
+                                    if (!empty($global_infusions)) {
+                                        foreach ($global_infusions as $inf_id => $inf_data) {
+                                            echo '<span class="badge bg-blue m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
+                                        }
                                     }
+                                    $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>' : '';
+                                } else {
+                                    echo '<div class="text-center">'.$locale['284'].'</div>';
                                 }
-                                $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>' : '';
-                            } else {
-                                echo '<div class="text-center">'.$locale['284'].'</div>';
-                            }
-                        closeside($content);
-                    echo '</div>'; // #infusins
+                            closeside($content);
+                        echo '</div>'; // #infusins
+                    }
                 echo '</div>';
             echo '</div>'; // .row
 
