@@ -268,8 +268,8 @@ class Dashboard {
 
                 $html .= '</div>';
 
-                $html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-                    if (checkrights('I')) {
+                if (checkrights('I')) {
+                    $html .= '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
                         $html .= '<div id="infusions">';
                             $html .= fusion_get_function('openside', '<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
                                 $content = '';
@@ -285,8 +285,8 @@ class Dashboard {
                                 }
                             $html .= fusion_get_function('closeside', $content);
                         $html .= '</div>'; // #infusins
-                    }
-                $html .= '</div>';
+                    $html .= '</div>';
+                }
             $html .= '</div>'; // .row
 
         $html .= fusion_get_function('closetable', FALSE);
