@@ -44,8 +44,8 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
                     INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
                     WHERE p.thread_id=:tid AND p.post_id=:pid AND post_hidden='0'
                 ", [
-                        'tid' => (int) $tid,
-                        ':pid' => (int) $pid
+                        'tid'  => (int)$tid,
+                        ':pid' => (int)$pid
                     ]);
                     $data = dbarray($result);
                     $code_save = '<a class="pull-right m-t-0 btn btn-sm btn-default" href="'.INCLUDES.'bbcodes/code_bbcode_save.php?thread_id='.$data['thread_id'].'&amp;post_id='.$data['post_id'].'&amp;code_id='.$i.'"><i class="fa fa-download"></i> '.$locale['bb_code_save'].'</a>';
@@ -56,7 +56,7 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
             $html = '<div class="code_bbcode">';
             $html .= '<div class="clearfix m-b-5"><strong>'.$locale['bb_code_code'].'</strong>'.$code_save.'</div>';
             $lang = !empty($m['lang']) ? $m['lang'] : 'php';
-            $html .= '<pre><code class="language-'.$lang.'">'.formatcode($m['code']).'</code></pre>';
+            $html .= '<pre><code class="language-'.$lang.'">'.format_code($m['code']).'</code></pre>';
             $html .= '</div>';
 
             return $html;
@@ -73,12 +73,12 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
             $text = preg_replace_callback(
                 "#```(.*?)```#si",
                 function ($m) use (&$i) {
-                    return "<pre><code class='language-php'>".formatcode($m['1'])."</code></pre>";
+                    return "<pre><code class='language-php'>".format_code($m['1'])."</code></pre>";
                 }, $text);
         }
     }
 
-    $text = preg_replace("#`(.*?)`#si", '<code>\\1</code>', $text);
-    $text = preg_replace("#\[php\](.*?)\[/php\]#si", "<pre><code class='language-php'>".formatcode('\\1')."</code></pre>", $text);
-    $text = preg_replace("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", "<pre><code class='language-php'>".formatcode('\\2')."</code></pre>", $text);
+    $text = preg_replace("#`(.*?)`#si", "<code>".format_code('\\1')."</code>", $text);
+    $text = preg_replace("#\[php\](.*?)\[/php\]#si", "<pre><code class='language-php'>".format_code('\\1')."</code></pre>", $text);
+    $text = preg_replace("#\[geshi=(.*?)\](.*?)\[/geshi\]#si", "<pre><code class='language-php'>".format_code('\\2')."</code></pre>", $text);
 }

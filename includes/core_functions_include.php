@@ -792,12 +792,23 @@ function parseubb($text, $selected = "", $descript = TRUE) {
     }
 
     $bbcode_cache = cache_bbcode();
+    $bbcodes = [];
+    foreach ($bbcode_cache as $bbcode) {
+        $bbcodes[$bbcode] = $bbcode;
+    }
+
+    if (!empty($bbcodes['code'])) {
+        $move_to_top = $bbcodes['code'];
+        unset($bbcodes['code']);
+        array_unshift($bbcodes, $move_to_top);
+    }
+
     $sel_bbcodes = [];
 
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
-    foreach ($bbcode_cache as $bbcode) {
+    foreach ($bbcodes as $bbcode) {
         $locale_file = '';
         if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
             $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
@@ -811,7 +822,7 @@ function parseubb($text, $selected = "", $descript = TRUE) {
 
     $locale = fusion_get_locale();
 
-    foreach ($bbcode_cache as $bbcode) {
+    foreach ($bbcodes as $bbcode) {
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
@@ -918,7 +929,7 @@ function encode_code($text) {
 
     foreach ($codes[0] as $key => $replacer) {
         $code = str_replace('&lt;br /&gt;', '', $replace[$key]);
-        $code = formatcode($code);
+        $code = format_code($code);
         $text = str_replace($replacer, '<pre><code class="language-php">'.$code.'</code></pre>', $text);
     }
     unset($key, $replacer, $replace);
@@ -934,23 +945,16 @@ function encode_code($text) {
  * @return string
  */
 function format_code($text) {
+    $text = htmlentities($text, ENT_QUOTES, 'UTF-8', FALSE);
+
     $text = str_replace(
-        ["  ", "  ", "\t"],
-        ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;"],
+        ["  ", "  ", "\t", "[", "]"],
+        ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;", "&#91;", "&#93;"],
         $text
     );
     $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
 
     return $text;
-}
-
-/**
- * @param $value
- *
- * @return string
- */
-function formatcode($value) {
-    return format_code($value);
 }
 
 /**

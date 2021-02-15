@@ -257,3 +257,14 @@ if (!function_exists('closesidex')) {
         closeside();
     }
 }
+
+/**
+ * @param $value
+ *
+ * @return string
+ *
+ * @deprecated use formatcode()
+ */
+function formatcode($value) {
+    return format_code($value);
+}
