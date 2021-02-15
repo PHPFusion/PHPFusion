@@ -29,8 +29,10 @@ add_breadcrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' =>
 
 if ($folder = post("infuse")) {
     Infusion_Core::getInstance()->infuse($folder);
+    redirect(FUSION_REQUEST);
 } else if ($folder = post("defuse")) {
     Infusion_Core::getInstance()->defuse($folder);
+    redirect(FUSION_REQUEST);
 }
 
 opentable($locale['400']);
