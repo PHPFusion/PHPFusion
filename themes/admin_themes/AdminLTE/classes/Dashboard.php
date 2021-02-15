@@ -291,8 +291,8 @@ class Dashboard {
                     }
                 echo '</div>';
 
-                echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
-                    if (checkrights('I')) {
+                if (checkrights('I')) {
+                    echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
                         echo '<div id="infusions">';
                             openside('<i class="fa fa-cubes"></i> <strong class="text-uppercase">'.$locale['283'].'</strong><span class="pull-right badge bg-blue">'.number_format((int)$infusions_count).'</span>');
                                 $content = '';
@@ -308,8 +308,9 @@ class Dashboard {
                                 }
                             closeside($content);
                         echo '</div>'; // #infusins
-                    }
-                echo '</div>';
+                    echo '</div>';
+                }
+
             echo '</div>'; // .row
 
         closetable(FALSE);
