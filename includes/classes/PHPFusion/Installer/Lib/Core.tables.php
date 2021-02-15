@@ -42,7 +42,7 @@ function get_core_tables($localeset) {
         ], //admin_rights CHAR(4) NOT NULL DEFAULT '',
         'admin_image'    => [
             'type'   => 'VARCHAR',
-            'length' => 50
+            'length' => 100
         ], //admin_image VARCHAR(50) NOT NULL DEFAULT '',
         'admin_title'    => [
             'type'   => 'VARCHAR',
