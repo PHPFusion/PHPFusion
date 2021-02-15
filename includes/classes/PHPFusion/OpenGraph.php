@@ -119,7 +119,7 @@ class OpenGraph {
         $settings = fusion_get_settings();
 
         OpenGraph::$data = [
-            'title'       => $settings['sitename'],
+            'title'       => get_title(),
             'description' => str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($settings['description']))),
             'url'         => $settings['siteurl'],
             'keywords'    => $settings['keywords'],

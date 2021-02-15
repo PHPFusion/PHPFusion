@@ -29,6 +29,13 @@ function set_title($title = "") {
 }
 
 /**
+ * Get Current Page Title
+ */
+function get_title() {
+    return OutputHandler::getTitle();
+}
+
+/**
  * Append something to the title of the page
  *
  * @param string $addition
@@ -78,8 +85,8 @@ function add_to_footer($tag = "") {
 /**
  * Replace something in the output using regexp
  *
- * @param string $target Regexp pattern without delimiters
- * @param string $replace The new content
+ * @param string $target    Regexp pattern without delimiters
+ * @param string $replace   The new content
  * @param string $modifiers Regexp modifiers
  */
 function replace_in_output($target, $replace, $modifiers = "") {

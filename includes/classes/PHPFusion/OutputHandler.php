@@ -213,9 +213,8 @@ class OutputHandler {
         }
 
         if (self::$pageTitle != $settings['sitename']) {
-            $output = preg_replace("#<title>.*</title>#i",
-                "<title>".self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename']."</title>",
-                $output, 1);
+            self::$pageTitle = self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename'];
+            $output = preg_replace("#<title>.*</title>#i", "<title>".self::$pageTitle."</title>", $output, 1);
         }
 
         if (!empty(self::$pageMeta)) {
