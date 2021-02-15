@@ -599,17 +599,19 @@ class Moderator {
 
                     dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=".$new_forum_id." WHERE thread_id=".$thread_id);
 
-                    $bestForumLastThread = dbarray(dbquery("select * from ".DB_FORUM_THREADS." where forum_id='".$forum_id."' order by thread_lastpost desc limit 1"));
+                    $bestForumLastThread = dbarray(dbquery("SELECT * FROM ".DB_FORUM_THREADS." WHERE forum_id='".$forum_id."' ORDER BY thread_lastpost DESC LIMIT 1"));
+
+                    $postcount = dbarray(dbquery("SELECT forum_postcount FROM ".DB_FORUMS." WHERE forum_id='".$forum_id."'"));
 
                     dbquery("UPDATE ".DB_FORUMS." SET
-                            forum_postcount=forum_postcount-:forum_postcount,
-                            forum_threadcount=forum_threadcount-1,
-                            forum_lastpost=:thread_lastpost,
-                            forum_lastpostid=:thread_lastpostid,
-                            forum_lastuser=:thread_lastuser
-                            WHERE forum_id=:forum_id"
-                    ,[
-                        ':forum_postcount'   => (int)$currentThreadPostCount,
+                        forum_postcount=:forum_postcount,
+                        forum_threadcount=forum_threadcount-1,
+                        forum_lastpost=:thread_lastpost,
+                        forum_lastpostid=:thread_lastpostid,
+                        forum_lastuser=:thread_lastuser
+                        WHERE forum_id=:forum_id
+                    ", [
+                        ':forum_postcount'   => (int)($postcount['forum_postcount'] - $currentThreadPostCount),
                         ':thread_lastpost'   => !empty($bestForumLastThread['thread_lastpost']) ? (int)$bestForumLastThread['thread_lastpost'] : 0,
                         ':thread_lastpostid' => !empty($bestForumLastThread['thread_lastpostid']) ? (int)$bestForumLastThread['thread_lastpostid'] : 0,
                         ':thread_lastuser'   => !empty($bestForumLastThread['thread_lastuser']) ? (int)$bestForumLastThread['thread_lastuser'] : 0,
