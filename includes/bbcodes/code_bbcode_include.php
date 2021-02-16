@@ -44,7 +44,7 @@ if (preg_match_all('#\[code(=(.*?))?\](.*?)\[/code\]#si', $text) ||
                     INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id = p.thread_id
                     WHERE p.thread_id=:tid AND p.post_id=:pid AND post_hidden='0'
                 ", [
-                        ':tid'  => (int)$tid,
+                        ':tid' => (int)$tid,
                         ':pid' => (int)$pid
                     ]);
                     $data = dbarray($result);
