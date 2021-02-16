@@ -30,6 +30,10 @@ if (!defined('IN_FUSION')) {
     define('IN_FUSION', TRUE);
 }
 
+if (is_file(__DIR__.'/.maintenance')) {
+    die('Shortly unavailable for scheduled maintenance. Please check again in a few minutes.');
+}
+
 require_once __DIR__.'/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.

@@ -128,6 +128,7 @@ class Install_Core extends Infusion_Core {
             if (file_exists(BASEDIR.'config.php')) {
                 @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
                 @chmod(BASEDIR.'config_temp.php', 0755);
+                file_put_contents(BASEDIR.'.maintenance', '');
             }
 
             session_start();
@@ -376,6 +377,7 @@ class Install_Core extends Infusion_Core {
                 if (file_exists(BASEDIR.'config_temp.php')) {
                     @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
                     @chmod(BASEDIR.'config.php', 0644);
+                    @unlink(BASEDIR.'.maintenance');
                 }
                 unset($_SESSION['step']);
                 redirect(BASEDIR.'index.php');
@@ -385,6 +387,7 @@ class Install_Core extends Infusion_Core {
                 if (file_exists(BASEDIR.'config_temp.php')) {
                     @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
                     @chmod(BASEDIR.'config.php', 0644);
+                    @unlink(BASEDIR.'.maintenance');
                 }
                 unset($_SESSION['step']);
                 redirect(BASEDIR.'index.php');
