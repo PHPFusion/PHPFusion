@@ -124,7 +124,8 @@ if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 
 echo "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-echo "</head>\n";
+echo "</head>";
+echo "<body class='maintenance-page'>";
 
 display_maintenance($info);
 
