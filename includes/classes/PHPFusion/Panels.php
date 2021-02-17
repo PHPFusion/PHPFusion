@@ -341,7 +341,7 @@ class Panels {
                                         eval($panelContent);
 
                                     } else {
-                                        echo $p_data['panel_content'];
+                                        echo stripslashes($p_data['panel_content']);
                                     }
                                 }
                             }
