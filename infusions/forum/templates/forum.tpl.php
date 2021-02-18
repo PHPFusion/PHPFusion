@@ -261,6 +261,7 @@ if (!function_exists('forum_viewforum')) {
         if ($info['forum_type'] > 1 && !empty($info['forum_page_link'])) {
             echo '<ul class="nav nav-pills">';
             $i = 0;
+            unset($info['forum_page_link']['subforums']); // hide subforums section
             foreach ($info['forum_page_link'] as $view_keys => $page_link) {
                 $active = (!isset($_GET['view']) && !$i) || (isset($_GET['view']) && $_GET['view'] === $view_keys) ? ' active' : '';
 
