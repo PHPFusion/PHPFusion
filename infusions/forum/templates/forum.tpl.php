@@ -123,7 +123,7 @@ if (!function_exists('render_forum_main')) {
                 if ($data['forum_type'] == 1) {
                     echo '<div class="panel panel-default">';
                     echo '<div class="panel-heading">';
-                    echo '<h4 class="panel-title">'.$data['forum_link']['title'].'</h4>';
+                    echo '<h4 class="panel-title"><a class="text-bold" href="'.$data['forum_link']['link'].'">'.$data['forum_link']['title'].'</a></h4>';
 
                     if ($data['forum_description']) {
                         echo '<span class="text-smaller">'.$data['forum_description'].'</span>';
@@ -258,7 +258,7 @@ if (!function_exists('forum_viewforum')) {
             echo '</div>';
         }
 
-        if (!empty($info['forum_page_link'])) {
+        if ($info['forum_type'] > 1 && !empty($info['forum_page_link'])) {
             echo '<ul class="nav nav-pills">';
             $i = 0;
             foreach ($info['forum_page_link'] as $view_keys => $page_link) {
@@ -277,7 +277,7 @@ if (!function_exists('forum_viewforum')) {
             echo '</div>';
         }
 
-        if (!empty($info['filters']['type'])) {
+        if ($info['forum_type'] > 1 && !empty($info['filters']['type'])) {
             echo '<div class="m-b-20">';
             foreach ($info['filters']['type'] as $key => $tab) {
                 $active = $tab['active'] == 1 ? ' strong' : '';
@@ -389,9 +389,27 @@ if (!function_exists('forum_viewforum')) {
                     break;
             }
         } else {
-            echo '<div class="list-group">';
-            render_forum_threads($info);
-            echo '</div>';
+            if (!empty($info['subforums'])) {
+                echo '<div class="panel panel-default">';
+                    echo '<div class="list-group">';
+                        foreach ($info['subforums'] as $subforum_id => $subforum_data) {
+                            echo '<div class="list-group-item clearfix">';
+                            render_forum_item($subforum_data);
+                            echo '</div>';
+                        }
+                    echo '</div>';
+                echo '</div>';
+            } else {
+                if ($info['forum_type'] == 1) {
+                    echo '<div class=" text-center">'.$locale['forum_0327'].'</div>';
+                }
+            }
+
+            if ($info['forum_type'] > 1) {
+                echo '<div class="list-group">';
+                    render_forum_threads($info);
+                echo '</div>';
+            }
         }
 
         openside('');
@@ -645,7 +663,6 @@ if (!function_exists("render_section")) {
 
 /**
  * Custom Modal New Topic
- * This is unused by the core but you can implement it.
  */
 if (!function_exists('forum_newtopic')) {
     function forum_newtopic() {
