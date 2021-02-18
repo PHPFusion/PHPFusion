@@ -669,7 +669,19 @@ function parseubb($text, $selected = FALSE) {
         if ($selected) {
             $sel_bbcodes = explode("|", $selected);
         }
+
+        $bbcodes = [];
         foreach ($bbcode_cache as $bbcode) {
+            $bbcodes[$bbcode] = $bbcode;
+        }
+
+        if (!empty($bbcodes['code'])) {
+            $move_to_top = $bbcodes['code'];
+            unset($bbcodes['code']);
+            array_unshift($bbcodes, $move_to_top);
+        }
+
+        foreach ($bbcodes as $bbcode) {
             if ($selected && in_array($bbcode, $sel_bbcodes)) {
                 if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
                     if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
@@ -748,6 +760,8 @@ function formatcode($text) {
     $text = str_replace("  ", "&nbsp; ", $text);
     $text = str_replace("  ", " &nbsp;", $text);
     $text = str_replace("\t", "&nbsp; &nbsp;", $text);
+    $text = str_replace("\t", "&nbsp; &nbsp;", $text);
+    $text = str_replace(["[", "]"], ["&#91;", "&#93;"], $text);
     $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
     return $text;
 }
