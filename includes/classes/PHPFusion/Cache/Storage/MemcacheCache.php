@@ -99,15 +99,15 @@ class MemcacheCache implements ICache {
                     $this->memcache->set($key.'_time', time(), $seconds);
                     $this->memcache->set($key, $data, $seconds);
                 } else {
-                    $this->memcache->set($key.'_time', time(), MEMCACHE_COMPRESSED, $seconds);
-                    $this->memcache->set($key, $data, MEMCACHE_COMPRESSED, $seconds);
+                    $this->memcache->set($key.'_time', time(), NULL, $seconds);
+                    $this->memcache->set($key, $data, NULL, $seconds);
                 }
             }
         } else {
             if ($this->is_memcached) {
                 $this->memcache->set($key, $data, $seconds);
             } else {
-                $this->memcache->set($key, $data, MEMCACHE_COMPRESSED, $seconds);
+                $this->memcache->set($key, $data, NULL, $seconds);
             }
         }
     }
