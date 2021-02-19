@@ -73,7 +73,7 @@ class Dashboard {
 
             $grid = ['mobile' => 12, 'tablet' => 6, 'laptop' => 6, 'desktop' => 4];
 
-            $html .= '<div class="row">';
+            $html .= '<div class="row equal-height">';
                 $modules = [];
 
                 if (defined('FORUM_EXISTS')) {
@@ -152,8 +152,8 @@ class Dashboard {
                     foreach ($modules as $name => $module) {
                         $html .= '<div class="col-xs-'.$grid['mobile'].' col-sm-'.$grid['tablet'].' col-md-'.$grid['laptop'].' col-lg-'.$grid['desktop'].' block">';
                             $html .= '<div class="info-box">';
-                                $html .= '<span class="info-box-icon bg-light-blue"><i class="'.$module['icon'].'"></i></span>';
-                                $html .= '<div class="info-box-content">';
+                                $html .= '<span class="info-box-icon bg-blue" style="height: 100%;"><i class="'.$module['icon'].'"></i></span>';
+                                $html .= '<div class="info-box-content overflow-hide">';
                                     $html .= '<strong class="info-box-text">'.$module['title'].' '.$locale['258'].'</strong>';
                                     if (!empty($module['stats'])) {
                                         foreach ($module['stats'] as $stat) {
