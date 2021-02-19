@@ -30,7 +30,7 @@ class SqlHandler {
      * @param string $new_column_name
      * @param string $field_attributes
      */
-    public static function add_column(string $table_name, string $new_column_name, string $field_attributes) {
+    public static function add_column($table_name, $new_column_name, $field_attributes) {
         if (!empty($field_attributes)) {
             $result = dbquery("ALTER TABLE ".$table_name." ADD ".$new_column_name." ".$field_attributes); // create the new one.
             if (!$result) {
@@ -45,7 +45,7 @@ class SqlHandler {
      * @param string $table_name
      * @param string $old_column_name
      */
-    public static function drop_column(string $table_name, string $old_column_name) {
+    public static function drop_column($table_name, $old_column_name) {
         $result = dbquery("ALTER TABLE ".$table_name." DROP ".$old_column_name);
         if (!$result) {
             fusion_stop("Unable to drop column ".$old_column_name);
@@ -60,7 +60,7 @@ class SqlHandler {
      *
      * @return bool|mixed|null|PDOStatement|resource
      */
-    public static function build_table(string $new_table, string $primary_column) {
+    public static function build_table($new_table, $primary_column) {
         $new_table = !stristr($new_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
         $result = NULL;
         if (!db_exists($new_table)) {
@@ -81,7 +81,7 @@ class SqlHandler {
      * @param string $old_table
      * @param string $new_table
      */
-    public static function transfer_table(string $old_table, string $new_table) {
+    public static function transfer_table($old_table, $new_table) {
 
         $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
         $new_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$new_table : $new_table;
@@ -108,7 +108,7 @@ class SqlHandler {
      *
      * @param string $old_table
      */
-    public static function drop_table(string $old_table) {
+    public static function drop_table($old_table) {
 
         $old_table = !stristr($old_table, DB_PREFIX) ? DB_PREFIX.$old_table : $old_table;
         $result = dbquery("DROP TABLE IF EXISTS ".$old_table);
@@ -129,7 +129,7 @@ class SqlHandler {
      * @param string $new_column_name
      * @param string $field_attributes
      */
-    public static function rename_column(string $table_name, string $old_column_name, string $new_column_name, string $field_attributes) {
+    public static function rename_column($table_name, $old_column_name, $new_column_name, $field_attributes) {
         $result = dbquery("ALTER TABLE ".$table_name." CHANGE ".$old_column_name." ".$new_column_name." ".$field_attributes."");
         if (!$result) {
             fusion_stop("Unable to alter ".$old_column_name." to ".$new_column_name);
@@ -143,7 +143,7 @@ class SqlHandler {
      * @param string $new_table
      * @param string $column_name
      */
-    public static function move_column(string $old_table, string $new_table, string $column_name) {
+    public static function move_column($old_table, $new_table, $column_name) {
 
         $result = dbquery("SHOW COLUMNS FROM ".$old_table);
         $data = [];
@@ -186,7 +186,7 @@ class SqlHandler {
  *
  * @return array Returns cat-id relationships
  */
-function dbquery_tree(string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function dbquery_tree($db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT $id_col, $cat_col FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -213,7 +213,7 @@ function dbquery_tree(string $db, string $id_col, string $cat_col, $filter = NUL
  *
  * @return array Returns cat-id relationships with full data
  */
-function dbquery_tree_full(string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function dbquery_tree_full($db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     //$data = [];
     $index = [];
     $query = "SELECT * FROM ".$db." ".$filter;
@@ -257,7 +257,7 @@ function tree_index(array $data) {
  *
  * @return array
  */
-function reduce_tree(array $result, string $id_col) {
+function reduce_tree(array $result, $id_col) {
     $arrays = flatten_array($result);
     $list = [];
     foreach ($arrays as $value) {
@@ -278,7 +278,7 @@ function reduce_tree(array $result, string $id_col) {
  *
  * @return int
  */
-function get_root(array $index, int $child_id) {
+function get_root(array $index, $child_id) {
     foreach ($index as $key => $array) {
         if (in_array($child_id, $array)) {
             if ($key == 0) {
@@ -303,7 +303,7 @@ function get_root(array $index, int $child_id) {
  *
  * @return int
  */
-function get_hkey(string $db, string $id_col, string $cat_col, int $current_id) {
+function get_hkey($db, $id_col, $cat_col, $current_id) {
     $result = dbquery("SELECT $id_col, $cat_col FROM ".$db." WHERE $id_col =:pid LIMIT 1", [':pid' => intval($current_id)]);
     if (dbrows($result) > 0) {
         $data = dbarray($result);
@@ -330,7 +330,7 @@ function get_hkey(string $db, string $id_col, string $cat_col, int $current_id) 
  *
  * @return int
  */
-function get_parent(array $index, int $child_id) {
+function get_parent(array $index, $child_id) {
     foreach ($index as $key => $value) {
         if (in_array($child_id, $value)) {
             return (int)$key;
@@ -348,7 +348,7 @@ function get_parent(array $index, int $child_id) {
  *
  * @return array
  */
-function get_parent_array(array $data, int $child_id) {
+function get_parent_array(array $data, $child_id) {
     foreach ($data as $value) {
         if (isset($value[$child_id])) {
             return (array)$value[$child_id];
@@ -367,7 +367,7 @@ function get_parent_array(array $data, int $child_id) {
  *
  * @return array|int
  */
-function get_all_parent(array $index, int $child_id, $list = []) {
+function get_all_parent(array $index, $child_id, $list = []) {
     foreach ($index as $key => $value) {
         if (in_array($child_id, $value)) {
             if ($key == 0) {
@@ -396,7 +396,7 @@ function get_all_parent(array $index, int $child_id, $list = []) {
  *
  * @return array
  */
-function get_child(array $index, int $parent_id, $children = []) {
+function get_child(array $index, $parent_id, $children = []) {
     $parent_id = $parent_id === NULL ? NULL : $parent_id;
     if (isset($index[$parent_id])) {
         foreach ($index[$parent_id] as $id) {
@@ -417,7 +417,7 @@ function get_child(array $index, int $parent_id, $children = []) {
  *
  * @return int
  */
-function get_depth(array $index, int $child_id, $depth = NULL) {
+function get_depth(array $index, $child_id, $depth = NULL) {
     if (!$depth) {
         $depth = 1;
     }
@@ -469,7 +469,7 @@ function array_depth(array $array) {
  *
  * @return array
  */
-function dbtree(string $db, string $id_col, string $cat_col, $cat_value = NULL, $filter = FALSE) {
+function dbtree($db, $id_col, $cat_col, $cat_value = NULL, $filter = FALSE) {
     $refs = [];
     $list = [];
     $col_names = fieldgenerator($db);
@@ -501,7 +501,7 @@ function dbtree(string $db, string $id_col, string $cat_col, $cat_value = NULL, 
  *
  * @return array
  */
-function dbtree_index(bool $db, string $id_col, string $cat_col, $cat_value = FALSE) {
+function dbtree_index($db, $id_col, $cat_col, $cat_value = FALSE) {
     $refs = [];
     $list = [];
     $result = dbquery("SELECT * FROM ".$db);
@@ -533,7 +533,7 @@ function dbtree_index(bool $db, string $id_col, string $cat_col, $cat_value = FA
  *
  * @return array
  */
-function sort_tree(array $result, string $key) {
+function sort_tree(array $result, $key) {
     $current_array = [];
     $master_sort = sorter($result, $key);
     foreach ($master_sort as $data) {
@@ -560,7 +560,7 @@ function sort_tree(array $result, string $key) {
  *
  * @return array
  */
-function sorter(array $array, string $key, $sort = 'ASC') {
+function sorter(array $array, $key, $sort = 'ASC') {
     $sorter = [];
     $ret = [];
     reset($array);
@@ -590,7 +590,7 @@ function sorter(array $array, string $key, $sort = 'ASC') {
  *
  * @return int
  */
-function tree_depth(array $data, string $field, string $match, $depth = 1) {
+function tree_depth(array $data, $field, $match, $depth = 1) {
     if (!$depth) {
         $depth = '1';
     }
@@ -658,7 +658,7 @@ function tree_count(array $data, $column_name = NULL, $value_to_match = NULL) {
  *
  * @return array
  */
-function display_parent_nodes(array $data, string $id_col, string $cat_col, int $id) {
+function display_parent_nodes(array $data, $id_col, $cat_col, $id) {
     $current = $data[$id];
     $parent_id = $current[$cat_col] === NULL ? "NULL" : $current[$cat_col];
     $parents = [];
@@ -680,7 +680,7 @@ function display_parent_nodes(array $data, string $id_col, string $cat_col, int 
  *
  * @return array
  */
-function fieldgenerator(string $db) {
+function fieldgenerator($db) {
     static $col_names = [];
 
     if (empty($col_names[$db])) {
@@ -713,7 +713,7 @@ function fieldgenerator(string $db) {
  *    incremented automatically, this function returns the last inserted id.
  *    In other cases it always returns 0.
  */
-function dbquery_insert(string $table, array $inputdata, string $mode, $options = []) {
+function dbquery_insert($table, array $inputdata, $mode, $options = []) {
     $options += [
         'debug'        => FALSE,
         'primary_key'  => '',
@@ -820,7 +820,7 @@ function dbquery_insert(string $table, array $inputdata, string $mode, $options 
  *
  * @return bool
  */
-function multilang_table(string $rights) {
+function multilang_table($rights) {
     static $tables = NULL;
     if ($tables === NULL) {
         $tables = [];
@@ -844,7 +844,7 @@ function multilang_table(string $rights) {
  * Example: language column contains '.BL.NS.NC.NG'
  *            SELECT * FROM ".DB." WHERE ".in_group(language, 'BL')."
  */
-function in_group(string $column_name, string $value, $delim = ',') {
+function in_group($column_name, $value, $delim = ',') {
     return "CONCAT('$delim', $column_name, '$delim') LIKE '%$delim$value$delim%' ";
 }
 
@@ -857,7 +857,7 @@ function in_group(string $column_name, string $value, $delim = ',') {
  * Usage: $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE ".multilang_column('news_subject')." = '".$data['news_subject']."'");
  * Usage: $tree_data = dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent", "order by ".multilang_column("news_cat_name"));
  */
-function multilang_column(string $column) {
+function multilang_column($column) {
     $installed_lang = fusion_get_enabled_languages();
     $i = 1;
     $val_key = 2; // this is the first pair
@@ -882,7 +882,7 @@ function multilang_column(string $column) {
  *
  * @return bool
  */
-function db_exists(string $table) {
+function db_exists($table) {
     if (strpos($table, DB_PREFIX) === FALSE) {
         $table = DB_PREFIX.$table;
     }
@@ -900,7 +900,7 @@ function db_exists(string $table) {
  *
  * @return bool
  */
-function column_exists(string $table, string $column, $add_prefix = TRUE) {
+function column_exists($table, $column, $add_prefix = TRUE) {
     static $table_config = [];
 
     if ($add_prefix === TRUE) {
@@ -932,7 +932,7 @@ function column_exists(string $table, string $column, $add_prefix = TRUE) {
  *
  * @return mixed
  */
-function dbquery_order(string $dbname, int $current_order, string $order_col, $current_id = 0, $id_col = NULL, $current_category = 0, $cat_col = NULL, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
+function dbquery_order($dbname, $current_order, $order_col, $current_id = 0, $id_col = NULL, $current_category = 0, $cat_col = NULL, $multilang = FALSE, $multilang_col = '', $mode = 'update') {
     $multilang_sql_1 = $multilang && $multilang_col ? "WHERE ".in_group($multilang_col, LANGUAGE) : '';
     $multilang_sql_2 = $multilang && $multilang_col ? "AND ".in_group($multilang_col, LANGUAGE) : '';
 
@@ -1019,7 +1019,7 @@ function flatten_array(array $array) {
  *
  * @return string
  */
-function search_field(array $columns, string $text) {
+function search_field(array $columns, $text) {
     $condition = '';
     $text = explode(" ", $text);
     $the_sql = [];
@@ -1121,7 +1121,7 @@ function cdreset($key) {
  *
  * @return array Returns cat-id relationships with full data
  */
-function cdquery_tree_full($key, string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function cdquery_tree_full($key, $db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT * FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -1149,7 +1149,7 @@ function cdquery_tree_full($key, string $db, string $id_col, string $cat_col, $f
  *
  * @return array Returns cat-id relationships
  */
-function cdquery_tree($key, string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function cdquery_tree($key, $db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT $id_col, $cat_col FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
