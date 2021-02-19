@@ -1130,8 +1130,8 @@ function cdquery_tree_full($key, $db, $id_col, $cat_col, $filter = NULL, $query_
     if (!empty($query_replace)) {
         $query = $query_replace;
     }
-    $query = \PHPFusion\cdquery($key, $query);
-    while ($row = \PHPFusion\cdarray($query)) {
+    $query = cdquery($key, $query);
+    while ($row = cdarray($query)) {
         $id = $row[$id_col];
         $parent_id = $row[$cat_col] === NULL ? "0" : $row[$cat_col];
         $index[$parent_id][$id] = $row;

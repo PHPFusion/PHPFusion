@@ -20,8 +20,6 @@ namespace PHPFusion;
 use PHPFusion\Cache\Cache;
 use PHPFusion\Database\DatabaseFactory;
 
-(defined("IN_FUSION") || exit);
-
 /**
  * Class DBCache
  * This class utilizes memory caching for database results.
