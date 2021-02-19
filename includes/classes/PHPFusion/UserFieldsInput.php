@@ -108,12 +108,14 @@ class UserFieldsInput {
         if (fusion_safe()) {
 
             if ($this->emailVerification) {
+
                 $this->_setEmailVerification();
+
             } else {
                 /**
                  * Create user
                  */
-                dbquery_insert(DB_USERS, $this->data, 'save');
+                dbquery_insert(DB_USERS, $this->data, 'save', ['keep_session' => TRUE]);
                 $this->_completeMessage = $locale['u160']." - ".$locale['u161'];
 
                 if (defined("ADMIN_PANEL")) {
@@ -266,6 +268,7 @@ class UserFieldsInput {
 
             }
         }
+
     }
 
     /**
@@ -592,7 +595,6 @@ class UserFieldsInput {
      * Update User Fields
      *
      * @return bool
-     * @throws \Exception
      */
     public function saveUpdate() {
 
@@ -665,10 +667,10 @@ class UserFieldsInput {
             }
 
             // Logs Field changes
-            $quantum->log_user_action(DB_USERS, "user_id");
+            $quantum->logUserAction(DB_USERS, "user_id");
 
             // Update Table
-            dbquery_insert(DB_USERS, $this->data, 'update');
+            dbquery_insert(DB_USERS, $this->data, 'update', ['keep_session' => TRUE]);
 
             $this->_completeMessage = $locale['u163'];
 

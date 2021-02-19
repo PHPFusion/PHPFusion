@@ -2896,12 +2896,10 @@ class QuantumFields extends SqlHandler {
     /**
      * Logs the user actions
      *
-     * @param $db
-     * @param $primary_key
-     *
-     * @throws Exception
+     * @param string $db
+     * @param string $primary_key
      */
-    public function log_user_action($db, $primary_key) {
+    public function logUserAction($db, $primary_key) {
         if (fusion_safe()) {
             $field = flatten_array($this->fields);
             $output_fields[$db] = $this->callback_data;
