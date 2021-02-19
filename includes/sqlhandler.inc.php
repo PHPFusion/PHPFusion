@@ -1167,26 +1167,3 @@ function cdquery_tree($key, $db, $id_col, $cat_col, $filter = NULL, $query_repla
 
     return (array)$index;
 }
-
-/**
- * Get cache database configurations
- *
- * @param array $config
- *
- * @return array
- *              "storage" - file|redis|memcache
- *              "memcache_hosts" - ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']
- *              "redis_hosts" - ['localhost:6379', '192.168.1.100:6379:1:passwd']
- *              "path" - BASEDIR."cache/data/" for Filecache
- */
-function default_cd_config($config = []) {
-    $default_config = [
-        "storage"        => "memcached",
-        "memcache_hosts" => ["localhost:11211"],
-        "redis_hosts"    => ['localhost:6379'],
-        "path"           => BASEDIR."cache/data/"
-    ];
-    $config += $default_config;
-
-    return (array)$config;
-}
