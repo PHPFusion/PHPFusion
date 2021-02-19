@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
-| Copyright (C) PHPFusion Inc
+| Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: dbcache_handler.php
+| Filename: DBCache.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -56,7 +56,7 @@ class DBCache {
      *
      * @return mixed|static
      */
-    public static function getInstance($connection = 'default'): DBCache {
+    public static function getInstance($connection = 'default') {
 
         self::$connect_id = $connection;
 
@@ -256,9 +256,8 @@ function cdflush() {
 
 /**
  * Resets the cache and invalidates it
- * @param $key
  *
- * @return mixed
+ * @param $key
  */
 function cdreset($key) {
     DBCache::getInstance()->delete($key);
@@ -276,7 +275,7 @@ function cdreset($key) {
  *
  * @return array Returns cat-id relationships with full data
  */
-function cdquery_tree_full($key, string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function cdquery_tree_full($key, $db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT * FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -292,7 +291,6 @@ function cdquery_tree_full($key, string $db, string $id_col, string $cat_col, $f
     return (array)$index;
 }
 
-
 /**
  * Hierarchy ID to Category Output
  *
@@ -305,7 +303,7 @@ function cdquery_tree_full($key, string $db, string $id_col, string $cat_col, $f
  *
  * @return array Returns cat-id relationships
  */
-function cdquery_tree($key, string $db, string $id_col, string $cat_col, $filter = NULL, $query_replace = NULL) {
+function cdquery_tree($key, $db, $id_col, $cat_col, $filter = NULL, $query_replace = NULL) {
     $index = [];
     $query = "SELECT $id_col, $cat_col FROM ".$db." ".$filter;
     if (!empty($query_replace)) {
@@ -320,8 +318,6 @@ function cdquery_tree($key, string $db, string $id_col, string $cat_col, $filter
 
     return (array)$index;
 }
-
-
 
 /**
  * Get cache database configurations
