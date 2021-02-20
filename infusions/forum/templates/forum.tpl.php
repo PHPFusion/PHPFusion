@@ -671,7 +671,7 @@ if (!function_exists('forum_newtopic')) {
 
         if (isset($_POST['select_forum'])) {
             $_POST['forum_sel'] = isset($_POST['forum_sel']) && isnum($_POST['forum_sel']) ? $_POST['forum_sel'] : 0;
-            redirect(FORUM.'newthread.php?forum_id='.$_POST['forum_sel']);
+            redirect(fusion_get_settings('siteurl').'infusions/forum/newthread.php?forum_id='.$_POST['forum_sel']);
         }
 
         echo openmodal('newtopic', $locale['forum_0057'], ['class' => 'modal-md', 'button_id' => 'create_new_thread']);
