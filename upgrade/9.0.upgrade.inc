@@ -38,7 +38,7 @@ $result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHE
 while ($data = dbarray($result)) {
     $current_rights = explode('.', $data['user_rights']);
 
-    $remove_rights = ['AC', 'DC', 'FR', 'NC', 'S5', 'S8', 'S10', 'S11', 'S13', 'SU', 'UFC', 'WC'];
+    $remove_rights = ['AC', 'DC', 'FR', 'NC', 'S5', 'S8', 'S10', 'S11', 'S13', 'S14', 'SU', 'UFC', 'WC'];
     foreach ($remove_rights as $key => $remove) {
         if (($key = array_search($remove, $current_rights)) !== FALSE) {
             unset($current_rights[$key]);
@@ -253,6 +253,7 @@ if (db_exists(DB_ADMIN)) {
         'UG'   => 'user_groups.png',
         'UL'   => 'user_log.png',
         'S9'   => 'user_settings.png',
+        'FM'   => 'file_manager.png',
     ];
 
     foreach ($new_icon_array as $admin_rights => $icon_file) {
