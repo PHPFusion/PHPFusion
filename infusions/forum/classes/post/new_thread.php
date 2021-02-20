@@ -617,7 +617,7 @@ class NewThread extends ForumServer {
                 $this->info = [
                     'title'             => self::$locale['forum_0057'],
                     'description'       => '',
-                    'openform'          => openform('input_form', 'post', FORUM.'newthread.php', ['enctype' => FALSE]),
+                    'openform'          => openform('input_form', 'post', fusion_get_settings('siteurl').'infusions/forum/newthread.php', ['enctype' => FALSE]),
                     'closeform'         => closeform(),
                     'forum_id_field'    => '',
                     'thread_id_field'   => '',
