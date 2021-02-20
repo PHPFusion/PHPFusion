@@ -187,6 +187,7 @@
 
 .post-item {
     padding: 20px;
+    background: rgba(247, 247, 247, .40);
 }
 
 .post-item .post_stats {

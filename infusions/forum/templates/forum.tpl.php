@@ -1117,7 +1117,7 @@ if (!function_exists('render_post_item')) {
         $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
 
         echo '<!-- forum-thread-prepost-'.$data['marker']['id'].' -->';
-        echo '<div class="panel panel-default post-item m-t-20" id="'.$data['marker']['id'].'">';
+        echo '<div class="post-item m-t-20" id="'.$data['marker']['id'].'">';
             echo '<div class="clearfix">';
                 echo '<div class="forum_avatar">';
                     echo display_avatar($data, '30px', FALSE, FALSE, 'img-rounded m-r-10 avatar');
