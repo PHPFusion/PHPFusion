@@ -785,6 +785,11 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         }
         $where = implode(' AND ', $pkwhere);
     }
+
+    if ($mode === 'delete') {
+        $params = []; // fix for "Invalid parameter number: number of bound variables does not match number of tokens"
+    }
+
     $sql = strtr($sqlPatterns[$mode], [
         '{table}'  => $table,
         '{values}' => implode(', ', $sanitized_input),
