@@ -431,7 +431,7 @@ class InstallerDbSetup extends Install_Core {
             'placeholder' => self::$locale['setup_1221']
         ]);
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'], [
-            'type'             => 'password',
+            'type'             => 'text',
             'inline'           => TRUE,
             'required'         => FALSE,
             'placeholder'      => self::$locale['setup_1222'],
