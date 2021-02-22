@@ -466,8 +466,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
             if ($options['required']) {
                 add_to_jquery("
-                let init_value = $('#".$options['input_id']."').select2('val');
-                if (init_value) { $('dummy-".$options['input_id']."').val(init_value);	} else { $('dummy-".$options['input_id']."').val('');	}
+                if ($('#".$options['input_id']."').select2('val')) { $('dummy-".$options['input_id']."').val($('#".$options['input_id']."').select2('val'));} else { $('dummy-".$options['input_id']."').val('');}
                 $('#".$options['input_id']."').select2({
                     ".($options['placeholder'] ? "placeholder: '".$options['placeholder']."'," : '')."
                     minimumResultsForSearch: ".$options['display_search_count'].",
