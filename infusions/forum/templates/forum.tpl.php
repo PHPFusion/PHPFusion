@@ -278,15 +278,6 @@ if (!function_exists('forum_viewforum')) {
             echo '</div>';
         }
 
-        if ($info['forum_type'] > 1 && !empty($info['filters']['type'])) {
-            echo '<div class="m-b-20">';
-            foreach ($info['filters']['type'] as $key => $tab) {
-                $active = $tab['active'] == 1 ? ' strong' : '';
-                echo '<a class="m-r-10'.$active.'" href="'.$tab['link'].'">'.$tab['icon'].''.$tab['title'].' ('.$tab['count'].')</a>';
-            }
-            echo '</div>';
-        }
-
         if (isset($_GET['view'])) {
             switch ($_GET['view']) {
                 default:
@@ -391,6 +382,11 @@ if (!function_exists('forum_viewforum')) {
             }
         } else {
             if (!empty($info['subforums'])) {
+
+                if ($info['forum_type'] != 1) {
+                    echo '<div class="forum-title m-t-20">'.$locale['forum_0351'].'</div>';
+                }
+
                 echo '<div class="panel panel-default">';
                     echo '<div class="list-group">';
                         foreach ($info['subforums'] as $subforum_id => $subforum_data) {
@@ -404,6 +400,15 @@ if (!function_exists('forum_viewforum')) {
                 if ($info['forum_type'] == 1) {
                     echo '<div class=" text-center">'.$locale['forum_0327'].'</div>';
                 }
+            }
+
+            if ($info['forum_type'] > 1 && !empty($info['filters']['type'])) {
+                echo '<div class="m-b-20">';
+                foreach ($info['filters']['type'] as $key => $tab) {
+                    $active = $tab['active'] == 1 ? ' strong' : '';
+                    echo '<a class="m-r-10'.$active.'" href="'.$tab['link'].'">'.$tab['icon'].''.$tab['title'].' ('.$tab['count'].')</a>';
+                }
+                echo '</div>';
             }
 
             if ($info['forum_type'] > 1) {
