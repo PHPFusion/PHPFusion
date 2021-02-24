@@ -207,7 +207,7 @@ class Errors {
         $html .= "<div class='alert alert-info'>".$error_message."</div>\n";
         $html .= "</td></tr>\n";
 
-        $html .= '<textarea style="width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
+        $html .= '<textarea style="position:absolute;width:.1px;height:.1px;border:0;padding:0;" id="error-'.$data['error_id'].'">';
         $html .= 'File: '.$link_title.PHP_EOL;
         $html .= 'Page: '.$data['error_page'].PHP_EOL;
         $html .= 'Line: '.$data['error_line'].PHP_EOL;
@@ -375,7 +375,7 @@ class Errors {
         $html .= '<div class="text-center well m-t-5 m-b-5">';
         $html .= "<div class='display-inline-block text-right m-r-10'>".$locale['ERROR_440']."</div>\n";
         $html .= "<div class='display-inline-block'>\n";
-        $html .= form_select('delete_status', '', '0', ['options' => $this->getErrorLogTypes(), 'select2_disabled' => TRUE, 'inline' => TRUE]);
+        $html .= form_select('delete_status', '', '0', ['options' => $this->getErrorLogTypes(), 'select2_disabled' => TRUE, 'inline' => TRUE, 'class' => 'input-group-sm']);
         $html .= form_button('delete_entries', $locale['ERROR_453'], $locale['ERROR_453'], ['class' => 'm-l-10 btn-primary btn-sm']);
         $html .= "</div>\n";
         $html .= "</div>\n";
