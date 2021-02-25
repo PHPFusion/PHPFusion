@@ -42,7 +42,7 @@ if (stripget($_GET)) {
 }
 
 // Establish mySQL database connection
-if (!empty($db_host) && !empty($db_user) && !empty($db_pass) && !empty($db_name)) {
+if (!empty($db_host) && !empty($db_user) && !empty($db_name)) {
     dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
 }
 
