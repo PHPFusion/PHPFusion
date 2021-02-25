@@ -268,4 +268,50 @@ a.answer_unchecked:focus {
 
 .rank-label {
     margin: 0 2px;
+    padding: 6px 10px;
+}
+
+.rank-label > .detail {
+    background: rgba(0, 0, 0, .1);
+    margin: 0 -10px 0 10px;
+    padding: 7px 12px;
+    border-radius: 0 .28571429rem .28571429rem 0;
+    display: inline-block;
+    font-weight: 700;
+    opacity: .8;
+}
+
+.rank-label.label-super-admin {
+    background-color: #504cc7;
+}
+
+.rank-label.label-mod {
+    background-color: #00B5AD;
+    border-color: #00B5AD;
+}
+
+.rank-label.label-member {
+    background-color: #2185D0;
+    border-color: #2185D0;
+}
+
+.forum_cat_name h3,
+.forum_name h3 {
+    margin: 0;
+}
+
+.forum_name h3 {
+    display: inline;
+    font-weight: normal;
+}
+
+.forum-icon,
+.forum-stats,
+.forum-lastpost {
+    white-space: nowrap;
+}
+
+.lastpost-avatar > .avatar {
+    width: 40px;
+    margin-right: 4px;
 }

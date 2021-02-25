@@ -186,9 +186,9 @@ abstract class ForumServer {
                         while ($data = dbarray($result)) {
                             if ($user_id) {
                                 $user = fusion_get_user($user_id);
-                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']) ? TRUE : FALSE;
+                                $this->forum_access = checkusergroup($data['forum_access'], $user['user_level'], $user['user_groups']);
                             } else {
-                                $this->forum_access = checkgroup($data['forum_access']) ? TRUE : FALSE;
+                                $this->forum_access = checkgroup($data['forum_access']);
                             }
                             if ($this->forum_access === FALSE) {
                                 break;
@@ -299,7 +299,7 @@ abstract class ForumServer {
                 }
             } else {
                 if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
-                    $res .= "<label class='rank-label forum label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")." '><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</label>\n";
+                    $res .= "<span class='rank-label label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")."'><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</span>\n";
                 }
             }
         }
@@ -401,19 +401,19 @@ abstract class ForumServer {
     public static function get_recentTopics($forum_id = 0) {
         $forum_settings = self::get_forum_settings();
         $result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
-			u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
-			uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
-			count(v.post_id) AS vote_count
-			FROM ".DB_FORUM_THREADS." tt
-			INNER JOIN ".DB_FORUMS." tf ON (tt.forum_id=tf.forum_id)
-			LEFT JOIN ".DB_FORUM_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
-			LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
-			LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
-			LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
-			".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND" : "WHERE")."
-			".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
-			".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
-			GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");
+            u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
+            uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
+            count(v.post_id) AS vote_count
+            FROM ".DB_FORUM_THREADS." tt
+            INNER JOIN ".DB_FORUMS." tf ON (tt.forum_id=tf.forum_id)
+            LEFT JOIN ".DB_FORUM_POSTS." tp on (tt.thread_lastpostid = tp.post_id)
+            LEFT JOIN ".DB_USERS." u ON u.user_id=tt.thread_lastuser
+            LEFT JOIN ".DB_USERS." uc ON uc.user_id=tt.thread_author
+            LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = tt.thread_id AND tp.post_id = v.post_id
+            ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND" : "WHERE")."
+            ".groupaccess('tf.forum_access')." AND tt.thread_hidden='0'
+            ".($forum_id ? "AND forum_id='".intval($forum_id)."'" : '')."
+            GROUP BY thread_id ORDER BY tt.thread_lastpost LIMIT 0, ".$forum_settings['threads_per_page']."");
         $info['rows'] = dbrows($result);
         if ($info['rows'] > 0) {
             // need to throw moderator as an object

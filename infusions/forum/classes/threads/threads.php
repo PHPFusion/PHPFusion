@@ -437,13 +437,13 @@ class ForumThreads extends ForumServer {
                 $this->thread_info['mod_form'] = openform('moderator_menu', 'post', $this->thread_info['form_action']);
                 $this->thread_info['mod_form'] .= form_hidden('delete_item_post');
                 $this->thread_info['mod_form'] .= "<div class='btn-group m-r-10'>\n
-                        ".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], ['class' => 'btn-default', "type" => "button"])."
-                        ".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], ['class' => 'btn-default', "type" => "button"])."
+                        ".form_button("check_all", $locale['forum_0080'], $locale['forum_0080'], ['class' => 'btn-default btn-sm', "type" => "button"])."
+                        ".form_button("check_none", $locale['forum_0081'], $locale['forum_0080'], ['class' => 'btn-default btn-sm', "type" => "button"])."
                     </div>\n
-                    ".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], ['class' => 'btn-default m-r-10'])."
-                    ".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], ['class' => 'btn-default'])."
+                    ".form_button('move_posts', $locale['forum_0176'], $locale['forum_0176'], ['class' => 'btn-default btn-sm m-r-10'])."
+                    ".form_button('delete_posts', $locale['delete'], $locale['forum_0177'], ['class' => 'btn-default btn-sm'])."
                     <div class='pull-right'>
-                        ".form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default pull-right m-l-10'])
+                        ".form_button('go', $locale['forum_0208'], $locale['forum_0208'], ['class' => 'btn-default btn-sm pull-right m-l-10'])
                     .form_select('step', '', '', [
                         'options'     => $this->thread_info['mod_options'],
                         'placeholder' => $locale['forum_0200'],

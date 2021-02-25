@@ -830,27 +830,6 @@ dl, dt, dd {
     overflow: hidden;
 }
 
-.forum_cat_name h3,
-.forum_name h3 {
-    margin: 0;
-}
-
-.forum_name h3 {
-    display: inline;
-    font-weight: normal;
-}
-
-.forum-icon,
-.forum-stats,
-.forum-lastpost {
-    white-space: nowrap;
-}
-
-.lastpost-avatar > .avatar {
-    width: 40px;
-    margin-right: 4px;
-}
-
 /* Admin Panel */
 .dms-switch:hover, .list-group-item:hover .status {
     text-decoration: underline;
@@ -1097,35 +1076,6 @@ th.min, td.min {
 
 .comments_reply_form {
     margin-bottom: 30px;
-}
-
-/* Forum mods */
-.forum.label {
-    padding: 6px 10px;
-}
-
-.forum.label > .detail {
-    background: rgba(0, 0, 0, .1);
-    margin: 0 -10px 0 10px;
-    padding: 7px 12px;
-    border-radius: 0 .28571429rem .28571429rem 0;
-    display: inline-block;
-    font-weight: 700;
-    opacity: .8;
-}
-
-.forum.label-super-admin {
-    background-color: #504cc7;
-}
-
-.forum.label-mod {
-    background-color: #00B5AD;
-    border-color: #00B5AD;
-}
-
-.forum.label-member {
-    background-color: #2185D0 !important;
-    border-color: #2185D0 !important;
 }
 
 /* Textarea Dynamics */

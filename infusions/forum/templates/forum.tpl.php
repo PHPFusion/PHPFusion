@@ -24,7 +24,7 @@ if (!function_exists('render_forum')) {
     function render_forum($info) {
         $locale = fusion_get_locale();
 
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
+        fusion_load_script(INFUSIONS.'forum/templates/css/forum.css', 'css');
 
         echo '<div class="forum-main-index">';
         opentable('');
@@ -863,7 +863,7 @@ if (!function_exists("display_quick_reply")) {
  */
 if (!function_exists("display_forum_tags")) {
     function display_forum_tags($info) {
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
+        fusion_load_script(INFUSIONS.'forum/templates/css/forum.css', 'css');
         $locale = fusion_get_locale();
 
         echo '<div class="forum-tags">';
@@ -952,7 +952,7 @@ if (!function_exists('render_thread')) {
     function render_thread($info) {
         $locale = fusion_get_locale();
 
-        add_to_head("<link rel='stylesheet' href='".INFUSIONS."forum/templates/css/forum.css'>");
+        fusion_load_script(INFUSIONS.'forum/templates/css/forum.css', 'css');
 
         echo '<div class="forum-viewthread">';
         opentable('');
