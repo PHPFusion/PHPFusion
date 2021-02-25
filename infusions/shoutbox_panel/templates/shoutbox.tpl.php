@@ -55,7 +55,7 @@ if (!function_exists('render_shoutbox')) {
             }
 
             if (!empty($info['archive'])) {
-                echo '<a class="btn btn-default btn-xs" href="'.$info['archive']['link'].'">'.$info['archive']['title'].'</a>';
+                echo '<div class="text-center m-t-20"><a class="btn btn-default btn-xs" href="'.$info['archive']['link'].'">'.$info['archive']['title'].'</a></div>';
             }
         closeside();
     }
