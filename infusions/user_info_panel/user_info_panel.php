@@ -112,10 +112,12 @@ if (iMEMBER) {
         $info = [
             'title'                => $locale['global_100'],
             'login_name_field'     => form_text('user_name', $locale['global_101'], '', [
+                'input_id'    => 'username_uip',
                 'placeholder' => $placeholder,
                 'required'    => TRUE
             ]),
             'login_pass_field'     => form_text('user_pass', $locale['global_102'], '', [
+                'input_id'    => 'userpass_uip',
                 'placeholder' => $locale['global_102'],
                 'type'        => 'password',
                 'required'    => TRUE
@@ -123,11 +125,11 @@ if (iMEMBER) {
             'login_remember_field' => form_checkbox('remember_me', $locale['global_103'], '', ['value' => 'y']),
             'login_submit'         => form_button('login', $locale['global_104'], '', ['class' => 'm-t-20 m-b-20 btn-block btn-primary']),
             'registration'         => (fusion_get_settings('enable_registration') ? strtr($locale['global_105'], ['[LINK]' => '<a href="'.BASEDIR.'register.php">', '[/LINK]' => '</a>']) : ''),
-            'lostpassword'         => strtr($locale['global_106'], ['[LINK]' => '<a href="'.BASEDIR.'lostpassword.php">', '[/LINK]' => '</a>'])
+            'lostpassword'         => strtr($locale['global_106'], ['[LINK]' => '<a href="'.BASEDIR.'lostpassword.php">', '[/LINK]' => '</a>']),
+            'openform'             => openform('userinfopanel_login', 'post', $action_url),
+            'closeform'            => closeform()
         ];
 
-        echo openform('loginform', 'post', $action_url);
         display_user_info_panel($info);
-        echo closeform();
     }
 }

@@ -84,6 +84,7 @@ if (!function_exists('display_user_info_panel')) {
             closeside();
         } else {
             openside($locale['global_100']);
+            echo $info['openform'];
             echo $info['login_name_field'];
             echo $info['login_pass_field'];
             echo $info['login_remember_field'];
@@ -92,6 +93,7 @@ if (!function_exists('display_user_info_panel')) {
             echo $info['registration'];
             echo '<br>';
             echo $info['lostpassword'];
+            echo $info['closeform'];
             closeside();
         }
     }
