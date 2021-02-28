@@ -88,7 +88,7 @@ foreach ($check_array as $key => $value) {
 }
 
 if (!db_exists(DB_NEWS_IMAGES)) {
-    $inf_newtable[] = DB_NEWS_IMAGES." (
+    dbquery("CREATE TABLE ".DB_NEWS_IMAGES." (
     news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_image VARCHAR(100) NOT NULL DEFAULT '',
@@ -97,7 +97,7 @@ if (!db_exists(DB_NEWS_IMAGES)) {
     news_image_user MEDIUMINT(9) NOT NULL DEFAULT '0',
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     PRIMARY KEY (news_image_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
 }
 
 // Port Photos into New Tables
