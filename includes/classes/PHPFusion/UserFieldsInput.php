@@ -213,6 +213,8 @@ class UserFieldsInput {
 
             if (!defined('ADMIN_PANEL') && $this->registration) {
                 $this->userData["user_name"] = fusion_get_userdata("user_name");
+            } else {
+                $this->userData['user_name'] = '';
             }
 
             if ($this->_userName != $this->userData['user_name']) {
