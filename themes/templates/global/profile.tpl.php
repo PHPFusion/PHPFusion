@@ -31,18 +31,19 @@ if (!function_exists('display_register_form')) {
         opentable('');
         //echo $opentab;
         echo "<!--register_pre_idx--><div class='spacer-sm'><div id='register_form' class='row'><div class='col-xs-12 col-sm-12'>";
-        echo $info["openform"].
-            $info["user_id"].
-            $info["user_name"].
-            $info["user_email"].
-            $info["user_hide_email"].
-            $info["user_avatar"].
-            $info["user_password"].
-            $info["user_admin_password"].
-            $info["user_custom"].
-            $info["validate"].
-            $info["terms"].
-            $info["button"];
+        echo $info['openform'].
+            $info['user_id'].
+            $info['user_name'].
+            $info['user_email'].
+            $info['user_hide_email'].
+            $info['user_avatar'].
+            $info['user_password'].
+            $info['user_admin_password'].
+            $info['user_custom'].
+            $info['validate'].
+            $info['terms'].
+            $info['button'].
+            $info['closeform'];
         echo "</div></div></div><!--register_sub_idx-->";
         closetable();
         echo "<!--//HTML-->";
