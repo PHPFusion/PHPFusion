@@ -277,7 +277,7 @@ class Members_Display extends Members_Admin {
                 </div>\n";
 
                 $login_as_link = "";
-                if (fusion_get_userdata("user_level") <= $data["user_level"] && fusion_get_userdata("user_id") != $data["user_id"]) {
+                if ($data['user_status'] != 2 && fusion_get_userdata("user_level") <= $data["user_level"] && fusion_get_userdata("user_id") != $data["user_id"]) {
                     $login_as_link = " - <a href='".self::$status_uri['login_as'].$data['user_id']."'>".self::$locale["ME_508"]."</a>";
                 }
 

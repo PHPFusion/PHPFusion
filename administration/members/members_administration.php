@@ -290,7 +290,7 @@ class Members_Admin {
                     }
                     break;
                 case 'resend':
-                    if (get("lookup", FILTER_VALIDATE_INT)) {
+                    if (get("lookup")) {
                         Members_Profile::resend_email();
                     } else {
                         redirect(FUSION_SELF.$aidlink);
