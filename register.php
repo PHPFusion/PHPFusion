@@ -116,7 +116,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                         }, ms || 0);
                     };
                 }
-                
+
                 let r_username = $("#userfieldsform #user_name");
                 let r_username_field = $("#userfieldsform #user_name-field");
                 r_username.keyup(delayKeyupTimer(function (e) {
