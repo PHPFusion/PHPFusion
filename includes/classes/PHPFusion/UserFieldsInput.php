@@ -138,7 +138,7 @@ class UserFieldsInput {
                 } else {
                     // got admin activation and not
                     if ($this->adminActivation) {
-                        $this->_completeMessage = $locale['u160'].$locale['u162'];
+                        $this->_completeMessage = $locale['u160']." - ".$locale['u162'];
                     }
                 }
 
