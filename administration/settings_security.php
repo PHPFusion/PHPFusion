@@ -63,8 +63,6 @@ if (isset($_POST['savesettings'])) {
         'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
         'database_sessions'     => form_sanitizer($_POST['database_sessions'], 0, 'database_sessions'),
         'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
-        'gateway'               => post('gateway') ? 1 : 0,
-        'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
         'mime_check'            => post('mime_check') ? 1 : 0,
         'error_logging_enabled' => post('error_logging_enabled') ? 1 : 0,
         'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
@@ -217,22 +215,6 @@ openside('');
 echo form_checkbox('mime_check', $locale['699f'], $settings['mime_check'], [
     'toggle' => TRUE
 ]);
-closeside();
-
-openside('');
-echo form_checkbox('gateway', $locale['security_010'], $settings['gateway'], [
-    'toggle' => TRUE
-]);
-echo form_select('gateway_method', $locale['security_011'], $settings['gateway_method'], [
-    'options'     => [
-        0 => $locale['security_012'],
-        1 => $locale['security_013'],
-        2 => $locale['security_014']
-    ],
-    'width'       => '100%',
-    'inner_width' => '100%'
-]);
-
 closeside();
 
 openside('');

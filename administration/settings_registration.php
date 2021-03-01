@@ -33,7 +33,9 @@ if (isset($_POST['savesettings'])) {
         'email_verification'  => post('email_verification') ? 1 : 0,
         'admin_activation'    => post('admin_activation') ? 1 : 0,
         'enable_terms'        => post('enable_terms') ? 1 : 0,
-        'license_lastupdate'  => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
+        'license_lastupdate'  => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate')),
+        'gateway'               => post('gateway') ? 1 : 0,
+        'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
     ];
 
     if (\defender::safe()) {
@@ -89,6 +91,22 @@ $opts = ['0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['6
 echo form_select('login_method', $locale['699'], $settings['login_method'], ['options' => $opts]);
 
 closeside();
+
+openside('');
+echo form_checkbox('gateway', $locale['security_010'], $settings['gateway'], [
+    'toggle' => TRUE
+]);
+echo form_select('gateway_method', $locale['security_011'], $settings['gateway_method'], [
+    'options'     => [
+        0 => $locale['security_012'],
+        1 => $locale['security_013'],
+        2 => $locale['security_014']
+    ],
+    'width'       => '100%',
+    'inner_width' => '100%'
+]);
+closeside();
+
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
 echo closeform();
