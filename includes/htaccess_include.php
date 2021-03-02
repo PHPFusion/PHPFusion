@@ -44,20 +44,17 @@ function write_htaccess() {
 
     $htc .= "# Protect .htaccess file".PHP_EOL;
     $htc .= "<Files .htaccess>".PHP_EOL;
-    $htc .= "    order allow,deny".PHP_EOL;
-    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "    Require all denied".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
     $htc .= "# Protect config.php".PHP_EOL;
     $htc .= "<Files config.php>".PHP_EOL;
-    $htc .= "    order allow,deny".PHP_EOL;
-    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "    Require all denied".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
     $htc .= "# Protect fusion_error_log.log".PHP_EOL;
     $htc .= "<Files fusion_error_log.log>".PHP_EOL;
-    $htc .= "    order allow,deny".PHP_EOL;
-    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "    Require all denied".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
     $htc .= "<ifModule mod_headers.c>".PHP_EOL;
