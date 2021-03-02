@@ -29,7 +29,7 @@ class UserFieldsInput {
     public $adminActivation = 1;
     public $emailVerification = 1;
     public $verifyNewEmail = FALSE;
-    public $userData;
+    public $userData = ['user_name' => NULL];
     public $validation = 0;
     public $registration = FALSE;
     // On insert or admin edit
