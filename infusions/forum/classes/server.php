@@ -295,11 +295,11 @@ abstract class ForumServer {
         foreach ($ranks as $rank) {
             if ($image) {
                 if (isset($rank['rank_title']) && isset($rank['rank_image'])) {
-                    $res .= "<div class='rank-image'><div class='rank_title'>".$rank['rank_title']."</div>\n<img src='".RANKS.$rank['rank_image']."' alt='".$rank['rank_title']."'></div>";
+                    $res .= "<span id='rank".$rank['rank_id']."' class='rank-image'><span class='rank-title'>".$rank['rank_title']."</span> <img src='".RANKS.$rank['rank_image']."' alt='".$rank['rank_title']."'></span>";
                 }
             } else {
                 if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
-                    $res .= "<span class='rank-label label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")."'><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</span>\n";
+                    $res .= "<span id='rank".$rank['rank_id']."' class='rank-label label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")."'><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</span>\n";
                 }
             }
         }
@@ -345,7 +345,7 @@ abstract class ForumServer {
             ];
 
             $cache_query = "
-            SELECT rank_title, rank_image, rank_type, rank_posts, rank_apply, rank_language
+            SELECT *
             FROM ".DB_FORUM_RANKS." ".(multilang_table("FR") ? "WHERE ".in_group('rank_language', LANGUAGE) : "")."
             ORDER BY rank_apply DESC, rank_posts ASC
             ";

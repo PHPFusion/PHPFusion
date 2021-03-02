@@ -1280,6 +1280,34 @@ tr:hover > td .tbl_actions {
     border-radius: 50%;
 }
 
+.rank-label {
+    padding: 6px 10px;
+}
+
+.rank-label > .detail {
+    background: rgba(0, 0, 0, .1);
+    margin: 0 -10px 0 10px;
+    padding: 7px 12px;
+    border-radius: 0 .28571429rem .28571429rem 0;
+    display: inline-block;
+    font-weight: 700;
+    opacity: .8;
+}
+
+.rank-label.label-super-admin {
+    background-color: #504cc7;
+}
+
+.rank-label.label-mod {
+    background-color: #00B5AD;
+    border-color: #00B5AD;
+}
+
+.rank-label.label-member {
+    background-color: #2185D0;
+    border-color: #2185D0;
+}
+
 #site-links {
     list-style: none;
     min-height: 20px;
