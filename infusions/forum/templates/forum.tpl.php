@@ -327,12 +327,12 @@ if (!function_exists('forum_viewforum')) {
                         }
                         echo '</tbody>';
                         echo '</table></div>';
+
+                        echo $info['pagenav'];
                     }
                     break;
                 case 'activity':
                     if (!empty($info['item'])) {
-                        echo $info['pagenav'];
-
                         if (!empty($info['max_post_count'])) {
                             echo '<div class="list-group-item clearfix m-b-10"><strong>';
                             echo format_word($info['max_post_count'], $locale['fmt_post']);
@@ -375,6 +375,8 @@ if (!function_exists('forum_viewforum')) {
                             echo '</div>';
                             $i++;
                         }
+
+                        echo $info['pagenav'];
                     } else {
                         echo '<div class="text-center">'.$locale['forum_4121'].'</div>';
                     }
