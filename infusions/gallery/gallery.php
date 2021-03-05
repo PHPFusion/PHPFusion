@@ -251,7 +251,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 'name' => $data['photo_title']
                             ],
                             'image'       => displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], $data['album_id']),
-                            'title'       => ($data['photo_title']) ? $data['photo_title'] : $data['image'],
+                            'title'       => ($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'],
                             'description' => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE)) : '',
                             'photo_views' => format_word($data['photo_views'], $locale['fmt_views'])
                         ];
