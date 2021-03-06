@@ -438,6 +438,10 @@ if (db_exists(DB_USER_FIELDS)) {
     }
 }
 
+if (column_exists('users', 'user_offset')) {
+    $inf_dropcol[] = ['table' => DB_USERS, 'column' => 'user_offset'];
+}
+
 if (db_exists(DB_INFUSIONS)) {
     // The infusions table should not exist in any version prior to this:
     $check_infusions = [
