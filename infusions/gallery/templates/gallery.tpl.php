@@ -174,7 +174,7 @@ if (!function_exists('render_photo')) {
         if ($info['photo_description']) {
             echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
         }
-        echo "<div class='list-group-item m-b-20'>\n";
+        echo "<div class='m-b-20'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
         echo "<strong>".$locale['gallery_434']."</strong> ".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."<br/>\n";
