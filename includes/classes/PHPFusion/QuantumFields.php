@@ -708,7 +708,7 @@ class QuantumFields extends SqlHandler {
                             $field_list[$data['field_cat']][$data['field_id']] = $data['field_name'];
                         }
                     }
-                    if (isset($this->page[$data['field_parent']]) or !empty($field_list) && (!empty($field_list[$_GET['cat_id']]) && $field_list[$_GET['cat_id']] > 0)) {
+                    if ((isset($data['field_parent']) && isset($this->page[$data['field_parent']])) or (!empty($field_list) && $field_list[$_GET['cat_id']] > 0)) {
                         ob_start();
                         echo openmodal("delete", $this->locale['fields_0313'], [
                             'class'  => 'modal-lg modal-center',
