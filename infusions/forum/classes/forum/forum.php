@@ -239,26 +239,32 @@ class Forum extends ForumServer {
                             case 'gallery':
                                 // Under Development for Forum 3.0
                             case 'people':
-                                // Under Development
                                 $this->forum_info['item'] = [];
                                 $this->forum_info['pagenav'] = '';
                                 if ($this->forum_info['thread_count']) {
-                                    $sql_select = DB_USERS." u INNER JOIN ".DB_FORUM_POSTS." p ON p.post_author=u.user_id";
-                                    $sql_cond = "p.forum_id=:forum_id";
                                     $sql_param = [
                                         ':forum_id' => $this->forum_info['forum_id']
                                     ];
-                                    $this->forum_info['max_user_count'] = dbcount("(user_id)", $sql_select, $sql_cond, $sql_param);
+
+                                    $this->forum_info['max_user_count'] = dbrows(dbquery("SELECT u.*, p.* FROM ".DB_FORUM_POSTS." p INNER JOIN ".DB_USERS." u ON u.user_id=p.post_author WHERE p.forum_id=:forum_id GROUP BY u.user_id", $sql_param));
+
+                                    $limit = $this->forum_info['posts_per_page'];
                                     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['max_user_count'] ? $_GET['rowstart'] : 0;
 
-                                    $query = "SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, p.post_id, p.post_datestamp, t.thread_id, t.thread_subject, t.forum_id
-                                    FROM $sql_select INNER JOIN ".DB_FORUM_THREADS." t ON t.thread_id=p.thread_id AND t.forum_id=p.forum_id WHERE $sql_cond GROUP BY u.user_id ORDER BY u.user_name ASC, p.post_datestamp DESC LIMIT ".$_GET['rowstart'].", ".$this->forum_info['posts_per_page']."";
+                                    $result = dbquery("SELECT u.*, p.*, t.*, COUNT(p.post_id) post_count
+                                        FROM ".DB_FORUM_THREADS." t
+                                        INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id=t.thread_id AND p.forum_id=t.forum_id
+                                        INNER JOIN ".DB_USERS." u ON u.user_id=p.post_author
+                                        WHERE p.forum_id=:forum_id
+                                        GROUP BY u.user_id
+                                        ORDER BY u.user_name ASC, p.post_datestamp DESC
+                                        LIMIT ".$_GET['rowstart'].", ".$limit."
+                                    ", $sql_param);
 
-                                    $result = dbquery($query, $sql_param);
                                     $rows = dbrows($result);
                                     if ($rows) {
-                                        if ($this->forum_info['max_user_count'] > $this->forum_info['posts_per_page']) {
-                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $rows, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=people&amp;');
+                                        if ($this->forum_info['max_user_count'] > $limit) {
+                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $limit, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=people&amp;');
                                         }
                                         while ($data = dbarray($result)) {
                                             $data['thread_link'] = [
@@ -266,13 +272,9 @@ class Forum extends ForumServer {
                                                 'title' => $data['thread_subject']
                                             ];
                                             $this->forum_info['item'][$data['user_id']] = $data;
-                                            //print_p($data);
                                         }
                                     }
                                 }
-                                /*
-                                 * Benchmark results - 0.32s
-                                 */
                                 break;
                             case 'activity':
                                 // Fetch latest activity in this forum sort by the latest posts.
@@ -291,8 +293,8 @@ class Forum extends ForumServer {
                                     $result = dbquery($query, $sql_param);
                                     $rows = dbrows($result);
                                     if ($rows) {
-                                        if ($this->forum_info['max_post_count'] > $rows) {
-                                            $this->forum_info['pagenav'] = makepagenav($rowstart, $rows, $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=activity&amp;');
+                                        if ($this->forum_info['max_post_count'] > $this->forum_info['posts_per_page']) {
+                                            $this->forum_info['pagenav'] = makepagenav($rowstart, $this->forum_info['posts_per_page'], $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=activity&amp;');
                                         }
                                         $i = 0;
                                         while ($data = dbarray($result)) {
