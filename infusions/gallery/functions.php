@@ -80,7 +80,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $a
 function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link, $album_id = 0) {
     $gallery_settings = get_settings('gallery');
 
-    if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb1))) {
+    if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb1) || file_exists(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb1))) {
         $image = '';
         if (file_exists(IMAGES_G.$photo_thumb1)) {
             $image = thumbnail(IMAGES_G.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
@@ -88,12 +88,14 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link,
             $image = thumbnail(IMAGES_G_T.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         } else if (file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb1)) {
             $image = thumbnail(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
+        } else if (file_exists(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb1)) {
+            $image = thumbnail(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb1, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         }
 
         return $image;
     }
 
-    if (!empty($photo_thumb2) && (file_exists(IMAGES_G_T.$photo_thumb2) || file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb2))) {
+    if (!empty($photo_thumb2) && (file_exists(IMAGES_G_T.$photo_thumb2) || file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb2) || file_exists(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb2))) {
         $image = '';
         if (file_exists(IMAGES_G.$photo_thumb2)) {
             $image = thumbnail(IMAGES_G.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
@@ -101,6 +103,8 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link,
             $image = thumbnail(IMAGES_G_T.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         } else if (file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb2)) {
             $image = thumbnail(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
+        } else if (file_exists(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb2)) {
+            $image = thumbnail(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb2, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         }
 
         return $image;
@@ -125,23 +129,27 @@ function return_photo_paths($data) {
     $photo_thumb1 = '';
     $photo_filename = '';
 
-    if (!empty($data['photo_thumb2']) && (file_exists(IMAGES_G_T.$data['photo_thumb2']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2']))) {
+    if (!empty($data['photo_thumb2']) && (file_exists(IMAGES_G_T.$data['photo_thumb2']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb2']))) {
         if (file_exists(IMAGES_G.$data['photo_thumb2'])) {
             $photo_thumb2 = IMAGES_G.$data['photo_thumb2'];
         } else if (file_exists(IMAGES_G_T.$data['photo_thumb2'])) {
             $photo_thumb2 = IMAGES_G_T.$data['photo_thumb2'];
         } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'])) {
             $photo_thumb2 = IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb2'];
+        } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb2'])) {
+            $photo_thumb2 = IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb2'];
         }
     }
 
-    if (!empty($data['photo_thumb1']) && (file_exists(IMAGES_G_T.$data['photo_thumb1']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1']))) {
+    if (!empty($data['photo_thumb1']) && (file_exists(IMAGES_G_T.$data['photo_thumb1']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1']) || file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb1']))) {
         if (file_exists(IMAGES_G.$data['photo_thumb1'])) {
             $photo_thumb1 = IMAGES_G.$data['photo_thumb1'];
         } else if (file_exists(IMAGES_G_T.$data['photo_thumb1'])) {
             $photo_thumb1 = IMAGES_G_T.$data['photo_thumb1'];
         } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'])) {
             $photo_thumb1 = IMAGES_G.'album_'.$data['album_id'].'/thumbs/'.$data['photo_thumb1'];
+        } else if (file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb1'])) {
+            $photo_thumb1 = IMAGES_G.'album_'.$data['album_id'].'/'.$data['photo_thumb1'];
         }
     }
 
