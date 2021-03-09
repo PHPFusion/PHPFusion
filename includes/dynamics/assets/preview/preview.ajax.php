@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__."../../../../../maincore.php";
 require_once INCLUDES.'theme_functions_include.php';
-require_once THEMES."templates/render_functions.php";
 echo "<div class='preview-response clearfix p-20'>\n";
 if (fusion_safe()) {
     $locale = fusion_get_locale();

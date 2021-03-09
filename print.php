@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 require_once(__DIR__.'/maincore.php');
 require_once INCLUDES.'theme_functions_include.php';
-require_once THEMES.'templates/render_functions.php';
 
 $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET."print.php");
