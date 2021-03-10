@@ -308,7 +308,7 @@ class Search_Engine extends Search_Model {
             'memory_limit' => self::$memory_limit,
             'composevars'  => self::$composevars,
             'rowstart'     => self::$rowstart,
-            'search_param' => htmlentities(self::$search_param),
+            'search_param' => self::$search_param,
         ];
 
         return $key === NULL ? $info : (isset($info[$key]) ? $info[$key] : NULL);
