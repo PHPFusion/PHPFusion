@@ -21,7 +21,7 @@ use PHPFusion\Search;
 
 class Search_Engine extends Search_Model {
 
-    protected static $search_instance = NULL;
+    public static $locale = [];
 
     /*
      * Template
@@ -31,41 +31,18 @@ class Search_Engine extends Search_Model {
      *
      * In order to access the variables, extend your class to Search_Engine!
      */
+    protected static $search_instance = NULL;
     protected static $render_search = '';
     protected static $search_no_result = '';
     protected static $search_count = '';
     protected static $search_item_wrapper = '';
-
     protected static $search_item = '';
     protected static $search_item_list = '';
     protected static $search_item_image = '';
-    public static $locale = [];
 
-    /**
-     * Returns params
-     *
-     * @param null $key
-     *
-     * @return array|string
-     */
-    public static function get_param($key = NULL) {
-        $info = [
-            'stype'        => self::$search_type,
-            'stext'        => self::$search_text,
-            'method'       => self::$search_method,
-            'datelimit'    => self::$search_date_limit,
-            'fields'       => self::$search_fields,
-            'sort'         => self::$search_sort,
-            'chars'        => self::$search_chars,
-            'order'        => self::$search_order,
-            'forum_id'     => self::$forum_id,
-            'memory_limit' => self::$memory_limit,
-            'composevars'  => self::$composevars,
-            'rowstart'     => self::$rowstart,
-            'search_param' => self::$search_param,
-        ];
-
-        return $key === NULL ? $info : (isset($info[$key]) ? $info[$key] : NULL);
+    protected function __construct() {
+        parent::__construct();
+        self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
     }
 
     /**
@@ -80,11 +57,6 @@ class Search_Engine extends Search_Model {
         }
 
         return self::$search_instance;
-    }
-
-    protected function __construct() {
-        parent::__construct();
-        self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'search.php');
     }
 
     /**
@@ -316,6 +288,33 @@ class Search_Engine extends Search_Model {
     }
 
     /**
+     * Returns params
+     *
+     * @param null $key
+     *
+     * @return array|string
+     */
+    public static function get_param($key = NULL) {
+        $info = [
+            'stype'        => htmlentities(self::$search_type),
+            'stext'        => htmlentities(self::$search_text),
+            'method'       => htmlentities(self::$search_method),
+            'datelimit'    => self::$search_date_limit,
+            'fields'       => self::$search_fields,
+            'sort'         => self::$search_sort,
+            'chars'        => htmlentities(self::$search_chars),
+            'order'        => self::$search_order,
+            'forum_id'     => self::$forum_id,
+            'memory_limit' => self::$memory_limit,
+            'composevars'  => self::$composevars,
+            'rowstart'     => self::$rowstart,
+            'search_param' => htmlentities(self::$search_param),
+        ];
+
+        return $key === NULL ? $info : (isset($info[$key]) ? $info[$key] : NULL);
+    }
+
+    /**
      * Controller for display the search results
      */
     protected static function display_results() {
@@ -333,7 +332,7 @@ class Search_Engine extends Search_Model {
         self::$fields_count = self::get_param('fields') + 1;
         for ($i = 0, $k = 0; $i < count($search_text); $i++) {
             if (strlen($search_text[$i]) >= 3) {
-                $qualified_search_text[] = $search_text[$i];
+                $qualified_search_text[] = htmlentities($search_text[$i]);
                 for ($j = 0; $j < self::$fields_count; $j++) {
                     // It is splitting to 2 parts.
                     self::$search_param[':sword'.$k.$j] = '%'.$search_text[$i].'%';
@@ -360,6 +359,7 @@ class Search_Engine extends Search_Model {
             $highlighted_text .= ($i < self::$c_swords ? "," : "");
             $i++;
         }
+
         add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
         add_to_jquery("$('.search_result').highlight([".$highlighted_text."],{wordsOnly:true}); $('.highlight').css({backgroundColor:'#FFFF88'});");
 
@@ -461,6 +461,16 @@ class Search_Engine extends Search_Model {
     }
 
     /**
+     * Load the search driver file
+     * - Prevents string mutation
+     *
+     * @param $path
+     */
+    protected static function __Load($path) {
+        include_once($path);
+    }
+
+    /**
      * Controller for omitting search
      */
     protected static function display_noResults() {
@@ -476,15 +486,5 @@ class Search_Engine extends Search_Model {
      * Prevents class cloning
      */
     private function __clone() {
-    }
-
-    /**
-     * Load the search driver file
-     * - Prevents string mutation
-     *
-     * @param $path
-     */
-    protected static function __Load($path) {
-        include_once($path);
     }
 }
