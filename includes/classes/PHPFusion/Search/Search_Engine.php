@@ -295,21 +295,26 @@ class Search_Engine extends Search_Model {
      * @return array|string
      */
     public static function get_param($key = NULL) {
-        $info = [
-            'stype'        => htmlentities(self::$search_type),
-            'stext'        => htmlentities(self::$search_text),
-            'method'       => htmlentities(self::$search_method),
-            'datelimit'    => self::$search_date_limit,
-            'fields'       => self::$search_fields,
-            'sort'         => self::$search_sort,
-            'chars'        => htmlentities(self::$search_chars),
-            'order'        => self::$search_order,
-            'forum_id'     => self::$forum_id,
-            'memory_limit' => self::$memory_limit,
-            'composevars'  => self::$composevars,
-            'rowstart'     => self::$rowstart,
-            'search_param' => self::$search_param,
-        ];
+        try {
+            $info = [
+                'stype'        => stripinput(self::$search_type),
+                'stext'        => stripinput(self::$search_text),
+                'method'       => stripinput(self::$search_method),
+                'datelimit'    => self::$search_date_limit,
+                'fields'       => self::$search_fields,
+                'sort'         => self::$search_sort,
+                'chars'        => stripinput(self::$search_chars),
+                'order'        => self::$search_order,
+                'forum_id'     => self::$forum_id,
+                'memory_limit' => self::$memory_limit,
+                'composevars'  => self::$composevars,
+                'rowstart'     => self::$rowstart,
+                'search_param' => self::$search_param,
+            ];
+        } catch (\Exception $e) {
+            redirect(BASEDIR.fusion_get_settings('opening_page'));
+        }
+
 
         return $key === NULL ? $info : (isset($info[$key]) ? $info[$key] : NULL);
     }
