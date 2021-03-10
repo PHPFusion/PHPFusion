@@ -28,6 +28,8 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $locale = fusion_get_locale();
 
+    $input_value = clean_input_value($input_value);
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $id = trim($input_name, "[]");

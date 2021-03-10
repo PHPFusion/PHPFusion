@@ -78,6 +78,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     $options += $default_options;
 
+    $input_value = clean_input_value($input_value);
+
+
     if ($options['type'] == "tinymce") {
 
         $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], [TRUE, 'simple', 'advanced']) ? $options['tinymce'] : "simple";

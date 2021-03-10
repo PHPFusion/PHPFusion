@@ -30,7 +30,10 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
+
+    $input_value = clean_input_value($input_value);
 
     $template_choices = ['classic', 'modern', 'thumbnail'];
 

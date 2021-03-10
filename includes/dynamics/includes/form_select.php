@@ -109,6 +109,9 @@ function form_select($input_name, $label, $input_value, $options = []) {
     ];
 
     $options += $default_options;
+
+    $input_value = clean_input_value($input_value);
+
     $disable_opts = '';
     if ($options['disable_opts']) {
         $disable_opts = is_array($options['disable_opts']) ? $options['disable_opts'] : explode(',', $options['disable_opts']);
@@ -528,6 +531,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $input_value = clean_input_value($input_value);
 
     $default_options = [
         'required'          => FALSE,

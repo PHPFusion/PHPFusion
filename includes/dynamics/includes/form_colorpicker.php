@@ -17,18 +17,17 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = []) {
+
     $locale = fusion_get_locale();
 
-    if (!defined("COLORPICKER")) {
-        define("COLORPICKER", TRUE);
+    $input_value = clean_input_value($input_value);
 
-        if (defined('BOOTSTRAP4')) {
-            add_to_head("<link href='".DYNAMICS."assets/colorpick/bs4/css/bootstrap-colorpicker.min.css' rel='stylesheet'>");
-            add_to_head("<script src='".DYNAMICS."assets/colorpick/bs4/js/bootstrap-colorpicker.min.js'></script>");
-        } else {
-            add_to_head("<link href='".DYNAMICS."assets/colorpick/css/bootstrap-colorpicker.min.css' rel='stylesheet'>");
-            add_to_head("<script src='".DYNAMICS."assets/colorpick/js/bootstrap-colorpicker.min.js'></script>");
-        }
+    if (defined('BOOTSTRAP4')) {
+        fusion_load_script(DYNAMICS.'assets/colorpick/bs4/css/bootstrap-colorpicker.min.css', 'css');
+        fusion_load_script(DYNAMICS.'assets/colorpick/bs4/js/bootstrap-colorpicker.min.js');
+    } else {
+        fusion_load_script(DYNAMICS.'assets/colorpick/css/bootstrap-colorpicker.min.css', 'css');
+        fusion_load_script(DYNAMICS.'assets/colorpick/js/bootstrap-colorpicker.min.js');
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

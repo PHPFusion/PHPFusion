@@ -33,6 +33,8 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
         $input_value['2'] = '';
     }
 
+    $input_value = clean_input_value($input_value);
+
     $options += [
         'input_id'     => $input_name,
         'required'     => FALSE,

@@ -28,6 +28,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'global.php');
 
+    $input_value = clean_input_value($input_value);
+
     $default_options = [
         'input_id'       => $input_name,
         'inline'         => FALSE,

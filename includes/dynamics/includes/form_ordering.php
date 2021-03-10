@@ -66,6 +66,10 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         }
         $multiple = ($is_multiple == "1") ? "multiple" : "";
     }
+
+    $input_value = clean_input_value($input_value);
+
+
     $html = "";
     $html .= "<div class='form-group ".$state_validation." lres'><label class='col-lg-3 control-label' for='$input_id'>$title</label>";
     $html .= "<div class='col-lg-9'>";

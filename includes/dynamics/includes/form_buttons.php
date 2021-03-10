@@ -20,7 +20,7 @@
 function form_button($input_name, $title, $input_value, array $options = []) {
     $html = "";
 
-    $input_value = stripinput($input_value);
+    $input_value = clean_input_value($input_value);
 
     $default_options = [
         'input_id'    => $input_name,

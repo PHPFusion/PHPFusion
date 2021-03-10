@@ -86,6 +86,17 @@ function clean_input_name($value) {
     return preg_replace($re, '', $value);
 }
 
+function clean_input_value($value) {
+    if (is_string($value)) {
+        return descript($value);
+    }
+    if (is_array($value)) {
+        return array_map('descript', $value);
+    }
+    return '';
+}
+
+
 function load_select2_script() {
     static $loaded = FALSE;
     if ($loaded === FALSE) {

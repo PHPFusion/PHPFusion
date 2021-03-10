@@ -29,6 +29,9 @@
 function form_geo($input_name, $label = "", $input_value = "", array $options = []) {
 
     $locale = fusion_get_locale();
+
+    $input_value = clean_input_value($input_value);
+
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $countries = [];
     require(INCLUDES.'geomap/geomap.inc.php');

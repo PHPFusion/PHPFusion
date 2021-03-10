@@ -55,6 +55,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $input_id = trim(str_replace("[", "-", $input_name), "]");
 
+    $input_value = clean_input_value($input_value);
+
     $default_options = [
         'type'               => 'text',
         'required'           => FALSE,

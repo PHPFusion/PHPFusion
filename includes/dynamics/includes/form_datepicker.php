@@ -84,6 +84,8 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $locale = fusion_get_locale();
 
+    $input_value = clean_input_value($input_value);
+
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
         if (file_exists(DYNAMICS."assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
