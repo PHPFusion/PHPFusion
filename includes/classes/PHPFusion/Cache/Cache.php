@@ -100,24 +100,26 @@ class Cache {
      * @throws CacheException
      */
     private function getCacheConfig() {
-        global $cache_config;
+        global $config_inc;
 
         /**
          * Config
          *
-         * $cache_config = [
-         *     'storage'        => 'memcache', // file|redis|memcache
-         *     'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']
-         *     'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']
-         *     'path'           => BASEDIR.'cache/'
+         * $config_inc = [
+         *     'cache' => [
+         *         'storage'        => 'file', // file|redis|memcache
+         *         'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']
+         *         'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']
+         *         'path'           => BASEDIR.'cache/' // for FileCache
+         *     ]
          * ];
          */
 
-        if (!is_array($cache_config)) {
+        if (!is_array($config_inc['cache'])) {
             throw new CacheException('Missing cache config');
         }
 
-        return $cache_config;
+        return $config_inc['cache'];
     }
 
     /**

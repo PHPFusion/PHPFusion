@@ -50,6 +50,10 @@ if (!empty($db_host) && !empty($db_user) && !empty($db_name)) {
 }
 DatabaseFactory::registerConfigurationFromFile(__DIR__.'/../config.db.php');
 
+if (is_file(__DIR__.'/config.inc.php')) {
+    require_once __DIR__.'/config.inc.php';
+}
+
 require_once DB_HANDLERS."all_functions_include.php";
 require_once __DIR__."/system_images.php";
 require_once __DIR__."/output_handling_include.php";
