@@ -87,13 +87,16 @@ function clean_input_name($value) {
 }
 
 function clean_input_value($value) {
-    if (is_string($value)) {
-        return stripinput($value);
+    if (!is_float($value)) {
+        if (is_string($value)) {
+            return stripinput($value);
+        }
+        if (is_array($value)) {
+            return array_map('stripinput', $value);
+        }
     }
-    if (is_array($value)) {
-        return array_map('stripinput', $value);
-    }
-    return '';
+
+    return $value;
 }
 
 function load_select2_script() {
