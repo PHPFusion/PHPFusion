@@ -320,7 +320,7 @@ class Panels {
                                     if (is_file($file_path)) {
                                         include $file_path;
                                     } else {
-                                        addNotice("error", sprintf($locale["global_130"], $p_data["panel_name"]));
+                                        addNotice('warning', sprintf($locale['global_130'], $p_data['panel_name']));
                                     }
                                 } else {
                                     if (fusion_get_settings("allow_php_exe")) {
