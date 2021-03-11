@@ -27,15 +27,15 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
-/*$insert_settings_tbl = [
+$insert_settings_tbl = [
+    'recaptcha_score' => '0.5'
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
     }
-}*/
-
+}
 
 /**
  * Delete all unused files
