@@ -688,7 +688,7 @@ if (!function_exists('forum_newtopic')) {
         $disable_query = dbquery("SELECT forum_id FROM ".DB_FORUMS." WHERE forum_type=1 ".(multilang_table("FO") ? "AND ".in_group('forum_language', LANGUAGE) : ''));
         if (dbrows($disable_query) > 0) {
             while ($d_forum = dbarray($disable_query)) {
-                $disabled_opts = $d_forum['forum_id'];
+                $disabled_opts[] = $d_forum['forum_id'];
             }
         }
 

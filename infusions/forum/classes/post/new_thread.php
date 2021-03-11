@@ -608,7 +608,7 @@ class NewThread extends ForumServer {
                 $disable_query = dbquery(" $disable_query ");
                 if (dbrows($disable_query) > 0) {
                     while ($d_forum = dbarray($disable_query)) {
-                        $disabled_opts = $d_forum['forum_id'];
+                        $disabled_opts[] = $d_forum['forum_id'];
                     }
                 }
 
