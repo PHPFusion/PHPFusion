@@ -48,6 +48,10 @@ class Cache {
      * @param string $cache_storage
      *
      * @throws CacheException
+     *
+     * @uses \PHPFusion\Cache\Storage\FileCache
+     * @uses \PHPFusion\Cache\Storage\RedisCache
+     * @uses \PHPFusion\Cache\Storage\MemcacheCache
      */
     public function __construct($cache_storage = NULL) {
         if (!empty($cache_storage)) {

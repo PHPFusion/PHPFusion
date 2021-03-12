@@ -80,10 +80,16 @@ class FileCache implements ICache {
      * @return mixed
      */
     public function get($key) {
-        $data = file_get_contents($this->path.$key.'.cache');
-        $data = unserialize($data);
+        $file = $this->path.$key.'.cache';
 
-        return $data;
+        if (is_file($file)) {
+            $data = file_get_contents($file);
+            $data = unserialize($data);
+
+            return $data;
+        }
+
+        return NULL;
     }
 
     /**
