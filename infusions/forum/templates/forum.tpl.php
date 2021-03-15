@@ -1003,7 +1003,8 @@ if (!function_exists('render_thread')) {
                     echo '<strong>'.$locale['forum_0183'].'</strong> ';
                     $selector['oldest'] = $locale['forum_0180'];
                     $selector['latest'] = $locale['forum_0181'];
-                    echo isset($_GET['section']) && in_array($_GET['section'], array_flip($selector)) ? $selector[$_GET['section']] : $locale['forum_0180'];
+                    $selector['high'] = $locale['forum_0182'];
+                    echo isset($_GET['sort_post']) && in_array($_GET['sort_post'], array_flip($selector)) ? $selector[$_GET['sort_post']] : $locale['forum_0180'];
                     echo '<span class="caret"></span>';
                 echo '</a>';
 
@@ -1041,7 +1042,7 @@ if (!function_exists('render_thread')) {
         echo '</div>';
 
         if (!empty($pdata)) {
-            $i = 1;
+            $i = get('sort_post') == 'latest' ? count($pdata) : 1;
             foreach ($pdata as $post_id => $post_data) {
                 render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
 
@@ -1051,7 +1052,11 @@ if (!function_exists('render_thread')) {
                     }
                 }
 
-                $i++;
+                if (get('sort_post') == 'latest') {
+                    $i--;
+                } else {
+                    $i++;
+                }
             }
         }
 
