@@ -491,7 +491,11 @@ if (!function_exists('render_thread_item')) {
         echo '<div class="text-lighter">'.(!empty($info['thread_starter_text']) ? $info['thread_starter_text'] : $info['thread_starter']).'</div>';
 
         if (!empty($info['thread_last'])) {
-            echo '<div class="text-lighter">'.$locale['forum_0373'].' '.profile_link($info['thread_last']['user']['user_id'], $info['thread_last']['user']['user_name'], $info['thread_last']['user']['user_status']).'</div>';
+            echo '<div class="text-lighter">';
+                echo $locale['forum_0373'].' ';
+                echo profile_link($info['thread_last']['user']['user_id'], $info['thread_last']['user']['user_name'], $info['thread_last']['user']['user_status']);
+                echo ' - '.timer($info['thread_lastpost']);
+            echo '</div>';
         }
 
         echo $info['thread_pages'];
