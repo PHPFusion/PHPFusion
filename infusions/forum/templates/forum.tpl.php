@@ -1042,15 +1042,6 @@ if (!function_exists('render_thread')) {
                 render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
 
                 if ($post_id == $info['post_firstpost']) {
-                    if ($info['permissions']['can_post'] == 1) {
-                        if (!empty($buttons['reply'])) {
-                            echo '<div class="text-right m-t-10 m-b-20">';
-                                $active = empty($buttons['reply']) ? ' disabled' : '';
-                                echo '<a class="btn btn-success btn-md m-l-20 vatop'.$active.'" href="'.$buttons['reply']['link'].'">'.$buttons['reply']['title'].'</a>';
-                            echo '</div>';
-                        }
-                    }
-
                     if ($info['thread_bounty']) {
                         echo '<div class="block-bounty m-b-20">'.$info['thread_bounty'].'</div>';
                     }
