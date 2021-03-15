@@ -186,8 +186,10 @@
 }
 
 .post-item {
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    background: rgba(247, 247, 247, .04);
     padding: 20px;
-    background: rgba(247, 247, 247, .40);
 }
 
 .post-item .post_stats {
