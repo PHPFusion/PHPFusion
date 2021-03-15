@@ -1145,10 +1145,10 @@ if (!function_exists('render_post_item')) {
                     echo '<a href="'.$quote['link'].'" title="'.$quote['title'].'" ><i class="fa fa-quote-right"></i></a>';
                 }
 
-                if (isset($data['post_reply']) && !empty($data['post_reply'])) {
+                /*if (isset($data['post_reply']) && !empty($data['post_reply'])) {
                     $reply = $data['post_reply'];
                     echo '<a href="'.$reply['link'].'" title="'.$reply['title'].'" class="m-l-5"><i class="fa fa-reply"></i></a>';
-                }
+                }*/
 
                 $print = $data['print'];
                 echo '<a href="'.$print['link'].'" title="'.$print['title'].'" class="m-l-5"><i class="fa fa-print"></i></a>';
