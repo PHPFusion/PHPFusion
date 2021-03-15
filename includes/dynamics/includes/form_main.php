@@ -87,7 +87,7 @@ function clean_input_name($value) {
 }
 
 function clean_input_value($value) {
-    if (!is_float($value)) {
+    if (!is_float($value) && !is_numeric($value)) {
         if (is_string($value)) {
             return stripinput($value);
         }
