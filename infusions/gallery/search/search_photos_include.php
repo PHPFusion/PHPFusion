@@ -88,13 +88,6 @@ if (defined('GALLERY_EXISTS')) {
 
             $search_result = '';
             while ($data = dbarray($result)) {
-                $search_result = "";
-                $timeoffset = timezone_offset_get(timezone_open($settings['timeoffset']), new \DateTime());
-                if ($data['photo_datestamp'] + 604800 > time() + ($timeoffset * 3600)) {
-                    $new = " <span class='small'>".$locale['p403']."</span>";
-                } else {
-                    $new = "";
-                }
                 $data['photo_description'] = strip_tags(htmlspecialchars_decode($data['photo_description']));
                 $text_all = $data['photo_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
@@ -107,10 +100,10 @@ if (defined('GALLERY_EXISTS')) {
                 require_once INFUSIONS.'gallery/functions.php';
 
                 $img_path = return_photo_paths($data);
-                if (!empty($img_path['photo_thumb2'])) {
-                    $img_path = $img_path['photo_thumb2'];
-                } else if (!empty($img_path['photo_thumb1'])) {
+                if (!empty($img_path['photo_thumb1'])) {
                     $img_path = $img_path['photo_thumb1'];
+                } else if (!empty($img_path['photo_thumb2'])) {
+                    $img_path = $img_path['photo_thumb2'];
                 } else {
                     $img_path = $img_path['photo_filename'];
                 }
@@ -124,8 +117,8 @@ if (defined('GALLERY_EXISTS')) {
                 $search_result .= strtr(Search::render_search_item_image(), [
                         '{%item_url%}'             => $image_link,
                         '{%item_target%}'          => '',
-                        '{%item_image%}'           => "<img src='".$img_path."' class='img-responsive' style='border:none' alt='".$data['photo_title']."'>",
-                        '{%item_title%}'           => $data['photo_title']."</a>".$new." ".$locale['p404']." <a href='photogallery.php?album_id=".$data['album_id']."'>".$data['album_title'],
+                        '{%item_image%}'           => "<img src='".$img_path."' class='icon-xl' alt='".$data['photo_title']."'>",
+                        '{%item_title%}'           => $data['photo_title'].'<br>'.$locale['p404']." <a href='".INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a>",
                         '{%item_description%}'     => $desc,
                         '{%item_search_criteria%}' => '',
                         '{%item_search_context%}'  => ''

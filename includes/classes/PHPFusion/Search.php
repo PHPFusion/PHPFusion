@@ -167,7 +167,7 @@ class Search extends Search_Engine {
         if (function_exists('render_search_item_image')) {
             return (string)self::render_search_item_image();
         }
-        return "<li class='display-inline-block m-2'><a href='{%item_url%}'>{%item_image%}</a></li>";
+        return "<li><a href='{%item_url%}' class='display-inline-block m-2'>{%item_image%}</a> <div class='display-inline-block'>{%item_title%}{%item_description%}</div></li>";
     }
 
     /**

@@ -133,7 +133,7 @@ abstract class Search_Model {
 
     public static function search_navigation($rows) {
         self::$site_search_count += $rows;
-        $navigation_result = "<div class='center m-t-5'>\n";
+        $navigation_result = "<div class='center m-t-10 m-b-10'>\n";
         $navigation_result .= makePageNav(Search_Engine::get_param('rowstart'), 10, (self::$site_search_count > 100 || self::search_globalarray("") ? 100 : self::$site_search_count), 3, BASEDIR."search.php?stype=".Search_Engine::get_param('stype')."&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars'));
         $navigation_result .= "\n</div>\n";
         self::$navigation_result = $navigation_result;
