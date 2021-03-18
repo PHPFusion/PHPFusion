@@ -201,7 +201,7 @@ class Members {
             $search_form .= "</div>\n";
             $search_form .= closeform();
 
-            $search_filter = range("A", "Z") + range(0, 9);
+            $search_filter = array_merge(range("A", "Z"), range(0, 9));
 
             $search_table = "<div class='table-responsive'><table class='table table-striped center alphabet-table'>\n<tr>\n";
             $search_table .= "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
