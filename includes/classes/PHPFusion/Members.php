@@ -49,7 +49,7 @@ class Members {
     private function __construct() {
         $sortby = isset($_GET['sortby']) ? $_GET['sortby'] : $this->sortby;
         if ($sortby) {
-            if (in_array($sortby, range("A", "Z") + range(1, 9))) {
+            if (in_array($sortby, array_merge(range("A", "Z"), range(0, 9)))) {
                 $this->sortby = $sortby;
             }
         }
