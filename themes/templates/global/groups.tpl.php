@@ -34,7 +34,9 @@ if (!function_exists('render_user_group')) {
         echo "<th class='col-xs-1'>".$locale['u062']."</th>\n";
         echo "<th class='col-xs-1'>".$locale['u113']."</th>\n";
         echo "<th class='col-xs-1'>".$locale['u114']."</th>\n";
-        echo "<th class='col-xs-1'>".$locale['u115']."</th>\n";
+        if (count(fusion_get_enabled_languages()) > 1) {
+            echo "<th class='col-xs-1'>".$locale['u115']."</th>\n";
+        }
         echo "<th class='col-xs-1'>".$locale['status']."</th>\n";
         echo "</tr>\n";
         if (!empty($info['group_members'])) {
@@ -43,7 +45,9 @@ if (!function_exists('render_user_group')) {
                 echo "<td class='col-xs-1'>".display_avatar($mData, '50px', '', FALSE, 'img-rounded')."</td>\n";
                 echo "<td>".profile_link($mData['user_id'], $mData['user_name'], $mData['user_status'])."</td>\n";
                 echo "<td class='col-xs-1'>".getuserlevel($mData['user_level'])."</td>\n";
-                echo "<td class='col-xs-1'>".translate_lang_names($mData['user_language'])."</td>\n";
+                if (count(fusion_get_enabled_languages()) > 1) {
+                    echo "<td class='col-xs-1'>".translate_lang_names($mData['user_language'])."</td>\n";
+                }
                 echo "<td class='col-xs-1'>".getuserstatus($mData['user_status'])."</td>\n";
                 echo "</tr>\n";
             }
