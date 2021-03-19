@@ -120,7 +120,7 @@ class PageComposer extends PageAdmin {
                         'page_access'       => form_sanitizer($_POST['page_access'], 0, 'page_access'),
                         'page_content'      => addslash($_POST['page_content']),
                         'page_keywords'     => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                        'page_status'       => form_sanitizer($_POST['page_status'], '', 'page_status'),
+                        'page_status'       => form_sanitizer($_POST['page_status'], 0, 'page_status'),
                         'page_datestamp'    => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),
                         'page_language'     => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
                         'page_user'         => fusion_get_userdata('user_id'),
