@@ -55,21 +55,21 @@ class Members {
         }
 
         $orderby = isset($_GET['orderby']) ? $_GET['orderby'] : $this->orderby;
-        if ($orderby ) {
-            if (in_array($orderby, array("active", "registered", "name"))) {
+        if ($orderby) {
+            if (in_array($orderby, ["active", "registered", "name"])) {
                 $this->orderby = $orderby;
             }
         }
 
         $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : $this->sort_order;
         if ($sort_order) {
-            if (in_array($sort_order, array("ASC", "DESC"))) {
+            if (in_array($sort_order, ["ASC", "DESC"])) {
                 $this->sort_order = $sort_order;
             }
         }
 
         $search_text = isset($_GET['search_text']) ? $_GET['search_text'] : $this->sortby;
-        if ($search_text ) {
+        if ($search_text) {
             $search_text = stripinput(descript($search_text));
             if (preg_check("/^[-0-9A-Z_@\s]+$/i", $search_text)) {
                 $this->search_text = $search_text;
@@ -176,24 +176,24 @@ class Members {
             $search_form .= '<span class="m-r-10">'.self::$locale['MEMB_007'].'</span>';
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
             $search_form .= form_select('orderby', '', $this->orderby,
-                array(
-                    'options'     => array(
+                [
+                    'options'     => [
                         'active'     => self::$locale['MEMB_008'],
                         'registered' => self::$locale['MEMB_009'],
                         'name'       => self::$locale['MEMB_010']
-                    ),
+                    ],
                     'inline'      => TRUE,
                     'inner_width' => '150px',
                     'class'       => 'm-0 p-0'
-                )
+                ]
             );
             $search_form .= "</div>\n";
             $search_form .= "<div class='display-inline-block' style='vertical-align:top;'>\n";
             $search_form .= form_select('sort_order', '', $this->sort_order, [
-                'options'     => array(
+                'options'     => [
                     'ASC'  => self::$locale['MEMB_012'],
                     'DESC' => self::$locale['MEMB_013'],
-                ),
+                ],
                 'inner_width' => "150px",
                 'inline'      => TRUE,
                 'class'       => 'm-0 p-0'
@@ -204,20 +204,20 @@ class Members {
             $search_filter = array_merge(range("A", "Z"), range(0, 9));
 
             $search_table = "<div class='table-responsive'><table class='table table-striped center alphabet-table'>\n<tr>\n";
-            $search_table .= "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
+            $search_table .= "<td rowspan='2' class='tbl2 va'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>";
             for ($i = 0; $i < count($search_filter) != ""; $i++) {
                 $search_table .= "<td class='tbl1 text-center'><div class='small'><a href='".BASEDIR."members.php?sortby=".$search_filter[$i]."'>".$search_filter[$i]."</a></div></td>";
-                $search_table .= ($i == 17 ? "<td rowspan='2' class='tbl2'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
+                $search_table .= ($i == 17 ? "<td rowspan='2' class='tbl2 va'><a class='strong' href='".BASEDIR."members.php?sortby=all'>".self::$locale['MEMB_014']."</a></td>\n</tr>\n<tr>\n" : "\n");
             }
             $search_table .= "</tr>\n</table>\n</div>";
 
-            $info = array(
+            $info = [
                 'search_filter' => $search_filter,
                 'rows'          => self::$max_rows,
                 'search_form'   => $search_form,
                 "search_table"  => $search_table,
                 "no_result"     => self::$locale['MEMB_018'].(isset($this->search_text) ? form_sanitizer($this->search_text, '', 'search_text') : $this->sortby)
-            );
+            ];
 
             if (self::$max_rows > 0) {
                 $this->rowstart = get_rowstart("rowstart", self::$max_rows);
