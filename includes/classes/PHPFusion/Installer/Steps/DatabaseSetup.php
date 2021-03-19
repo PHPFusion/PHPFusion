@@ -45,7 +45,6 @@ class InstallerDbSetup extends Install_Core {
         $content = '';
 
         if (check_post("step")) {
-
             self::$connection = [
                 'db_host'         => post("db_host"),
                 'db_port'         => post("db_port", FILTER_VALIDATE_INT),
@@ -54,7 +53,8 @@ class InstallerDbSetup extends Install_Core {
                 'db_name'         => post("db_name"),
                 'db_prefix'       => post("db_prefix"),
                 'cookie_prefix'   => post("cookie_prefix"),
-                'db_driver'       => post("db_driver"),
+                //'db_driver'       => post("db_driver"),
+                'db_driver'       => extension_loaded('pdo_mysql') ? 'pdo' : 'mysqli',
                 'localeset'       => post("localeset"),
                 'secret_key_salt' => self::createRandomPrefix(32),
                 'secret_key'      => self::createRandomPrefix(32)
@@ -362,9 +362,9 @@ class InstallerDbSetup extends Install_Core {
         if (!empty($array)) {
             foreach ($array as $table => $syntax) { // table is method
                 if ($comment_message) {
-                    $sql_head = "### ".$comment_message." ".DB_PREFIX.$table.PHP_EOL;
+                    $sql_head = "--- ".$comment_message." ".DB_PREFIX.$table.PHP_EOL;
                     if ($_SDK) {
-                        $sql_head = "### ".$comment_message." ON $table method".PHP_EOL;
+                        $sql_head = "--- ".$comment_message." ON $table method".PHP_EOL;
                     }
                     $sql .= $sql_head;
                     if (!empty($syntax)) {
@@ -376,7 +376,7 @@ class InstallerDbSetup extends Install_Core {
                                 }
                                 $sql_code = $code.PHP_EOL.PHP_EOL;
                                 if ($_SDK) {
-                                    $sql_code .= "### Skipping\n".$code.PHP_EOL;
+                                    $sql_code .= "--- Skipping\n".$code.PHP_EOL;
                                 }
                                 $sql .= $sql_code;
                             }
@@ -448,16 +448,16 @@ class InstallerDbSetup extends Install_Core {
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1224']
         ]);
-        $options['mysqli'] = 'MySQLi';
+        /*$options['mysqli'] = 'MySQLi';
         $value = 'mysqli';
-        if (defined('PDO::ATTR_DRIVER_NAME')) {
-            $options['pdo'] = 'PDO';
+        if (extension_loaded('pdo_mysql')) {
+            $options['pdo'] = 'PDO MySQL';
             $value = 'pdo';
         }
         $content .= form_select('db_driver', self::$locale['setup_1208'], $value, [
             'options' => $options,
             'inline'  => TRUE
-        ]);
+        ]);*/
 
         self::$step = [
             1 => [

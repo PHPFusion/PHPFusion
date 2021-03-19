@@ -172,7 +172,7 @@ class Requirements extends Install_Core {
 
         // Test for PDO (database). Making sure PDO is available
         // $requirements['database_extensions']
-        $database_ok = extension_loaded('pdo');
+        $database_ok = extension_loaded('pdo_mysql');
         if (!$database_ok) {
             $requirements['database_extensions'] = [
                 'value'        => self::$locale['setup_0115a'],

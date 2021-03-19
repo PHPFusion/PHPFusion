@@ -63,7 +63,7 @@ class DbBackupAdministration {
     }
 
     private function execute_backup() {
-        global $db_name, $db_prefix, $db_driver, $pdo_enabled;
+        global $db_name, $db_prefix, $db_driver;
         if (isset($_POST['btn_create_backup'])) {
             ini_set('max_execution_time', 0);
             if (!ini_get('safe_mode')) {
@@ -105,7 +105,7 @@ class DbBackupAdministration {
 
                         $num_fields = $db->countColumns($result);
                         for ($i = 0; $i < $num_fields; $i++) {
-                            if ((!empty($db_driver) && $db_driver === 'pdo' || !empty($pdo_enabled) && $pdo_enabled === 1)) {
+                            if (!empty($db_driver) && $db_driver === 'pdo' && extension_loaded('pdo_mysql')) {
                                 $column_meta = $result->getColumnMeta($i);
                                 $column_list .= (($column_list != "") ? ", " : "")."`".$column_meta['name']."`";
                             } else {
