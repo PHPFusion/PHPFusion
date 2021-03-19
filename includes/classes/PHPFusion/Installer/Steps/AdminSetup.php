@@ -179,6 +179,9 @@ class InstallerAdminSetup extends Install_Core {
             'user_status'         => '0',
             'user_theme'          => 'Default',
             'user_birthdate'      => '1900-01-01',
+            'user_threads'        => '',
+            'user_groups'         => '',
+            'user_sig'            => ''
         ];
     }
 

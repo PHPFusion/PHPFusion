@@ -325,7 +325,7 @@ class Batch_Core extends Install_Core {
 
         // Default Attr
         $default_create = '';
-        if (array_key_exists('default', $col_attr) && empty($col_attr['auto_increment']) || isset(self::$required_default[$col_attr['type']])) {
+        if (array_key_exists('default', $col_attr) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
             $default_create = 'DEFAULT \'0\'';
             if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
                 $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
@@ -391,7 +391,7 @@ class Batch_Core extends Install_Core {
 
                 // Default Attr
                 $default_create = '';
-                if (array_key_exists('default', $col_attr) && empty($col_attr['auto_increment']) || isset(self::$required_default[$col_attr['type']])) {
+                if (array_key_exists('default', $col_attr) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
                     $default_create = 'DEFAULT \'0\'';
                     if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
                         $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
