@@ -114,7 +114,7 @@ class ForumAdminTags extends ForumAdminInterface {
             form_hidden('tag_id', '', $this->data['tag_id']).
 
             form_text('tag_title', self::$locale['forum_tag_0200'], $this->data['tag_title'],
-                ['required' => TRUE, 'error_text' => self::$locale['414'], "inline" => TRUE]).
+                ['required' => TRUE, "inline" => TRUE]).
 
             form_textarea('tag_description', self::$locale['forum_tag_0201'], $this->data['tag_description'],
                 [
