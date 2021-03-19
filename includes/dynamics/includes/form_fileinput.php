@@ -157,7 +157,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             foreach ($files_list as $files) {
                 $html .= "<div class='col-xs-6 col-sm-3 clearfix text-center m-b-15'>\n";
                 $html .= "<div class='media-container' title='$files' data-file='$files' style='height:".$image_container_height."px;'>\n";
-                $html .= "<img class='center-y' style='margin: 0 auto;' src='".$options['upload_path'].$files."' alt='$files'/>";
+                $html .= "<img class='center-y img-responsive' style='margin: 0 auto;' src='".$options['upload_path'].$files."' alt='$files'/>";
                 $html .= "</div>\n";
                 $html .= "<small>$files</small>";
                 $html .= "</div>\n";
