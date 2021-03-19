@@ -325,9 +325,9 @@ class Batch_Core extends Install_Core {
 
         // Default Attr
         $default_create = '';
-        if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
+        if (array_key_exists('default', $col_attr) && empty($col_attr['auto_increment']) || isset(self::$required_default[$col_attr['type']])) {
             $default_create = 'DEFAULT \'0\'';
-            if (!empty($col_attr['default'])) {
+            if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
                 $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
             }
         }
@@ -391,9 +391,9 @@ class Batch_Core extends Install_Core {
 
                 // Default Attr
                 $default_create = '';
-                if (isset($col_attr['default']) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
+                if (array_key_exists('default', $col_attr) && empty($col_attr['auto_increment']) || isset(self::$required_default[$col_attr['type']])) {
                     $default_create = 'DEFAULT \'0\'';
-                    if (!empty($col_attr['default'])) {
+                    if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
                         $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
                     }
                 }
@@ -472,6 +472,7 @@ class Batch_Core extends Install_Core {
 
     /**
      * Checks for Upgrade Files
+     *
      * @return array
      */
     public function check_upgrades() {
