@@ -41,8 +41,8 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     ];
     if (isset($_POST['save_cat'])) {
         $data = [
-            "download_cat_id"          => form_sanitizer($_POST['download_cat_id'], "", "download_cat_id"),
-            "download_cat_parent"      => form_sanitizer($_POST['download_cat_parent'], "", "download_cat_parent"),
+            "download_cat_id"          => form_sanitizer($_POST['download_cat_id'], 0, "download_cat_id"),
+            "download_cat_parent"      => form_sanitizer($_POST['download_cat_parent'], 0, "download_cat_parent"),
             "download_cat_hidden"      => [],
             "download_cat_name"        => form_sanitizer($_POST['download_cat_name'], "", "download_cat_name"),
             "download_cat_description" => form_sanitizer($_POST['download_cat_description'], "", "download_cat_description"),

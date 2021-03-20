@@ -107,7 +107,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         ");
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             if (!empty($submit_criteria['blog_image']) && file_exists(IMAGES_B.$submit_criteria['blog_image'])) {
                 unlink(IMAGES_B.$submit_criteria['blog_image']);
             }
@@ -129,7 +129,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             WHERE submit_type='b' AND submit_id=:id order by submit_datestamp desc", [':id' => intval($_GET['submit_id'])]);
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $callback_data = [
                 "blog_start"      => $data['submit_datestamp'],
                 "blog_datestamp"  => $data['submit_datestamp'],
@@ -369,7 +369,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "</tr></thead>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             echo "<tr>\n";
             echo "<td>".$data['submit_id']."</td>\n";
             echo "<td>".$submit_criteria['blog_subject']."</td>\n";

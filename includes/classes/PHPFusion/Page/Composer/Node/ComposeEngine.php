@@ -251,7 +251,7 @@ class ComposeEngine extends PageAdmin {
             'page_grid_id'           => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
             'page_id'                => self::$data['page_id'],
             'page_grid_column_count' => form_sanitizer($_POST['page_grid_column_count'], 1, 'page_grid_column_count'),
-            'page_grid_html_id'      => form_sanitizer($_POST['page_grid_html_id'], '', 'page_grid_html_id'),
+            'page_grid_html_id'      => form_sanitizer($_POST['page_grid_html_id'], 0, 'page_grid_html_id'),
             'page_grid_container'    => form_sanitizer($_POST['page_grid_container'], 0, 'page_grid_container'),
             'page_grid_class'        => form_sanitizer($_POST['page_grid_class'], '', 'page_grid_class'),
             'page_grid_order'        => form_sanitizer($_POST['page_grid_order'], 0, 'page_grid_order')

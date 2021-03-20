@@ -125,7 +125,7 @@ class QuantumFields extends SqlHandler {
         } else {
             if (isset($data[$input_name])) {
                 if (self::is_serialized($data[$input_name])) {
-                    return unserialize($data[$input_name]);
+                    return unserialize(stripslashes($data[$input_name]));
                 } else {
                     $value = [];
                     foreach ($language_opts as $lang) {
@@ -219,11 +219,7 @@ class QuantumFields extends SqlHandler {
             }
         }
 
-        $value = preg_replace_callback('/s:([0-9]+):\"(.*?)\";/', function ($match) {
-            return "s:".strlen($match[2]).':"'.$match[2].'";';
-        }, $value);
-
-        if (($result = @unserialize($value)) === FALSE) {
+        if (($result = unserialize(stripslashes($value))) === FALSE) {
             $result = NULL;
 
             return FALSE;
@@ -423,7 +419,7 @@ class QuantumFields extends SqlHandler {
      */
     public static function parse_label($value) {
         if (self::is_serialized($value)) {
-            $value = @unserialize($value); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
+            $value = unserialize(stripslashes($value)); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
 
             return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
         } else {
@@ -1745,9 +1741,9 @@ class QuantumFields extends SqlHandler {
         if (check_post("save_cat")) {
 
             $this->field_cat_data = [
-                'field_cat_id'    => sanitizer("field_cat_id", "", "field_cat_id"),
+                'field_cat_id'    => sanitizer("field_cat_id", 0, "field_cat_id"),
                 'field_cat_name'  => sanitizer(["field_cat_name"], "", "field_cat_name", TRUE),
-                'field_parent'    => sanitizer('field_parent', '', 'field_parent'),
+                'field_parent'    => sanitizer('field_parent', 0, 'field_parent'),
                 'field_cat_order' => sanitizer('field_cat_order', '', 'field_cat_order'),
                 'field_cat_db'    => '',
                 'field_cat_index' => '',
@@ -1969,7 +1965,7 @@ class QuantumFields extends SqlHandler {
         $locale = fusion_get_locale();
         $html = '';
         $language_opts = fusion_get_enabled_languages();
-        $input_value = self::is_serialized($input_value) ? unserialize($input_value) : $input_value;
+        $input_value = self::is_serialized($input_value) ? unserialize(stripslashes($input_value)) : $input_value;
         $options += [
             'function'    => !empty($options['textarea']) && $options['textarea'] == 1 ? 'form_textarea' : 'form_text',
             // only 2 fields type need a multiple locale logically

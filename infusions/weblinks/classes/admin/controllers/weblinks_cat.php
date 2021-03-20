@@ -69,7 +69,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         if (!empty($save_cat)) {
             // Check Fields
             $inputArray = [
-                'weblink_cat_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_id', FILTER_DEFAULT), '', 'weblink_cat_id'),
+                'weblink_cat_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_id', FILTER_DEFAULT), 0, 'weblink_cat_id'),
                 'weblink_cat_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT), '', 'weblink_cat_name'),
                 'weblink_cat_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_description', FILTER_DEFAULT), '', 'weblink_cat_description'),
                 'weblink_cat_parent'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_parent', FILTER_VALIDATE_INT), 0, 'weblink_cat_parent'),

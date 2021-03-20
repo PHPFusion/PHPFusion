@@ -63,7 +63,7 @@ class FaqAdmin extends FaqAdminModel {
     private function display_faq_category_form() {
         if (isset($_POST['save_cat'])) {
             $this->cat_data = [
-                'faq_cat_id'          => form_sanitizer($_POST['faq_cat_id'], '', 'faq_cat_id'),
+                'faq_cat_id'          => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
                 'faq_cat_name'        => form_sanitizer($_POST['faq_cat_name'], '', 'faq_cat_name'),
                 'faq_cat_description' => form_sanitizer($_POST['faq_cat_description'], '', 'faq_cat_description'),
                 'faq_cat_language'    => form_sanitizer($_POST['faq_cat_language'], LANGUAGE, 'faq_cat_language'),

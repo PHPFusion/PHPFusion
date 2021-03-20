@@ -56,7 +56,7 @@ $formTitle = $locale['blog_0409'];
 // if edit, override $data
 if (isset($_POST['save_cat'])) {
     $inputArray = [
-        "blog_cat_id"       => form_sanitizer($_POST['blog_cat_id'], "", "blog_cat_id"),
+        "blog_cat_id"       => form_sanitizer($_POST['blog_cat_id'], 0, "blog_cat_id"),
         "blog_cat_name"     => form_sanitizer($_POST['blog_cat_name'], "", "blog_cat_name"),
         "blog_cat_parent"   => form_sanitizer($_POST['blog_cat_parent'], 0, "blog_cat_parent"),
         "blog_cat_image"    => form_sanitizer($_POST['blog_cat_image'], "", "blog_cat_image"),

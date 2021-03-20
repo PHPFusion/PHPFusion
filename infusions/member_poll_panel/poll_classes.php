@@ -237,8 +237,8 @@ class MemberPoll {
             if (self::verify_poll($_poll_id)) {
                 $this->data = $this->_selectFormPoll($_poll_id);
 
-                $this->data['poll_title'] = unserialize($this->data['poll_title']);
-                $this->data['poll_opt'] = unserialize($this->data['poll_opt']);
+                $this->data['poll_title'] = unserialize(stripslashes($this->data['poll_title']));
+                $this->data['poll_opt'] = unserialize(stripslashes($this->data['poll_opt']));
             }
         }
 
@@ -352,8 +352,8 @@ class MemberPoll {
         if ($rows > 0) {
             echo "<div class='row m-t-20'>\n";
             while ($data = dbarray($result)) {
-                $title = unserialize($data['poll_title']);
-                $poll_opt = unserialize($data['poll_opt']);
+                $title = unserialize(stripslashes($data['poll_title']));
+                $poll_opt = unserialize(stripslashes($data['poll_opt']));
                 echo "<div class='col-xs-12 col-sm-3'>\n";
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='panel-heading text-left'>\n";
@@ -548,8 +548,8 @@ class MemberPoll {
         if ($rows > 0) {
             echo "<div class='row m-t-20'>\n";
             while ($data = dbarray($result)) {
-                $title = unserialize($data['poll_title']);
-                $poll_opt = unserialize($data['poll_opt']);
+                $title = unserialize(stripslashes($data['poll_title']));
+                $poll_opt = unserialize(stripslashes($data['poll_opt']));
 
                 echo "<div class='col-xs-12 col-sm-3'>\n";
                 echo "<div class='panel panel-default'>\n";

@@ -105,7 +105,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         ");
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
-                $criteriaArray = unserialize($data['submit_criteria']);
+                $criteriaArray = unserialize(stripslashes($data['submit_criteria']));
                 purgeSubmissionsPhotoImage($criteriaArray);
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($data['submit_id'])."'");
                 addNotice("success", $locale['gallery_0161']);
@@ -122,7 +122,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $callback_data = [
                     "album_id"          => $submit_criteria['album_id'],
                     "photo_title"       => $submit_criteria['photo_title'],
@@ -236,7 +236,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "</tr>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             echo "<tr>\n";
             echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",

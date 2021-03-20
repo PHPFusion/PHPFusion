@@ -95,7 +95,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         if (dbrows($result) > 0) {
             $callback_data = dbarray($result);
             // delete all the relevant files
-            $delCriteria = unserialize($callback_data['submit_criteria']);
+            $delCriteria = unserialize(stripslashes($callback_data['submit_criteria']));
             if (!empty($delCriteria['download_image']) && file_exists(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image'])) {
                 unlink(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image']);
             }
@@ -286,7 +286,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "</tr>\n";
         echo "<tbody></thead>\n";
         while ($callback_data = dbarray($result)) {
-            $submit_criteria = unserialize($callback_data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($callback_data['submit_criteria']));
             echo "<tr>\n";
             echo "<td>".$callback_data['submit_id']."</td>\n";
             echo "<td>".display_avatar($callback_data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($callback_data['user_id'], $callback_data['user_name'], $callback_data['user_status'])."</td>\n";

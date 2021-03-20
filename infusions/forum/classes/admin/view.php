@@ -158,7 +158,7 @@ class ForumAdminView extends ForumAdminInterface {
     private function forum_jump() {
         global $aidlink;
         if (isset($_POST['jp_forum'])) {
-            $data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            $data['forum_id'] = form_sanitizer($_POST['forum_id'], 0, 'forum_id');
             redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']);
         }
     }
@@ -172,7 +172,7 @@ class ForumAdminView extends ForumAdminInterface {
         // Save_permission
         if (isset($_POST['save_permission'])) {
 
-            $this->data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            $this->data['forum_id'] = form_sanitizer($_POST['forum_id'], 0, 'forum_id');
 
             $this->data = self::get_forum($this->data['forum_id']);
 
@@ -812,7 +812,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         if (isset($_POST['remove_image']) && isset($_POST['forum_id'])) {
 
-            $data['forum_id'] = form_sanitizer($_POST['forum_id'], '', 'forum_id');
+            $data['forum_id'] = form_sanitizer($_POST['forum_id'], 0, 'forum_id');
 
             if ($data['forum_id']) {
                 $data = self::get_forum($data['forum_id']);

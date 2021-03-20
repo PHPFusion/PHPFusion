@@ -91,7 +91,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
         // if edit, override $data
         if ((isset($_POST['save_cat'])) or (isset($_POST['save_cat_and_close']))) {
             $inputArray = [
-                "news_cat_id"         => form_sanitizer($_POST['news_cat_id'], "", "news_cat_id"),
+                "news_cat_id"         => form_sanitizer($_POST['news_cat_id'], 0, "news_cat_id"),
                 "news_cat_name"       => form_sanitizer($_POST['news_cat_name'], "", "news_cat_name"),
                 "news_cat_parent"     => form_sanitizer($_POST['news_cat_parent'], 0, "news_cat_parent"),
                 "news_cat_visibility" => form_sanitizer($_POST['news_cat_visibility'], 0, "news_cat_visibility"),

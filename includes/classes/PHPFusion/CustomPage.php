@@ -22,7 +22,7 @@ class CustomPage {
      * @var array
      */
     private $data = [
-        'page_id'             => '',
+        'page_id'             => 0,
         'page_title'          => '',
         'link_id'             => 0,
         'link_order'          => 0,
