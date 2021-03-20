@@ -28,7 +28,7 @@ class BlacklistAdministration {
 
     private $data = [
         'blacklist_id'        => 0,
-        'blacklist_user_id'   => '',
+        'blacklist_user_id'   => 0,
         'blacklist_ip'        => '',
         'blacklist_ip_type'   => '4',
         'blacklist_email'     => '',
@@ -73,7 +73,7 @@ class BlacklistAdministration {
 
             $this->data = [
                 'blacklist_id'        => form_sanitizer($_POST['blacklist_id'], 0, 'blacklist_id'),
-                'blacklist_user_id'   => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : '',
+                'blacklist_user_id'   => empty($_POST['blacklist_id']) ? fusion_get_userdata('user_id') : 0,
                 'blacklist_ip'        => form_sanitizer($_POST['blacklist_ip'], '', 'blacklist_ip'),
                 'blacklist_ip_type'   => $blacklist_ip_type,
                 'blacklist_email'     => !empty($_POST['blacklist_email']) ? form_sanitizer($_POST['blacklist_email'], '', 'blacklist_email') : '',
