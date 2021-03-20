@@ -252,8 +252,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
             add_to_jquery("$('#add_admin').bind('click', function() { return confirm('".$locale['ADM_461']."'); });");
             echo closeform();
         } else {
-            echo "<div class='well text-center'>".$locale['ADM_418']."<br /></div>";
-            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."'>".$locale['ADM_419']."</a>\n</div>\n";
+            echo "<div class='well text-center'>".$locale['ADM_418']."<br /><a href='".FUSION_SELF.fusion_get_aidlink()."'>".$locale['ADM_419']."</a>\n</div>\n";
         }
     }
     closetable();
