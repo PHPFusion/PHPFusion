@@ -362,9 +362,9 @@ class InstallerDbSetup extends Install_Core {
         if (!empty($array)) {
             foreach ($array as $table => $syntax) { // table is method
                 if ($comment_message) {
-                    $sql_head = "--- ".$comment_message." ".DB_PREFIX.$table.PHP_EOL;
+                    $sql_head = "### ".$comment_message." ".DB_PREFIX.$table.PHP_EOL;
                     if ($_SDK) {
-                        $sql_head = "--- ".$comment_message." ON $table method".PHP_EOL;
+                        $sql_head = "### ".$comment_message." ON $table method".PHP_EOL;
                     }
                     $sql .= $sql_head;
                     if (!empty($syntax)) {
@@ -376,7 +376,7 @@ class InstallerDbSetup extends Install_Core {
                                 }
                                 $sql_code = $code.PHP_EOL.PHP_EOL;
                                 if ($_SDK) {
-                                    $sql_code .= "--- Skipping\n".$code.PHP_EOL;
+                                    $sql_code .= "### Skipping\n".$code.PHP_EOL;
                                 }
                                 $sql .= $sql_code;
                             }
