@@ -66,7 +66,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         if ((isset($_POST['save_cat'])) || (isset($_POST['save_cat_and_close']))) {
             // Check Fields
             $inputArray = [
-                'article_cat_id'          => form_sanitizer($_POST['article_cat_id'], '', 'article_cat_id'),
+                'article_cat_id'          => form_sanitizer($_POST['article_cat_id'], 0, 'article_cat_id'),
                 'article_cat_name'        => form_sanitizer($_POST['article_cat_name'], '', 'article_cat_name'),
                 'article_cat_description' => form_sanitizer(addslashes($_POST['article_cat_description']), '', 'article_cat_description'),
                 'article_cat_parent'      => form_sanitizer($_POST['article_cat_parent'], 0, 'article_cat_parent'),

@@ -219,8 +219,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo "</div>\n";
         echo "<hr/>\n";
         echo form_hidden('article_id', '', $this->article_data['article_id']);
-        echo "<div class='row m-b-10'>\n";
-        echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+
         echo form_text('article_subject', '', $this->article_data['article_subject'], [
             'required'    => TRUE,
             'max_length'  => 200,
@@ -245,7 +244,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo closetabbody();
         echo closetab();
 
-        echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+        echo '<div class="row">';
+        echo '<div class="col-xs-12 col-sm-6">';
+
         openside($this->locale['article_0262']);
         echo form_select('article_draft', $this->locale['status'], $this->article_data['article_draft'], [
             'inner_width' => '100%',
@@ -281,6 +282,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo form_datepicker('article_datestamp', $this->locale['article_0203'], $this->article_data['article_datestamp']);
         closeside();
 
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-6">';
+
         openside('');
         if (fusion_get_settings("tinymce_enabled") != 1) {
             echo form_checkbox('article_breaks', $this->locale['article_0257'], $this->article_data['article_breaks'], [
@@ -310,7 +314,9 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'multiple'    => TRUE
         ]);
         closeside();
-        echo "</div>\n</div>\n";
+
+        echo '</div>';
+        echo '</div>';
 
         self::display_articleButtons("formend");
         echo closeform();
@@ -458,7 +464,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ";
         $result2 = dbquery($sql);
         $article_rows = dbrows($result2);
-        $article_cats = dbcount("(article_cat_id)", DB_ARTICLE_CATS, "");
+        $article_cats = dbcount("(article_cat_id)", DB_ARTICLE_CATS);
 
         // Filters
         $filter_values = [
@@ -574,7 +580,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         </div>
 
         <?php echo openform('article_table', 'post', FUSION_REQUEST); ?>
-        <?php echo form_hidden('table_action', '', ''); ?>
+        <?php echo form_hidden('table_action'); ?>
 
         <!-- Display Table -->
         <div class="table-responsive">
