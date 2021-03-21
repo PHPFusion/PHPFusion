@@ -1744,7 +1744,7 @@ class QuantumFields extends SqlHandler {
                 'field_cat_id'    => sanitizer("field_cat_id", 0, "field_cat_id"),
                 'field_cat_name'  => sanitizer(["field_cat_name"], "", "field_cat_name", TRUE),
                 'field_parent'    => sanitizer('field_parent', 0, 'field_parent'),
-                'field_cat_order' => sanitizer('field_cat_order', '', 'field_cat_order'),
+                'field_cat_order' => sanitizer('field_cat_order', 0, 'field_cat_order'),
                 'field_cat_db'    => '',
                 'field_cat_index' => '',
                 'field_cat_class' => '',
@@ -2101,7 +2101,8 @@ class QuantumFields extends SqlHandler {
                 'field_required'     => (int)check_post("field_required"),
                 'field_log'          => (int)check_post("field_log"),
                 'field_registration' => (int)check_post("field_registration"),
-                'field_order'        => sanitizer("field_order", '0', 'field_order')
+                'field_order'        => sanitizer("field_order", '0', 'field_order'),
+                'field_config'       => ''
             ];
 
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
@@ -2735,7 +2736,9 @@ class QuantumFields extends SqlHandler {
                 'field_required'     => isset($_POST['field_required']) ? 1 : 0,
                 'field_registration' => isset($_POST['field_registration']) ? 1 : 0,
                 'field_log'          => isset($_POST['field_log']) ? 1 : 0,
-                'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order')
+                'field_order'        => form_sanitizer($_POST['field_order'], '0', 'field_order'),
+                'field_options'      => '',
+                'field_config'       => ''
             ];
             $this->field_data['field_name'] = str_replace(' ', '_', $this->field_data['field_name']); // make sure no space.
             if (!$this->field_data['field_order']) {

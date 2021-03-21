@@ -279,10 +279,10 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 "link_url"         => sanitizer('link_url', '', 'link_url'),
                 "link_icon"        => sanitizer('link_icon', '', 'link_icon'),
                 "link_language"    => sanitizer('link_language', LANGUAGE, 'link_language'),
-                "link_visibility"  => sanitizer('link_visibility', '', 'link_visibility'),
-                "link_position"    => sanitizer('link_position', '', 'link_position'),
+                "link_visibility"  => sanitizer('link_visibility', 0, 'link_visibility'),
+                "link_position"    => sanitizer('link_position', 0, 'link_position'),
                 'link_status'      => sanitizer('link_status', 0, 'link_status'),
-                "link_order"       => sanitizer('link_order', '', 'link_order'),
+                "link_order"       => sanitizer('link_order', 0, 'link_order'),
                 "link_window"      => (check_post('link_window') ? '1' : '0'),
                 "link_position_id" => 0,
             ];

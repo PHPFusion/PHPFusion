@@ -45,7 +45,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "download_image_thumb"       => isset($_POST['download_image_thumb']) ? form_sanitizer($_POST['download_image_thumb'], '', 'download_image_thumb') : '',
                 "download_allow_comments"    => isset($_POST['download_allow_comments']),
                 "download_allow_ratings"     => isset($_POST['download_allow_ratings']),
-                "download_visibility"        => form_sanitizer($_POST['download_visibility'], '', 'download_visibility'),
+                "download_visibility"        => form_sanitizer($_POST['download_visibility'], 0, 'download_visibility'),
                 "download_keywords"          => form_sanitizer($_POST['download_keywords'], '', 'download_keywords'),
                 "download_datestamp"         => $callback_data['submit_datestamp'],
             ];

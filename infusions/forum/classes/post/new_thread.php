@@ -159,20 +159,23 @@ class NewThread extends ForumServer {
                     }
 
                     $thread_data = [
-                        'forum_id'          => $forum_data['forum_id'],
-                        'thread_id'         => 0,
-                        'thread_subject'    => isset($_POST['thread_subject']) ? form_sanitizer($_POST['thread_subject'], '', 'thread_subject') : '',
-                        'thread_tags'       => isset($_POST['thread_tags']) ? form_sanitizer($_POST['thread_tags'], '', 'thread_tags') : '',
-                        'thread_author'     => $userdata['user_id'],
-                        'thread_views'      => 0,
-                        'thread_lastpost'   => time(),
-                        'thread_lastpostid' => 0, // need to run update
-                        'thread_lastuser'   => $userdata['user_id'],
-                        'thread_postcount'  => 1, // already insert 1 postcount.
-                        'thread_poll'       => 0,
-                        'thread_sticky'     => isset($_POST['thread_sticky']) ? 1 : 0,
-                        'thread_locked'     => isset($_POST['thread_sticky']) ? 1 : 0,
-                        'thread_hidden'     => 0,
+                        'forum_id'                  => $forum_data['forum_id'],
+                        'thread_id'                 => 0,
+                        'thread_subject'            => isset($_POST['thread_subject']) ? form_sanitizer($_POST['thread_subject'], '', 'thread_subject') : '',
+                        'thread_tags'               => isset($_POST['thread_tags']) ? form_sanitizer($_POST['thread_tags'], '', 'thread_tags') : '',
+                        'thread_tags_old'           => '',
+                        'thread_author'             => $userdata['user_id'],
+                        'thread_views'              => 0,
+                        'thread_lastpost'           => time(),
+                        'thread_lastpostid'         => 0, // need to run update
+                        'thread_lastuser'           => $userdata['user_id'],
+                        'thread_postcount'          => 1, // already insert 1 postcount.
+                        'thread_poll'               => 0,
+                        'thread_sticky'             => isset($_POST['thread_sticky']) ? 1 : 0,
+                        'thread_locked'             => isset($_POST['thread_sticky']) ? 1 : 0,
+                        'thread_hidden'             => 0,
+                        'thread_bounty'             => 0,
+                        'thread_bounty_description' => ''
                     ];
 
                     $post_data = [

@@ -24,12 +24,12 @@ require_once INCLUDES."html_buttons_include.php";
 
 if (isset($_POST['save_template'])) {
     $data = [
-        'template_id'           => form_sanitizer($_POST['template_id'], '', 'template_id'),
+        'template_id'           => form_sanitizer($_POST['template_id'], 0, 'template_id'),
         'template_key'          => form_sanitizer($_POST['template_key'], '', 'template_key'),
         'template_format'       => form_sanitizer($_POST['template_format'], '', 'template_format'),
         'template_subject'      => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
         'template_content'      => form_sanitizer($_POST['template_content'], '', 'template_content'),
-        'template_active'       => form_sanitizer($_POST['template_active'], '', 'template_active'),
+        'template_active'       => form_sanitizer($_POST['template_active'], 0, 'template_active'),
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     ];
@@ -40,12 +40,12 @@ if (isset($_POST['save_template'])) {
     }
 } else if (isset($_POST['test_template'])) {
     $data = [
-        'template_id'           => form_sanitizer($_POST['template_id'], '', 'template_id'),
+        'template_id'           => form_sanitizer($_POST['template_id'], 0, 'template_id'),
         'template_key'          => form_sanitizer($_POST['template_key'], '', 'template_key'),
         'template_format'       => form_sanitizer($_POST['template_format'], '', 'template_format'),
         'template_subject'      => form_sanitizer($_POST['template_subject'], '', 'template_subject'),
         'template_content'      => form_sanitizer($_POST['template_content'], '', 'template_content'),
-        'template_active'       => form_sanitizer($_POST['template_active'], '', 'template_active'),
+        'template_active'       => form_sanitizer($_POST['template_active'], 0, 'template_active'),
         'template_sender_name'  => form_sanitizer($_POST['template_sender_name'], '', 'template_sender_name'),
         'template_sender_email' => form_sanitizer($_POST['template_sender_email'], '', 'template_sender_email'),
     ];

@@ -73,8 +73,8 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         'news_allow_comments'      => isset($_POST['news_allow_comments']) ? 1 : 0,
                         'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? 1 : 0,
                         'news_language'            => form_sanitizer($_POST['news_language'], LANGUAGE, 'news_language'),
-                        'news_image_full_default'  => '',
-                        'news_image_front_default' => '',
+                        'news_image_full_default'  => 0,
+                        'news_image_front_default' => 0,
                         'news_image_align'         => '',
                     ];
 

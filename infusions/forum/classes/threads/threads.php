@@ -926,7 +926,7 @@ class ForumThreads extends ForumServer {
                         'user_joined'    => $user['user_joined'],
                         'user_lastvisit' => $user['user_lastvisit'],
                         'user_ip'        => $user['user_ip'],
-                        'user_sig'       => $user['user_sig']
+                        'user_sig'       => !empty($user['user_sig']) ? $user['user_sig'] : ''
                     ];
 
                     if (!$pdata['post_showsig']) {
