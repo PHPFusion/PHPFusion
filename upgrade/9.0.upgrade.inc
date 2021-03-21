@@ -72,6 +72,15 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
             $inf_insertdbrow[] = $value;
         }
     }
+
+    // from v8
+    $delete_tpl_array = [
+        'ACTIVATION'
+    ];
+
+    foreach ($delete_tpl_array as $key) {
+        dbquery("DELETE FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='".$key."'");
+    }
 }
 
 if (db_exists(DB_SETTINGS)) {
