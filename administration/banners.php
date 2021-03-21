@@ -37,7 +37,6 @@ if (isset($_POST['save_banners']) || isset($_POST['preview_banners'])) {
 
     if (isset($_POST['preview_banners']) && \defender::safe()) {
         $modal = openmodal('banners_preview', $locale['855']);
-
         $modal .= fusion_get_function('openside', $locale['851']);
         if (!empty($settings_main['sitebanner1'])) {
             if ($settings['allow_php_exe']) {
@@ -47,7 +46,6 @@ if (isset($_POST['save_banners']) || isset($_POST['preview_banners'])) {
             }
         }
         $modal .= fusion_get_function('closeside', '');
-
         $modal .= fusion_get_function('openside', $locale['852']);
         if (!empty($settings_main['sitebanner2'])) {
             if ($settings['allow_php_exe']) {
@@ -57,7 +55,6 @@ if (isset($_POST['save_banners']) || isset($_POST['preview_banners'])) {
             }
         }
         $modal .= fusion_get_function('closeside', '');
-
         $modal .= closemodal();
         add_to_footer($modal);
     } else {
@@ -74,20 +71,16 @@ if (isset($_POST['save_banners']) || isset($_POST['preview_banners'])) {
 
 opentable($locale['850']);
 echo openform('banner_form', 'post', FUSION_REQUEST);
-
-
 echo form_textarea('sitebanner1', $locale['851'], $settings_main['sitebanner1'], [
     'type'      => 'html',
     'form_name' => 'banner_form',
     'inline'    => FALSE
 ]);
-
 echo form_textarea('sitebanner2', $locale['852'], $settings_main['sitebanner2'], [
     'type'      => 'html',
     'form_name' => 'banner_form',
     'inline'    => FALSE
 ]);
-
 echo form_button('preview_banners', $locale['855'], $locale['855'], ['class' => 'btn-default m-r-10']);
 echo form_button('save_banners', $locale['854'], $locale['854'], ['class' => 'btn-success']);
 
