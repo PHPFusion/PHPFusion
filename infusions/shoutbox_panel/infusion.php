@@ -84,7 +84,7 @@ if (!empty($enabled_languages)) {
 
         // Delete
         $mlt_deldbrow[$language][] = DB_SHOUTBOX." WHERE shout_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='SB' AND admin_language='".$language."'";
+        $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='S' AND admin_language='".$language."'";
     }
 } else {
     $inf_adminpanel[] = [
