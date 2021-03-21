@@ -77,7 +77,8 @@ abstract class News extends NewsServer {
      */
     protected static function get_NewsFilter() {
         $array['allowed_filters'] = [
-            'recent' => self::$locale['news_0011']
+            'recent' => self::$locale['news_0011'],
+            'read' => self::$locale['news_0020']
         ];
 
         if (fusion_get_settings('comments_enabled') == 1) {
@@ -264,7 +265,7 @@ abstract class News extends NewsServer {
     protected static function check_NewsFilter() {
 
         /* Filter Construct */
-        $filter = ['recent', 'comment', 'rating'];
+        $filter = ['recent', 'read', 'comment', 'rating'];
 
         if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
             $current_filter = $_GET['type'];
@@ -272,6 +273,9 @@ abstract class News extends NewsServer {
             if ($current_filter == 'recent') {
                 // order by datestamp.
                 $cat_filter['order'] = 'news_datestamp DESC';
+            } else if ($current_filter == 'read') {
+                // order by datestamp.
+                $cat_filter['order'] = 'news_reads DESC';
             } else if ($current_filter == 'comment') {
                 // order by comment_count
                 $cat_filter = [

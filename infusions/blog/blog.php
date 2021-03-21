@@ -74,7 +74,8 @@ $info = [
 ];
 
 $info['allowed_filters'] = [
-    'recent'  => $locale['blog_2001']
+    'recent'  => $locale['blog_2001'],
+    'read'  => $locale['blog_3004']
 ];
 
 if (fusion_get_settings('comments_enabled') == 1) {
@@ -132,6 +133,9 @@ $filter_join = '';
 switch ($_GET['type']) {
     case 'recent':
         $filter_condition = 'b.blog_datestamp DESC';
+        break;
+    case 'read':
+        $filter_condition = 'b.blog_reads DESC';
         break;
     case 'comment':
         $filter_condition = 'count_comment DESC';

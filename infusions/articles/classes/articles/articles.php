@@ -68,7 +68,8 @@ abstract class Articles extends ArticlesServer {
      */
     private function get_ArticleFilters() {
         $array['allowed_filters'] = [
-            'recent'  => self::$locale['article_0030']
+            'recent' => self::$locale['article_0030'],
+            'read'   => self::$locale['article_0063']
         ];
 
         if (fusion_get_settings('comments_enabled') == 1) {
@@ -185,12 +186,15 @@ abstract class Articles extends ArticlesServer {
      */
     private static function check_ArticlesFilter() {
         /* Filter Construct */
-        $filter = ['recent', 'comment', 'rating'];
+        $filter = ['recent', 'read', 'comment', 'rating'];
 
         if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
             switch ($_GET['type']) {
                 case "recent":
                     $catfilter = "a.article_datestamp DESC";
+                    break;
+                case "read":
+                    $catfilter = "a.article_reads DESC";
                     break;
                 case "comment":
                     $catfilter = "count_comment DESC";
