@@ -81,10 +81,12 @@ foreach ($temp as $folders) {
             $content .= "<div class='pull-left m-r-10'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
 
             $button = $inf['title'];
-            if (!empty($inf['mlt_adminpanel'][LANGUAGE][0])) {
-                $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['mlt_adminpanel'][LANGUAGE][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
-            } else if (!empty($inf['adminpanel'][0])) {
-                $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['adminpanel'][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
+            if ($inf['status'] > 0 ) {
+                if (!empty($inf['mlt_adminpanel'][LANGUAGE][0])) {
+                    $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['mlt_adminpanel'][LANGUAGE][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
+                } else if (!empty($inf['adminpanel'][0])) {
+                    $button = '<a href="'.INFUSIONS.$inf['folder'].'/'.$inf['adminpanel'][0]['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>';
+                }
             }
 
             $content .= "<div class='overflow-hide'><strong>".$button."</strong><br/>".$inf['description']."</div>\n</div>\n";
