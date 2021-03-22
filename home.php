@@ -125,7 +125,7 @@ if (!defined('DISABLE_HOME_MODULES')) {
     if (defined('DB_DOWNLOADS')) {
         $configs[DB_DOWNLOADS] = [
             'select'              => "SELECT
-            dl.download_id as id, dl.download_title as title, dl.download_description_short as content, dl.download_count as dl_count
+            dl.download_id as id, dl.download_title as title, dl.download_description_short as content, dl.download_count as dl_count,
             dl.download_datestamp as datestamp, dc.download_cat_id as cat_id, dc.download_cat_name as cat_name,
             us.user_id, us.user_name, us.user_status,
             dl.download_image as image,
