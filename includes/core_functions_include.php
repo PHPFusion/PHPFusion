@@ -659,7 +659,7 @@ function parsesmileys($message) {
         foreach (cache_smileys() as $smiley) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
             $smiley_image = get_image("smiley_".$smiley['smiley_text']);
-            $smiley_image = "<img style='width:20px;height:20px;' src='$smiley_image' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
+            $smiley_image = "<img class='smiley' style='width:20px;height:20px;' src='$smiley_image' alt='".$smiley['smiley_text']."'>";
             $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
         }
     }
@@ -683,7 +683,7 @@ function displaysmileys($textarea, $form = "inputform") {
         }
         $i++;
         $img = get_image("smiley_".$smiley['smiley_text']);
-        $smileys .= "<img style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
+        $smileys .= "<img class='smiley' style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\">\n";
     }
     return $smileys;
 }
