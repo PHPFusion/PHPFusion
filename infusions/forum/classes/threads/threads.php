@@ -1125,7 +1125,7 @@ class ForumThreads extends ForumServer {
                         if (iMOD || (
                                 (($forum_settings['forum_edit_lock'] == TRUE && $pdata['is_last_post'] || $forum_settings['forum_edit_lock'] == FALSE))
                                 && ($userdata['user_id'] == $pdata['post_author'])
-                                && ($forum_settings['forum_edit_timelimit'] <= 0 || time() - $forum_settings['forum_edit_timelimit'] * 60 < $pdata['post_datestamp'])
+                                && (self::getEditTimelimit() <= 0 || (time() - self::getEditTimelimit()) < $pdata['post_datestamp'])
                             )
                         ) {
                             $pdata['post_edit'] = [

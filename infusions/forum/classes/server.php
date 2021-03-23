@@ -609,4 +609,30 @@ abstract class ForumServer {
             BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
+
+    static function getEditTimelimit($seconds = TRUE) {
+        $seconds = $seconds == TRUE ? 60 : 1;
+
+        switch (self::$forum_settings['forum_edit_timelimit']) {
+            case 0: // no limit
+                $limit = 0;
+                break;
+            case 1: // 10 minutes
+                $limit = 10 * $seconds;
+                break;
+            case 2: // 30 minutes
+                $limit = 30 * $seconds;
+                break;
+            case 3: // 45 minutes
+                $limit = 45 * $seconds;
+                break;
+            case 4: // 60 minutes
+                $limit = 60 * $seconds;
+                break;
+            default:
+                $limit = 0;
+        }
+
+        return $limit;
+    }
 }

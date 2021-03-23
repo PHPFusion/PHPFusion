@@ -155,7 +155,7 @@ class Forum_Postify extends ForumServer {
                     break;
                 case 6:
                     // You may only edit a post for %d minute(s) after initial submission.
-                    return sprintf(self::$locale['forum_0556'], self::$forum_settings['forum_edit_timelimit']);
+                    return sprintf(self::$locale['forum_0556'], self::getEditTimelimit(FALSE));
                     break;
             }
         }

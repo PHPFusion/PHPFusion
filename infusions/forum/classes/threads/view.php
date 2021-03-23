@@ -501,7 +501,7 @@ class ViewThread extends ForumServer {
                     }
 
                     // no edit if time limit reached
-                    if (!iMOD && ($forum_settings['forum_edit_timelimit'] > 0 && (TIME - $forum_settings['forum_edit_timelimit'] * 60) > $post_data['post_datestamp'])) {
+                    if (!iMOD && (self::getEditTimelimit() > 0 && (TIME - self::getEditTimelimit()) > $post_data['post_datestamp'])) {
                         redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
                     }
 
