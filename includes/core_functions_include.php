@@ -1857,31 +1857,33 @@ function parsebytesize($size, $decimals = 2, $dir = FALSE) {
     }
 }
 
-/**
- * User profile link
- *
- * @param int    $user_id
- * @param string $user_name
- * @param int    $user_status
- * @param string $class html class of link
- * @param bool   $display_link
- *
- * @return string
- */
-function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
-    $locale = fusion_get_locale();
-    $settings = fusion_get_settings();
-    $class = ($class ? "class='$class'" : "");
+if (!function_exists('profile_link')) {
+    /**
+     * User profile link
+     *
+     * @param int    $user_id
+     * @param string $user_name
+     * @param int    $user_status
+     * @param string $class html class of link
+     * @param bool   $display_link
+     *
+     * @return string
+     */
+    function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
+        $class = ($class ? "class='$class'" : "");
 
-    if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
-        $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."' ".$class.">".$user_name."</a>";
-    } else if ($user_status == "5" || $user_status == "6") {
-        $link = $locale['user_anonymous'];
-    } else {
-        $link = $user_name;
+        if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
+            $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."' ".$class.">".$user_name."</a>";
+        } else if ($user_status == "5" || $user_status == "6") {
+            $link = $locale['user_anonymous'];
+        } else {
+            $link = $user_name;
+        }
+
+        return $link;
     }
-
-    return $link;
 }
 
 /**
