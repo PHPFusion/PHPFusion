@@ -268,7 +268,6 @@ class AdminPanel {
     }
 
     private function sidebarMenu() {
-        $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $admin_sections = Admins::getInstance()->getAdminSections();
         $admin_pages = Admins::getInstance()->getAdminPages();
@@ -290,17 +289,12 @@ class AdminPanel {
                                 if (checkrights($data['admin_rights'])) {
                                     $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
 
-                                    $title = $data['admin_title'];
-                                    if ($data['admin_page'] !== 5) {
-                                        $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
-                                    }
-
-                                    $icon = '<img class="m-r-5" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$title.'"/>';
+                                    $icon = '<img class="m-r-5" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'">';
 
                                     if (!empty($admin_pages[$data['admin_rights']])) {
                                         if (checkrights($data['admin_rights'])) {
                                             $html .= '<li class="treeview'.($sub_active ? ' menu-open' : '').'">';
-                                                $html .= '<a href="#">'.$icon.' '.$title.'<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+                                                $html .= '<a href="#">'.$icon.' '.$data['admin_title'].'<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
                                                 $html .= '<ul class="treeview-menu"'.($sub_active ? ' style="display: block;"' : '').'>';
                                                     foreach ($admin_pages[$data['admin_rights']] as $sub_page) {
                                                         $html .= '<li><a href="'.$sub_page['admin_link'].'">'.$sub_page['admin_title'].'</a></li>';
@@ -309,7 +303,7 @@ class AdminPanel {
                                             $html .= '</li>';
                                         }
                                     } else {
-                                        $html .= '<li'.($sub_active ? ' class="active"' : '').'><a href="'.ADMIN.$data['admin_link'].$aidlink.'">'.$icon.' '.$title.'</a></li>';
+                                        $html .= '<li'.($sub_active ? ' class="active"' : '').'><a href="'.ADMIN.$data['admin_link'].$aidlink.'">'.$icon.' '.$data['admin_title'].'</a></li>';
                                     }
                                 }
                             }

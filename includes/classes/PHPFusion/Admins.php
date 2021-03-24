@@ -305,6 +305,8 @@ class Admins {
      * @return array
      */
     public function getAdminPages() {
+        $locale = fusion_get_locale();
+
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
             $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
@@ -313,7 +315,7 @@ class Admins {
                 while ($data = dbarray($result)) {
                     if (file_exists(ADMIN.$data['admin_link']) || file_exists(INFUSIONS.$data['admin_link'])) {
                         if (checkrights($data['admin_rights']) && $data['admin_link'] != "reserved") {
-                            $data['admin_title'] = preg_replace("/&(?!(#\d+|\w+);)/", "&amp;", $data['admin_title']);
+                            $data['admin_title'] = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
                             self::$admin_pages[$data['admin_page']][] = $data;
                         }
                     }
@@ -547,16 +549,10 @@ class Admins {
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
                 foreach ($admin_pages[$i] as $key => $data) {
-
-                    $title = $data['admin_title'];
-                    if ($data['admin_page'] !== 5) {
-                        $title = isset(self::$locale[$data['admin_rights']]) ? self::$locale[$data['admin_rights']] : $title;
-                    }
-
                     $secondary_active = $data['admin_link'] == $this->_currentPage();
-                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='$title'/>" : $this->get_admin_icons($data['admin_rights']);
+                    $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'>" : $this->get_admin_icons($data['admin_rights']);
 
-                    $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$title."</span></a></li>\n" : "";
+                    $html .= checkrights($data['admin_rights']) ? "<li".($secondary_active ? " class='active'" : '')."><a href='".ADMIN.$data['admin_link'].$aidlink."'>".$icons." <span class='adl-submenu-title'>".$data['admin_title']."</span></a></li>\n" : "";
                 }
 
                 $html .= "</ul>\n";
