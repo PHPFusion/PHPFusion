@@ -39,34 +39,34 @@ if (check_post('add_admin') && post('user_id', FILTER_SANITIZE_NUMBER_INT)) {
 
         dbquery("UPDATE ".DB_USERS." SET user_level=:userLevel, user_rights=:userRights WHERE user_id=:userId", [
             ':userLevel'  => check_post('make_super') ? USER_LEVEL_SUPER_ADMIN : USER_LEVEL_ADMIN,
-            ':userRights' => $admin_rights, ':userId' => $_POST['user_id'],
+            ':userRights' => $admin_rights, ':userId' => post('user_id'),
         ]);
     } else {
-        addNotice('success', $locale['ADM_463']);
+        addNotice('warning', $locale['ADM_463']);
         redirect(clean_request('', [''], FALSE));
     }
     addNotice('success', $locale['ADM_400']);
     redirect(clean_request('', [''], FALSE));
 }
 
-if (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1) {
-    dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<=".USER_LEVEL_ADMIN."");
+if (check_get('remove') && get('remove', FILTER_SANITIZE_NUMBER_INT) != 1) {
+    dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".get('remove')."' AND user_level<=".USER_LEVEL_ADMIN);
 
     addNotice('success', $locale['ADM_402']);
     redirect(clean_request('', ['remove'], FALSE));
 }
 
-if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['user_id']) && $_GET['user_id'] != 1)) {
-    if (isset($_POST['rights'])) {
-        $user_rights = implode('.', $_POST['rights']);
+if (check_post('update_admin') && get('user_id', FILTER_SANITIZE_NUMBER_INT) != 1) {
+    if (check_post('rights')) {
+        $user_rights = implode('.', post('rights'));
         dbquery("UPDATE ".DB_USERS." SET user_rights=:userRight WHERE user_id=:userId AND user_level<=:userLevel", [
             ':userRight' => $user_rights,
-            ':userId'    => $_GET['user_id'],
+            ':userId'    => get('user_id'),
             ':userLevel' => USER_LEVEL_ADMIN,
         ]);
     } else {
         dbquery("UPDATE ".DB_USERS." SET user_rights='' WHERE user_id=:userId AND user_level<=:userLevel", [
-            ':userId'    => $_GET['user_id'],
+            ':userId'    => get('user_id'),
             ':userLevel' => USER_LEVEL_ADMIN,
         ]);
     }
@@ -75,18 +75,18 @@ if (isset($_POST['update_admin']) && (isset($_GET['user_id']) && isnum($_GET['us
     redirect(clean_request('', ['edit'], FALSE));
 }
 
-if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
-    $user = fusion_get_user((int)$_GET['edit']);
+if (check_get('edit') && get('edit', FILTER_SANITIZE_NUMBER_INT) != 1) {
+    $user = fusion_get_user(get('edit'));
     if (fusion_get_userdata('user_level') <= $user['user_level'] && fusion_get_userdata('user_id') != $user['user_id']) {
         $result = dbquery("
         SELECT user_name, user_rights
         FROM ".DB_USERS."
         WHERE user_id=:userId AND user_level<=:userLevel
         ORDER BY user_id ASC", [
-                ':userId'    => (int)$_GET['edit'],
-                ':userLevel' => USER_LEVEL_ADMIN,
-            ]
-        );
+            ':userId'    => get('edit'),
+            ':userLevel' => USER_LEVEL_ADMIN,
+        ]);
+
         if (dbrows($result)) {
             $data = dbarray($result);
             $user_rights = explode(".", $data['user_rights']);
@@ -105,7 +105,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
                 $admin_pages[$row['admin_page']][] = $row;
             }
 
-            echo openform('rightsform', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;user_id=".$_GET['edit']);
+            echo openform('rightsform', 'post', FUSION_SELF.fusion_get_aidlink()."&user_id=".get('edit'));
             echo "<div class='alert alert-warning'><strong>".$locale['ADM_462']."</strong></div>\n";
             echo "<div class='table-responsive'>\n";
             echo "<table id='links-table' class='table table-striped'>\n";
@@ -199,7 +199,7 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     }
 } else {
     opentable($locale['ADM_410']);
-    if (!isset($_POST['search_users']) || !isset($_POST['search_criteria'])) {
+    if (!check_post('search_users') || !check_post('search_criteria')) {
         echo openform('searchform', 'post', FUSION_SELF.fusion_get_aidlink());
 
         echo form_user_select('search_criteria', $locale['ADM_411'], '', [
@@ -209,8 +209,8 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         ]);
         echo form_button('search_users', $locale['search'], $locale['search']);
         echo closeform();
-    } else if (isset($_POST['search_users']) && isset($_POST['search_criteria'])) {
-        $search_criteria = form_sanitizer($_POST['search_criteria'], '', 'search_criteria');
+    } else if (check_post('search_users') && check_post('search_criteria')) {
+        $search_criteria = sanitizer('search_criteria', '', 'search_criteria');
         $result = dbquery("
             SELECT user_id, user_name
             FROM ".DB_USERS."
@@ -258,9 +258,10 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
     $result = dbquery("SELECT user_id, user_name, user_rights, user_level
         FROM ".DB_USERS."
         WHERE user_level<=:level
-        ORDER BY user_level DESC, user_name",
-        [':level' => USER_LEVEL_ADMIN]
-    );
+        ORDER BY user_level DESC, user_name
+    ", [
+        ':level' => USER_LEVEL_ADMIN
+    ]);
     echo "<div class='table-responsive'>\n";
     echo "<table class='table table-hover table-striped'>\n";
     echo "<thead>\n";
@@ -279,8 +280,8 @@ if (isset($_GET['edit']) && isnum($_GET['edit']) && $_GET['edit'] != 1) {
         echo "<td class='text-center'>".getuserlevel($data['user_level'])."</td>\n";
         echo "<td class='text-center'>\n";
         if ($can_edit && $data['user_id'] != "1") {
-            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&amp;edit=".$data['user_id']."'>".$locale['edit']."</a> |\n";
-            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&amp;remove=".$data['user_id']."' onclick=\"return confirm('".$locale['ADM_460']."');\">".$locale['delete']."</a>\n";
+            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&edit=".$data['user_id']."'>".$locale['edit']."</a> |\n";
+            echo "<a href='".FUSION_SELF.fusion_get_aidlink()."&remove=".$data['user_id']."' onclick=\"return confirm('".$locale['ADM_460']."');\">".$locale['delete']."</a>\n";
         }
         echo "</td>\n";
         echo "</tr>\n";
