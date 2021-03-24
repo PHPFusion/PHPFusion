@@ -16,21 +16,19 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('AD');
 require_once THEMES.'templates/admin_header.php';
+pageAccess('AD');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 
-PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-    'link'  => ADMIN.'administrators.php'.fusion_get_aidlink(),
-    'title' => $locale['ADM_420'],
-]);
+add_breadcrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['ADM_420'],]);
 
-if (isset($_POST['cancel'])) {
+if (check_post('cancel')) {
     redirect(clean_request('', [''], FALSE));
 }
 
-if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['user_id']))) {
-    if (isset($_POST['all_rights']) || isset($_POST['make_super'])) {
+if (check_post('add_admin') && post('user_id', FILTER_SANITIZE_NUMBER_INT)) {
+    if (check_post('all_rights') || check_post('make_super')) {
         $admin_rights_array = [];
 
         $result = dbquery("SELECT DISTINCT admin_rights AS admin_right, admin_language FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_right");
@@ -40,7 +38,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
         $admin_rights = implode('.', $admin_rights_array);
 
         dbquery("UPDATE ".DB_USERS." SET user_level=:userLevel, user_rights=:userRights WHERE user_id=:userId", [
-            ':userLevel'  => (isset($_POST['make_super']) ? USER_LEVEL_SUPER_ADMIN : USER_LEVEL_ADMIN),
+            ':userLevel'  => check_post('make_super') ? USER_LEVEL_SUPER_ADMIN : USER_LEVEL_ADMIN,
             ':userRights' => $admin_rights, ':userId' => $_POST['user_id'],
         ]);
     } else {
@@ -54,7 +52,7 @@ if (isset($_POST['add_admin']) && (isset($_POST['user_id']) && isnum($_POST['use
 if (isset($_GET['remove']) && isnum($_GET['remove']) && $_GET['remove'] != 1) {
     dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".$_GET['remove']."' AND user_level<=".USER_LEVEL_ADMIN."");
 
-    addNotice('danger', $locale['ADM_402']);
+    addNotice('success', $locale['ADM_402']);
     redirect(clean_request('', ['remove'], FALSE));
 }
 
