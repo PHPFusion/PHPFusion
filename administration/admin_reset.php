@@ -33,11 +33,11 @@ $tabs['title'][] = $locale['apw_title'];
 $tabs['id'][] = 'adminreset_form';
 $tabs['icon'][] = '';
 
-$allowed_section = ["adminreset_form", "adminreset_list"];
-$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'adminreset_list';
+$allowed_sections = ['adminreset_form', 'adminreset_list'];
+$section = in_array(get('section'), $allowed_sections) ? get('section') : 'adminreset_list';
 
-echo opentab($tabs, $_GET['section'], 'adminreset_list', TRUE);
-switch ($_GET['section']) {
+echo opentab($tabs, $section, 'adminreset_list', TRUE);
+switch ($section) {
     case 'adminreset_form':
         admin_reset_form();
         break;
@@ -50,14 +50,16 @@ closetable();
 
 function admin_reset_form() {
     $locale = fusion_get_locale();
+    $settings = fusion_get_settings();
+    $userdata = fusion_get_userdata();
+
     fusion_confirm_exit();
 
-    if (isset($_POST['reset_admins'])) {
+    if (check_post('reset_admins')) {
         require_once INCLUDES."sendmail_include.php";
-        $userdata = fusion_get_userdata();
-        $reset_message = form_sanitizer($_POST['reset_message'], '', 'reset_message');
-        $reset_admin = form_sanitizer($_POST['reset_admin'], '', 'reset_admin');
-        $reset_login = isset($_POST['reset_login']) ? $_POST['reset_login'] : FALSE;
+        $reset_message = sanitizer('reset_message', '', 'reset_message');
+        $reset_admin = sanitizer('reset_admin', '', 'reset_admin');
+        $reset_login = check_post('reset_login') ? post('reset_login') : FALSE;
         $reset_success = [];
         $reset_failed = [];
 
@@ -108,13 +110,14 @@ function admin_reset_form() {
                             "[RESET_MESSAGE]"
                         ],
                         [
-                            "<a href='".fusion_get_settings("siteurl")."'>".fusion_get_settings("sitename")."</a>",
+                            "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>",
                             $data['user_name'],
                             $newLoginPass,
                             $newAdminPass,
                             $userdata['user_name'],
                             $reset_message
-                        ], fusion_get_locale('apw_409', LOCALE.$data['user_language']."/admin/admin_reset.php"));
+                        ], $locale['apw_409']
+                    );
 
                 } else {
                     $message = str_replace(
@@ -126,12 +129,12 @@ function admin_reset_form() {
                             "[RESET_MESSAGE]"
                         ],
                         [
-                            "<a href='".fusion_get_settings('siteurl')."'>".fusion_get_settings('sitename')."</a>",
+                            "<a href='".$settings['siteurl']."'>".$settings['sitename']."</a>",
                             $data['user_name'],
                             $newAdminPass,
                             $userdata['user_name'],
                             $reset_message
-                        ], fusion_get_locale('apw_408', LOCALE.$data['user_language']."/admin/admin_reset.php")
+                        ], $locale['apw_408']
                     );
                     $loginPassIsReset = TRUE;
                 }
@@ -140,7 +143,7 @@ function admin_reset_form() {
                     dbquery("UPDATE ".DB_USERS." SET ".$updat." WHERE user_id='".$data['user_id']."'");
                 }
 
-                if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], $locale['apw_407'].fusion_get_settings('sitename'), $message)) {
+                if ($loginPassIsReset && $adminPassIsReset && sendemail($data['user_name'], $data['user_email'], $userdata['user_name'], $userdata['user_email'], $locale['apw_407'].$settings['sitename'], $message)) {
                     $reset_success[] = ['user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email']];
                 } else {
                     $reset_failed[] = ['user_id' => $data['user_id'], 'user_name' => $data['user_name'], 'user_email' => $data['user_email']];
@@ -178,7 +181,7 @@ function admin_reset_form() {
 
             $data1 = [
                 'reset_id'        => 0,
-                'reset_admin_id'  => fusion_get_userdata('user_id'),
+                'reset_admin_id'  => $userdata['user_id'],
                 'reset_timestamp' => time(),
                 'reset_sucess'    => $sucess_ids,
                 'reset_failed'    => $failed_ids,
@@ -205,7 +208,7 @@ function admin_reset_form() {
         }
     }
 
-    echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_form");
+    echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&section=adminreset_form");
     echo form_select('reset_admin', $locale['apw_400'], '', [
         'required'    => TRUE,
         'options'     => $admin_list,
@@ -227,7 +230,7 @@ function admin_reset_listing() {
         $id = $_GET['reset_id'];
         if (isnum($id) && dbcount("(reset_id)", DB_ADMIN_RESETLOG, "reset_id='".intval($id)."'")) {
             dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id='".intval($id)."'");
-            addNotice('warning', $locale['apw_429']);
+            addNotice('success', $locale['apw_429']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }
@@ -240,7 +243,7 @@ function admin_reset_listing() {
                     dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => $reset_id]);
                 }
             }
-            addNotice('warning', $locale['apw_429']);
+            addNotice('success', $locale['apw_429']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }
@@ -279,7 +282,7 @@ function admin_reset_listing() {
             echo "<td>".$reset_passwords."</td>\n";
             echo "<td>".$sucess." ".$locale['apw_422']." ".($sucess + $failed)."</td>\n";
             echo "<td>".($info['reset_reason'] ? $info['reset_reason'] : $locale['apw_423'])."</td>\n";
-            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&amp;section=adminreset_list&amp;action=delete&amp;reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
+            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
             echo "</tr>\n";
             add_to_jquery('$("#reset-id-'.$info['reset_id'].'").click(function() {
                 if ($(this).prop("checked")) {
