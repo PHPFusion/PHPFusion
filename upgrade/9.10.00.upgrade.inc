@@ -40,7 +40,9 @@ foreach ($insert_settings_tbl as $key => $value) {
 /**
  * Delete all unused files
  */
-/*$deleted_files = [
+$deleted_files = [
+    THEMES.'templates/render_functions.php',
+    LOCALE.'English/admin/banners.php',
 ];
 
 foreach ($deleted_files as $file) {
@@ -52,4 +54,3 @@ foreach ($deleted_files as $file) {
         }
     }
 }
-*/
