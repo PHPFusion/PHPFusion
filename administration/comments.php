@@ -141,10 +141,6 @@ function comments_listing() {
     $comment_types = \PHPFusion\Admins::getInstance()->getCommentType();
     $ctype = in_array(get('ctype', FILTER_SANITIZE_STRING), array_keys($comment_types)) ? get('ctype', FILTER_SANITIZE_STRING) : key($comment_types);
 
-    $limit = 20;
-    $rows = dbcount("(comment_id)", DB_COMMENTS, "comment_type='".$ctype."'");
-    $rowstart = check_get('rowstart') && get('rowstart', FILTER_SANITIZE_NUMBER_INT) <= $rows ? get('rowstart') : 0;
-
     if (check_get('action') && get('action') == 'delete' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
         addNotice('success', $locale['411']);
@@ -179,17 +175,20 @@ function comments_listing() {
     }
     echo "</div></div>";
 
+    $limit = 20;
+    $total_rows = dbcount("(comment_id)", DB_COMMENTS, "comment_type='".$ctype."'".((check_get('comment_item_id') && get('comment_item_id', FILTER_SANITIZE_NUMBER_INT) ? "AND comment_item_id=".get('comment_item_id') : '')));
+    $rowstart = check_get('rowstart') && get('rowstart', FILTER_SANITIZE_NUMBER_INT) <= $total_rows ? get('rowstart') : 0;
+
     $result = dbquery("SELECT
         c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_ip_type, c.comment_type,
         u.user_id, u.user_name, u.user_status
         FROM ".DB_COMMENTS." AS c
         LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
         WHERE c.comment_type=:ctype
-        ORDER BY c.comment_datestamp ASC LIMIT :rowstart, :limit
+        ".(check_get('comment_item_id') && get('comment_item_id', FILTER_SANITIZE_NUMBER_INT) ? "AND c.comment_item_id=".get('comment_item_id')." " : '')."
+        ORDER BY c.comment_datestamp ASC LIMIT $rowstart, $limit
     ", [
-        ':ctype'    => $ctype,
-        ':rowstart' => $rowstart,
-        ':limit'    => $limit
+        ':ctype' => $ctype
     ]);
 
     $rows = dbrows($result);
@@ -220,9 +219,11 @@ function comments_listing() {
         }
         echo '</div>';
 
-        echo '<div class="m-t-5 m-b-5">';
-        echo makepagenav($rowstart, $limit, $rows, 3, FUSION_SELF.fusion_get_aidlink()."&ctype=".$ctype."&");
-        echo '</div>';
+        if ($total_rows > $rows) {
+            echo '<div class="m-t-5 m-b-5">';
+            echo makepagenav($rowstart, $limit, $total_rows, 3, FUSION_SELF.fusion_get_aidlink()."&ctype=".$ctype."&");
+            echo '</div>';
+        }
     } else {
         echo "<div class='alert alert-info text-center'>".$locale['434']."</div>";
     }
