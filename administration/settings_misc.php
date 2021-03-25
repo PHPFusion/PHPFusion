@@ -34,13 +34,9 @@ if (check_post('savesettings')) {
         'smtp_password'          => form_sanitizer($_POST['smtp_password'], '', 'smtp_password'),
         'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
         'guestposts'             => post('guestposts') ? 1 : 0,
-        'comments_enabled'       => post('comments_enabled') ? 1 : 0,
-        'comments_per_page'      => sanitizer('comments_per_page', '10', 'comments_per_page'),
         'ratings_enabled'        => post('ratings_enabled') ? 1 : 0,
         'visitorcounter_enabled' => post('visitorcounter_enabled') ? 1 : 0,
         'rendertime_enabled'     => sanitizer('rendertime_enabled', '0', 'rendertime_enabled'),
-        'comments_avatar'        => post('comments_avatar') ? 1 : 0,
-        'comments_sorting'       => sanitizer('comments_sorting', 'DESC', 'comments_sorting'),
         'index_url_bbcode'       => post('index_url_bbcode') ? 1 : 0,
         'index_url_userweb'      => post('index_url_userweb') ? 1 : 0,
         'create_og_tags'         => post('create_og_tags') ? 1 : 0,
@@ -103,28 +99,6 @@ echo form_checkbox('rendertime_enabled', $locale['688'], $settings['rendertime_e
     'options' => $opts,
     'inline'  => TRUE,
     'type'    => 'radio'
-]);
-closeside();
-
-openside('');
-echo form_checkbox('comments_enabled', $locale['671'], $settings['comments_enabled'], [
-    'toggle' => TRUE
-]);
-echo form_text('comments_per_page', $locale['913'], $settings['comments_per_page'], [
-    'inline'      => TRUE,
-    'error_text'  => $locale['error_value'],
-    'type'        => 'number',
-    'inner_width' => '150px'
-]);
-
-$sort_opts = ['ASC' => $locale['685'], 'DESC' => $locale['686']];
-echo form_checkbox('comments_sorting', $locale['684'], $settings['comments_sorting'], [
-    'inline'  => TRUE,
-    'options' => $sort_opts,
-    'type'    => 'radio'
-]);
-echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar'], [
-    'toggle' => TRUE
 ]);
 closeside();
 

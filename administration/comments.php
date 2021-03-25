@@ -17,285 +17,215 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
+pageAccess('C');
 
-use \PHPFusion\BreadCrumbs;
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/comments.php');
 
-class CommentsAdministration {
-    private static $instance = NULL;
-    private static $rows = 0;
-    private $aidlink;
-    private $locale;
-    private $commentType;
-    private static $ctype = '';
+add_breadcrumb(['link' => ADMIN.'comments.php'.fusion_get_aidlink(), 'title' => $locale['401']]);
 
-    private function __construct() {
+$tabs['title'][] = $locale['401'];
+$tabs['id'][] = 'comments_listing';
+$tabs['icon'][] = 'fa fa-comment';
 
-        pageAccess('C');
-        $this->aidlink = fusion_get_aidlink();
-        $this->locale = fusion_get_locale("", LOCALE.LOCALESET."admin/comments.php");
-        $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
-        $this->commentType = \PHPFusion\Admins::getInstance()->getCommentType();
-
-        self::$ctype = get('ctype', FILTER_SANITIZE_STRING);
-        self::$ctype = in_array(self::$ctype, array_keys($this->commentType)) ? self::$ctype : key($this->commentType);
-
-        if (isset($_GET['action'])) {
-            switch ($_GET['action']) {
-                case 'delete':
-                    $result = $this->delete_comments($_GET['comment_id']);
-                    if ($result) {
-                        addNotice('success', $this->locale['411']);
-                        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
-                    }
-                    break;
-                case 'delban':
-                    $result = $this->ban_comments($_GET['comment_id']);
-                    if ($result) {
-                        addNotice('success', fusion_get_locale('BLS_011', LOCALE.LOCALESET."admin/blacklist.php"));
-                        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
-    public static function getInstance() {
-        if (empty(self::$instance)) {
-            self::$instance = new CommentsAdministration();
-        }
-
-        self::$rows = dbcount("(comment_id)", DB_COMMENTS, (!empty(self::$ctype) ? "comment_type='".self::$ctype."'" : '').(!empty($_GET['comment_item_id']) ? " AND comment_item_id=".$_GET['comment_item_id']."" : ''));
-        $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= self::$rows) ? $_GET['rowstart'] : 0;
-        return self::$instance;
-    }
-
-    public function display_administration_form() {
-
-        BreadCrumbs::getInstance()->addBreadCrumb([
-            'link'  => ADMIN.'comments.php'.fusion_get_aidlink(),
-            'title' => $this->locale['401']
-        ]);
-
-        $allowed_section = ['comments_view', 'comments_edit'];
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'comments_view';
-
-        if ($_GET['section'] == 'comments_edit') {
-            BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => ADMIN.'comments.php'.fusion_get_aidlink(),
-                'title' => $this->locale['400']
-            ]);
-        }
-
-        $master_tab_title['title'][] = $this->locale['401'];
-        $master_tab_title['id'][] = 'comments_view';
-        $master_tab_title['icon'][] = 'fa fa-comment';
-
-        if (!empty($_GET['comment_id'])) {
-            $master_tab_title['title'][] = $this->locale['400'];
-            $master_tab_title['id'][] = 'comments_edit';
-            $master_tab_title['icon'][] = 'fa fa-edit';
-        }
-
-        opentable($this->locale['401']);
-        echo opentab($master_tab_title, $_GET['section'], 'comments_view', TRUE, 'nav-tabs m-b-20');
-
-        switch ($_GET['section']) {
-            case "comments_view":
-                $this->comments_view();
-                break;
-            case "comments_edit":
-                $this->comments_edit();
-                break;
-            default:
-                break;
-        }
-
-        echo closetab();
-        closetable();
-    }
-
-    private function comments_edit() {
-        if (isset($_POST['save_comment']) && (isset($_GET['comment_id']) && isnum($_GET['comment_id']))) {
-            $comment_message = form_sanitizer($_POST['comment_message'], '', 'comment_message');
-            dbquery("UPDATE ".DB_COMMENTS." SET comment_message=:CommentMessage WHERE comment_id=:CommentId", [
-                ':CommentMessage' => $comment_message,
-                ':CommentId'      => $_GET['comment_id']
-            ]);
-            addNotice('success', $this->locale['410']);
-            redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
-        }
-
-        if (isset($_GET['comment_id']) && isnum($_GET['comment_id'])) {
-
-            $result = dbquery(self::get_CommentsQuery());
-            $data = dbarray($result);
-
-            echo openform('settingsform', 'post', FUSION_REQUEST);
-            echo form_textarea('comment_message', '', $data['comment_message'], [
-                'autosize' => TRUE, 'bbcode' => TRUE, 'preview' => TRUE, 'form_name' => 'settingsform'
-            ]);
-            echo form_button('save_comment', $this->locale['421'], $this->locale['421'], ['class' => 'btn-primary']);
-            echo closeform();
-        }
-    }
-
-    private function comments_Button() {
-        $text = "<div class='text-center well'>\n";
-        $text .= "<div class='btn-group'>\n";
-        foreach ($this->commentType as $key => $value) {
-            $text .= "<a class='btn btn-default".(self::$ctype == $key ? ' active' : '')."' href='".FUSION_SELF.$this->aidlink."&amp;ctype=$key'>".$value."</a>\n";
-        }
-        $text .= "</div>\n</div>\n";
-        return $text;
-    }
-
-    protected static function get_NavQuery() {
-        $condition = (!empty(self::$ctype) ? "WHERE c.comment_type='".self::$ctype."'" : '');
-        return "SELECT
-            c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_type,
-            u.user_id, u.user_name, u.user_status
-            FROM ".DB_COMMENTS." AS c
-            LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
-            $condition
-            ORDER BY c.comment_datestamp ASC
-            ";
-
-    }
-
-    protected static function get_CommentsQuery() {
-        $limit = 20;
-        $ctype = !empty(self::$ctype) ? "WHERE c.comment_type='".self::$ctype."'" : '';
-        $comment_item_id = !empty($_GET['comment_item_id']) ? " AND c.comment_item_id=".$_GET['comment_item_id']."" : '';
-        $comment_id = !empty($_GET['comment_id']) ? " AND c.comment_id=".$_GET['comment_id']."" : '';
-
-        $condition = $ctype.$comment_id.$comment_item_id;
-        $order = "c.comment_datestamp ASC";
-
-        return "SELECT
-            c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_ip_type, c.comment_type,
-            u.user_id, u.user_name, u.user_status
-            FROM ".DB_COMMENTS." AS c
-            LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
-            $condition
-            ORDER BY $order LIMIT ".intval($_GET['rowstart']).", $limit
-        ";
-    }
-
-    private function comments_view() {
-        $row = '';
-        $navrows = '';
-        $result = '';
-        $navresult = '';
-
-        if (!empty(self::$ctype)) {
-            $result = dbquery(self::get_CommentsQuery());
-            $row = dbrows($result);
-            $navresult = dbquery(self::get_NavQuery());
-            $navrows = dbrows($navresult);
-        }
-
-        $info = [
-            'buttons'  => $this->comments_Button(),
-            'no_data'  => (!$row) ? "<div class='alert alert-info text-center'>".$this->locale['434']."</div>\n" : '',
-            'page_nav' => '<div class="m-t-5 m-b-5">'.makepagenav($_GET['rowstart'], 20, self::$rows, 3, FUSION_SELF.fusion_get_aidlink()."&amp;ctype=".self::$ctype.(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : '')."&amp;").'</div>'
-        ];
-
-        if (self::$rows > 0) {
-            if ($navrows) {
-                while ($data = dbarray($navresult)) {
-                    $info['item_id'][$data['comment_item_id']] = $data['comment_item_id'];
-                }
-            }
-
-            if ($row) {
-
-                while ($data = dbarray($result)) {
-                    $info['data'][] = [
-                        'data'        => $data,
-                        'edit_link'   => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_edit&amp;ctype=".self::$ctype."&amp;comment_id=".$data['comment_id'].(!empty($_GET['comment_item_id']) ? "&amp;comment_item_id=".$_GET['comment_item_id'] : ''),
-                        'del_link'    => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".self::$ctype."&amp;action=delete&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['433']."');\"",
-                        'delban_link' => FUSION_SELF.fusion_get_aidlink()."&amp;section=comments_view&amp;ctype=".self::$ctype."&amp;action=delban&amp;comment_id=".$data['comment_id']."' onclick=\"return confirm('".$this->locale['435']."');\"",
-                        'profile'     => $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'],
-                        'date'        => $this->locale['global_071'].showdate("longdate", $data['comment_datestamp']),
-                        'ip'          => "<span class='label label-default m-l-10'>".$this->locale['432']." ".$data['comment_ip']."</span>",
-                        'subject'     => !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "",
-                        'messages'    => "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n",
-                    ];
-                }
-            }
-        }
-        openside('');
-        self::reder_commentAdmin($info);
-        closeside();
-    }
-
-    public function reder_commentAdmin($info) {
-        if (!empty($info)) {
-            echo $info['buttons'];
-
-            if (!empty($info['data'])) {
-                echo '<div class="list-group">';
-                foreach ($info['data'] as $comment) {
-                    echo "<div class='list-group-item'>\n";
-                    echo "<div class='btn-group pull-right'>\n";
-                    echo "<a class='btn btn-xs btn-default' href='".$comment['edit_link']."'>".$this->locale['edit']."</a>\n";
-                    echo "<a class='btn btn-xs btn-default' href='".$comment['del_link']."'>".$this->locale['delete']."</a>\n";
-
-                    if (!empty($comment['data']['user_id']) && $comment['data']['user_id'] != 1) {
-                        echo "<a class='btn btn-xs btn-default' href='".$comment['delban_link']."'>".$this->locale['431']."</a>\n";
-                    }
-
-                    echo "</div>\n";
-                    echo $comment['profile'].' '.$comment['date'].$comment['ip'];
-                    echo $comment['subject'];
-                    echo $comment['messages'];
-                    echo "</div>\n";
-                }
-                echo '</div>';
-                echo $info['page_nav'];
-            } else {
-                echo $info['no_data'];
-            }
-        }
-    }
-
-    private static function delete_comments($comment_id) {
-        if (isnum($comment_id)) {
-            return dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
-        }
-
-        return NULL;
-    }
-
-    private function ban_comments($comment_id) {
-        if (isnum($comment_id)) {
-            $resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
-
-            $data = dbarray($resultquery);
-
-            $info = [
-                'blacklist_id'        => '',
-                'blacklist_user_id'   => fusion_get_userdata('user_id'),
-                'blacklist_ip'        => $data['comment_ip'],
-                'blacklist_ip_type'   => $data['comment_ip_type'],
-                'blacklist_email'     => '',
-                'blacklist_reason'    => $this->locale['436'],
-                'blacklist_datestamp' => time()
-            ];
-
-            dbquery_insert(DB_BLACKLIST, $info, 'save');
-            return dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:CommentId", [':CommentId' => $comment_id]);
-        }
-
-        return NULL;
-
-    }
-
+if (check_get('comments_edit') && check_get('comment_id')) {
+    $tabs['title'][] = $locale['400'];
+    $tabs['id'][] = 'comments_edit';
+    $tabs['icon'][] = 'fa fa-edit';
 }
 
-CommentsAdministration::getInstance()->display_administration_form();
+$tabs['title'][] = $locale['settings'];
+$tabs['id'][] = 'comments_settings';
+$tabs['icon'][] = 'fa fa-cogs';
+
+$allowed_sections = ['comments_listing', 'comments_edit', 'comments_settings'];
+$sections = in_array(get('section'), $allowed_sections) ? get('section') : 'comments_listing';
+
+opentable($locale['401']);
+echo opentab($tabs, $sections, 'comments_listing', TRUE, 'nav-tabs');
+
+switch ($sections) {
+    case 'comments_edit':
+        comments_edit();
+        break;
+    case 'comments_settings':
+        comments_settings();
+        break;
+    case 'comments_listing':
+        comments_listing();
+        break;
+}
+
+echo closetab();
+closetable();
+
+function comments_edit() {
+    $locale = fusion_get_locale();
+
+    if (check_post('save_comment') && check_get('comment_id')) {
+        $comment_message = sanitizer('comment_message', '', 'comment_message');
+        dbquery("UPDATE ".DB_COMMENTS." SET comment_message=:comment_message WHERE comment_id=:comment_id", [
+            ':comment_message' => $comment_message,
+            ':comment_id'      => get('comment_id')
+        ]);
+        addNotice('success', $locale['410']);
+        redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
+    }
+
+    if (check_get('comment_id') && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
+        $result = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
+        $data = dbarray($result);
+
+        echo openform('comment_edit_form', 'post', FUSION_REQUEST);
+        echo form_textarea('comment_message', '', $data['comment_message'], [
+            'autosize' => TRUE, 'bbcode' => TRUE, 'preview' => TRUE, 'form_name' => 'comment_edit_form'
+        ]);
+        echo form_button('save_comment', $locale['421'], $locale['421'], ['class' => 'btn-primary']);
+        echo closeform();
+    }
+}
+
+function comments_settings() {
+    $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+    $settings = fusion_get_settings();
+
+    if (check_post('savesettings')) {
+        $inputData = [
+            'comments_enabled'  => post('comments_enabled') ? 1 : 0,
+            'comments_per_page' => sanitizer('comments_per_page', '10', 'comments_per_page'),
+            'comments_avatar'   => post('comments_avatar') ? 1 : 0,
+            'comments_sorting'  => sanitizer('comments_sorting', 'DESC', 'comments_sorting')
+        ];
+
+        if (\defender::safe()) {
+            foreach ($inputData as $settings_name => $settings_value) {
+                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                    ':settings_value' => $settings_value,
+                    ':settings_name'  => $settings_name
+                ]);
+            }
+
+            addNotice('success', $locale['900']);
+            redirect(FUSION_REQUEST);
+        }
+    }
+
+    openside('');
+    echo openform('settingsform', 'post', FUSION_REQUEST);
+    echo form_checkbox('comments_enabled', $locale['671'], $settings['comments_enabled'], [
+        'toggle' => TRUE
+    ]);
+    echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar'], [
+        'toggle' => TRUE
+    ]);
+    echo form_text('comments_per_page', $locale['913'], $settings['comments_per_page'], [
+        'error_text'  => $locale['error_value'],
+        'type'        => 'number',
+        'inner_width' => '150px',
+        'inline'      => TRUE
+    ]);
+
+    echo form_checkbox('comments_sorting', $locale['684'], $settings['comments_sorting'], [
+        'options' => ['ASC' => $locale['685'], 'DESC' => $locale['686']],
+        'type'    => 'radio',
+        'inline'  => TRUE
+    ]);
+
+    echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+    echo closeform();
+    closeside();
+}
+
+function comments_listing() {
+    $locale = fusion_get_locale();
+
+    $comment_types = \PHPFusion\Admins::getInstance()->getCommentType();
+    $ctype = in_array(get('ctype', FILTER_SANITIZE_STRING), array_keys($comment_types)) ? get('ctype', FILTER_SANITIZE_STRING) : key($comment_types);
+
+    $limit = 20;
+    $rows = dbcount("(comment_id)", DB_COMMENTS, "comment_type='".$ctype."'");
+    $rowstart = check_get('rowstart') && get('rowstart', FILTER_SANITIZE_NUMBER_INT) <= $rows ? get('rowstart') : 0;
+
+    if (check_get('action') && get('action') == 'delete' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
+        dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
+        addNotice('success', $locale['411']);
+        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
+    }
+
+    if (check_get('action') && get('action') == 'delban' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
+        $resultquery = dbquery("SELECT * FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
+
+        $data = dbarray($resultquery);
+
+        $info = [
+            'blacklist_id'        => '',
+            'blacklist_user_id'   => fusion_get_userdata('user_id'),
+            'blacklist_ip'        => $data['comment_ip'],
+            'blacklist_ip_type'   => $data['comment_ip_type'],
+            'blacklist_email'     => '',
+            'blacklist_reason'    => $locale['436'],
+            'blacklist_datestamp' => time()
+        ];
+
+        dbquery_insert(DB_BLACKLIST, $info, 'save');
+        dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
+
+        addNotice('success', $locale['412']);
+        redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
+    }
+
+    echo "<div class='text-center well'><div class='btn-group'>";
+    foreach ($comment_types as $key => $value) {
+        echo "<a class='btn btn-default".($ctype == $key ? ' active' : '')."' href='".FUSION_SELF.fusion_get_aidlink()."&ctype=$key'>".$value."</a>\n";
+    }
+    echo "</div></div>";
+
+    $result = dbquery("SELECT
+        c.comment_id, c.comment_item_id, c.comment_name, c.comment_subject, c.comment_message, c.comment_datestamp, c.comment_ip, c.comment_ip_type, c.comment_type,
+        u.user_id, u.user_name, u.user_status
+        FROM ".DB_COMMENTS." AS c
+        LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
+        WHERE c.comment_type=:ctype
+        ORDER BY c.comment_datestamp ASC LIMIT :rowstart, :limit
+    ", [
+        ':ctype'    => $ctype,
+        ':rowstart' => $rowstart,
+        ':limit'    => $limit
+    ]);
+
+    $rows = dbrows($result);
+
+    if ($rows > 0) {
+        echo '<div class="list-group">';
+        while ($data = dbarray($result)) {
+            $edit = FUSION_SELF.fusion_get_aidlink()."&section=comments_edit&comment_id=".$data['comment_id'];
+            $delete = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delete&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['433']."');\"";
+            $delete_ban = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delban&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['435']."');\"";
+
+            echo "<div class='list-group-item'>\n";
+            echo "<div class='btn-group pull-right'>\n";
+            echo "<a class='btn btn-xs btn-default' href='".$edit."'>".$locale['edit']."</a>\n";
+            echo "<a class='btn btn-xs btn-default' href='".$delete."'>".$locale['delete']."</a>\n";
+
+            if (!empty($data['user_id']) && $data['user_id'] != 1) {
+                echo "<a class='btn btn-xs btn-default' href='".$delete_ban."'>".$locale['431']."</a>\n";
+            }
+
+            echo "</div>\n";
+            echo $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'];
+            echo ' '.$locale['global_071'].showdate('longdate', $data['comment_datestamp']);
+            echo "<span class='label label-default m-l-10'>".$locale['432']." ".$data['comment_ip']."</span>";
+            echo !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "";
+            echo "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n";
+            echo "</div>\n";
+        }
+        echo '</div>';
+
+        echo '<div class="m-t-5 m-b-5">';
+        echo makepagenav($rowstart, $limit, $rows, 3, FUSION_SELF.fusion_get_aidlink()."&ctype=".$ctype."&");
+        echo '</div>';
+    } else {
+        echo "<div class='alert alert-info text-center'>".$locale['434']."</div>";
+    }
+}
 
 require_once THEMES.'templates/footer.php';
