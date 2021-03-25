@@ -114,7 +114,6 @@ class ImageValidation {
 
             // build the mime type according to the allowed extension.
             $check_type = [];
-            print_p($valid_ext);
             foreach ($valid_ext as $ext) {
                 $ext = strtolower(ltrim($ext, '.'));
                 if (isset($mime_types[$ext])) {
@@ -122,7 +121,6 @@ class ImageValidation {
                 }
             }
             $check_ext = strtolower(ltrim($file_ext, '.'));
-            print_p($check_type);
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {
                     if (self::in_array_r($type, $check_type[$check_ext])) {
