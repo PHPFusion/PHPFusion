@@ -183,7 +183,7 @@ function blacklist_listing() {
     echo "<span class='pull-right m-t-10'>".sprintf($locale['BLS_023'], $rows, $total_rows)."</span>\n";
     echo "</div>\n";
     echo "</div>\n";
-    echo ($total_rows > $rows) ? makepagenav($rowstart, 20, $total_rows, 20, clean_request('', ['section'], FALSE).'&') : '';
+    echo ($total_rows > $rows) ? makepagenav($rowstart, 20, $total_rows, 3, clean_request('', ['section'], FALSE).'&') : '';
     echo "</div>\n";
 
     if ($rows > 0) {
