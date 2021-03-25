@@ -85,7 +85,7 @@ $settings = [
     'blog_allow_submission'       => 1,
     'blog_allow_submission_files' => 1,
     'blog_extended_required'      => 0,
-    'blog_file_types'             => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z'
+    'blog_file_types'             => '.gif,.jpg,.png,.svg,.webp'
 ];
 
 foreach ($settings as $name => $value) {

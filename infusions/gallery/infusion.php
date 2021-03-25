@@ -87,7 +87,7 @@ $settings = [
     'photo_watermark_save'        => 0,
     'gallery_allow_submission'    => 1,
     'gallery_extended_required'   => 1,
-    'gallery_file_types'          => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z'
+    'gallery_file_types'          => '.gif,.jpg,.png,.svg,.webp'
 ];
 
 foreach ($settings as $name => $value) {

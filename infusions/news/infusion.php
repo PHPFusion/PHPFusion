@@ -98,7 +98,7 @@ $settings = [
     'news_allow_submission'       => 1,
     'news_allow_submission_files' => 1,
     'news_extended_required'      => 0,
-    'news_file_types'             => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z'
+    'news_file_types'             => '.gif,.jpg,.png,.svg,.webp'
 ];
 
 foreach ($settings as $name => $value) {
