@@ -17,10 +17,13 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-
 pageAccess('S12');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
+$settings = fusion_get_settings();
+
+add_breadcrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
+
 $available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
     while (FALSE !== ($file = readdir($temp))) {
@@ -30,11 +33,10 @@ if ($temp = opendir(INCLUDES."captchas/")) {
     }
 }
 
-$settings = fusion_get_settings();
 
 $is_multilang = count(fusion_get_enabled_languages()) > 1;
 
-if (isset($_POST['clear_cache'])) {
+if (check_post('clear_cache')) {
     if ($settings['database_sessions']) {
         $session = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session');
         $session->_purge();
@@ -46,26 +48,26 @@ if (isset($_POST['clear_cache'])) {
     redirect(FUSION_REQUEST);
 }
 
-if (isset($_POST['savesettings'])) {
+if (check_post('savesettings')) {
     // Save settings after validation
     $inputData = [
-        'captcha'               => form_sanitizer($_POST['captcha'], '', 'captcha'),
+        'captcha'               => sanitizer('captcha', '', 'captcha'),
         'display_validation'    => post('display_validation') ? 1 : 0,
         'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => post('allow_php_exe') ? 1 : 0,
-        'flood_interval'        => form_sanitizer($_POST['flood_interval'], 15, 'flood_interval'),
+        'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => post('flood_autoban') ? 1 : 0,
-        'maintenance_level'     => form_sanitizer($_POST['maintenance_level'], -102, 'maintenance_level'),
+        'maintenance_level'     => sanitizer('maintenance_level', -102, 'maintenance_level'),
         'maintenance'           => post('maintenance') ? 1 : 0,
-        'maintenance_message'   => form_sanitizer($_POST['maintenance_message'], '', 'maintenance_message'),
+        'maintenance_message'   => sanitizer('maintenance_message', '', 'maintenance_message'),
         'bad_words_enabled'     => post('bad_words_enabled') ? 1 : 0,
         'bad_words'             => stripinput($_POST['bad_words']),
-        'bad_word_replace'      => form_sanitizer($_POST['bad_word_replace'], '', 'bad_word_replace'),
-        'database_sessions'     => form_sanitizer($_POST['database_sessions'], 0, 'database_sessions'),
-        'form_tokens'           => form_sanitizer($_POST['form_tokens'], '', 'form_tokens'),
+        'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
+        'database_sessions'     => sanitizer('database_sessions', 0, 'database_sessions'),
+        'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
         'mime_check'            => post('mime_check') ? 1 : 0,
         'error_logging_enabled' => post('error_logging_enabled') ? 1 : 0,
-        'error_logging_method'  => form_sanitizer($_POST['error_logging_method'], '', 'error_logging_method'),
+        'error_logging_method'  => sanitizer('error_logging_method', '', 'error_logging_method'),
     ];
 
     // Validate extra fields
@@ -302,7 +304,7 @@ function recaptcha(val) {
         $('#grecaptcha3').slideUp('slow');
         $('#grecaptcha2').slideDown('slow');
     }
-    
+
     if (val == 'grecaptcha') {
         $('#grecaptcha2').slideDown('slow');
         $('#grecaptcha3').slideUp('slow');
@@ -310,7 +312,7 @@ function recaptcha(val) {
         $('#grecaptcha2').slideUp('slow');
         $('#grecaptcha3').slideDown('slow');
     }
-    
+
     if (val == 'grecaptcha' || val == 'grecaptcha3') {
         $('#extDiv').slideDown('slow');
     } else {

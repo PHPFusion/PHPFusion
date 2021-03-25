@@ -16,14 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S6');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
+pageAccess('S6');
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
+
+if (check_post('savesettings')) {
     $inputData = [
         'tinymce_enabled'        => post('tinymce_enabled') ? 1 : 0,
         'smtp_host'              => form_sanitizer($_POST['smtp_host'], '', 'smtp_host'),
@@ -34,12 +35,12 @@ if (isset($_POST['savesettings'])) {
         'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
         'guestposts'             => post('guestposts') ? 1 : 0,
         'comments_enabled'       => post('comments_enabled') ? 1 : 0,
-        'comments_per_page'      => form_sanitizer($_POST['comments_per_page'], '10', 'comments_per_page'),
+        'comments_per_page'      => sanitizer('comments_per_page', '10', 'comments_per_page'),
         'ratings_enabled'        => post('ratings_enabled') ? 1 : 0,
         'visitorcounter_enabled' => post('visitorcounter_enabled') ? 1 : 0,
-        'rendertime_enabled'     => form_sanitizer($_POST['rendertime_enabled'], '0', 'rendertime_enabled'),
+        'rendertime_enabled'     => sanitizer('rendertime_enabled', '0', 'rendertime_enabled'),
         'comments_avatar'        => post('comments_avatar') ? 1 : 0,
-        'comments_sorting'       => form_sanitizer($_POST['comments_sorting'], 'DESC', 'comments_sorting'),
+        'comments_sorting'       => sanitizer('comments_sorting', 'DESC', 'comments_sorting'),
         'index_url_bbcode'       => post('index_url_bbcode') ? 1 : 0,
         'index_url_userweb'      => post('index_url_userweb') ? 1 : 0,
         'create_og_tags'         => post('create_og_tags') ? 1 : 0,

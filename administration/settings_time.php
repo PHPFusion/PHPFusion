@@ -16,24 +16,25 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S2');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
+pageAccess('S2');
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+add_breadcrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
+
+if (check_post('savesettings')) {
     $inputData = [
-        'shortdate'        => form_sanitizer($_POST['shortdate'], '', 'shortdate'),
-        'longdate'         => form_sanitizer($_POST['longdate'], '', 'longdate'),
-        'forumdate'        => form_sanitizer($_POST['forumdate'], '', 'forumdate'),
-        'newsdate'         => form_sanitizer($_POST['newsdate'], '', 'newsdate'),
-        'subheaderdate'    => form_sanitizer($_POST['subheaderdate'], '', 'subheaderdate'),
-        'timeoffset'       => form_sanitizer($_POST['timeoffset'], '', 'timeoffset'),
-        'serveroffset'     => form_sanitizer($_POST['serveroffset'], '', 'serveroffset'),
-        'default_timezone' => form_sanitizer($_POST['default_timezone'], '', 'default_timezone'),
-        'week_start'       => form_sanitizer($_POST['week_start'], 0, 'week_start')
+        'shortdate'        => sanitizer('shortdate', '', 'shortdate'),
+        'longdate'         => sanitizer('longdate', '', 'longdate'),
+        'forumdate'        => sanitizer('forumdate', '', 'forumdate'),
+        'newsdate'         => sanitizer('newsdate', '', 'newsdate'),
+        'subheaderdate'    => sanitizer('subheaderdate', '', 'subheaderdate'),
+        'timeoffset'       => sanitizer('timeoffset', '', 'timeoffset'),
+        'serveroffset'     => sanitizer('serveroffset', '', 'serveroffset'),
+        'default_timezone' => sanitizer('default_timezone', '', 'default_timezone'),
+        'week_start'       => sanitizer('week_start', 0, 'week_start')
     ];
 
     if (\defender::safe()) {

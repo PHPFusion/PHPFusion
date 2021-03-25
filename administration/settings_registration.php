@@ -16,26 +16,28 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S4');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
+pageAccess('S4');
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 $settings = fusion_get_settings();
+
+add_breadcrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
+
 
 $is_multilang = count(fusion_get_enabled_languages()) > 1;
 
-if (isset($_POST['savesettings'])) {
+if (check_post('savesettings')) {
     $inputData = [
-        'login_method'        => form_sanitizer($_POST['login_method'], '0', 'login_method'),
+        'login_method'        => sanitizer('login_method', '0', 'login_method'),
         'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
         'enable_registration' => post('enable_registration') ? 1 : 0,
         'email_verification'  => post('email_verification') ? 1 : 0,
         'admin_activation'    => post('admin_activation') ? 1 : 0,
         'enable_terms'        => post('enable_terms') ? 1 : 0,
-        'license_lastupdate'  => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate')),
-        'gateway'               => post('gateway') ? 1 : 0,
-        'gateway_method'        => form_sanitizer($_POST['gateway_method'], 0, 'gateway_method'),
+        'license_lastupdate'  => (check_post('license_agreement') != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate')),
+        'gateway'             => post('gateway') ? 1 : 0,
+        'gateway_method'      => sanitizer('gateway_method', 0, 'gateway_method'),
     ];
 
     if (\defender::safe()) {
