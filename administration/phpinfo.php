@@ -40,7 +40,7 @@ $master_tab_title['id'][] = 'details';
 $master_tab_title['icon'][] = "";
 
 opentable($locale['400']);
-echo opentab($master_tab_title, $sections, 'general', TRUE, 'nav-tabs m-b-15');
+echo opentab($master_tab_title, $sections, 'general', TRUE, 'nav-tabs');
 switch ($sections) {
     case "phpsettings":
         phpsettings();

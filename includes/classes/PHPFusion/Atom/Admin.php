@@ -80,7 +80,7 @@ class Admin {
         $atom = new Atom();
         $atom->target_folder = $theme_name;
         $atom->theme_name = $theme_name;
-        echo opentab($tab, $tab_active, "theme_admin", TRUE, 'nav-tabs m-b-10');
+        echo opentab($tab, $tab_active, "theme_admin", TRUE, 'nav-tabs');
         // now include the thing as necessary
         switch ($_GET['section']) {
             case "dashboard":

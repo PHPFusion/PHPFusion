@@ -345,7 +345,7 @@ $tab['id'][] = "pls";
 $tab['icon'][] = "";
 
 opentable($locale['PL_428']);
-echo opentab($tab, $_GET['section'], 'permalinkTab', TRUE, 'nav-tabs m-b-15', 'section');
+echo opentab($tab, $_GET['section'], 'permalinkTab', TRUE, 'nav-tabs', 'section');
 switch ($_GET['section']) {
     case "pl":
         echo "<p>".$locale['PL_415']."</p>\n";

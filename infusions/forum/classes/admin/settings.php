@@ -63,7 +63,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         $_GET['ref'] = (isset($_GET['ref']) && method_exists($this, $tab['callback'][$_GET['ref']]) ? $_GET['ref'] : 'general');
 
-        echo opentab($tab, $_GET['ref'], 'forum_settings_tab', TRUE, 'nav-tabs m-t-15', 'ref', ['ref'], TRUE);
+        echo opentab($tab, $_GET['ref'], 'forum_settings_tab', TRUE, 'nav-tabs', 'ref', ['ref'], TRUE);
         $function = $tab['callback'][$_GET['ref']];
         $this->$function();
         echo closetab();

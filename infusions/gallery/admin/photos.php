@@ -26,7 +26,7 @@ $tab_photo['title'][] = $locale['gallery_0010'];
 $tab_photo['id'][] = "mass_photo";
 $tab_photo['icon'][] = "";
 $tab_photo_active = tab_active($tab_photo, 0);
-echo opentab($tab_photo, $tab_photo_active, "phototabs", FALSE, "nav-tabs m-t-20");
+echo opentab($tab_photo, $tab_photo_active, "phototabs", FALSE, "nav-tabs");
 echo opentabbody($tab_photo['title'][0], $tab_photo['id'][0], $tab_photo_active);
 photo_form();
 echo closetabbody();

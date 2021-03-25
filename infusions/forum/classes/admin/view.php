@@ -727,7 +727,7 @@ class ForumAdminView extends ForumAdminInterface {
         $tab_title['id'][] = 'fs';
         $tab_title['icon'][] = 'fa fa-cogs';
 
-        echo opentab($tab_title, (isset($_GET['section']) ? $_GET['section'] : 'fm'), 'forum-admin-tabs', TRUE, 'nav-tabs m-b-10', 'section', ['action', 'ref', 'mood_id', 'forum_id']);
+        echo opentab($tab_title, (isset($_GET['section']) ? $_GET['section'] : 'fm'), 'forum-admin-tabs', TRUE, 'nav-tabs', 'section', ['action', 'ref', 'mood_id', 'forum_id']);
         if (isset($_GET['section'])) {
 
             switch ($_GET['section']) {

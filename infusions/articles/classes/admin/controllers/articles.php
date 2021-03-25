@@ -235,7 +235,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         $tab_title['id'][] = 'extended';
         $tab_title['icon'][] = '';
         $tab_active = tab_active($tab_title, 0);
-        echo opentab($tab_title, $tab_active, 'articletext', FALSE, 'nav-tabs m-b-10');
+        echo opentab($tab_title, $tab_active, 'articletext', FALSE, 'nav-tabs');
         echo opentabbody($tab_title['title'][0], 'snippet', $tab_active);
         echo form_textarea('article_snippet', '', $this->article_data['article_snippet'], $articleSnippetSettings);
         echo closetabbody();

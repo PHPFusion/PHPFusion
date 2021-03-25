@@ -54,7 +54,7 @@ class PageComposer extends PageAdmin {
             $composerTab['id'][] = 'pg_settings';
         }
 
-        echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'nav-tabs m-t-10', 'composer_tab');
+        echo opentab($composerTab, self::getComposerMode(), 'composer_tab', TRUE, 'nav-tabs', 'composer_tab');
 
         echo "<div class='m-t-10'>";
         echo form_button('save', self::$locale['page_0320'], self::$locale['page_0320'], ['input_id' => 'save-btn', 'class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);

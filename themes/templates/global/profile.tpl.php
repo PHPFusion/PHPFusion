@@ -188,7 +188,7 @@ if (!function_exists('display_user_profile')) {
             $tab_active = tab_active($tab_title, get('section'));
 
             echo '<div class="profile-section">';
-                echo opentab($tab_title, get('section'), 'profile_tab', TRUE, 'nav-tabs m-b-20', 'section', ['section']);
+                echo opentab($tab_title, get('section'), 'profile_tab', TRUE, 'nav-tabs', 'section', ['section']);
                     echo opentabbody($tab_title['title'][get('section')], $tab_title['id'][get('section')], $tab_active, TRUE);
 
                     if ($tab_title['id'][get('section')] == $tab_title['id'][1]) {

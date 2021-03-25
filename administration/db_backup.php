@@ -47,7 +47,7 @@ class DbBackupAdministration {
 
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : $tab['id'][0];
         opentable($this->locale['450']);
-        echo opentab($tab, $_GET['section'], 'database_tab', TRUE, 'nav-tabs m-b-20', 'section', ['action', 'section']);
+        echo opentab($tab, $_GET['section'], 'database_tab', TRUE, 'nav-tabs', 'section', ['action', 'section']);
         switch ($_GET['section']) {
             case 'backup_db':
                 $this->backup_form();

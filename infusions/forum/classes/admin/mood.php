@@ -63,7 +63,7 @@ class ForumAdminMood extends ForumAdminInterface {
 
         $_GET['ref'] = isset($_GET['ref']) && in_array($_GET['ref'], $tab['id']) ? $_GET['ref'] : "mood_list";
 
-        echo opentab($tab, $_GET['ref'], "mood_admin", TRUE, "nav-tabs m-t-10 m-b-15", "ref", ['mood_id', 'action']);
+        echo opentab($tab, $_GET['ref'], "mood_admin", TRUE, "nav-tabs", "ref", ['mood_id', 'action']);
 
         switch ($_GET['ref']) {
             case "mood_form" :

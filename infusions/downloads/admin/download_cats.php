@@ -117,7 +117,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $tab_cats['icon'][] = "";
     $tab_cats_active = tab_active($tab_cats, isset($_GET['cat_view']) ? 1 : 0);
 
-    echo opentab($tab_cats, $tab_cats_active, 'dcategory', FALSE, "nav-tabs m-t-10");
+    echo opentab($tab_cats, $tab_cats_active, 'dcategory', FALSE, "nav-tabs");
     echo opentabbody($tab_cats['title'][0], $tab_cats['id'][0], $tab_cats_active);
     echo openform('addcat', 'post', FUSION_REQUEST, ['class' => 'm-t-20']);
     echo "<div class='row'>\n";

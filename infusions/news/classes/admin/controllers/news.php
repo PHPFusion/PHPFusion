@@ -290,7 +290,7 @@ class NewsAdmin extends NewsAdminModel {
         $tab_title['id'][] = 'extended';
         $tab_title['icon'][] = '';
         $tab_active = tab_active($tab_title, 0);
-        echo opentab($tab_title, $tab_active, 'newstext', FALSE, 'nav-tabs m-b-10');
+        echo opentab($tab_title, $tab_active, 'newstext', FALSE, 'nav-tabs');
         echo opentabbody($tab_title['title'][0], 'snippet', $tab_active);
         echo form_textarea('news_news', '', $this->news_data['news_news'], $snippetSettings);
         echo closetabbody();

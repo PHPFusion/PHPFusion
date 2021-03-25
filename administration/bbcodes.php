@@ -37,7 +37,7 @@ $tab_title['id'][] = 'bbcode_list';
 $tab_title['icon'][] = '';
 
 opentable($locale['BBCA_400']);
-echo opentab($tab_title, $sections, 'bbcode_list', TRUE, 'nav-tabs m-b-15');
+echo opentab($tab_title, $sections, 'bbcode_list', TRUE, 'nav-tabs');
 switch ($sections) {
     case "bbcode_form":
         bbcode_form();
@@ -97,7 +97,6 @@ function bbcode_form() {
     $enabled_bbcodes = [];
     $textarea_name = "";
     $inputform_name = "";
-    $__BBCODE__ = [];
 
     if ((check_get('action') && get('action') == "mup") && (check_get('bbcode_id') && get('bbcode_id', FILTER_SANITIZE_NUMBER_INT))) {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => get('order', FILTER_SANITIZE_NUMBER_INT)]));
@@ -204,6 +203,7 @@ function bbcode_form() {
             }
 
             if (file_exists(INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php")) {
+                $__BBCODE__ = [];
                 include INCLUDES."bbcodes/".$data['bbcode_name']."_bbcode_include_var.php";
 
                 echo "<tr>\n";

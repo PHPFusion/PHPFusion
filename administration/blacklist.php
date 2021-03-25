@@ -41,7 +41,7 @@ $allowed_sections = ['blacklist', 'blacklist_form'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'blacklist';
 
 opentable($locale['BLS_000']);
-echo opentab($tabs, $sections, 'blacklist', TRUE, 'nav-tabs m-b-15');
+echo opentab($tabs, $sections, 'blacklist', TRUE, 'nav-tabs');
 switch ($sections) {
     case 'blacklist_form':
         blacklist_form();

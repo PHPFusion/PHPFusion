@@ -161,7 +161,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
 
         opentable($this->locale["SL_0001"]);
 
-        echo opentab($master_title, $this->section, 'link', TRUE, "nav-tabs m-b-10", "section", ['refs', 'action', 'id', 'cat']);
+        echo opentab($master_title, $this->section, 'link', TRUE, "nav-tabs", "section", ['refs', 'action', 'id', 'cat']);
 
         switch ($this->section) {
             case "settings":

@@ -278,7 +278,7 @@ class ShoutBox {
         $master_tab_title['id'][] = "shoutbox_settings";
         $master_tab_title['icon'][] = "";
 
-        echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE, 'nav-tabs m-b-10');
+        echo opentab($master_tab_title, $_GET['section'], "shoutbox", TRUE, 'nav-tabs');
         switch ($_GET['section']) {
             case "shoutbox_form":
                 add_to_title($edit ? self::$locale['edit'] : self::$locale['SB_add']);
@@ -429,8 +429,8 @@ class ShoutBox {
             echo "<div class='list-group'>\n";
 
             if (!defined("SHOUTBOXJS")) {
-                add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {             
-                return confirm('".self::$locale['SB_warning_shout']."'); 
+                add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {
+                return confirm('".self::$locale['SB_warning_shout']."');
                 });");
                 define("SHOUTBOXJS", TRUE);
             }
@@ -499,8 +499,8 @@ class ShoutBox {
         ];
 
         if (!defined("SHOUTBOXJS")) {
-            add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {             
-                return confirm('".self::$locale['SB_warning_shout']."'); 
+            add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {
+                return confirm('".self::$locale['SB_warning_shout']."');
                 });");
             define("SHOUTBOXJS", TRUE);
         }
@@ -558,8 +558,8 @@ class ShoutBox {
 
         if ($rows > 0) {
             if (!defined("SHOUTBOXJS")) {
-                add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {             
-                return confirm('".self::$locale['SB_warning_shout']."'); 
+                add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {
+                return confirm('".self::$locale['SB_warning_shout']."');
                 });");
                 define("SHOUTBOXJS", TRUE);
             }

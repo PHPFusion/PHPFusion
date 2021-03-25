@@ -64,7 +64,7 @@ class ForumAdminRanks extends ForumAdminInterface {
             $tab['icon'][] = isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? "fa fa-fw fa fa-pencil" : "fa fa-fw fa fa-plus";
 
 
-            echo opentab($tab, $_GET['ref'], "rank_admin", TRUE, "nav-tabs m-t-10", "ref");
+            echo opentab($tab, $_GET['ref'], "rank_admin", TRUE, "nav-tabs", "ref");
 
             switch ($_GET['ref']) {
                 case "rank_form" :

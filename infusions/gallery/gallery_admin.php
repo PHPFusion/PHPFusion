@@ -115,7 +115,7 @@ if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 }
 
 opentable($locale['gallery_0001']);
-echo opentab($tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs m-t-20", 'section', ['album_id']);
+echo opentab($tab, $_GET['section'], "gallery_admin", TRUE, "nav-tabs", 'section', ['album_id']);
 switch ($_GET['section']) {
     case "photo_form":
         include "admin/photos.php";
