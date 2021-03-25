@@ -16,17 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
 pageAccess('PI');
 
-use PHPFusion\BreadCrumbs;
-
-require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
-$aidlink = fusion_get_aidlink();
-BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
-$allowed_section = ['general', 'phpsettings', 'folderpermission', 'details'];
-$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'general';
+add_breadcrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+
+$allowed_sections = ['general', 'phpsettings', 'folderpermission', 'details'];
+$sections = in_array(get('section'), $allowed_sections) ? get('section') : 'general';
 
 $master_tab_title['title'][] = $locale['401'];
 $master_tab_title['id'][] = 'general';
@@ -41,25 +39,9 @@ $master_tab_title['title'][] = $locale['450'];
 $master_tab_title['id'][] = 'details';
 $master_tab_title['icon'][] = "";
 
-if (isset($_GET['section'])) {
-    switch ($_GET['section']) {
-        case "phpsettings":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['420']]);
-            break;
-        case "folderpermission":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['440']]);
-            break;
-        case "details":
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['450']]);
-            break;
-        default:
-            break;
-    }
-}
-
 opentable($locale['400']);
-echo opentab($master_tab_title, $_GET['section'], 'general', TRUE, 'nav-tabs m-b-15');
-switch ($_GET['section']) {
+echo opentab($master_tab_title, $sections, 'general', TRUE, 'nav-tabs m-b-15');
+switch ($sections) {
     case "phpsettings":
         phpsettings();
         break;
@@ -81,7 +63,7 @@ function general() {
     $settings = fusion_get_settings();
     $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['402']."</td><td class='text-right'>".php_uname()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['403']."</td><td class='text-right'>".$_SERVER['SERVER_SOFTWARE']."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['403']."</td><td class='text-right'>".server('SERVER_SOFTWARE')."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['404']."</td><td class='text-right'>".phpversion()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['405']."</td><td class='text-right'>".php_sapi_name()."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406']."</td><td class='text-right'>".dbconnection()->getServerVersion()."</td></tr>\n";
@@ -89,7 +71,7 @@ function general() {
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".stripinput($_SERVER['HTTP_USER_AGENT'])."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".stripinput(server('HTTP_USER_AGENT'))."</td></tr>\n";
     if (LANGUAGE !== 'English') {
         $phpinfo .= "<tr>\n<td colspan='2'>".$locale['411']."</td></tr>\n";
     }

@@ -16,12 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
 pageAccess('ROB');
 
-require_once THEMES.'templates/admin_header.php';
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
+add_breadcrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
 
 function write_Default() {
     $robots_content = "User-agent: *\n";
@@ -37,8 +37,8 @@ function write_Default() {
 
 $file = BASEDIR."robots.txt";
 
-if (isset($_POST['save_robots'])) {
-    $robots_content = form_sanitizer($_POST['robots_content'], '', 'robots_content');
+if (check_post('save_robots')) {
+    $robots_content = sanitizer('robots_content', '', 'robots_content');
 
     if (!preg_check("/^[-0-9A-Z._\*\:\.\/@\s]+$/i", $robots_content)) {
         \defender::stop();
@@ -54,7 +54,7 @@ if (isset($_POST['save_robots'])) {
 
 }
 
-if (isset($_POST['set_default'])) {
+if (check_post('set_default')) {
 
     if (!is_writable($file)) {
         \defender::stop();
