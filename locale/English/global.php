@@ -462,6 +462,8 @@ $locale['mark_as'] = "Mark As";
 $locale['preview'] = "Preview";
 $locale['custom'] = "Custom";
 $locale['submit'] = "Submit";
+$locale['submissions'] = "Submissions";
+$locale['categories'] = "Categories";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
