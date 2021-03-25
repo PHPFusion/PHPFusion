@@ -37,7 +37,6 @@ class ImageValidation {
 
                     if (isset($each['name']) && !empty($each['name']) && !empty($each['tmp_name'])) {
                         if (is_array($each['name'])) {
-
                             for ($i = 0; $i < count($each['name']); $i++) {
                                 $file_info = pathinfo($each['name'][$i]);
                                 if (!empty($file_info['extension'])) {
@@ -52,12 +51,12 @@ class ImageValidation {
                                                 }
                                             }
                                             if (!$valid_mimetype) {
-                                                die('Prevented an unwanted file upload attempt - 1!');
+                                                die('Prevented an unwanted file upload attempt - 1! MIME Type(s) '.$each['type'][$i].' is not valid.');
                                             }
                                             unset($valid_mimetype);
                                         } else {
-                                            if ($mime_types[$extension] != $each['type']) {
-                                                die('Prevented an unwanted file upload attempt - 2!');
+                                            if ($mime_types[$extension] !== $each['type'][$i]) {
+                                                die('Prevented an unwanted file upload attempt - 2! Unknown MIME Type(s) '.$each['type'][$i]);
                                             }
                                         }
                                     }
@@ -78,12 +77,12 @@ class ImageValidation {
                                             }
                                         }
                                         if (!$valid_mimetype) {
-                                            die('Prevented an unwanted file upload attempt - 3!');
+                                            die('Prevented an unwanted file upload attempt - 3! MIME Type '.$each['type'].' is not valid.');
                                         }
                                         unset($valid_mimetype);
                                     } else {
-                                        if ($mime_types[$extension] != $each['type']) {
-                                            die('Prevented an unwanted file upload attempt- 4!');
+                                        if ($mime_types[$extension] !== $each['type']) {
+                                            die('Prevented an unwanted file upload attempt - 4! Unknown MIME Type '.$each['type']);
                                         }
                                     }
                                 }
@@ -112,8 +111,10 @@ class ImageValidation {
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $type = $finfo->file($file_src);
             $mime_types = mimeTypes();
+
             // build the mime type according to the allowed extension.
             $check_type = [];
+            print_p($valid_ext);
             foreach ($valid_ext as $ext) {
                 $ext = strtolower(ltrim($ext, '.'));
                 if (isset($mime_types[$ext])) {
@@ -121,6 +122,7 @@ class ImageValidation {
                 }
             }
             $check_ext = strtolower(ltrim($file_ext, '.'));
+            print_p($check_type);
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {
                     if (self::in_array_r($type, $check_type[$check_ext])) {

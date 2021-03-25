@@ -273,7 +273,7 @@ class Upload extends Validation {
                         } else if (!$filetype || !verify_image($image['tmp_name'][$i])) {
                             // Unsupported image type
                             $image_info['error'] = 2;
-                        } else if (fusion_get_settings('mime_check') && ImageValidation::mime_check($image['tmp_name'][$i], $image_ext, ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp']) === FALSE) {
+                        } else if (fusion_get_settings('mime_check') && ImageValidation::mime_check($image['tmp_name'][$i], $image_ext, ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp', '.webp']) === FALSE) {
                             $image_info['error'] = 5;
                         } else if ($image_res[0] > $target_width || $image_res[1] > $target_height) {
                             // Invalid image resolution
