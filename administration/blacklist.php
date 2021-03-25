@@ -124,7 +124,7 @@ function blacklist_form() {
 
     echo form_textarea('blacklist_reason', $locale['BLS_036'], $data['blacklist_reason'], ['inline' => TRUE, 'autosize' => TRUE]);
 
-    echo form_button('blacklist_admins', empty($_GET['blacklist_id']) ? $locale['BLS_037'] : $locale['BLS_038'], empty($_GET['blacklist_id']) ? $locale['BLS_037'] : $locale['BLS_038'], ['class' => 'btn-primary']);
+    echo form_button('blacklist_admins', empty(get('blacklist_id')) ? $locale['BLS_037'] : $locale['BLS_038'], empty(get('blacklist_id')) ? $locale['BLS_037'] : $locale['BLS_038'], ['class' => 'btn-primary']);
     echo closeform();
 
     closeside();
@@ -146,7 +146,7 @@ function blacklist_listing() {
         if (!empty($input)) {
             foreach ($input as $blacklist_id) {
                 if (dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".intval($blacklist_id)."'") && \defender::safe()) {
-                    if ($_POST['table_action'] == 'delete') {
+                    if (post('table_action') == 'delete') {
                         dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".$blacklist_id."'");
                         addNotice('success', $locale['BLS_013']);
                     }
