@@ -16,20 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess("S7");
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+pageAccess("S7");
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-if (isset($_POST['save_settings'])) {
+add_breadcrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+
+if (check_post('save_settings')) {
     $inputData = [
         'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
         'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
         'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-        'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
-        'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+        'pm_email_notify'  => post('pm_email_notify') ? 1 : 0,
+        'pm_save_sent'     => post('pm_save_sent') ? 1 : 0
     ];
 
     if (\defender::safe()) {
@@ -45,7 +46,7 @@ if (isset($_POST['save_settings'])) {
     }
 }
 
-if (isset($_POST['delete-messages'])) {
+if (check_post('delete-messages')) {
     dbquery("TRUNCATE TABLE ".DB_MESSAGES);
     addNotice('success', $locale['712']);
     redirect(FUSION_REQUEST);
@@ -79,13 +80,11 @@ closeside();
 
 echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
 openside('');
-echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
+echo form_checkbox('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
+    'toggle' => TRUE
 ]);
-echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
-    'options' => ['1' => $locale['no'], '2' => $locale['yes']],
-    'width'   => '100%'
+echo form_checkbox('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
+    'toggle' => TRUE
 ]);
 closeside();
 

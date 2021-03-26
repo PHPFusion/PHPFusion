@@ -16,20 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S3');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
+pageAccess('S3');
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+add_breadcrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'title' => $locale['theme_settings']]);
+
+if (check_post('savesettings')) {
     $inputData = [
-        'admin_theme' => form_sanitizer($_POST['admin_theme'], $settings['admin_theme'], 'admin_theme'),
-        'theme'       => form_sanitizer($_POST['theme'], $settings['theme'], 'theme'),
+        'admin_theme' => sanitizer('admin_theme', $settings['admin_theme'], 'admin_theme'),
+        'theme'       => sanitizer('theme', $settings['theme'], 'theme'),
         'bootstrap'   => post('bootstrap') ? 1 : 0,
         'entypo'      => post('entypo') ? 1 : 0,
-        'fontawesome' => post('fontawesome') ? 1 : 0,
+        'fontawesome' => post('fontawesome') ? 1 : 0
     ];
 
     if (\defender::safe()) {
