@@ -18,9 +18,7 @@
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version'         => '9.10.00',
-    'pm_email_notify' => $settings['pm_email_notify']-1,
-    'pm_save_sent'    => $settings['pm_save_sent']-1
+    'version' => '9.10.00'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
