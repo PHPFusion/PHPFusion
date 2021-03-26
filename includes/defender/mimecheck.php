@@ -51,12 +51,12 @@ class ImageValidation {
                                                 }
                                             }
                                             if (!$valid_mimetype) {
-                                                die('Prevented an unwanted file upload attempt - 1! MIME Type(s) '.$each['type'][$i].' is not valid.');
+                                                die('Prevented an unwanted file upload attempt - 1! Unknown MIME Type '.$each['type'][$i]);
                                             }
                                             unset($valid_mimetype);
                                         } else {
                                             if ($mime_types[$extension] !== $each['type'][$i]) {
-                                                die('Prevented an unwanted file upload attempt - 2! Unknown MIME Type(s) '.$each['type'][$i]);
+                                                die('Prevented an unwanted file upload attempt - 2! Unknown MIME Type '.$each['type'][$i]);
                                             }
                                         }
                                     }
@@ -77,7 +77,7 @@ class ImageValidation {
                                             }
                                         }
                                         if (!$valid_mimetype) {
-                                            die('Prevented an unwanted file upload attempt - 3! MIME Type '.$each['type'].' is not valid.');
+                                            die('Prevented an unwanted file upload attempt - 3! Unknown MIME Type '.$each['type']);
                                         }
                                         unset($valid_mimetype);
                                     } else {
