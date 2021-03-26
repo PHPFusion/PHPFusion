@@ -35,14 +35,12 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         $weblink_settings = self::get_weblink_settings();
 
         // Save
-        if (isset($_POST['savesettings'])) {
-            $links_extended_required = filter_input(INPUT_POST, 'links_extended_required', FILTER_VALIDATE_INT);
-            $links_allow_submission = filter_input(INPUT_POST, 'links_allow_submission', FILTER_VALIDATE_INT);
+        if (check_post('savesettings')) {
 
             $inputArray = [
-                'links_per_page'          => form_sanitizer(filter_input(INPUT_POST, 'links_per_page', FILTER_VALIDATE_INT), 15, 'links_per_page'),
-                'links_allow_submission'  => !empty($links_allow_submission) ? $links_allow_submission : 0,
-                'links_extended_required' => !empty($links_extended_required) ? $links_extended_required : 0
+                'links_per_page'          => sanitizer('links_per_page', 15, 'links_per_page'),
+                'links_allow_submission'  => post('links_allow_submission') ? 1 : 0,
+                'links_extended_required' => post('links_extended_required') ? 1 : 0
             ];
 
             // Update
@@ -77,8 +75,12 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         echo "<div class='col-xs-12 col-sm-3'>\n";
         echo "<h4 class='m-0'>".$locale['WLS_0400']."</h4>";
         echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
-        echo form_checkbox('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], ['reverse_label' => TRUE]);
-        echo form_checkbox('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], ['reverse_label' => TRUE]);
+        echo form_checkbox('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
+            'toggle' => TRUE
+        ]);
+        echo form_checkbox('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], [
+            'toggle' => TRUE
+        ]);
 
         echo "</div>\n</div>\n";
         echo "<hr/>\n";

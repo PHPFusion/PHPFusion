@@ -27,16 +27,11 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $locale = self::get_WeblinkAdminLocale();
 
         // Back and Check Section
-        if (isset($_GET['section']) && $_GET['section'] == "back") {
+        if (check_get('section') && get('section') == "back") {
             redirect(clean_request('', ['ref', 'section', 'weblink_id', 'action', 'cat_id', 'weblink_cat_id', 'submit_id'], FALSE));
         }
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
 
-        // Handle Breadcrumbs and Titles
-        $weblinkTitle = $locale['WLS_0001'];
-        $weblinkCatTitle = $locale['WLS_0004'];
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $weblinkTitle]);
-
+        $sections = in_array(get('section'), $this->allowed_pages) ? get('section') : $this->allowed_pages[0];
         // Sitetitle
         add_to_title($locale['WLS_0001']);
 
@@ -50,10 +45,10 @@ class WeblinksAdminView extends WeblinksAdminModel {
             $master_title['id'][] = "back";
             $master_title['icon'][] = "fa fa-fw fa-arrow-left";
         }
-        $master_title['title'][] = $weblinkTitle;
+        $master_title['title'][] = $locale['WLS_0001'];
         $master_title['id'][] = "weblinks";
         $master_title['icon'][] = "fa fa-fw fa-file-text";
-        $master_title['title'][] = $weblinkCatTitle;
+        $master_title['title'][] = $locale['WLS_0004'];
         $master_title['id'][] = "weblinks_category";
         $master_title['icon'][] = "fa fa-fw fa-folder";
         $master_title['title'][] = $locale['WLS_0007'];
@@ -66,8 +61,8 @@ class WeblinksAdminView extends WeblinksAdminModel {
         // Display Content
         opentable($locale['WLS_0001']);
 
-        echo opentab($master_title, $_GET['section'], "weblinks_admin", TRUE, "nav-tabs", "section", ['ref', 'rowstart', 'submit_id']);
-        switch ($_GET['section']) {
+        echo opentab($master_title, $sections, "weblinks_admin", TRUE, "nav-tabs m-b-15", "section", ['ref', 'rowstart', 'submit_id', 'action', 'weblink_id', 'cat_id']);
+        switch ($sections) {
             case "weblinks_category":
                 WeblinksCategoryAdmin::getInstance()->displayWeblinksAdmin();
                 break;
