@@ -219,10 +219,9 @@ abstract class Search_Model {
         self::$form_config = self::load_search_modules();
 
         // Memory Limits
-        $memory_limit = str_replace("m", "", strtolower(ini_get("memory_limit"))) * 1024 * 1024;
-
-        $memory_limit = (!isnum($memory_limit) ? 8 * 1024 * 1024 : $memory_limit < 8 * 1024 * 1024) ? 8 * 1024 * 1024 : $memory_limit;
-
+        $memory_limit = floatval(ini_get('memory_limit')); // remove units
+        $memory_limit = strpos(ini_get('memory_limit'), 'G') !== FALSE ? $memory_limit * 1024 : $memory_limit;
+        $memory_limit = $memory_limit * 1024 * 1024;
         self::$memory_limit = $memory_limit - ceil($memory_limit / 4);
     }
 
