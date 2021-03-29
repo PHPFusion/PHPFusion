@@ -16,8 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess("LANG");
 require_once THEMES.'templates/admin_header.php';
+pageAccess('LANG');
+
 $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/settings.php', LOCALE.LOCALESET.'setup.php']);
 $aidlink = fusion_get_aidlink();
 
@@ -53,16 +54,15 @@ if (dbrows($inf_result) > 0) {
     }
 }
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
+add_breadcrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
 
-if (isset($_POST['savesettings'])) {
+if (check_post('savesettings')) {
     $inputData = [
-        "localeset"             => form_sanitizer($_POST['localeset'], fusion_get_settings('locale'), "localeset"),
-        "old_localeset"         => form_sanitizer($_POST['old_localeset'], fusion_get_settings('locale'), "old_localeset"),
-        "enabled_languages"     => isset($_POST['enabled_languages']) ? form_sanitizer($_POST['enabled_languages'], "",
-            "enabled_languages") : fusion_get_settings('locale'),
+        "localeset"             => sanitizer('localeset', fusion_get_settings('locale'), "localeset"),
+        "old_localeset"         => sanitizer('old_localeset', fusion_get_settings('locale'), "old_localeset"),
+        "enabled_languages"     => sanitizer('enabled_languages', fusion_get_settings('locale'), "enabled_languages"),
         // returns Chinese_Simplified,English,Malay
-        "old_enabled_languages" => form_sanitizer($_POST['old_enabled_languages'], "", "old_enabled_languages"),
+        "old_enabled_languages" => sanitizer('old_enabled_languages', "", "old_enabled_languages"),
         // returns Chinese_Simplified.English.Malay
     ];
 
@@ -308,11 +308,11 @@ if (isset($_POST['savesettings'])) {
          * Part III - Set Checkboxes for on and off of mlt handler
          */
         $ml_tables = "";
-        if (isset($_POST['multilang_tables'])) {
+        if (check_post(['multilang_tables'])) {
             $result = dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_status='0'");
-            for ($i = 0; $i < count($_POST['multilang_tables']); $i++) {
-                $ml_tables .= stripinput($_POST['multilang_tables'][$i]);
-                if ($i != (count($_POST['multilang_tables']) - 1)) {
+            for ($i = 0; $i < count(post(['multilang_tables'])); $i++) {
+                $ml_tables .= stripinput(post(['multilang_tables'])[$i]);
+                if ($i != (count(post(['multilang_tables'])) - 1)) {
                     $ml_tables .= ".";
                 }
             }
