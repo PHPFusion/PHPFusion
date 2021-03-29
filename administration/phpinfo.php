@@ -19,36 +19,36 @@ require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageAccess('PI');
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/phpinfo.php');
 
 add_breadcrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 $allowed_sections = ['general', 'phpsettings', 'folderpermission', 'details'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'general';
 
-$master_tab_title['title'][] = $locale['401'];
-$master_tab_title['id'][] = 'general';
-$master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['420'];
-$master_tab_title['id'][] = 'phpsettings';
-$master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['440'];
-$master_tab_title['id'][] = 'folderpermission';
-$master_tab_title['icon'][] = "";
-$master_tab_title['title'][] = $locale['450'];
-$master_tab_title['id'][] = 'details';
-$master_tab_title['icon'][] = "";
+$tabs['title'][] = $locale['401'];
+$tabs['id'][] = 'general';
+$tabs['icon'][] = "";
+$tabs['title'][] = $locale['420'];
+$tabs['id'][] = 'phpsettings';
+$tabs['icon'][] = "";
+$tabs['title'][] = $locale['440'];
+$tabs['id'][] = 'folderpermission';
+$tabs['icon'][] = "";
+$tabs['title'][] = $locale['450'];
+$tabs['id'][] = 'details';
+$tabs['icon'][] = "";
 
 opentable($locale['400']);
-echo opentab($master_tab_title, $sections, 'general', TRUE, 'nav-tabs');
+echo opentab($tabs, $sections, 'general', TRUE, 'nav-tabs');
 switch ($sections) {
-    case "phpsettings":
+    case 'phpsettings':
         phpsettings();
         break;
-    case "folderpermission":
+    case 'folderpermission':
         folderpermission();
         break;
-    case "details":
+    case 'details':
         details();
         break;
     default:
@@ -57,9 +57,9 @@ switch ($sections) {
 }
 echo closetab();
 closetable();
-//General info
+
 function general() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
+    $locale = fusion_get_locale();
     $settings = fusion_get_settings();
     $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['402']."</td><td class='text-right'>".php_uname()."</td></tr>\n";
@@ -71,7 +71,7 @@ function general() {
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
     $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".stripinput(server('HTTP_USER_AGENT'))."</td></tr>\n";
+    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".server('HTTP_USER_AGENT')."</td></tr>\n";
     if (LANGUAGE !== 'English') {
         $phpinfo .= "<tr>\n<td colspan='2'>".$locale['411']."</td></tr>\n";
     }
@@ -80,8 +80,7 @@ function general() {
 }
 
 function phpsettings() {
-
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
+    $locale = fusion_get_locale();
     //Check GD version
     if (function_exists('gd_info')) {
         $gd_ver = gd_info();
@@ -103,7 +102,7 @@ function phpsettings() {
 }
 
 function folderpermission() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
+    $locale = fusion_get_locale();
     $status = '';
     $folders = [
         //path => have to be writeable or not
@@ -121,15 +120,14 @@ function folderpermission() {
         $folders += $value;
     }
 
-    add_to_head("<style type='text/css'>.passed {color:green;} .failed {color:red; text-transform: uppercase; font-weight:bold;}</style>\n");
     //Check file/folder writeable
     $i = 0;
     foreach ($folders as $folder => $writeable) {
         $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
         if (is_writable(BASEDIR.$folder) == TRUE) {
-            $status .= "<span class='".($writeable == TRUE ? "passed" : "failed")."'>".$locale['441']."</span>";
+            $status .= "<span class='".($writeable == TRUE ? "text-success" : "text-danger text-bold text-uppercase")."'>".$locale['441']."</span>";
         } else {
-            $status .= "<span class='".($writeable == TRUE ? "failed" : "passed")."'>".$locale['442']."</span>";
+            $status .= "<span class='".($writeable == TRUE ? "text-danger text-bold text-uppercase" : "text-success")."'>".$locale['442']."</span>";
         }
         $status .= " (".substr(sprintf('%o', fileperms(BASEDIR.$folder)), -4).")</td></tr>\n";
         $i++;
@@ -141,7 +139,7 @@ function folderpermission() {
 }
 
 function details() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/phpinfo.php");
+    $locale = fusion_get_locale();
     if (!stristr(ini_get('disable_functions'), "phpinfo")) {
         //Generating new phpinfo style, compatible with PHPFusion styles
         ob_start();
