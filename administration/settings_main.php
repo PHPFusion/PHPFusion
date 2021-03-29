@@ -180,7 +180,7 @@ $tabs['title'][] = $locale['446'];
 $tabs['id'][] = 'general';
 $tabs['icon'][] = '';
 $tabs['title'][] = $locale['447'];
-$tabs['id'][] = 'url_path';
+$tabs['id'][] = 'url';
 $tabs['icon'][] = '';
 $tabs['title'][] = $locale['448'];
 $tabs['id'][] = 'panels';
@@ -240,7 +240,7 @@ echo form_text('sitebanner', $locale['404'], $settings['sitebanner'], [
 ]);
 echo closetabbody();
 
-echo opentabbody($tabs['title'][1], 'url_path', $tab_active);
+echo opentabbody($tabs['title'][1], 'url', $tab_active);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 echo "<strong>".$locale['401a']."</strong><br/><i>".$locale['401b']."</i>";

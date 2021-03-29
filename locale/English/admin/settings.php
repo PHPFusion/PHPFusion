@@ -59,7 +59,7 @@ $locale['444a'] = "Configuration for multiple domains on a single site.<br/><br/
 $locale['444b'] = "Registered Domain Names <br /> <i>You must write current domain read under Site Host when you enable this feature</i>.";
 $locale['445'] = "Invalid (test purposes)";
 $locale['446'] = "General Settings";
-$locale['447'] = "URL and Path Settings";
+$locale['447'] = "URL Settings";
 $locale['448'] = "Panels Settings";
 
 // Time & Date Settings
