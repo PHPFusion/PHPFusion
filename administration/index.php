@@ -16,55 +16,58 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-if (!iADMIN || fusion_get_userdata('user_rights') == "" || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
+
+if (!iADMIN || fusion_get_userdata('user_rights') == '' || !defined('iAUTH') || !check_get('aid') || get('aid') != iAUTH) {
     redirect("../index.php");
 }
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
-if (!isset($_GET['pagenum']) || !isnum($_GET['pagenum'])) {
-    $_GET['pagenum'] = 1;
-}
 
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 $settings = fusion_get_settings();
 $aidlink = fusion_get_aidlink();
-
-$admin_images = TRUE;
 
 if (defined('ARTICLES_EXISTS')) {
     $article_query = "(SELECT COUNT(article_id) FROM ".DB_PREFIX."articles) AS article_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='A') AS article_comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS article_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='a') AS article_submissions
+    ";
 }
 if (defined('BLOG_EXISTS')) {
     $blog_query = "(SELECT COUNT(blog_id) FROM ".DB_PREFIX."blog) AS blog_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='B') AS blog_comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS blog_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='b') AS blog_submissions
+    ";
 }
 if (defined('DOWNLOADS_EXISTS')) {
     $download_query = "(SELECT COUNT(download_id) FROM ".DB_PREFIX."downloads) AS download_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='D') AS download_comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS download_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='d') AS download_submissions
+    ";
 }
 if (defined('FORUM_EXISTS')) {
     $forum_query = "(SELECT COUNT(forum_id) FROM ".DB_PREFIX."forums) AS forums,
         (SELECT COUNT(thread_id) FROM ".DB_PREFIX."forum_threads) AS threads,
         (SELECT COUNT(post_id) FROM ".DB_PREFIX."forum_posts) AS posts,
-        (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts";
+        (SELECT COUNT(user_id) FROM ".DB_USERS." WHERE user_posts > '0') AS user_posts
+    ";
 }
 if (defined('GALLERY_EXISTS')) {
     $photo_query = "(SELECT COUNT(photo_id) FROM ".DB_PREFIX."photos) AS photo_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='P') AS photo_comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS photo_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='p') AS photo_submissions
+    ";
 }
 if (defined('NEWS_EXISTS')) {
     $news_query = "
         (SELECT COUNT(news_id) FROM ".DB_PREFIX."news) AS news_items,
         (SELECT COUNT(comment_id) FROM ".DB_COMMENTS." WHERE comment_type='N') AS news_comments,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS news_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='n') AS news_submissions
+    ";
 }
 if (defined('WEBLINKS_EXISTS')) {
     $weblink_query = "(SELECT COUNT(weblink_id) FROM ".DB_PREFIX."weblinks) AS weblink_items,
-        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS weblink_submissions";
+        (SELECT COUNT(submit_id) FROM ".DB_SUBMISSIONS." WHERE submit_type='l') AS weblink_submissions
+    ";
 }
 
 if ($settings['enable_deactivation'] == 1) {
@@ -87,54 +90,63 @@ $queries = dbarray(dbquery("SELECT
 "));
 
 // Members stats
-$members['registered'] = $queries['members_registered'];
-$members['unactivated'] = $queries['members_unactivated'];
-$members['security_ban'] = $queries['members_security_ban'];
-$members['cancelled'] = $queries['members_canceled'];
-$members['inactive'] = $settings['enable_deactivation'] == 1 ? $queries['members_inactive'] : 0;
+$members = [
+    'registered'   => $queries['members_registered'],
+    'unactivated'  => $queries['members_unactivated'],
+    'security_ban' => $queries['members_security_ban'],
+    'cancelled'    => $queries['members_canceled'],
+    'inactive'     => $settings['enable_deactivation'] == 1 ? $queries['members_inactive'] : 0
+];
 
 // Get Core Infusion's stats
 if (defined('ARTICLES_EXISTS')) {
-    $articles = [];
-    $articles['article'] = $queries['article_items'];
-    $articles['comment'] = $queries['article_comments'];
-    $articles['submit'] = $queries['article_submissions'];
+    $articles = [
+        'article' => $queries['article_items'],
+        'comment' => $queries['article_comments'],
+        'submit'  => $queries['article_submissions']
+    ];
 }
 if (defined('BLOG_EXISTS')) {
-    $blog = [];
-    $blog['blog'] = $queries['blog_items'];
-    $blog['comment'] = $queries['blog_comments'];
-    $blog['submit'] = $queries['blog_submissions'];
+    $blog = [
+        'blog'    => $queries['blog_items'],
+        'comment' => $queries['blog_comments'],
+        'submit'  => $queries['blog_submissions']
+    ];
 }
 if (defined('DOWNLOADS_EXISTS')) {
-    $download = [];
-    $download['download'] = $queries['download_items'];
-    $download['comment'] = $queries['download_comments'];
-    $download['submit'] = $queries['download_submissions'];
+    $download = [
+        'download' => $queries['download_items'],
+        'comment'  => $queries['download_comments'],
+        'submit'   => $queries['download_submissions']
+    ];
 }
 if (defined('FORUM_EXISTS')) {
-    $forum = [];
-    $forum['count'] = $queries['forums'];
-    $forum['thread'] = $queries['threads'];
-    $forum['post'] = $queries['posts'];
-    $forum['users'] = $queries['user_posts'];
+    $forum = [
+        'count'  => $queries['forums'],
+        'thread' => $queries['threads'],
+        'post'   => $queries['posts'],
+        'users'  => $queries['user_posts']
+    ];
 }
 if (defined('GALLERY_EXISTS')) {
-    $photos = [];
-    $photos['photo'] = $queries['photo_items'];
-    $photos['comment'] = $queries['photo_comments'];
-    $photos['submit'] = $queries['photo_submissions'];
+    $photos = [
+        'photo'   => $queries['photo_items'],
+        'comment' => $queries['photo_comments'],
+        'submit'  => $queries['photo_submissions']
+    ];
 }
 if (defined('NEWS_EXISTS')) {
-    $news = [];
-    $news['news'] = $queries['news_items'];
-    $news['comment'] = $queries['news_comments'];
-    $news['submit'] = $queries['news_submissions'];
+    $news = [
+        'news'    => $queries['news_items'],
+        'comment' => $queries['news_comments'],
+        'submit'  => $queries['news_submissions']
+    ];
 }
 if (defined('WEBLINKS_EXISTS')) {
-    $weblinks = [];
-    $weblinks['weblink'] = $queries['weblink_items'];
-    $weblinks['submit'] = $queries['weblink_submissions'];
+    $weblinks = [
+        'weblink' => $queries['weblink_items'],
+        'submit'  => $queries['weblink_submissions']
+    ];
 }
 $comments_type = [
     'C'  => $locale['272a'],
@@ -142,14 +154,9 @@ $comments_type = [
 ];
 $comments_type += \PHPFusion\Admins::getInstance()->getCommentType();
 
-$submit_type = [];
-$submit_type += \PHPFusion\Admins::getInstance()->getSubmitType();
-
-$submit_link = [];
-$submit_link += \PHPFusion\Admins::getInstance()->getSubmitLink();
-
-$submit_data = [];
-$submit_data += \PHPFusion\Admins::getInstance()->getSubmitData();
+$submit_type = \PHPFusion\Admins::getInstance()->getSubmitType();
+$submit_link = \PHPFusion\Admins::getInstance()->getSubmitLink();
+$submit_data = \PHPFusion\Admins::getInstance()->getSubmitData();
 
 $link_type = [
     'C'  => $settings['siteurl']."viewpage.php?page_id=%s",
@@ -174,94 +181,88 @@ if ($infusions_count > 0) {
 
 // Latest Comments
 $global_comments = [];
-$global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
-$_GET['c_rowstart'] = isset($_GET['c_rowstart']) && isnum($_GET['c_rowstart']) && $_GET['c_rowstart'] <= $global_comments['rows'] ? (int)$_GET['c_rowstart'] : 0;
-$comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-    FROM ".DB_COMMENTS." c
-    LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
-    ORDER BY comment_datestamp DESC LIMIT ".$_GET['c_rowstart'].", 5
-");
+if ($settings['comments_enabled'] == 1) {
+    $global_comments['rows'] = dbcount("('comment_id')", DB_COMMENTS);
+    $c_rowstart = check_get('c_rowstart') && get('c_rowstart', FILTER_SANITIZE_NUMBER_INT) <= $global_comments['rows'] ? get('c_rowstart') : 0;
+    $comments_result = dbquery("SELECT c.*, u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_COMMENTS." c
+        LEFT JOIN ".DB_USERS." u on u.user_id=c.comment_name
+        ORDER BY comment_datestamp DESC LIMIT ".$c_rowstart.", 5
+    ");
 
-if ($global_comments['rows'] > 10) {
-    $global_comments['comments_nav'] = makepagenav($_GET['c_rowstart'], 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 'c_rowstart');
-}
-
-$global_comments['data'] = [];
-
-if (dbrows($comments_result)) {
-    while ($_comdata = dbarray($comments_result)) {
-        $global_comments['data'][] = $_comdata;
+    if ($global_comments['rows'] > 10) {
+        $global_comments['comments_nav'] = makepagenav($c_rowstart, 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&pagenum=0&', 'c_rowstart');
     }
-} else {
-    $global_comments['nodata'] = $locale['254c'];
+
+    $global_comments['data'] = [];
+
+    if (dbrows($comments_result)) {
+        while ($_comdata = dbarray($comments_result)) {
+            $global_comments['data'][] = $_comdata;
+        }
+    } else {
+        $global_comments['nodata'] = $locale['254c'];
+    }
 }
 
 // Latest Ratings
 $global_ratings = [];
-$global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
-$_GET['r_rowstart'] = isset($_GET['r_rowstart']) && isnum($_GET['r_rowstart']) && $_GET['r_rowstart'] <= $global_ratings['rows'] ? (int)$_GET['r_rowstart'] : 0;
-$result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-    FROM ".DB_RATINGS." r
-    LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
-    ORDER BY rating_datestamp DESC LIMIT ".$_GET['r_rowstart'].", 5
-");
+if ($settings['ratings_enabled'] == 1) {
+    $global_ratings['rows'] = dbcount("('rating_id')", DB_RATINGS);
+    $r_rowstart = check_get('r_rowstart') && get('r_rowstart', FILTER_SANITIZE_NUMBER_INT) <= $global_ratings['rows'] ? get('r_rowstart') : 0;
+    $result = dbquery("SELECT r.*, u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_RATINGS." r
+        LEFT JOIN ".DB_USERS." u on u.user_id=r.rating_user
+        ORDER BY rating_datestamp DESC LIMIT ".$r_rowstart.", 5
+    ");
 
-$global_ratings['data'] = [];
-if (dbrows($result) > 0) {
-    while ($_ratdata = dbarray($result)) {
-        $global_ratings['data'][] = $_ratdata;
+    $global_ratings['data'] = [];
+    if (dbrows($result) > 0) {
+        while ($_ratdata = dbarray($result)) {
+            $global_ratings['data'][] = $_ratdata;
+        }
+    } else {
+        $global_ratings['nodata'] = $locale['254b'];
     }
-} else {
-    $global_ratings['nodata'] = $locale['254b'];
-}
 
-if ($global_ratings['rows'] > 10) {
-    $global_ratings['ratings_nav'] = makepagenav($_GET['r_rowstart'], 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 'r_rowstart');
+    if ($global_ratings['rows'] > 10) {
+        $global_ratings['ratings_nav'] = makepagenav($r_rowstart, 10, $global_comments['rows'], 2, FUSION_SELF.$aidlink.'&pagenum=0&', 'r_rowstart');
+    }
 }
 
 // Latest Submissions
 $global_submissions = [];
-$global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
-$_GET['s_rowstart'] = isset($_GET['s_rowstart']) && isnum($_GET['s_rowstart']) && $_GET['s_rowstart'] <= $global_submissions['rows'] ? (int)$_GET['s_rowstart'] : 0;
-$result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
-    FROM ".DB_SUBMISSIONS." s
-    LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
-    ORDER BY submit_datestamp DESC LIMIT ".$_GET['s_rowstart'].", 5
-");
+if (!empty(\PHPFusion\Admins::getInstance()->getSubmitData())) {
+    $global_submissions['rows'] = dbcount("('submit_id')", DB_SUBMISSIONS);
+    $s_rowstart = check_get('s_rowstart') && get('s_rowstart', FILTER_SANITIZE_NUMBER_INT) <= $global_submissions['rows'] ? get('s_rowstart') : 0;
+    $result = dbquery("SELECT s.*, u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_SUBMISSIONS." s
+        LEFT JOIN ".DB_USERS." u on u.user_id=s.submit_user
+        ORDER BY submit_datestamp DESC LIMIT ".$s_rowstart.", 5
+    ");
 
-$global_submissions['data'] = [];
+    $global_submissions['data'] = [];
 
-if (dbrows($result) > 0) {
-    while ($_subdata = dbarray($result)) {
-        $global_submissions['data'][] = $_subdata;
+    if (dbrows($result) > 0) {
+        while ($_subdata = dbarray($result)) {
+            $global_submissions['data'][] = $_subdata;
+        }
+    } else {
+        $global_submissions['nodata'] = $locale['254a'];
     }
-} else {
-    $global_submissions['nodata'] = $locale['254a'];
-}
 
-if ($global_submissions['rows'] > 10) {
-    $global_submissions['submissions_nav'] = makepagenav($_GET['s_rowstart'], 10, $global_submissions['rows'], 2, FUSION_SELF.$aidlink.'&amp;pagenum=0&amp;', 's_rowstart');
+    if ($global_submissions['rows'] > 10) {
+        $global_submissions['submissions_nav'] = makepagenav($s_rowstart, 10, $global_submissions['rows'], 2, FUSION_SELF.$aidlink.'&pagenum=0&', 's_rowstart');
+    }
 }
 
 // Icon Grid
-if (isset($_GET['pagenum']) && isnum($_GET['pagenum'])) {
-    $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_page=:adminpage AND admin_language=:language ORDER BY admin_page DESC, admin_id ASC, admin_title ASC",
-        [':adminpage' => $_GET['pagenum'], ':language' => LANGUAGE]);
-    $admin_icons['rows'] = dbrows($result);
-    $admin_icons['data'] = [];
-    if (dbrows($result)) {
-        while ($_idata = dbarray($result)) {
-            if (file_exists(ADMIN.$_idata['admin_link']) || file_exists(INFUSIONS.$_idata['admin_link'])) {
-                if (checkrights($_idata['admin_rights']) && $_idata['admin_link'] != "reserved") {
-                    // Current locale file have the admin title definitions paired by admin_rights.
-                    if ($_idata['admin_page'] !== 5) {
-                        $_idata['admin_title'] = isset($locale[$_idata['admin_rights']]) ? $locale[$_idata['admin_rights']] : $_idata['admin_title'];
-                    }
-                    $admin_icons['data'][] = $_idata;
-                }
-            }
-        }
-    }
+if (check_get('pagenum') && get('pagenum', FILTER_SANITIZE_NUMBER_INT)) {
+    $pages = \PHPFusion\Admins::getInstance()->getAdminPages(get('pagenum'));
+    $admin_icons = [
+        'data' => $pages,
+        'rows' => count($pages)
+    ];
 }
 
 render_admin_dashboard();

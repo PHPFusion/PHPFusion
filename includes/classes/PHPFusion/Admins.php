@@ -302,16 +302,17 @@ class Admins {
     }
 
     /**
+     * @param int $page
+     *
      * @return array
      */
-    public function getAdminPages() {
+    public function getAdminPages($page = NULL) {
         $locale = fusion_get_locale();
 
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
             $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
-            $rows = dbrows($result);
-            if ($rows) {
+            if (dbrows($result)) {
                 while ($data = dbarray($result)) {
                     if (file_exists(ADMIN.$data['admin_link']) || file_exists(INFUSIONS.$data['admin_link'])) {
                         if (checkrights($data['admin_rights']) && $data['admin_link'] != "reserved") {
@@ -322,8 +323,7 @@ class Admins {
                 }
             }
         }
-
-        return self::$admin_pages;
+        return $page === NULL ? self::$admin_pages : (isset(self::$admin_pages[$page]) ? self::$admin_pages[$page] : self::$admin_pages);
     }
 
     /**
