@@ -433,7 +433,7 @@ class SiteLinks {
                     $res .= "</button>\n";
                 }
                 if (self::getMenuParam('show_banner') === TRUE) {
-                    $res .= "<a class='navbar-brand ".fusion_get_settings('logoposition_xs')." ".fusion_get_settings('logoposition_sm')." ".fusion_get_settings('logoposition_md')." ".fusion_get_settings('logoposition_lg')."' href='".BASEDIR.fusion_get_settings('opening_page')."'>".self::getMenuParam('banner')."</a>\n";
+                    $res .= "<a class='navbar-brand' href='".BASEDIR.fusion_get_settings('opening_page')."'>".self::getMenuParam('banner')."</a>\n";
                 } else if (self::getMenuParam('show_header') === TRUE) {
                     $res .= "<a class='navbar-brand visible-xs hidden-sm hidden-md hidden-lg' href='".BASEDIR.fusion_get_settings('opening_page')."'>".fusion_get_settings("sitename")."</a>\n";
                 } else {

@@ -37,6 +37,17 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
+$delete_settings_tbl = [
+    'logoposition_xs',
+    'logoposition_sm',
+    'logoposition_md',
+    'logoposition_lg'
+];
+
+foreach ($delete_settings_tbl as $value) {
+    $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";
+}
+
 /**
  * Delete all unused files
  */

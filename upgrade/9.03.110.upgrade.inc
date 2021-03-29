@@ -38,8 +38,14 @@ foreach ($insert_settings_tbl as $key => $value) {
     }
 }
 
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='userNameChange'";
-$inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='user_name_ban'";
+$delete_settings_tbl = [
+    'userNameChange',
+    'user_name_ban'
+];
+
+foreach ($delete_settings_tbl as $value) {
+    $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";
+}
 
 if (db_exists(DB_PREFIX.'captcha')) {
     dbquery("DROP TABLE ".DB_PREFIX.'captcha');
