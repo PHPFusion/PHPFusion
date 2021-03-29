@@ -21,13 +21,13 @@ pageAccess('MI');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/migrate.php');
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'migrate.php'.fusion_get_aidlink(), 'title' => $locale['MIG_100']]);
+add_breadcrumb(['link' => ADMIN.'migrate.php'.fusion_get_aidlink(), 'title' => $locale['MIG_100']]);
 
 opentable($locale['MIG_100']);
 
-if (isset($_POST['migrate'])) {
-    $user_primary_id = form_sanitizer($_POST['user_primary'], '', 'user_primary');
-    $user_temp_id = form_sanitizer($_POST['user_migrate'], '', 'user_migrate');
+if (check_post('migrate')) {
+    $user_primary_id = sanitizer('user_primary', 0, 'user_primary');
+    $user_temp_id = sanitizer('user_migrate', 0, 'user_migrate');
 
     if ($user_primary_id == $user_temp_id || !isnum($user_primary_id) || !isnum($user_temp_id)) {
         \defender::stop();
@@ -40,7 +40,7 @@ if (isset($_POST['migrate'])) {
         if (dbrows($result) > 0) {
             $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
             if (dbrows($result2) > 0) {
-                if (isset($_POST['forum']) == '1') {
+                if (post('forum') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREAD_NOTIFY, 'notify_user', $locale['MIG_102']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_author', $locale['MIG_103']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_FORUM_THREADS, 'thread_lastuser', $locale['MIG_104']);
@@ -55,49 +55,48 @@ if (isset($_POST['migrate'])) {
                         dbquery("UPDATE ".DB_USERS." SET user_posts=:userposts WHERE user_id=:userid", [':userposts' => $posts, ':userid' => $user_primary_id]);
                     }
                 }
-                if (isset($_POST['comments']) == '1') {
+                if (post('comments') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_COMMENTS, 'comment_name', $locale['MIG_115']);
                 }
-                if (isset($_POST['ratings']) == '1') {
+                if (post('ratings') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_RATINGS, 'rating_user', $locale['MIG_116']);
                 }
-                if (isset($_POST['messages']) == '1') {
+                if (post('messages') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_to', $locale['MIG_117']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_from', $locale['MIG_118']);
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_MESSAGES, 'message_user', $locale['MIG_119']);
-                    $result = dbquery("DELETE FROM ".DB_MESSAGES."_options WHERE user_id=:userid", [':userid' => $user_temp_id]);
                 }
-                if (isset($_POST['polls']) == '1') {
+                if (post('polls') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_POLL_VOTES, 'vote_user', $locale['MIG_120']);
                 }
-                if (isset($_POST['shoutbox']) == '1') {
+                if (post('shoutbox') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_SHOUTBOX, 'shout_name', $locale['MIG_121']);
                 }
-                if (isset($_POST['articles']) == '1') {
+                if (post('articles') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_ARTICLES, 'article_name', $locale['MIG_122']);
                 }
-                if (isset($_POST['faq']) == '1') {
+                if (post('faq') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_FAQS, 'faq_name', $locale['MIG_123']);
                 }
-                if (isset($_POST['news']) == '1') {
+                if (post('news') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_NEWS, 'news_name', $locale['MIG_124']);
                 }
-                if (isset($_POST['blog']) == '1') {
+                if (post('blog') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_BLOG, 'blog_name', $locale['MIG_125']);
                 }
-                if (isset($_POST['downloads']) == '1') {
+                if (post('downloads') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_DOWNLOADS, 'download_user', $locale['MIG_126']);
                 }
-                if (isset($_POST['photos']) == '1') {
+                if (post('photos') == 1) {
                     user_posts_migrate($user_primary_id, $user_temp_id, DB_PHOTOS, 'photo_user', $locale['MIG_127']);
                 }
-                if (isset($_POST['user_level']) == '1') {
+                if (post('user_level') == 1) {
                     user_rights_migrate($user_primary_id, $user_temp_id);
                 }
-                if (isset($_POST['del_user']) == '1') {
+                if (post('del_user') == 1) {
                     $result = dbquery("DELETE FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);
                 } else {
-                    require_once INCLUDES."suspend_include.php";
+                    require_once INCLUDES.'suspend_include.php';
                     $result = dbquery("UPDATE ".DB_USERS." SET user_status=:status WHERE user_id=:userid", [':status' => '7', ':userid' => $user_temp_id]);
                     suspend_log($user_temp_id, '7', $locale['MIG_130']);
                 }
@@ -118,83 +117,81 @@ function user_posts_migrate_console() {
 
     $chkbox = [
         'user_level' => [
-            'value'  => !empty($_POST['user_level']) ? $_POST['user_level'] : 0,
+            'value'  => post('user_level') ? 1 : 0,
             'text'   => $locale['MIG_150'],
             'active' => TRUE
         ],
         'messages'   => [
-            'value'  => !empty($_POST['messages']) ? $_POST['messages'] : 0,
+            'value'  => post('messages') ? 1 : 0,
             'text'   => $locale['MIG_151'],
             'active' => TRUE
         ],
         'comments'   => [
-            'value'  => !empty($_POST['comments']) ? $_POST['comments'] : 0,
+            'value'  => post('comments') ? 1 : 0,
             'text'   => $locale['MIG_152'],
             'active' => TRUE
         ],
         'ratings'    => [
-            'value'  => !empty($_POST['ratings']) ? $_POST['ratings'] : 0,
+            'value'  => post('ratings') ? 1 : 0,
             'text'   => $locale['MIG_153'],
             'active' => TRUE
         ],
         'forum'      => [
-            'value'  => !empty($_POST['forum']) ? $_POST['forum'] : 0,
+            'value'  => post('forum') ? 1 : 0,
             'text'   => $locale['MIG_154'],
             'active' => defined('FORUM_EXISTS')
         ],
         'articles'   => [
-            'value'  => !empty($_POST['articles']) ? $_POST['articles'] : 0,
+            'value'  => post('articles') ? 1 : 0,
             'text'   => $locale['MIG_155'],
             'active' => defined('ARTICLES_EXISTS')
         ],
         'faq'        => [
-            'value'  => !empty($_POST['faq']) ? $_POST['faq'] : 0,
+            'value'  => post('faq') ? 1 : 0,
             'text'   => $locale['MIG_156'],
             'active' => defined('FAQ_EXISTS')
         ],
         'polls'      => [
-            'value'  => !empty($_POST['polls']) ? $_POST['polls'] : 0,
+            'value'  => post('polls') ? 1 : 0,
             'text'   => $locale['MIG_157'],
             'active' => defined('MEMBER_POLL_PANEL_EXISTS')
         ],
         'news'       => [
-            'value'  => !empty($_POST['news']) ? $_POST['news'] : 0,
+            'value'  => post('news') ? 1 : 0,
             'text'   => $locale['MIG_158'],
             'active' => defined('NEWS_EXISTS')
         ],
         'blog'       => [
-            'value'  => !empty($_POST['blog']) ? $_POST['blog'] : 0,
+            'value'  => post('blog') ? 1 : 0,
             'text'   => $locale['MIG_159'],
             'active' => defined('BLOG_EXISTS')
         ],
         'downloads'  => [
-            'value'  => !empty($_POST['downloads']) ? $_POST['downloads'] : 0,
+            'value'  => post('downloads') ? 1 : 0,
             'text'   => $locale['MIG_160'],
             'active' => defined('DOWNLOADS_EXISTS')
         ],
         'photos'     => [
-            'value'  => !empty($_POST['photos']) ? $_POST['photos'] : 0,
+            'value'  => post('photos') ? 1 : 0,
             'text'   => $locale['MIG_161'],
             'active' => defined('GALLERY_EXISTS')
         ],
         'shoutbox'   => [
-            'value'  => !empty($_POST['shoutbox']) ? $_POST['shoutbox'] : 0,
+            'value'  => post('shoutbox') ? 1 : 0,
             'text'   => $locale['MIG_162'],
             'active' => defined('SHOUTBOX_PANEL_EXISTS')
         ],
     ];
 
     echo openform('inputform', 'post', FUSION_REQUEST);
-    echo "<div class='m-t-20'>";
-    echo "<div class='col-xs-12 col-sm-12'>\n";
     echo "<div class='row'>\n";
     echo "<div class='col-xs-12 col-sm-4'>\n";
-    echo form_user_select('user_primary', $locale['MIG_135'], (isset($_POST['user_primary']) && isnum($_POST['user_primary']) ? $_POST['user_primary'] : ''), [
+    echo form_user_select('user_primary', $locale['MIG_135'], post('user_primary'), [
         'placeholder' => $locale['MIG_136']
     ]);
     echo "</div>";
     echo "<div class='col-xs-12 col-sm-8'>\n";
-    echo form_user_select('user_migrate', $locale['MIG_137'], (isset($_POST['user_migrate']) && isnum($_POST['user_migrate']) ? $_POST['user_migrate'] : ''), [
+    echo form_user_select('user_migrate', $locale['MIG_137'], post('user_migrate'), [
         'placeholder' => $locale['MIG_138']
     ]);
     echo "</div>";
@@ -228,9 +225,7 @@ function user_posts_migrate_console() {
     echo "</div>\n";
     echo "</div>\n";
     echo "</div>\n";
-    echo "</div>\n";
     echo form_button('migrate', $locale['MIG_175'], $locale['MIG_175'], ['inline' => TRUE, 'class' => 'btn-primary m-t-20']);
-    echo "</div>\n";
     echo closeform();
 }
 
