@@ -23,7 +23,7 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/robots.php");
 
 add_breadcrumb(['link' => ADMIN.'robots.php'.fusion_get_aidlink(), 'title' => $locale['ROBOT_400']]);
 
-function write_Default() {
+function write_default() {
     $robots_content = "User-agent: *\n";
     $robots_content .= "Disallow: /config.php\n";
     $robots_content .= "Disallow: /administration/\n";
@@ -51,7 +51,6 @@ if (check_post('save_robots')) {
         addNotice("success", $message);
         redirect(FUSION_REQUEST);
     }
-
 }
 
 if (check_post('set_default')) {
@@ -61,18 +60,17 @@ if (check_post('set_default')) {
         addNotice("danger", $locale['ROBOT_414']);
     }
     if (\defender::safe() && !defined('FUSION_NULL')) {
-        write_file($file, write_Default());
+        write_file($file, write_default());
         addNotice("success", $locale['ROBOT_412']);
         redirect(FUSION_REQUEST);
     }
-
 }
 
 opentable($locale['ROBOT_400']);
 
 if (!file_exists($file)) {
     echo "<div class='alert alert-danger text-center'><strong>".$locale['ROBOT_411']."</strong></div>\n";
-    $current = write_Default();
+    $current = write_default();
     $button = $locale['ROBOT_422'];
 } else {
 
