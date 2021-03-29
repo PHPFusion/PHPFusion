@@ -231,7 +231,6 @@ $locale['UM103'] = "Logoff as User";
 $locale['UM098'] = "PM Inbox:";
 $locale['UM099'] = "PM Outbox:";
 $locale['UM100'] = "PM Archive:";
-
 // Keywords and Meta
 $locale['tags'] = "Tags";
 // Captcha
@@ -252,8 +251,6 @@ $locale['global_182'] = "Admin Password not entered or incorrect.";
 $locale['global_183'] = "Your login session has expired. Please login again.";
 $locale['global_184'] = "You are now logged in as %s";
 $locale['global_185'] = "You are now switched back to your own account.";
-
-// Do not add anything within global_183-190. To be reserved for code verification development.
 
 // Miscellaneous
 $locale['global_190'] = "Maintenance Mode Activated";
@@ -330,7 +327,7 @@ $locale['global_459'] = "New password has been set for USER_NAME, and email was 
 // Function parsebytesize()
 $locale['global_460'] = "Empty";
 $locale['global_461'] = "Bytes";
-//Safe Redirect
+// Safe Redirect
 $locale['global_500'] = "You are being redirected to %s, please wait. If you're not redirected, click here.";
 // Captcha Locales
 $locale['global_600'] = "Validation Code";
@@ -338,10 +335,10 @@ $locale['global_601'] = "You must enter a correct validation code";
 $locale['recaptcha'] = "en";
 // Site links
 $locale['global_700'] = "Show More";
-//Miscellaneous
+// Miscellaneous
 $locale['global_900'] = "Unable to convert HEX to DEC";
 $locale['global_901'] = "Insert Media";
-//Language Selection
+// Language Selection
 $locale['global_ML100'] = "Language:";
 $locale['global_ML101'] = "- Select Language -";
 $locale['global_ML102'] = "Site language";
@@ -418,7 +415,7 @@ $locale['us'] = "Us";
 $locale['he'] = "He";
 $locale['she'] = "She";
 $locale['it'] = "It";
-//Tables
+// Tables
 $locale['order'] = "Order";
 $locale['sort'] = "Sort";
 $locale['id'] = "ID";
@@ -477,6 +474,8 @@ $locale['about'] = "About";
 // User status
 $locale['online'] = "Online";
 $locale['offline'] = "Offline";
+// Misc
+$locale['max_fs_allowed_ft'] = "Max. file size %s / Allowed file types %s";
 // Timer
 $locale['timer_year'] = "year|years";
 $locale['timer_month'] = "month|months";
