@@ -324,10 +324,10 @@ $sections = in_array(get('section'), $allowed_sections) ? get('section') : $allo
 
 switch ($sections) {
     case "pl":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['400']]);
+        add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['400']]);
         break;
     case "pls":
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_401a']]);
+        add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_401a']]);
         break;
     default:
         break;
