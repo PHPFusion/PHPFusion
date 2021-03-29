@@ -2473,3 +2473,48 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
 
     return "";
 }
+
+/**
+ * Get max server upload limit
+ *
+ * @return mixed
+ */
+function max_server_upload() {
+    // select maximum upload size
+    $max_upload = convert_to_bytes(ini_get('upload_max_filesize'));
+    // select post limit
+    $max_post = convert_to_bytes(ini_get('post_max_size'));
+    // select memory limit
+    $memory_limit = convert_to_bytes(ini_get('memory_limit'));
+
+    // return the smallest of them, this defines the real limit
+    return min($max_upload, $max_post, $memory_limit);
+}
+
+/**
+ * Convert to bytes
+ *
+ * @param int|string $val
+ *
+ * @return int
+ */
+function convert_to_bytes($val) {
+    $val = trim($val);
+    $last = strtolower($val[strlen($val) - 1]);
+    $kb = 1024;
+    $mb = 1024 * $kb;
+    $gb = 1024 * $mb;
+    switch ($last) {
+        case 'g':
+            $val = (int)$val * $gb;
+            break;
+        case 'm':
+            $val = (int)$val * $mb;
+            break;
+        case 'k':
+            $val = (int)$val * $kb;
+            break;
+    }
+
+    return (int)$val;
+}

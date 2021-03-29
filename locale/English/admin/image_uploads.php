@@ -12,7 +12,7 @@ $locale['421'] = "Filename:";
 $locale['422'] = "Main Images";
 $locale['423'] = "Article Images";
 $locale['424'] = "News Images";
-$locale['425'] = "Max. file size %s / Allowed file types .jpg,.JPG,.png,.PNG,.JPEG,.gif,.GIF,.bmp,.BMP,.svg,.SVG,.tiff,.TIFF";
+$locale['425'] = "Max. file size %s / Allowed file types .jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp";
 $locale['426'] = "Image Uploaded";
 $locale['427'] = "News Cats Images";
 $locale['428'] = "Blog Images";
@@ -26,5 +26,6 @@ $locale['460'] = "Images";
 $locale['461'] = "View";
 $locale['463'] = "This folder is empty";
 $locale['464'] = "Update image list for TinyMCE editor";
+$locale['465'] = "Image list updated";
 // Popup Error/Warning Messages
 $locale['470'] = "Delete this image?";
