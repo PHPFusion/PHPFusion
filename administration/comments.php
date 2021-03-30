@@ -91,6 +91,7 @@ function comments_settings() {
     if (check_post('savesettings')) {
         $inputData = [
             'comments_enabled'  => post('comments_enabled') ? 1 : 0,
+            'guestposts'        => post('guestposts') ? 1 : 0,
             'comments_per_page' => sanitizer('comments_per_page', '10', 'comments_per_page'),
             'comments_avatar'   => post('comments_avatar') ? 1 : 0,
             'comments_sorting'  => sanitizer('comments_sorting', 'DESC', 'comments_sorting')
@@ -112,6 +113,9 @@ function comments_settings() {
     openside('');
     echo openform('settingsform', 'post', FUSION_REQUEST);
     echo form_checkbox('comments_enabled', $locale['671'], $settings['comments_enabled'], [
+        'toggle' => TRUE
+    ]);
+    echo form_checkbox('guestposts', $locale['655'], $settings['guestposts'], [
         'toggle' => TRUE
     ]);
     echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar'], [
