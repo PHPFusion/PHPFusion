@@ -16,26 +16,28 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('S9');
 require_once THEMES.'templates/admin_header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
+pageAccess('S9');
+
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+
+add_breadcrumb(['link' => ADMIN.'settings_user.php'.fusion_get_aidlink(), 'title' => $locale['user_settings']]);
 
 $settings = fusion_get_settings();
 
-if (isset($_POST['savesettings'])) {
+if (check_post('savesettings')) {
     $inputData = [
         'enable_deactivation'   => post('enable_deactivation') ? 1 : 0,
-        'deactivation_period'   => form_sanitizer($_POST['deactivation_period'], '365', 'deactivation_period'),
-        'deactivation_response' => form_sanitizer($_POST['deactivation_response'], '14', 'deactivation_response'),
-        'deactivation_action'   => form_sanitizer($_POST['deactivation_action'], '0', 'deactivation_action'),
+        'deactivation_period'   => sanitizer('deactivation_period', '365', 'deactivation_period'),
+        'deactivation_response' => sanitizer('deactivation_response', '14', 'deactivation_response'),
+        'deactivation_action'   => sanitizer('deactivation_action', '0', 'deactivation_action'),
         'hide_userprofiles'     => post('hide_userprofiles') ? 1 : 0,
-        'avatar_filesize'       => form_sanitizer($_POST['calc_b'], '15', 'calc_b') * form_sanitizer($_POST['calc_c'], '100000', 'calc_c'),
-        'avatar_width'          => form_sanitizer($_POST['avatar_width'], '100', 'avatar_width'),
-        'avatar_height'         => form_sanitizer($_POST['avatar_height'], '100', 'avatar_height'),
-        'avatar_ratio'          => form_sanitizer($_POST['avatar_ratio'], '0', 'avatar_ratio'),
+        'avatar_filesize'       => sanitizer('calc_b', '15', 'calc_b') * sanitizer('calc_c', '100000', 'calc_c'),
+        'avatar_width'          => sanitizer('avatar_width', '100', 'avatar_width'),
+        'avatar_height'         => sanitizer('avatar_height', '100', 'avatar_height'),
+        'avatar_ratio'          => sanitizer('avatar_ratio', '0', 'avatar_ratio'),
         'username_change'       => post('username_change') ? 1 : 0,
-        'username_ban'          => stripinput($_POST['username_ban']),
+        'username_ban'          => stripinput(post('username_ban')),
         'userthemes'            => post('userthemes') ? 1 : 0,
         'multiple_logins'       => post('multiple_logins') ? 1 : 0,
     ];
@@ -60,7 +62,7 @@ if (isset($_POST['savesettings'])) {
 opentable($locale['user_settings']);
 echo "<div class='well'>".$locale['user_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
+echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 
 echo form_checkbox('enable_deactivation', $locale['1002'], $settings['enable_deactivation'], ['toggle' => TRUE]);
@@ -134,7 +136,7 @@ echo form_select('avatar_ratio', $locale['1001'], $settings['avatar_ratio'], [
 ]);
 closeside();
 echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
+echo "<div class='col-xs-12 col-sm-6'>\n";
 openside('');
 echo form_checkbox('hide_userprofiles', $locale['673'], $settings['hide_userprofiles'], ['toggle' => TRUE]);
 closeside();
