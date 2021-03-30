@@ -299,7 +299,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             if (fusion_safe()) {
                 if (!empty($this->data['link_id'])) {
 
-                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language", "update");
+                    dbquery_order(DB_SITE_LINKS, $this->data['link_order'], "link_order", $this->data['link_id'], "link_id", $this->data['link_cat'], "link_cat", multilang_table("SL"), "link_language");
 
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'update');
 
@@ -535,7 +535,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         echo "<th>".$this->locale["SL_0052"]."</th>";
         echo "</tr>";
         echo "</thead><tbody class='sort'></tbody></table>";
-        echo form_hidden("table_action", "", "");
+        echo form_hidden("table_action");
         echo closeform();
         echo closetabbody();
         echo closetab();
