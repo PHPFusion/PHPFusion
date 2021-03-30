@@ -27,13 +27,12 @@ add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title
 if (check_post('savesettings')) {
     $inputData = [
         'tinymce_enabled'        => post('tinymce_enabled') ? 1 : 0,
-        'smtp_host'              => form_sanitizer($_POST['smtp_host'], '', 'smtp_host'),
-        'smtp_port'              => form_sanitizer($_POST['smtp_port'], '', 'smtp_port'),
-        'smtp_auth'              => isset($_POST['smtp_auth']) && !empty($_POST['smtp_username']) && !empty($_POST['smtp_password']) ? 1 : 0,
-        'smtp_username'          => form_sanitizer($_POST['smtp_username'], '', 'smtp_username'),
-        'smtp_password'          => form_sanitizer($_POST['smtp_password'], '', 'smtp_password'),
-        'thumb_compression'      => form_sanitizer($_POST['thumb_compression'], '0', 'thumb_compression'),
-        'guestposts'             => post('guestposts') ? 1 : 0,
+        'smtp_host'              => sanitizer('smtp_host', '', 'smtp_host'),
+        'smtp_port'              => sanitizer('smtp_port', '', 'smtp_port'),
+        'smtp_auth'              => check_post('smtp_auth') && !empty(post('smtp_username')) && !empty(post('smtp_password')) ? 1 : 0,
+        'smtp_username'          => sanitizer('smtp_username', '', 'smtp_username'),
+        'smtp_password'          => sanitizer('smtp_password', '', 'smtp_password'),
+        'thumb_compression'      => sanitizer('thumb_compression', '0', 'thumb_compression'),
         'ratings_enabled'        => post('ratings_enabled') ? 1 : 0,
         'visitorcounter_enabled' => post('visitorcounter_enabled') ? 1 : 0,
         'rendertime_enabled'     => sanitizer('rendertime_enabled', '0', 'rendertime_enabled'),
@@ -62,14 +61,9 @@ if (check_post('savesettings')) {
 opentable($locale['misc_settings']);
 echo "<div class='well'>".$locale['misc_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
+$choice_arr = [1 => $locale['yes'], 0 => $locale['no']];
 echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
-openside('');
-$choice_arr = ['1' => $locale['yes'], '0' => $locale['no']];
-echo form_checkbox('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
-    'toggle' => TRUE
-]);
-closeside();
+echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
 echo form_text('smtp_host', $locale['664'], $settings['smtp_host'], [
     'max_length' => 200,
@@ -102,20 +96,43 @@ echo form_checkbox('rendertime_enabled', $locale['688'], $settings['rendertime_e
 ]);
 closeside();
 
-echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-4'>\n";
+openside('');
+$options = [
+    '.' => '.',
+    ',' => ','
+];
+echo form_select('number_delimiter', $locale['611'], $settings['number_delimiter'], [
+    'options' => $options,
+    'width'   => '100%'
+]);
+echo form_select('thousands_separator', $locale['612'], $settings['thousands_separator'], [
+    'options' => $options,
+    'width'   => '100%'
+]);
+closeside();
+
+echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+openside('');
+echo form_checkbox('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
+    'toggle' => TRUE
+]);
+closeside();
 openside('');
 $gd_opts = ['gd1' => $locale['607'], 'gd2' => $locale['608']];
 echo form_select('thumb_compression', $locale['606'], $settings['thumb_compression'], [
     'options' => $gd_opts,
     'width'   => '100%'
 ]);
-echo form_checkbox('guestposts', $locale['655'], $settings['guestposts'], [
-    'toggle' => TRUE
-]);
-echo form_checkbox('ratings_enabled', $locale['672'], $settings['ratings_enabled'], [
-    'toggle' => TRUE
-]);
+closeside();
+
+openside('');
 echo form_checkbox('visitorcounter_enabled', $locale['679'], $settings['visitorcounter_enabled'], [
+    'toggle' => TRUE
+]);
+closeside();
+
+openside('');
+echo form_checkbox('ratings_enabled', $locale['672'], $settings['ratings_enabled'], [
     'toggle' => TRUE
 ]);
 closeside();
@@ -142,24 +159,6 @@ openside('');
 echo form_checkbox('update_checker', $locale['610'], $settings['update_checker'], [
     'toggle' => TRUE
 ]);
-closeside();
-
-openside('');
-
-$options = [
-    '.' => '.',
-    ',' => ','
-];
-echo form_select('number_delimiter', $locale['611'], $settings['number_delimiter'], [
-    'options' => $options,
-    'width'   => '100%'
-]);
-
-echo form_select('thousands_separator', $locale['612'], $settings['thousands_separator'], [
-    'options' => $options,
-    'width'   => '100%'
-]);
-
 closeside();
 
 echo "</div>\n</div>";
