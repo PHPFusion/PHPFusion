@@ -33,7 +33,7 @@ class Members_Profile extends Members_Admin {
      * Displays new user form
      */
     public static function display_new_user_form() {
-        if (isset($_POST['add_new_user'])) {
+        if (check_post('add_new_user')) {
             $userInput = new UserFieldsInput();
             $userInput->validation = FALSE;
             $userInput->emailVerification = FALSE;
@@ -80,7 +80,7 @@ class Members_Profile extends Members_Admin {
     }
 
     public static function edit_user_profile() {
-        if (isset($_POST['savechanges'])) {
+        if (check_post('savechanges')) {
             $userInput = new \UserFieldsInput();
             $userInput->userData = self::$user_data; // full user data
             $userInput->adminActivation = 0;
@@ -111,8 +111,7 @@ class Members_Profile extends Members_Admin {
     }
 
     public static function delete_user() {
-
-        if (isset($_POST['delete_user'])) {
+        if (check_post('delete_user')) {
             $result = dbquery("SELECT user_id, user_avatar FROM ".DB_USERS." WHERE user_id=:user_id AND user_level >:user_level",
                 [
                     ':user_id'    => self::$user_id,
@@ -249,14 +248,14 @@ class Members_Profile extends Members_Admin {
     }
 
     public static function delete_unactivated_user() {
-        if (isset($_POST['delete_newuser'])) {
-            dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
+        if (check_post('delete_newuser')) {
+            dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_name=:user_name", [':user_name' => get('lookup')]);
             redirect(clean_request('', ['ref', 'lookup', 'newuser'], FALSE));
         }
 
         echo "<div class='well'>\n";
         echo "<h4>".self::$locale['ME_454']."</h4>";
-        echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".$_GET['lookup']."</strong>"))."</p>\n";
+        echo "<p>".nl2br(sprintf(self::$locale['ME_457'], "<strong>".get('lookup')."</strong>"))."</p>\n";
         echo openform('mod_form', 'post', FUSION_REQUEST);
         echo "<div class='spacer-sm'>\n";
         echo form_button('delete_newuser', self::$locale['ME_456'], self::$locale['ME_456'], ['class' => 'btn-danger m-r-10']);
@@ -267,21 +266,21 @@ class Members_Profile extends Members_Admin {
     }
 
     public static function activate_user() {
-        $result = dbquery("SELECT * FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_name=:name", [':code' => $_GET['code'], ':name' => $_GET['lookup']]);
+        $result = dbquery("SELECT * FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_name=:name", [':code' => get('code'), ':name' => get('lookup')]);
 
         $data = dbarray($result);
         $user_info = unserialize(base64_decode($data['user_info']));
         dbquery_insert(DB_USERS, $user_info, 'save');
-        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code", [':code' => $_GET['code']]);
+        dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code", [':code' => get('code')]);
 
         addNotice('success', self::$locale['ME_469']);
         redirect(clean_request('', ['ref', 'lookup', 'code'], FALSE));
     }
 
     public static function resend_email() {
-        if (isset($_GET['lookup']) && !isnum($_GET['lookup'])) {
+        if (check_get('lookup') && !isnum(get('lookup'))) {
             $dbquery = dbquery("SELECT * FROM ".DB_NEW_USERS."
-                WHERE user_name=:username", [':username' => $_GET['lookup']]);
+                WHERE user_name=:username", [':username' => get('lookup')]);
             if (dbrows($dbquery)) {
                 require_once INCLUDES."sendmail_include.php";
                 self::$user_data = dbarray($dbquery);
@@ -296,7 +295,7 @@ class Members_Profile extends Members_Admin {
                 }
 
                 if (\defender::safe()) {
-                    dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => $_GET['lookup']]);
+                    dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => get('lookup')]);
                     addNotice('success', self::$locale['u165']);
                     redirect(clean_request('', ['ref', 'lookup'], FALSE));
                 }

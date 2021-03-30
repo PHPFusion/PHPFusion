@@ -17,14 +17,13 @@
 +--------------------------------------------------------*/
 require_once "../../maincore.php";
 
-$aid = isset($_GET['aidlink']) ? explode('=', $_GET['aidlink']) : '';
+$aid = explode('=', get('aidlink'));
 
 if (!empty($aid)) {
     $aid = $aid[1];
 }
-$id = isset($_GET['error_id']) && isnum($_GET['error_id']) ? $_GET['error_id'] : 0;
-
-$type = isset($_GET['error_type']) && isnum($_GET['error_type']) ? $_GET['error_type'] : 0;
+$id = get('error_id', FILTER_SANITIZE_NUMBER_INT);
+$type = get('error_type', FILTER_SANITIZE_NUMBER_INT);
 
 if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
 

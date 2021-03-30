@@ -43,13 +43,13 @@ function display_sitelinks() {
         $orderby = "ORDER BY sl.link_order";
 
         $ordering = [];
-        if (!empty($_POST["order"])) {
-            foreach ($_POST["order"] as $order) {
+        if (!empty(post(['order']))) {
+            foreach (post(['order']) as $order) {
                 $column_index = $order["column"];
                 if (!$column_index or $column_index == 1) {
                     $column_index = 6;
                 }
-                if ($column_name = post(["columns", $column_index, "data"])) {
+                if ($column_name = post(['columns', $column_index, 'data'])) {
                     $ordering[] = form_sanitizer($column_name)." ".form_sanitizer($order["dir"]);
                 }
             }

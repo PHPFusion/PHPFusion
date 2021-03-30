@@ -188,18 +188,18 @@ class Members_Action extends Members_Admin {
         if (!empty($this->users)) {
             $u_name = [];
 
-            if (isset($_POST['post_action'])) {
+            if (check_post('post_action')) {
                 $settings = fusion_get_settings();
                 $userdata = fusion_get_userdata();
                 $reason = '';
 
                 if (!empty($this->action_map[$this->action]['reason'])) {
-                    $reason = form_sanitizer($_POST['reason'], '', 'reason');
+                    $reason = sanitizer('reason', '', 'reason');
                 }
 
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
-                    $duration = form_sanitizer($_POST['duration'], '', 'duration');
+                    $duration = sanitizer('duration', '', 'duration');
                     $duration = ($duration * 86400) + TIME;
                 }
 
@@ -255,7 +255,7 @@ class Members_Action extends Members_Admin {
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),
                         [
-                            '{%user_avatar%}' => display_avatar($user_data, $height, '', '', ''),
+                            '{%user_avatar%}' => display_avatar($user_data, $height, '', FALSE),
                             '{%height%}'      => $height,
                             '{%user_name%}'   => $user_data['user_name']
                         ]

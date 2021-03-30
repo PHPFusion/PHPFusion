@@ -70,11 +70,11 @@ class Members_Admin {
             LOCALE.LOCALESET."user_fields.php"
         ]);
 
-        self::$rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
-        self::$sortby = (isset($_GET['sortby']) ? stripinput($_GET['sortby']) : "all");
-        self::$status = (isset($_GET['status']) && isnum($_GET['status'] && $_GET['status'] < 9) ? $_GET['status'] : 0);
+        self::$rowstart = get('rowstart', FILTER_SANITIZE_NUMBER_INT);
+        self::$sortby = check_get('sortby') ? stripinput(get('sortby')) : "all";
+        self::$status = check_get('status') && get('status', FILTER_SANITIZE_NUMBER_INT) < 9 ? get('status') : 0;
+        self::$usr_mysql_status = check_get('usr_mysql_status') && get('usr_mysql_status', FILTER_SANITIZE_NUMBER_INT) < 9 ? get('usr_mysql_status') : 0;
 
-        self::$usr_mysql_status = (isset($_GET['usr_mysql_status']) && isnum($_GET['usr_mysql_status'] && $_GET['usr_mysql_status'] < 9) ? $_GET['usr_mysql_status'] : 0);
         if (self::$status == 0 && fusion_get_settings('enable_deactivation') == 1) {
             self::$usr_mysql_status = "0' AND user_lastvisit>'".self::$time_overdue."' AND user_actiontime='0";
         } else if (self::$status == 8 && fusion_get_settings('enable_deactivation') == 1) {
@@ -103,7 +103,7 @@ class Members_Admin {
             'activate'              => $base_url.'&amp;ref=activate&amp;lookup=',
         ];
 
-        self::$user_id = (isset($_GET['lookup']) && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => isnum($_GET['lookup']) ? $_GET['lookup'] : 0]) ? $_GET['lookup'] : 0);
+        self::$user_id = (check_get('lookup') && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => get('lookup')]) ? get('lookup') : 0);
 
         self::$is_admin = FALSE;
 
@@ -174,7 +174,7 @@ class Members_Admin {
                             redirect(FUSION_SELF.fusion_get_aidlink());
                         }
 
-                        if (isset($_POST['deactivate_users']) && \defender::safe()) {
+                        if (check_post('deactivate_users') && \defender::safe()) {
                             require_once INCLUDES."sendmail_include.php";
                             $result = dbquery("SELECT user_id, user_name, user_email, user_password FROM ".DB_USERS."
                                         WHERE user_level>".USER_LEVEL_SUPER_ADMIN." AND user_lastvisit<'".self::$time_overdue."' AND user_actiontime='0' AND user_status='0'
@@ -272,8 +272,8 @@ class Members_Admin {
                     }
                     break;
                 case 'delete':
-                    if (!empty($_GET['newuser'])) {
-                        opentable(sprintf(self::$locale['ME_453'], $_GET['lookup']));
+                    if (!empty(get('newuser'))) {
+                        opentable(sprintf(self::$locale['ME_453'], get('lookup')));
                         Members_Profile::delete_unactivated_user();
                         closetable();
 
