@@ -16,20 +16,21 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess("S7");
 require_once THEMES.'templates/admin_header.php';
+pageAccess('S7');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_messages.php'.fusion_get_aidlink(), 'title' => $locale['message_settings']]);
 
 $settings = fusion_get_settings();
 
-if (isset($_POST['save_settings'])) {
+if (check_post('save_settings')) {
     $inputData = [
-        'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
-        'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
-        'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-        'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
-        'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+        'pm_inbox_limit'   => sanitizer('pm_inbox_limit', '20', 'pm_inbox_limit'),
+        'pm_outbox_limit'  => sanitizer('pm_outbox_limit', '20', 'pm_outbox_limit'),
+        'pm_archive_limit' => sanitizer('pm_archive_limit', '20', 'pm_archive_limit'),
+        'pm_email_notify'  => sanitizer('pm_email_notify', '1', 'pm_email_notify'),
+        'pm_save_sent'     => sanitizer('pm_save_sent', '1', 'pm_save_sent')
     ];
 
     if (\defender::safe()) {
@@ -45,7 +46,7 @@ if (isset($_POST['save_settings'])) {
     }
 }
 
-if (isset($_POST['delete-messages'])) {
+if (check_post('delete_messages')) {
     dbquery("TRUNCATE TABLE ".DB_MESSAGES);
     addNotice('success', $locale['712']);
     redirect(FUSION_REQUEST);
@@ -93,8 +94,8 @@ closeside();
 echo "<div class='panel panel-danger'><div class='panel-body'>";
 openform('delete-pm', 'post', FUSION_REQUEST);
 fusion_confirm_exit();
-add_to_jquery("$('#delete-messages').bind('click', function() { return confirm('".$locale['713']."'); });");
-echo form_button('delete-messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
+add_to_jquery("$('#delete_messages').bind('click', function() { return confirm('".$locale['713']."'); });");
+echo form_button('delete_messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
 echo "</div></div>";
 
 echo "</div>\n</div>\n";
