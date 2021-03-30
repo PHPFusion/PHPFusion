@@ -24,13 +24,12 @@ $settings = fusion_get_settings();
 
 add_breadcrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
 
-
 $is_multilang = count(fusion_get_enabled_languages()) > 1;
 
 if (check_post('savesettings')) {
     $inputData = [
         'login_method'        => sanitizer('login_method', '0', 'login_method'),
-        'license_agreement'   => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', $is_multilang),
+        'license_agreement'   => sanitizer('license_agreement', '', 'license_agreement', $is_multilang),
         'enable_registration' => post('enable_registration') ? 1 : 0,
         'email_verification'  => post('email_verification') ? 1 : 0,
         'admin_activation'    => post('admin_activation') ? 1 : 0,
