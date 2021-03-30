@@ -56,7 +56,7 @@ opentable($locale['message_settings']);
 echo "<div class='well'>".$locale['message_description']."</div>\n";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-6'>\n";
-openside('');
+openside($locale['707']);
 echo form_text('pm_inbox_limit', $locale['701'], $settings['pm_inbox_limit'], [
     'type'        => 'number',
     'max_length'  => 2,
@@ -78,8 +78,16 @@ echo form_text('pm_archive_limit', $locale['703'], $settings['pm_archive_limit']
 ]);
 closeside();
 
-echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
+// Danger zone
 openside('');
+fusion_confirm_exit();
+add_to_jquery("$('#delete_messages').bind('click', function() { return confirm('".$locale['713']."'); });");
+echo form_button('delete_messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
+closeside();
+
+echo "</div>\n<div class='col-xs-12 col-sm-6'>\n";
+openside($locale['708']);
+echo '<div class="m-b-10">'.$locale['711'].'</div>';
 echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
     'options' => ['1' => $locale['no'], '2' => $locale['yes']],
     'width'   => '100%'
@@ -89,14 +97,6 @@ echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
     'width'   => '100%'
 ]);
 closeside();
-
-// Danger zone
-echo "<div class='panel panel-danger'><div class='panel-body'>";
-openform('delete-pm', 'post', FUSION_REQUEST);
-fusion_confirm_exit();
-add_to_jquery("$('#delete_messages').bind('click', function() { return confirm('".$locale['713']."'); });");
-echo form_button('delete_messages', $locale['714'], $locale['714'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash-o']);
-echo "</div></div>";
 
 echo "</div>\n</div>\n";
 echo form_button('save_settings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
