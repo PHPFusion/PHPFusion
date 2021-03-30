@@ -119,12 +119,12 @@ $settings = fusion_get_settings();
 // Saving settings
 if (check_post('savesettings')) {
     $inputData = [
-        'siteintro'      => form_sanitizer(addslashes(post('siteintro')), '', 'siteintro'),
+        'siteintro'      => sanitizer('siteintro', '', 'siteintro'),
         'sitename'       => sanitizer('sitename', '', 'sitename'),
         'sitebanner'     => sanitizer('sitebanner', '', 'sitebanner'),
         'siteemail'      => sanitizer('siteemail', '', 'siteemail'),
         'siteusername'   => sanitizer('siteusername', '', 'siteusername'),
-        'footer'         => form_sanitizer(addslashes(post('footer')), '', 'footer'),
+        'footer'         => sanitizer('footer', '', 'footer'),
         'site_protocol'  => sanitizer('site_protocol', '', 'site_protocol'),
         'site_host'      => sanitizer('site_host', '', 'site_host'),
         'site_path'      => sanitizer('site_path', '', 'site_path'),
@@ -210,14 +210,16 @@ echo form_text('siteusername', $locale['406'], $settings['siteusername'], [
     'error_text' => $locale['error_value']
 ]);
 echo form_textarea('siteintro', $locale['407'], stripslashes($settings['siteintro']), [
-    'type'     => 'html',
-    'autosize' => TRUE,
-    'inline'   => TRUE
+    'type'      => 'html',
+    'autosize'  => TRUE,
+    'inline'    => TRUE,
+    'form_name' => 'settingsform'
 ]);
 echo form_textarea('footer', $locale['412'], stripslashes($settings['footer']), [
-    'autosize' => TRUE,
-    'type'     => 'html',
-    'inline'   => TRUE
+    'autosize'  => TRUE,
+    'type'      => 'html',
+    'inline'    => TRUE,
+    'form_name' => 'settingsform'
 ]);
 echo form_textarea('description', $locale['409'], $settings['description'], [
     'autosize' => TRUE,
