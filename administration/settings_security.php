@@ -33,7 +33,6 @@ if ($temp = opendir(INCLUDES."captchas/")) {
     }
 }
 
-
 $is_multilang = count(fusion_get_enabled_languages()) > 1;
 
 if (check_post('clear_cache')) {
@@ -53,7 +52,7 @@ if (check_post('savesettings')) {
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
         'display_validation'    => post('display_validation') ? 1 : 0,
-        'privacy_policy'        => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', $is_multilang),
+        'privacy_policy'        => sanitizer('privacy_policy', '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => post('allow_php_exe') ? 1 : 0,
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => post('flood_autoban') ? 1 : 0,
@@ -61,7 +60,7 @@ if (check_post('savesettings')) {
         'maintenance'           => post('maintenance') ? 1 : 0,
         'maintenance_message'   => sanitizer('maintenance_message', '', 'maintenance_message'),
         'bad_words_enabled'     => post('bad_words_enabled') ? 1 : 0,
-        'bad_words'             => stripinput($_POST['bad_words']),
+        'bad_words'             => stripinput(post('bad_words')),
         'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
         'database_sessions'     => sanitizer('database_sessions', 0, 'database_sessions'),
         'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
