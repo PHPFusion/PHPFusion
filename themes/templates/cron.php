@@ -24,7 +24,6 @@ $settings = fusion_get_settings();
 if (fusion_get_settings("cronjob_hour") < (TIME - 360)) {
     $crontime = (TIME - 360);
     dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < $crontime");
-    dbquery("DELETE FROM ".DB_USERS." WHERE user_joined='0' AND user_ip='0.0.0.0' and user_level=".USER_LEVEL_SUPER_ADMIN);
     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => TIME, ':name' => 'cronjob_hour']);
 }
 
