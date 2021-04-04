@@ -531,7 +531,7 @@ class ShoutBox {
                 }
 
                 $data['profile_link'] = profile_link($data['shout_name'], $data['user_name'], $data['user_status']);
-                $data['message'] = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                $data['message'] = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE, NULL, TRUE);
 
                 $sdata['items'][] = $data;
             }
