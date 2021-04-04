@@ -451,7 +451,7 @@ class ShoutBox {
                 echo "</div>\n";
                 echo '</div>';
                 echo '<div class="col-sm-6">';
-                echo parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                echo parse_textarea($data['shout_message'], TRUE, TRUE, FALSE, NULL, TRUE);
                 echo '</div>';
                 echo '<div class="col-sm-3">';
                 echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
@@ -585,7 +585,7 @@ class ShoutBox {
                 echo timer($data['shout_datestamp']);
                 echo "</div>\n";
 
-                $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE);
+                $shout_message = parse_textarea($data['shout_message'], TRUE, TRUE, FALSE, NULL, TRUE);
                 echo "<div class='shoutbox overflow-hide'>".$shout_message."</div>\n";
                 echo "</div>\n";
             }
