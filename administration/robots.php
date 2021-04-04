@@ -40,7 +40,7 @@ $file = BASEDIR."robots.txt";
 if (check_post('save_robots')) {
     $robots_content = sanitizer('robots_content', '', 'robots_content');
 
-    if (!preg_check("/^[-0-9A-Z._\*\:\.\/@\s]+$/i", $robots_content)) {
+    if (!preg_check("/^[-0-9A-Z._\*\:\.\!\/@\s]+$/i", $robots_content)) {
         \defender::stop();
         addNotice("danger", $locale['ROBOT_417']);
     }
