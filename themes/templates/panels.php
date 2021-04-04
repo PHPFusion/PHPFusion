@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Rewrite\Router;
+
 if (!defined("IN_FUSION")) {
     die("Access Denied");
 }
@@ -84,30 +87,41 @@ foreach ($p_name as $p_key => $p_side) {
                     $url_arr = explode("\r\n", $p_data['panel_url_list']);
                     $url = [];
 
-                    $source = "/".PERMALINK_CURRENT_PATH;
+                    if (fusion_get_settings("site_seo")) {
+                        $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                        $script_url = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                    } else {
+                        $script_url = '/'.PERMALINK_CURRENT_PATH;
+                    }
 
                     foreach ($url_arr as $url_list) {
                         $url[] = $url_list;
-                        if (wildcard_match($source, $url_list)) {
-                            $url[] = $source;
+                        if (wildcard_match($script_url, $url_list)) {
+                            $url[] = $script_url;
                         }
                     }
 
+                    $show_panel = FALSE;
+
                     if ($p_data['panel_url_list'] == ""
-                        || ($p_data['panel_restriction'] == 1 && (!in_array("/".PERMALINK_CURRENT_PATH, $url) && !in_array("/".PERMALINK_CURRENT_PATH, $url)))
-                        || ($p_data['panel_restriction'] == 0 && (in_array("/".PERMALINK_CURRENT_PATH, $url) || in_array("/".PERMALINK_CURRENT_PATH, $url)))) {
+                        || ($p_data['panel_restriction'] == 1 && (!in_array($script_url, $url) && !in_array($script_url, $url)))
+                        || ($p_data['panel_restriction'] == 0 && (in_array($script_url, $url) || in_array($script_url, $url)))) {
 
                         if (($p_data['panel_side'] != 2 && $p_data['panel_side'] != 3 && $p_data['panel_side'] != 5 && $p_data['panel_side'] != 6) || $p_data['panel_display'] == 1 || $settings['opening_page'] == START_PAGE) {
-                            if ($p_data['panel_type'] == "file") {
-                                if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
-                                    include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
-                                }
+                            $show_panel = TRUE;
+                        }
+                    }
+
+                    if ($show_panel === TRUE) {
+                        if ($p_data['panel_type'] == "file") {
+                            if (file_exists(INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php")) {
+                                include INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
+                            }
+                        } else {
+                            if (fusion_get_settings('allow_php_exe')) {
+                                eval(stripslashes($p_data['panel_content']));
                             } else {
-                                if (fusion_get_settings('allow_php_exe')) {
-                                    eval(stripslashes($p_data['panel_content']));
-                                } else {
-                                    echo stripslashes($p_data['panel_content']);
-                                }
+                                echo stripslashes($p_data['panel_content']);
                             }
                         }
                     }
