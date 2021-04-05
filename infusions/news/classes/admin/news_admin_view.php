@@ -31,13 +31,13 @@ class NewsAdminView extends NewsAdminModel {
 
     public function display_admin() {
 
-        if (isset($_GET['section']) && $_GET['section'] == 'back') {
+        if (check_get('section') && get('section') == "back") {
             redirect(clean_request('', ['ref', 'section', 'news_id', 'action', 'cat_id'], FALSE));
         }
 
         $locale = self::get_newsAdminLocale();
 
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $this->allowed_pages) ? $_GET['section'] : $this->allowed_pages[0];
+        $sections = in_array(get('section'), $this->allowed_pages) ? get('section') : $this->allowed_pages[0];
 
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
 
@@ -51,10 +51,10 @@ class NewsAdminView extends NewsAdminModel {
 
         $news_title = $locale['news_0001'];
         $news_icon = 'fa fa-newspaper-o m-r-5';
-        if (isset($_GET['ref']) && $_GET['ref'] == "news_form") {
+        if (check_get('ref') && get('ref') == "news_form") {
             $news_title = $locale['news_0002'];
             $news_icon = 'fa fa-plus m-r-5';
-            if (isset($_GET['news_id'])) {
+            if (check_get('news_id')) {
                 $news_title = $locale['edit'];
                 $news_icon = 'fa fa-pencil m-r-5';
             }
@@ -65,27 +65,13 @@ class NewsAdminView extends NewsAdminModel {
         $tab['icon'][] = $news_icon;
 
         $news_cat_title = $locale['news_0020'];
-        if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
+        if (check_get('ref') && get('ref') == "news_cat_form") {
             $news_cat_title = $locale['news_0022'];
-            if (isset($_GET['news_cat_id'])) {
+            if (check_get('cat_id')) {
                 $news_cat_title = $locale['news_0021'];
             }
         }
-        if (!empty($_GET['section'])) {
-            switch ($_GET['section']) {
-                case "news_category":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $news_cat_title]);
-                    break;
-                case "settings":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0004']]);
-                    break;
-                case "submissions":
-                    BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['news_0023']]);
-                    break;
-                default:
-            }
-        }
-        $edit = (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id']));
+        $edit = (check_get('action') && get('action') == 'edit' && check_get('cat_id') && isnum(get('cat_id')));
 
         if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
             addNotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
@@ -104,8 +90,8 @@ class NewsAdminView extends NewsAdminModel {
         $tab['icon'][] = 'fa fa-cogs m-r-5';
 
         opentable($locale['news_0001']);
-        echo opentab($tab, $_GET['section'], 'news_admin', TRUE, '', 'section');
-        switch ($_GET['section']) {
+        echo opentab($tab, $sections, 'news_admin', TRUE, '', 'section', ['ref', 'rowstart', 'action', 'submit_id', 'cat_id', 'news_id']);
+        switch ($sections) {
             case 'news_category':
                 NewsCategoryAdmin::getInstance()->displayNewsAdmin();
                 break;
