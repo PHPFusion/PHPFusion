@@ -33,14 +33,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
     public function displayWeblinksAdmin() {
         pageAccess("W");
-        $cancel = filter_input(INPUT_GET, 'cancel', FILTER_DEFAULT);
-        if (!empty($cancel)) {
+        if (check_get('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
         $this->locale = fusion_get_locale("", WEBLINK_ADMIN_LOCALE);
         $this->weblinksSettings = self::get_weblink_settings();
 
-        $ref = filter_input(INPUT_GET, 'ref');
+        $ref = get('ref');
         if (!empty($ref) && $ref == "weblinkform") {
             $this->display_weblinks_form();
         } else {
@@ -62,8 +61,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
         /**
          * Global vars
          */
-        $weblink_id = filter_input(INPUT_GET, 'weblink_id', FILTER_VALIDATE_INT);
-        $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
+        $weblink_id = get('weblink_id', FILTER_VALIDATE_INT);
+        $action = get('action', FILTER_DEFAULT);
         if ($action && ($action == "edit") && (!empty($weblink_id))) {
             $result = dbquery("SELECT * FROM ".DB_WEBLINKS." WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]);
             if (dbrows($result)) {
@@ -83,26 +82,25 @@ class WeblinksAdmin extends WeblinksAdminModel {
      */
     private function execute_Update() {
 
-        if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
+        if ((check_post('save')) or (check_post('save_and_close'))) {
 
             // Check posted Informations
-            $weblink_status = filter_input(INPUT_POST, 'weblink_status', FILTER_VALIDATE_INT);
             $this->weblink_data = [
-                'weblink_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_id', FILTER_VALIDATE_INT), 0, 'weblink_id'),
-                'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
-                'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
-                'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), '', 'weblink_url'),
-                'weblink_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT), '', 'weblink_description'),
-                'weblink_datestamp'   => form_sanitizer(filter_input(INPUT_POST, 'weblink_datestamp', FILTER_DEFAULT), '', 'weblink_datestamp'),
-                'weblink_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_visibility', FILTER_VALIDATE_INT), 0, 'weblink_visibility'),
-                'weblink_status'      => !empty($weblink_status) ? $weblink_status : '0',
-                'weblink_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT), LANGUAGE, 'weblink_language'),
+                'weblink_id'          => sanitizer('weblink_id', 0, 'weblink_id'),
+                'weblink_name'        => sanitizer('weblink_name', '', 'weblink_name'),
+                'weblink_cat'         => sanitizer('weblink_cat', 0, 'weblink_cat'),
+                'weblink_url'         => sanitizer('weblink_url', '', 'weblink_url'),
+                'weblink_description' => sanitizer('weblink_description', '', 'weblink_description'),
+                'weblink_datestamp'   => sanitizer('weblink_datestamp', '', 'weblink_datestamp'),
+                'weblink_visibility'  => sanitizer('weblink_visibility', 0, 'weblink_visibility'),
+                'weblink_status'      => sanitizer('weblink_status', 0, 'weblink_status'),
+                'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language'),
             ];
 
             // Handle
             if (\defender::safe()) {
 
-                $update_datestamp = filter_input(INPUT_POST, 'update_datestamp', FILTER_DEFAULT);
+                $update_datestamp = check_post('update_datestamp');
                 // Update
                 if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id=:weblinkid", [':weblinkid' => $this->weblink_data['weblink_id']])) {
                     $this->weblink_data['weblink_datestamp'] = !empty($update_datestamp) ? time() : $this->weblink_data['weblink_datestamp'];
@@ -115,7 +113,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 }
 
                 // Redirect
-                if (isset($_POST['save_and_close'])) {
+                if (check_post('save_and_close')) {
                     redirect(clean_request('', ['ref', 'action', 'weblink_id'], FALSE));
                 } else {
                     redirect(clean_request('action=edit&weblink_id='.$this->weblink_data['weblink_id'], ['action', 'weblink_id'], FALSE));
@@ -207,7 +205,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 echo form_hidden('weblink_status', '', 1);
                 echo form_hidden('weblink_datestamp', '', $this->weblink_data['weblink_datestamp']);
 
-                if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
+                if (get('action') && get('action') == 'edit') {
                     echo form_checkbox('update_datestamp', $this->locale['WLS_0259'], '');
                 }
 
@@ -258,12 +256,13 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete', 'verify', 'weblink_display']);
+        $table_action = post('table_action');
 
         // Table Actions
-        if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
+        if (check_post('table_action') && isset($allowed_actions[$table_action])) {
 
-            $input = (isset($_POST['weblink_id'])) ? explode(",", form_sanitizer($_POST['weblink_id'], '', 'weblink_id')) : "";
-            if (empty($input) && $_POST['table_action'] == "verify") {
+            $input = (check_post('weblink_id')) ? explode(",", form_sanitizer($_POST['weblink_id'], 0, 'weblink_id')) : "";
+            if (empty($input) && $table_action == "verify") {
                 self::verifyLink();
                 redirect(FUSION_REQUEST);
             }
@@ -273,7 +272,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     // check input table
                     if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]) && \defender::safe()) {
 
-                        switch ($_POST['table_action']) {
+                        switch ($table_action) {
                             case "publish":
                                 dbquery("UPDATE ".DB_WEBLINKS." SET weblink_status = :status WHERE weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id, ':status' => '1']);
                                 addNotice('success', $this->locale['WLS_0035']);
@@ -301,63 +300,65 @@ class WeblinksAdmin extends WeblinksAdminModel {
         }
 
         // Clear
-        if (isset($_POST['weblink_clear'])) {
+        if (check_post('weblink_clear')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
         // Search
-        $sql_condition = "";
+        $sql_condition = '';
         $search_string = [];
-        $p_submit_weblink_name = filter_input(INPUT_POST, 'p-submit-weblink_name', FILTER_DEFAULT);
-        $weblink_name = filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT);
-        if (!empty($p_submit_weblink_name)) {
+        $p_submit_weblink_name = check_post('p-submit-weblink_name');
+        //$weblink_name = filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT);
+        if (check_post('p-submit-weblink_name')) {
+        	$weblink_name = sanitizer('weblink_name', '', 'weblink_name');
             $search_string['weblink_name'] = [
-                'input' => form_sanitizer($weblink_name, '', 'weblink_name'), 'operator' => "LIKE", 'option' => "AND"
+                'input' => $weblink_name, 'operator' => "LIKE", 'option' => "AND"
             ];
             $search_string['weblink_url'] = [
-                'input' => form_sanitizer($weblink_name, '', 'weblink_name'), 'operator' => "LIKE", 'option' => "OR"
+                'input' => $weblink_name, 'operator' => "LIKE", 'option' => "OR"
             ];
             $search_string['weblink_description'] = [
-                'input' => form_sanitizer($weblink_name, '', 'weblink_name'), 'operator' => "LIKE", 'option' => "OR"
+                'input' => $weblink_name, 'operator' => "LIKE", 'option' => "OR"
             ];
         }
 
-        $weblink_status = filter_input(INPUT_POST, 'weblink_status', FILTER_VALIDATE_INT);
+        $weblink_status = post('weblink_status');
         if (!empty($weblink_status) && $weblink_status == "1") {
             $search_string['weblink_status'] = ['input' => 1, 'operator' => "=", 'option' => "AND"];
         }
 
-        $weblink_visibility = filter_input(INPUT_POST, 'weblink_visibility', FILTER_DEFAULT);
+        $weblink_visibility = post('weblink_visibility');
         if (!empty($weblink_visibility)) {
             $search_string['weblink_visibility'] = [
-                'input' => form_sanitizer($weblink_visibility, '', 'weblink_visibility'), 'operator' => "=", 'option' => "AND"
+                'input' => sanitizer('weblink_visibility', '', 'weblink_visibility'), 'operator' => "=", 'option' => "AND"
             ];
         }
 
-        $weblink_cat = filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT);
+        $weblink_cat = post('weblink_cat');
         if (!empty($weblink_cat)) {
             $search_string['weblink_cat'] = [
-                'input' => form_sanitizer($weblink_cat, '', 'weblink_cat'), 'operator' => "=", 'option' => "AND"
+                'input' => sanitizer('weblink_cat', '', 'weblink_cat'), 'operator' => "=", 'option' => "AND"
             ];
         }
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                $sql_condition .= $values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "' ");
             }
         }
 
         $limit = 16;
-        if ((!empty($_POST['weblink_display']) && isnum($_POST['weblink_display'])) || (!empty($_GET['weblink_display']) && isnum($_GET['weblink_display']))) {
-            $limit = (!empty($_POST['weblink_display']) ? $_POST['weblink_display'] : $_GET['weblink_display']);
+        $post_weblink = post('weblink_display');
+        $get_weblink = get('weblink_display');
+        if ((!empty($post_weblink) && isnum($post_weblink)) || (!empty($get_weblink) && isnum($get_weblink))) {
+            $limit = (!empty($post_weblink) ? $post_weblink : $get_weblink);
         }
 
-        $max_rows = dbcount("(weblink_id)", DB_WEBLINKS);
+        $max_rows = dbcount("(weblink_id)", DB_WEBLINKS, (multilang_table("WL") ? in_group('weblink_language', LANGUAGE) : '').$sql_condition);
         $rowstart = 0;
-        if (!isset($_POST['weblink_display'])) {
-            $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
+        if (!isset($post_weblink)) {
+            $rowstart = get_rowstart("rowstart", $max_rows);
         }
-
         // Query
         $result2 = dbquery("SELECT  w.*, wc.*
             FROM ".DB_WEBLINKS." w
@@ -372,10 +373,10 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
         // Filters
         $filter_values = [
-            'weblink_name'       => !empty($weblink_name) ? form_sanitizer($weblink_name, '', 'weblink_name') : '',
-            'weblink_status'     => !empty($weblink_status) ? form_sanitizer($weblink_status, '', 'weblink_status') : '',
-            'weblink_cat'        => !empty($weblink_cat) ? form_sanitizer($weblink_cat, '', 'weblink_cat') : '',
-            'weblink_visibility' => !empty($weblink_visibility) ? form_sanitizer($weblink_visibility, '', 'weblink_visibility') : ''
+            'weblink_name'       => !empty(post('weblink_name')) ? sanitizer('weblink_name', '', 'weblink_name') : '',
+            'weblink_status'     => !empty($weblink_status) ? sanitizer('weblink_status', 0, 'weblink_status') : '',
+            'weblink_cat'        => !empty($weblink_cat) ? sanitizer('weblink_cat', 0, 'weblink_cat') : '',
+            'weblink_visibility' => !empty($weblink_visibility) ? sanitizer('weblink_visibility', 0, 'weblink_visibility') : ''
         ];
 
         $filter_empty = TRUE;
@@ -644,8 +645,8 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
     // Weblinks Delete Function
     private function execute_Delete() {
-        $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
-        $weblink_id = filter_input(INPUT_GET, 'weblink_id', FILTER_VALIDATE_INT);
+        $action = get('action', FILTER_DEFAULT);
+        $weblink_id = get('weblink_id', FILTER_VALIDATE_INT);
 
         if (!empty($action) && ($action == "delete") && !empty($weblink_id)) {
 

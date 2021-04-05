@@ -34,12 +34,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         $this->locale = self::get_WeblinkAdminLocale();
 
         // Cancel Form
-        $cancel = filter_input(INPUT_GET, 'cancel', FILTER_DEFAULT);
-        if (!empty($cancel)) {
+        //$cancel = check_get('cancel');
+        if (check_get('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=weblinks_category");
         }
 
-        $ref = filter_input(INPUT_GET, 'ref');
+        $ref = get('ref');
         if (!empty($ref) && $ref == "weblink_cat_form") {
             $this->display_weblinks_cat_form();
         } else {
@@ -63,19 +63,18 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         ];
 
         // Save
-        $save_cat = filter_input(INPUT_POST, 'save_cat', FILTER_DEFAULT) || filter_input(INPUT_POST, 'save_cat_and_close', FILTER_DEFAULT);
-        $action = filter_input(INPUT_GET, 'action', FILTER_DEFAULT);
-        $cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
-        if (!empty($save_cat)) {
+        $action = get('action', FILTER_DEFAULT);
+        $cat_id = get('cat_id', FILTER_VALIDATE_INT);
+        if (check_post('save_cat') || check_post('save_cat_and_close')) {
             // Check Fields
             $inputArray = [
-                'weblink_cat_id'          => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_id', FILTER_DEFAULT), 0, 'weblink_cat_id'),
-                'weblink_cat_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT), '', 'weblink_cat_name'),
-                'weblink_cat_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_description', FILTER_DEFAULT), '', 'weblink_cat_description'),
-                'weblink_cat_parent'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_parent', FILTER_VALIDATE_INT), 0, 'weblink_cat_parent'),
-                'weblink_cat_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_visibility', FILTER_VALIDATE_INT), 0, 'weblink_cat_visibility'),
-                'weblink_cat_status'      => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_status', FILTER_VALIDATE_INT), 0, 'weblink_cat_status'),
-                'weblink_cat_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat_language', FILTER_DEFAULT), LANGUAGE, 'weblink_cat_language')
+                'weblink_cat_id'          => sanitizer('weblink_cat_id', 0, 'weblink_cat_id'),
+                'weblink_cat_name'        => sanitizer('weblink_cat_name', '', 'weblink_cat_name'),
+                'weblink_cat_description' => sanitizer('weblink_cat_description', '', 'weblink_cat_description'),
+                'weblink_cat_parent'      => sanitizer('weblink_cat_parent', 0, 'weblink_cat_parent'),
+                'weblink_cat_visibility'  => sanitizer('weblink_cat_visibility', 0, 'weblink_cat_visibility'),
+                'weblink_cat_status'      => sanitizer('weblink_cat_status', 0, 'weblink_cat_status'),
+                'weblink_cat_language'    => sanitizer('weblink_cat_language', LANGUAGE, 'weblink_cat_language')
             ];
             // Check Where Condition
             $categoryNameCheck = [
@@ -105,7 +104,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                     }
                 }
                 if (\defender::safe()) {
-                    if (isset($_POST['save_cat_and_close'])) {
+                    if (check_post('save_cat_and_close')) {
                         redirect(clean_request('', ['action', 'ref'], FALSE));
                     } else {
                         redirect(clean_request('action=edit&cat_id='.$inputArray['weblink_cat_id'], ['action', 'weblink_id'], FALSE));
@@ -197,11 +196,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
     private function display_weblinks_cat_listing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete']);
-
+        $table_action = post('table_action');
         // Table Actions
-        if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
+        if (check_post('table_action') && isset($allowed_actions[$table_action])) {
 
-            $input = !empty($_POST['weblink_cat_id']) ? form_sanitizer($_POST['weblink_cat_id'], "", "weblink_cat_id") : "";
+            $input = check_post('weblink_cat_id') ? form_sanitizer($_POST['weblink_cat_id'], 0, "weblink_cat_id") : "";
             if (!empty($input)) {
                 $input = ($input ? explode(",", $input) : []);
                 foreach ($input as $weblink_cat_id) {
@@ -209,7 +208,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                     if (dbcount("('weblink_cat_id')", DB_WEBLINK_CATS,
                             "weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]) && \defender::safe()
                     ) {
-                        switch ($_POST['table_action']) {
+                        switch ($table_action) {
                             case "publish":
                                 dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '1', ':catid' => (int)$weblink_cat_id]);
                                 addNotice('success', $this->locale['WLS_0049']);
@@ -240,39 +239,37 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         }
 
         // Clear
-        $weblink_clear = filter_input(INPUT_POST, 'weblink_clear', FILTER_DEFAULT);
-        if (!empty($weblink_clear)) {
+        if (check_post('weblink_clear')) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&amp;section=weblinks_category");
         }
 
         // Search
-        $sql_condition = "";
+        $sql_condition = multilang_table("WL") ? in_group('ac.weblink_cat_language', LANGUAGE) : "";
         $search_string = [];
-        $p_submit_weblink_cat_name = filter_input(INPUT_POST, 'p-submit-weblink_cat_name', FILTER_DEFAULT);
-        $weblink_cat_name = filter_input(INPUT_POST, 'weblink_cat_name', FILTER_DEFAULT);
-        if (!empty($p_submit_weblink_cat_name)) {
+        if (check_post('p-submit-weblink_cat_name')) {
             $search_string['weblink_cat_name'] = [
-                'input' => form_sanitizer($weblink_cat_name, '', 'weblink_cat_name'), 'operator' => "LIKE", 'option' => "AND"
+                'input' => sanitizer('weblink_cat_name', '', 'weblink_cat_name'), 'operator' => "LIKE", 'option' => "AND"
             ];
         }
-
-        $weblink_cat_status = filter_input(INPUT_POST, 'weblink_cat_status', FILTER_VALIDATE_INT);
+        $weblink_cat_status = post('weblink_cat_status');
         if (!empty($weblink_cat_status)) {
             $search_string['weblink_cat_status'] = [
-                'input' => form_sanitizer($weblink_cat_status, '', 'weblink_cat_status') - 1, 'operator' => "="
+                'input' => sanitizer('weblink_cat_status', 0, 'weblink_cat_status') - 1, 'operator' => "="
             ];
         }
-
-        $weblink_cat_visibility = filter_input(INPUT_POST, 'weblink_cat_visibility', FILTER_DEFAULT);
-        if (!empty($_POST['weblink_cat_visibility'])) {
+        $weblink_cat_visibility = post('weblink_cat_visibility');
+        if (!empty($weblink_cat_visibility)) {
             $search_string['weblink_cat_visibility'] = [
-                'input' => form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility'), 'operator' => "="
+                'input' => sanitizer('weblink_cat_visibility', '', 'weblink_cat_visibility'), 'operator' => "="
             ];
         }
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                $sql_condition .= " ".$values['option']." `$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                if ($sql_condition) {
+                    $sql_condition .= "AND ";
+                    $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "' ");
+                }
             }
         }
 
@@ -281,17 +278,16 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             "SELECT ac.*, COUNT(a.weblink_id) AS weblink_count
             FROM ".DB_WEBLINK_CATS." ac
             LEFT JOIN ".DB_WEBLINKS." AS a ON a.weblink_cat=ac.weblink_cat_id
-            WHERE ".(multilang_table("WL") ? in_group('ac.weblink_cat_language', LANGUAGE) : "")."
-            $sql_condition
+            ".($sql_condition ? " WHERE ".$sql_condition : "")."
             GROUP BY ac.weblink_cat_id
             ORDER BY ac.weblink_cat_parent ASC, ac.weblink_cat_id ASC"
         );
 
         // Filters
         $filter_values = [
-            'weblink_cat_name'       => !empty($weblink_cat_name) ? form_sanitizer($weblink_cat_name, '', 'weblink_cat_name') : '',
-            'weblink_cat_status'     => !empty($weblink_cat_status) ? form_sanitizer($weblink_cat_status, '', 'weblink_cat_status') : '',
-            'weblink_cat_visibility' => !empty($weblink_cat_visibility) ? form_sanitizer($weblink_cat_visibility, '', 'weblink_cat_visibility') : ''
+            'weblink_cat_name'       => !empty(post('weblink_cat_name')) ? sanitizer('weblink_cat_name', '', 'weblink_cat_name') : '',
+            'weblink_cat_status'     => !empty($weblink_cat_status) ? sanitizer('weblink_cat_status', 0, 'weblink_cat_status') : '',
+            'weblink_cat_visibility' => !empty($weblink_cat_visibility) ? sanitizer('weblink_cat_visibility', 0, 'weblink_cat_visibility') : ''
         ];
 
         $filter_empty = TRUE;

@@ -36,35 +36,28 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      */
     private function PostSubmission() {
 
-        if (isset($_POST['publish_submission'])) {
+        if (check_post('publish_submission')) {
 
             // Check posted Informations
-            $weblink_status = filter_input(INPUT_POST, 'weblink_status', FILTER_VALIDATE_INT);
             $this->inputArray = [
-                'weblink_name'        => form_sanitizer(filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT), '', 'weblink_name'),
-                'weblink_description' => form_sanitizer(filter_input(INPUT_POST, 'weblink_description', FILTER_DEFAULT), "", "weblink_description"),
-                'weblink_url'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_url', FILTER_DEFAULT), "", 'weblink_url'),
-                'weblink_cat'         => form_sanitizer(filter_input(INPUT_POST, 'weblink_cat', FILTER_VALIDATE_INT), 0, 'weblink_cat'),
-                'weblink_datestamp'   => form_sanitizer(filter_input(INPUT_POST, 'weblink_datestamp', FILTER_DEFAULT), time(), 'weblink_datestamp'),
-                'weblink_visibility'  => form_sanitizer(filter_input(INPUT_POST, 'weblink_visibility', FILTER_VALIDATE_INT), 0, 'weblink_visibility'),
-                "weblink_status"      => !empty($weblink_status) ? $weblink_status : "0",
-                "weblink_count"       => "0",
-                'weblink_language'    => form_sanitizer(filter_input(INPUT_POST, 'weblink_language', FILTER_DEFAULT), LANGUAGE, 'weblink_language'),
-                'weblink_user_name'   => form_sanitizer(filter_input(INPUT_POST, 'weblink_user_name', FILTER_DEFAULT), '', 'weblink_user_name'),
+                'weblink_name'        => sanitizer('weblink_name', '', 'weblink_name'),
+                'weblink_description' => sanitizer('weblink_description', "", "weblink_description"),
+                'weblink_url'         => sanitizer('weblink_url', "", 'weblink_url'),
+                'weblink_cat'         => sanitizer('weblink_cat', 0, 'weblink_cat'),
+                'weblink_datestamp'   => sanitizer('weblink_datestamp', time(), 'weblink_datestamp'),
+                'weblink_visibility'  => sanitizer('weblink_visibility', 0, 'weblink_visibility'),
+                'weblink_status'      => sanitizer('weblink_status', 0, 'weblink_status'),
+                'weblink_count'       => "0",
+                'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language'),
+                'weblink_user_name'   => sanitizer('weblink_user_name', '', 'weblink_user_name'),
             ];
-
             // Handle
             if (\defender::safe()) {
-
                 // Publish Submission
-                $publish_submission = filter_input(INPUT_POST, 'publish_submission', FILTER_DEFAULT);
-                if (!empty($publish_submission)) {
-                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l']);
-                    dbquery_insert(DB_WEBLINKS, $this->inputArray, 'save');
-                    addNotice('success', $this->locale['WLS_0060']);
-                    redirect(clean_request('', ['submit_id'], FALSE));
-                }
-
+                dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l']);
+                dbquery_insert(DB_WEBLINKS, $this->inputArray, 'save');
+                addNotice('success', $this->locale['WLS_0060']);
+                redirect(clean_request('', ['submit_id'], FALSE));
             }
         }
     }
@@ -73,8 +66,9 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * Delete a Weblink Submission
      */
     private function DeleteSubmission() {
-        if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$_GET['submit_id'], ':submittype' => 'l']);
+        if (check_post('delete_submission')) {
+            $submit_id = get('submit_id', FILTER_VALIDATE_INT);
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$submit_id, ':submittype' => 'l']);
             addNotice('success', $this->locale['WLS_0061']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
@@ -211,10 +205,10 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                         'multiple'    => TRUE
                     ]);
                 } else {
-                    echo form_hidden('article_language', '', $this->inputArray['article_language']);
+                    echo form_hidden('weblink_language', '', $this->inputArray['weblink_language']);
                 }
 
-                echo form_datepicker('weblink_datestamp', $this->locale['WLS_0103'], $this->inputArray['weblink_datestamp']);
+                echo form_datepicker('weblink_datestamp', $this->locale['WLS_0203'], $this->inputArray['weblink_datestamp']);
                 closeside();
 
                 ?>
@@ -322,10 +316,10 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         pageAccess("W");
 
         $this->locale = self::get_WeblinkAdminLocale();
-        //$weblinksettings = self::get_weblink_settings();
 
         // Handle a Submission
-        $this->submit_id = filter_input(INPUT_GET, 'submit_id', FILTER_VALIDATE_INT);
+        $this->submit_id = get('submit_id', FILTER_VALIDATE_INT);
+
         if (!empty($this->submit_id) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l'])) {
             $this->inputArray = self::unserializeData();
 
