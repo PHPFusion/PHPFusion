@@ -261,12 +261,12 @@ function admin_reset_listing() {
         echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
         echo "<thead><tr>\n";
         echo "<th>&nbsp;</th>\n";
-        echo "<th><small><strong>".$locale['apw_417']."</strong></small></th>\n";
-        echo "<th><small><strong>".$locale['apw_418']."</strong></small></th>\n";
-        echo "<th><small><strong>".$locale['apw_419']."</strong></small></th>\n";
-        echo "<th><small><strong>".$locale['apw_420']."</strong></small></th>\n";
-        echo "<th><small><strong>".$locale['apw_421']."</strong></small></th>\n";
-        echo "<th><small><strong>".$locale['apw_427']."</strong></small></th>\n";
+        echo "<th>".$locale['apw_417']."</th>\n";
+        echo "<th>".$locale['apw_418']."</th>\n";
+        echo "<th>".$locale['apw_419']."</th>\n";
+        echo "<th>".$locale['apw_420']."</th>\n";
+        echo "<th>".$locale['apw_421']."</th>\n";
+        echo "<th>".$locale['apw_427']."</th>\n";
         echo "</tr></thead>\n";
         echo "<tbody>\n";
 
