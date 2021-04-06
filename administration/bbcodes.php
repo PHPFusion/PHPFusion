@@ -26,14 +26,14 @@ global $p_data;
 add_breadcrumb(['link' => ADMIN.'bbcodes.php'.fusion_get_aidlink(), 'title' => $locale['BBCA_400']]);
 
 $allowed_sections = ['bbcode_form', 'bbcode_list'];
-$sections = in_array(get('section'), $allowed_sections) ? get('section') : 'bbcode_form';
+$sections = in_array(get('section'), $allowed_sections) ? get('section') : 'bbcode_list';
 
 $tab_title['title'][] = $locale['BBCA_400a'];
-$tab_title['id'][] = 'bbcode_form';
+$tab_title['id'][] = 'bbcode_list';
 $tab_title['icon'][] = '';
 
 $tab_title['title'][] = $locale['BBCA_401'];
-$tab_title['id'][] = 'bbcode_list';
+$tab_title['id'][] = 'bbcode_form';
 $tab_title['icon'][] = '';
 
 opentable($locale['BBCA_400']);
@@ -49,7 +49,7 @@ switch ($sections) {
 echo closetab();
 closetable();
 
-function bbcode_list() {
+function bbcode_form() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET.'comments.php');
     $test_message = '';
     $smileys_checked = 0;
@@ -90,7 +90,7 @@ function bbcode_list() {
     echo closeform();
 }
 
-function bbcode_form() {
+function bbcode_list() {
     $locale = fusion_get_locale('', LOCALE.LOCALESET."comments.php");
     $aidlink = fusion_get_aidlink();
     $available_bbcodes = [];
@@ -156,11 +156,11 @@ function bbcode_form() {
     if (dbrows($result)) {
         echo '<h4>'.$locale['BBCA_402'].'</h4>';
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
-        echo "<th><strong>".$locale['BBCA_403']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_404']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_405']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
-        echo "<th class='text-center' colspan='2'><strong>".$locale['BBCA_407']."</strong></th>\n";
+        echo "<th>".$locale['BBCA_403']."</th>\n";
+        echo "<th>".$locale['BBCA_404']."</th>\n";
+        echo "<th>".$locale['BBCA_405']."</th>\n";
+        echo "<th>".$locale['BBCA_406']."</th>\n";
+        echo "<th class='text-center' colspan='2'>".$locale['BBCA_407']."</th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
         $i = 1;
@@ -228,10 +228,10 @@ function bbcode_form() {
     echo '<h4>'.$locale['BBCA_413'].'</h4>';
     if (count($available_bbcodes) != $enabled) {
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
-        echo "<th><strong>".$locale['BBCA_403']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_404']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_405']."</strong></th>\n";
-        echo "<th><strong>".$locale['BBCA_406']."</strong></th>\n";
+        echo "<th>".$locale['BBCA_403']."</th>\n";
+        echo "<th>".$locale['BBCA_404']."</th>\n";
+        echo "<th>".$locale['BBCA_405']."</th>\n";
+        echo "<th>".$locale['BBCA_406']."</th>\n";
         echo "<th></th>\n";
         echo "</tr>\n</thead>\n<tbody>\n";
 
