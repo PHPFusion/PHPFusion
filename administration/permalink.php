@@ -399,8 +399,8 @@ switch ($sections) {
             if (!empty($available_rewrites)) {
                 echo "<div class='table-responsive'><table class='table table-hover'>\n";
                 echo "<thead><tr>\n";
-                echo "<th><strong>".$locale['PL_402']."</strong></th>\n";
-                echo "<th><strong>".$locale['PL_403']."</strong></th>\n";
+                echo "<th>".$locale['PL_402']."</th>\n";
+                echo "<th>".$locale['PL_403']."</th>\n";
                 echo "</tr>\n</thead>";
                 echo "<tbody>\n";
                 foreach ($available_rewrites as $rewrite_name) {
