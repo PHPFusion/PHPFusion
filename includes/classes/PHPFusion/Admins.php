@@ -332,7 +332,7 @@ class Admins {
     public function _currentPage() {
         $path = $_SERVER['PHP_SELF'];
         if (defined('START_PAGE')) {
-            $path_info = pathinfo(START_PAGE);
+            $path_info = pathinfo(strtok(START_PAGE, '?'));
             if (stristr(FUSION_REQUEST, '/administration/')) {
                 $path = $path_info['filename'].'.php';
             } else {
