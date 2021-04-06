@@ -16,19 +16,15 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
 pageAccess("U");
 
-require_once THEMES.'templates/admin_header.php';
-
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
 $settings = fusion_get_settings();
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
-
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['U_0000']]);
+add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['U_0000']]);
 
 opentable($locale['U_0000']);
-
 echo '<div class="well text-center">'.$locale['U_0001'].'</div>';
-
 closetable();
 require_once THEMES.'templates/footer.php';
