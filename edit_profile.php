@@ -38,6 +38,7 @@ if (check_post("update_profile")) {
     $userInput->userData = fusion_get_userdata();
 
     if ($userInput->saveUpdate()) {
+
         redirect(FUSION_REQUEST);
     }
 
@@ -63,6 +64,75 @@ $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("username_change"));
 $userFields->registration = FALSE;
-$userFields->method = 'input';
 $userFields->display_profile_input($info);
+
+add_to_jquery('
+ function delayKeyupTimer(callback, ms) {
+                    let timer = 0;
+                    return function () {
+                        let context = this, args = arguments;
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            callback.apply(context, args);
+                        }, ms || 0);
+                    };
+                }
+    $("input#user_email").on("change input paste change", function(ev) {
+        $("#user_email_change").show();
+    });
+
+    let r_userpass1 = $("#userfieldsform #user_password1");    
+    let r_userpass1_field = $("#userfieldsform #user_password1-field");    
+    r_userpass1.keyup(delayKeyupTimer(function (e) {        
+        $.ajax({
+            url: "'.INCLUDES.'api/?api=userpass-check",
+            method: "GET",
+            data: $.param({"name": $(this).val()}),
+            dataType: "json",
+            success: function (e) {
+            if (e.result === "valid") {
+                r_userpass1.removeClass("is-invalid");
+                r_userpass1_field.removeClass("has-error");
+                $(".userpass-checker").remove();
+
+            } else if (e.result === "invalid") {
+
+                r_userpass1.addClass("is-invalid").removeClass("is-valid");
+                r_userpass1_field.addClass("has-error").removeClass("has-success");
+                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
+                    $(".userpass-checker").remove();
+                    $(feedback_html).insertAfter(r_userpass1);
+                }
+        }
+        });
+    }, 500));
+    
+    let r_adminpass1 = $("#userfieldsform #user_admin_password1");    
+    let r_adminpass1_field = $("#userfieldsform #user_admin_password1-field");    
+    r_adminpass1.keyup(delayKeyupTimer(function (e) {        
+        $.ajax({
+            url: "'.INCLUDES.'api/?api=userpass-check",
+            method: "GET",
+            data: $.param({"name": $(this).val()}),
+            dataType: "json",
+            success: function (e) {
+            if (e.result === "valid") {
+                r_adminpass1.removeClass("is-invalid");
+                r_adminpass1_field.removeClass("has-error");
+                $(".userpass-checker").remove();
+
+            } else if (e.result === "invalid") {
+
+                r_adminpass1.addClass("is-invalid").removeClass("is-valid");
+                r_adminpass1_field.addClass("has-error").removeClass("has-success");
+                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
+                $(".userpass-checker").remove();
+                $(feedback_html).insertAfter(r_adminpass1);
+            }
+        }
+        });
+    }, 500));
+
+');
+
 require_once THEMES.'templates/footer.php';

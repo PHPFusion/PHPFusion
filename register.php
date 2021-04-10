@@ -60,6 +60,10 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 
             $user_info = unserialize(base64_decode($data['user_info']));
 
+            if (empty($user_info['user_hide_email'])) {
+                $user_info['user_hide_email'] = 1;
+            }
+
             dbquery_insert(DB_USERS, $user_info, 'save');
 
             $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
@@ -75,7 +79,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
             redirect($settings['opening_page']);
         }
 
-    } else if (isset($_POST['register'])) {
+    } else if (check_post('register')) {
+
         $userInput = new PHPFusion\UserFieldsInput();
         $userInput->validation = $settings['display_validation'];
         $userInput->emailVerification = $settings['email_verification'];
@@ -90,7 +95,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         unset($userInput);
     }
 
-    if (!isset($_GET['email']) && !isset($_GET['code'])) {
+    if (!check_get('email') && !check_get('code')) {
+
         $userFields = new PHPFusion\UserFields();
         $userFields->postName = "register";
         $userFields->postValue = $locale['u101'];
@@ -103,8 +109,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->registration = TRUE;
         $userFields->display_profile_input();
 
-        if (!defined('USERNAME_CHECK')) {
-            define('USERNAME_CHECK', TRUE);
+        if (!defined('REGISTER_JS_CHECK')) {
+            define('REGISTER_JS_CHECK', TRUE);
             add_to_jquery('
                 function delayKeyupTimer(callback, ms) {
                     let timer = 0;
@@ -142,6 +148,34 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                         }
                     });
                 }, 500));
+                
+                
+                let r_userpass1 = $("#userfieldsform #user_password1");
+                let r_userpass1_field = $("#userfieldsform #user_password1-field");
+                r_userpass1.keyup(delayKeyupTimer(function (e) {
+                    $.ajax({
+                        url: "'.INCLUDES.'api/?api=userpass-check",
+                        method: "GET",
+                        data: $.param({"name": $(this).val()}),
+                        dataType: "json",
+                        success: function (e) {
+                            if (e.result === "valid") {
+                                r_userpass1.removeClass("is-invalid");
+                                r_userpass1_field.removeClass("has-error");                                
+                                $(".userpass-checker").remove();
+                                                                
+                            } else if (e.result === "invalid") {
+                            
+                                r_userpass1.addClass("is-invalid").removeClass("is-valid");
+                                r_userpass1_field.addClass("has-error").removeClass("has-success");
+                                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
+                                $(".userpass-checker").remove();
+                                $(feedback_html).insertAfter($("#userfieldsform #user_password1"));
+                            }
+                        }
+                    });
+                }, 500));
+                
             ');
         }
     }

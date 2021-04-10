@@ -117,20 +117,6 @@ class UserFields extends QuantumFields {
     }
 
     /**
-     * Check for input value of profile form
-     *
-     * @param $key
-     *
-     * @return int|mixed|string|null
-     */
-    function getInputValue($key) {
-        if (check_post($key)) {
-            return post($key);
-        }
-        return (isset($this->userData[$key]) ? $this->userData[$key] : "");
-    }
-
-    /**
      * Display Input Fields
      *
      * @param array $input
@@ -175,16 +161,18 @@ class UserFields extends QuantumFields {
             $this->info['user_password'] = form_para($locale['u132'], 'password', 'profile_category_name');
 
             if ($this->registration || $this->admin_mode) {
+
                 $this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', [
-                        'type'              => 'password',
-                        'autocomplete_off'  => 1,
-                        'inline'            => TRUE,
-                        'max_length'        => 64,
-                        'error_text'        => $locale['u134'].$locale['u143a'],
-                        'required'          => $this->admin_mode ? FALSE : TRUE,
-                        'password_strength' => TRUE
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u134'].$locale['u143a'],
+                        'required'         => $this->admin_mode ? FALSE : TRUE,
+                        'ext_tip'          => $locale['u147']
                     ]
                 );
+
                 $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', [
                         'type'             => 'password',
                         'autocomplete_off' => 1,
@@ -194,9 +182,19 @@ class UserFields extends QuantumFields {
                         'required'         => $this->admin_mode ? FALSE : TRUE
                     ]
                 );
+
             } else {
 
-                $this->info['user_password'] .= form_text('user_password', $locale['u135a'], '', [
+                $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], $this->getInputValue('user_password1'), [
+                        'type'             => 'password',
+                        'autocomplete_off' => 1,
+                        'inline'           => TRUE,
+                        'max_length'       => 64,
+                        'error_text'       => $locale['u133'],
+                        'ext_tip'          => $locale['u147']
+                    ]
+                );
+                $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], $this->getInputValue('user_password2'), [
                         'type'             => 'password',
                         'autocomplete_off' => 1,
                         'inline'           => TRUE,
@@ -204,17 +202,7 @@ class UserFields extends QuantumFields {
                         'error_text'       => $locale['u133']
                     ]
                 );
-                $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], '', [
-                        'type'              => 'password',
-                        'autocomplete_off'  => 1,
-                        'inline'            => TRUE,
-                        'max_length'        => 64,
-                        'error_text'        => $locale['u133'],
-                        'password_strength' => TRUE
-                    ]
-                );
-                $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], '', [
-                        'class'            => 'm-b-0',
+                $this->info['user_password'] .= form_text('user_password', $locale['u135a'], $this->getInputValue('user_password'), [
                         'type'             => 'password',
                         'autocomplete_off' => 1,
                         'inline'           => TRUE,
@@ -222,17 +210,39 @@ class UserFields extends QuantumFields {
                         'error_text'       => $locale['u133']
                     ]
                 );
+
                 $this->info['user_password'] .= form_hidden('user_hash', '', $this->userData['user_password'], ['input_id' => 'userhash']);
             }
 
-            $this->info['user_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div><br/>";
 
             // Admin Password - not available for everyone except edit profile.
             if (!$this->registration && iADMIN && !defined('ADMIN_PANEL')) {
+
                 $this->info['user_admin_password'] = form_para($locale['u131'], 'adm_password', 'profile_category_name');
+
                 if ($this->userData['user_admin_password']) {
                     // This is for changing password
-                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144a'], '', [
+
+                    $this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], $this->getInputValue('user_admin_password1'), [
+                            'type'             => 'password',
+                            'autocomplete_off' => TRUE,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136'],
+                            'ext_tip'          => $locale['u147']
+                        ]
+                    );
+
+                    $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], $this->getInputValue('user_admin_password2'), [
+
+                            'type'             => 'password',
+                            'autocomplete_off' => TRUE,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136']
+                        ]
+                    );
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144a'], $this->getInputValue('user_admin_password'), [
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => TRUE,
@@ -240,18 +250,19 @@ class UserFields extends QuantumFields {
                             'error_text'       => $locale['u136']
                         ]
                     );
-                    $this->info['user_admin_password'] .= form_text('user_admin_password1', $locale['u144'], '', [
-                            'type'              => 'password',
-                            'autocomplete_off'  => 1,
-                            'inline'            => TRUE,
-                            'max_length'        => 64,
-                            'error_text'        => $locale['u136'],
-                            'password_strength' => TRUE
-                        ]
-                    );
+
                 } else {
                     // This is just setting new password off blank records
-                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144'], '', [
+                    $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144'], $this->getInputValue('user_admin_password'), [
+                            'type'             => 'password',
+                            'autocomplete_off' => TRUE,
+                            'inline'           => TRUE,
+                            'max_length'       => 64,
+                            'error_text'       => $locale['u136'],
+                            'ext_tip'          => $locale['u147']
+                        ]
+                    );
+                    $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], $this->getInputValue('user_admin_password2'), [
                             'type'             => 'password',
                             'autocomplete_off' => 1,
                             'inline'           => TRUE,
@@ -261,17 +272,6 @@ class UserFields extends QuantumFields {
                     );
                 }
 
-                $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], '', [
-                        'class'            => 'm-b-0',
-                        'type'             => 'password',
-                        'autocomplete_off' => 1,
-                        'inline'           => TRUE,
-                        'max_length'       => 64,
-                        'error_text'       => $locale['u136']
-                    ]
-                );
-
-                $this->info['user_admin_password'] .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-offset-3 col-lg-offset-3'><span class='text-smaller'>".$locale['u147']."</span></div>\n";
 
             }
 
@@ -339,6 +339,17 @@ class UserFields extends QuantumFields {
                     'ext_tip'    => $ext_tip
                 ]
             );
+
+            $this->info['user_email_password'] = '<div id="user_email_change" style="display:none;">'.form_text('user_email_password', 'Password', $this->getInputValue("user_email_password"), [
+                        'type'        => 'password',
+                        "required"    => FALSE,
+                        'inline'      => TRUE,
+                        'max_length'  => '100',
+                        'placeholder' => 'Enter password to change your email address',
+                        'error_text'  => $locale['u126'],
+                        'ext_tip'     => $ext_tip
+                    ]
+                ).'</div>';
 
             $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"),
                 [
@@ -443,6 +454,20 @@ class UserFields extends QuantumFields {
         }
 
         return (array)$section;
+    }
+
+    /**
+     * Check for input value of profile form
+     *
+     * @param $key
+     *
+     * @return int|mixed|string|null
+     */
+    function getInputValue($key) {
+        if (check_post($key)) {
+            return post($key);
+        }
+        return (isset($this->userData[$key]) ? $this->userData[$key] : "");
     }
 
     /**
@@ -649,12 +674,13 @@ class UserFields extends QuantumFields {
     public function display_profile_output() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
+        $lookup = get('lookup', FILTER_VALIDATE_INT);
 
         // Add User to Groups
-        if (iADMIN && checkrights("UG") && isset($_GET['lookup']) && $_GET['lookup'] !== fusion_get_userdata('user_id')) {
-            if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
-                $lookup = stripinput($_GET['lookup']);
-                $user_group = stripinput($_POST['user_group']);
+        if (iADMIN && checkrights("UG") && get('lookup', FILTER_VALIDATE_INT) !== fusion_get_userdata('user_id')) {
+
+            if (check_post('add_to_group') && $user_group = post('user_group', FILTER_VALIDATE_INT)) {
+
                 if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->userData['user_groups'])) {
                     $userdata = [
                         'user_groups' => $this->userData['user_groups'].".".$user_group,
@@ -662,23 +688,29 @@ class UserFields extends QuantumFields {
                     ];
                     dbquery_insert(DB_USERS, $userdata, 'update');
                 }
-                if (defined('ADMIN_PANEL') && isset($_GET['step']) && $_GET['step'] == "view") {
+
+                if (defined('ADMIN_PANEL') && get('step') === 'view') {
                     redirect(ADMIN."members.php".fusion_get_aidlink()."&amp;step=view&amp;user_id=".$this->userData['user_id']);
                 } else {
                     redirect(BASEDIR."profile.php?lookup=".$lookup);
                 }
+
             }
         }
 
         $this->info['section'] = $this->getProfileSections();
+
         $this->info['user_id'] = $this->userData['user_id'];
+
         $this->info['user_name'] = $this->userData['user_name'];
 
         $current_section = ['id' => 1];
         if (!empty($this->info['section'])) {
             $current_section = current($this->info['section']);
         }
+
         $_GET['section'] = isset($_GET['section']) && isset($this->info['section'][$_GET['section']]) ? $_GET['section'] : $current_section['id'];
+
         if (empty($this->userData['user_avatar']) && !file_exists(IMAGES."avatars/".$this->userData['user_avatar'])) {
             $this->userData['user_avatar'] = get_image('noavatar');
         }
@@ -751,6 +783,7 @@ class UserFields extends QuantumFields {
         $user_groups = strpos($this->userData['user_groups'], ".") == 0 ? substr($this->userData['user_groups'], 1) : $this->userData['user_groups'];
         $user_groups = explode(".", $user_groups);
         $user_groups = (array)array_filter($user_groups);
+
         $group_info = [];
         if (!empty($user_groups)) {
             for ($i = 0; $i < count($user_groups); $i++) {
