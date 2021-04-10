@@ -54,6 +54,7 @@ foreach ($delete_settings_tbl as $value) {
 $deleted_files = [
     THEMES.'templates/render_functions.php',
     LOCALE.'English/admin/banners.php',
+    ADMIN.'updateuser.php',
 ];
 
 foreach ($deleted_files as $file) {
