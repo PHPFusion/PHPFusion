@@ -61,7 +61,7 @@ class Admins {
         'MAIL' => "<i class='admin-ico fa fa-fw fa-send'></i>", // Email Templates
         'MI'   => "<i class='admin-ico fa fa-fw fa-barcode'></i>", // Migration Tool
         'P'    => "<i class='admin-ico fa fa-fw fa-desktop'></i>", // Panels
-        'PI'   => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // PHP Info
+        'PI'   => "<i class='admin-ico fa fa-fw fa-info-circle'></i>", // Server Info
         'PL'   => "<i class='admin-ico fa fa-fw fa-puzzle-piece'></i>", // Permalinks
         'ROB'  => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
         'S1'   => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings

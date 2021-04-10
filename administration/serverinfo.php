@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: phpinfo.php
+| Filename: serverinfo.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,9 +19,9 @@ require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageAccess('PI');
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/phpinfo.php');
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/serverinfo.php');
 
-add_breadcrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+add_breadcrumb(['link' => ADMIN.'serverinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 $allowed_sections = ['general', 'phpsettings', 'folderpermission', 'details'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'general';

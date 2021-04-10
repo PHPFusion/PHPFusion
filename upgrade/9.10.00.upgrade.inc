@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
@@ -48,6 +49,9 @@ foreach ($delete_settings_tbl as $value) {
     $inf_deldbrow[] = DB_SETTINGS." WHERE settings_name='$value'";
 }
 
+// Rename PHP Info to Server Info
+$inf_updatedbrow[] = DB_ADMIN." SET admin_image='serverinfo.png', admin_title='".$locale['setup_3021']."', admin_link='serverinfo.php' WHERE admin_link='phpinfo.php'";
+
 /**
  * Delete all unused files
  */
@@ -55,6 +59,8 @@ $deleted_files = [
     THEMES.'templates/render_functions.php',
     LOCALE.'English/admin/banners.php',
     ADMIN.'updateuser.php',
+    ADMIN.'images/phpinfo.png',
+    ADMIN.'phpinfo.php',
 ];
 
 foreach ($deleted_files as $file) {

@@ -160,7 +160,7 @@ if (check_post('savesettings')) {
                         ['admin_rights' => 'MI', 'admin_image' => 'migration.png', 'admin_title' => $locale['setup_3057'], 'admin_link' => 'migrate.php', 'admin_page' => 2, 'admin_language' => $language],
                         ['admin_rights' => 'P', 'admin_image' => 'panels.png', 'admin_title' => $locale['setup_3019'], 'admin_link' => 'panels.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'PL', 'admin_image' => 'permalink.png', 'admin_title' => $locale['setup_3052'], 'admin_link' => 'permalink.php', 'admin_page' => 3, 'admin_language' => $language],
-                        ['admin_rights' => 'PI', 'admin_image' => 'phpinfo.png', 'admin_title' => $locale['setup_3021'], 'admin_link' => 'phpinfo.php', 'admin_page' => 3, 'admin_language' => $language],
+                        ['admin_rights' => 'PI', 'admin_image' => 'serverinfo.png', 'admin_title' => $locale['setup_3021'], 'admin_link' => 'serverinfo.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'SL', 'admin_image' => 'sitelinks.png', 'admin_title' => $locale['setup_3023'], 'admin_link' => 'site_links.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'SM', 'admin_image' => 'smileys.png', 'admin_title' => $locale['setup_3024'], 'admin_link' => 'smileys.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'U', 'admin_image' => 'upgrade.png', 'admin_title' => $locale['setup_3026'], 'admin_link' => 'upgrade.php', 'admin_page' => 3, 'admin_language' => $language],
