@@ -61,6 +61,7 @@ $deleted_files = [
     ADMIN.'updateuser.php',
     ADMIN.'images/phpinfo.png',
     ADMIN.'phpinfo.php',
+    LOCALE.'English/admin/phpinfo.php',
 ];
 
 foreach ($deleted_files as $file) {
