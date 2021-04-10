@@ -16,67 +16,64 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
-pageAccess('UL');
 require_once THEMES.'templates/admin_header.php';
+pageAccess('UL');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/user_log.php");
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
+add_breadcrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
 
-
-$_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? $_GET['rowstart'] : 0);
+$rowstart = (check_get('rowstart') && get('rowstart', FILTER_VALIDATE_INT) ? get('rowstart') : 0);
 
 $aidlink = fusion_get_aidlink();
 
 // Set default values
-$dbOrder = "ORDER BY userlog_timestamp DESC";
-$dbWhere = "";
-$dbWhereCount = "";
-$getString = $aidlink;
-$orderby = "userlog_timestamp";
+$db_order = "ORDER BY userlog_timestamp DESC";
+$db_where = "";
+$get_string = $aidlink;
+$order_by = "userlog_timestamp";
 $expr = "DESC";
 $user = "";
-$userField = "";
-$orderbyArray = [
+$user_field = "";
+$orderby_array = [
     'userlog_timestamp' => $locale['UL_002'],
     'user_name'         => $locale['UL_003'],
     'userlog_field'     => $locale['UL_004']
 ];
 
-$exprArray = ["DESC" => $locale['UL_019'], "ASC" => $locale['UL_018']];
+$expr_array = ["DESC" => $locale['UL_019'], "ASC" => $locale['UL_018']];
 if (isset($_POST) && !empty($_POST)) {
-    if (isset($_POST['orderby']) && in_array($_POST['orderby'], $orderbyArray)) {
-        $orderby = form_sanitizer($_POST['orderby'], 'DESC', 'orderby');
-        $dbOrder = "ORDER BY ".$orderby;
-        if (isset($_POST['expr']) && in_array($_POST['expr'], $exprArray)) {
-            $expr = form_sanitizer($_POST['expr'], '', 'expr');
-            $dbOrder .= " ".$expr;
+    if (check_post('orderby')) {
+        $order_by = sanitizer('orderby', 'DESC', 'orderby');
+        $db_order = "ORDER BY ".$order_by;
+        if (check_post('expr')) {
+            $expr = sanitizer('expr', '', 'expr');
+            $db_order .= " ".$expr;
         }
     }
-    if (isset($_POST['user'])) {
-        $user = form_sanitizer($_POST['user'], '', 'user');
-
+    if (check_post('user')) {
+        $user = sanitizer('user', '', 'user');
         if (isnum($user)) {
-            $dbWhere = "userlog_user_id='".$user."'";
-        } else if ($_POST['user'] != "") {
+            $db_where = "userlog_user_id='".$user."'";
+        } else if (post('user') != "") {
             $user = trim(stripinput($user));
-            $dbWhere = "user_name LIKE '".$user."%'";
+            $db_where = "user_name LIKE '".$user."%'";
         }
     }
 
-    if (isset($_POST['userField']) && $_POST['userField'] != "---" && $_POST['userField'] != "") {
-        $userField = trim(stripinput($_POST['userField']));
-        $dbWhere .= ($dbWhere != "" ? " AND userlog_field='".$userField."'" : "userlog_field='".$userField."'");
+    if (check_post('user_field') && post('user_field') != "---" && post('user_field') != "") {
+        $user_field = trim(stripinput(post('user_field')));
+        $db_where .= ($db_where != "" ? " AND userlog_field='".$user_field."'" : "userlog_field='".$user_field."'");
     }
-    $dbWhereCount = $dbWhere;
-    $dbWhere = ($dbWhere != "" ? "WHERE ".$dbWhere : "");
+    $db_where = ($db_where != "" ? "WHERE ".$db_where : "");
     // build get string
-    $getString .= "&amp;orderby=".$orderby."&amp;expr=".$expr."&amp;user=".$user."&amp;userField=".$userField;
+    $get_string .= "&orderby=".$order_by."&expr=".$expr."&user=".$user."&user_field=".$user_field;
 }
 
 // End $_GET Vars
-if (isset($_POST['log_id'])) {
-    if (isset($_POST['table_action']) && isset($_POST['log_id'])) {
-        $input = (isset($_POST['log_id'])) ? explode(",", form_sanitizer($_POST['log_id'], "", "log_id")) : "";
+if (check_post('log_id')) {
+    if (check_post('table_action') && check_post('log_id')) {
+        $input = (check_post('log_id')) ? explode(",", sanitizer('log_id', "", "log_id")) : "";
         if (!empty($input)) {
             foreach ($input as $log_id) {
                 dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:logid", [':logid' => $log_id]);
@@ -88,23 +85,22 @@ if (isset($_POST['log_id'])) {
     redirect(clean_request('', ['delete'], FALSE));
 }
 
-if (isset($_POST['daydelete']) && isnum($_POST['daydelete'])) {
-    $delete = form_sanitizer($_POST['daydelete'], 0, 'daydelete');
-    $bind = [
+if (check_post('day_delete') && post('day_delete', FILTER_VALIDATE_INT)) {
+    $delete = sanitizer('day_delete', 0, 'day_delete');
+    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:time", [
         ':time' => time() - $delete * 24 * 60 * 60,
-    ];
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:time", $bind);
+    ]);
     addNotice('info', sprintf($locale['UL_005'], $delete));
     redirect(clean_request('', ['delete'], FALSE));
 }
 
-if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => $_GET['delete']]);
+if (check_get('delete') && get('delete', FILTER_VALIDATE_INT)) {
+    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => get('delete')]);
     addNotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], FALSE));
 }
 
-function userFieldOptions() {
+function user_field_options() {
     $locale = fusion_get_locale();
     $options['user_name'] = $locale['UL_003'];
     $options['user_email'] = $locale['UL_007'];
@@ -122,14 +118,13 @@ opentable($locale['UL_001']);
 
 openside('');
 echo openform('userlog_search', 'post', FUSION_REQUEST);
-echo form_hidden('aid', '', iAUTH);
-echo form_select('orderby', $locale['UL_008'], $orderby, [
-    'options'    => $orderbyArray,
+echo form_select('orderby', $locale['UL_008'], $order_by, [
+    'options'    => $orderby_array,
     'placholder' => $locale['choose'],
     'inline'     => TRUE
 ]);
-echo form_select('expr', ' ', $orderby, [
-    'options'    => $exprArray,
+echo form_select('expr', ' ', $order_by, [
+    'options'    => $expr_array,
     'placholder' => $locale['choose'],
     'inline'     => TRUE
 ]);
@@ -139,8 +134,8 @@ echo form_user_select("user", $locale['UL_009'], $user, [
     'inner_width' => '100%',
     'allow_self'  => TRUE,
 ]);
-echo form_select('userField', $locale['UL_010'], $userField, [
-    'options'     => userFieldOptions(),
+echo form_select('user_field', $locale['UL_010'], $user_field, [
+    'options'     => user_field_options(),
     'placeholder' => $locale['choose'],
     'allowclear'  => 1,
     'inline'      => TRUE
@@ -152,11 +147,12 @@ closeside();
 // at least validate token.
 if (!defined('FUSION_NULL')) {
     $result = dbquery("SELECT SQL_CALC_FOUND_ROWS userlog_id, userlog_user_id, userlog_field, userlog_value_old, userlog_value_new, userlog_timestamp, user_name, user_status
-                   FROM ".DB_USER_LOG."
-                   LEFT JOIN ".DB_USERS." ON userlog_user_id=user_id
-                   ".$dbWhere."
-                   ".$dbOrder."
-                   LIMIT ".$_GET['rowstart'].",20");
+        FROM ".DB_USER_LOG."
+        LEFT JOIN ".DB_USERS." ON userlog_user_id=user_id
+        ".$db_where."
+        ".$db_order."
+        LIMIT ".$rowstart.",20
+    ");
     $rows = dbresult(dbquery("SELECT FOUND_ROWS()"), 0);
     if (dbrows($result)) {
         echo "<div class='table-responsive'><table id='log-table' class='table table-striped'>\n";
@@ -172,16 +168,16 @@ if (!defined('FUSION_NULL')) {
 
         echo "<tbody>\n";
         echo openform('userlog_table', 'post', FUSION_REQUEST);
-        echo form_hidden('table_action', '', '');
+        echo form_hidden('table_action');
         while ($data = dbarray($result)) {
             echo "<tr>";
-            echo "<td>".form_checkbox("log_id[]", "", "", ["value" => $data['userlog_id'], "class" => "m-0"])."</td>\n";
+            echo "<td>".form_checkbox("log_id[]", "", "", ["value" => $data['userlog_id'], 'input_id' => 'log_id'.$data['userlog_id'], "class" => "m-0"])."</td>\n";
             echo "<td>".showdate("shortdate", $data['userlog_timestamp'])."</td>\n";
             echo "<td>".profile_link($data['userlog_user_id'], $data['user_name'], $data['user_status'])."</td>\n";
             echo "<td>".$data['userlog_field']."</td>\n";
             echo "<td>".trimlink($data['userlog_value_old'], 100)."</td>\n";
             echo "<td>".trimlink($data['userlog_value_new'], 100)."</td>\n";
-            echo "<td><a href='".FUSION_SELF.$getString."&amp;delete=".$data['userlog_id']."'>".$locale['delete']."</a></td>\n";
+            echo "<td><a href='".FUSION_SELF.$get_string."&delete=".$data['userlog_id']."'>".$locale['delete']."</a></td>\n";
             echo "</tr>\n";
         }
 
@@ -208,14 +204,14 @@ if (!defined('FUSION_NULL')) {
     }
 
     if ($rows > 20) {
-        echo "<div class='m-t-5 text-center'>\n".makepagenav($_GET['rowstart'], 20, $rows, 3, FUSION_SELF.$getString."&amp;")."\n</div>\n";
+        echo "<div class='m-t-5 text-center'>\n".makepagenav($rowstart, 20, $rows, 3, FUSION_SELF.$get_string."&")."\n</div>\n";
     }
 
 }
 
 openside('', 'm-t-20');
 echo openform('userlog_delete', 'post', FUSION_REQUEST);
-echo form_text('daydelete', $locale['UL_016'], '', [
+echo form_text('day_delete', $locale['UL_016'], '', [
     'max_length'  => 3,
     'type'        => 'number',
     'placeholder' => $locale['UL_017'],
