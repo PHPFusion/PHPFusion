@@ -67,7 +67,7 @@ class PasswordAuth {
      *
      * @return bool
      */
-    public function isValidCurrentPassword($createNewHash = FALSE): bool {
+    public function isValidCurrentPassword($createNewHash = FALSE) {
         $inputPasswordHash = $this->_hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
         if ($inputPasswordHash == $this->currentPasswordHash) {
             if ($createNewHash === TRUE) {
@@ -164,7 +164,7 @@ class PasswordAuth {
      *
      * @return string
      */
-    private function _hashPassword($password, $algorithm, $salt): string {
+    private function _hashPassword($password, $algorithm, $salt) {
         if ($algorithm != "md5") {
             return hash_hmac($algorithm, $password, $salt);
         } else {
@@ -189,7 +189,7 @@ class PasswordAuth {
      *
      * @return string
      */
-    public static function getNewRandomSalt($length = 12): string {
+    public static function getNewRandomSalt($length = 12) {
         return sha1(PasswordAuth::getNewPassword($length));
     }
 
@@ -200,7 +200,7 @@ class PasswordAuth {
      *
      * @return string
      */
-    public static function getNewPassword($length = 12): string {
+    public static function getNewPassword($length = 12) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
@@ -227,7 +227,7 @@ class PasswordAuth {
      *
      * @return array
      */
-    public function setNewPassword($user_password): array {
+    public function setNewPassword($user_password) {
         $salt = self::getNewRandomSalt();
 
         return [
@@ -242,7 +242,7 @@ class PasswordAuth {
      *
      * @return int
      */
-    public function isValidNewPassword(): int {
+    public function isValidNewPassword() {
         if ($this->inputNewPassword != $this->inputPassword) {
             if ($this->inputNewPassword == $this->inputNewPassword2) {
                 if ($this->_isValidPasswordInput()) {
@@ -268,7 +268,7 @@ class PasswordAuth {
      *
      * @return bool
      */
-    private function _isValidPasswordInput(): bool {
+    private function _isValidPasswordInput() {
         if (preg_match("/^[0-9A-Z@<>\[\]!#$%&\/\(\)=\-_?+\*\.,:~;\{\}]{8,64}$/i", $this->inputNewPassword)) {
             return TRUE;
         } else {
@@ -281,7 +281,7 @@ class PasswordAuth {
      *
      * @return string
      */
-    public function getNewAlgo(): string {
+    public function getNewAlgo() {
         return $this->_newAlgo;
     }
 
