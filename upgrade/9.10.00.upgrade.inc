@@ -62,6 +62,7 @@ $deleted_files = [
     ADMIN.'images/phpinfo.png',
     ADMIN.'phpinfo.php',
     LOCALE.'English/admin/phpinfo.php',
+    INCLUDES.'elFinder/themes/manifests/'
 ];
 
 foreach ($deleted_files as $file) {
