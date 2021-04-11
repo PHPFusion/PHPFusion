@@ -695,9 +695,9 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'admin_rights'   => 'PI',
-                'admin_image'    => 'phpinfo.png',
+                'admin_image'    => 'serverinfo.png',
                 'admin_title'    => $locale['setup_3021'],
-                'admin_link'     => 'phpinfo.php',
+                'admin_link'     => 'serverinfo.php',
                 'admin_page'     => 3,
                 'admin_language' => $localeset
             ],

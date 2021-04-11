@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: phpinfo.php
+| Filename: serverinfo.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,18 +19,15 @@ require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageAccess('PI');
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/phpinfo.php');
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/serverinfo.php');
 
-add_breadcrumb(['link' => ADMIN.'phpinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+add_breadcrumb(['link' => ADMIN.'serverinfo.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
 
 $allowed_sections = ['general', 'phpsettings', 'folderpermission', 'details'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'general';
 
 $tabs['title'][] = $locale['401'];
 $tabs['id'][] = 'general';
-$tabs['icon'][] = "";
-$tabs['title'][] = $locale['420'];
-$tabs['id'][] = 'phpsettings';
 $tabs['icon'][] = "";
 $tabs['title'][] = $locale['440'];
 $tabs['id'][] = 'folderpermission';
@@ -42,9 +39,6 @@ $tabs['icon'][] = "";
 opentable($locale['400']);
 echo opentab($tabs, $sections, 'general', TRUE, 'nav-tabs');
 switch ($sections) {
-    case 'phpsettings':
-        phpsettings();
-        break;
     case 'folderpermission':
         folderpermission();
         break;
@@ -61,44 +55,63 @@ closetable();
 function general() {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
-    $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['402']."</td><td class='text-right'>".php_uname()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['403']."</td><td class='text-right'>".server('SERVER_SOFTWARE')."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['404']."</td><td class='text-right'>".phpversion()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['405']."</td><td class='text-right'>".php_sapi_name()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406']."</td><td class='text-right'>".dbconnection()->getServerVersion()."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['406a']."</td><td class='text-right'>".str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass())."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['407']."</td><td class='text-right'>".$settings['version']."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['408']."</td><td class='text-right'>".DB_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['409']."</td><td class='text-right'>".COOKIE_PREFIX."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:20%'>".$locale['410']."</td><td class='text-right'>".server('HTTP_USER_AGENT')."</td></tr>\n";
-    if (LANGUAGE !== 'English') {
-        $phpinfo .= "<tr>\n<td colspan='2'>".$locale['411']."</td></tr>\n";
-    }
-    $phpinfo .= "</table>\n</div>";
-    echo $phpinfo;
-}
 
-function phpsettings() {
-    $locale = fusion_get_locale();
-    //Check GD version
+    echo '<div class="row">';
+    echo '<div class="col-xs-12 col-sm-6">';
+    openside('');
+    echo '<div><span class="strong">'.$locale['402'].'</span><span class="pull-right">'.php_uname().'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['403'].'</span><span class="pull-right">'.server('SERVER_SOFTWARE').'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['404'].'</span><span class="pull-right">'.phpversion().'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['405'].'</span><span class="pull-right">'.php_sapi_name().'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['406'].'</span><span class="pull-right">'.dbconnection()->getServerVersion().'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['406a'].'</span><span class="pull-right">'.str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass()).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['407'].'</span><span class="pull-right">'.$settings['version'].'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['408'].'</span><span class="pull-right">'.DB_PREFIX.'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['409'].'</span><span class="pull-right">'.COOKIE_PREFIX.'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['410'].'</span><span class="pull-right">'.server('HTTP_USER_AGENT').'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    if (LANGUAGE !== 'English') {
+        echo '<div>'.$locale['411'].'</div>';
+    }
+    closeside();
+    echo '</div>';
+
+    echo '<div class="col-xs-12 col-sm-6">';
+    openside('');
+    // Check GD version
+    $gd_ver = $locale['na'];
     if (function_exists('gd_info')) {
         $gd_ver = gd_info();
         preg_match('/[0-9]+.[0-9]+/', $gd_ver['GD Version'], $gd_ver);
-    } else {
-        $gd_ver = '';
     }
-    $phpinfo = "<div class='table-responsive'><table class='table table-hover table-striped' id='folders'>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['423']."</td><td class='text-right'>".(ini_get('safe_mode') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['424']."</td><td class='text-right'>".(ini_get('register_globals') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." GD (".$locale['431'].")</td><td class='text-right'>".(extension_loaded('gd') ? $locale['yes']." (".$gd_ver[0].")" : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." zlib</td><td class='text-right'>".(extension_loaded('zlib') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['425']." Magic_quotes_gpc</td><td class='text-right'>".(ini_get('magic_quotes_gpc') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['426']."</td><td class='text-right'>".(ini_get('file_uploads') ? $locale['yes']." (".ini_get('upload_max_filesize')."B)" : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['428']."</td><td class='text-right'>".(ini_get('display_errors') ? $locale['yes'] : $locale['no'])."</td></tr>\n";
-    $phpinfo .= "<tr>\n<td style='width:50%'>".$locale['429']."</td><td class='text-right'>".(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430'])."</td></tr>\n";
-    $phpinfo .= "</table>\n</div>";
-    echo $phpinfo;
+
+    echo '<div><span class="strong">'.$locale['423'].'</span><span class="pull-right">'.(ini_get('safe_mode') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['424'].'</span><span class="pull-right">'.(ini_get('register_globals') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['425'].' GD</span><span class="pull-right">'.(extension_loaded('gd') ? $locale['yes'].' ('.$locale['431'].' '.$gd_ver[0].')' : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['425'].' zlib</span><span class="pull-right">'.(extension_loaded('zlib') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['425'].' magic_quotes_gpc</span><span class="pull-right">'.(extension_loaded('magic_quotes_gpc') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['426'].'</span><span class="pull-right">'.(ini_get('file_uploads') ? $locale['yes'].' ('.ini_get('upload_max_filesize').')' : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['428'].'</span><span class="pull-right">'.(ini_get('display_errors') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<hr class="m-t-5 m-b-5">';
+    echo '<div><span class="strong">'.$locale['429'].'</span><span class="pull-right">'.(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430']).'</span></div>';
+    closeside();
+    echo '</div>';
+    echo '</div>';
 }
 
 function folderpermission() {

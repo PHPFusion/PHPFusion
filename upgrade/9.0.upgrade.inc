@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
+$locale = fusion_get_locale("", LOCALE.LOCALESET.'setup.php');
 $settings = fusion_get_settings();
 
 /*
@@ -243,7 +243,7 @@ if (db_exists(DB_ADMIN)) {
         'S6'   => 'misc.png',
         'P'    => 'panels.png',
         'PL'   => 'permalink.png',
-        'PI'   => 'phpinfo.png',
+        'PI'   => 'serverinfo.png',
         'S7'   => 'pm.png',
         'S4'   => 'registration.png',
         'ROB'  => 'robots.png',
