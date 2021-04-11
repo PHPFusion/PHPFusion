@@ -38,6 +38,7 @@ function get_extended_endpoints() {
 
 $endpoints = [
         "username-check" => "username_validation.php",
+        "userpass-check" => "userpass_validation.php",
     ]
     + get_extended_endpoints();
 
