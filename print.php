@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once(__DIR__.'/maincore.php');
+require_once __DIR__.'/maincore.php';
 require_once INCLUDES.'theme_functions_include.php';
 
 $settings = fusion_get_settings();

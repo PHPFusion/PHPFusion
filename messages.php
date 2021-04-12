@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once(__DIR__.'/maincore.php');
+require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 include THEMES."templates/global/messages.tpl.php";
 echo \PHPFusion\PrivateMessages::getInstance()->Server()->View();

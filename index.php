@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__.'/maincore.php';
 $settings = fusion_get_settings();
 
 if ($settings['site_seo'] && !isset($_GET['aid'])) {
