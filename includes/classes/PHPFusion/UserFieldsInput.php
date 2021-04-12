@@ -49,8 +49,6 @@ class UserFieldsInput {
 
     private $_userEmail;
 
-    private $_userHideEmail;
-
     /**
      * @var string username
      */
@@ -110,7 +108,7 @@ class UserFieldsInput {
         $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
 
         if (!empty($fields_input)) {
-            foreach ($fields_input as $table_name => $fields_array) {
+            foreach ($fields_input as $fields_array) {
                 $this->data += $fields_array;
             }
         }
@@ -190,7 +188,7 @@ class UserFieldsInput {
             // Compulsory Core Fields
             return [
                 'user_id'         => 0,
-                'user_hide_email' => $this->_userHideEmail,
+                'user_hide_email' => 0,
                 'user_avatar'     => '',
                 'user_posts'      => 0,
                 'user_threads'    => 0,
@@ -326,7 +324,7 @@ class UserFieldsInput {
 
                             $this->_isValidCurrentPassword = 1;
                             if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
-                                Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
+                                Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo());
                             }
                             break;
                         case '1':
@@ -410,7 +408,7 @@ class UserFieldsInput {
 
                                     // Reset cookie for current session and logs out user
                                     if (!defined('ADMIN_PANEL') && !$this->skipCurrentPass) {
-                                        Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo(), FALSE);
+                                        Authenticate::setUserCookie($this->userData['user_id'], $passAuth->getNewSalt(), $passAuth->getNewAlgo());
                                     }
 
                                     break;
@@ -531,43 +529,6 @@ class UserFieldsInput {
 
         $this->data['user_hide_email'] = check_post('user_hide_email');
 
-    }
-
-    /**
-     * Require a valid password when changing email address
-     */
-    private function verifyEmailPass() {
-        $locale = fusion_get_locale();
-        // Validation of password change
-        if ($_userPassword = self::_getPasswordInput('user_email_password')) {
-
-            /**
-             * Validation of Password
-             */
-            $passAuth = new PasswordAuth();
-            $passAuth->inputPassword = $_userPassword;
-            $passAuth->currentAlgo = $this->userData['user_algo'];
-            $passAuth->currentSalt = $this->userData['user_salt'];
-            $passAuth->currentPasswordHash = $this->userData['user_password'];
-
-            $passAuth->currentPassCheckLength = 1;          // add settings
-            $passAuth->currentPassCheckCase = FALSE;        // add settings
-            $passAuth->currentPassCheckNum = FALSE;         // add settings
-            $passAuth->currentPassCheckSpecialchar = FALSE; // add settings
-
-            if ($passAuth->isValidCurrentPassword()) {
-                $this->_isValidCurrentPassword = 1;
-
-            } else {
-
-                fusion_stop($passAuth->getError());
-
-            }
-        } else {
-            fusion_stop();
-            Defender::setInputError('user_email_password');
-            Defender::setErrorText('user_email_password', $locale['u149']);
-        }
     }
 
     /**
@@ -853,7 +814,7 @@ class UserFieldsInput {
         } else { // check db only - admin cannot save profile page without password
 
             if (iADMIN) {
-                $require_valid_password = $this->userData['user_admin_password'] ? TRUE : FALSE;
+                $require_valid_password = $this->userData['user_admin_password'];
                 if (!$require_valid_password) {
                     // 149 for admin
                     Defender::stop();
@@ -939,9 +900,7 @@ class UserFieldsInput {
      * To validate only when _setUserEmail is true
      * Changing Email address
      */
-    private function verify_password() {
-        $locale = fusion_get_locale();
-
+    private function verifyEmailPass() {
         // Validation of password change
         if ($_userPassword = self::_getPasswordInput('user_password')) {
             /**
@@ -953,17 +912,17 @@ class UserFieldsInput {
             $passAuth->currentSalt = $this->userData['user_salt'];
             $passAuth->currentPasswordHash = $this->userData['user_password'];
 
-            $passAuth->currentPassCheckLength = 8;         // add settings
-            $passAuth->currentPassCheckCase = TRUE;        // add settings
-            $passAuth->currentPassCheckNum = TRUE;         // add settings
-            $passAuth->currentPassCheckSpecialchar = TRUE; // add settings
+            $passAuth->currentPassCheckLength = 1;          // add settings
+            $passAuth->currentPassCheckCase = FALSE;        // add settings
+            $passAuth->currentPassCheckNum = FALSE;         // add settings
+            $passAuth->currentPassCheckSpecialchar = FALSE; // add settings
 
             if ($passAuth->isValidCurrentPassword()) {
                 $this->_isValidCurrentPassword = 1;
             } else {
                 fusion_stop($passAuth->getError());
-                //Defender::setInputError('user_password');
-                //Defender::setErrorText('user_password',$passAuth->getError());
+                Defender::setInputError('user_password');
+                Defender::setErrorText('user_password', $passAuth->getError());
             }
         }
     }
