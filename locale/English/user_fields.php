@@ -157,3 +157,8 @@ If you really want to change your email address to this one please click the fol
 [EMAIL_VERIFY_LINK]<br/>
 Note: you have to be logged in to proceed.<br/>
 Regards, [SITEUSERNAME]<br/>[SITENAME]";
+// Checker
+$locale['300'] = "Password should contain at least 1 special character";
+$locale['301'] = "Password should contain at least 1 uppercase and 1 lowercase character";
+$locale['302'] = "Password should contain at least 1 number character";
+$locale['303'] = "Password should be at least 8 characters long";

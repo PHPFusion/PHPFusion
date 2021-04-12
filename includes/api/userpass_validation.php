@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: username_validation.php
-| Author: PHPFusion Developers Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,50 +17,47 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-function xhttp_userpasscheck() {
+$userpass = (string)filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_STRING);
+$result = [];
+if (!empty($userpass)) {
+    $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 
-    $userpass = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
-    $result = [];
-    if (!empty($userpass)) {
-        // Check length
-        $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, FALSE, FALSE, FALSE);
+    // Check length
+    $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, FALSE, FALSE, FALSE);
+    if (preg_match('/'.$regex.'/', $userpass)) {
+        // Check contains number
+        $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, FALSE, FALSE);
         if (preg_match('/'.$regex.'/', $userpass)) {
-            // Check contains number
-            $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, FALSE, FALSE);
+            // Check contains at least 1 upper and 1 lowercase
+            $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, FALSE);
             if (preg_match('/'.$regex.'/', $userpass)) {
-                // Check contains at least 1 upper and 1 lowercase
-                $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, FALSE);
+                // Check contains special char
+                $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, TRUE);
                 if (preg_match('/'.$regex.'/', $userpass)) {
-                    // Check contains special char
-                    $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, TRUE);
-                    if (preg_match('/'.$regex.'/', $userpass)) {
-                        $result['result'] = 'valid';
+                    $result['result'] = 'valid';
 
-                    } else {
-                        $result['result'] = 'invalid';
-                        $result['response'] = 'Password should contain at least 1 special character';
-                    }
                 } else {
                     $result['result'] = 'invalid';
-                    $result['response'] = 'Password should contain at least 1 uppercase and 1 lowercase character';
+                    $result['response'] = $locale['300'];
                 }
             } else {
-                // no number
                 $result['result'] = 'invalid';
-                $result['response'] = 'Password should contain at least 1 number character';
+                $result['response'] = $locale['301'];
             }
         } else {
-            // password too short
+            // no number
             $result['result'] = 'invalid';
-            $result['response'] = 'Password should be at least 8 characters long';
+            $result['response'] = $locale['302'];
         }
-
-        $result['regex'] = $regex;
-
-        header('Content-Type: application/json');
-        echo json_encode($result);
+    } else {
+        // password too short
+        $result['result'] = 'invalid';
+        $result['response'] = $locale['303'];
     }
-    die();
-}
 
-fusion_add_hook("fusion_filters", "xhttp_userpasscheck");
+    $result['regex'] = $regex;
+
+    header('Content-Type: application/json');
+    echo json_encode($result);
+}
+die();

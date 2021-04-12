@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
+require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-$locale = fusion_get_locale("", LOCALE.LOCALESET."user_fields.php");
+$locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 include THEMES."templates/global/profile.tpl.php";
 
 if (!iMEMBER) {
@@ -28,9 +28,8 @@ add_to_title($locale['u102']);
 
 $info = [];
 $errors = [];
-//$_GET['profiles'] = isset($_GET['profiles']) && isnum($_GET['profiles']) ? $_GET['profiles'] : 1;
 
-if (check_post("update_profile")) {
+if (check_post('update_profile')) {
 
     $userInput = new PHPFusion\UserFieldsInput();
     $userInput->setUserNameChange(fusion_get_settings('username_change')); // accept or not username change.
@@ -42,10 +41,9 @@ if (check_post("update_profile")) {
         redirect(FUSION_REQUEST);
     }
 
-
-} else if (isset($_GET['code']) && fusion_get_settings('email_verification') == 1) {
+} else if (check_get('code') && fusion_get_settings('email_verification') == 1) {
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->verifyCode($_GET['code']);
+    $userInput->verifyCode(get('code'));
     redirect(FUSION_REQUEST);
 }
 
@@ -56,6 +54,7 @@ if (fusion_get_settings('email_verification') == 1) {
         $info['email_notification'] = sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201'];
     }
 }
+
 $userFields = new PHPFusion\UserFields();
 $userFields->postName = "update_profile";
 $userFields->postValue = $locale['u105'];
@@ -66,73 +65,78 @@ $userFields->setUserNameChange(fusion_get_settings("username_change"));
 $userFields->registration = FALSE;
 $userFields->display_profile_input($info);
 
-add_to_jquery('
- function delayKeyupTimer(callback, ms) {
-                    let timer = 0;
-                    return function () {
-                        let context = this, args = arguments;
-                        clearTimeout(timer);
-                        timer = setTimeout(function () {
-                            callback.apply(context, args);
-                        }, ms || 0);
-                    };
-                }
-    $("input#user_email").on("change input paste change", function(ev) {
-        $("#user_email_change").show();
-    });
+if (!defined('EDITPROFILE_JS_CHECK')) {
+    define('EDITPROFILE_JS_CHECK', TRUE);
+    add_to_jquery('
+        function delayKeyupTimer(callback, ms) {
+            let timer = 0;
+            return function () {
+                let context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    callback.apply(context, args);
+                }, ms || 0);
+            };
+        }
 
-    let r_userpass1 = $("#userfieldsform #user_password1");    
-    let r_userpass1_field = $("#userfieldsform #user_password1-field");    
-    r_userpass1.keyup(delayKeyupTimer(function (e) {        
-        $.ajax({
-            url: "'.INCLUDES.'api/?api=userpass-check",
-            method: "GET",
-            data: $.param({"name": $(this).val()}),
-            dataType: "json",
-            success: function (e) {
-            if (e.result === "valid") {
-                r_userpass1.removeClass("is-invalid");
-                r_userpass1_field.removeClass("has-error");
-                $(".userpass-checker").remove();
-
-            } else if (e.result === "invalid") {
-
-                r_userpass1.addClass("is-invalid").removeClass("is-valid");
-                r_userpass1_field.addClass("has-error").removeClass("has-success");
-                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
+        // User Password check
+        let r_userpass1 = $("#userfieldsform #user_password1");
+        let r_userpass1_field = $("#userfieldsform #user_password1-field"); // BS3
+        r_userpass1.keyup(delayKeyupTimer(function () {
+            $.ajax({
+                url: "'.INCLUDES.'api/?api=userpass-check",
+                method: "GET",
+                data: $.param({"pass": $(this).val()}),
+                dataType: "json",
+                success: function (e) {
                     $(".userpass-checker").remove();
-                    $(feedback_html).insertAfter(r_userpass1);
+
+                    if (e.result === "valid") {
+                        r_userpass1.removeClass("is-invalid");
+                        r_userpass1_field.removeClass("has-error"); // BS3
+                    } else if (e.result === "invalid") {
+                        r_userpass1.addClass("is-invalid").removeClass("is-valid");
+                        r_userpass1_field.addClass("has-error").removeClass("has-success"); // BS3
+                        let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">" + e.response + "</div>";
+                        if (r_userpass1_field.find(".input-group").length > 0) {
+                            r_userpass1_field.find(".input-group").after(feedback_html);
+                        } else {
+                            r_userpass1.after(feedback_html);
+                        }
+                    }
                 }
-        }
-        });
-    }, 500));
-    
-    let r_adminpass1 = $("#userfieldsform #user_admin_password1");    
-    let r_adminpass1_field = $("#userfieldsform #user_admin_password1-field");    
-    r_adminpass1.keyup(delayKeyupTimer(function (e) {        
-        $.ajax({
-            url: "'.INCLUDES.'api/?api=userpass-check",
-            method: "GET",
-            data: $.param({"name": $(this).val()}),
-            dataType: "json",
-            success: function (e) {
-            if (e.result === "valid") {
-                r_adminpass1.removeClass("is-invalid");
-                r_adminpass1_field.removeClass("has-error");
-                $(".userpass-checker").remove();
+            });
+        }, 400));
 
-            } else if (e.result === "invalid") {
+        // Admin Password check
+        let r_adminpass1 = $("#userfieldsform #user_admin_password1");
+        let r_adminpass1_field = $("#userfieldsform #user_admin_password1-field"); // BS3
+        r_adminpass1.keyup(delayKeyupTimer(function () {
+            $.ajax({
+                url: "'.INCLUDES.'api/?api=userpass-check",
+                method: "GET",
+                data: $.param({"pass": $(this).val()}),
+                dataType: "json",
+                success: function (e) {
+                    $(".adminpass-checker").remove();
 
-                r_adminpass1.addClass("is-invalid").removeClass("is-valid");
-                r_adminpass1_field.addClass("has-error").removeClass("has-success");
-                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
-                $(".userpass-checker").remove();
-                $(feedback_html).insertAfter(r_adminpass1);
-            }
-        }
-        });
-    }, 500));
-
-');
+                    if (e.result === "valid") {
+                        r_adminpass1.removeClass("is-invalid");
+                        r_adminpass1_field.removeClass("has-error"); // BS3
+                    } else if (e.result === "invalid") {
+                        r_adminpass1.addClass("is-invalid").removeClass("is-valid");
+                        r_adminpass1_field.addClass("has-error").removeClass("has-success"); // BS3
+                        let feedback_html = "<div class=\"adminpass-checker invalid-feedback help-block\">" + e.response + "</div>";
+                        if (r_adminpass1_field.find(".input-group").length > 0) {
+                            r_adminpass1_field.find(".input-group").after(feedback_html);
+                        } else {
+                            r_adminpass1.after(feedback_html);
+                        }
+                    }
+                }
+            });
+        }, 400));
+    ');
+}
 
 require_once THEMES.'templates/footer.php';

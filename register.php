@@ -41,16 +41,16 @@ if ($settings['gateway'] == 1) {
 if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $settings['gateway'] == 0) {
     $errors = [];
 
-    if (isset($_GET['email']) && isset($_GET['code'])) {
-        if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $_GET['email'])) {
+    if (check_get('email') && check_get('code')) {
+        if (!preg_check("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", get('email'))) {
             redirect("register.php?error=activate");
         }
 
-        if (!preg_check("/^[0-9a-z]{40}$/", $_GET['code'])) {
+        if (!preg_check("/^[0-9a-z]{40}$/", get('code'))) {
             redirect("register.php?error=activate");
         }
 
-        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => $_GET['code'], ':email' => $_GET['email']]);
+        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => get('code'), ':email' => get('email')]);
 
         if (dbrows($result) > 0) {
 
@@ -66,18 +66,16 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
 
             dbquery_insert(DB_USERS, $user_info, 'save');
 
-            $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => $_GET['code']]);
+            $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => get('code')]);
 
             if ($settings['admin_activation'] == 1) {
                 addNotice("info", $locale['u171']." - ".$locale['u162'], $settings["opening_page"]);
             } else {
                 addNotice("info", $locale['u171']." - ".$locale['u161'], $settings["opening_page"]);
             }
-            redirect($settings['opening_page']);
 
-        } else {
-            redirect($settings['opening_page']);
         }
+        redirect($settings['opening_page']);
 
     } else if (check_post('register')) {
 
@@ -123,59 +121,61 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                     };
                 }
 
+                // Username check
                 let r_username = $("#userfieldsform #user_name");
-                let r_username_field = $("#userfieldsform #user_name-field");
-                r_username.keyup(delayKeyupTimer(function (e) {
+                let r_username_field = $("#userfieldsform #user_name-field"); // BS3
+                r_username.keyup(delayKeyupTimer(function () {
                     $.ajax({
                         url: "'.INCLUDES.'api/?api=username-check",
                         method: "GET",
                         data: $.param({"name": $(this).val()}),
                         dataType: "json",
                         success: function (e) {
+                            $(".username-checker").remove();
+
                             if (e.result === "valid") {
                                 r_username.addClass("is-valid").removeClass("is-invalid");
-                                r_username_field.addClass("has-success").removeClass("has-error");
-                                let feedback_html = "<div class=\"username-checker valid-feedback help-block\">'.$locale['global_413'].'</div>";
-                                $(".username-checker").remove();
-                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));
+                                r_username_field.addClass("has-success").removeClass("has-error"); // BS3
+                                let feedback_html = "<div class=\"username-checker valid-feedback help-block\">" + e.response + "</div>";
+                                r_username.after(feedback_html);
                             } else if (e.result === "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
-                                r_username_field.addClass("has-error").removeClass("has-success");
-                                let feedback_html = "<div class=\"username-checker invalid-feedback help-block\">'.$locale['global_414'].'</div>";
-                                $(".username-checker").remove();
-                                $(feedback_html).insertAfter($("#userfieldsform #user_name"));
+                                r_username_field.addClass("has-error").removeClass("has-success"); // BS3
+                                let feedback_html = "<div class=\"username-checker invalid-feedback help-block\">" + e.response + "</div>";
+                                r_username.after(feedback_html);
                             }
                         }
                     });
-                }, 500));
-                
-                
+                }, 400));
+
+                // Password check
                 let r_userpass1 = $("#userfieldsform #user_password1");
-                let r_userpass1_field = $("#userfieldsform #user_password1-field");
-                r_userpass1.keyup(delayKeyupTimer(function (e) {
+                let r_userpass1_field = $("#userfieldsform #user_password1-field"); // BS3
+                r_userpass1.keyup(delayKeyupTimer(function () {
                     $.ajax({
                         url: "'.INCLUDES.'api/?api=userpass-check",
                         method: "GET",
-                        data: $.param({"name": $(this).val()}),
+                        data: $.param({"pass": $(this).val()}),
                         dataType: "json",
                         success: function (e) {
+                            $(".userpass-checker").remove();
+
                             if (e.result === "valid") {
                                 r_userpass1.removeClass("is-invalid");
-                                r_userpass1_field.removeClass("has-error");                                
-                                $(".userpass-checker").remove();
-                                                                
+                                r_userpass1_field.removeClass("has-error"); // BS3
                             } else if (e.result === "invalid") {
-                            
                                 r_userpass1.addClass("is-invalid").removeClass("is-valid");
-                                r_userpass1_field.addClass("has-error").removeClass("has-success");
-                                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">"+ e.response +"</div>";
-                                $(".userpass-checker").remove();
-                                $(feedback_html).insertAfter($("#userfieldsform #user_password1"));
+                                r_userpass1_field.addClass("has-error").removeClass("has-success"); // BS3
+                                let feedback_html = "<div class=\"userpass-checker invalid-feedback help-block\">" + e.response + "</div>";
+                                if (r_userpass1_field.find(".input-group").length > 0) {
+                                    r_userpass1_field.find(".input-group").after(feedback_html);
+                                } else {
+                                    r_userpass1.after(feedback_html);
+                                }
                             }
                         }
                     });
-                }, 500));
-                
+                }, 400));
             ');
         }
     }
