@@ -160,5 +160,5 @@ Regards, [SITEUSERNAME]<br/>[SITENAME]";
 // Checker
 $locale['300'] = "Password should contain at least 1 special character";
 $locale['301'] = "Password should contain at least 1 uppercase and 1 lowercase character";
-$locale['302'] = "Password should contain at least 1 number character";
+$locale['302'] = "Password should contain at least 1 number";
 $locale['303'] = "Password should be at least 8 characters long";
