@@ -58,7 +58,7 @@ if (check_get('remove') && get('remove', FILTER_SANITIZE_NUMBER_INT) != 1) {
 
 if (check_post('update_admin') && get('user_id', FILTER_SANITIZE_NUMBER_INT) != 1) {
     if (check_post('rights')) {
-        $user_rights = implode('.', $_POST['rights']);
+        $user_rights = implode('.', post(['rights']));
         dbquery("UPDATE ".DB_USERS." SET user_rights=:userRight WHERE user_id=:userId AND user_level<=:userLevel", [
             ':userRight' => $user_rights,
             ':userId'    => get('user_id'),
