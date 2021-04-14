@@ -2386,13 +2386,17 @@ function fusion_rename($origin, $target) {
  * @return bool|string
  */
 function fusion_get_contents($url) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // PHP 7.1
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    $data = curl_exec($ch);
-    curl_close($ch);
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // PHP 7.1
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $data = @file_get_contents($url);
+    }
     return $data;
 }
 
