@@ -108,7 +108,6 @@ if ($settings['tinymce_enabled'] == 1) {
         function advanced() {
             tinymce.init({
                 file_picker_callback : mceElf.browser,
-                images_upload_handler: mceElf.uploadHandler,
                 selector: 'textarea',
                 resize: 'both',
                 height: 300,
@@ -126,7 +125,7 @@ if ($settings['tinymce_enabled'] == 1) {
                 toolbar3: 'link unlink anchor | hr | responsivefilemanager | image media | forecolor backcolor charmap emoticons | codesample | code | preview fullpage | fullscreen',
                 menubar: 'edit insert view format table',
                 image_advtab: true,
-                relative_urls : false,
+                relative_urls : true,
                 remove_script_host : false,
                 document_base_url : '".$settings['siteurl']."',
                 content_css: [
