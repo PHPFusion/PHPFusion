@@ -38,21 +38,21 @@ if (!empty($userpass)) {
 
                 } else {
                     $result['result'] = 'invalid';
-                    $result['response'] = $locale['300'];
+                    $result['response'] = $locale['u300'];
                 }
             } else {
                 $result['result'] = 'invalid';
-                $result['response'] = $locale['301'];
+                $result['response'] = $locale['u301'];
             }
         } else {
             // no number
             $result['result'] = 'invalid';
-            $result['response'] = $locale['302'];
+            $result['response'] = $locale['u302'];
         }
     } else {
         // password too short
         $result['result'] = 'invalid';
-        $result['response'] = $locale['303'];
+        $result['response'] = $locale['u303'];
     }
 
     $result['regex'] = $regex;

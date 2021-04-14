@@ -88,11 +88,13 @@ class PasswordAuth {
      * @return bool
      */
     public function checkInputPassword($value) {
+        $locale = fusion_get_locale();
+
         if ($value) {
             //$currentPassCheckLength
             $regex = self::_passwordStrengthOpts($this->currentPassCheckLength, FALSE, FALSE, FALSE);
             if (!preg_match('/'.$regex.'/', $value)) {
-                $this->error = 'Password should be at least 8 characters long';
+                $this->error = $locale['u303'];
                 return FALSE;
             }
 
@@ -100,7 +102,7 @@ class PasswordAuth {
                 // Check contains number
                 $regex = self::_passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum, FALSE, FALSE);
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = 'Password should contain at least 1 number character';
+                    $this->error = $locale['u302'];
                     return FALSE;
                 }
             }
@@ -109,7 +111,7 @@ class PasswordAuth {
                 // Check contains at least 1 upper and 1 lowercase
                 $regex = self::_passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum, $this->currentPassCheckCase, FALSE);
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = 'Password should contain at least 1 uppercase and 1 lowercase character';
+                    $this->error = $locale['u301'];
                     return FALSE;
                 }
             }
@@ -119,7 +121,7 @@ class PasswordAuth {
                 $regex = self::_passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum, $this->currentPassCheckCase, $this->currentPassCheckSpecialchar);
 
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = 'Password should contain at least 1 special character';
+                    $this->error = $locale['u300'];
                     return FALSE;
                 }
             }
