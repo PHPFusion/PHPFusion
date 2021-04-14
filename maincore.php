@@ -1637,6 +1637,27 @@ function get_http_response_code($url) {
     return substr($headers[0], 9, 3);
 }
 
+/**
+ * cURL method to get any contents for Apache that does not support SSL for remote paths
+ *
+ * @param $url
+ *
+ * @return bool|string
+ */
+function fusion_get_contents($url) {
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $data = @file_get_contents($url);
+    }
+    return $data;
+}
+
 include INCLUDES."system_images.php";
 
 $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');

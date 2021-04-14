@@ -24,7 +24,7 @@ if (iADMIN) {
     if ($settings['update_checker'] == 1) {
         $url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/8.txt';
         if (@get_http_response_code($url) == 200) {
-            $file = @file_get_contents($url);
+            $file = fusion_get_contents($url);
             $array = explode("\n", $file);
             $version = $array[0];
 
