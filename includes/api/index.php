@@ -43,6 +43,7 @@ $endpoints = [
     + get_extended_endpoints();
 
 if ($api = get("api")) {
+
     if (isset($endpoints[$api])) {
 
         require $endpoints[$api];

@@ -84,6 +84,7 @@ class UserFieldsInput {
         $this->data = $this->_setEmptyFields();
 
         if ($this->username_change) {
+
             $this->_setUserName();
         }
 
@@ -218,68 +219,71 @@ class UserFieldsInput {
 
         $locale = fusion_get_locale();
 
-        $this->_userName = sanitizer("user_name", "", "user_name");
+        $defender = Defender::getInstance();
 
-        if (check_post("user_name")) {
+        if (post("user_name")) {
 
-            $uban = explode(',', fusion_get_settings('username_ban'));
+            $this->_userName = sanitizer("user_name", "", "user_name");
 
-            if (!defined('ADMIN_PANEL') && $this->registration) {
-                $this->userData["user_name"] = fusion_get_userdata("user_name");
-            }
+            if (!empty($this->_userName)) {
+                $uban = explode(',', fusion_get_settings('username_ban'));
 
-            if ($this->_userName != $this->userData['user_name']) {
+                if (!defined('ADMIN_PANEL') && $this->registration) {
+                    $this->userData["user_name"] = fusion_get_userdata("user_name");
+                }
 
-                $defender = Defender::getInstance();
+                if ($this->_userName != $this->userData['user_name']) {
 
-                if (empty($this->_userName)) {
-                    fusion_stop();
 
-                    $defender::setInputError('user_name');
-                    $defender::setErrorText('user_name', $locale['u122']);
-                } else if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
+                    if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
 
-                    // Check for invalid characters
-                    fusion_stop();
-
-                    $defender::setInputError('user_name');
-                    $defender::setErrorText('user_name', $locale['u120']);
-
-                } else if (in_array($this->_userName, $uban)) {
-
-                    // Check for contains username
-                    fusion_stop();
-
-                    $defender::setInputError('user_name');
-
-                    $defender::setErrorText('user_name', $locale['u119']);
-
-                } else {
-
-                    // Make sure the username is not used already
-                    $name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
-                    $name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
-
-                    if ($name_active == 0 && $name_inactive == 0) {
-
-                        $this->data['user_name'] = $this->_userName;
-
-                    } else {
-
+                        // Check for invalid characters
                         fusion_stop();
 
                         $defender::setInputError('user_name');
+                        $defender::setErrorText('user_name', $locale['u120']);
 
-                        $defender::setErrorText('user_name', $locale['u121']);
+                    } else if (in_array($this->_userName, $uban)) {
+
+                        // Check for contains username
+                        fusion_stop();
+
+                        $defender::setInputError('user_name');
+                        $defender::setErrorText('user_name', $locale['u119']);
+
+                    } else {
+
+                        // Make sure the username is not used already
+                        $name_active = dbcount("(user_id)", DB_USERS, "user_name='".$this->_userName."'");
+                        $name_inactive = dbcount("(user_code)", DB_NEW_USERS, "user_name='".$this->_userName."'");
+
+                        if ($name_active == 0 && $name_inactive == 0) {
+
+                            $this->data['user_name'] = $this->_userName;
+
+                        } else {
+
+                            fusion_stop();
+
+                            $defender::setInputError('user_name');
+
+                            $defender::setErrorText('user_name', $locale['u121']);
+                        }
                     }
-                }
-            } else {
 
-                if ($this->_method == 'validate_update') {
-                    $this->data['user_name'] = $this->_userName;
-                }
+                } else {
 
+                    if ($this->_method == 'validate_update') {
+                        $this->data['user_name'] = $this->_userName;
+                    }
+
+                }
             }
+
+        } else {
+
+            $defender::setErrorText('user_name', $locale['u122']);
+            $defender::setInputError('user_name');
         }
     }
 

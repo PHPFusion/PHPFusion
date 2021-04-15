@@ -109,7 +109,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addNotice("danger", $options['error_text']);
         }
     }
 

@@ -82,7 +82,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addNotice("danger", $options['error_text']);
         }
     }
 

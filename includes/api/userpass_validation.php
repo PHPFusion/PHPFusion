@@ -17,47 +17,54 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$userpass = (string)filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_STRING);
-$result = [];
-if (!empty($userpass)) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
+/**
+ * Validate password strength
+ */
+function xuserpass_validation() {
+    $userpass = (string)filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_STRING);
+    $result = [];
+    if (!empty($userpass)) {
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 
-    // Check length
-    $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, FALSE, FALSE, FALSE);
-    if (preg_match('/'.$regex.'/', $userpass)) {
-        // Check contains number
-        $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, FALSE, FALSE);
+        // Check length
+        $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, FALSE, FALSE, FALSE);
         if (preg_match('/'.$regex.'/', $userpass)) {
-            // Check contains at least 1 upper and 1 lowercase
-            $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, FALSE);
+            // Check contains number
+            $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, FALSE, FALSE);
             if (preg_match('/'.$regex.'/', $userpass)) {
-                // Check contains special char
-                $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, TRUE);
+                // Check contains at least 1 upper and 1 lowercase
+                $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, FALSE);
                 if (preg_match('/'.$regex.'/', $userpass)) {
-                    $result['result'] = 'valid';
+                    // Check contains special char
+                    $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, TRUE);
+                    if (preg_match('/'.$regex.'/', $userpass)) {
+                        $result['result'] = 'valid';
 
+                    } else {
+                        $result['result'] = 'invalid';
+                        $result['response'] = $locale['u300'];
+                    }
                 } else {
                     $result['result'] = 'invalid';
-                    $result['response'] = $locale['u300'];
+                    $result['response'] = $locale['u301'];
                 }
             } else {
+                // no number
                 $result['result'] = 'invalid';
-                $result['response'] = $locale['u301'];
+                $result['response'] = $locale['u302'];
             }
         } else {
-            // no number
+            // password too short
             $result['result'] = 'invalid';
-            $result['response'] = $locale['u302'];
+            $result['response'] = $locale['u303'];
         }
-    } else {
-        // password too short
-        $result['result'] = 'invalid';
-        $result['response'] = $locale['u303'];
+
+        $result['regex'] = $regex;
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
     }
-
-    $result['regex'] = $regex;
-
-    header('Content-Type: application/json');
-    echo json_encode($result);
+    die();
 }
-die();
+
+fusion_add_hook('fusion_filters', 'xuserpass_validation');
