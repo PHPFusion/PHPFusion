@@ -75,12 +75,9 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<div class='btn-group m-t-5 m-b-5'>\n";
         $res .= "<button type='button' value='link' title='".$locale['html_010']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\"><i class='fa fa-link'></i></button>\n";
         //$res .= "<button type='button' value='img' title='".$locale['html_011']."' class='btn btn-sm btn-default dropdown-toggle button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\"><i class='fa fa-picture-o'></i></button>\n";
-        $res .= "<button type='button' value='center' title='".$locale['html_012']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;center&gt;', '&lt;/center&gt;', '".$formname."');\">center</button>\n";
-        $res .= "<button type='button' value='small' title='".$locale['html_013']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;span class=\'small\'&gt;', '&lt;/span&gt;', '".$formname."');\">small</button>\n";
-        $res .= "<button type='button' value='small2' title='".$locale['html_014']."' class='btn btn-sm  btn-default button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\">small2</button>\n";
+        $res .= "<button type='button' value='small' title='".$locale['html_013']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;small&gt;', '&lt;/small&gt;', '".$formname."');\">small</button>\n";
         $res .= "<button type='button' value='alt' title='".$locale['html_015']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\">alt</button>\n";
         $res .= "</div>\n";
-
 
         $res .= "<div class='btn-group m-t-5 m-b-5'><button type='button' value='code' title='code' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;code&gt;', '&lt;/code&gt;', '".$formname."');\"><i class='fa fa-code'></i></button></div>\n";
 
