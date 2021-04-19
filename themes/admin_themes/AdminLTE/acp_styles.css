@@ -1573,6 +1573,7 @@ input[type="checkbox"] {
     border-radius: 0;
     box-shadow: none;
     border-color: #d2d6de;
+    vertical-align: middle;
 }
 
 .textbox:focus,
