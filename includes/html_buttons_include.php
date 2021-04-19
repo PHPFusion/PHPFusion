@@ -32,9 +32,8 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
         $res .= "<input type='button' value='u' class='button' style='text-decoration:underline;' onclick=\"addText('".$textarea."', '&lt;u&gt;', '&lt;/u&gt;', '".$formname."');\" />\n";
         $res .= "<input type='button' value='link' class='button' onclick=\"addText('".$textarea."', '&lt;a href=\'', '\' target=\'_blank\'>Link&lt;/a&gt;', '".$formname."');\" />\n";
         $res .= "<input type='button' value='img' class='button' onclick=\"addText('".$textarea."', '&lt;img src=\'".str_replace("../", "", $folder)."', '\' style=\'margin:5px\' alt=\'\' align=\'left\' /&gt;', '".$formname."');\" />\n";
-        $res .= "<input type='button' value='center' class='button' onclick=\"addText('".$textarea."', '&lt;center&gt;', '&lt;/center&gt;', '".$formname."');\" />\n";
-        $res .= "<input type='button' value='small' class='button' onclick=\"addText('".$textarea."', '&lt;span class=\'small\'&gt;', '&lt;/span&gt;', '".$formname."');\" />\n";
-        $res .= "<input type='button' value='small2' class='button' onclick=\"addText('".$textarea."', '&lt;span class=\'small2\'&gt;', '&lt;/span&gt;', '".$formname."');\" />\n";
+        $res .= "<input type='button' value='center' class='button' onclick=\"addText('".$textarea."', '&lt;p style=\'text-align:center;\'&gt;', '&lt;/p&gt;', '".$formname."');\" />\n";
+        $res .= "<input type='button' value='small' class='button' onclick=\"addText('".$textarea."', '&lt;small&gt;', '&lt;/small&gt;', '".$formname."');\" />\n";
         $res .= "<input type='button' value='alt' class='button' onclick=\"addText('".$textarea."', '&lt;span class=\'alt\'&gt;', '&lt;/span&gt;', '".$formname."');\" />\n";
     }
 
