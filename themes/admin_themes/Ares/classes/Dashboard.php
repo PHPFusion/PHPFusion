@@ -292,7 +292,7 @@ class Dashboard {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
 
-        $html = fusion_get_function('opentable', $locale['200a']);
+        $html = fusion_get_function('opentable', '');
             $html .= '<div class="row">';
             if (count($admin_icons['data']) > 0) {
                 foreach ($admin_icons['data'] as $data) {
