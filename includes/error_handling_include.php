@@ -90,7 +90,8 @@ function getErrorLevel($level, $desc = FALSE) {
         512  => ["E_USER_WARNING", $locale['E_USER_WARNING']],
         1024 => ["E_USER_NOTICE", $locale['E_USER_NOTICE']],
         2047 => ["E_ALL", $locale['E_ALL']],
-        2048 => ["E_STRICT", $locale['E_STRICT']]
+        // 2048 => ["E_STRICT", $locale['E_STRICT']]
+        2048 => ["E_STRICT", '']
     ];
 
     if (isset($errorLevels[$level])) {
