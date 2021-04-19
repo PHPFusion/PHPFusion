@@ -211,7 +211,7 @@ if (isset($_POST['save'])) {
     echo "<div class='panel panel-default box-shadow' style='border:none;'>";
     echo "<div class='panel-body'>";
 
-    echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 pull-left'>".$locale['424']." <br />";
+    echo $locale['424']." <br />";
     echo "<textarea name='page_content' rows='20' class='textbox col-xs-12 col-sm-12 col-md-12 col-lg-12' style='width:100%'>".$page_content."</textarea></div>\n";
 
     if (!isset($_COOKIE['custom_pages_tinymce']) || !$_COOKIE['custom_pages_tinymce'] || !$settings['tinymce_enabled']) {
@@ -223,7 +223,6 @@ if (isset($_POST['save'])) {
         echo display_html("inputform", "page_content", TRUE)."\n";
         echo "</div>\n";
     }
-    echo "</div>\n";
     echo "</div>\n";
 
     echo "<div class='panel panel-default box-shadow' style='border:none;'>";
