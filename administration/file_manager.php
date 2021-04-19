@@ -39,11 +39,7 @@ $("#elfinder").elfinder({
     baseUrl: "'.INCLUDES.'elFinder/",
     url: "'.INCLUDES.'elFinder/php/connector.php'.fusion_get_aidlink().'"
     '.$lang.',
-    themes: {
-        "material-light": "themes/manifests/material-light.json",
-        "material": "themes/manifests/material-default.json",
-        "material-gray": "themes/manifests/material-gray.json"
-    },
+    cssAutoLoad: ["themes/Material/css/theme-light.min.css"],
     ui: ["toolbar", "tree", "path", "stat"],
     uiOptions: {
         toolbar: [
