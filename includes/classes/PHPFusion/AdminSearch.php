@@ -93,10 +93,10 @@ class AdminSearch {
                             $title = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $title;
                         }
 
-                        $icon = get_image('ac_'.$data['admin_rights']);
-                        if (stristr(get_image('ac_'.$data['admin_rights']), '/infusions/')) {
-                            $icon = str_replace(ADMIN.'images/', fusion_get_settings('siteurl').'infusions/', get_image('ac_'.$data['admin_rights']));
-                        }
+                        $icon = strtr(get_image('ac_'.$data['admin_rights']), [
+                            //INFUSIONS => fusion_get_settings('siteurl').'infusions/',
+                            ADMIN     => fusion_get_settings('siteurl').'administration/'
+                        ]);
 
                         if (checkrights($data['admin_rights'])) {
                             $result[] = [

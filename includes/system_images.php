@@ -44,10 +44,12 @@ if (db_exists(DB_BLOG_CATS)) {
     }
 }
 
-$result = dbquery("SELECT admin_rights, admin_title, admin_image FROM ".DB_ADMIN);
+$result = dbquery("SELECT admin_rights, admin_title, admin_image as image FROM ".DB_ADMIN);
 $ac_images = [];
 while ($data = dbarray($result)) {
-    $ac_images["ac_".$data['admin_rights']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/notfound.png");
+    $ac_images["ac_".$data['admin_rights']] = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/notfound.png");
+
+    // $ac_images["ac_".$data['admin_rights']] = file_exists(ADMIN."images/".$data['admin_image']) ? ADMIN."images/".$data['admin_image'] : (file_exists($data['admin_image']) ? $data['admin_image'] : ADMIN."images/notfound.png");
 }
 
 /*
