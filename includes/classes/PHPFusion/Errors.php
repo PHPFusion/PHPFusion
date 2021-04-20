@@ -457,7 +457,8 @@ class Errors {
             self::E_USER_WARNING    => ["E_USER_WARNING", $locale['E_USER_WARNING']],
             self::E_USER_NOTICE     => ["E_USER_NOTICE", $locale['E_USER_NOTICE']],
             self::E_ALL             => ["E_ALL", $locale['E_ALL']],
-            self::E_STRICT          => ["E_STRICT", $locale['E_STRICT']]
+            // self::E_STRICT          => ["E_STRICT", $locale['E_STRICT']]
+            self::E_STRICT          => ["E_STRICT", '']
         ];
         if (isset($error_types[$type])) {
             return $error_types[$type][1];
