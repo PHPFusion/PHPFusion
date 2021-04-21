@@ -40,11 +40,11 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         if (dbrows($result)) {
             $data = dbarray($result);
             if ($data['submit_type'] == "p") {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 @unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
             }
             if ($data['submit_type'] == "d") {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 if ($submit_criteria['download_file'])
                     @unlink(DOWNLOADS."submissions/".$submit_criteria['download_file']);
                 if ($submit_criteria['download_image']) {
@@ -65,7 +65,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='l' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $links .= "<tr>\n<td class='tbl1'>".$submit_criteria['link_name']."</td>\n";
                 $links .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=l&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $links .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -76,7 +76,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='n' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $news .= "<tr>\n<td class='tbl1'>".$submit_criteria['news_subject']."</td>\n";
                 $news .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=n&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $news .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -87,7 +87,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='b' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $blog .= "<tr>\n<td class='tbl1'>".$submit_criteria['blog_subject']."</td>\n";
                 $blog .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=b&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $blog .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -98,7 +98,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='a' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $articles .= "<tr>\n<td class='tbl1'>".$submit_criteria['article_subject']."</td>\n";
                 $articles .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=a&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $articles .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -109,7 +109,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='p' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $photos .= "<tr>\n<td class='tbl1'>".$submit_criteria['photo_title']."</td>\n";
                 $photos .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=p&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $photos .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -120,7 +120,7 @@ if (!isset($_GET['action']) || $_GET['action'] == "1") {
         $result = dbquery("SELECT submit_id, submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_type='d' ORDER BY submit_datestamp DESC");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
-                $submit_criteria = unserialize($data['submit_criteria']);
+                $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $downloads .= "<tr>\n<td class='tbl1'>".$submit_criteria['download_title']."</td>\n";
                 $downloads .= "<td align='right' width='1%' class='tbl1' style='white-space:nowrap'><span class='small'><a href='".FUSION_SELF.$aidlink."&amp;action=2&amp;t=d&amp;submit_id=".$data['submit_id']."'>".$locale['417']."</a></span> |\n";
                 $downloads .= "<span class='small'><a href='".FUSION_SELF.$aidlink."&amp;delete=".$data['submit_id']."'>".$locale['418']."</a></span></td>\n</tr>\n";
@@ -173,7 +173,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
             $data = dbarray($result);
             $opts = "";
             $sel = "";
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $posted = showdate("longdate", $data['submit_datestamp']);
             $result2 = dbquery("SELECT weblink_cat_id, weblink_cat_name FROM ".DB_WEBLINK_CATS." ORDER BY weblink_cat_name");
             if (dbrows($result2) != 0) {
@@ -256,7 +256,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $news_subject = $submit_criteria['news_subject'];
             $news_cat = $submit_criteria['news_cat'];
             if (isset($submit_criteria['news_snippet'])) {
@@ -368,7 +368,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $blog_subject = $submit_criteria['blog_subject'];
             $blog_cat = $submit_criteria['blog_cat'];
             if (isset($submit_criteria['blog_snippet'])) {
@@ -450,7 +450,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $article_cat = isnum($_POST['article_cat']) ? $_POST['article_cat'] : 0;
             $article_subject = stripinput($_POST['article_subject']);
             $article_snippet = addslash($_POST['article_snippet']);
@@ -483,7 +483,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "2") && (isset($_GET['t']) && 
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $article_cat = $submit_criteria['article_cat'];
             $article_subject = $submit_criteria['article_subject'];
             $article_snippet = phpentities(stripslashes($submit_criteria['article_snippet']));
@@ -573,7 +573,7 @@ function download_submissions_review() {
         );
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $download_title = stripinput($_POST['download_title']);
             $download_description = stripinput($_POST['download_description']);
             $download_description_short = stripinput($_POST['download_description_short']);
@@ -657,7 +657,7 @@ function download_submissions_review() {
     } else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         opentable($locale['582']);
         $data = dbarray(dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'"));
-        $submit_criteria = unserialize($data['submit_criteria']);
+        $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
         if ($submit_criteria['download_file'])
             @unlink(DOWNLOADS."submissions/".$submit_criteria['download_file']);
         if ($submit_criteria['download_image']) {
@@ -678,7 +678,7 @@ function download_submissions_review() {
         );
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $editlist = "";
             $sel = "";
             $result2 = dbquery("SELECT download_cat_id, download_cat_name FROM ".DB_DOWNLOAD_CATS." ORDER BY download_cat_name");
@@ -845,7 +845,7 @@ function photo_submissions_review() {
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $photo_title = stripinput($_POST['photo_title']);
             $photo_description = stripinput($_POST['photo_description']);
             $album_id = isnum($_POST['album_id']) ? $_POST['album_id'] : "0";
@@ -877,7 +877,7 @@ function photo_submissions_review() {
     } else if (isset($_POST['delete']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         opentable($locale['582']);
         $data = dbarray(dbquery("SELECT submit_criteria FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'"));
-        $submit_criteria = unserialize($data['submit_criteria']);
+        $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
         @unlink(PHOTOS."submissions/".$submit_criteria['photo_file']);
         dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
         echo "<br /><div style='text-align:center'>".$locale['583']."<br /><br />\n";
@@ -891,7 +891,7 @@ function photo_submissions_review() {
             WHERE submit_id='".$_GET['submit_id']."'");
         if (dbrows($result)) {
             $data = dbarray($result);
-            $submit_criteria = unserialize($data['submit_criteria']);
+            $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $photo_title = $submit_criteria['photo_title'];
             $photo_description = $submit_criteria['photo_description'];
             $photo_file = $submit_criteria['photo_file'];
