@@ -60,7 +60,7 @@ if (check_post('savesettings')) {
     $inputData = [
         "localeset"             => sanitizer('localeset', fusion_get_settings('locale'), "localeset"),
         "old_localeset"         => sanitizer('old_localeset', fusion_get_settings('locale'), "old_localeset"),
-        "enabled_languages"     => sanitizer('enabled_languages', fusion_get_settings('locale'), "enabled_languages"),
+        "enabled_languages"     => sanitizer(['enabled_languages'], fusion_get_settings('locale'), "enabled_languages"),
         // returns Chinese_Simplified,English,Malay
         "old_enabled_languages" => sanitizer('old_enabled_languages', "", "old_enabled_languages"),
         // returns Chinese_Simplified.English.Malay
