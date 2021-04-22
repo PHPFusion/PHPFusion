@@ -26,9 +26,7 @@ opentable($locale['theme_1000']);
 switch (get('action')) {
     case "manage":
         if (check_get('theme')) {
-            echo "<div class='m-t-20'>\n";
             $theme_admin::display_theme_editor(get('theme'));
-            echo "</div>\n";
         }
         break;
     default:
@@ -38,14 +36,10 @@ switch (get('action')) {
         $active_tab = tab_active($tabs, $active_set);
         echo opentab($tabs, $active_tab, 'theme_tab');
         echo opentabbody($tabs['title'][0], $tabs['id'][0], $active_tab);
-        echo "<div class='m-t-20'>\n";
         $theme_admin::display_theme_list();
-        echo "</div>\n";
         echo closetabbody();
         echo opentabbody($tabs['title'][1], $tabs['id'][1], $active_tab);
-        echo "<div class='m-t-20'>\n";
         $theme_admin::theme_uploader();
-        echo "</div>\n";
         echo closetabbody();
         echo closetab();
         break;

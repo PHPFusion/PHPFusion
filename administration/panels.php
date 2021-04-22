@@ -123,7 +123,7 @@ class PanelsAdministration {
      *
      * @param $id
      *
-     * @return bool|string
+     * @return bool|int
      */
     static function verifyPanel($id) {
         if (isnum($id)) {
@@ -171,7 +171,7 @@ class PanelsAdministration {
             // 3, show on all, 2 = show on home page. 1 = exclude , 0 = include
             //  post 0 to include all , 1 to exclude all, show all.
             if ($this->data['panel_restriction'] == '3') { // show on all
-                $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
+                $this->data['panel_display'] = ($this->data['panel_side'] != 1 && $this->data['panel_side'] != 4) ? 1 : 0;
                 $this->data['panel_url_list'] = '';
             } else if ($this->data['panel_restriction'] == '2') {
                 // show on homepage only
@@ -185,11 +185,7 @@ class PanelsAdministration {
                 $this->data['panel_url_list'] = sanitizer('panel_url_list', '', 'panel_url_list');
                 if ($this->data['panel_url_list']) {
                     $this->data['panel_url_list'] = str_replace(",", "\r\n", $this->data['panel_url_list']);
-                    if ($this->data['panel_restriction'] == 1) { // exclude mode
-                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
-                    } else { // include mode
-                        $this->data['panel_display'] = ($this->data['panel_side'] !== 1 && $this->data['panel_side'] !== 4) ? 1 : 0;
-                    }
+                    $this->data['panel_display'] = ($this->data['panel_side'] != 1 && $this->data['panel_side'] != 4) ? 1 : 0;
                 } else {
                     \defender::stop();
                     addNotice('danger', self::$locale['475']);
@@ -309,7 +305,6 @@ class PanelsAdministration {
                 }
             });
         ");
-        echo "<div class='m-t-20'>\n";
         echo "<div id='info'></div>\n";
         echo "<div class='well text-center'>".self::$locale['410']."</div>\n";
         echo "<div class='row'>\n";
@@ -334,7 +329,7 @@ class PanelsAdministration {
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo self::panelReactor(10);
         echo "</div>\n</div>\n";
-        echo "</div>\n";
+
         //Unused Panels in the directory
         $panel_list = self::panelsList();
         $string = format_word(count($panel_list), self::$locale['604']);
@@ -368,8 +363,7 @@ class PanelsAdministration {
         $k = 0;
         $count = dbcount("('panel_id')", DB_PANELS, "panel_side='".$side."'");
         $title = $type." <span id='side-".$side."' class='badge num pull-right'>".$count."</span>";
-        $html = '';
-        $html .= "<div class='panel panel-default' style='border-style: dashed'>\n<div class='panel-body clearfix'>\n";
+        $html = "<div class='panel panel-default' style='border-style: dashed'>\n<div class='panel-body clearfix'>\n";
         $html .= "<i class='fa fa-desktop m-r-10'></i> $title ";
         $html .= "</div>\n";
         $html .= "<ul id='panel-side".$side."' data-side='".$side."' style='list-style: none;' class='panels-list connected list-group p-10'>\n";
@@ -412,11 +406,9 @@ class PanelsAdministration {
     /**
      * Panel array
      *
-     * @param int|null $panel_id
-     *
-     * @return array|string
+     * @return array
      */
-    private function panelsList($panel_id = NULL) {
+    private function panelsList() {
         $panel_list = [];
         $panels = [];
         $result = dbquery("SELECT panel_id, panel_filename FROM ".DB_PANELS." ORDER BY panel_id");
@@ -434,12 +426,9 @@ class PanelsAdministration {
                 }
             }
         }
-        if ($panel_id != NULL) {
-            return $panel_list[$panel_id];
-        }
         sort($panel_list);
 
-        return (array)$panel_list;
+        return $panel_list;
     }
 
     /**
@@ -489,9 +478,9 @@ class PanelsAdministration {
             ];
         }
 
-        echo openform('panel_form', 'post', $this->formaction, ['class' => 'spacer-sm']);
+        echo openform('panel_form', 'post', $this->formaction);
 
-        echo "<div class='spacer-xs'>\n";
+        echo "<div class='m-b-10'>\n";
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10', 'input_id' => 'btn1']);
         if ($settings['allow_php_exe']) {
             echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-l-10 btn-default', 'input_id' => 'btn2']);
@@ -560,11 +549,11 @@ class PanelsAdministration {
 
         echo "<div id='pgrp'>\n";
         echo form_textarea('panel_content', self::$locale['455'], $this->data['panel_content'], [
-            'html'      => $settings['allow_php_exe'] ? FALSE : TRUE,
+            'html'      => !$settings['allow_php_exe'],
             'form_name' => 'panel_form',
             'autosize'  => TRUE,
-            'preview'   => $settings['allow_php_exe'] ? FALSE : TRUE,
-            'descript'  => $settings['allow_php_exe'] ? FALSE : TRUE
+            'preview'   => !$settings['allow_php_exe'],
+            'descript'  => !$settings['allow_php_exe']
         ]);
         echo "</div>\n";
 
@@ -615,7 +604,7 @@ class PanelsAdministration {
      */
     private function getPanelOpts() {
         $current_panels = [];
-        foreach ($this->panel_data as $side => $panels) {
+        foreach ($this->panel_data as $panels) {
             foreach ($panels as $data) {
                 $current_panels[$data['panel_filename']] = $data['panel_filename'];
             }
@@ -638,7 +627,7 @@ class PanelsAdministration {
         $ref = [];
         $user_groups = getusergroups();
 
-        foreach ($user_groups as $key => $user_group) {
+        foreach ($user_groups as $user_group) {
             $ref[$user_group[0]] = $user_group[1];
         }
 

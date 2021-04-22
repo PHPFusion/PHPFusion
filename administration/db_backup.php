@@ -332,13 +332,13 @@ function restore_form() {
         }
         $table_opt_list = '';
         sort($info_tbls);
-        foreach ($info_tbls as $key => $info_tbl) {
+        foreach ($info_tbls as $info_tbl) {
             $table_opt_list .= "<option value='$info_tbl' selected='selected'>".$info_tbl."</option>\n";
         }
         $insert_ins_cnt = array_count_values($info_ins_cnt);
         $insert_opt_list = "";
         sort($info_inserts);
-        foreach ($info_inserts as $key => $info_insert) {
+        foreach ($info_inserts as $info_insert) {
             $insert_opt_list .= "<option value='".$info_insert."' selected='selected'>".$info_insert." (".$insert_ins_cnt[$info_insert].")</option>";
         }
         $maxrows = max(count($info_tbls), count($info_inserts));
@@ -473,9 +473,7 @@ function get_table_count($prefix = "") {
 function stripsiteinput($text) {
     $search = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", " "];
     $replace = ["", "", "", "", "", "", "", "", ""];
-    $text = str_replace($search, $replace, $text);
-
-    return $text;
+    return str_replace($search, $replace, $text);
 }
 
 require_once THEMES.'templates/footer.php';

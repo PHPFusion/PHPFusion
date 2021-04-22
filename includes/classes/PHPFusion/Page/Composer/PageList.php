@@ -163,17 +163,17 @@ class PageList extends PageAdmin {
         $page_result = dbquery($page_query);
         ?>
 
-        <div class="m-t-15">
+        <div>
             <?php
 
             echo openform("cp_filter", "post", FUSION_REQUEST);
             echo "<div class='clearfix'>\n";
 
-            echo "<div class='pull-right'>\n";
+            echo "<div class='pull-right-lg'>\n";
             echo "<a class='btn btn-success btn-sm m-r-10' href='".clean_request("section=compose_frm", ["section"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['page_0200']."</a>";
             echo "<button type='button' class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('publish', '#table_action', '#cp_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']." </button>";
             echo "<button type='button' class='btn btn-default btn-sm m-r-10' onclick=\"run_admin('unpublish', '#table_action', '#cp_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</button>";
-            echo "<button type='button' class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action', '#cp_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</button>";
+            echo "<button type='button' class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#cp_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</button>";
             echo "</div>\n";
 
             $filter_values = [

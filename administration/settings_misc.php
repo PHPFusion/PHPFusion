@@ -42,7 +42,9 @@ if (check_post('savesettings')) {
         'devmode'                => post('devmode') ? 1 : 0,
         'update_checker'         => post('update_checker') ? 1 : 0,
         'number_delimiter'       => sanitizer('number_delimiter', '.', 'number_delimiter'),
-        'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator')
+        'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator'),
+        'error_logging_enabled'  => post('error_logging_enabled') ? 1 : 0,
+        'error_logging_method'   => sanitizer('error_logging_method', '', 'error_logging_method'),
     ];
 
     if (\defender::safe()) {
@@ -146,6 +148,20 @@ echo form_checkbox('index_url_userweb', $locale['1032'], $settings['index_url_us
 ]);
 echo form_checkbox('create_og_tags', $locale['1030'], $settings['create_og_tags'], [
     'toggle' => TRUE
+]);
+closeside();
+
+openside('');
+echo form_checkbox('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
+    'toggle' => TRUE
+]);
+echo form_select('error_logging_method', $locale['security_016'], $settings['error_logging_method'], [
+    'options'     => [
+        'file'     => $locale['security_017'],
+        'database' => $locale['security_018']
+    ],
+    'width'       => '100%',
+    'inner_width' => '100%'
 ]);
 closeside();
 

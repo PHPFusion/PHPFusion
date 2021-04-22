@@ -65,14 +65,14 @@ if ($is_multilang == TRUE) {
     echo \PHPFusion\QuantumFields::quantum_multilocale_fields('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'input_id'  => 'enable_license_agreement',
-        'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+        'autosize'  => (bool)fusion_get_settings('tinymce_enabled'),
         'type'      => (fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html'),
         'function'  => 'form_textarea'
     ]);
 } else {
     echo form_textarea('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
-        'autosize'  => !fusion_get_settings('tinymce_enabled') ? FALSE : TRUE,
+        'autosize'  => (bool)fusion_get_settings('tinymce_enabled'),
         'html'      => !fusion_get_settings('tinymce_enabled')
     ]);
 }

@@ -28,7 +28,7 @@ $data = [];
 add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_428']]);
 
 // Check if mod_rewrite is enabled
-$mod_rewrite = FALSE;
+/*$mod_rewrite = FALSE;
 if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
     $mod_rewrite = TRUE;
 } else if (getenv('HTTP_MOD_REWRITE') == 'On') {
@@ -41,7 +41,7 @@ if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_
 define('MOD_REWRITE', $mod_rewrite);
 if (!MOD_REWRITE) {
     addNotice("info", $locale['rewrite_disabled']);
-}
+}*/
 
 $settings_seo = [
     'site_seo'      => $settings['site_seo'],
@@ -440,7 +440,7 @@ switch ($sections) {
         break;
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
-        echo "<div class='well m-t-10'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
+        echo "<div class='well'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
         echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
         echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
         echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], ['toggle' => TRUE, 'inline' => TRUE]);

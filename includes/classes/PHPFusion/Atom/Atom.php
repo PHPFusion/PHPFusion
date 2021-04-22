@@ -213,7 +213,7 @@ class Atom {
                 'theme_license'     => !empty($theme_license) ? $theme_license : $data['theme_license'],
                 'theme_version'     => !empty($theme_version) ? $theme_version : $data['theme_version'],
                 'theme_description' => !empty($theme_description) ? $theme_description : $data['theme_description'],
-                'theme_widgets'     => file_exists(THEMES.$this->theme_name.'/widget.php') ? TRUE : FALSE
+                'theme_widgets'     => file_exists(THEMES.$this->theme_name.'/widget.php')
             ];
         }
 
@@ -297,7 +297,6 @@ class Atom {
     public function display_theme_widgets() {
         $locale = fusion_get_locale();
         if (Admin::theme_widget_exists($this->theme_name)) {
-            echo "<div class='m-t-20 m-b-20'>\n";
             require_once THEMES.$this->theme_name."/theme_db.php";
             /**
              * Infuse Widget Action
@@ -382,7 +381,6 @@ class Atom {
                 include THEMES.$this->theme_name."/widget.php";
                 echo "<!---end widget form--->\n";
             }
-            echo "</div>\n";
         } else {
             echo "<div class='m-t-20 well text-center'>".$locale['theme_1031']."</div>\n";
         }
@@ -536,8 +534,8 @@ class Atom {
                         }
                     }
                 } else {
+                    $rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
                     if (!$this->debug && !empty($data['theme_file'])) {
-                        $rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
                         $data['theme_active'] = $rows < 1 ? 1 : 0;
                         $data['theme_config'] = addslashes(serialize($this->data));
                         dbquery_insert(DB_THEME, $data, 'save');
@@ -547,7 +545,6 @@ class Atom {
                         }
                     } else {
                         // debug messages
-                        $rows = dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."'");
                         $data['theme_active'] = $rows < 1 ? 1 : 0;
                         $data['theme_config'] = addslashes(serialize($this->data));
                         print_p($data);
@@ -602,11 +599,10 @@ class Atom {
                 addNotice('danger', $error_message);
             }
         } else {
+            \defender::stop();
             if (!$this->Compiler) {
-                \defender::stop();
                 addNotice('danger', $locale['theme_error_008']);
             } else {
-                \defender::stop();
                 addNotice('danger', $locale['theme_error_007']);
             }
         }

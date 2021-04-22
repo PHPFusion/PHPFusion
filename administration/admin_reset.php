@@ -255,7 +255,6 @@ function admin_reset_listing() {
         ORDER BY arl.reset_timestamp DESC
     ");
 
-    echo "<div class='m-t-15'>";
     if (dbrows($result) > 0) {
         echo openform('reset_table', 'post', FUSION_REQUEST);
         echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
@@ -281,7 +280,7 @@ function admin_reset_listing() {
             echo "<td>".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</td>\n";
             echo "<td>".$reset_passwords."</td>\n";
             echo "<td>".$sucess." ".$locale['apw_422']." ".($sucess + $failed)."</td>\n";
-            echo "<td>".($info['reset_reason'] ? $info['reset_reason'] : $locale['apw_423'])."</td>\n";
+            echo "<td>".(!empty($info['reset_reason']) ? $info['reset_reason'] : $locale['apw_423'])."</td>\n";
             echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
             echo "</tr>\n";
             add_to_jquery('$("#reset-id-'.$info['reset_id'].'").click(function() {
@@ -314,7 +313,6 @@ function admin_reset_listing() {
     } else {
         echo "<div class='well text-center'>".$locale['apw_426']."</div>\n";
     }
-    echo '</div>';
 }
 
 require_once THEMES.'templates/footer.php';

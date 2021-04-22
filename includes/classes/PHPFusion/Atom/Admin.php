@@ -156,7 +156,7 @@ class Admin {
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
         if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
-            $theme_name = form_sanitizer($_GET['theme'], '');
+            $theme_name = form_sanitizer($_GET['theme']);
             if (self::theme_installable($theme_name)) {
                 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
                 if ($result) {
@@ -183,7 +183,7 @@ class Admin {
                     'license'     => isset($theme_license) ? $theme_license : '',
                     'version'     => isset($theme_version) ? $theme_version : '',
                     'description' => isset($theme_description) ? $theme_description : '',
-                    'widgets'     => file_exists(THEMES.$theme_folder.'/widget.php') ? TRUE : FALSE
+                    'widgets'     => file_exists(THEMES.$theme_folder.'/widget.php')
                 ];
             } else {
                 // older legacy theme.
@@ -206,12 +206,11 @@ class Admin {
         krsort($data);
         foreach ($data as $status => $themes) {
             foreach ($themes as $theme_name => $theme_data) {
-                echo "<div class='panel panel-default'>\n<div class='panel-body'>\n<div class='row'>\n";
+                echo "<div class='list-group'>\n<div class='list-group-item'>";
 
-                echo '<div class="col-xs-12 col-sm-10">';
                 echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
 
-                echo "<div class='overflow-hide'>\n";
+                echo "<div class='overflow-hide display-inline-block'>\n";
                 echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
                 echo "<div>\n";
                 if (!empty($theme_data['description'])) {
@@ -242,19 +241,16 @@ class Admin {
                 echo "</div>\n";
                 echo "</div>\n";
                 echo "</div>\n";
-                echo '</div>';
 
-                echo '<div class="col-xs-12 col-sm-2">';
-                echo "<div class='btn-group pull-right m-l-20 m-t-20'>\n";
+                echo "<div class='btn-group pull-right-lg m-t-20'>\n";
                 if ($status == TRUE) {
-                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&amp;theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
                 } else {
-                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&amp;theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
+                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
                 }
                 echo "</div>\n";
-                echo '</div>';
 
-                echo "</div>\n</div>\n</div>\n";
+                echo "</div>\n</div>";
                 unset($theme_data);
             }
         }
@@ -286,7 +282,7 @@ class Admin {
                 $defender->stop();
                 switch ($upload['error']) {
                     case 1:
-                        addNotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size, 2)));
+                        addNotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
                         break;
                     case 2:
                         addNotice('danger', $locale['theme_error_002']);
@@ -317,18 +313,14 @@ class Admin {
                                 addNotice('danger', $locale['theme_error_009']);
                             }
                             $zip->close();
-                            @unlink($target_file);
-                            redirect(FUSION_SELF.$aidlink);
                         } else {
                             addNotice('danger', $locale['theme_error_005']);
-                            @unlink($target_file);
-                            redirect(FUSION_SELF.$aidlink);
                         }
                     } else {
                         addNotice('warning', $locale['theme_error_006']);
-                        @unlink($target_file);
-                        redirect(FUSION_SELF.$aidlink);
                     }
+                    @unlink($target_file);
+                    redirect(FUSION_SELF.$aidlink);
                 }
             }
         }

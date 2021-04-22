@@ -229,6 +229,36 @@ Grids
     float: right;
 }
 
+@media (min-width: 768px) {
+    .pull-left-sm {
+        float: left;
+    }
+
+    .pull-right-sm {
+        float: right;
+    }
+}
+
+@media (min-width: 992px) {
+    .pull-left-md {
+        float: left;
+    }
+
+    .pull-right-md {
+        float: right;
+    }
+}
+
+@media (min-width: 1200px) {
+    .pull-left-lg {
+        float: left;
+    }
+
+    .pull-right-lg {
+        float: right;
+    }
+}
+
 /*spacers family*/
 .spacer-xs {
     margin: 15px 0;

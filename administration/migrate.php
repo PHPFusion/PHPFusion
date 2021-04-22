@@ -269,7 +269,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     }
                 } else {
                     $rights_dump = [];
-                    foreach ($old_user_rights as $arr => $value) {
+                    foreach ($old_user_rights as $value) {
                         if (!in_array($value, $new_user_rights)) {
                             $rights_dump[] = $value;
                         }
@@ -297,7 +297,7 @@ function user_rights_migrate($user_primary_id, $user_temp_id) {
                     }
                 } else {
                     $group_dump = [];
-                    foreach ($old_user_groups as $arr => $value) {
+                    foreach ($old_user_groups as $value) {
                         if (!in_array($value, $new_user_groups)) {
                             $group_dump[] = $value;
                         }

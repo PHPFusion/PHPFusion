@@ -114,7 +114,7 @@ if (dbrows($result)) {
     }
 }
 
-echo openform('emailtemplateform', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'm-t-20']);
+echo openform('emailtemplateform', 'post', FUSION_SELF.fusion_get_aidlink());
 echo form_hidden('template_id', '', $data['template_id']);
 echo form_hidden('template_key', '', $data['template_key']);
 

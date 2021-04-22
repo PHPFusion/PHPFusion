@@ -250,7 +250,7 @@ class Errors {
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
 
         if (fusion_get_settings('error_logging_method') === 'database') {
-            echo "<div class='m-t-20'>".$this->getErrorLogs()."</div>";
+            echo $this->getErrorLogs();
         } else {
             if (isset($_POST['delete_log'])) {
                 if (file_exists(BASEDIR.'fusion_error_log.log')) {
@@ -259,13 +259,13 @@ class Errors {
                 }
             }
             echo openform('deletelog', 'post', FUSION_REQUEST);
-            echo form_button('delete_log', $locale['delete'], 'delete_log', ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
+            echo form_button('delete_log', $locale['delete'], 'delete_log', ['class' => 'btn-danger m-b-10', 'icon' => 'fa fa-trash']);
             echo closeform();
 
             if (file_exists(BASEDIR.'fusion_error_log.log')) {
-                echo '<textarea class="form-control m-t-20" rows="15" disabled>'.file_get_contents(BASEDIR.'fusion_error_log.log').'</textarea>';
+                echo '<textarea class="form-control" rows="15" disabled>'.file_get_contents(BASEDIR.'fusion_error_log.log').'</textarea>';
             } else {
-                echo "<div class='text-center well m-t-20'>".$locale['ERROR_418']."</div>\n";
+                echo "<div class='text-center well'>".$locale['ERROR_418']."</div>\n";
             }
         }
 

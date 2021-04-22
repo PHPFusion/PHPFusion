@@ -85,8 +85,8 @@ if ($infs) {
         echo "</div>";
         echo "<div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h5 class='m-0'>".($inf['status'] > 0 ? "<span class='label label-success'>".$locale['415']."</span>" : "<span class='label label-default'>".$locale['414']."</span>")."</h5></div>\n";
         echo "<div class='hidden-xs hidden-sm col-md-1 col-lg-1'><span class='badge'>".$adminpanel['rights']."</span></div>\n";
-        echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-        echo "<div class='hidden-xs hidden-sm col-md-12 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+        echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
+        echo "<div class='hidden-xs hidden-sm col-md-12 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
 
         echo "</div></div>";
     }

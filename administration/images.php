@@ -158,7 +158,7 @@ class ImagesAdministration {
             }
         }
 
-        echo openform('uploadform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-15']);
+        echo openform('uploadform', 'post', FUSION_REQUEST, ['enctype' => TRUE]);
         echo form_fileinput("myfile", self::$locale['421'], "", [
             'upload_path' => $this->data['afolder'],
             'type'        => 'image',

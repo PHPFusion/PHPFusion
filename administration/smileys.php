@@ -30,7 +30,7 @@ $edit = (check_get('action') && get('action') == 'edit' && check_get('smiley_id'
 
 $tabs['title'][] = $locale['SMLY_400'];
 $tabs['id'][] = 'smiley_list';
-$tabs['icon'][] = '';
+$tabs['icon'][] = 'fa fa-smile-o';
 $tabs['title'][] = $edit ? $locale['SMLY_402'] : $locale['SMLY_401'];
 $tabs['id'][] = 'smiley_form';
 $tabs['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
@@ -83,7 +83,6 @@ function smiley_listing() {
         }
     }
 
-    echo '<div class="m-t-10">';
     echo '<h2>'.$locale['SMLY_404'].'</h2>';
 
     if (!empty($all_smileys)) {
@@ -108,7 +107,6 @@ function smiley_listing() {
     } else {
         echo "<div class='well text-center'>".$locale['SMLY_440']."</div>\n";
     }
-    echo '</div>';
 
     echo '<div class="m-t-10">';
     echo '<h2>'.$locale['SMLY_405'].'</h2>';
@@ -182,7 +180,6 @@ function add_smiley_form() {
         $data['smiley_image'] = get('smiley_text');
     }
 
-    echo '<div class="m-t-10">';
     echo openform('smiley_form', 'post', FUSION_REQUEST, ['enctype' => TRUE]);
 
     echo form_hidden('smiley_id', '', $data['smiley_id']);
@@ -200,6 +197,16 @@ function add_smiley_form() {
             'inline'     => TRUE,
             'error_text' => $locale['SMLY_438'],
         ]);
+
+        add_to_jquery("
+            function showMeSmileys(item) {
+                return '<img style=\"height:15px;width:15px;\" src=\"".IMAGES."smiley/'+item.id+'\" alt=\"'+item.text+'\"> - ' + item.text;
+            }
+            $('#smiley_image').select2({
+                formatSelection: function(m) { return showMeSmileys(m); },
+                formatResult: function(m) { return showMeSmileys(m); }
+            });
+        ");
     } else {
         echo form_fileinput('smiley_file', '', '', [
             'upload_path'     => IMAGES.'smiley/',
@@ -222,19 +229,6 @@ function add_smiley_form() {
     ]);
     echo form_button('smiley_save', ($data['smiley_id'] ? $locale['SMLY_424'] : $locale['SMLY_423']), ($data['smiley_id'] ? $locale['SMLY_424'] : $locale['SMLY_423']), ['class' => 'btn-primary']);
     echo closeform();
-
-    if (!empty($image_opts)) {
-        add_to_jquery("
-                function showMeSmileys(item) {
-                    return '<img style=\"height:15px;width:15px;\" src=\"".IMAGES."smiley/'+item.id+'\" alt=\"'+item.text+'\"> - ' + item.text;
-                }
-                $('#smiley_image').select2({
-                    formatSelection: function(m) { return showMeSmileys(m); },
-                    formatResult: function(m) { return showMeSmileys(m); }
-                });
-            ");
-    }
-    echo '</div>';
 }
 
 require_once THEMES.'templates/footer.php';

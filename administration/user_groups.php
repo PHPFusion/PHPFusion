@@ -51,11 +51,10 @@ class UserGroups {
                 if (self::verifyGroup(get('group_id'))) {
                     dbquery("DELETE FROM ".DB_USER_GROUPS." WHERE group_id='".intval(get('group_id'))."'");
                     addNotice('success', self::$locale['GRP_407']);
-                    redirect(clean_request("", ["section=usergroup", "aid"]));
                 } else {
                     addNotice('warning', self::$locale['GRP_405']." ".self::$locale['GRP_406']);
-                    redirect(clean_request("", ["section=usergroup", "aid"]));
                 }
+                redirect(clean_request("", ["section=usergroup", "aid"]));
                 break;
             case 'edit':
                 if (check_get('group_id')) {
@@ -182,7 +181,7 @@ class UserGroups {
                     $group_id = get('group_id');
                     $result = dbquery("SELECT user_id, user_name, user_groups
                         FROM ".DB_USERS."
-                        WHERE user_groups REGEXP('^\\\.{$group_id}$|\\\.{$group_id}\\\.|\\\.{$group_id}$')
+                        WHERE user_groups REGEXP('^\\\.{$group_id}$|\\\.$group_id\\\.|\\\.{$group_id}$')
                     ");
                     $i = 0;
                     if (dbrows($result)) {
@@ -201,12 +200,12 @@ class UserGroups {
     }
 
     static function addUserGroup($group_id, $groups) {
-        return $user_groups = preg_replace(["(^\.{$group_id}$)", "(\.{$group_id}\.)", "(\.{$group_id}$)"], ["", ".", ""], $groups);
+        return preg_replace(["(^\.{$group_id}$)", "(\.$group_id\.)", "(\.{$group_id}$)"], ["", ".", ""], $groups);
     }
 
     static function countUserGroup($id) {
         if (isnum($id)) {
-            return dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.{$id}\\\.|\\\.{$id}$')");
+            return dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.$id\\\.|\\\.{$id}$')");
         }
 
         return FALSE;
@@ -214,7 +213,7 @@ class UserGroups {
 
     static function verifyGroup($id) {
         if (isnum($id)) {
-            if (!dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.{$id}\\\.|\\\.{$id}$')")
+            if (!dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.$id\\\.|\\\.{$id}$')")
                 && dbcount("(group_id)", DB_USER_GROUPS, "group_id='".intval($id)."'")
             ) {
                 return TRUE;
@@ -275,7 +274,7 @@ class UserGroups {
     public function groupListing() {
         $aidlink = fusion_get_aidlink();
 
-        $html = "<div class='clearfix spacer-xs'>\n";
+        $html = "<div class='clearfix'>\n";
         $html .= "<div class='pull-right'><a class='btn btn-success' href='".FUSION_SELF.$aidlink."&section=usergroup_form'><i class='fa fa-plus fa-fw'></i> ".self::$locale['GRP_428']."</a>\n</div>\n";
         $html .= "</div>\n";
         $html .= "<div class='table-responsive'><table class='table table-striped'>\n";
@@ -290,7 +289,7 @@ class UserGroups {
         $html .= "<tr>\n";
         $html .= "</thead>\n<tbody>\n";
         if (!empty(self::$groups)) {
-            foreach (self::$groups as $key => $groups) {
+            foreach (self::$groups as $groups) {
                 $edit_link = FUSION_SELF.$aidlink."&section=usergroup_form&action=edit&group_id=".$groups[0];
                 $member_link = FUSION_SELF.$aidlink."&section=user_form&action=user_edit&group_id=".$groups[0];
                 $html .= "<tr>\n";
@@ -310,7 +309,7 @@ class UserGroups {
         }
         $html .= "</tbody>\n<tfoot>\n";
         $html .= "<tr><td colspan='5'><strong>".self::$locale['GRP_426']."</strong></td></tr>\n";
-        foreach (self::$default_groups as $key => $groups) {
+        foreach (self::$default_groups as $groups) {
             $html .= "<tr>\n";
 
             $html .= "<td>".$groups[1]."</td>\n";
@@ -330,7 +329,7 @@ class UserGroups {
      * Group Add/Edit Form
      */
     public function groupForm() {
-        $html = openform('editform', 'post', FUSION_SELF.fusion_get_aidlink()."&section=usergroup_form", ['class' => 'spacer-xs']);
+        $html = openform('editform', 'post', FUSION_SELF.fusion_get_aidlink()."&section=usergroup_form");
         $html .= form_hidden('group_id', '', $this->data['group_id']);
         $html .= form_text('group_name', self::$locale['GRP_432'], $this->data['group_name'], ['required' => TRUE, 'maxlength' => '100', 'error_text' => self::$locale['GRP_464']]);
         $html .= form_textarea('group_description', self::$locale['GRP_433'], $this->data['group_description'], ['autosize' => TRUE, 'maxlength' => '200']);
@@ -351,17 +350,16 @@ class UserGroups {
         $group = get('group_id', FILTER_SANITIZE_NUMBER_INT);
         $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
             FROM ".DB_USERS."
-            WHERE user_groups REGEXP('^\\\.{$group}$|\\\.{$group}\\\.|\\\.{$group}$')
+            WHERE user_groups REGEXP('^\\\.{$group}$|\\\.$group\\\.|\\\.{$group}$')
             ORDER BY user_level DESC, user_name
             LIMIT ".intval($rowstart).", ".self::$limit
         );
 
         $rows = dbrows($result);
 
-        $html = "<div class='spacer-xs'>\n";
-        $html .= "<h4>".self::$locale['GRP_452'].getgroupname(get('group_id'), $return_desc = FALSE, $return_icon = FALSE)."</h4>\n";
+        $html = "<h4>".self::$locale['GRP_452'].getgroupname(get('group_id'))."</h4>\n";
         $html .= "<hr/>\n";
-        $html .= "<div class='row flexbox'>\n";
+        $html .= "<div class='row'>\n";
         $html .= "<div class='col-xs-12 col-sm-4'>\n";
         $html .= openform('searchuserform', 'post', FUSION_SELF.fusion_get_aidlink()."&section=user_form&action=user_edit&group_id=".get('group_id'), [
             'class' => 'list-group-item p-10 m-t-0 m-b-20'
@@ -446,7 +444,6 @@ class UserGroups {
             $html .= "<div class='well text-center'>".self::$locale['GRP_463']."</div>\n";
         }
 
-        $html .= "</div>\n";
         $html .= "</div>\n";
 
         add_to_footer("<script type='text/javascript'>\n

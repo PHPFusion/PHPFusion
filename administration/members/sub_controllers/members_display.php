@@ -53,21 +53,19 @@ class Members_Display extends Members_Admin {
             if ($display = post(["display"])) {
                 $selected_display_keys = \defender::sanitize_array(array_keys($display));
                 $cookie_selected = implode(',', $selected_display_keys);
-                setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             } else {
                 // Prevent cookie tampering and reverted to default result
                 $cookie_selected = implode(',', $default_selected);
-                setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             }
+            setcookie($c_name, $cookie_selected, time() + (86400 * 30), "/");
             if ($statuses = post(["user_status"])) {
                 $selected_display_keys = \defender::sanitize_array(array_keys($statuses));
                 $status_cookie_selected = implode(',', $selected_display_keys);
-                setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
             } else {
                 // Prevent cookie tampering and reverted to default result
                 $status_cookie_selected = implode(',', $default_status_selected);
-                setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
             }
+            setcookie($s_name, $status_cookie_selected, time() + (86400 * 30), "/");
         } else {
             // Callback
             if (!cookie($c_name)) {
@@ -365,7 +363,7 @@ class Members_Display extends Members_Admin {
 
         $html .= closeform();
 
-        return (string)$html;
+        return $html;
     }
 
     /**

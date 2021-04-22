@@ -87,7 +87,7 @@ function get_default_search_opts() {
 
     }
 
-    return (array)$search_opts;
+    return $search_opts;
 }
 
 /**

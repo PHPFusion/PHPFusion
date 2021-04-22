@@ -91,6 +91,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             $this->section = "links";
         }
 
+        $this->form_action = FUSION_SELF.$this->aidlink."&amp;section=link_form";
+
     }
 
     /**
@@ -130,9 +132,9 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $this->data['link_position_id'] = 0;
                 break;
             case "del":
-                $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => (int)$this->link_id]), 0);
+                $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => $this->link_id]), 0);
                 dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order" => (int)$link_order]);
-                dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => (int)$this->link_id]);
+                dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => $this->link_id]);
                 addNotice("success", $this->locale['SL_0017']);
                 redirect(FUSION_SELF.$this->aidlink."&section=links&refs=".get("refs", FILTER_VALIDATE_INT)."&cat=".get("cat", FILTER_VALIDATE_INT));
                 break;
@@ -173,11 +175,10 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 echo "<h4>$this->title</h4>";
                 echo "<hr/>";
                 echo "</div>";
+                add_breadcrumb(['link' => $this->form_action, 'title' => ($this->refs == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                 if ($this->refs == "form") {
-                    add_breadcrumb(['link' => $this->form_action, 'title' => ($this->refs == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                     $this->form();
                 } else {
-                    add_breadcrumb(['link' => $this->form_action, 'title' => ($this->refs == 'link_form' ? $this->locale['SL_0010'] : $this->locale['SL_0012'])]);
                     $this->listing();
                 }
         }
@@ -640,7 +641,6 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             }
         }
 
-        return "";
     }
 
     /**

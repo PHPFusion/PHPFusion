@@ -205,20 +205,23 @@ function comments_listing() {
             $delete_ban = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delban&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['435']."');\"";
 
             echo "<div class='list-group-item'>\n";
-            echo "<div class='btn-group pull-right'>\n";
+            echo "<div class='btn-group pull-right-lg m-b-10'>\n";
             echo "<a class='btn btn-xs btn-default' href='".$edit."'>".$locale['edit']."</a>\n";
             echo "<a class='btn btn-xs btn-default' href='".$delete."'>".$locale['delete']."</a>\n";
-
             if (!empty($data['user_id']) && $data['user_id'] != 1) {
                 echo "<a class='btn btn-xs btn-default' href='".$delete_ban."'>".$locale['431']."</a>\n";
             }
-
             echo "</div>\n";
+
+            echo '<div>';
             echo $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'];
             echo ' '.$locale['global_071'].showdate('longdate', $data['comment_datestamp']);
             echo "<span class='label label-default m-l-10'>".$locale['432']." ".$data['comment_ip']."</span>";
+            echo '</div>';
+
             echo !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "";
             echo "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n";
+
             echo "</div>\n";
         }
         echo '</div>';

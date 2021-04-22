@@ -174,14 +174,12 @@ function blacklist_listing() {
     echo openform('blacklist_table', 'post', FUSION_REQUEST);
     echo form_hidden('table_action');
     echo "<div class='m-t-15'>\n";
-    echo "<div class='clearfix'>\n";
+    echo "<div class='clearfix m-b-20'>\n";
     echo "<div class='pull-right'>";
     echo "<a class='btn btn-success btn-sm m-r-10' href=".clean_request('section=blacklist_form', ['section', 'rowstart'], FALSE)."><i class='fa fa-fw fa-plus'></i>".$locale['BLS_022']."</a>";
-    echo "<a class='btn btn-danger btn-sm m-r-10' onclick=\"run_admin('delete', '#table_action','#blacklist_table');\"><i class='fa fa-fw fa-trash-o'></i>".$locale['delete']."</a>";
+    echo "<a class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action','#blacklist_table');\"><i class='fa fa-fw fa-trash-o'></i>".$locale['delete']."</a>";
     echo "</div>";
-    echo "<div class='pull-left'>";
-    echo "<span class='pull-right m-t-10'>".sprintf($locale['BLS_023'], $rows, $total_rows)."</span>\n";
-    echo "</div>\n";
+    //echo "<div class='pull-left'><span class='pull-right m-t-10'>".sprintf($locale['BLS_023'], $rows, $total_rows)."</span></div>\n";
     echo "</div>\n";
     echo ($total_rows > $rows) ? makepagenav($rowstart, 20, $total_rows, 3, clean_request('', ['section'], FALSE).'&') : '';
     echo "</div>\n";
@@ -202,7 +200,7 @@ function blacklist_listing() {
             echo "<td>";
             echo form_checkbox('blacklist_id[]', '', '', ['value' => $data['blacklist_id'], 'input_id' => 'blist-id-'.$data['blacklist_id']]);
             echo "</td>";
-            echo "<td>".($data['blacklist_ip'] ? $data['blacklist_ip'] : $data['blacklist_email']);
+            echo "<td>".(!empty($data['blacklist_ip']) ? $data['blacklist_ip'] : $data['blacklist_email']);
             if ($data['blacklist_reason']) {
                 echo "<br /><span class='small2'>".$data['blacklist_reason']."</span>";
             }

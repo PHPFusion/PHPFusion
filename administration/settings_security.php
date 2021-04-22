@@ -65,8 +65,6 @@ if (check_post('savesettings')) {
         'database_sessions'     => sanitizer('database_sessions', 0, 'database_sessions'),
         'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
         'mime_check'            => post('mime_check') ? 1 : 0,
-        'error_logging_enabled' => post('error_logging_enabled') ? 1 : 0,
-        'error_logging_method'  => sanitizer('error_logging_method', '', 'error_logging_method'),
     ];
 
     // Validate extra fields
@@ -258,19 +256,6 @@ echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
 ]);
 echo form_checkbox('flood_autoban', $locale['680'], $settings['flood_autoban'], [
     'toggle' => TRUE
-]);
-closeside();
-openside('');
-echo form_checkbox('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
-    'toggle' => TRUE
-]);
-echo form_select('error_logging_method', $locale['security_016'], $settings['error_logging_method'], [
-    'options'     => [
-        'file'     => $locale['security_017'],
-        'database' => $locale['security_018']
-    ],
-    'width'       => '100%',
-    'inner_width' => '100%'
 ]);
 closeside();
 openside('');

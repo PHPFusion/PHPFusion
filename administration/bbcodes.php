@@ -157,7 +157,7 @@ function bbcode_list() {
         echo '<h4>'.$locale['BBCA_402'].'</h4>';
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
         echo "<th>".$locale['BBCA_403']."</th>\n";
-        echo "<th>".$locale['BBCA_404']."</th>\n";
+        echo "<th class='hidden-xs'>".$locale['BBCA_404']."</th>\n";
         echo "<th>".$locale['BBCA_405']."</th>\n";
         echo "<th>".$locale['BBCA_406']."</th>\n";
         echo "<th class='text-center' colspan='2'>".$locale['BBCA_407']."</th>\n";
@@ -172,11 +172,9 @@ function bbcode_list() {
                 if ($i == 1) {
                     $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
                 } else {
+                    $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mup&bbcode_id=".$data['bbcode_id']."&order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
                     if ($i < $numrows) {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mup&bbcode_id=".$data['bbcode_id']."&order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
                         $up_down .= " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
-                    } else {
-                        $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mup&bbcode_id=".$data['bbcode_id']."&order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
                     }
                 }
             } else {
@@ -208,7 +206,7 @@ function bbcode_list() {
 
                 echo "<tr>\n";
                 echo "<td>".ucwords($data['bbcode_name'])."</td>\n";
-                echo "<td class='text-center'>".$bbcode_image."</td>\n";
+                echo "<td class='text-center hidden-xs'>".$bbcode_image."</td>\n";
                 echo "<td>".$__BBCODE__[0]['description']."</td>\n";
                 echo "<td>".$__BBCODE__[0]['usage']."</td>\n";
                 unset ($__BBCODE__);
@@ -229,7 +227,7 @@ function bbcode_list() {
     if (count($available_bbcodes) != $enabled) {
         echo "<div class='table-responsive'><table class='table table-hover table-striped'>\n<thead>\n<tr>\n";
         echo "<th>".$locale['BBCA_403']."</th>\n";
-        echo "<th>".$locale['BBCA_404']."</th>\n";
+        echo "<th class='hidden-xs'>".$locale['BBCA_404']."</th>\n";
         echo "<th>".$locale['BBCA_405']."</th>\n";
         echo "<th>".$locale['BBCA_406']."</th>\n";
         echo "<th></th>\n";
@@ -259,7 +257,7 @@ function bbcode_list() {
                 include INCLUDES."bbcodes/".$available_bbcode."_bbcode_include_var.php";
                 echo "<tr>\n";
                 echo "<td>".ucwords($available_bbcode)."</td>\n";
-                echo "<td class='text-center'>".$bbcode_image."</td>\n";
+                echo "<td class='text-center hidden-xs'>".$bbcode_image."</td>\n";
                 echo "<td>".$__BBCODE__[0]['description']."</td>\n";
                 echo "<td>".$__BBCODE__[0]['usage']."</td>\n";
                 echo "<td class='text-center'><a href='".FUSION_SELF.$aidlink."&enable=".$available_bbcode."'>".$locale['BBCA_414']."</a></td>\n";

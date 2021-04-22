@@ -37,7 +37,7 @@ $tabs['id'][] = 'details';
 $tabs['icon'][] = "";
 
 opentable($locale['400']);
-echo opentab($tabs, $sections, 'general', TRUE, 'nav-tabs');
+echo opentab($tabs, $sections, 'serverinfotabs', TRUE, 'nav-tabs');
 switch ($sections) {
     case 'folderpermission':
         folderpermission();
@@ -59,25 +59,25 @@ function general() {
     echo '<div class="row">';
     echo '<div class="col-xs-12 col-sm-6">';
     openside('');
-    echo '<div><span class="strong">'.$locale['402'].'</span><span class="pull-right">'.php_uname().'</span></div>';
+    echo '<div><span class="strong">'.$locale['402'].'</span> <span class="pull-right-lg">'.php_uname().'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['403'].'</span><span class="pull-right">'.server('SERVER_SOFTWARE').'</span></div>';
+    echo '<div><span class="strong">'.$locale['403'].'</span> <span class="pull-right-lg">'.server('SERVER_SOFTWARE').'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['404'].'</span><span class="pull-right">'.phpversion().'</span></div>';
+    echo '<div><span class="strong">'.$locale['404'].'</span> <span class="pull-right-lg">'.phpversion().'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['405'].'</span><span class="pull-right">'.php_sapi_name().'</span></div>';
+    echo '<div><span class="strong">'.$locale['405'].'</span> <span class="pull-right-lg">'.php_sapi_name().'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['406'].'</span><span class="pull-right">'.dbconnection()->getServerVersion().'</span></div>';
+    echo '<div><span class="strong">'.$locale['406'].'</span> <span class="pull-right-lg">'.dbconnection()->getServerVersion().'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['406a'].'</span><span class="pull-right">'.str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass()).'</span></div>';
+    echo '<div><span class="strong">'.$locale['406a'].'</span> <span class="pull-right-lg">'.str_replace('\\PHPFusion\\Database\Driver\\', '', \PHPFusion\Database\DatabaseFactory::getDriverClass()).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['407'].'</span><span class="pull-right">'.$settings['version'].'</span></div>';
+    echo '<div><span class="strong">'.$locale['407'].'</span> <span class="pull-right-lg">'.$settings['version'].'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['408'].'</span><span class="pull-right">'.DB_PREFIX.'</span></div>';
+    echo '<div><span class="strong">'.$locale['408'].'</span> <span class="pull-right-lg">'.DB_PREFIX.'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['409'].'</span><span class="pull-right">'.COOKIE_PREFIX.'</span></div>';
+    echo '<div><span class="strong">'.$locale['409'].'</span> <span class="pull-right-lg">'.COOKIE_PREFIX.'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['410'].'</span><span class="pull-right">'.server('HTTP_USER_AGENT').'</span></div>';
+    echo '<div><span class="strong">'.$locale['410'].'</span> <span class="pull-right-lg">'.server('HTTP_USER_AGENT').'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
     if (LANGUAGE !== 'English') {
         echo '<div>'.$locale['411'].'</div>';
@@ -94,21 +94,21 @@ function general() {
         preg_match('/[0-9]+.[0-9]+/', $gd_ver['GD Version'], $gd_ver);
     }
 
-    echo '<div><span class="strong">'.$locale['423'].'</span><span class="pull-right">'.(ini_get('safe_mode') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['423'].'</span> <span class="pull-right-lg">'.(ini_get('safe_mode') ? $locale['yes'] : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['424'].'</span><span class="pull-right">'.(ini_get('register_globals') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['424'].'</span> <span class="pull-right-lg">'.(ini_get('register_globals') ? $locale['yes'] : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['425'].' GD</span><span class="pull-right">'.(extension_loaded('gd') ? $locale['yes'].' ('.$locale['431'].' '.$gd_ver[0].')' : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['425'].' GD</span> <span class="pull-right-lg">'.(extension_loaded('gd') ? $locale['yes'].' ('.$locale['431'].' '.$gd_ver[0].')' : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['425'].' zlib</span><span class="pull-right">'.(extension_loaded('zlib') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['425'].' zlib</span> <span class="pull-right-lg">'.(extension_loaded('zlib') ? $locale['yes'] : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['425'].' magic_quotes_gpc</span><span class="pull-right">'.(extension_loaded('magic_quotes_gpc') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['425'].' magic_quotes_gpc</span> <span class="pull-right-lg">'.(extension_loaded('magic_quotes_gpc') ? $locale['yes'] : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['426'].'</span><span class="pull-right">'.(ini_get('file_uploads') ? $locale['yes'].' ('.ini_get('upload_max_filesize').')' : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['426'].'</span> <span class="pull-right-lg">'.(ini_get('file_uploads') ? $locale['yes'].' ('.ini_get('upload_max_filesize').')' : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['428'].'</span><span class="pull-right">'.(ini_get('display_errors') ? $locale['yes'] : $locale['no']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['428'].'</span> <span class="pull-right-lg">'.(ini_get('display_errors') ? $locale['yes'] : $locale['no']).'</span></div>';
     echo '<hr class="m-t-5 m-b-5">';
-    echo '<div><span class="strong">'.$locale['429'].'</span><span class="pull-right">'.(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430']).'</span></div>';
+    echo '<div><span class="strong">'.$locale['429'].'</span> <span class="pull-right-lg">'.(ini_get('disable_functions') ? str_replace(',', ', ', ini_get('disable_functions')) : $locale['430']).'</span></div>';
     closeside();
     echo '</div>';
     echo '</div>';
@@ -118,7 +118,7 @@ function folderpermission() {
     $locale = fusion_get_locale();
     $status = '';
     $folders = [
-        //path => have to be writeable or not
+        // path => have to be writeable or not
         'administration/db_backups/' => TRUE,
         'images/'                    => TRUE,
         'images/imagelist.js'        => TRUE,
@@ -133,7 +133,7 @@ function folderpermission() {
         $folders += $value;
     }
 
-    //Check file/folder writeable
+    // Check file/folder writeable
     $i = 0;
     foreach ($folders as $folder => $writeable) {
         $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
@@ -154,7 +154,7 @@ function folderpermission() {
 function details() {
     $locale = fusion_get_locale();
     if (!stristr(ini_get('disable_functions'), "phpinfo")) {
-        //Generating new phpinfo style, compatible with PHPFusion styles
+        // Generating new phpinfo style, compatible with PHPFusion styles
         ob_start();
         phpinfo();
         $phpinfo = ob_get_contents();

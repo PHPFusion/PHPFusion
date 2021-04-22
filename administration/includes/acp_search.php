@@ -33,7 +33,7 @@ if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
     exit();
 } else {
     header("Last-Modified: $tsstring");
-    header("ETag: \"{$etag}\"");
+    header("ETag: \"$etag\"");
 }
 
 header('Content-Type: application/json');
