@@ -26,7 +26,7 @@ class Defender {
     private static $debug = FALSE;
     private static $defender_instance = NULL;
 
-    private static $input_name;
+    private static $input_name = '';
     private static $input_error_text = [];
     private static $page_hash = '';
     public $ref = [];
@@ -82,7 +82,7 @@ class Defender {
     /**
      * @param string $value
      *
-     * @return mixed
+     * @return string
      */
     public static function encode($value) {
         return base64_encode(json_encode($value));
@@ -146,7 +146,7 @@ class Defender {
             self::$page_hash = md5(SECRET_KEY);
         }
 
-        return (string)self::$page_hash;
+        return self::$page_hash;
     }
 
     public static function unset_field_session() {
@@ -242,7 +242,7 @@ class Defender {
      * @return string
      */
     public static function get_encrypt_key($private_key) {
-        return $encryption_key = openssl_random_pseudo_bytes(32, $private_key); // 256 bits
+        return openssl_random_pseudo_bytes(32, $private_key); // 256 bits
     }
 
     /**
@@ -259,8 +259,8 @@ class Defender {
         $ivlen = openssl_cipher_iv_length($cipher = 'AES-128-CBC');
         $iv = openssl_random_pseudo_bytes(16, $ivlen); // 128 bits
         $string = self::pkcs7_pad($string, 16);
-        $ciphertext_raw = openssl_encrypt($string, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
+        $ciphertext_raw = openssl_encrypt($string, $cipher, $private_key, OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $private_key, TRUE);
 
         return base64_encode($iv.$hmac.$ciphertext_raw);
     }
@@ -290,9 +290,9 @@ class Defender {
         $iv = substr($c, 0, $ivlen);
         $hmac = substr($c, $ivlen, $sha2len = 32);
         $ciphertext_raw = substr($c, $ivlen + $sha2len);
-        $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, $options = OPENSSL_RAW_DATA, $iv);
+        $string = openssl_decrypt($ciphertext_raw, $cipher, $private_key, OPENSSL_RAW_DATA, $iv);
         $string = self::pkcs7_unpad($string);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, $as_binary = TRUE);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $private_key, TRUE);
 
         if (!function_exists('hash_equals')) {
             function hash_equals($str1, $str2) {
@@ -483,7 +483,7 @@ class Defender {
                     $val_ = [];
 
                     foreach ($val as $lang => $value) {
-                        $val_[$lang] = $val[$lang];
+                        $val_[$lang] = $value;
                     }
 
                     return serialize($val_);
@@ -703,7 +703,7 @@ function sanitize_array($array = []) {
  * @param string $default
  * @param bool   $input_name
  *
- * @return array|string
+ * @return array
  */
 function file_sanitizer($value, $default = '', $input_name = FALSE) {
     return Defender::getInstance()->fileSanitizer($value, $default, $input_name);
@@ -751,30 +751,26 @@ function check_post($key) {
 function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
 
     if (is_array($key)) {
-        $flag = NULL;
-        $input_key = $key;
-        if (is_array($key)) {
-            // always use key 0 for filter var
-            $input_key = $key[0];
-            $flag = FILTER_REQUIRE_ARRAY;
-        }
+        // always use key 0 for filter var
+        $input_key = $key[0];
+        $flag = FILTER_REQUIRE_ARRAY;
 
         $filtered = get($input_key, FILTER_DEFAULT, $flag);
 
-        if (is_array($key)) {
-            $input_ref = $key;
-            unset($input_ref[0]);
 
-            // Get the value of the filtered post value using the $key array as map
-            return array_reduce(
-                $input_ref,
-                function ($value, $key) {
+        $input_ref = $key;
+        unset($input_ref[0]);
 
-                    return (!empty($value[$key]) ? $value[$key] : '');
-                },
-                $filtered
-            );
-        }
+        // Get the value of the filtered post value using the $key array as map
+        return array_reduce(
+            $input_ref,
+            function ($value, $key) {
+
+                return (!empty($value[$key]) ? $value[$key] : '');
+            },
+            $filtered
+        );
+
 
         return (string)stripinput($filtered);
     }
@@ -785,7 +781,7 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
             return (int)$_GET[$key];
         }
 
-        return (int)0;
+        return 0;
     }
 
     if (filter_has_var(INPUT_GET, $key)) {
@@ -807,32 +803,24 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
  * @return mixed
  */
 function post($key, $type = FILTER_DEFAULT, $flags = NULL) {
-
-    $flag = NULL;
     if (is_array($key)) {
-        $post_key = $key;
-        if (is_array($key)) {
-            // always use key 0 for filter var
-            $post_key = $key[0];
-            $flag = FILTER_REQUIRE_ARRAY;
-        }
-
+        // always use key 0 for filter var
+        $post_key = $key[0];
+        $flag = FILTER_REQUIRE_ARRAY;
         $filtered = post($post_key, FILTER_DEFAULT, $flag);
+        $input_ref = $key;
+        unset($input_ref[0]);
 
-        if (is_array($key)) {
-            $input_ref = $key;
-            unset($input_ref[0]);
+        // Get the value of the filtered post value using the $key array as map
+        return array_reduce(
+            $input_ref,
+            function ($value, $key) {
 
-            // Get the value of the filtered post value using the $key array as map
-            return array_reduce(
-                $input_ref,
-                function ($value, $key) {
+                return (!empty($value[$key]) ? $value[$key] : '');
+            },
+            $filtered
+        );
 
-                    return (!empty($value[$key]) ? $value[$key] : '');
-                },
-                $filtered
-            );
-        }
 
         return (string)stripinput($filtered);
     }
@@ -940,7 +928,7 @@ function cookie($key, $type = FILTER_DEFAULT) {
  *
  * @param string $key
  *
- * @return mixed
+ * @return array
  */
 function cookie_remove($key) {
     unset($_COOKIE[$key]);
