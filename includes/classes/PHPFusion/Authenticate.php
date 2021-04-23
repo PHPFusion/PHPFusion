@@ -353,7 +353,7 @@ class Authenticate {
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale("", LOCALE.$settings["locale"]."/global.php");
+        $locale = fusion_get_locale();
 
         if ($user_logoff = get("logoff", FILTER_VALIDATE_INT)) {
             session_remove("login_as");
