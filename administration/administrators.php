@@ -37,7 +37,7 @@ $allowed_sections = ['list', 'form'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'list';
 
 opentable($locale['ADM_420']);
-echo opentab($tabs, $sections, 'adminstabs', TRUE, 'nav-tabs');
+echo opentab($tabs, $sections, 'adminstabs', TRUE, 'nav-tabs', "section", ['edit', 'user_id']);
 switch ($sections) {
     case 'form':
         admins_form();
@@ -180,7 +180,7 @@ function admins_form() {
                     var insecureBoxes = linksTable.find('.insecure :checkbox');
                     var checkAll = $('#check_all');
                     var checkSecure = $('#check_secure');
-    
+
                     var updateCheckAll = function () {
                         checkAll.prop('checked', checkboxes.filter(':not(:checked)').length === 0);
                     };
