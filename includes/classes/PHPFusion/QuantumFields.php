@@ -20,7 +20,6 @@
 
 namespace PHPFusion;
 
-use Exception;
 use FusionTabs;
 use SqlHandler;
 
@@ -481,7 +480,7 @@ class QuantumFields extends SqlHandler {
                         }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
-                        print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0651']));
+                        print_p('Move Field ID '.$_GET['field_id'].' Up a slot and Field ID '.$data['field_id'].' down a slot.');
                     }
                 } else if ($_GET['action'] == 'fmd') {
                     if (!$this->debug) {
@@ -490,7 +489,7 @@ class QuantumFields extends SqlHandler {
                         }
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_id='".$_GET['field_id']."'");
                     } else {
-                        print_p($this->locale['fields_0650'].$_GET['field_id'].str_replace('[FIELD_ID]', $data['field_id'], $this->locale['fields_0652']));
+                        print_p('Move Field ID '.$_GET['field_id'].' Down a slot and Field ID '.$data['field_id'].' up a slot.');
                     }
                 }
                 if (!$this->debug) {
@@ -581,7 +580,7 @@ class QuantumFields extends SqlHandler {
                     }
 
                     // execute removal on child fields and cats
-                    foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+                    foreach ($this->page[$_GET['cat_id']] as $field_category) {
 
                         $result = dbquery("
                                   SELECT field_id, field_name FROM ".$this->field_db."
@@ -624,7 +623,7 @@ class QuantumFields extends SqlHandler {
                 } else if (isset($_POST['move_subcat']) && $_POST['move_subcat'] > 0) {
 
                     // When deletion to move subcategory
-                    foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+                    foreach ($this->page[$_GET['cat_id']] as $field_category) {
                         $new_parent = form_sanitizer($_POST['move_subcat'], 0, 'move_subcat');
 
                         if ($this->debug) {
@@ -640,7 +639,7 @@ class QuantumFields extends SqlHandler {
                     // Delete fields
                     $this->debug = FALSE;
                     if ($this->debug) {
-                        print_p($this->locale['fields_0655']);
+                        print_p('Cat ID was not found. Please check again.');
                     }
                     // Delete Fields - Bug with Isset errors
                     $result = dbquery("SELECT field_id, field_name FROM ".$this->field_db." WHERE field_cat='".intval($_GET['cat_id'])."'");
@@ -717,7 +716,7 @@ class QuantumFields extends SqlHandler {
                                     count($this->page[$_GET['cat_id']]))."</span><br/>";
                             echo "<div class='alert alert-info m-t-10'>";
                             echo "<ol style='list-style:inherit !important; margin-bottom:0;'>";
-                            foreach ($this->page[$_GET['cat_id']] as $arr => $field_category) {
+                            foreach ($this->page[$_GET['cat_id']] as $field_category) {
                                 echo "<li style='list-style-type:decimal;'>".self::parse_label($field_category['field_cat_name'])."</li>";
                             }
                             echo "</ol>";
@@ -738,7 +737,7 @@ class QuantumFields extends SqlHandler {
                             echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'><span class='strong'>".sprintf($this->locale['fields_0601'],
                                     count($field_list[$_GET['cat_id']]))."</span><br/>";
                             echo "<div class='well strong m-t-10'>";
-                            foreach ($field_list[$_GET['cat_id']] as $arr => $field) {
+                            foreach ($field_list[$_GET['cat_id']] as $field) {
                                 echo "- ".$field."<br/>";
                             }
                             echo "</div>";
@@ -766,7 +765,7 @@ class QuantumFields extends SqlHandler {
                     }
                 } else {
                     if ($this->debug) {
-                        addNotice('info', $this->locale['fields_0655'].'<br/>'.$this->locale['fields_0656']);
+                        addNotice('info', 'Cat ID was not found. Please check again.<br/>Category ID was not found. Please check again.');
                     } else {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -880,7 +879,7 @@ class QuantumFields extends SqlHandler {
                             if (!in_array($field_title, $this->enabled_fields)) {
 
                                 if ($this->module_debug) {
-                                    print_p($field_title.$this->locale['fields_0657']);
+                                    print_p($field_title.' set for load.');
                                 }
 
                                 if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
@@ -896,7 +895,7 @@ class QuantumFields extends SqlHandler {
                                     $this->get_available_modules[$field_title] = $user_field_name;
 
                                     if ($this->module_debug) {
-                                        print_p($field_title.$this->locale['fields_0658']);
+                                        print_p($field_title.' loaded.');
                                     }
 
                                 } else {
@@ -933,7 +932,7 @@ class QuantumFields extends SqlHandler {
                                         if (!in_array($field_title, $this->enabled_fields)) {
 
                                             if ($this->module_debug) {
-                                                print_p($field_title.$this->locale['fields_0657']);
+                                                print_p($field_title.' set for load.');
                                             }
 
                                             if (is_file($locale_path.$field_title.".php")) {
@@ -950,7 +949,7 @@ class QuantumFields extends SqlHandler {
                                                 $this->get_available_modules[$field_title] = $user_field_name;
 
                                                 if ($this->module_debug) {
-                                                    print_p($field_title.$this->locale['fields_0658']);
+                                                    print_p($field_title.' loaded.');
                                                 }
 
                                             } else {
@@ -979,7 +978,7 @@ class QuantumFields extends SqlHandler {
                             if (!in_array($field_title, $this->enabled_fields)) {
 
                                 if ($this->module_debug) {
-                                    print_p($field_title.$this->locale['fields_0657']);
+                                    print_p($field_title.' set for load.');
                                 }
 
                                 if (file_exists($this->plugin_locale_folder.$field_title.".php")) {
@@ -996,7 +995,7 @@ class QuantumFields extends SqlHandler {
                                     $this->get_available_modules[$field_title] = $user_field_name;
 
                                     if ($this->module_debug) {
-                                        print_p($field_title.$this->locale['fields_0658']);
+                                        print_p($field_title.' loaded.');
                                     }
 
                                 } else {
@@ -1132,7 +1131,7 @@ class QuantumFields extends SqlHandler {
                         if (isset($this->fields[$cat_id])) {
                             $k = 0;
                             $item_counter = count($this->fields[$cat_id]) - 1;
-                            foreach ($this->fields[$cat_id] as $arr => $field_data) {
+                            foreach ($this->fields[$cat_id] as $field_data) {
                                 $start_edit = '';
                                 $end_edit = '';
                                 if ($this->debug) {
@@ -1766,7 +1765,7 @@ class QuantumFields extends SqlHandler {
                 $this->field_cat_data['field_cat_class'] = sanitizer('field_cat_class', '', 'field_cat_class');
                 // Improvised to code jquery chained selector
                 if (!column_exists($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index'])) {
-                    fusion_stop($this->locale["fields_0671"]);
+                    fusion_stop($this->locale['fields_0671']);
                 }
             }
 
@@ -1826,7 +1825,7 @@ class QuantumFields extends SqlHandler {
                     }
 
                 } else {
-                    print_p($this->locale['fields_0661']);
+                    print_p('Update Mode');
                     print_p($this->field_cat_data);
                 }
 
@@ -1864,7 +1863,7 @@ class QuantumFields extends SqlHandler {
                 } else {
 
                     if ($this->debug) {
-                        print_p($this->locale['fields_0662']);
+                        print_p('Save Mode');
                         print_p($this->field_cat_data);
                     }
                 }
@@ -2387,15 +2386,15 @@ class QuantumFields extends SqlHandler {
         if (self::validate_field($data['field_id'])) {
 
             if ($this->debug) {
-                print_p($this->locale['fields_0661']);
+                print_p('Update Mode');
             }
             // update
             // Alter $this->field_db table - change and modify column.
             $field_query = "SELECT uf.*, cat.field_cat_id, cat.field_parent, cat.field_cat_order, root.field_cat_db, root.field_cat_index
-                                    FROM ".$this->field_db." uf
-                                    LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
-                                    LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
-                                    WHERE uf.field_id=:field_id";
+                FROM ".$this->field_db." uf
+                LEFT JOIN ".$this->category_db." cat ON (cat.field_cat_id = uf.field_cat)
+                LEFT JOIN ".$this->category_db." root ON (cat.field_parent = root.field_cat_id)
+                WHERE uf.field_id=:field_id";
             $field_param = [':field_id' => $data['field_id']];
 
             $old_record = dbquery($field_query, $field_param); // search old database.
@@ -2428,11 +2427,11 @@ class QuantumFields extends SqlHandler {
 
                 if ($this->debug) {
                     // Old Table Information
-                    print_p($this->locale['fields_0664']);
+                    print_p('Old table information - ');
                     print_p($oldRows);
 
                     // New Table Information
-                    print_p($this->locale['fields_0665']);
+                    print_p('New table information - ');
                     print_p($newRows);
 
                     print_p($data['field_cat']);
@@ -2442,7 +2441,7 @@ class QuantumFields extends SqlHandler {
                 if ($data['field_cat'] != $oldRows['field_cat']) { // old and new mismatch - move to another category and possibly a new table.
                     // Fork #1 - Update on new table
                     if ($this->debug)
-                        print_p($this->locale['fields_0666']);
+                        print_p('Fork No.1 - Update Field on a different table');
                     /**
                      * Drop column on old table and Create column on new table
                      *
@@ -2463,7 +2462,7 @@ class QuantumFields extends SqlHandler {
                                     dbquery("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                                 }
                             } else {
-                                fusion_stop(str_replace('[OLD_TABLE]', $old_table, $this->locale['fields_0667']).$new_table);
+                                fusion_stop('Column conflict. There are columns on '.$old_table.' existed in '.$new_table);
                             }
                         } else {
                             // DEBUG MODE
@@ -2474,7 +2473,7 @@ class QuantumFields extends SqlHandler {
                                 // since change table. fix all which is greater than link order.
                                 print_p("UPDATE ".$this->field_db." SET field_order=field_order-1 WHERE field_order >= '".$oldRows['field_order']."' AND field_cat='".$oldRows['field_cat']."'");
                             } else {
-                                print_p(str_replace('[OLD_TABLE]', $old_table, $this->locale['fields_0667']).$new_table);
+                                print_p('Column conflict. There are columns on '.$old_table.' existed in '.$new_table);
                             }
                         }
                     } else {
@@ -2490,7 +2489,7 @@ class QuantumFields extends SqlHandler {
                     // check if same title.
                     // if not same, change column name.
                     if ($this->debug) {
-                        print_p($this->locale['fields_0668']);
+                        print_p('Fork No.2 - Update Field on the same table');
                     }
 
                     if ($data['field_name'] != $oldRows['field_name']) {
@@ -2500,7 +2499,7 @@ class QuantumFields extends SqlHandler {
                             if (!$this->debug) {
                                 self::rename_column($old_table, $oldRows['field_name'], $data['field_name'], $field_attr);
                             } else {
-                                print_p(str_replace(['[FIELD_NAME]', '[OLD_TABLE]', '[FIELD_NAME_]'], [$oldRows['field_name'], $old_table, $data['field_name']], $this->locale['fields_0669']).$field_attr);
+                                print_p('Renaming column '.$oldRows['field_name'].' on '.$old_table.' to '.$data['field_name'].' with attributes of '.$field_attr);
                             }
                         } else {
 
@@ -2628,7 +2627,7 @@ class QuantumFields extends SqlHandler {
             if (dbrows($result) > 0) {
                 $this->field_data = dbarray($result);
                 if ($this->debug) {
-                    print_p($this->locale['fields_0670']);
+                    print_p('Old Data');
                     print_p($this->field_data);
                 }
             } else {
@@ -2756,10 +2755,10 @@ class QuantumFields extends SqlHandler {
         echo "<hr/>";
         echo "<div class='well'>";
         echo "<p class='strong'>".$this->locale['fields_0400']."</p>";
-        echo "<span class='text-dark strong'>".$this->locale['fields_0401']."</span> ".($user_field_api_version ? $user_field_api_version : $this->locale['fields_0402'])."<br/>";
-        echo "<span class='text-dark strong'>".$this->locale['fields_0403']."</span>".($user_field_dbname ? "<br/>".$user_field_dbname : '<br/>'.$this->locale['fields_0404'])."<br/>";
-        echo "<span class='text-dark strong'>".$this->locale['fields_0405']."</span>".($user_field_dbinfo ? "<br/>".$user_field_dbinfo : '<br/>'.$this->locale['fields_0406'])."<br/>";
-        echo "<span class='text-dark strong'>".$this->locale['fields_0407']."</span>".($user_field_desc ? "<br/>".$user_field_desc : '')."<br/>";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0401']."</span> ".(!empty($user_field_api_version) ? $user_field_api_version : $this->locale['fields_0402'])."<br/>";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0403']."</span>".(!empty($user_field_dbname) ? "<br/>".$user_field_dbname : '<br/>'.$this->locale['fields_0404'])."<br/>";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0405']."</span>".(!empty($user_field_dbinfo) ? "<br/>".$user_field_dbinfo : '<br/>'.$this->locale['fields_0406'])."<br/>";
+        echo "<span class='text-dark strong'>".$this->locale['fields_0407']."</span>".(!empty($user_field_desc) ? "<br/>".$user_field_desc : '')."<br/>";
         echo "</div>";
         echo "<hr/>";
 
@@ -2901,10 +2900,10 @@ class QuantumFields extends SqlHandler {
     public function logUserAction($db, $primary_key) {
         if (fusion_safe()) {
             $field = flatten_array($this->fields);
-            $output_fields[$db] = $this->callback_data;
-            foreach ($field as $arr => $field_data) {
+            //$output_fields[$db] = $this->callback_data;
+            foreach ($field as $field_data) {
                 $target_db = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-                $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+                $col_name = !empty($field_data['field_cat_index']) ? $field_data['field_cat_index'] : $primary_key;
                 $index_value = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], 0) : '';
                 $old_cache = isset($this->callback_data[$field_data['field_name']]) ? $this->callback_data[$field_data['field_name']] : '';
                 $new_val = isset($this->output_fields[$target_db][$field_data['field_name']]) ? $this->output_fields[$target_db][$field_data['field_name']] : '';
