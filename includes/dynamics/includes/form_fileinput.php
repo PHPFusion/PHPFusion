@@ -262,7 +262,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             );
         }
 
-        $lang = file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
+        $lang = file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
 
         switch ($options['template']) {
             case "classic":
@@ -351,18 +351,18 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 break;
         }
 
-        if (!defined('form_fileinput')) {
+        if (!defined('FORM_FILEINPUT')) {
             add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
             if ($locale['text-direction'] == 'rtl') {
                 add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />");
             }
             add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
 
-            if (file_exists(DYNAMICS.'assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
-                add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
+            if (file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
+                add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
                 //$lang = 'language: "'.$locale['short_lang_name'].'",';
             }
-            define('form_fileinput', TRUE);
+            define('FORM_FILEINPUT', TRUE);
         }
 
     }

@@ -88,12 +88,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
-        if (file_exists(DYNAMICS."assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
+        if (file_exists(LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
             $lang = $locale['datepicker'];
         } else {
             $lang = 'en-gb';
         }
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/tooltip/".$lang.".js'></script>");
+        add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/tooltip/".$lang.".js'></script>");
 
         if (defined('BOOTSTRAP4')) {
             add_to_head("<link href='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>");
@@ -108,7 +108,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         } else {
             add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datetimepicker.min.js'></script>");
         }
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
+        add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -130,12 +130,12 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'delimiter'              => '-',
         'fieldicon_off'          => FALSE,
         'filtered_dates'         => [], // must be an array
-        'include_filtered_dates' => (boolean)FALSE, // if TRUE, then only days filtered are selectable
+        'include_filtered_dates' => FALSE, // if TRUE, then only days filtered are selectable
         'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
-        'disable_weekend'        => (boolean)FALSE, // if true, all weekend will be non-selectable
+        'disable_weekend'        => FALSE, // if true, all weekend will be non-selectable
         'type'                   => 'timestamp',
         'tip'                    => '',
-        'showTime'               => (boolean)FALSE,
+        'showTime'               => FALSE,
         'week_start'             => fusion_get_settings('week_start'),
         'join_to_id'             => '',
         'join_from_id'           => '',
@@ -182,7 +182,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         foreach ($options['filtered_dates'] as $value) {
             $date_filtered[] = date("m/d/Y", $value);
         }
-        $dateFilter[1] = (string)"['".implode("','", $date_filtered)."']";
+        $dateFilter[1] = "['".implode("','", $date_filtered)."']";
     }
 
     // Format for Weekend
@@ -320,5 +320,5 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         ");
     }
 
-    return (string)$html;
+    return $html;
 }

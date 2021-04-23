@@ -190,6 +190,12 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             $images = "file_picker_callback : mceElf.browser,";
         }
 
+        $tinymce_lang = '';
+        if (file_exists(LOCALE.LOCALESET."includes/jscripts/tinymce/langs/".$locale['tinymce'].".js")) {
+            $tinymce_lang = "language:'".$locale['tinymce']."',
+            language_url: '".LOCALE.LOCALESET."includes/jscripts/tinymce/langs/".$locale['tinymce'].".js',";
+        }
+
         // Mode switching for TinyMCE
         switch ($options['tinymce']) {
             case 'advanced':
@@ -205,7 +211,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
                     browser_spellcheck: ".$options['tinymce_spellcheck'].",
                     entity_encoding: 'raw',
-                    language:'".$locale['tinymce']."',
+                    ".$tinymce_lang."
                     directionality : '".$locale['text-direction']."',
                     ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                     width: '100%',
@@ -309,7 +315,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
                     browser_spellcheck: ".$options['tinymce_spellcheck'].",
                     entity_encoding: 'raw',
-                    language:'".$locale['tinymce']."',
+                    ".$tinymce_lang."
                     directionality : '".$locale['text-direction']."',
                     ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
                     setup: function(ed) {

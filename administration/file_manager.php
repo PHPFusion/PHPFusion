@@ -31,9 +31,9 @@ add_to_head('<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui
 add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
 add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
 add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
-
 $lang = '';
-if (file_exists(INCLUDES.'elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.js')) {
+if (file_exists(LOCALE.LOCALESET.'includes/elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.js')) {
+    add_to_head('<script src="'.LOCALE.LOCALESET.'includes/elFinder/js/i18n/elFinder.'.$locale['filemanager'].'.js"></script>');
     $lang = ',lang: "'.$locale['filemanager'].'"';
 }
 

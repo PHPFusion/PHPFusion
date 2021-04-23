@@ -43,10 +43,10 @@ if (!function_exists('sendemail')) {
 
         $mail = new PHPMailer\PHPMailer\PHPMailer();
 
-        if (file_exists(CLASSES."PHPMailer/language/phpmailer.lang-".$locale['phpmailer'].".php")) {
-            $mail->setLanguage($locale['phpmailer'], CLASSES."PHPMailer/language/");
+        if (file_exists(LOCALE.LOCALESET."includes/classes/PHPMailer/language/phpmailer.lang-".$locale['phpmailer'].".php")) {
+            $mail->setLanguage($locale['phpmailer'], LOCALE.LOCALESET."includes/classes/PHPMailer/language/");
         } else {
-            $mail->setLanguage("en", CLASSES."PHPMailer/language/");
+            $mail->setLanguage("en", LOCALE.LOCALESET."includes/classes/PHPMailer/language/");
         }
         if (!$settings['smtp_host']) {
             $mail->isMAIL();
@@ -54,7 +54,7 @@ if (!function_exists('sendemail')) {
             $mail->isSMTP();
             $mail->Host = $settings['smtp_host'];
             $mail->Port = $settings['smtp_port'];
-            $mail->SMTPAuth = $settings['smtp_auth'] ? TRUE : FALSE;
+            $mail->SMTPAuth = $settings['smtp_auth'];
             $mail->Username = $settings['smtp_username'];
             $mail->Password = $settings['smtp_password'];
         }

@@ -110,7 +110,7 @@ function load_select2_script() {
             return DYNAMICS."assets/select2/select2.css";
         }
 
-        $select2_locale_path = DYNAMICS."assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+        $select2_locale_path = LOCALE.LOCALESET."includes/dynamics/assets/select2/select2_locale_".fusion_get_locale('select2').".js";
         fusion_load_script(DYNAMICS."assets/select2/select2.js");
 
         if (is_file($select2_locale_path)) {

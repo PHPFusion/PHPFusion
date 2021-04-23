@@ -214,10 +214,10 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         if (!defined('PWSTRENGTH')) {
             define('PWSTRENGTH', TRUE);
 
-            if (file_exists(DYNAMICS."assets/password/lang/".$locale['password_strength'].".js")) {
-                $path = DYNAMICS."assets/password/lang/".$locale['password_strength'].".js";
+            if (file_exists(LOCALE.LOCALESET."includes/dynamics/assets/password/lang/".$locale['password_strength'].".js")) {
+                $path = LOCALE.LOCALESET."includes/dynamics/assets/password/lang/".$locale['password_strength'].".js";
             } else {
-                $path = DYNAMICS."assets/password/lang/en.js";
+                $path = LOCALE.LOCALESET."includes/dynamics/assets/password/lang/en.js";
             }
 
             add_to_footer("<script type='text/javascript' src='$path'></script>");
