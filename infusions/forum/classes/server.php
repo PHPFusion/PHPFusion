@@ -299,7 +299,14 @@ abstract class ForumServer {
                 }
             } else {
                 if (isset($rank['rank_apply']) && isset($rank['rank_title'])) {
-                    $res .= "<span class='rank".$rank['rank_id']." rank-label label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")."'><i class='".(isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw")."'></i><div class='detail'>".$rank['rank_title']."</div>\n</span>\n";
+                    $font_color = get_color_brightness($rank['rank_color']) > 130 ? '#000' : '#fff';
+                    $bg = !empty($rank['rank_color']) ? " style='background:".$rank['rank_color'].";color:".$font_color."'" : '';
+                    $res .= "<span class='rank".$rank['rank_id']." rank-label label ".(isset($forum_rank_css_class[$rank['rank_apply']]) ? $forum_rank_css_class[$rank['rank_apply']] : "label-default")."'".$bg.">";
+                    $icon = !empty($rank['rank_icon']) ? $rank['rank_icon'] : '';
+                    $icon = !empty($icon) ? $icon : (isset($forum_rank_icon_class[$rank['rank_apply']]) ? $forum_rank_icon_class[$rank['rank_apply']] : "fa fa-user fa-fw");
+                    $res .= "<i class='".$icon."'></i>";
+                    $res .= "<span class='detail'>".$rank['rank_title']."</span>";
+                    $res .= "</span>";
                 }
             }
         }

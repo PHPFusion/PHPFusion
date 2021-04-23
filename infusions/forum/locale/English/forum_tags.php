@@ -12,6 +12,7 @@ $locale['forum_tag_0111'] = "Discussions regarding the management of this websit
 $locale['forum_tag_0200'] = "Tag Title";
 $locale['forum_tag_0201'] = "Tag Description";
 $locale['forum_tag_0202'] = "Tag Color";
+$locale['forum_tag_0202a'] = "Tag Icon";
 $locale['forum_tag_0203'] = "Tag Language";
 $locale['forum_tag_0204'] = "Tag Status";
 $locale['forum_tag_0205'] = "This tag is active";

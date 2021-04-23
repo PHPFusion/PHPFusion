@@ -26,6 +26,8 @@ class ForumAdminRanks extends ForumAdminInterface {
         'rank_image'         => '',
         'rank_posts'         => 0,
         'rank_type'          => 2,
+        'rank_color'         => '',
+        'rank_icon'          => '',
         'rank_apply_normal'  => '',
         'rank_apply_special' => '',
         'rank_apply'         => '',
@@ -62,7 +64,6 @@ class ForumAdminRanks extends ForumAdminInterface {
             $tab['title'][] = isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? self::$locale['forum_rank_401'] : self::$locale['forum_rank_400'];
             $tab['id'][] = "rank_form";
             $tab['icon'][] = isset($_GET['rank_id']) && isnum($_GET['rank_id']) ? "fa fa-fw fa fa-pencil" : "fa fa-fw fa fa-plus";
-
 
             echo opentab($tab, $_GET['ref'], "rank_admin", TRUE, "nav-tabs", "ref");
 
@@ -134,11 +135,25 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             form_hidden('rank_id', '', $this->data['rank_id']).
 
-            form_text('rank_title', self::$locale['forum_rank_420'], $this->data['rank_title'],
-                ['required' => TRUE, 'inline' => TRUE, 'error_text' => self::$locale['forum_rank_414']]).
+            form_text('rank_title', self::$locale['forum_rank_420'], $this->data['rank_title'], [
+                'required'   => TRUE, 'inline' => TRUE,
+                'error_text' => self::$locale['forum_rank_414']
+            ]).
 
-            form_select('rank_image', self::$locale['forum_rank_421'], $this->data['rank_image'],
-                ['inline' => TRUE, 'options' => $this->get_rank_images(), 'placeholder' => self::$locale['choose'],]);
+            form_select('rank_image', self::$locale['forum_rank_421'], $this->data['rank_image'], [
+                'inline'      => TRUE,
+                'options'     => $this->get_rank_images(),
+                'placeholder' => self::$locale['choose']
+            ]).
+
+            form_colorpicker('rank_color', self::$locale['forum_rank_421a'], $this->data['rank_color'], [
+                'inline'   => TRUE
+            ]).
+
+            form_text('rank_icon', self::$locale['forum_rank_421b'], $this->data['rank_icon'], [
+                'inline'      => TRUE,
+                'placeholder' => 'fa fa-user'
+            ]);
 
         if (multilang_table("FR")) {
             $html .=
@@ -153,19 +168,17 @@ class ForumAdminRanks extends ForumAdminInterface {
             $html .= form_hidden('rank_language', '', $this->data['rank_language']);
         }
 
-        $html .= form_checkbox('rank_type', self::$locale['forum_rank_429'], $this->data['rank_type'],
-                [
-                    'options' => [
-                        self::$locale['forum_rank_429c'],
-                        self::$locale['forum_rank_429b'],
-                        self::$locale['forum_rank_429a'],
-                    ],
-                    'type'    => 'radio',
-                    'inline'  => TRUE,
-                ]).
+        $html .= form_checkbox('rank_type', self::$locale['forum_rank_429'], $this->data['rank_type'], [
+                'options' => [
+                    self::$locale['forum_rank_429c'],
+                    self::$locale['forum_rank_429b'],
+                    self::$locale['forum_rank_429a'],
+                ],
+                'type'    => 'radio',
+                'inline'  => TRUE,
+            ]).
 
-            form_text('rank_posts', self::$locale['forum_rank_422'], $this->data['rank_posts'],
-                [
+            form_text('rank_posts', self::$locale['forum_rank_422'], $this->data['rank_posts'], [
                     'inline'      => TRUE,
                     'type'        => 'number',
                     'inner_width' => '10%',
@@ -175,13 +188,19 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             "<div id='select_normal' ".($this->data['rank_type'] == 2 ? "style='display:none;'" : "").">".
 
-            form_select('rank_apply_normal', self::$locale['forum_rank_423'], $this->data['rank_apply'],
-                ['inline' => TRUE, 'options' => $array_apply_normal_opts, 'placeholder' => self::$locale['choose']]).
+            form_select('rank_apply_normal', self::$locale['forum_rank_423'], $this->data['rank_apply'], [
+                'inline'      => TRUE,
+                'options'     => $array_apply_normal_opts,
+                'placeholder' => self::$locale['choose']
+            ]).
 
             "</div>\n<div id='select_special' ".($this->data['rank_type'] != 2 ? " style='display:none;'" : "").">".
 
-            form_select('rank_apply_special', self::$locale['forum_rank_423'], $this->data['rank_apply'],
-                ['inline' => TRUE, 'options' => $group_opts, 'placeholder' => self::$locale['choose']]).
+            form_select('rank_apply_special', self::$locale['forum_rank_423'], $this->data['rank_apply'], [
+                'inline'      => TRUE,
+                'options'     => $group_opts,
+                'placeholder' => self::$locale['choose']
+            ]).
 
             "</div>\n".
 
@@ -204,6 +223,8 @@ class ForumAdminRanks extends ForumAdminInterface {
                 'rank_language'      => form_sanitizer($_POST['rank_language'], LANGUAGE, "rank_language"),
                 'rank_posts'         => isset($_POST['rank_posts']) && isnum($_POST['rank_posts']) ? $_POST['rank_posts'] : 0,
                 'rank_type'          => isset($_POST['rank_type']) && isnum($_POST['rank_type']) ? $_POST['rank_type'] : 0,
+                'rank_color'         => form_sanitizer($_POST['rank_color'], '', 'rank_color'),
+                'rank_icon'          => form_sanitizer($_POST['rank_icon'], '', 'rank_icon'),
                 'rank_apply_normal'  => isset($_POST['rank_apply_normal']) ? $_POST['rank_apply_normal'] : USER_LEVEL_MEMBER,
                 'rank_apply_special' => isset($_POST['rank_apply_special']) && isnum($_POST['rank_apply_special']) ? $_POST['rank_apply_special'] : 0,
             ];

@@ -60,8 +60,11 @@ if (!function_exists('render_forum')) {
                 $active = isset($_GET['tag_id']) && $_GET['tag_id'] == $tag_id ? ' active' : '';
                 echo '<a href="'.$tag_data['tag_link'].'" class="list-group-item clearfix p-5 p-l-15'.$active.'">';
                 echo '<div class="pull-left m-r-10">';
-                $color = !empty($tag_data['tag_color']) ? $tag_data['tag_color'] : '#3498db';
-                echo '<i class="fa fa-square fa-lg" style="color: '.$color.';"></i>';
+                echo '<span class="fa-stack" style="font-size: 0.5em;"><i class="fa-stack-2x fa fa-square" style="color:'.$tag_data['tag_color'].';"></i>';
+                if (!empty($tag_data['tag_icon'])) {
+                    echo '<i class="text-white fa-stack-1x '.$tag_data['tag_icon'].'"></i>';
+                }
+                echo '</span>';
                 echo '</div>';
                 echo $tag_data['tag_title'];
                 echo '</a>';

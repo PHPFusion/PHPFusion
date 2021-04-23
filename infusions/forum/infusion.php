@@ -25,7 +25,7 @@ $locale = fusion_get_locale('', [
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '2.1.0';
+$inf_version = '2.1.1';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@phpfusion.com';
 $inf_weburl = 'https://phpfusion.com';
@@ -61,6 +61,8 @@ $inf_newtable[] = DB_FORUM_RANKS." (
     rank_image VARCHAR(100) NOT NULL DEFAULT '',
     rank_posts iNT(10) UNSIGNED NOT NULL DEFAULT '0',
     rank_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+    rank_color VARCHAR(20) NOT NULL DEFAULT '',
+    rank_icon VARCHAR(50) NOT NULL DEFAULT '',
     rank_apply TINYINT(4) DEFAULT ".USER_LEVEL_MEMBER.",
     rank_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (rank_id)
@@ -196,6 +198,7 @@ $inf_newtable[] = DB_FORUM_TAGS." (
     tag_title VARCHAR(100) NOT NULL DEFAULT '',
     tag_description VARCHAR(250) NOT NULL DEFAULT '',
     tag_color VARCHAR(20) NOT NULL DEFAULT '',
+    tag_icon VARCHAR(50) NOT NULL DEFAULT '',
     tag_status SMALLINT(1) NOT NULL DEFAULT '0',
     tag_language VARCHAR(100) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (tag_id)
