@@ -122,7 +122,7 @@ if (!function_exists('render_forum_main')) {
         if (!empty($info['forums'][$id])) {
             $forums = $info['forums'][$id];
 
-            foreach ($forums as $forum_id => $data) {
+            foreach ($forums as $data) {
                 if ($data['forum_type'] == 1) {
                     echo '<div class="panel panel-default">';
                     echo '<div class="panel-heading">';
@@ -133,11 +133,11 @@ if (!function_exists('render_forum_main')) {
                     }
                     echo '</div>';
 
-                    if (isset($forums[$forum_id]['child'])) {
+                    if (isset($data['child'])) {
                         echo '<div class="list-group">';
-                        $sub_forums = $forums[$forum_id]['child'];
+                        $sub_forums = $data['child'];
 
-                        foreach ($sub_forums as $sub_forum_id => $cdata) {
+                        foreach ($sub_forums as $cdata) {
                             echo '<div class="list-group-item clearfix">';
                             render_forum_item($cdata);
                             echo '</div>';
@@ -301,7 +301,7 @@ if (!function_exists('forum_viewforum')) {
 
                         echo '<div class="panel panel-default">';
                         echo '<div class="list-group">';
-                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_id => $subforum_data) {
+                        foreach ($info['item'][$_GET['forum_id']]['child'] as $subforum_data) {
                             echo '<div class="list-group-item clearfix">';
                             render_forum_item($subforum_data);
                             echo '</div>';
@@ -348,7 +348,7 @@ if (!function_exists('forum_viewforum')) {
                         }
 
                         $i = 0;
-                        foreach ($info['item'] as $post_id => $postData) {
+                        foreach ($info['item'] as $postData) {
                             echo '<div class="forum-activity well m-b-20">';
                             echo '<div class="pull-left">';
                             echo display_avatar($postData['post_author'], '50px', FALSE, '', 'm-r-10');
@@ -394,7 +394,7 @@ if (!function_exists('forum_viewforum')) {
 
                 echo '<div class="panel panel-default">';
                     echo '<div class="list-group">';
-                        foreach ($info['subforums'] as $subforum_id => $subforum_data) {
+                        foreach ($info['subforums'] as $subforum_data) {
                             echo '<div class="list-group-item clearfix">';
                             render_forum_item($subforum_data);
                             echo '</div>';
@@ -409,7 +409,7 @@ if (!function_exists('forum_viewforum')) {
 
             if ($info['forum_type'] > 1 && !empty($info['filters']['type'])) {
                 echo '<div class="m-b-20">';
-                foreach ($info['filters']['type'] as $key => $tab) {
+                foreach ($info['filters']['type'] as $tab) {
                     $active = $tab['active'] == 1 ? ' strong' : '';
                     echo '<a class="m-r-10'.$active.'" href="'.$tab['link'].'">'.$tab['icon'].''.$tab['title'].' ('.$tab['count'].')</a>';
                 }
@@ -930,7 +930,7 @@ if (!function_exists("display_forum_tags")) {
             if (!empty($info['tags'])) {
                 unset($info['tags'][0]);
 
-                foreach ($info['tags'] as $tag_id => $tag_data) {
+                foreach ($info['tags'] as $tag_data) {
                     echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">';
                     $color = $tag_data['tag_color'];
                     echo '<div class="panel-body" style="height: 200px; background: '.$color.';">';
@@ -1013,7 +1013,7 @@ if (!function_exists('render_thread')) {
 
                 if (!empty($info['post-filters'])) {
                     echo '<ul class="dropdown-menu" aria-labelledby="ddfilter5">';
-                        foreach ($info['post-filters'] as $i => $filters) {
+                        foreach ($info['post-filters'] as $filters) {
                             echo '<li class="dropdown-item"><a class="text-smaller" href="'.$filters['value'].'">'.$filters['locale'].'</a></li>';
                         }
                     echo '</ul>';
@@ -1202,7 +1202,7 @@ if (!function_exists('render_post_item')) {
                 if (!empty($data['user_profiles'])) {
                     echo '<div class="post_profiles clearfix">';
                     foreach ($data['user_profiles'] as $attr) {
-                        if (!empty($attr['type']) && $attr['type'] == 'social') {
+                        if ((!empty($attr['type']) && $attr['type'] == 'social') || !empty($attr['link']) && !empty($attr['icon'])) {
                             echo '<a class="social-link" href="'.$attr['link'].'"'.(fusion_get_settings('index_url_userweb') ? '' : 'rel="nofollow noopener noreferrer" ').'target="_blank">'.$attr['icon'].'</a>';
                         } else {
                             echo '<b>'.$attr['title'].'</b>: '.$attr['value'].' ';
@@ -1211,10 +1211,10 @@ if (!function_exists('render_post_item')) {
                     echo '</div>';
                 }
 
-                echo $data['user_sig'] ? '<div>'.$data['user_sig'].'</div>' : '';
+                echo !empty($data['user_sig']) ? '<div>'.$data['user_sig'].'</div>' : '';
                 echo $data['post_edit_reason'];
-                echo $data['post_mood_message'] ? '<div>'.$data['post_mood_message'].'</div>' : '';
-                echo $data['post_mood'] ? $data['post_mood'] : '';
+                echo !empty($data['post_mood_message']) ? '<div>'.$data['post_mood_message'].'</div>' : '';
+                echo !empty($data['post_mood']) ? $data['post_mood'] : '';
 
                 if (!empty($data['post_bounty'])) {
                     echo '<a href="'.$data['post_bounty']['link'].'">'.$data['post_bounty']['title'].'</a>';
