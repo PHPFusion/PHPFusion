@@ -17,9 +17,14 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$locale = fusion_get_locale();
+if (!function_exists('render_welcome_panel')) {
+    function render_welcome_panel() {
+        $locale = fusion_get_locale();
 
-opentable($locale['global_035']);
+        opentable($locale['global_035']);
+        echo html_entity_decode(stripslashes(nl2br(fusion_get_settings('siteintro'))), ENT_QUOTES);
+        closetable();
+    }
+}
 
-echo html_entity_decode(stripslashes(nl2br(fusion_get_settings('siteintro'))), ENT_QUOTES);
-closetable();
+render_welcome_panel();
