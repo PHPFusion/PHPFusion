@@ -178,11 +178,10 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
             if ($script == FALSE && !headers_sent()) {
                 set_status_header($code);
                 header("Location: ".str_replace("&amp;", "&", $location));
-                exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-                exit;
             }
+            exit;
         }
     }
 }
@@ -274,15 +273,25 @@ function set_status_header($code = 200) {
  * @return false|string
  */
 function get_http_response_code($url) {
-    stream_context_set_default([
-        'ssl' => [
-            'verify_peer'      => FALSE,
-            'verify_peer_name' => FALSE
-        ],
-    ]);
+    if (function_exists('curl_init')) {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_exec($handle);
+        $http_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
 
-    $headers = @get_headers($url);
-    return substr($headers[0], 9, 3);
+        return $http_code;
+    } else {
+        stream_context_set_default([
+            'ssl' => [
+                'verify_peer'      => FALSE,
+                'verify_peer_name' => FALSE
+            ],
+        ]);
+
+        $headers = @get_headers($url);
+        return substr($headers[0], 9, 3);
+    }
 }
 
 /**
@@ -304,7 +313,7 @@ function cleanurl($url) {
  *
  * @param mixed $text
  *
- * @return mixed
+ * @return array|string
  */
 function stripinput($text) {
     if (!is_array($text)) {
@@ -526,7 +535,7 @@ function normalize($value) {
         'گ'     => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
     ];
 
-    return (string)strtr($value, $table);
+    return strtr($value, $table);
 }
 
 /**
@@ -547,7 +556,7 @@ function random_string($length = 6, $alpha_only = FALSE) {
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-    return (string)$randomString;
+    return $randomString;
 }
 
 /**
@@ -633,9 +642,7 @@ function clean_request($request_addition = '', $filter_array = [], $keep_filtere
     }
 
     $prefix = $fusion_query ? '?' : '';
-    $query = $url['path'].$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
-
-    return (string)$query;
+    return $url['path'].$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
 }
 
 /**
@@ -660,7 +667,7 @@ function parsesmileys($message) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
             $smiley_image = get_image("smiley_".$smiley['smiley_text']);
             $smiley_image = "<img class='smiley' style='width:20px;height:20px;' src='$smiley_image' alt='".$smiley['smiley_text']."'>";
-            $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
+            $message = preg_replace("#$smiley_code#s", $smiley_image, $message);
         }
     }
     return $message;
@@ -718,7 +725,7 @@ function cache_bbcode() {
         }
     }
 
-    return (array)$bbcode_cache;
+    return $bbcode_cache;
 }
 
 /**
@@ -863,7 +870,7 @@ function hide_email($email, $title = "", $subject = "") {
         if ($subject != "") {
             $MailLink .= "?subject=".urlencode($subject);
         }
-        $MailLink .= "'>".($title ? $title : $enc_email)."</a>";
+        $MailLink .= "'>".(!empty($title) ? $title : $enc_email)."</a>";
 
         $MailLetters = "";
         for ($i = 0; $i < strlen($MailLink); $i++) {
@@ -952,9 +959,8 @@ function format_code($text) {
         ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;", "&#91;", "&#93;"],
         $text
     );
-    $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
 
-    return $text;
+    return preg_replace("/^ {1}/m", "&nbsp;", $text);
 }
 
 /**
@@ -1057,7 +1063,7 @@ function highlight_words($words, $subject) {
  * @param bool   $strip_tags False if you don't want to remove html tags. True by default
  * @param bool   $strip_scripts
  *
- * @return string
+ * @return string|array
  */
 function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
     if (is_array($text)) {
@@ -1388,7 +1394,7 @@ function fusion_get_groups() {
  * @return bool
  */
 function users_groupaccess($group_id) {
-    if (preg_match("(^\.{$group_id}$|\.{$group_id}\.|\.{$group_id}$)", fusion_get_userdata('user_groups'))) {
+    if (preg_match("(^\.{$group_id}$|\.$group_id\.|\.{$group_id}$)", fusion_get_userdata('user_groups'))) {
         return TRUE;
     }
 
@@ -1716,9 +1722,8 @@ function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', 
  * @param string $id_col     "news_cat_id",
  * @param string $title_col  "news_cat_name",
  * @param string $getname    cat_id for $_GET['cat_id']
- * @param string $key        key for breadcrumb instance
  */
-function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav", $key = 'default') {
+function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
 
     $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
 
@@ -1796,7 +1801,7 @@ function showdate($format, $val, $options = []) {
         $tz_client = 'Europe/London';
     }
 
-    $offset = (int)0;
+    $offset = 0;
 
     try {
         $client_dtz = new DateTimeZone($tz_client);
@@ -1964,7 +1969,6 @@ function fusion_get_locale($key = NULL, $include_file = '') {
  * @return string
  */
 function fusion_get_username($user_id) {
-    $result = NULL;
     $result = (dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"), 0));
 
     return ($result !== NULL) ? $result : fusion_get_locale("na");
@@ -2026,7 +2030,7 @@ function fusion_get_aidlink() {
         $aidlink = '?aid='.iAUTH;
     }
 
-    return (string)$aidlink;
+    return $aidlink;
 }
 
 /**
@@ -2160,7 +2164,7 @@ function fusion_get_language_switch() {
         }
     }
 
-    return (array)$language_switch;
+    return $language_switch;
 }
 
 /**
@@ -2244,7 +2248,7 @@ function fusion_get_enabled_languages() {
         }
     }
 
-    return (array)$enabled_languages;
+    return $enabled_languages;
 }
 
 /**
@@ -2261,7 +2265,7 @@ function fusion_get_detected_language() {
         }
     }
 
-    return (array)$detected_languages;
+    return $detected_languages;
 }
 
 /**
@@ -2310,7 +2314,6 @@ function jsminify($code) {
  * @return int Number of written bytes
  */
 function write_file($file, $data, $flags = NULL) {
-    $bytes = NULL;
     if ($flags === NULL) {
         $bytes = file_put_contents($file, $data);
     } else {
