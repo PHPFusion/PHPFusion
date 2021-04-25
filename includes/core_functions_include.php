@@ -1427,6 +1427,23 @@ function groupaccess($field) {
 }
 
 /**
+ * Get the data of the access level or user group
+ *
+ * @param int  $group_id
+ *
+ * @return array
+ */
+function getgroupdata($group_id) {
+    foreach (getusergroups() as $group) {
+        if ($group_id == $group[0]) {
+            return $group;
+        }
+    }
+
+    return NULL;
+}
+
+/**
  * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
  *
  * @param string $field The name of the field
@@ -1877,10 +1894,10 @@ if (!function_exists('profile_link')) {
     function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
-        $class = ($class ? "class='$class'" : "");
-
         if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
-            $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."' ".$class.">".$user_name."</a>";
+            $user = fusion_get_user($user_id);
+            $group = getgroupdata($user['user_level']);
+            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="group-'.$group[0].' '.$class.'">'.$user_name.'</a>';
         } else if ($user_status == "5" || $user_status == "6") {
             $link = $locale['user_anonymous'];
         } else {
