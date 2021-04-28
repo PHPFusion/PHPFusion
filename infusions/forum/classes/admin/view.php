@@ -181,17 +181,13 @@ class ForumAdminView extends ForumAdminInterface {
                 $this->data['forum_access'] = form_sanitizer($_POST['forum_access'], USER_LEVEL_PUBLIC, 'forum_access');
                 $this->data['forum_post'] = form_sanitizer($_POST['forum_post'], USER_LEVEL_MEMBER, 'forum_post');
                 $this->data['forum_reply'] = form_sanitizer($_POST['forum_reply'], USER_LEVEL_MEMBER, 'forum_reply');
-                $this->data['forum_post_ratings'] = form_sanitizer($_POST['forum_post_ratings'], USER_LEVEL_MEMBER,
-                    'forum_post_ratings');
+                $this->data['forum_post_ratings'] = form_sanitizer($_POST['forum_post_ratings'], USER_LEVEL_MEMBER, 'forum_post_ratings');
                 $this->data['forum_poll'] = form_sanitizer($_POST['forum_poll'], USER_LEVEL_MEMBER, 'forum_poll');
                 $this->data['forum_vote'] = form_sanitizer($_POST['forum_vote'], USER_LEVEL_MEMBER, 'forum_vote');
-                $this->data['forum_answer_threshold'] = form_sanitizer($_POST['forum_answer_threshold'], 0,
-                    'forum_answer_threshold');
+                $this->data['forum_answer_threshold'] = form_sanitizer($_POST['forum_answer_threshold'], 0, 'forum_answer_threshold');
                 $this->data['forum_attach'] = form_sanitizer($_POST['forum_attach'], USER_LEVEL_MEMBER, 'forum_attach');
-                $this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'],
-                    USER_LEVEL_PUBLIC, 'forum_attach_download');
-                $this->data['forum_mods'] = isset($_POST['forum_mods']) ? form_sanitizer($_POST['forum_mods'], '',
-                    'forum_mods') : "";
+                $this->data['forum_attach_download'] = form_sanitizer($_POST['forum_attach_download'], USER_LEVEL_PUBLIC, 'forum_attach_download');
+                $this->data['forum_mods'] = isset($_POST['forum_mods']) ? form_sanitizer($_POST['forum_mods'], '', 'forum_mods') : "";
 
                 dbquery_insert(DB_FORUMS, $this->data, 'update');
 
@@ -860,7 +856,7 @@ class ForumAdminView extends ForumAdminInterface {
         echo "</div><div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>\n";
 
         echo "<div class='well'>\n";
-        $self_id = $this->data['forum_id'] ? $this->data['forum_id'] : '';
+        $self_id = !empty($this->data['forum_id']) ? $this->data['forum_id'] : '';
 
         echo form_select_tree('forum_cat', self::$locale['forum_008'], $this->data['forum_cat'], [
                 'add_parent_opts' => 1,
@@ -935,7 +931,7 @@ class ForumAdminView extends ForumAdminInterface {
         echo "<div class='well'>\n";
         // need to get parent category
         echo form_select_tree('forum_permissions', self::$locale['forum_025'], $this->data['forum_branch'],
-            ['no_root' => TRUE, 'deactivate' => $this->data['forum_id'] ? TRUE : FALSE],
+            ['no_root' => TRUE, 'deactivate' => $this->data['forum_id']],
             DB_FORUMS, 'forum_name', 'forum_id', 'forum_cat');
         if ($this->data['forum_id']) {
             echo form_button('jp_forum', self::$locale['forum_029'], self::$locale['forum_029'],
@@ -1014,9 +1010,10 @@ class ForumAdminView extends ForumAdminInterface {
         echo "<span class='strong display-inline-block m-b-20'>".self::$locale['forum_006'].": ".$data['forum_name']."</span>\n";
         openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_000']."</span><br/>\n";
-        echo form_select('forum_access', self::$locale['forum_031'], $data['forum_access'], [
+        echo form_select('forum_access[]', self::$locale['forum_031'], $data['forum_access'], [
             'inline'  => TRUE,
-            'options' => $public_access_opts
+            'options' => $public_access_opts,
+            'multiple'  => TRUE,
         ]);
         $optionArray = ["inline" => TRUE, "options" => $access_opts];
         echo form_select('forum_post', self::$locale['forum_032'], $data['forum_post'], $optionArray);
