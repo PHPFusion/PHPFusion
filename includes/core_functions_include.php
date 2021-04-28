@@ -1265,24 +1265,41 @@ function pageAccess($rights, $debug = FALSE) {
 /**
  * Check if user is assigned to the specified user group
  *
- * @param int $group
+ * @param int    $group
+ * @param string $delim
  *
  * @return bool
  */
-function checkgroup($group) {
-    if (iSUPERADMIN) {
-        return TRUE;
-    } else if (iADMIN && ($group == "0" || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
-        return TRUE;
-    } else if (iMEMBER && ($group == "0" || $group == USER_LEVEL_MEMBER)) {
-        return TRUE;
-    } else if (iGUEST && $group == "0") {
-        return TRUE;
-    } else if (iMEMBER && $group && in_array($group, explode(".", iUSER_GROUPS))) {
-        return TRUE;
+function checkgroup($group, $delim = ',') {
+    if (strpos($group, $delim) !== FALSE) {
+        foreach (explode($delim, $group) as $group_) {
+            if (iSUPERADMIN) {
+                return TRUE;
+            } else if (iADMIN && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER || $group_ == USER_LEVEL_ADMIN)) {
+                return TRUE;
+            } else if (iMEMBER && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER)) {
+                return TRUE;
+            } else if (iGUEST && $group_ == 0) {
+                return TRUE;
+            } else if (iMEMBER && $group_ && in_array($group_, explode(".", iUSER_GROUPS))) {
+                return TRUE;
+            }
+        }
     } else {
-        return FALSE;
+        if (iSUPERADMIN) {
+            return TRUE;
+        } else if (iADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
+            return TRUE;
+        } else if (iMEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
+            return TRUE;
+        } else if (iGUEST && $group == 0) {
+            return TRUE;
+        } else if (iMEMBER && $group && in_array($group, explode('.', iUSER_GROUPS))) {
+            return TRUE;
+        }
     }
+
+    return NULL;
 }
 
 /**
@@ -1294,20 +1311,36 @@ function checkgroup($group) {
  *
  * @return bool
  */
-function checkusergroup($group, $user_level, $user_groups) {
-    if ($user_level == USER_LEVEL_SUPER_ADMIN) {
-        return TRUE;
-    } else if ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
-        return TRUE;
-    } else if ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
-        return TRUE;
-    } else if ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
-        return TRUE;
-    } else if ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
-        return TRUE;
+function checkusergroup($group, $user_level, $user_groups, $delim = ',') {
+    if (strpos($group, $delim) !== FALSE) {
+        foreach (explode($delim, $group) as $group_) {
+            if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_ADMIN && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER || $group_ == USER_LEVEL_ADMIN)) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_MEMBER && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER)) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_PUBLIC && $group_ == 0) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_MEMBER && $group_ && in_array($group_, explode('.', $user_groups))) {
+                return TRUE;
+            }
+        }
+    } else {
+        if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
+            return TRUE;
+        }
     }
 
-    return FALSE;
+    return NULL;
 }
 
 /**
@@ -1405,22 +1438,29 @@ function users_groupaccess($group_id) {
  * Getting the access levels used when asking the database for data
  *
  * @param string $field
+ * @param string $delim
  *
  * @return string The part of WHERE clause. Always returns a condition
  */
-function groupaccess($field) {
+function groupaccess($field, $delim = ',') {
     $res = '';
     if (iGUEST) {
-        $res = $field." = ".USER_LEVEL_PUBLIC;
+        $res = in_group($field, USER_LEVEL_PUBLIC, $delim);
     } else if (iSUPERADMIN) {
         $res = "1 = 1";
     } else if (iADMIN) {
-        $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
+        $res = in_group($field, USER_LEVEL_PUBLIC, $delim)." OR ".in_group($field, USER_LEVEL_MEMBER, $delim)." OR ".in_group($field, USER_LEVEL_ADMIN, $delim);
     } else if (iMEMBER) {
-        $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
+        $res = in_group($field, USER_LEVEL_PUBLIC, $delim)." OR ".in_group($field, USER_LEVEL_MEMBER, $delim);
     }
     if (iUSER_GROUPS != "" && !iSUPERADMIN) {
-        $res = "(".$res." OR $field='".str_replace(".", "' OR $field='", iUSER_GROUPS)."')";
+        $groups = explode('.', iUSER_GROUPS);
+        $groups_ = [];
+        foreach ($groups as $group) {
+            $groups_[] = in_group($field, $group, $delim);
+        }
+        $group_sql = implode(' OR ', $groups_);
+        $res = "(".$res." OR ".$group_sql.")";
     }
 
     return $res;
@@ -1429,7 +1469,7 @@ function groupaccess($field) {
 /**
  * Get the data of the access level or user group
  *
- * @param int  $group_id
+ * @param int $group_id
  *
  * @return array
  */
