@@ -1936,8 +1936,12 @@ if (!function_exists('profile_link')) {
         $settings = fusion_get_settings();
         if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
             $user = fusion_get_user($user_id);
-            $group = getgroupdata($user['user_level']);
-            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="group-'.$group[0].' '.$class.'">'.$user_name.'</a>';
+            $group_class = '';
+            if (!empty($user['user_level'])) {
+                $group = getgroupdata($user['user_level']);
+                $group_class = 'group-'.$group[0];
+            }
+            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="'.$group_class.' '.$class.'">'.$user_name.'</a>';
         } else if ($user_status == "5" || $user_status == "6") {
             $link = $locale['user_anonymous'];
         } else {
