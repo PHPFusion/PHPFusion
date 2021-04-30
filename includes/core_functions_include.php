@@ -1445,14 +1445,15 @@ function users_groupaccess($group_id) {
 function groupaccess($field, $delim = ',') {
     $res = '';
     if (iGUEST) {
-        $res = in_group($field, USER_LEVEL_PUBLIC, $delim);
+        $res = $field." = ".USER_LEVEL_PUBLIC;
     } else if (iSUPERADMIN) {
         $res = "1 = 1";
     } else if (iADMIN) {
-        $res = in_group($field, USER_LEVEL_PUBLIC, $delim)." OR ".in_group($field, USER_LEVEL_MEMBER, $delim)." OR ".in_group($field, USER_LEVEL_ADMIN, $delim);
+        $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
     } else if (iMEMBER) {
-        $res = in_group($field, USER_LEVEL_PUBLIC, $delim)." OR ".in_group($field, USER_LEVEL_MEMBER, $delim);
+        $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
     }
+
     if (iUSER_GROUPS != "" && !iSUPERADMIN) {
         $groups = explode('.', iUSER_GROUPS);
         $groups_ = [];
