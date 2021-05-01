@@ -1445,7 +1445,7 @@ function users_groupaccess($group_id) {
 function groupaccess($field, $delim = ',') {
     $res = '';
     if (iGUEST) {
-        $res = $field." = ".USER_LEVEL_PUBLIC;
+        $res = $field." in (".USER_LEVEL_PUBLIC.")";
     } else if (iSUPERADMIN) {
         $res = "1 = 1";
     } else if (iADMIN) {
