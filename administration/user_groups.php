@@ -159,9 +159,9 @@ class UserGroups {
                 $group = getgroupname(get('group_id'));
                 if ($group) {
                     $rem_user = [];
-                    foreach ($group_userSender as $grp) {
-                        $groupadduser = fusion_get_user($grp);
-                        if (in_array(get('group_id'), explode(".", $groupadduser['user_groups']))) {
+                    foreach ($group_userSender as $user) {
+                        $groupadduser = fusion_get_user($user);
+                        if (!empty($groupadduser['user_groups']) && in_array(get('group_id'), explode(".", $groupadduser['user_groups']))) {
                             $groupadduser['user_groups'] = self::addUserGroup(get('group_id'), $groupadduser['user_groups']);
                             $rem_user[] = $groupadduser['user_name'];
                             dbquery_insert(DB_USERS, $groupadduser, "update");
