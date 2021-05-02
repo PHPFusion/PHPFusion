@@ -218,7 +218,13 @@ class Authenticate {
         $locale = fusion_get_locale();
 
         if (check_get("logout")) {
-            self::logOut();
+            if (defined('COOKIE_ADMIN') && isset($_COOKIE[COOKIE_ADMIN]) && $_COOKIE[COOKIE_ADMIN] != "") {
+                $cookieDataArr = explode(".", $_COOKIE[COOKIE_ADMIN]);
+                if (count($cookieDataArr) == 3) {
+                    self::expireAdminCookie();
+                }
+            }
+
             redirect(BASEDIR."index.php");
         }
 
@@ -353,9 +359,9 @@ class Authenticate {
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale('', LOCALE.$settings['locale'].'/global.php');
 
-        if ($user_logoff = get("logoff", FILTER_VALIDATE_INT)) {
+        if (get("logoff", FILTER_VALIDATE_INT)) {
             session_remove("login_as");
             addNotice("success", $locale["global_185"], BASEDIR.$settings["opening_page"]);
             redirect(BASEDIR.$settings["opening_page"]);
@@ -386,7 +392,7 @@ class Authenticate {
                                 if (isnum($login_id)) {
                                     $login_user = fusion_get_user(session_get("login_as"));
                                     if (!empty($login_user["user_id"]) && $login_user["user_status"] == 0 && $login_user["user_actiontime"] == 0) {
-                                        addNotice("success", sprintf($locale["global_184"], $login_user["user_name"]));
+                                        addNotice("success", sprintf(fusion_get_locale('global_184'), $login_user["user_name"]));
                                         $user = $login_user;
                                     }
                                 }
