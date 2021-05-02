@@ -359,7 +359,8 @@ class Authenticate {
     // Checks and sets the admin last visit cookie
     public static function validateAuthUser() {
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale('', LOCALE.$settings['locale'].'/global.php');
+        $locale = fusion_get_locale();
+        include_once LOCALE.$settings['locale'].'/global.php'; // fix for multilang issue
 
         if (get("logoff", FILTER_VALIDATE_INT)) {
             session_remove("login_as");
@@ -392,7 +393,7 @@ class Authenticate {
                                 if (isnum($login_id)) {
                                     $login_user = fusion_get_user(session_get("login_as"));
                                     if (!empty($login_user["user_id"]) && $login_user["user_status"] == 0 && $login_user["user_actiontime"] == 0) {
-                                        addNotice("success", sprintf(fusion_get_locale('global_184'), $login_user["user_name"]));
+                                        addNotice("success", sprintf($locale['global_184'], $login_user["user_name"]));
                                         $user = $login_user;
                                     }
                                 }
