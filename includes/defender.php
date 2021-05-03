@@ -80,7 +80,7 @@ class Defender {
     }
 
     /**
-     * @param string $value
+     * @param string|array $value
      *
      * @return string
      */
