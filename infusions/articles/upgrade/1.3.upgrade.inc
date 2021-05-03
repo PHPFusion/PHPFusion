@@ -39,7 +39,7 @@ foreach ($change_aricle_cats as $key => $value) {
 
 $settings = get_settings('articles');
 $check_array = [
-    'article_submission_visibility' => 1
+    'article_submission_access' => 1
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {

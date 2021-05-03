@@ -68,10 +68,10 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 
 // Insert settings
 $settings = [
-    'article_pagination'            => 15,
-    'article_allow_submission'      => 1,
-    'article_submission_visibility' => 0,
-    'article_extended_required'     => 0
+    'article_pagination'        => 15,
+    'article_allow_submission'  => 1,
+    'article_submission_access' => 0,
+    'article_extended_required' => 0
 ];
 
 foreach ($settings as $name => $value) {

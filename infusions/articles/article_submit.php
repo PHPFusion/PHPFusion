@@ -27,7 +27,7 @@ opentable("<i class='fa fa-file-text-o fa-lg m-r-10'></i> ".$locale['article_090
 add_to_title($locale['article_0900']);
 
 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".groupaccess("article_cat_visibility")."")) {
-    if (iMEMBER && $articleSettings['article_allow_submission'] && checkgroup($articleSettings['article_submission_visibility'])) {
+    if (iMEMBER && $articleSettings['article_allow_submission'] && checkgroup($articleSettings['article_submission_access'])) {
         $criteriaArray = [
             'article_subject'  => '',
             'article_keywords' => '',

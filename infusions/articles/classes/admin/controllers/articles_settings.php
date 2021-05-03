@@ -36,10 +36,10 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         // Save
         if (isset($_POST['savesettings'])) {
             $inputArray = [
-                'article_pagination'            => form_sanitizer($_POST['article_pagination'], 15, 'article_pagination'),
-                'article_allow_submission'      => form_sanitizer($_POST['article_allow_submission'], 0, 'article_allow_submission'),
-                'article_extended_required'     => form_sanitizer($_POST['article_extended_required'], 0, 'article_extended_required'),
-                'article_submission_visibility' => form_sanitizer($_POST['article_submission_visibility'], 0, 'article_submission_visibility')
+                'article_pagination'        => form_sanitizer($_POST['article_pagination'], 15, 'article_pagination'),
+                'article_allow_submission'  => form_sanitizer($_POST['article_allow_submission'], 0, 'article_allow_submission'),
+                'article_extended_required' => form_sanitizer($_POST['article_extended_required'], 0, 'article_extended_required'),
+                'article_submission_access' => form_sanitizer($_POST['article_submission_access'], 0, 'article_submission_access')
             ];
 
             // Update
@@ -72,7 +72,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             'inline'  => TRUE,
             'options' => [$locale['disable'], $locale['enable']]
         ]);
-        echo form_select('article_submission_visibility[]', $locale['submissions_visibility'], $article_settings['article_submission_visibility'], [
+        echo form_select('article_submission_access[]', $locale['submissions_access'], $article_settings['article_submission_access'], [
             'inline'   => TRUE,
             'options'  => fusion_get_groups(),
             'multiple' => TRUE,
