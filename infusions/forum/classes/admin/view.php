@@ -1042,6 +1042,7 @@ class ForumAdminView extends ForumAdminInterface {
         echo form_select('forum_attach_download[]', self::$locale['forum_035'], $data['forum_attach_download'], [
             'options'  => $public_access_opts,
             'inline'   => TRUE,
+            'multiple' => TRUE,
         ]);
         closeside();
         openside('');
