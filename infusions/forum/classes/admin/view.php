@@ -300,7 +300,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                     $result = dbquery_order(DB_FORUMS, $this->data['forum_order'], 'forum_order',
                         $this->data['forum_id'], 'forum_id', $this->data['forum_cat'], 'forum_cat',
-                        1, 'forum_language', 'update');
+                        1, 'forum_language');
 
                     if ($result) {
                         dbquery_insert(DB_FORUMS, $this->data, 'update');
@@ -761,7 +761,7 @@ class ForumAdminView extends ForumAdminInterface {
     public function display_forum_index() {
         $res = FALSE;
         if (isset($_POST['init_forum'])) {
-            $this->data['forum_name'] = self::check_validForumName(form_sanitizer($_POST['forum_name'], '', 'forum_name'), 0);
+            $this->data['forum_name'] = self::check_validForumName(form_sanitizer($_POST['forum_name'], '', 'forum_name'));
             if ($this->data['forum_name']) {
                 $this->data['forum_cat'] = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? $_GET['parent_id'] : 0;
                 $res = TRUE;
@@ -979,7 +979,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         $_access = getusergroups();
         $access_opts['0'] = self::$locale['531'];
-        foreach ($_access as $key => $option) {
+        foreach ($_access as $option) {
             $access_opts[$option['0']] = $option['1'];
         }
         $public_access_opts = $access_opts;
@@ -1011,19 +1011,19 @@ class ForumAdminView extends ForumAdminInterface {
         openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_000']."</span><br/>\n";
         echo form_select('forum_access[]', self::$locale['forum_031'], $data['forum_access'], [
-            'inline'  => TRUE,
-            'options' => $public_access_opts,
-            'multiple'  => TRUE,
+            'inline'   => TRUE,
+            'options'  => $public_access_opts,
+            'multiple' => TRUE,
         ]);
-        $optionArray = ["inline" => TRUE, "options" => $access_opts];
-        echo form_select('forum_post', self::$locale['forum_032'], $data['forum_post'], $optionArray);
-        echo form_select('forum_reply', self::$locale['forum_033'], $data['forum_reply'], $optionArray);
-        echo form_select('forum_post_ratings', self::$locale['forum_039'], $data['forum_post_ratings'], $optionArray);
+        $optionArray = ["inline" => TRUE, "options" => $access_opts, 'multiple' => TRUE,];
+        echo form_select('forum_post[]', self::$locale['forum_032'], $data['forum_post'], $optionArray);
+        echo form_select('forum_reply[]', self::$locale['forum_033'], $data['forum_reply'], $optionArray);
+        echo form_select('forum_post_ratings[]', self::$locale['forum_039'], $data['forum_post_ratings'], $optionArray);
         closeside();
         openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_001']."</span><br/>\n";
-        echo form_select('forum_poll', self::$locale['forum_036'], $data['forum_poll'], $optionArray);
-        echo form_select('forum_vote', self::$locale['forum_037'], $data['forum_vote'], $optionArray);
+        echo form_select('forum_poll[]', self::$locale['forum_036'], $data['forum_poll'], $optionArray);
+        echo form_select('forum_vote[]', self::$locale['forum_037'], $data['forum_vote'], $optionArray);
         closeside();
         openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_004']."</span><br/>\n";
@@ -1034,13 +1034,14 @@ class ForumAdminView extends ForumAdminInterface {
         closeside();
         openside('');
         echo "<span class='text-dark strong display-inline-block m-b-20'>".self::$locale['forum_desc_002']."</span><br/>\n";
-        echo form_select('forum_attach', self::$locale['forum_034'], $data['forum_attach'], [
-            'options' => $access_opts,
-            'inline'  => TRUE
+        echo form_select('forum_attach[]', self::$locale['forum_034'], $data['forum_attach'], [
+            'options'  => $access_opts,
+            'inline'   => TRUE,
+            'multiple' => TRUE,
         ]);
-        echo form_select('forum_attach_download', self::$locale['forum_035'], $data['forum_attach_download'], [
-            'options' => $public_access_opts,
-            'inline'  => TRUE
+        echo form_select('forum_attach_download[]', self::$locale['forum_035'], $data['forum_attach_download'], [
+            'options'  => $public_access_opts,
+            'inline'   => TRUE,
         ]);
         closeside();
         openside('');
@@ -1108,8 +1109,8 @@ class ForumAdminView extends ForumAdminInterface {
         if ($rows > 0) {
 
             // To support entypo and font-awesome icon switching
-            $has_entypo = fusion_get_settings("entypo") ? TRUE : FALSE;
-            $has_fa = fusion_get_settings("fontawesome") ? TRUE : FALSE;
+            $has_entypo = fusion_get_settings("entypo");
+            $has_fa = fusion_get_settings("fontawesome");
 
             $type_icon = [
                 '1' => ($has_entypo ? 'entypo entypo-folder' : $has_fa) ? 'fa fa-folder fa-fw fa-2x' : "",
