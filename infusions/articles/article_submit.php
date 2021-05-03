@@ -26,9 +26,8 @@ $locale = fusion_get_locale('', ARTICLE_ADMIN_LOCALE);
 opentable("<i class='fa fa-file-text-o fa-lg m-r-10'></i> ".$locale['article_0900']);
 add_to_title($locale['article_0900']);
 
-
 if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".groupaccess("article_cat_visibility")."")) {
-    if (iMEMBER && $articleSettings['article_allow_submission']) {
+    if (iMEMBER && $articleSettings['article_allow_submission'] && checkgroup($articleSettings['article_submission_visibility'])) {
         $criteriaArray = [
             'article_subject'  => '',
             'article_keywords' => '',
@@ -127,13 +126,13 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'form_name'  => 'submissionform'
                 ];
                 $articleExtendedSettings = [
-                    'required'   => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
-                    'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                    'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'required'      => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
+                    'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                    'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                     'tinymce_image' => FALSE,
-                    'error_text' => $locale['article_0272'],
-                    'path'       => IMAGES_A,
-                    'form_name'  => 'submissionform'
+                    'error_text'    => $locale['article_0272'],
+                    'path'          => IMAGES_A,
+                    'form_name'     => 'submissionform'
                 ];
             }
 

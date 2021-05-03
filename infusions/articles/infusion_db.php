@@ -54,7 +54,7 @@ if (!defined("DB_ARTICLES")) {
 \PHPFusion\Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
 
 $inf_settings = get_settings('articles');
-if (!empty($inf_settings['article_allow_submission']) && $inf_settings['article_allow_submission']) {
+if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article_allow_submission']) && (!empty($inf_settings['article_submission_visibility']) && checkgroup($inf_settings['article_submission_visibility']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('a', [
         'infusion_name' => 'articles',
         'link'          => INFUSIONS."articles/article_submit.php",

@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['articles']['title'];
 $inf_description = $locale['articles']['description'];
-$inf_version = "1.2";
+$inf_version = "1.3";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -40,7 +40,7 @@ $inf_newtable[] = DB_ARTICLES." (
     article_breaks CHAR(1) NOT NULL DEFAULT '',
     article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
     article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    article_visibility CHAR(4) NOT NULL DEFAULT '0',
+    article_visibility VARCHAR(50) DEFAULT '0',
     article_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
     article_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     article_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
@@ -57,7 +57,7 @@ $inf_newtable[] = DB_ARTICLE_CATS." (
     article_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     article_cat_name VARCHAR(100) NOT NULL DEFAULT '',
     article_cat_description TEXT NOT NULL,
-    article_cat_visibility CHAR(4) NOT NULL DEFAULT '0',
+    article_cat_visibility VARCHAR(50) DEFAULT '0',
     article_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
     article_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (article_cat_id)
@@ -68,9 +68,10 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 
 // Insert settings
 $settings = [
-    'article_pagination'        => 15,
-    'article_allow_submission'  => 1,
-    'article_extended_required' => 0
+    'article_pagination'            => 15,
+    'article_allow_submission'      => 1,
+    'article_submission_visibility' => 0,
+    'article_extended_required'     => 0
 ];
 
 foreach ($settings as $name => $value) {

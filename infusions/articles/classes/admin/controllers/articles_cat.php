@@ -191,9 +191,10 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         echo form_hidden('article_cat_language', '', $data['article_cat_language']);
                     }
 
-                    echo form_select('article_cat_visibility', $this->locale['article_0106'], $data['article_cat_visibility'], [
+                    echo form_select('article_cat_visibility[]', $this->locale['article_0106'], $data['article_cat_visibility'], [
                         'options'     => fusion_get_groups(),
-                        'placeholder' => $this->locale['choose']
+                        'placeholder' => $this->locale['choose'],
+                        'multiple'    => TRUE,
                     ]);
 
                     echo form_select('article_cat_status', $this->locale['article_0152'], $data['article_cat_status'], [
@@ -340,10 +341,14 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
                 <!-- Actions -->
                 <div class="pull-right">
-                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?></a>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#article_table');"><i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#article_table');"><i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#article_table');"><i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
+                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?>
+                    </a>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#article_table');">
+                        <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#article_table');">
+                        <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#article_table');">
+                        <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
                 </div>
 
                 <!-- Search -->
@@ -460,9 +465,15 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                         }
                     });');
                         ?></td>
-                    <td><span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span></td>
-                    <td><span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span></td>
-                    <td><span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['published'] : $this->locale['unpublished']); ?></span></td>
+                    <td>
+                        <span class="text-dark"><?php echo str_repeat("&nbsp;&nbsp;", $level)." ".$cdata['article_cat_name']; ?></span>
+                    </td>
+                    <td>
+                        <span class="badge"><?php echo format_word($cdata['article_count'], $this->locale['fmt_article']); ?></span>
+                    </td>
+                    <td>
+                        <span class="badge"><?php echo($cdata['article_cat_status'] == 1 ? $this->locale['published'] : $this->locale['unpublished']); ?></span>
+                    </td>
                     <td><span class="badge"><?php echo getgroupname($cdata['article_cat_visibility']); ?></span></td>
                     <td>
                         <a href="<?php echo $edit_link; ?>" title="<?php echo $this->locale['edit']; ?>"><?php echo $this->locale['edit']; ?></a>&nbsp;|&nbsp;
@@ -476,7 +487,9 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="6" class="text-center"><?php echo $this->locale['article_0162']; ?></td></tr>
+            <tr>
+                <td colspan="6" class="text-center"><?php echo $this->locale['article_0162']; ?></td>
+            </tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>

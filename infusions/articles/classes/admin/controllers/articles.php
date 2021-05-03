@@ -264,10 +264,11 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ],
             DB_ARTICLE_CATS, "article_cat_name", "article_cat_id", "article_cat_parent"
         );
-        echo form_select('article_visibility', $this->locale['article_0106'], $this->article_data['article_visibility'], [
+        echo form_select('article_visibility[]', $this->locale['article_0106'], $this->article_data['article_visibility'], [
             'options'     => fusion_get_groups(),
             'placeholder' => $this->locale['choose'],
-            'inner_width' => '100%'
+            'inner_width' => '100%',
+            'multiple'    => TRUE,
         ]);
         if (multilang_table("AR")) {
             echo form_select('article_language[]', $this->locale['language'], $this->article_data['article_language'], [
