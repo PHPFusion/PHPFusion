@@ -461,7 +461,7 @@ $locale['preview'] = "Preview";
 $locale['custom'] = "Custom";
 $locale['submit'] = "Submit";
 $locale['submissions'] = "Submissions";
-$locale['submissions_access'] = "Submissions page access";
+$locale['submit_access'] = "Access to Submit page";
 $locale['categories'] = "Categories";
 // Alignment
 $locale['left'] = "Left";

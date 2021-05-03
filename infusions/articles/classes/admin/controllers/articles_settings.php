@@ -72,7 +72,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             'inline'  => TRUE,
             'options' => [$locale['disable'], $locale['enable']]
         ]);
-        echo form_select('article_submission_access[]', $locale['submissions_access'], $article_settings['article_submission_access'], [
+        echo form_select('article_submission_access[]', $locale['submit_access'], $article_settings['article_submission_access'], [
             'inline'   => TRUE,
             'options'  => fusion_get_groups(),
             'multiple' => TRUE,
