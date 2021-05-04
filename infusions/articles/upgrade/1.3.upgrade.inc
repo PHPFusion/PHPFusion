@@ -18,7 +18,7 @@
 $inf_version = '1.3';
 
 $change_articles = [
-    'article_visibility' => " CHANGE article_visibility article_visibility VARCHAR(50) DEFAULT '0'",
+    'article_visibility' => " CHANGE article_visibility article_visibility VARCHAR(50) NOT NULL DEFAULT '0'",
 ];
 
 foreach ($change_articles as $key => $value) {
@@ -28,7 +28,7 @@ foreach ($change_articles as $key => $value) {
 }
 
 $change_aricle_cats = [
-    'article_cat_visibility' => " CHANGE article_cat_visibility article_cat_visibility VARCHAR(50) DEFAULT '0'",
+    'article_cat_visibility' => " CHANGE article_cat_visibility article_cat_visibility VARCHAR(50) NOT NULL DEFAULT '0'",
 ];
 
 foreach ($change_aricle_cats as $key => $value) {
