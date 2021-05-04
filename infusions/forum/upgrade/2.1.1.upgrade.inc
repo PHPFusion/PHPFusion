@@ -39,15 +39,15 @@ foreach ($check_tags_array as $key => $value) {
 }
 
 $change_forums = [
-    'forum_access'          => " CHANGE forum_access forum_access VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_post'            => " CHANGE forum_post forum_post VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_reply'           => " CHANGE forum_reply forum_reply VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_post_ratings'    => " CHANGE forum_post_ratings forum_post_ratings VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_poll'            => " CHANGE forum_poll forum_poll VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_vote'            => " CHANGE forum_vote forum_vote VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_attach'          => " CHANGE forum_attach forum_attach VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download VARCHAR(50) DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) DEFAULT ''"
+    'forum_access'          => " CHANGE forum_access forum_access VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_post'            => " CHANGE forum_post forum_post VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_reply'           => " CHANGE forum_reply forum_reply VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_post_ratings'    => " CHANGE forum_post_ratings forum_post_ratings VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_poll'            => " CHANGE forum_poll forum_poll VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_vote'            => " CHANGE forum_vote forum_vote VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_attach'          => " CHANGE forum_attach forum_attach VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
+    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) NOT NULL DEFAULT ''"
 ];
 
 foreach ($change_forums as $key => $value) {

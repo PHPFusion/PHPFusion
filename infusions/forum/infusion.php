@@ -106,8 +106,8 @@ $inf_newtable[] = DB_FORUMS." (
     forum_rules TEXT NOT NULL,
     forum_mods VARCHAR(50) NOT NULL DEFAULT '',
     forum_access VARCHAR(50) NOT NULL DEFAULT '0',
-    forum_post VARCHAR(50) DEFAULT ".USER_LEVEL_MEMBER.",
-    forum_reply VARCHAR(50) DEFAULT ".USER_LEVEL_MEMBER.",
+    forum_post VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    forum_reply VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
     forum_poll VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_vote VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
@@ -280,7 +280,7 @@ foreach ($forum_settings as $name => $value) {
 
 // During loading of infusion.php - column user_reputation does not exist, and therefore this statement is always FALSE and rule is not loaded
 //if (column_exists('users', 'user_reputation')) { // this will fail because when not infused, the user_reputation does not exist.
-    $inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."'";
+$inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."'";
 //}
 
 // Insert panels
