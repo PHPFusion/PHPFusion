@@ -35,7 +35,8 @@ if (isset($_POST['savesettings'])) {
         "blog_photo_max_w"            => form_sanitizer($_POST['blog_photo_max_w'], 1800, 'blog_photo_max_w'),
         "blog_photo_max_h"            => form_sanitizer($_POST['blog_photo_max_h'], 1600, 'blog_photo_max_h'),
         "blog_photo_max_b"            => form_sanitizer($_POST['calc_b'], 153600, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
-        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "blog_file_types"),
+        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '..gif,.jpg,.png,.svg,.webp', "blog_file_types"),
+        'blog_submission_access'      => form_sanitizer($_POST['blog_submission_access'], USER_LEVEL_MEMBER, 'blog_submission_access')
     ];
     if (Defender::safe()) {
         foreach ($inputArray as $settings_name => $settings_value) {
@@ -130,6 +131,11 @@ echo form_select('blog_allow_submission', $locale['blog_0600'], $blog_settings['
 ]);
 echo form_select('blog_allow_submission_files', $locale['blog_0601'], $blog_settings['blog_allow_submission_files'], [
     "inline" => TRUE, "options" => [$locale['disable'], $locale['enable']]
+]);
+echo form_select('blog_submission_access[]', $locale['submit_access'], $blog_settings['blog_submission_access'], [
+    'inline'   => TRUE,
+    'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+    'multiple' => TRUE,
 ]);
 echo form_checkbox('blog_extended_required', $locale['blog_0602'], $blog_settings['blog_extended_required'], ['inline' => TRUE]);
 closeside();

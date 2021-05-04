@@ -54,7 +54,7 @@ if (!defined("DB_BLOG_CATS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('B', fusion_get_settings("siteurl")."infusions/blog/blog.php?readmore=%s");
 
 $inf_settings = get_settings('blog');
-if (!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_submission']) {
+if ((!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow_submission']) && (!empty($inf_settings['blog_submission_access']) && checkgroup($inf_settings['blog_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('b', [
         'infusion_name' => 'blog',
         'link'          => INFUSIONS."blog/blog_submit.php",

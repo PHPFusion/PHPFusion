@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['blog']['title'];
 $inf_description = $locale['blog']['description'];
-$inf_version = "1.2";
+$inf_version = "1.3";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -46,7 +46,7 @@ $inf_newtable[] = DB_BLOG." (
     blog_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     blog_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
     blog_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    blog_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    blog_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     blog_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
     blog_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     blog_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -85,7 +85,8 @@ $settings = [
     'blog_allow_submission'       => 1,
     'blog_allow_submission_files' => 1,
     'blog_extended_required'      => 0,
-    'blog_file_types'             => '.gif,.jpg,.png,.svg,.webp'
+    'blog_file_types'             => '.gif,.jpg,.png,.svg,.webp',
+    'blog_submission_access'      => USER_LEVEL_MEMBER
 ];
 
 foreach ($settings as $name => $value) {

@@ -212,10 +212,11 @@ echo form_select('blog_cat[]', $locale['blog_0423'], $data['blog_cat'], [
     ]
 );
 
-echo form_select('blog_visibility', $locale['blog_0430'], $data['blog_visibility'], [
+echo form_select('blog_visibility[]', $locale['blog_0430'], $data['blog_visibility'], [
     'options'     => fusion_get_groups(),
     'placeholder' => $locale['choose'],
-    'width'       => '100%'
+    'width'       => '100%',
+    'multiple' => TRUE,
 ]);
 
 if (multilang_table("BL")) {
