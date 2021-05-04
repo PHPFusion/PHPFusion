@@ -70,7 +70,7 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 $settings = [
     'article_pagination'        => 15,
     'article_allow_submission'  => 1,
-    'article_submission_access' => 0,
+    'article_submission_access' => USER_LEVEL_MEMBER,
     'article_extended_required' => 0
 ];
 

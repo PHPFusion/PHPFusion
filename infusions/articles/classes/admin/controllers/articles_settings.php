@@ -39,7 +39,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
                 'article_pagination'        => form_sanitizer($_POST['article_pagination'], 15, 'article_pagination'),
                 'article_allow_submission'  => form_sanitizer($_POST['article_allow_submission'], 0, 'article_allow_submission'),
                 'article_extended_required' => form_sanitizer($_POST['article_extended_required'], 0, 'article_extended_required'),
-                'article_submission_access' => form_sanitizer($_POST['article_submission_access'], 0, 'article_submission_access')
+                'article_submission_access' => form_sanitizer($_POST['article_submission_access'], USER_LEVEL_MEMBER, 'article_submission_access')
             ];
 
             // Update
@@ -74,7 +74,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         ]);
         echo form_select('article_submission_access[]', $locale['submit_access'], $article_settings['article_submission_access'], [
             'inline'   => TRUE,
-            'options'  => fusion_get_groups(),
+            'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
             'multiple' => TRUE,
         ]);
         echo form_select('article_extended_required', $locale['article_0403'], $article_settings['article_extended_required'], [
