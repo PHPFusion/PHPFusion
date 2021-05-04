@@ -36,14 +36,13 @@ class Forum_Bounty extends ForumServer {
 
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';
-        $bounty_points = 50;
+        $bounty_points = self::get_forum_settings('bounty_points');
         $points = '';
         $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
         if ($edit ? self::get_bounty_permissions('can_edit_bounty') : self::get_bounty_permissions('can_start_bounty')) {
-            $default = 50;
             for ($i = 1; $i <= 10; $i++) {
-                $points[$i * $default] = format_word($i * $default, $locale['forum_2015']);
+                $points[$i * $bounty_points] = format_word($i * $bounty_points, $locale['forum_2015']);
             }
             if (isset($_POST['save_bounty'])) {
                 $bounty_description = form_sanitizer($_POST['bounty_description'], '', 'bounty_description');
@@ -56,7 +55,7 @@ class Forum_Bounty extends ForumServer {
                             ]
                         );
                     } else {
-                        $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, $default, 'bounty_points');
+                        $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, $bounty_points, 'bounty_points');
                         $point_bal = fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [

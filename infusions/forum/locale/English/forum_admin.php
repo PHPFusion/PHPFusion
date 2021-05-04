@@ -146,6 +146,7 @@ $locale['forum_134'] = "Min. Points to Cast Down Vote:";
 $locale['forum_135'] = "Point(s)";
 $locale['forum_136'] = "Forum User Points";
 $locale['forum_136a'] = "Points for new users:";
+$locale['forum_136b'] = "Bounty points:";
 $locale['forum_137'] = "General Forum Settings";
 $locale['forum_138'] = "Forum Post Settings";
 $locale['forum_139'] = "Forum User Fields Settings";

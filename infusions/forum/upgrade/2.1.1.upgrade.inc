@@ -17,6 +17,17 @@
 +--------------------------------------------------------*/
 $inf_version = '2.1.1';
 
+$new_settings = [
+    'bounty_points' => 50,
+];
+
+$settings = get_settings('forum');
+foreach ($new_settings as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'forum')";
+    }
+}
+
 $check_ranks_array = [
     'rank_color' => " ADD rank_color VARCHAR(20) NOT NULL DEFAULT '' AFTER rank_type",
     'rank_icon'  => " ADD rank_icon VARCHAR(50) NOT NULL DEFAULT '' AFTER rank_color",

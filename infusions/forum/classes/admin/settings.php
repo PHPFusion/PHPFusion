@@ -131,7 +131,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                                             if (empty($cdata['field_title']) && $cdata['field_type'] == 'file') {
                                                 if (file_exists(LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php')) {
                                                     $locale_file = LOCALE.LOCALESET.'user_fields/'.$cdata['field_name'].'.php';
-                                                }  else {
+                                                } else {
                                                     $locale_file = LOCALE.'English/user_fields/'.$cdata['field_name'].'.php';
                                                 }
                                                 $locale = fusion_get_locale('', $locale_file);
@@ -188,6 +188,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'points_to_upvote'          => form_sanitizer($_POST['points_to_upvote'], 100, 'points_to_upvote'),
                 'points_to_downvote'        => form_sanitizer($_POST['points_to_downvote'], 100, 'points_to_downvote'),
                 'forum_show_reputation'     => form_sanitizer($_POST['forum_show_reputation'], 0, 'forum_show_reputation'),
+                'bounty_points'             => form_sanitizer($_POST['bounty_points'], 50, 'bounty_points'),
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -306,6 +307,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 echo form_text('answering_points', self::$locale['forum_132'], $forum_settings['answering_points'], $points_config);
                 echo form_text('points_to_upvote', self::$locale['forum_133'], $forum_settings['points_to_upvote'], $points_config);
                 echo form_text('points_to_downvote', self::$locale['forum_134'], $forum_settings['points_to_downvote'], $points_config);
+                echo form_text('bounty_points', self::$locale['forum_136b'], $forum_settings['bounty_points'], $points_config);
                 closeside();
                 openside(self::$locale['forum_admin_001']);
                 echo form_select('forum_ranks', self::$locale['520'], $forum_settings['forum_ranks'], [
