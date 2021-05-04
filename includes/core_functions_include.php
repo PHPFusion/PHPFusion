@@ -1408,12 +1408,15 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 /**
  * Get array of all groups
  *
+ * @param array $remove
+ *
  * @return array
  */
-function fusion_get_groups() {
+function fusion_get_groups($remove = []) {
     $visibility_opts = [];
-    foreach (getusergroups() as $groups) {
-        $visibility_opts[$groups[0]] = $groups[1];
+    $groups = array_diff_key(getusergroups(), array_flip($remove));
+    foreach ($groups as $group) {
+        $visibility_opts[$group[0]] = $group[1];
     }
 
     return $visibility_opts;
