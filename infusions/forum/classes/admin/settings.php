@@ -189,6 +189,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'points_to_downvote'        => form_sanitizer($_POST['points_to_downvote'], 100, 'points_to_downvote'),
                 'forum_show_reputation'     => form_sanitizer($_POST['forum_show_reputation'], 0, 'forum_show_reputation'),
                 'bounty_points'             => form_sanitizer($_POST['bounty_points'], 50, 'bounty_points'),
+                'min_rep_points'            => form_sanitizer($_POST['min_rep_points'], 50, 'min_rep_points'),
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -308,6 +309,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 echo form_text('points_to_upvote', self::$locale['forum_133'], $forum_settings['points_to_upvote'], $points_config);
                 echo form_text('points_to_downvote', self::$locale['forum_134'], $forum_settings['points_to_downvote'], $points_config);
                 echo form_text('bounty_points', self::$locale['forum_136b'], $forum_settings['bounty_points'], $points_config);
+                echo form_text('min_rep_points', self::$locale['forum_136c'], $forum_settings['min_rep_points'], $points_config);
                 closeside();
                 openside(self::$locale['forum_admin_001']);
                 echo form_select('forum_ranks', self::$locale['520'], $forum_settings['forum_ranks'], [

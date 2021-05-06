@@ -18,7 +18,8 @@
 $inf_version = '2.1.1';
 
 $new_settings = [
-    'bounty_points' => 50,
+    'bounty_points'  => 50,
+    'min_rep_points' => 50,
 ];
 
 $settings = get_settings('forum');

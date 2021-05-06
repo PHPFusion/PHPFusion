@@ -272,7 +272,8 @@ $forum_settings = [
     'forum_show_lastpost'        => 1,
     'forum_enabled_userfields'   => 0,
     'forum_show_reputation'      => 1,
-    'bounty_points'              => 50
+    'bounty_points'              => 50,
+    'min_rep_points'             => 50,
 ];
 
 foreach ($forum_settings as $name => $value) {

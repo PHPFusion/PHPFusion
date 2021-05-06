@@ -37,7 +37,7 @@ class Forum_Bounty extends ForumServer {
     public function render_bounty_form($edit = FALSE) {
         $bounty_description = '';
         $bounty_points = self::get_forum_settings('bounty_points');
-        $points = '';
+        $points = [];
         $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
         if ($edit ? self::get_bounty_permissions('can_edit_bounty') : self::get_bounty_permissions('can_start_bounty')) {
@@ -56,7 +56,7 @@ class Forum_Bounty extends ForumServer {
                         );
                     } else {
                         $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, $bounty_points, 'bounty_points');
-                        $point_bal = fusion_get_userdata('user_reputation') - $bounty_points;
+                        $point_bal = (int)fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
                             ':point_balance' => $point_bal,
@@ -131,9 +131,9 @@ class Forum_Bounty extends ForumServer {
                             ':start'     => 0,
                             ':thread_id' => $post_data['thread_id']
                         ]);
-                    redirect(FORUM.'postify.php?post=award&amp;error=0&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
+                    redirect(FORUM.'postify.php?post=award&error=0&forum_id='.$post_data['forum_id'].'&thread_id='.$post_data['thread_id'].'&post_id='.$post_data['post_id']);
                 }
-                redirect(FORUM.'postify.php?post=award&amp;error=7&amp;forum_id='.$post_data['forum_id'].'&amp;thread_id='.$post_data['thread_id'].'&amp;post_id='.$post_data['post_id']);
+                redirect(FORUM.'postify.php?post=award&error=7&forum_id='.$post_data['forum_id'].'&thread_id='.$post_data['thread_id'].'&post_id='.$post_data['post_id']);
             }
         }
     }
@@ -144,7 +144,7 @@ class Forum_Bounty extends ForumServer {
         if (self::$data['thread_bounty']) {
             $user = fusion_get_user(self::$data['thread_bounty_user']);
             $html = "<div class='list-group-item-info p-15'>\n";
-            $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&amp;thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
+            $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
             $html .= "<h4>".strtr(self::$locale['forum_4101'], [
                     '{%points%}'       => "<span class='label label-primary'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",
                     '{%profile_link%}' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
