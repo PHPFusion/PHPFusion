@@ -24,7 +24,7 @@ $userdata = fusion_get_userdata();
 
 add_to_title($locale['blog_0700']);
 $criteriaArray = [];
-if (iMEMBER && $blog_settings['blog_allow_submission']  && checkgroup($blog_settings['blog_submission_access'])) {
+if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_settings['blog_submission_access'])) {
     $criteriaArray = [
         "blog_subject"  => "",
         "blog_cat"      => 0,
