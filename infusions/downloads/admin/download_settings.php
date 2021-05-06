@@ -36,6 +36,7 @@ if (isset($_POST['savesettings'])) {
         "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 0, "download_allow_submission"),
         "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
         "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
+        'download_submission_access'   => form_sanitizer($_POST['download_submission_access'], USER_LEVEL_MEMBER, 'download_submission_access')
     ];
     if (\defender::safe()) {
         foreach ($StoreArray as $key => $value) {
@@ -164,7 +165,16 @@ echo "<div class='row'>
 closeside();
 openside('');
 echo form_select('download_allow_submission', $locale['download_0046'], $dl_settings['download_allow_submission'], [
-    'inline' => TRUE, 'options' => [$locale['disable'], $locale['enable']]]);
+    'inline'  => TRUE,
+    'options' => [
+        $locale['disable'], $locale['enable']
+    ]
+]);
+echo form_select('download_submission_access[]', $locale['submit_access'], $dl_settings['download_submission_access'], [
+    'inline'   => TRUE,
+    'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+    'multiple' => TRUE,
+]);
 echo form_checkbox('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], ['inline' => TRUE]);
 echo form_checkbox('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], ['inline' => TRUE]);
 closeside();

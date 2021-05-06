@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];
-$inf_version = "1.1.1";
+$inf_version = "1.2";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -49,7 +49,7 @@ $inf_newtable[] = DB_DOWNLOADS." (
     download_version VARCHAR(20) NOT NULL DEFAULT '',
     download_filesize VARCHAR(20) NOT NULL DEFAULT '',
     download_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    download_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    download_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     download_count INT(10) UNSIGNED NOT NULL DEFAULT '0',
     download_allow_comments TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     download_allow_ratings TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -71,7 +71,6 @@ $inf_newtable[] = DB_DOWNLOAD_CATS." (
     KEY download_cat_parent (download_cat_parent)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-
 // Insert panel
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3326']."', 'latest_downloads_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 
@@ -89,7 +88,8 @@ $settings = [
     'download_pagination'          => 15,
     'download_allow_submission'    => 1,
     'download_screenshot_required' => 1,
-    'download_extended_required'   => 1
+    'download_extended_required'   => 1,
+    'download_submission_access'   => USER_LEVEL_MEMBER
 ];
 
 foreach ($settings as $name => $value) {

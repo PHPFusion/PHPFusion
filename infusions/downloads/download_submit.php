@@ -24,7 +24,7 @@ $userdata = fusion_get_userdata();
 add_to_title($locale['download_0041']);
 
 opentable("<i class='fa fa-download fa-lg fa-fw'></i>".$locale['download_0041']);
-if (iMEMBER && $dl_settings['download_allow_submission']) {
+if (iMEMBER && $dl_settings['download_allow_submission'] && checkgroup($dl_settings['download_submission_access'])) {
     $criteriaArray = [
         "download_title"             => "",
         "download_cat"               => 0,
@@ -108,7 +108,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
             addNotice("success", $locale['download_0042']);
-            redirect(clean_request("submitted=d", ["stype"], TRUE));
+            redirect(clean_request("submitted=d", ["stype"]));
         }
     }
     if (isset($_GET['submitted']) && $_GET['submitted'] == "d") {
@@ -164,7 +164,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
 
             echo form_textarea('download_description_short', $locale['download_0202'], $criteriaArray['download_description_short'], $textArea_opts_short);
 
-            $textArea_opts['required'] = $dl_settings['download_extended_required'] ? TRUE : FALSE;
+            $textArea_opts['required'] = $dl_settings['download_extended_required'];
             $textArea_opts['error_text'] = $locale['download_0201'];
 
             echo form_textarea('download_description', $locale['download_0202a'], $criteriaArray['download_description'], $textArea_opts);
@@ -217,7 +217,7 @@ if (iMEMBER && $dl_settings['download_allow_submission']) {
                 $screenshot_options = [
                     "inline"           => TRUE,
                     "upload_path"      => DOWNLOADS."submissions/images/",
-                    "required"         => $dl_settings['download_screenshot_required'] ? TRUE : FALSE,
+                    "required"         => $dl_settings['download_screenshot_required'],
                     "max_width"        => $dl_settings['download_screen_max_w'],
                     "max_height"       => $dl_settings['download_screen_max_h'],
                     "max_byte"         => $dl_settings['download_screen_max_b'],

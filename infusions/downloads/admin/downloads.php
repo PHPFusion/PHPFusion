@@ -185,7 +185,7 @@ echo form_textarea('download_description_short', $locale['download_0202'], $data
     'required'   => TRUE,
     'error_text' => $locale['download_0112'],
     'maxlength'  => '255',
-    'autosize'   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+    'autosize'   => fusion_get_settings("tinymce_enabled"),
     'type'       => 'bbcode',
     'form_name'  => 'inputform'
 ]);
@@ -297,8 +297,8 @@ echo form_textarea('download_description', $locale['download_0202a'], $data['dow
     "form_name"   => "inputform",
     "type"        => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
     "tinymce"     => "advanced",
-    "autosize"    => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
-    "preview"     => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+    "autosize"    => fusion_get_settings("tinymce_enabled"),
+    "preview"     => fusion_get_settings("tinymce_enabled"),
     "placeholder" => $locale['download_0201'],
     'height'      => '300px',
     'path'        => IMAGES_D
@@ -322,10 +322,11 @@ echo form_select_tree("download_cat", $locale['download_0207'], $data['download_
     'width'       => '100%',
     "query"       => (multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : "")
 ], DB_DOWNLOAD_CATS, "download_cat_name", "download_cat_id", "download_cat_parent");
-echo form_select('download_visibility', $locale['download_0205'], $data['download_visibility'], [
+echo form_select('download_visibility[]', $locale['download_0205'], $data['download_visibility'], [
     'options'     => fusion_get_groups(),
     'placeholder' => $locale['choose'],
-    'width'       => '100%'
+    'width'       => '100%',
+    'multiple'    => TRUE,
 ]);
 
 echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], [
@@ -351,8 +352,8 @@ closeside();
 echo "</div>\n</div>\n"; // end row.
 echo "<div class='m-t-20'>\n";
 echo form_button('save_download', $locale['download_0212'], $locale['download_0212'], [
-    'class' => 'btn-success m-r-10',
-    'icon'  => 'fa fa-check-square-o',
+    'class'    => 'btn-success m-r-10',
+    'icon'     => 'fa fa-check-square-o',
     'input_id' => 'save-btn'
 ]);
 if (isset($_GET['action']) && $_GET['action'] == "edit") {
