@@ -42,7 +42,7 @@ if (!defined('DB_FAQ_CATS')) {
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
 
 $inf_settings = get_settings('faq');
-if (!empty($inf_settings['faq_allow_submission']) && $inf_settings['faq_allow_submission']) {
+if ((!empty($inf_settings['faq_allow_submission']) && $inf_settings['faq_allow_submission']) && (!empty($inf_settings['faq_submission_access']) && checkgroup($inf_settings['faq_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('q', [
         'infusion_name' => 'faq',
         'link'          => INFUSIONS."faq/faq_submit.php",

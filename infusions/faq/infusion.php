@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['faqs']['title'];
 $inf_description = $locale['faqs']['description'];
-$inf_version = "1.1";
+$inf_version = "1.2.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -38,7 +38,7 @@ $inf_newtable[] = DB_FAQS." (
     faq_breaks CHAR(1) NOT NULL DEFAULT '',
     faq_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
     faq_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    faq_visibility CHAR(4) NOT NULL DEFAULT '0',
+    faq_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     faq_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     faq_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY(faq_id),
@@ -55,7 +55,14 @@ $inf_newtable[] = DB_FAQ_CATS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 // Insert settings
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('faq_allow_submission', '1', '".$inf_folder."')";
+$settings = [
+    'faq_allow_submission'  => 1,
+    'faq_submission_access' => USER_LEVEL_MEMBER
+];
+
+foreach ($settings as $name => $value) {
+    $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('".$name."', '".$value."', '".$inf_folder."')";
+}
 
 // Multilanguage table
 $inf_mlt[] = [

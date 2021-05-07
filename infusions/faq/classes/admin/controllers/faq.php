@@ -209,7 +209,7 @@ class FaqAdmin extends FaqAdminModel {
 
     private static function FaqData(array $filters = []) {
 
-        $result = dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
+        return dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
             FROM ".DB_FAQS." ac
             ".(!empty($filters['join']) ? $filters['join'] : "")."
             WHERE ".(!empty($filters['where']) ? $filters['where'] : "").
@@ -218,8 +218,6 @@ class FaqAdmin extends FaqAdminModel {
             ORDER BY ac.faq_datestamp DESC
             ".(!empty($filters['limit']) ? $filters['limit'] : "")."
         ");
-
-        return $result;
     }
 
     /**
@@ -282,10 +280,11 @@ class FaqAdmin extends FaqAdminModel {
                     'required'    => TRUE
                 ]);
 
-                echo form_select('faq_visibility', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
+                echo form_select('faq_visibility[]', $this->locale['faq_0106'], $this->faq_data['faq_visibility'], [
                     'options'     => fusion_get_groups(),
                     'placeholder' => $this->locale['choose'],
-                    'inner_width' => '100%'
+                    'inner_width' => '100%',
+                    'multiple'    => TRUE,
                 ]);
                 if (multilang_table('FQ')) {
                     echo form_select("faq_language[]", $this->locale['language'], $this->faq_data['faq_language'], [

@@ -34,7 +34,7 @@ class FaqSubmissions extends FaqServer {
         $this->locale = fusion_get_locale("", FAQ_LOCALE);
         add_to_title($this->locale['faq_0900']);
         $this->info['faq_tablename'] = $this->locale['faq_0900'];
-        if (iMEMBER && self::$faq_settings['faq_allow_submission']) {
+        if (iMEMBER && self::$faq_settings['faq_allow_submission'] && checkgroup(self::$faq_settings['faq_submission_access'])) {
             display_faq_submissions($this->display_submission_form());
         } else {
             $info['no_submissions'] = $this->locale['faq_0922'];

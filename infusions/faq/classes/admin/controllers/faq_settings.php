@@ -41,7 +41,8 @@ class FaqSettingsAdmin extends FaqAdminModel {
 
     private function SaveFaqAdmin() {
         $inputArray = [
-            'faq_allow_submission' => form_sanitizer($this->faq_allow_submission, 0, 'faq_allow_submission')
+            'faq_allow_submission'  => form_sanitizer($this->faq_allow_submission, 0, 'faq_allow_submission'),
+            'faq_submission_access' => form_sanitizer($_POST['faq_submission_access'], USER_LEVEL_MEMBER, 'faq_submission_access')
         ];
         // Update
         if (\defender::safe()) {
@@ -67,6 +68,11 @@ class FaqSettingsAdmin extends FaqAdminModel {
             form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
                 'inline'  => TRUE,
                 'options' => [$this->locale['disable'], $this->locale['enable']]
+            ]).
+            form_select('faq_submission_access[]', $this->locale['submit_access'], self::$faq_settings['faq_submission_access'], [
+                'inline'   => TRUE,
+                'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+                'multiple' => TRUE,
             ]).
             form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']).
             closeform();
