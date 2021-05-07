@@ -52,7 +52,7 @@ if (!defined("DB_DOWNLOADS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
 
 $inf_settings = get_settings('downloads');
-if (!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) {
+if ((!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) && (!empty($inf_settings['download_submission_access']) && checkgroup($inf_settings['download_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('d', [
         'infusion_name' => 'downloads',
         'link'          => INFUSIONS."downloads/download_submit.php",
