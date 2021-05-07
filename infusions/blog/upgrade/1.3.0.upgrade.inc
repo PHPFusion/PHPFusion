@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 1.2.upgrade.inc
+| Filename: 1.3.0.upgrade.inc
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,24 +15,23 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.2';
+$inf_version = '1.3.0';
 
-$change_downloads = [
-    'download_visibility' => " CHANGE download_visibility download_visibility VARCHAR(50) NOT NULL DEFAULT '0'",
+$change_blog = [
+    'blog_visibility' => " CHANGE blog_visibility blog_visibility VARCHAR(50) NOT NULL DEFAULT '0'",
 ];
-
-foreach ($change_downloads as $key => $value) {
-    if (column_exists(DB_DOWNLOADS, $key, FALSE)) {
-        $inf_altertable[] = DB_DOWNLOADS.$value;
+foreach ($change_blog as $key => $value) {
+    if (column_exists(DB_BLOG, $key, FALSE)) {
+        $inf_altertable[] = DB_BLOG.$value;
     }
 }
 
-$settings = get_settings('downloads');
+$settings = get_settings('blog');
 $check_array = [
-    'download_submission_access' => USER_LEVEL_MEMBER
+    'blog_submission_access' => USER_LEVEL_MEMBER
 ];
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
-        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'downloads')";
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'blog')";
     }
 }

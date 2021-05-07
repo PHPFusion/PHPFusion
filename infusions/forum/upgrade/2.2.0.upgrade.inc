@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 2.1.1.upgrade.inc
+| Filename: 2.2.0.upgrade.inc
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '2.1.1';
+$inf_version = '2.2.0';
 
 $new_settings = [
     'bounty_points'  => 50,

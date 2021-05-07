@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['downloads']['title'];
 $inf_description = $locale['downloads']['description'];
-$inf_version = "1.2";
+$inf_version = "1.2.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
