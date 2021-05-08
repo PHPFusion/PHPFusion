@@ -1110,8 +1110,8 @@ class ForumAdminView extends ForumAdminInterface {
         if ($rows > 0) {
 
             // To support entypo and font-awesome icon switching
-            $has_entypo = fusion_get_settings("entypo");
-            $has_fa = fusion_get_settings("fontawesome");
+            $has_entypo = defined('ENTYPO') && ENTYPO == TRUE;
+            $has_fa = defined('FONTAWESOME') && FONTAWESOME == TRUE;
 
             $type_icon = [
                 '1' => ($has_entypo ? 'entypo entypo-folder' : $has_fa) ? 'fa fa-folder fa-fw fa-2x' : "",

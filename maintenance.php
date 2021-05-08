@@ -80,7 +80,7 @@ echo "<meta name='url' content='".$settings['siteurl']."'>\n";
 echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
 echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
         echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
@@ -95,11 +95,11 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
     }
 }
 
-if ($settings['entypo'] || defined('ENTYPO')) {
+if (defined('ENTYPO') && ENTYPO == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
-if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
 }
 
@@ -110,7 +110,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
 echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 
-if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
+if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -135,7 +135,7 @@ if (!empty($fusion_jquery_tags)) {
     echo "<script>$(function(){".$minifier->minify()."});</script>\n";
 }
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
     } else {

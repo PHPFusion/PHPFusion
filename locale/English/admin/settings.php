@@ -44,12 +44,11 @@ $locale['433'] = "mysite.com";
 $locale['434'] = "myfolder";
 $locale['435'] = "Exclude Above Upper Panels:";
 $locale['436'] = "Exclude Below Lower Panels:";
-$locale['437'] = "Enable Bootstrap";
+
 $locale['438'] = "Search Engine Friendly URL (SEF):";
 $locale['439'] = "Normalize Friendly URLs:";
 $locale['440'] = "Enable SEO Debug Mode:";
-$locale['441'] = "Enable Entypo";
-$locale['442'] = "Enable Font-Awesome";
+
 $locale['443a'] = "Exclude User 1 Panels";
 $locale['443b'] = "Exclude User 2 Panels";
 $locale['443c'] = "Exclude User 3 Panels";
@@ -67,7 +66,7 @@ $locale['450'] = "Time and Date";
 $locale['451'] = "Short date format:";
 $locale['452'] = "Long date format:";
 $locale['453'] = "Forum date format:";
-$locale['454'] = "Sub-header date format:";
+
 $locale['455'] = "-- Select a Format --";
 $locale['456'] = "Guests offset";
 $locale['457'] = "News &amp; Articles date format:";

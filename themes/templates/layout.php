@@ -47,7 +47,7 @@ if (count($languages) > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
 
@@ -78,11 +78,11 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
     }
 }
 
-if ($settings['entypo'] || defined('ENTYPO')) {
+if (defined('ENTYPO') && ENTYPO == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
-if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
 }
@@ -107,7 +107,7 @@ if (is_array($core_css_files)) {
 // Theme CSS loading
 echo fusion_load_script(THEME."styles.css", "css", TRUE);
 
-if ($settings['bootstrap'] == TRUE || defined('BOOTSTRAP')) {
+if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -168,7 +168,7 @@ if (function_exists("render_page")) {
 }
 
 // Load Bootstrap javascript
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
@@ -184,7 +184,7 @@ echo $fusion_page_footer_tags;
 
 $jquery_tags = '';
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP')) {
+if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $jquery_tags .= "$('[data-submenu]').submenupicker();";
     // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
     $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";

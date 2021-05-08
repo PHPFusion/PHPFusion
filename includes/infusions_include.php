@@ -26,7 +26,7 @@ function get_rowstart($key, $max_limit) {
     if ($rowstart <= $max_limit) {
         return (int)$rowstart;
     }
-    return (int)0;
+    return 0;
 }
 
 // Protect filename from uploader by renaming file.
@@ -161,7 +161,7 @@ if (!function_exists('infusion_exists')) {
             }
         }
 
-        return (bool)(isset($infusions_installed[$infusion_folder]));
+        return isset($infusions_installed[$infusion_folder]);
     }
 }
 
@@ -489,11 +489,9 @@ if (!function_exists('download_file')) {
  *       "responsive" => TRUE
  *  ]
  *
- * @return mixed
+ * @return string
  */
 function fusion_table($table_id, array $options = []) {
-    $settings = fusion_get_settings();
-
     $table_id = str_replace(["-", " "], "_", $table_id);
 
     $js_event_function = "";
@@ -618,7 +616,7 @@ function fusion_table($table_id, array $options = []) {
         define('FUSION_DATATABLES', TRUE);
         add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
 
-        if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+        if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
             if (defined('BOOTSTRAP4')) {
                 add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.css'>");
                 add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.js'></script>");

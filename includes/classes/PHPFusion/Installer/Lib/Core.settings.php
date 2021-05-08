@@ -105,18 +105,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
             ],
             [
-                'settings_name'  => 'bootstrap',
-                'settings_value' => 1
-            ],
-            [
-                'settings_name'  => 'entypo',
-                'settings_value' => 0
-            ],
-            [
-                'settings_name'  => 'fontawesome',
-                'settings_value' => 1
-            ],
-            [
                 'settings_name'  => 'theme',
                 'settings_value' => 'Magazine'
             ],
@@ -170,27 +158,19 @@ function get_table_rows($table_name, $localeset = 'English') {
             ],
             [
                 'settings_name'  => 'shortdate',
-                'settings_value' => $locale['setup_3700'],
+                'settings_value' => '%d.%m.%y',
             ],
             [
                 'settings_name'  => 'longdate',
-                'settings_value' => $locale['setup_3701'],
-            ],
-            [
-                'settings_name'  => 'link_bbcode',
-                'settings_value' => '0',
+                'settings_value' => '%B %d %Y %H:%M:%S',
             ],
             [
                 'settings_name'  => 'forumdate',
-                'settings_value' => $locale['setup_3702'],
+                'settings_value' => '%d-%m-%Y %H:%M',
             ],
             [
                 'settings_name'  => 'newsdate',
-                'settings_value' => $locale['setup_3703']
-            ],
-            [
-                'settings_name'  => 'subheaderdate',
-                'settings_value' => $locale['setup_3704']
+                'settings_value' => '%B %d %Y'
             ],
             [
                 'settings_name'  => 'timeoffset',
@@ -335,6 +315,10 @@ function get_table_rows($table_name, $localeset = 'English') {
             [
                 'settings_name'  => 'link_grouping',
                 'settings_value' => 8
+            ],
+            [
+                'settings_name'  => 'link_bbcode',
+                'settings_value' => '0',
             ],
             [
                 'settings_name'  => 'comments_per_page',

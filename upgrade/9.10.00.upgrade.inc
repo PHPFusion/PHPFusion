@@ -42,7 +42,11 @@ $delete_settings_tbl = [
     'logoposition_xs',
     'logoposition_sm',
     'logoposition_md',
-    'logoposition_lg'
+    'logoposition_lg',
+    'subheaderdate',
+    'bootstrap',
+    'entypo',
+    'fontawesome'
 ];
 
 foreach ($delete_settings_tbl as $value) {

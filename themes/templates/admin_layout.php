@@ -27,7 +27,7 @@ echo "<meta charset='".$locale['charset']."'>";
 echo "<meta name='robots' content='none'>";
 echo "<meta name='googlebot' content='noarchive'>";
 
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
         echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
@@ -42,11 +42,11 @@ if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
     }
 }
 
-if ($settings['entypo'] || defined('ENTYPO')) {
+if (defined('ENTYPO') && ENTYPO == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
 }
 
-if ($settings['fontawesome'] || defined('FONTAWESOME')) {
+if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
 }
@@ -132,7 +132,7 @@ if (!check_admin_pass('')) {
 }
 
 // Load Bootstrap javascript
-if ($settings['bootstrap'] || defined('BOOTSTRAP') || defined('BOOTSTRAP4')) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
     } else {

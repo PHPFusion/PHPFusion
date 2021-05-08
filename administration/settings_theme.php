@@ -27,10 +27,6 @@ add_breadcrumb(['link' => ADMIN.'settings_theme.php'.fusion_get_aidlink(), 'titl
 if (check_post('savesettings')) {
     $inputData = [
         'admin_theme' => sanitizer('admin_theme', $settings['admin_theme'], 'admin_theme'),
-        'theme'       => sanitizer('theme', $settings['theme'], 'theme'),
-        'bootstrap'   => post('bootstrap') ? 1 : 0,
-        'entypo'      => post('entypo') ? 1 : 0,
-        'fontawesome' => post('fontawesome') ? 1 : 0
     ];
 
     if (\defender::safe()) {
@@ -46,8 +42,6 @@ if (check_post('savesettings')) {
     }
 }
 
-$theme_files = makefilelist(THEMES, ".|..|templates|admin_themes", TRUE, "folders");
-
 $admin_theme_files = makefilelist(THEMES."admin_themes/", ".|..", TRUE, "folders");
 
 opentable($locale['theme_settings']);
@@ -57,18 +51,6 @@ echo "<div class='row'><div class='col-xs-12 col-sm-12 col-md-6'>\n";
 
 openside('');
 
-$opts = [];
-foreach ($theme_files as $file) {
-    $opts[$file] = $file;
-}
-
-echo form_select('theme', $locale['418'], $settings['theme'], [
-    'options'        => $opts,
-    'callback_check' => 'theme_exists',
-    'inline'         => TRUE,
-    'error_text'     => $locale['error_invalid_theme'],
-    'width'          => '100%'
-]);
 // Admin Panel theme requires extra checks
 $opts = [];
 foreach ($admin_theme_files as $file) {
@@ -79,16 +61,6 @@ echo form_select('admin_theme', $locale['418a'], $settings['admin_theme'], [
     'inline'     => TRUE,
     'error_text' => $locale['error_value'],
     'width'      => '100%'
-]);
-
-echo form_checkbox('bootstrap', $locale['437'], $settings['bootstrap'], [
-    'toggle' => TRUE
-]);
-echo form_checkbox('entypo', $locale['441'], $settings['entypo'], [
-    'toggle' => TRUE
-]);
-echo form_checkbox('fontawesome', $locale['442'], $settings['fontawesome'], [
-    'toggle' => TRUE
 ]);
 
 closeside();

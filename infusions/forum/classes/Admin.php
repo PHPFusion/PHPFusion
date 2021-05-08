@@ -1209,8 +1209,8 @@ class Admin extends ForumServer {
         if ($rows > 0) {
 
             // To support entypo and font-awesome icon switching
-            $has_entypo = fusion_get_settings("entypo") ? TRUE : FALSE;
-            $has_fa = fusion_get_settings("fontawesome") ? TRUE : FALSE;
+            $has_entypo = defined('ENTYPO') && ENTYPO == TRUE;
+            $has_fa = defined('FONTAWESOME') && FONTAWESOME == TRUE;
 
             $type_icon = [
                 '1' => $has_entypo ? 'entypo entypo-folder' : $has_fa ? 'fa fa-folder fa-fw fa-2x' : "",

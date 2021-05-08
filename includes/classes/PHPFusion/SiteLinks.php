@@ -65,7 +65,7 @@ class SiteLinks {
             ];
         }
 
-        return (array)self::$position_opts;
+        return self::$position_opts;
     }
 
     /**
@@ -73,7 +73,7 @@ class SiteLinks {
      *
      * @param $id
      *
-     * @return array|bool
+     * @return array
      */
     public static function get_SiteLinks($id) {
         $data = [];
@@ -107,7 +107,7 @@ class SiteLinks {
             }
         }
 
-        return $key === NULL ? (array)$data : (isset($data[$key]) ? $data[$key] : NULL);
+        return $key === NULL ? $data : (isset($data[$key]) ? $data[$key] : NULL);
     }
 
     /**
@@ -115,14 +115,14 @@ class SiteLinks {
      *
      * @param $link_id
      *
-     * @return bool|string
+     * @return int|null
      */
     public static function verify_sitelinks($link_id) {
         if (isnum($link_id)) {
             return dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($link_id)."'");
         }
 
-        return FALSE;
+        return NULL;
     }
 
     /**
@@ -154,11 +154,11 @@ class SiteLinks {
     public static function get_LinkVisibility() {
         static $visibility_opts = [];
         $user_groups = getusergroups();
-        foreach ($user_groups as $key => $user_group) {
+        foreach ($user_groups as $user_group) {
             $visibility_opts[$user_group['0']] = $user_group['1'];
         }
 
-        return (array)$visibility_opts;
+        return $visibility_opts;
     }
 
     /**
@@ -270,7 +270,7 @@ class SiteLinks {
 
         $default_link_filter = [
             'join'               => '',
-            'position_condition' => '(sl.link_position='.($link_position ? $link_position : implode(' OR sl.link_position=', $default_position)).')',
+            'position_condition' => '(sl.link_position='.(!empty($link_position) ? $link_position : implode(' OR sl.link_position=', $default_position)).')',
             'condition'          => (multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1",
             'group'              => '',
             'order'              => "link_cat ASC, link_order ASC",
@@ -286,7 +286,7 @@ class SiteLinks {
             $query_replace .= (!empty($options['group']) ? " GROUP BY ".$options['group']." " : "")." ORDER BY ".$options['order'];
         }
 
-        return (array)dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
+        return dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "", $query_replace);
     }
 
     /**
@@ -455,7 +455,7 @@ class SiteLinks {
             if (self::getMenuParam('responsive')) {
                 $res .= "<div class='navbar-collapse collapse' id='".self::getMenuParam('id')."_menu'>\n";
             }
-            $class = (fusion_get_settings("bootstrap") || defined('BOOTSTRAP') ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
+            $class = ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
             if (self::getMenuParam('nav_class')) {
                 $class = " class='".self::getMenuParam('nav_class')."'";
             }
@@ -473,7 +473,7 @@ class SiteLinks {
             $res .= self::getMenuParam('html_content');
 
             if (self::getMenuParam('language_switcher') == TRUE || self::getMenuParam('searchbar') == TRUE || !empty(self::getMenuParam('additional_data'))) {
-                $class = (fusion_get_settings("bootstrap") || defined('BOOTSTRAP') ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
+                $class = ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) ? "class='nav navbar-nav secondary navbar-right'" : "id='second-menu' class='secondary sm sm-simple'");
                 if (self::getMenuParam('additional_nav_class')) {
                     $class = "class='".self::getMenuParam('additional_nav_class')."'";
                 }
@@ -490,7 +490,7 @@ class SiteLinks {
                         $language_opts .= "<a id='ddlangs".$id."' href='#' class='nav-link dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddlangs".$id."' role='menu'>\n";
                         if (!empty($language_switch)) {
-                            foreach ($language_switch as $folder => $langData) {
+                            foreach ($language_switch as $langData) {
                                 $language_opts .= "<li class='text-left'><a href='".$langData['language_link']."'>";
                                 $language_opts .= "<img alt='".$langData['language_name']."' class='m-r-5' src='".$langData['language_icon_s']."'/>";
                                 $language_opts .= $langData['language_name'];
@@ -550,7 +550,7 @@ class SiteLinks {
 
     public static function getMenuParam($key = FALSE) {
         if ($key) {
-            return (isset(self::$instances[self::$id]->menu_options[$key])) ? self::$instances[self::$id]->menu_options[$key] : NULL;
+            return isset(self::$instances[self::$id]->menu_options[$key]) ? self::$instances[self::$id]->menu_options[$key] : NULL;
         }
 
         return self::$instances[self::$id]->menu_options;
@@ -794,7 +794,7 @@ class SiteLinks {
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
                             $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
                             $link_class = strtr($link_class, [
-                                'nav-link' => 'dropdown-item',
+                                'nav-link'        => 'dropdown-item',
                                 'dropdown-toggle' => ''
                             ]);
                             $res .= ($itemlink ? "<a ".$itemlink.$link_target.$link_class.">\n" : '');
