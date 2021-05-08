@@ -92,9 +92,9 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 'weblink_url'         => sanitizer('weblink_url', '', 'weblink_url'),
                 'weblink_description' => sanitizer('weblink_description', '', 'weblink_description'),
                 'weblink_datestamp'   => sanitizer('weblink_datestamp', '', 'weblink_datestamp'),
-                'weblink_visibility'  => sanitizer('weblink_visibility', 0, 'weblink_visibility'),
+                'weblink_visibility'  => sanitizer(['weblink_visibility'], 0, 'weblink_visibility'),
                 'weblink_status'      => sanitizer('weblink_status', 0, 'weblink_status'),
-                'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language'),
+                'weblink_language'    => sanitizer(['weblink_language'], LANGUAGE, 'weblink_language'),
             ];
 
             // Handle
@@ -153,7 +153,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 // Textarea Settings
                 if (!fusion_get_settings("tinymce_enabled")) {
                     $extended_settings = [
-                        'required'    => ($this->weblinksSettings['links_extended_required'] ? TRUE : FALSE),
+                        'required'    => $this->weblinksSettings['links_extended_required'],
                         'preview'     => TRUE,
                         'html'        => TRUE,
                         'autosize'    => TRUE,
@@ -187,9 +187,10 @@ class WeblinksAdmin extends WeblinksAdminModel {
                     'query'       => (multilang_table("WL") ? "WHERE ".in_group('weblink_cat_language', LANGUAGE) : "")
                 ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
 
-                echo form_select('weblink_visibility', $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], [
+                echo form_select('weblink_visibility[]', $this->locale['WLS_0103'], $this->weblink_data['weblink_visibility'], [
                     'options'     => fusion_get_groups(),
-                    'placeholder' => $this->locale['choose']
+                    'placeholder' => $this->locale['choose'],
+                    'multiple'    => TRUE
                 ]);
 
                 if (multilang_table("WL")) {
@@ -310,7 +311,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         $p_submit_weblink_name = check_post('p-submit-weblink_name');
         //$weblink_name = filter_input(INPUT_POST, 'weblink_name', FILTER_DEFAULT);
         if (check_post('p-submit-weblink_name')) {
-        	$weblink_name = sanitizer('weblink_name', '', 'weblink_name');
+            $weblink_name = sanitizer('weblink_name', '', 'weblink_name');
             $search_string['weblink_name'] = [
                 'input' => $weblink_name, 'operator' => "LIKE", 'option' => "AND"
             ];

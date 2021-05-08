@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['weblinks']['title'];
 $inf_description = $locale['weblinks']['description'];
-$inf_version = "1.2";
+$inf_version = "1.3.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -37,7 +37,7 @@ $inf_newtable[] = DB_WEBLINKS." (
     weblink_url VARCHAR(200) NOT NULL DEFAULT '',
     weblink_cat MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     weblink_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    weblink_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    weblink_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     weblink_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
     weblink_count SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
     weblink_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
@@ -52,7 +52,7 @@ $inf_newtable[] = DB_WEBLINK_CATS." (
     weblink_cat_name VARCHAR(100) NOT NULL DEFAULT '',
     weblink_cat_description TEXT NOT NULL,
     weblink_cat_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-    weblink_cat_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    weblink_cat_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     weblink_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (weblink_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
@@ -61,7 +61,8 @@ $inf_newtable[] = DB_WEBLINK_CATS." (
 $settings = [
     'links_per_page'          => 15,
     'links_extended_required' => 1,
-    'links_allow_submission'  => 1
+    'links_allow_submission'  => 1,
+    'links_submission_access' => USER_LEVEL_MEMBER
 ];
 
 foreach ($settings as $name => $value) {

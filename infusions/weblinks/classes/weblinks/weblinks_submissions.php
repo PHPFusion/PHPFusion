@@ -42,7 +42,7 @@ class WeblinksSubmissions extends WeblinksServer {
 
         $this->info['weblink_tablename'] = $this->locale['WLS_0900'];
 
-        if (iMEMBER && self::$weblink_settings['links_allow_submission']) {
+        if (iMEMBER && self::$weblink_settings['links_allow_submission'] && checkgroup(self::$weblink_settings['links_submission_access'])) {
             display_weblink_submissions($this->display_submission_form());
         } else {
             $info['no_submissions'] = $this->locale['WLS_0922'];

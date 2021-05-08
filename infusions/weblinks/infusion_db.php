@@ -51,7 +51,7 @@ if (!defined("DB_WEBLINKS")) {
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
 
 $inf_settings = get_settings('weblinks');
-if (!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) {
+if ((!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) && (!empty($inf_settings['links_submission_access']) && checkgroup($inf_settings['links_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('l', [
         'infusion_name' => 'weblinks',
         'link'          => INFUSIONS."weblinks/weblink_submit.php",

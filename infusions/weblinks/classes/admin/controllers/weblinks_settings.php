@@ -40,7 +40,8 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
             $inputArray = [
                 'links_per_page'          => sanitizer('links_per_page', 15, 'links_per_page'),
                 'links_allow_submission'  => post('links_allow_submission') ? 1 : 0,
-                'links_extended_required' => post('links_extended_required') ? 1 : 0
+                'links_extended_required' => post('links_extended_required') ? 1 : 0,
+                'links_submission_access' => form_sanitizer($_POST['links_submission_access'], USER_LEVEL_MEMBER, 'links_submission_access')
             ];
 
             // Update
@@ -77,6 +78,11 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
         echo form_checkbox('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
             'toggle' => TRUE
+        ]);
+        echo form_select('links_submission_access[]', $locale['submit_access'], $weblink_settings['links_submission_access'], [
+            'inline'   => TRUE,
+            'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+            'multiple' => TRUE,
         ]);
         echo form_checkbox('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], [
             'toggle' => TRUE
