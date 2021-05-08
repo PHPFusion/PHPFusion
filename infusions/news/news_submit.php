@@ -22,7 +22,7 @@ include INFUSIONS.'news/templates/submissions.tpl.php';
 $news_settings = get_settings('news');
 $locale = fusion_get_locale('', [NEWS_ADMIN_LOCALE]);
 
-if (iMEMBER && $news_settings['news_allow_submission']) {
+if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_settings['news_submission_access'])) {
     $criteriaArray = [
         'news_subject'            => '',
         'news_cat'                => 0,
@@ -77,7 +77,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
 
             dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
             addNotice('success', $locale['news_0701']);
-            redirect(clean_request('submitted=n', ['submitted', 'stype'], TRUE));
+            redirect(clean_request('submitted=n', ['submitted', 'stype']));
         }
     }
 
@@ -183,24 +183,24 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             ) : ''),
             'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'],
                 [
-                    'required'  => TRUE,
-                    'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                    'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'required'      => TRUE,
+                    'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                    'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                     'tinymce_image' => FALSE,
-                    'autosize'  => TRUE,
-                    'form_name' => 'submit_form',
-                    'path'      => IMAGES_N
+                    'autosize'      => TRUE,
+                    'form_name'     => 'submit_form',
+                    'path'          => IMAGES_N
                 ]
             ),
             'news_body_field'        => form_textarea('news_extended', $locale['news_0005'], $criteriaArray['news_extended'],
                 [
-                    'required'  => $news_settings['news_extended_required'] ? TRUE : FALSE,
-                    'type'      => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                    'tinymce'   => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                    'required'      => $news_settings['news_extended_required'],
+                    'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
+                    'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                     'tinymce_image' => FALSE,
-                    'autosize'  => TRUE,
-                    'form_name' => 'submit_form',
-                    'path'      => IMAGES_N
+                    'autosize'      => TRUE,
+                    'form_name'     => 'submit_form',
+                    'path'          => IMAGES_N
                 ]
             ),
             'news_submit'            => form_button('submit_news', $locale['news_0700'], $locale['news_0700'], ['class' => 'btn-primary m-r-10', 'icon' => 'fa fa-hdd-o']),
@@ -208,7 +208,7 @@ if (iMEMBER && $news_settings['news_allow_submission']) {
             'criteria_array'         => $criteriaArray,
         ];
 
-        echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n", ["enctype" => $news_settings['news_allow_submission_files'] ? TRUE : FALSE]);
+        echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n", ["enctype" => $news_settings['news_allow_submission_files']]);
 
         echo strtr(display_news_submissions_form($info), [
             '{%title%}'                  => $locale['news_0400'],

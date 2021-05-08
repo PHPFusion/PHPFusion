@@ -318,11 +318,12 @@ class NewsAdmin extends NewsAdminModel {
             ],
             DB_NEWS_CATS, 'news_cat_name', 'news_cat_id', 'news_cat_parent'
         );
-        echo form_select('news_visibility', self::$locale['news_0209'], $this->news_data['news_visibility'],
+        echo form_select('news_visibility[]', self::$locale['news_0209'], $this->news_data['news_visibility'],
             [
                 'options'     => fusion_get_groups(),
                 'placeholder' => self::$locale['choose'],
-                'inner_width' => '100%'
+                'inner_width' => '100%',
+                'multiple'    => TRUE
             ]
         );
         if (multilang_table('NS')) {
@@ -1007,14 +1008,24 @@ class NewsAdmin extends NewsAdminModel {
                         ?>
                         <tr>
                             <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ['input_id' => 'news'.$data['news_id'], "value" => $data['news_id'], "class" => 'm-0']) ?></td>
-                            <td><a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a></td>
-                            <td><a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a></td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a>
+                            </td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a>
+                            </td>
                             <td><?php echo getgroupname($data['news_visibility']) ?></td>
-                            <td><span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
-                            <td><span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
                             <td><?php echo format_word(isset($comment_rows[$data['news_id']]) ? $comment_rows[$data['news_id']] : 0, self::$locale['fmt_comment']) ?></td>
                             <td><?php echo format_word(isset($image_rows[$data['news_id']]) ? $image_rows[$data['news_id']] : 0, self::$locale['fmt_photo']) ?></td>
-                            <td><div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div></td>
+                            <td>
+                                <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div>
+                            </td>
                             <td>
                                 <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> &middot;
                                 <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
@@ -1024,7 +1035,10 @@ class NewsAdmin extends NewsAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong></td></tr>
+                    <tr>
+                        <td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong>
+                        </td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
             </table>

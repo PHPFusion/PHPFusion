@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['news']['title'];
 $inf_description = $locale['news']['description'];
-$inf_version = "1.12";
+$inf_version = "2.0.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -42,7 +42,7 @@ $inf_newtable[] = DB_NEWS." (
     news_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     news_start INT(10) UNSIGNED NOT NULL DEFAULT '0',
     news_end INT(10) UNSIGNED NOT NULL DEFAULT '0',
-    news_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    news_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     news_reads INT(10) UNSIGNED NOT NULL DEFAULT '0',
     news_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     news_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -74,7 +74,7 @@ $inf_newtable[] = DB_NEWS_CATS." (
     news_cat_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_cat_name VARCHAR(100) NOT NULL DEFAULT '',
     news_cat_image VARCHAR(100) NOT NULL DEFAULT '',
-    news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0',
+    news_cat_visibility VARCHAR(50) NOT NULL DEFAULT '0',
     news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
     news_cat_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
@@ -98,7 +98,8 @@ $settings = [
     'news_allow_submission'       => 1,
     'news_allow_submission_files' => 1,
     'news_extended_required'      => 0,
-    'news_file_types'             => '.gif,.jpg,.png,.svg,.webp'
+    'news_file_types'             => '.gif,.jpg,.png,.svg,.webp',
+    'news_submission_access'      => USER_LEVEL_MEMBER
 ];
 
 foreach ($settings as $name => $value) {

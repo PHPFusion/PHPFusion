@@ -174,10 +174,11 @@ class NewsCategoryAdmin extends NewsAdminModel {
                     "inline"  => TRUE,
                     "options" => $this->newsCatImageOpts(),
                 ]);
-                echo form_select('news_cat_visibility', self::$locale['news_0209'], $data['news_cat_visibility'], [
+                echo form_select('news_cat_visibility[]', self::$locale['news_0209'], $data['news_cat_visibility'], [
                     'options'     => fusion_get_groups(),
                     'placeholder' => self::$locale['choose'],
                     "inline"      => TRUE,
+                    'multiple'    => TRUE
                 ]);
                 ?>
             </div>
@@ -316,7 +317,8 @@ class NewsCategoryAdmin extends NewsAdminModel {
         }
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                if ($sql_condition) $sql_condition .= " AND ";
+                if ($sql_condition)
+                    $sql_condition .= " AND ";
                 $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
@@ -464,14 +466,20 @@ class NewsCategoryAdmin extends NewsAdminModel {
                         }
                     });');
                         ?></td>
-                    <td><a class="text-dark" href="<?php echo $edit_link ?>"><img style="width:25px" class="display-inline-block m-r-15" src="<?php echo get_image("nc_".$cdata['news_cat_name']) ?>" alt="<?php echo $cdata['news_cat_name'] ?>"/><?php echo $cdata['news_cat_name'] ?></a></td>
+                    <td>
+                        <a class="text-dark" href="<?php echo $edit_link ?>"><img style="width:25px" class="display-inline-block m-r-15" src="<?php echo get_image("nc_".$cdata['news_cat_name']) ?>" alt="<?php echo $cdata['news_cat_name'] ?>"/><?php echo $cdata['news_cat_name'] ?>
+                        </a></td>
                     <td>
                         <span class="badge"><?php echo sprintf(self::$locale['news_0254'], $cdata['news_published']) ?></span>
                         <span class="label label-default m-r-10"><i class="fa fa-star fa-fw"></i> <?php echo $cdata['news_draft'] ?></span>
                         <span class="label label-warning"><i class="fa fa-sticky-note-o fa-fw"></i> <?php echo $cdata['news_sticky'] ?></span>
                     </td>
-                    <td><span class="badge"><?php echo $cdata['news_cat_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
-                    <td><span class="badge"><?php echo $cdata['news_cat_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span></td>
+                    <td>
+                        <span class="badge"><?php echo $cdata['news_cat_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                    </td>
+                    <td>
+                        <span class="badge"><?php echo $cdata['news_cat_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                    </td>
                     <td><span class="badge"><?php echo getgroupname($cdata['news_cat_visibility']) ?></span></td>
                     <td>
                         <div class="btn-group m-0">
@@ -487,7 +495,9 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 ?>
             <?php endforeach; ?>
         <?php else: ?>
-            <tr><td colspan="8" class="text-center"><?php echo self::$locale['news_0303'] ?></td></tr>
+            <tr>
+                <td colspan="8" class="text-center"><?php echo self::$locale['news_0303'] ?></td>
+            </tr>
         <?php endif; ?>
 
         <?php if (!$id) : ?>

@@ -62,7 +62,7 @@ if (!defined("NEWS_CLASS")) {
 \PHPFusion\Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 
 $inf_settings = get_settings('news');
-if (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) {
+if ((!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) && (!empty($inf_settings['news_submission_access']) && checkgroup($inf_settings['news_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('n', [
         'infusion_name' => 'news',
         'link'          => INFUSIONS."news/news_submit.php",

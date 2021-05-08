@@ -56,7 +56,8 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 "news_photo_max_w"            => form_sanitizer($_POST['news_photo_max_w'], 2048, 'news_photo_max_w'),
                 "news_photo_max_h"            => form_sanitizer($_POST['news_photo_max_h'], 1365, 'news_photo_max_h'),
                 "news_photo_max_b"            => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
-                "news_file_types"             => form_sanitizer($_POST['news_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', "news_file_types"),
+                "news_file_types"             => form_sanitizer($_POST['news_file_types'], '.gif,.jpg,.png,.svg,.webp', "news_file_types"),
+                'news_submission_access'      => form_sanitizer($_POST['news_submission_access'], USER_LEVEL_MEMBER, 'news_submission_access')
             ];
             if (\defender::safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -108,6 +109,13 @@ class NewsSettingsAdmin extends NewsAdminModel {
             'width'       => '100%',
             'inner_width' => '100%'
         ]);
+
+        echo form_select('news_submission_access[]', $locale['submit_access'], $news_settings['news_submission_access'], [
+            'inline'   => TRUE,
+            'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+            'multiple' => TRUE,
+        ]);
+
         echo form_checkbox('news_extended_required', $locale['news_0402'], $news_settings['news_extended_required'], [
             'inline' => TRUE
         ]);
