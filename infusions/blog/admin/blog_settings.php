@@ -35,7 +35,7 @@ if (isset($_POST['savesettings'])) {
         "blog_photo_max_w"            => form_sanitizer($_POST['blog_photo_max_w'], 1800, 'blog_photo_max_w'),
         "blog_photo_max_h"            => form_sanitizer($_POST['blog_photo_max_h'], 1600, 'blog_photo_max_h'),
         "blog_photo_max_b"            => form_sanitizer($_POST['calc_b'], 153600, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
-        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '..gif,.jpg,.png,.svg,.webp', "blog_file_types"),
+        "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '.gif,.jpg,.png,.svg,.webp', "blog_file_types"),
         'blog_submission_access'      => form_sanitizer($_POST['blog_submission_access'], USER_LEVEL_MEMBER, 'blog_submission_access')
     ];
     if (Defender::safe()) {
