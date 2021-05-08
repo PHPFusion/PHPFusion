@@ -206,24 +206,25 @@ class Admin {
         krsort($data);
         foreach ($data as $status => $themes) {
             foreach ($themes as $theme_name => $theme_data) {
-                echo "<div class='list-group'>\n<div class='list-group-item'>";
+                echo "<div class='list-group'><div class='list-group-item'>";
+                echo '<div class="row">';
 
-                echo "<div class='pull-left m-r-10'>".thumbnail($theme_data['screenshot'], '150px')."</div>\n";
+                echo "<div class='col-xs-12 col-sm-2'>".thumbnail($theme_data['screenshot'], '150px')."</div>";
 
-                echo "<div class='overflow-hide display-inline-block'>\n";
-                echo "<h4 class='strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
-                echo "<div>\n";
+                echo '<div class="col-xs-12 col-sm-7">';
+                echo "<h4 class='m-t-0 strong text-dark'>".($status == TRUE ? "<i class='fa fa-diamond fa-fw'></i>" : "").$theme_data['title']."</h4>";
+
                 if (!empty($theme_data['description'])) {
                     echo "<div class='display-block m-t-10 m-b-10'>".$theme_data['description']."</div>";
                 }
                 if (!empty($theme_data['license'])) {
-                    echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>\n";
+                    echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-file fa-fw' title='".$locale['theme_1013']."'></i> ".$theme_data['license']."</span>";
                 }
                 if (!empty($theme_data['readme'])) {
                     echo "<a class='badge display-inline-block m-r-10' title='".$locale['theme_1036']."' target='_blank' href='".$theme_data['readme']."'><i class='fa fa-book fa-fw'></i> ".$locale['theme_1036']."</a>";
                 }
                 if (!empty($theme_data['version'])) {
-                    echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-code-fork fa-fw' title='".$locale['theme_1014']."'></i> ".$theme_data['version']."</span>\n";
+                    echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-code-fork fa-fw' title='".$locale['theme_1014']."'></i> ".$theme_data['version']."</span>";
                 }
                 if (!empty($theme_data['author'])) {
                     echo "<span class='badge display-inline-block m-r-10'><i class='fa fa-user fa-fw'></i> ".$theme_data['author']."</span>";
@@ -231,26 +232,27 @@ class Admin {
                 if (!empty($theme_data['web'])) {
                     echo "<a class='badge display-inline-block' target='_blank' title='".$locale['theme_1015']."' href='".$theme_data['web']."'><i class='fa fa-globe fa-fw'></i> ".$locale['theme_1015']."</a>";
                 }
-                echo "<div class='m-t-10'>\n";
+                echo "<div class='m-t-10'>";
                 if ($status == TRUE) {
-                    echo "<strong>".$locale['theme_1006']."</strong><br/>\n";
+                    echo "<strong>".$locale['theme_1006']."</strong><br/>";
                 }
                 if (!empty($theme_data['widgets']) == TRUE) {
-                    echo "<small>".$locale['theme_1027'].$locale['yes']."</small>\n";
+                    echo "<small>".$locale['theme_1027'].$locale['yes']."</small>";
                 }
-                echo "</div>\n";
-                echo "</div>\n";
-                echo "</div>\n";
+                echo "</div>";
+                echo '</div>';
 
-                echo "<div class='btn-group pull-right-lg m-t-20'>\n";
+                echo '<div class="col-xs-12 col-sm-3">';
                 if ($status == TRUE) {
-                    echo "<a class='btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>\n";
+                    echo "<a class='pull-right-lg btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>";
                 } else {
-                    echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
+                    echo "<a class='pull-right-lg btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=set_active&theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
                 }
-                echo "</div>\n";
+                echo '</div>';
 
-                echo "</div>\n</div>";
+                echo '</div>';
+
+                echo "</div></div>";
                 unset($theme_data);
             }
         }
