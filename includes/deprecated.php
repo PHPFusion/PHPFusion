@@ -35,7 +35,7 @@ if (!function_exists("showsubdate")) {
      * @deprecated
      */
     function showsubdate() {
-        return ucwords(showdate(fusion_get_settings('subheaderdate'), time()));
+        return ucwords(showdate(fusion_get_settings('shortdate'), time()));
     }
 }
 
