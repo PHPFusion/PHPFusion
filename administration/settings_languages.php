@@ -168,7 +168,6 @@ if (check_post('savesettings')) {
                         ['admin_rights' => 'UG', 'admin_image' => 'user_groups.png', 'admin_title' => $locale['setup_3027'], 'admin_link' => 'user_groups.php', 'admin_page' => 2, 'admin_language' => $language],
                         ['admin_rights' => 'S1', 'admin_image' => 'settings.png', 'admin_title' => $locale['setup_3030'], 'admin_link' => 'settings_main.php', 'admin_page' => 4, 'admin_language' => $language],
                         ['admin_rights' => 'S2', 'admin_image' => 'time.png', 'admin_title' => $locale['setup_3031'], 'admin_link' => 'settings_time.php', 'admin_page' => 4, 'admin_language' => $language],
-                        ['admin_rights' => 'S3', 'admin_image' => 'theme_settings.png', 'admin_title' => $locale['setup_3058'], 'admin_link' => 'settings_theme.php', 'admin_page' => 4, 'admin_language' => $language],
                         ['admin_rights' => 'S4', 'admin_image' => 'registration.png', 'admin_title' => $locale['setup_3033'], 'admin_link' => 'settings_registration.php', 'admin_page' => 4, 'admin_language' => $language],
                         ['admin_rights' => 'S6', 'admin_image' => 'misc.png', 'admin_title' => $locale['setup_3035'], 'admin_link' => 'settings_misc.php', 'admin_page' => 4, 'admin_language' => $language],
                         ['admin_rights' => 'S7', 'admin_image' => 'pm.png', 'admin_title' => $locale['setup_3036'], 'admin_link' => 'settings_messages.php', 'admin_page' => 4, 'admin_language' => $language],

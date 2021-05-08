@@ -56,6 +56,23 @@ foreach ($delete_settings_tbl as $value) {
 // Rename PHP Info to Server Info
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='serverinfo.png', admin_title='".$locale['setup_3021']."', admin_link='serverinfo.php' WHERE admin_link='phpinfo.php'";
 
+$inf_deldbrow[] = DB_ADMIN." WHERE admin_link='settings_theme.php'";
+
+$result = dbquery("SELECT user_id, user_rights, user_level FROM ".DB_USERS." WHERE user_rights !=''");
+while ($data = dbarray($result)) {
+    $current_rights = explode('.', $data['user_rights']);
+
+    $remove_rights = ['S3'];
+    foreach ($remove_rights as $key => $remove) {
+        if (($key = array_search($remove, $current_rights)) !== FALSE) {
+            unset($current_rights[$key]);
+        }
+    }
+
+    $final_rights = implode('.', $current_rights);
+    dbquery("UPDATE ".DB_USERS." SET user_rights='".$final_rights."' WHERE user_id='".$data['user_id']."'");
+}
+
 /**
  * Delete all unused files
  */
@@ -66,7 +83,9 @@ $deleted_files = [
     ADMIN.'images/phpinfo.png',
     ADMIN.'phpinfo.php',
     LOCALE.'English/admin/phpinfo.php',
-    INCLUDES.'elFinder/themes/manifests/'
+    INCLUDES.'elFinder/themes/manifests/',
+    ADMIN.'images/theme_settings.png',
+    ADMIN.'settings_theme.php',
 ];
 
 foreach ($deleted_files as $file) {

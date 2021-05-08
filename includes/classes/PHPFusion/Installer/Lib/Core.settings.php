@@ -742,14 +742,6 @@ function get_table_rows($table_name, $localeset = 'English') {
                 'admin_language' => $localeset
             ],
             [
-                'admin_rights'   => 'S3',
-                'admin_image'    => 'theme_settings.png',
-                'admin_title'    => $locale['setup_3058'],
-                'admin_link'     => 'settings_theme.php',
-                'admin_page'     => 4,
-                'admin_language' => $localeset
-            ],
-            [
                 'admin_rights'   => 'S4',
                 'admin_image'    => 'registration.png',
                 'admin_title'    => $locale['setup_3033'],

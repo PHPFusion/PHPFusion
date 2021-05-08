@@ -25,6 +25,7 @@ define("IMAGES", BASEDIR."images/");
 define("INCLUDES", BASEDIR."includes/");
 define("LOCALE", BASEDIR."locale/");
 define("THEMES", BASEDIR."themes/");
+define("ADMIN_THEMES", BASEDIR."themes/admin_themes/");
 define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
 define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
 define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));

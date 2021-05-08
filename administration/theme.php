@@ -30,17 +30,33 @@ switch (get('action')) {
         }
         break;
     default:
-        $tabs['title'] = [$locale['theme_1010'], $locale['theme_1011']];
-        $tabs['id'] = ["list", "upload"];
-        $active_set = post('upload') ? 1 : 0;
-        $active_tab = tab_active($tabs, $active_set);
-        echo opentab($tabs, $active_tab, 'theme_tab');
-        echo opentabbody($tabs['title'][0], $tabs['id'][0], $active_tab);
-        $theme_admin::display_theme_list();
-        echo closetabbody();
-        echo opentabbody($tabs['title'][1], $tabs['id'][1], $active_tab);
-        $theme_admin::theme_uploader();
-        echo closetabbody();
+        $tabs['title'][] = $locale['theme_1010'];
+        $tabs['id'][] = 'list';
+        $tabs['icon'][] = '';
+
+        $tabs['title'][] = $locale['theme_1011a'];
+        $tabs['id'][] = 'admin_themes';
+        $tabs['icon'][] = '';
+
+        $tabs['title'][] = $locale['theme_1011'];
+        $tabs['id'][] = 'upload';
+        $tabs['icon'][] = '';
+
+        $allowed_sections = ['list', 'admin_themes', 'upload'];
+        $section = in_array(get('section'), $allowed_sections) ? get('section') : 'list';
+
+        echo opentab($tabs, $section, 'theme_tab', TRUE);
+        switch ($section) {
+            case 'upload':
+                $theme_admin::theme_uploader();
+                break;
+            case 'admin_themes':
+                $theme_admin::admin_themes_list();
+                break;
+            default:
+                $theme_admin::display_theme_list();
+                break;
+        }
         echo closetab();
         break;
 }

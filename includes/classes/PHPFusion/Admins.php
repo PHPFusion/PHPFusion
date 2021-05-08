@@ -66,7 +66,6 @@ class Admins {
         'ROB'  => "<i class='admin-ico fa fa-fw fa-android'></i>", // robots.txt
         'S1'   => "<i class='admin-ico fa fa-fw fa-hospital-o'></i>", // Main Settings
         'S2'   => "<i class='admin-ico fa fa-fw fa-clock-o'></i>", // Time and Date
-        'S3'   => "<i class='admin-ico fa fa-fw fa-magic'></i>", // Theme Settings
         'S4'   => "<i class='admin-ico fa fa-fw fa-key'></i>", // Registration Settings
         'S6'   => "<i class='admin-ico fa fa-fw fa-gears'></i>", // Miscellaneous Settings
         'S7'   => "<i class='admin-ico fa fa-fw fa-envelope-square'></i>", // PM Settings
