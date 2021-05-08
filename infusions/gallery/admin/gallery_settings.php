@@ -68,7 +68,8 @@ if (isset($_POST['delete_watermarks'])) {
             'photo_watermark_text_color3' => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], 'FFFFFF', 'photo_watermark_text_color3') : 'FFFFFF',
             'gallery_allow_submission'    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
             'gallery_extended_required'   => isset($_POST['gallery_extended_required']) ? 1 : 0,
-            'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z', 'gallery_file_types'),
+            'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.gif,.jpg,.png,.svg,.webp', 'gallery_file_types'),
+            'gallery_submission_access'   => form_sanitizer($_POST['gallery_submission_access'], USER_LEVEL_MEMBER, 'gallery_submission_access')
         ];
         if (\defender::safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
@@ -205,6 +206,13 @@ echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gal
     'inner_width' => '150px'
 ]);
 echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
+
+echo form_select('gallery_submission_access[]', $locale['submit_access'], $gll_settings['gallery_submission_access'], [
+    'inline'   => TRUE,
+    'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+    'multiple' => TRUE,
+]);
+
 echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
 
 echo "</div>\n</div>\n";
@@ -257,7 +265,7 @@ echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'm-l-5 btn-danger', 'icon' => 'fa fa-trash'
 ]);
 echo closeform();
-        echo '</div>';
+echo '</div>';
 add_to_jquery("
     $('#photo_watermark').bind('change', function(){
     var vals = $(this).select2().val();

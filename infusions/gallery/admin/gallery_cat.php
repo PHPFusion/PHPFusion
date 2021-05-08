@@ -145,7 +145,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
     echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
     echo form_checkbox('del_image', $locale['album_0016']);
 } else {
-    $extip = sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'],  $gll_settings['photo_max_h']);
+    $extip = sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'], $gll_settings['photo_max_h']);
     $album_upload_settings = [
         'upload_path'       => INFUSIONS.'gallery/photos/',
         'thumbnail_folder'  => 'thumbs',
@@ -173,12 +173,13 @@ if ($data['album_image'] || $data['album_thumb1']) {
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 echo fusion_get_function('openside', '');
-echo form_select('album_access', $locale['album_0007'], $data['album_access'], [
-    'options' => fusion_get_groups()
+echo form_select('album_access[]', $locale['album_0007'], $data['album_access'], [
+    'options'  => fusion_get_groups(),
+    'multiple' => TRUE,
 ]);
 echo form_select('album_language[]', $locale['album_0008'], $data['album_language'], [
-    'options'   => fusion_get_enabled_languages(),
-    'multiple'  => TRUE
+    'options'  => fusion_get_enabled_languages(),
+    'multiple' => TRUE
 ]);
 echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'], [
     'max_length'  => 320,
@@ -189,7 +190,7 @@ echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'
     'multiple'    => TRUE
 ]);
 echo form_text('album_order', $locale['album_0011'], $data['album_order'], [
-    'type'   => 'number'
+    'type' => 'number'
 ]);
 echo fusion_get_function('closeside', '');
 echo "</div>\n</div>\n";

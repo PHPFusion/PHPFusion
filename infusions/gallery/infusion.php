@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", LOCALE.LOCALESET."setup.php");
 // Infusion general information
 $inf_title = $locale['photos']['title'];
 $inf_description = $locale['photos']['description'];
-$inf_version = "1.1";
+$inf_version = "1.2.0";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -39,7 +39,7 @@ $inf_newtable[] = DB_PHOTO_ALBUMS." (
     album_thumb1 VARCHAR(200) NOT NULL DEFAULT '',
     album_thumb2 VARCHAR(200) NOT NULL DEFAULT '',
     album_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
-    album_access TINYINT(4) NOT NULL DEFAULT '0',
+    album_access VARCHAR(50) NOT NULL DEFAULT '0',
     album_order SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
     album_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     album_language varchar(50) NOT NULL default '".LANGUAGE."',
@@ -87,7 +87,8 @@ $settings = [
     'photo_watermark_save'        => 0,
     'gallery_allow_submission'    => 1,
     'gallery_extended_required'   => 1,
-    'gallery_file_types'          => '.gif,.jpg,.png,.svg,.webp'
+    'gallery_file_types'          => '.gif,.jpg,.png,.svg,.webp',
+    'gallery_submission_access'   => USER_LEVEL_MEMBER
 ];
 
 foreach ($settings as $name => $value) {

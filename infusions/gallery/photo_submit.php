@@ -21,7 +21,7 @@ $locale = fusion_get_locale('', [GALLERY_LOCALE, GALLERY_ADMIN_LOCALE]);
 $gll_settings = get_settings("gallery");
 add_to_title($locale['gallery_0100']);
 opentable("<i class='fa fa-camera-retro m-r-5 fa-lg'></i> ".$locale['gallery_0100']);
-if ($gll_settings['gallery_allow_submission']) {
+if (iMEMBER && $gll_settings['gallery_allow_submission'] && checkgroup($gll_settings['gallery_submission_access'])) {
     $criteriaArray = [
         'album_id'          => 0,
         'photo_title'       => '',
@@ -71,7 +71,7 @@ if ($gll_settings['gallery_allow_submission']) {
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
             addNotice("success", $locale['gallery_0101']);
-            redirect(clean_request("submitted=p", ["stype"], TRUE));
+            redirect(clean_request("submitted=p", ["stype"]));
         }
     }
 
@@ -123,7 +123,7 @@ if ($gll_settings['gallery_allow_submission']) {
             ]);
             echo "<div class='m-b-10 col-xs-12 col-sm-9 col-sm-offset-3'>".sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'], $gll_settings['photo_max_h'])."</div>\n";
             $textArea_opts = [
-                'required'  => $gll_settings['gallery_extended_required'] ? TRUE : FALSE,
+                'required'  => $gll_settings['gallery_extended_required'],
                 'autosize'  => TRUE,
                 'form_name' => 'submit_form',
             ];

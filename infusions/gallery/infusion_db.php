@@ -56,7 +56,7 @@ if (!defined("GALLERY_ADMIN_LOCALE")) {
 \PHPFusion\Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 
 $inf_settings = get_settings('gallery');
-if (!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_allow_submission']) {
+if ((!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_allow_submission']) && (!empty($inf_settings['gallery_submission_access']) && checkgroup($inf_settings['gallery_submission_access']))) {
     \PHPFusion\Admins::getInstance()->setSubmitData('p', [
         'infusion_name' => 'gallery',
         'link'          => INFUSIONS."gallery/photo_submit.php",
