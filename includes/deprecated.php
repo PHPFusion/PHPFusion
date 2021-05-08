@@ -51,7 +51,7 @@ if (!function_exists("newsposter")) {
     function newsposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
         $link_class = $class ? "class='$class'" : "";
-        $res = THEME_BULLET." <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
+        $res = "&middot; <span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span> ";
         $res .= $locale['global_071'].showdate("newsdate", $info['news_date']);
         $res .= $info['news_ext'] == "y" || $info['news_allow_comments'] ? $sep."\n" : "\n";
 
@@ -123,7 +123,7 @@ if (!function_exists("articleposter")) {
     function articleposter($info, $sep = "", $class = "") {
         $locale = fusion_get_locale();
         $link_class = $class ? "class='$class'" : "";
-        $res = THEME_BULLET." ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
+        $res = "&middot; ".$locale['global_070']."<span ".$link_class.">".profile_link($info['user_id'], $info['user_name'], $info['user_status'])."</span>\n";
         $res .= $locale['global_071'].showdate("newsdate", $info['article_date']);
         $res .= ($info['article_allow_comments'] && fusion_get_settings('comments_enabled') == "1" ? $sep."\n" : "\n");
 

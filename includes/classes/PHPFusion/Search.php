@@ -188,7 +188,7 @@ class Search extends Search_Engine {
             <div class='panel-body'>
                 <h4>{%image%} {%search_title%}</h4>
             </div>
-            <div class='panel-body'><div class='spacer-xs'>".THEME_BULLET." {%search_result%}</div></div>
+            <div class='panel-body'><div class='spacer-xs'>&middot; {%search_result%}</div></div>
             <div class='panel-body'>
                 <ul class='block spacer-xs'>{%search_content%}</ul>
             </div>

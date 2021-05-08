@@ -48,15 +48,15 @@ class Auth {
             $msg_count = dbcount("(message_id)", DB_MESSAGES, "message_to='".$userdata['user_id']."' AND message_read='0' AND message_folder='0'");
             echo '<h3 class="text-center">'.$userdata['user_name'].'</h3>';
             echo '<div class="text-center"><br/>';
-            echo THEME_BULLET.' <a href="'.BASEDIR.'edit_profile.php" class="side">'.$locale['global_120'].'</a><br/>';
-            echo THEME_BULLET.' <a href="'.BASEDIR.'messages.php" class="side">'.$locale['global_121'].'</a><br/>';
-            echo THEME_BULLET.' <a href="'.BASEDIR.'members.php" class="side">'.$locale['global_122'].'</a><br/>';
+            echo '<a href="'.BASEDIR.'edit_profile.php" class="side">'.$locale['global_120'].'</a><br/>';
+            echo '<a href="'.BASEDIR.'messages.php" class="side">'.$locale['global_121'].'</a><br/>';
+            echo '<a href="'.BASEDIR.'members.php" class="side">'.$locale['global_122'].'</a><br/>';
 
             if (iADMIN && (iUSER_RIGHTS != '' || iUSER_RIGHTS != 'C')) {
-                echo THEME_BULLET.' <a href="'.ADMIN.'index.php'.$aidlink.'" class="side">'.$locale['global_123'].'</a><br/>';
+                echo '<a href="'.ADMIN.'index.php'.$aidlink.'" class="side">'.$locale['global_123'].'</a><br/>';
             }
 
-            echo THEME_BULLET.' <a href="'.BASEDIR.'index.php?logout=yes" class="side">'.$locale['global_124'].'</a><br/>';
+            echo '<a href="'.BASEDIR.'index.php?logout=yes" class="side">'.$locale['global_124'].'</a><br/>';
             if ($msg_count) {
                 echo '<br/><br/>';
                 echo '<strong><a href="'.BASEDIR.'messages.php" class="side">'.sprintf($locale['global_125'], $msg_count);
