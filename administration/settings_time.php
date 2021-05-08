@@ -30,7 +30,6 @@ if (check_post('savesettings')) {
         'longdate'         => sanitizer('longdate', '', 'longdate'),
         'forumdate'        => sanitizer('forumdate', '', 'forumdate'),
         'newsdate'         => sanitizer('newsdate', '', 'newsdate'),
-        //'subheaderdate'    => sanitizer('subheaderdate', '', 'subheaderdate'),
         'timeoffset'       => sanitizer('timeoffset', '', 'timeoffset'),
         'serveroffset'     => sanitizer('serveroffset', '', 'serveroffset'),
         'default_timezone' => sanitizer('default_timezone', '', 'default_timezone'),
@@ -215,13 +214,6 @@ echo form_select('newsdate_select', $locale['457'], $settings['newsdate'], [
 echo form_text('newsdate', '', $settings['newsdate']);
 closeside();
 
-/*openside('');
-echo form_select('subheaderdate_select', $locale['454'], $settings['subheaderdate'], [
-    'options'     => $date_opts,
-    'placeholder' => $locale['455']
-]);
-echo form_text('subheaderdate', '', $settings['subheaderdate']);
-closeside();*/
 echo "</div>\n";
 
 add_to_jquery('
