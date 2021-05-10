@@ -84,6 +84,10 @@ if (db_exists(DB_EMAIL_TEMPLATES)) {
 }
 
 if (db_exists(DB_SETTINGS)) {
+    $siteurl = rtrim(dirname(get_current_url()), '/').'/';
+    $siteurl = str_replace('install/', '', $siteurl);
+    $url = parse_url($siteurl);
+
     $update_settings_tbl = [
         'theme'              => 'Magazine',
         'rendertime_enabled' => '0',
@@ -92,6 +96,11 @@ if (db_exists(DB_SETTINGS)) {
         'opening_page'       => 'home.php',
         'captcha'            => 'securimage3',
         'admin_theme'        => 'AdminLTE',
+        'siteurl'            => $siteurl,
+        'site_protocol'      => $url['scheme'],
+        'site_host'          => $url['host'],
+        'site_port'          => (isset($url['port']) ? $url['port'] : ''),
+        'site_path'          => (isset($url['path']) ? $url['path'] : ''),
     ];
 
     foreach ($update_settings_tbl as $key => $value) {

@@ -2590,3 +2590,16 @@ function convert_to_bytes($val) {
 
     return (int)$val;
 }
+
+// Get Current URL
+function get_current_url() {
+    $s = (empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on")) ? "s" : "";
+    $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
+    $port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":".$_SERVER["SERVER_PORT"]);
+
+    return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
+}
+
+function strleft($s1, $s2) {
+    return substr($s1, 0, strpos($s1, $s2));
+}
