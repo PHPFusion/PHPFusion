@@ -46,25 +46,19 @@ class Panels {
 
     private static $panel_excluded = [];
     private static $panels_cache = [];
-    private static $panel_id = 0;
     private static $available_panels = [];
 
     /**
      * @param bool $set_info
-     * @param int  $panel_id
      *
      * @return Panels|null
      */
-    public static function getInstance($set_info = TRUE, $panel_id = 0) {
+    public static function getInstance($set_info = TRUE) {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
             if ($set_info) {
                 self::cachePanels();
             }
-        }
-
-        if ($panel_id) {
-            self::$panel_id = 1;
         }
 
         return self::$panel_instance;
@@ -105,7 +99,7 @@ class Panels {
             }
         }
 
-        return (array)self::$panels_cache;
+        return self::$panels_cache;
     }
 
     /**
@@ -180,7 +174,7 @@ class Panels {
      * @return array
      */
     public static function getPanelExcluded() {
-        return (array)self::$panel_excluded;
+        return self::$panel_excluded;
     }
 
     /**
@@ -213,7 +207,7 @@ class Panels {
             closedir($temp);
         }
 
-        return (array)self::$available_panels;
+        return self::$available_panels;
     }
 
     /**
@@ -238,20 +232,10 @@ class Panels {
             self::cachePanels();
         }
 
-        $settings = fusion_get_settings();
         $locale = fusion_get_locale();
 
-        if ($settings['site_seo'] == 1 && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
-            $params = http_build_query(Router::getRouterInstance()->get_FileParams());
-            $file_path = Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
-            $site['path'] = $file_path;
-        } else {
-            $site['path'] = ltrim(TRUE_PHP_SELF, '/').(FUSION_QUERY ? "?".FUSION_QUERY : "");
-        }
-
         // Add admin message
-        $admin_mess = '';
-        $admin_mess .= "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
+        $admin_mess = "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
         add_to_head($admin_mess);
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
@@ -269,9 +253,10 @@ class Panels {
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
 
-                            if (fusion_get_settings("site_seo")) {
+                            if (fusion_get_settings('site_seo')) {
                                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
-                                $script_url = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                                $path = Router::getRouterInstance()->getFilePath();
+                                $script_url = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                             } else {
                                 $script_url = '/'.PERMALINK_CURRENT_PATH;
                             }
@@ -298,9 +283,9 @@ class Panels {
                                     break;
                                 case 2: // Display on Opening Page only
                                     $opening_page = fusion_get_settings('opening_page');
-                                    if (!empty($p_data['panel_url_list']) && $opening_page == 'index.php' && $script_url == '/' || $script_url == '/'.$opening_page) {
+                                    if ($opening_page == 'index.php' && $script_url == '/' || $script_url == '/'.$opening_page) {
                                         $show_panel = TRUE;
-                                    } else if (!empty($p_data['panel_url_list']) && PERMALINK_CURRENT_PATH === $opening_page) {
+                                    } else if (PERMALINK_CURRENT_PATH === $opening_page) {
                                         $show_panel = TRUE;
                                     }
                                     break;
@@ -433,18 +418,19 @@ class Panels {
         if (is_array($exclude_list)) {
             if (fusion_get_settings('site_seo')) {
                 $params = http_build_query(Router::getRouterInstance()->get_FileParams());
-                $file_path = '/'.Router::getRouterInstance()->getFilePath().($params ? "?" : '').$params;
+                $path = Router::getRouterInstance()->getFilePath();
+                $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                 $script_url = explode("/", $file_path);
             } else {
                 $script_url = explode("/", '/'.PERMALINK_CURRENT_PATH);
             }
 
             $url_count = count($script_url);
-            $base_url_count = substr_count(BASEDIR, "../") + (fusion_get_settings('site_seo') ? ($url_count - 1) : 1);
+            $base_url_count = substr_count(BASEDIR, "../") + 1;
             $current_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;
-                $current_url .= "/".(!empty($script_url[(int)$current]) ? $script_url[(int)$current] : '');
+                $current_url .= "/".(!empty($script_url[$current]) ? $script_url[$current] : '');
                 $base_url_count--;
             }
 
@@ -456,7 +442,8 @@ class Panels {
                 }
             }
 
-            return (in_array($current_url, $url)) ? FALSE : TRUE;
+
+            return !in_array($current_url, $url);
         } else {
             return TRUE;
         }

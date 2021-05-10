@@ -19,7 +19,8 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version' => '9.10.00'
+    'version'      => '9.10.00',
+    'opening_page' => 'index.php'
 ];
 
 foreach ($update_settings_tbl as $key => $value) {
@@ -73,6 +74,10 @@ while ($data = dbarray($result)) {
     dbquery("UPDATE ".DB_USERS." SET user_rights='".$final_rights."' WHERE user_id='".$data['user_id']."'");
 }
 
+// Rename home.php to index.php
+$inf_updatedbrow[] = DB_SITE_LINKS." SET link_url='index.php' WHERE link_url='home.php'";
+$inf_updatedbrow[] = DB_PANELS." SET panel_url_list='index.php' WHERE panel_url_list='home.php'";
+
 /**
  * Delete all unused files
  */
@@ -86,6 +91,7 @@ $deleted_files = [
     INCLUDES.'elFinder/themes/manifests/',
     ADMIN.'images/theme_settings.png',
     ADMIN.'settings_theme.php',
+    BASEDIR.'home.php',
 ];
 
 foreach ($deleted_files as $file) {
