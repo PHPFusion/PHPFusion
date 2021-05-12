@@ -76,3 +76,47 @@ if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article
         'alias' => 'articles'
     ]
 ]);
+
+if (db_exists(DB_ARTICLES)) {
+    function articles_home_module() {
+        $locale = fusion_get_locale();
+        $limit = PHPFusion\HomePage::getLimit();
+
+        $result = dbquery("SELECT
+            ar.article_id AS id,
+            ar.article_subject AS title,
+            ar.article_snippet AS content,
+            ar.article_reads AS views,
+            ar.article_datestamp AS datestamp,
+            ac.article_cat_id AS cat_id,
+            ac.article_cat_name AS cat_name,
+            u.user_id, u.user_name, u.user_status
+            FROM ".DB_ARTICLES." AS ar
+            INNER JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id = ar.article_cat
+            INNER JOIN ".DB_USERS." AS u ON u.user_id = ar.article_name
+            WHERE ar.article_draft = 0
+            AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ".in_group('ac.article_cat_language', LANGUAGE) : "")."
+            ORDER BY ar.article_datestamp DESC LIMIT ".$limit
+        );
+
+        $module = [];
+        $module[DB_ARTICLES]['module_title'] = $locale['home_0001'];
+        $module[DB_ARTICLES]['inf_settings'] = get_settings('articles');
+
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $data['content'] = parse_textarea($data['content'], FALSE, TRUE, TRUE, NULL);
+                $data['url'] = INFUSIONS.'articles/articles.php?article_id='.$data['id'];
+                $data['category_link'] = INFUSIONS.'articles/articles.php?cat_id='.$data['cat_id'];
+                $data['item_count'] = format_word($data['views'], $locale['fmt_views']);
+                $module[DB_ARTICLES]['items'][] = $data;
+            }
+        } else {
+            $module[DB_ARTICLES]['norecord'] = $locale['home_0051'];
+        }
+
+        return $module;
+    }
+
+    fusion_add_hook('home_modules', 'articles_home_module');
+}

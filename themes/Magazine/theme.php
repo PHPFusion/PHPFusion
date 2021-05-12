@@ -75,6 +75,8 @@ function render_main_blog($info) {
     Magazine\Templates\Blog::renderMainBlog($info);
 }
 
+//\PHPFusion\HomePage::setLimit(3); // Here you can change number of items
+
 function display_home($info) {
     Magazine\Templates\Home::displayHome($info);
 }

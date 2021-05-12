@@ -90,3 +90,82 @@ if ((!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow
         'alias' => 'news_cats'
     ]
 ]);
+
+if (db_exists(DB_NEWS)) {
+    function news_home_module() {
+        $locale = fusion_get_locale();
+        $limit = PHPFusion\HomePage::getLimit();
+
+        $result = dbquery("SELECT
+            ns.news_id AS id,
+            ns.news_subject AS title,
+            ns.news_news AS content,
+            ns.news_reads AS views,
+            ns.news_datestamp AS datestamp,
+            nc.news_cat_id AS cat_id,
+            nc.news_cat_name AS cat_name,
+            ni.news_image AS image_main,
+            ni.news_image_t1 AS image_thumb,
+            ni.news_image_t2 AS image_thumb2,
+            nc.news_cat_image AS cat_image,
+            count(c1.comment_id) AS comment_count,
+            count(r1.rating_id) AS rating_count,
+            u.user_id, u.user_name, u.user_status
+            FROM ".DB_NEWS." AS ns
+            LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=ns.news_id
+            LEFT JOIN ".DB_NEWS_CATS." AS nc ON nc.news_cat_id = ns.news_cat
+            LEFT JOIN ".DB_COMMENTS." AS c1 on (c1.comment_item_id = ns.news_id and c1.comment_type = 'NS')
+            LEFT JOIN ".DB_RATINGS." AS r1 on (r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS')
+            INNER JOIN ".DB_USERS." AS u ON ns.news_name = u.user_id
+            WHERE (".time()." > ns.news_start OR ns.news_start = 0)
+            AND ns.news_draft = 0
+            AND (".time()." < ns.news_end OR ns.news_end = 0)
+            AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND ".in_group('news_language', LANGUAGE) : "")."
+            GROUP BY ns.news_id
+            ORDER BY ns.news_datestamp DESC LIMIT ".$limit
+        );
+
+        $module = [];
+        $module[DB_NEWS]['module_title'] = $locale['home_0000'];
+        $module[DB_NEWS]['inf_settings'] = get_settings('news');
+
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $data['content'] = parse_textarea($data['content'], TRUE, FALSE, TRUE, NULL);
+                $data['url'] = INFUSIONS.'news/news.php?readmore='.$data['id'];
+                $data['category_link'] = INFUSIONS.'news/news.php?cat_id='.$data['cat_id'];
+                $data['item_count'] = format_word($data['views'], $locale['fmt_views']);
+
+                if ($module[DB_NEWS]['inf_settings']['news_image_frontpage']) {
+                    if ($data['cat_image']) {
+                        $data['image'] = INFUSIONS.'news/news_cats/'.$data['cat_image'];
+                    }
+                } else {
+                    if ($data['image_main'] || $data['cat_image']) {
+                        if ($data['image_thumb'] && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb'])) {
+                            $data['image'] = INFUSIONS.'news/images/thumbs/'.$data['image_thumb'];
+                        } else if ($data['image_thumb2'] && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb2'])) {
+                            $data['image'] = INFUSIONS.'news/images/thumbs/'.$data['image_thumb2'];
+                        } else if ($data['image_main'] && file_exists(INFUSIONS.'news/images/'.$data['image_main'])) {
+                            $data['image'] = INFUSIONS.'news/images/'.$data['image_main'];
+                        } else if ($data['cat_image']) {
+                            $data['image'] = INFUSIONS.'news/news_cats/'.$data['cat_image'];
+                        } else {
+                            $data['image'] = get_image('imagenotfound');
+                        }
+                    } else {
+                        $data['image'] = get_image('imagenotfound');
+                    }
+                }
+
+                $module[DB_NEWS]['items'][] = $data;
+            }
+        } else {
+            $module[DB_NEWS]['norecord'] = $locale['home_0050'];
+        }
+
+        return $module;
+    }
+
+    fusion_add_hook('home_modules', 'news_home_module');
+}

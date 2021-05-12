@@ -19,32 +19,38 @@ namespace Magazine\Templates;
 
 class Home {
     public static function displayHome($info) {
-        foreach ($info as $db_id => $content) {
-            $colwidth = $content['colwidth'];
-            echo '<h2>'.$content['blockTitle'].'</h2>';
-            if ($colwidth) {
-                echo '<div class="row">';
-                foreach ($content['data'] as $data) {
-                    echo '<div class="col-xs-12 col-sm-'.$colwidth.' col-md-'.$colwidth.' col-lg-'.$colwidth.' content clearfix">';
-                        echo '<div class="post-item">';
+        if (!empty($info)) {
+            // Push News to top
+            $temp = [DB_NEWS => $info[DB_NEWS]];
+            unset($info[DB_NEWS]);
+            $info = $temp + $info;
 
-                            if (!empty($data['image'])) {
-                                echo '<a href="'.$data['url'].'" class="thumb overflow-hide">';
-                                    echo '<img class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'"/>';
-                                echo '</a>';
-                            }
+            foreach ($info as $module) {
+                echo '<h2>'.$module['module_title'].'</h2>';
+                if (!empty($module['items'])) {
+                    echo '<div class="row equal-height">';
+                    foreach ($module['items'] as $data) {
+                        echo '<div class="col-xs-12 col-sm-4 content m-b-10">';
+                            echo '<div class="post-item">';
 
-                            echo '<div class="post-meta">';
-                                echo '<h4 class="title"><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
-                                echo '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
-                                echo '<div class="overflow-hide hidden-xs">'.nl2br(trim_text(strip_tags($data['content']), 200)).'</div>';
+                                if (!empty($data['image'])) {
+                                    echo '<a href="'.$data['url'].'" class="thumb overflow-hide">';
+                                        echo '<img class="img-responsive" src="'.$data['image'].'" alt="'.$data['title'].'">';
+                                    echo '</a>';
+                                }
+
+                                echo '<div class="post-meta">';
+                                    echo '<h4 class="title"><a href="'.$data['url'].'">'.$data['title'].'</a></h4>';
+                                    echo '<div class="small m-b-10 overflow-hide">'.$data['meta'].'</div>';
+                                    echo '<div class="overflow-hide hidden-xs">'.nl2br(trim_text(strip_tags($data['content']), 200)).'</div>';
+                                echo '</div>';
                             echo '</div>';
                         echo '</div>';
+                    }
                     echo '</div>';
+                } else {
+                    echo '<div class="m-t-10 m-b-10">'.$module['norecord'].'</div>';
                 }
-                echo '</div>';
-            } else {
-                echo '<div class="m-t-10 m-b-10">'.$content['norecord'].'</div>';
             }
         }
     }
