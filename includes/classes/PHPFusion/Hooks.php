@@ -58,12 +58,15 @@ final class Hooks {
      * @return bool
      */
     public function add_hook($filter_name, $function, $que, $default_args, $accepted_args) {
+
         $hooks = [
+
             'function'      => $function,
             'default_args'  => $default_args,
             'accepted_args' => $accepted_args,
             'que'           => $que,
         ];
+
         $this->hooks[$que][$filter_name][] = $hooks;
         if (count($this->hooks) > 1) {
             ksort($this->hooks, SORT_NUMERIC);
@@ -100,6 +103,7 @@ final class Hooks {
         }
 
         return [];
+
     }
 
     /**
@@ -120,7 +124,6 @@ final class Hooks {
                         unset($this->hooks[$que][$filter_name][$key]);
                         if (empty($this->hooks[$que][$filter_name]))
                             unset($this->hooks[$que][$filter_name]);
-
                         return TRUE;
                     }
                 }
@@ -149,6 +152,30 @@ final class Hooks {
     }
 
     /**
+     * Removes first parameter from added args.
+     *
+     * @return array
+     */
+    /**
+     * @param $default_args
+     *
+     * @return array
+     */
+    private function getFunctionArgs($default_args) {
+        if (!empty($this->hook_args)) {
+            $this->hook_args = array_flip($this->hook_args);
+            unset($this->hook_args[$this->filter_name]);
+            $this->hook_args = array_flip($this->hook_args);
+        }
+
+        if (!empty($this->hook_args)) {
+            return $this->hook_args;
+        }
+
+        return $default_args;
+    }
+
+    /**
      * Run the hooks by $filter_name and $args parameters
      * There will be no output. If you need an output, use filter hook.
      *
@@ -158,15 +185,15 @@ final class Hooks {
      */
     public function apply_hook($filter_name) {
 
-        $function_args = func_get_args();
+        $this->hook_args = func_get_args();
+
+        $this->filter_name = $filter_name;
 
         $current_hook = $this->get_hook($filter_name);
-        //print_p($function_args);
-        //print_p($current_hook);
 
         if (!empty($current_hook)) {
 
-            foreach ($current_hook as $hook) {
+            foreach ($current_hook as $index => $hook) {
 
                 // prevent the current hook from being called twice, executed or not, else crash
                 $this->remove_hook($filter_name, $hook['function'], $hook['que']);
@@ -175,13 +202,7 @@ final class Hooks {
 
                     $args = (!empty($hook['default_args']) ? $hook['default_args'] : []);
 
-                    $_callback_args = FALSE;
-
-                    if (count($function_args) > 1) {
-                        unset($function_args[0]);
-                        $args = $function_args;
-                        $_callback_args = TRUE;
-                    }
+                    $this->hook_args = $this->getFunctionArgs($args);
 
                     if ($hook['accepted_args']) {
                         if ($hook['accepted_args'] < (count($function_args) - 1)) {
@@ -189,7 +210,7 @@ final class Hooks {
                         }
                     }
 
-                    $output = $_callback_args === FALSE ? $hook['function']($args) : call_user_func_array($hook['function'], $args);
+                    $output = call_user_func_array($hook['function'], $this->hook_args);
 
                     if (!empty($output)) {
 
@@ -201,6 +222,7 @@ final class Hooks {
 
             if (!empty($this->get_hook($filter_name)))
                 $this->apply_hook($filter_name, $function_args);
+
         }
     }
 
@@ -224,6 +246,7 @@ final class Hooks {
                         $args = $function_args;
                     }
                     if ($hook['accepted_args']) {
+
                         if ($hook['accepted_args'] < (count($function_args) - 1)) {
                             throw new \Exception("Too many arguments during executing the $filter_name hook");
                         }
@@ -267,10 +290,8 @@ final class Hooks {
                         }
                     }
                     $output = call_user_func_array($hook['function'], $args);
-
                     // remove the hook
                     //$this->remove_hook( $filter_name, $hook['function'], $hook['que'] );
-
                     if (!empty($output)) {
                         return $output;
                     }
@@ -324,18 +345,17 @@ final class Hooks {
         return (string)$output;
     }
 
+    /**
+     * Apply all hooks
+     */
     public function apply_all_hook() {
 
         if (!empty($this->hooks)) {
-
             foreach ($this->hooks as $que => $funcs_) {
-
                 if (!empty($funcs_['function']) && function_exists($funcs_['function'])) {
 
                     call_user_func_array($funcs_['function'], $funcs_['accepted_args']);
-
                     array_shift($this->hooks[$que]);
-
                 }
             }
         }
