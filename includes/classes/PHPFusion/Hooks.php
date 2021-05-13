@@ -204,8 +204,8 @@ final class Hooks {
 
                     $this->hook_args = $this->getFunctionArgs($args);
 
-                    if ($hook['accepted_args']) {
-                        if ($hook['accepted_args'] < (count($function_args) - 1)) {
+                    if ($hook['accepted_args'] && !empty($this->hook_args)) {
+                        if ($hook['accepted_args'] !== count($this->hook_args)) {
                             throw new \Exception("Too many arguments during executing the $filter_name hook");
                         }
                     }
