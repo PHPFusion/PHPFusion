@@ -118,7 +118,7 @@ class PageComposer extends PageAdmin {
                         'page_cat'          => form_sanitizer($_POST['page_cat'], 0, 'page_cat'),
                         'page_title'        => form_sanitizer($_POST['page_title'], '', 'page_title'),
                         'page_access'       => form_sanitizer($_POST['page_access'], 0, 'page_access'),
-                        'page_content'      => addslash($_POST['page_content']),
+                        'page_content'      => form_sanitizer($_POST['page_content'], '', 'page_content'),
                         'page_keywords'     => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
                         'page_status'       => form_sanitizer($_POST['page_status'], 0, 'page_status'),
                         'page_datestamp'    => form_sanitizer($_POST['page_datestamp'], '', 'page_datestamp'),

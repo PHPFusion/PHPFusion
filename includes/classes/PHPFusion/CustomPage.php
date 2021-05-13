@@ -192,7 +192,7 @@ class CustomPage {
             ];
         }
 
-        echo form_textarea('page_content', '', $data['page_content'], $textArea_config);
+        echo form_textarea('page_content', '', stripslashes($data['page_content']), $textArea_config);
 
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
@@ -485,7 +485,7 @@ class CustomPage {
                 'page_link_cat'       => isset($_POST['page_link_cat']) ? form_sanitizer($_POST['page_link_cat'], 0, 'page_link_cat') : "",
                 'page_title'          => form_sanitizer($_POST['page_title'], '', 'page_title'),
                 'page_access'         => form_sanitizer($_POST['page_access'], 0, 'page_access'),
-                'page_content'        => addslash($_POST['page_content']),
+                'page_content'        => form_sanitizer($_POST['page_content'], "", "page_content"),
                 'page_keywords'       => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
                 'page_language'       => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], "", "page_language") : LANGUAGE,
                 'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
