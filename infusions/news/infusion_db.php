@@ -92,9 +92,8 @@ if ((!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow
 ]);
 
 if (db_exists(DB_NEWS)) {
-    function news_home_module() {
+    function news_home_module($limit) {
         $locale = fusion_get_locale();
-        $limit = PHPFusion\HomePage::getLimit();
 
         $result = dbquery("SELECT
             ns.news_id AS id,

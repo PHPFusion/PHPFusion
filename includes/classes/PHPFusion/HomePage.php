@@ -31,7 +31,7 @@ class HomePage {
 
         $contents = [];
 
-        $modules = fusion_filter_hook('home_modules');
+        $modules = fusion_filter_hook('home_modules', self::$limit);
 
         if (!empty($modules) && !defined('DISABLE_HOME_MODULES')) {
             foreach ($modules as $module) {

@@ -78,9 +78,8 @@ if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article
 ]);
 
 if (db_exists(DB_ARTICLES)) {
-    function articles_home_module() {
+    function articles_home_module($limit) {
         $locale = fusion_get_locale();
-        $limit = PHPFusion\HomePage::getLimit();
 
         $result = dbquery("SELECT
             ar.article_id AS id,

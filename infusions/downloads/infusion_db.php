@@ -79,9 +79,8 @@ if ((!empty($inf_settings['download_allow_submission']) && $inf_settings['downlo
 ]);
 
 if (db_exists(DB_DOWNLOADS)) {
-    function downloads_home_module() {
+    function downloads_home_module($limit) {
         $locale = fusion_get_locale();
-        $limit = PHPFusion\HomePage::getLimit();
 
         $result = dbquery("SELECT
             dl.download_id AS id,

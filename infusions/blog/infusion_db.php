@@ -84,9 +84,8 @@ if ((!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow
 ]);
 
 if (db_exists(DB_BLOG)) {
-    function blog_home_module() {
+    function blog_home_module($limit) {
         $locale = fusion_get_locale();
-        $limit = PHPFusion\HomePage::getLimit();
 
         $result = dbquery("SELECT
             bl.blog_id AS id,
