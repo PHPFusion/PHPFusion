@@ -48,6 +48,8 @@ class HomePage {
                         ];
                     }
 
+                    $data['blockTitle'] = $data['module_title']; // for compatibility
+                    $data['data'] = $data['items']; // for compatibility
                     $contents[$key] = $data;
                 }
             }
