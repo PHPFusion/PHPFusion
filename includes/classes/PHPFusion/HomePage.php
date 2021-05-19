@@ -59,7 +59,6 @@ class HomePage {
                         }
                     }
 
-                    print_p($data);
                     $contents[$key] = $data;
                 }
             }
