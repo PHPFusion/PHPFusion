@@ -26,10 +26,10 @@ class Home {
             $info = $temp + $info;
 
             foreach ($info as $module) {
-                echo '<h2>'.$module['module_title'].'</h2>';
-                if (!empty($module['items'])) {
+                echo '<h2>'.$module['blockTitle'].'</h2>';
+                if (!empty($module['data'])) {
                     echo '<div class="row equal-height">';
-                    foreach ($module['items'] as $data) {
+                    foreach ($module['data'] as $data) {
                         echo '<div class="col-xs-12 col-sm-4 content m-b-10">';
                             echo '<div class="post-item">';
 

@@ -36,20 +36,30 @@ class HomePage {
         if (!empty($modules) && !defined('DISABLE_HOME_MODULES')) {
             foreach ($modules as $module) {
                 foreach ($module as $key => $data) {
-                    foreach ($data['items'] as $item_key => $item) {
-                        $item['content'] = str_replace('../../images', IMAGES, $item['content']);
-                        $profile = profile_link($item['user_id'], $item['user_name'], $item['user_status']);
-                        $cat = '<a href="'.$item['category_link'].'">'.$item['cat_name'].'</a>';
-                        $date = showdate('shortdate', $item['datestamp']);
-                        $data['items'][$item_key] += [
-                            'author' => $profile,
-                            'meta'   => $locale['home_0105'].$profile.' '.$date.$locale['home_0106'].$cat,
-                            'date'   => $date
-                        ];
+                    if (!empty($data['data'])) {
+                        foreach ($data['data'] as $item_key => $item) {
+                            $item['content'] = str_replace('../../images', IMAGES, $item['content']);
+                            $profile = profile_link($item['user_id'], $item['user_name'], $item['user_status']);
+                            $cat = '<a href="'.$item['category_link'].'">'.$item['cat_name'].'</a>';
+                            $date = showdate('shortdate', $item['datestamp']);
+
+                            if (fusion_get_settings('comments_enabled') == 1) {
+                                $data['data'][$item_key]['comments'] = format_word($item['comments_count'], $locale['fmt_comment']);
+                            }
+
+                            if (fusion_get_settings('ratings_enabled') == 1) {
+                                $data['data'][$item_key]['ratings'] = format_word($item['ratings_count'], $locale['fmt_rating']);
+                            }
+
+                            $data['data'][$item_key] += [
+                                'author' => $profile,
+                                'meta'   => $locale['home_0105'].$profile.' '.$date.$locale['home_0106'].$cat,
+                                'date'   => $date
+                            ];
+                        }
                     }
 
-                    $data['blockTitle'] = $data['module_title']; // for compatibility
-                    $data['data'] = $data['items']; // for compatibility
+                    print_p($data);
                     $contents[$key] = $data;
                 }
             }

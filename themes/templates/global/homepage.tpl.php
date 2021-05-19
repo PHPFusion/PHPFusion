@@ -83,10 +83,10 @@ if (!function_exists('display_home')) {
             $info = $temp + $info;
 
             foreach ($info as $module) {
-                opentable($module['module_title']);
-                if (!empty($module['items'])) {
+                opentable($module['blockTitle']);
+                if (!empty($module['data'])) {
                     echo '<div class="row equal-height">';
-                    foreach ($module['items'] as $data) {
+                    foreach ($module['data'] as $data) {
                         echo '<div class="col-xs-12 col-sm-4 content"><div class="item">';
                             if (!empty($data['image'])) {
                                 echo '<figure class="thumb">';

@@ -81,25 +81,35 @@ if (db_exists(DB_ARTICLES)) {
     function articles_home_module($limit) {
         $locale = fusion_get_locale();
 
+        if (fusion_get_settings('comments_enabled') == 1) {
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = ar.article_id AND c1.comment_type = 'A') AS comments_count,";
+        }
+
+        if (fusion_get_settings('ratings_enabled') == 1) {
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = ar.article_id AND r1.rating_type = 'A') AS ratings_count,";
+        }
+
         $result = dbquery("SELECT
             ar.article_id AS id,
             ar.article_subject AS title,
             ar.article_snippet AS content,
-            ar.article_reads AS views,
+            ar.article_reads AS views_count,
             ar.article_datestamp AS datestamp,
             ac.article_cat_id AS cat_id,
             ac.article_cat_name AS cat_name,
+            ".(!empty($comments_query) ? $comments_query : '')."
+            ".(!empty($ratings_query) ? $ratings_query : '')."
             u.user_id, u.user_name, u.user_status
             FROM ".DB_ARTICLES." AS ar
-            INNER JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id = ar.article_cat
-            INNER JOIN ".DB_USERS." AS u ON u.user_id = ar.article_name
+            LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id = ar.article_cat
+            LEFT JOIN ".DB_USERS." AS u ON u.user_id = ar.article_name
             WHERE ar.article_draft = 0
             AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ".in_group('ac.article_cat_language', LANGUAGE) : "")."
             ORDER BY ar.article_datestamp DESC LIMIT ".$limit
         );
 
         $module = [];
-        $module[DB_ARTICLES]['module_title'] = $locale['home_0001'];
+        $module[DB_ARTICLES]['blockTitle'] = $locale['home_0001'];
         $module[DB_ARTICLES]['inf_settings'] = get_settings('articles');
 
         if (dbrows($result) > 0) {
@@ -107,8 +117,9 @@ if (db_exists(DB_ARTICLES)) {
                 $data['content'] = parse_textarea($data['content'], FALSE, TRUE, TRUE, NULL);
                 $data['url'] = INFUSIONS.'articles/articles.php?article_id='.$data['id'];
                 $data['category_link'] = INFUSIONS.'articles/articles.php?cat_id='.$data['cat_id'];
-                $data['item_count'] = format_word($data['views'], $locale['fmt_views']);
-                $module[DB_ARTICLES]['items'][] = $data;
+                $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
+
+                $module[DB_ARTICLES]['data'][] = $data;
             }
         } else {
             $module[DB_ARTICLES]['norecord'] = $locale['home_0051'];

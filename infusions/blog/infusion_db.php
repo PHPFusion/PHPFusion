@@ -87,11 +87,19 @@ if (db_exists(DB_BLOG)) {
     function blog_home_module($limit) {
         $locale = fusion_get_locale();
 
+        if (fusion_get_settings('comments_enabled') == 1) {
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = bl.blog_id AND c1.comment_type = 'BL') AS comments_count,";
+        }
+
+        if (fusion_get_settings('ratings_enabled') == 1) {
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = bl.blog_id AND r1.rating_type = 'BL') AS ratings_count,";
+        }
+
         $result = dbquery("SELECT
             bl.blog_id AS id,
             bl.blog_subject AS title,
             bl.blog_blog AS content,
-            bl.blog_reads AS views,
+            bl.blog_reads AS views_count,
             bl.blog_datestamp AS datestamp,
             bc.blog_cat_id AS cat_id,
             bc.blog_cat_name AS cat_name,
@@ -99,14 +107,12 @@ if (db_exists(DB_BLOG)) {
             bl.blog_image_t1 AS image_thumb,
             bl.blog_image_t2 AS image_thumb2,
             bc.blog_cat_image AS cat_image,
-            count(c1.comment_id) AS comment_count,
-            count(r1.rating_id) AS rating_count,
+            ".(!empty($comments_query) ? $comments_query : '')."
+            ".(!empty($ratings_query) ? $ratings_query : '')."
             u.user_id, u.user_name, u.user_status
             FROM ".DB_BLOG." AS bl
             LEFT JOIN ".DB_BLOG_CATS." AS bc ON bc.blog_cat_id = bl.blog_cat
-            LEFT JOIN ".DB_COMMENTS." AS c1 on (c1.comment_item_id = bl.blog_id and c1.comment_type = 'BL')
-            LEFT JOIN ".DB_RATINGS." AS r1 on (r1.rating_item_id = bl.blog_id AND r1.rating_type = 'BL')
-            INNER JOIN ".DB_USERS." AS u ON bl.blog_name = u.user_id
+            LEFT JOIN ".DB_USERS." AS u ON bl.blog_name = u.user_id
             WHERE (".time()." > bl.blog_start OR bl.blog_start = 0)
             AND bl.blog_draft = 0
             AND (".time()." < bl.blog_end OR bl.blog_end = 0)
@@ -116,7 +122,7 @@ if (db_exists(DB_BLOG)) {
         );
 
         $module = [];
-        $module[DB_BLOG]['module_title'] = $locale['home_0002'];
+        $module[DB_BLOG]['blockTitle'] = $locale['home_0002'];
         $module[DB_BLOG]['inf_settings'] = get_settings('blog');
 
         if (dbrows($result) > 0) {
@@ -124,7 +130,7 @@ if (db_exists(DB_BLOG)) {
                 $data['content'] = parse_textarea($data['content'], FALSE, FALSE, TRUE, NULL);
                 $data['url'] = INFUSIONS.'blog/blog.php?readmore='.$data['id'];
                 $data['category_link'] = INFUSIONS.'blog/blog.php?cat_id='.$data['cat_id'];
-                $data['item_count'] = format_word($data['views'], $locale['fmt_views']);
+                $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
 
                 if ($data['image_main'] || $data['cat_image']) {
                     if ($data['image_thumb'] && file_exists(INFUSIONS.'blog/images/thumbs/'.$data['image_thumb'])) {
@@ -142,7 +148,7 @@ if (db_exists(DB_BLOG)) {
                     $data['image'] = get_image('imagenotfound');
                 }
 
-                $module[DB_BLOG]['items'][] = $data;
+                $module[DB_BLOG]['data'][] = $data;
             }
         } else {
             $module[DB_BLOG]['norecord'] = $locale['home_0052'];

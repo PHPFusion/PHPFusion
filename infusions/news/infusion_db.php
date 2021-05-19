@@ -95,11 +95,19 @@ if (db_exists(DB_NEWS)) {
     function news_home_module($limit) {
         $locale = fusion_get_locale();
 
+        if (fusion_get_settings('comments_enabled') == 1) {
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = ns.news_id AND c1.comment_type = 'NS') AS comments_count,";
+        }
+
+        if (fusion_get_settings('ratings_enabled') == 1) {
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS') AS ratings_count,";
+        }
+
         $result = dbquery("SELECT
             ns.news_id AS id,
             ns.news_subject AS title,
             ns.news_news AS content,
-            ns.news_reads AS views,
+            ns.news_reads AS views_count,
             ns.news_datestamp AS datestamp,
             nc.news_cat_id AS cat_id,
             nc.news_cat_name AS cat_name,
@@ -107,15 +115,13 @@ if (db_exists(DB_NEWS)) {
             ni.news_image_t1 AS image_thumb,
             ni.news_image_t2 AS image_thumb2,
             nc.news_cat_image AS cat_image,
-            count(c1.comment_id) AS comment_count,
-            count(r1.rating_id) AS rating_count,
+             ".(!empty($comments_query) ? $comments_query : '')."
+            ".(!empty($ratings_query) ? $ratings_query : '')."
             u.user_id, u.user_name, u.user_status
             FROM ".DB_NEWS." AS ns
             LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=ns.news_id
             LEFT JOIN ".DB_NEWS_CATS." AS nc ON nc.news_cat_id = ns.news_cat
-            LEFT JOIN ".DB_COMMENTS." AS c1 on (c1.comment_item_id = ns.news_id and c1.comment_type = 'NS')
-            LEFT JOIN ".DB_RATINGS." AS r1 on (r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS')
-            INNER JOIN ".DB_USERS." AS u ON ns.news_name = u.user_id
+            LEFT JOIN ".DB_USERS." AS u ON ns.news_name = u.user_id
             WHERE (".time()." > ns.news_start OR ns.news_start = 0)
             AND ns.news_draft = 0
             AND (".time()." < ns.news_end OR ns.news_end = 0)
@@ -125,7 +131,7 @@ if (db_exists(DB_NEWS)) {
         );
 
         $module = [];
-        $module[DB_NEWS]['module_title'] = $locale['home_0000'];
+        $module[DB_NEWS]['blockTitle'] = $locale['home_0000'];
         $module[DB_NEWS]['inf_settings'] = get_settings('news');
 
         if (dbrows($result) > 0) {
@@ -133,7 +139,7 @@ if (db_exists(DB_NEWS)) {
                 $data['content'] = parse_textarea($data['content'], TRUE, FALSE, TRUE, NULL);
                 $data['url'] = INFUSIONS.'news/news.php?readmore='.$data['id'];
                 $data['category_link'] = INFUSIONS.'news/news.php?cat_id='.$data['cat_id'];
-                $data['item_count'] = format_word($data['views'], $locale['fmt_views']);
+                $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
 
                 if ($module[DB_NEWS]['inf_settings']['news_image_frontpage']) {
                     if ($data['cat_image']) {
@@ -157,7 +163,7 @@ if (db_exists(DB_NEWS)) {
                     }
                 }
 
-                $module[DB_NEWS]['items'][] = $data;
+                $module[DB_NEWS]['data'][] = $data;
             }
         } else {
             $module[DB_NEWS]['norecord'] = $locale['home_0050'];
