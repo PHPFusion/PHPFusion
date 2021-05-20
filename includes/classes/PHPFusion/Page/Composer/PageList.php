@@ -239,11 +239,12 @@ class PageList extends PageAdmin {
             ]);
             echo "</div>\n";
             echo "<div class='display-inline-block'>\n";
-            echo form_select("page_access", "", $filter_values['page_access'],
+            echo form_select("page_access[]", "", $filter_values['page_access'],
                 [
                     "allowclear"  => TRUE,
                     "placeholder" => "- ".self::$locale['page_0111']." -",
-                    "options"     => fusion_get_groups()
+                    "options"     => fusion_get_groups(),
+                    'multiple'    => TRUE
                 ]
             );
             echo "</div>\n";

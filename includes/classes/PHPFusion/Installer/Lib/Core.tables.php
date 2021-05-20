@@ -229,10 +229,10 @@ function get_core_tables($localeset) {
             'default' => ''
         ], // page_title VARCHAR(200) NOT NULL DEFAULT '',
         'page_access'       => [
-            'type'    => 'TINYINT',
-            'length'  => 4,
+            'type'    => 'VARCHAR',
+            'length'  => 50,
             'default' => '0'
-        ], //page_access TINYINT(4) NOT NULL DEFAULT '0',
+        ], //page_access VARCHAR(50) NOT NULL DEFAULT '0',
         'page_content'      => [
             'type' => 'LONGTEXT'
         ], //page_content TEXT NOT NULL,

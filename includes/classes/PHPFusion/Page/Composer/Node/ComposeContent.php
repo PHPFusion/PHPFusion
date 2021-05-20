@@ -85,10 +85,11 @@ class ComposeContent extends PageAdmin {
                                 'width'   => '100%',
                                 'inline'  => FALSE
                             ]).
-                            form_select('page_access', self::$locale['page_0306'], self::$data['page_access'], [
-                                'options' => fusion_get_groups(),
-                                'width'   => '100%',
-                                'inline'  => FALSE,
+                            form_select('page_access[]', self::$locale['page_0306'], self::$data['page_access'], [
+                                'options'  => fusion_get_groups(),
+                                'width'    => '100%',
+                                'inline'   => FALSE,
+                                'multiple' => TRUE
                             ]).
                             form_datepicker('page_datestamp', self::$locale['page_0307'], self::$data['page_datestamp'], [
                                 'width'  => '100%',
