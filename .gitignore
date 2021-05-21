@@ -6,6 +6,7 @@
 .DS_Store
 .tmb
 /cache
+/temp
 .htaccess
 config*.php
 fusion_error_log.log
