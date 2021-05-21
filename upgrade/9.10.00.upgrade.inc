@@ -80,6 +80,8 @@ $inf_updatedbrow[] = DB_PANELS." SET panel_url_list='index.php' WHERE panel_url_
 
 $inf_altertable[] = DB_CUSTOM_PAGES." CHANGE page_access page_access VARCHAR(50) NOT NULL DEFAULT '0'";
 
+$inf_updatedbrow[] = DB_ADMIN." SET admin_link='upgrade.php' WHERE admin_rights='U'";
+
 /**
  * Delete all unused files
  */

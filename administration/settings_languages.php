@@ -163,7 +163,7 @@ if (check_post('savesettings')) {
                         ['admin_rights' => 'PI', 'admin_image' => 'serverinfo.png', 'admin_title' => $locale['setup_3021'], 'admin_link' => 'serverinfo.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'SL', 'admin_image' => 'sitelinks.png', 'admin_title' => $locale['setup_3023'], 'admin_link' => 'site_links.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'SM', 'admin_image' => 'smileys.png', 'admin_title' => $locale['setup_3024'], 'admin_link' => 'smileys.php', 'admin_page' => 3, 'admin_language' => $language],
-                        //['admin_rights' => 'U', 'admin_image' => 'upgrade.png', 'admin_title' => $locale['setup_3026'], 'admin_link' => 'upgrade.php', 'admin_page' => 3, 'admin_language' => $language],
+                        ['admin_rights' => 'U', 'admin_image' => 'upgrade.png', 'admin_title' => $locale['setup_3026'], 'admin_link' => 'upgrade.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'TS', 'admin_image' => 'theme.png', 'admin_title' => $locale['setup_3056'], 'admin_link' => 'theme.php', 'admin_page' => 3, 'admin_language' => $language],
                         ['admin_rights' => 'UG', 'admin_image' => 'user_groups.png', 'admin_title' => $locale['setup_3027'], 'admin_link' => 'user_groups.php', 'admin_page' => 2, 'admin_language' => $language],
                         ['admin_rights' => 'S1', 'admin_image' => 'settings.png', 'admin_title' => $locale['setup_3030'], 'admin_link' => 'settings_main.php', 'admin_page' => 4, 'admin_language' => $language],

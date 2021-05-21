@@ -21,18 +21,29 @@ $settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
 
 if ($settings['update_checker'] == 1) {
-    $url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/9.txt';
-    if (@get_http_response_code($url) == 200) {
-        $file = fusion_get_contents($url);
+    $update = new PHPFusion\AutoUpdate();
+    $url = $update->getUpdateUrl().$update->getUpdateFile();
+    $versions = $update->checkUpdate(10, TRUE);
+    $updates = [];
 
-        $array = explode("\n", $file);
-        $version = $array[0];
+    if (!empty($versions)) {
+        foreach ($versions as $data) {
+            if (version_compare($data['version'], $settings['version'], '>')) {
+                $result = str_replace(
+                    ['[LINK]', '[/LINK]', '[VERSION]'],
+                    ['<a href="'.$data['url'].'" target="_blank">', '</a>', $data['version']],
+                    $locale['new_update_avalaible']
+                );
 
-        if (version_compare($version, $settings['version'], '>')) {
-            $result = str_replace(['[LINK]', '[/LINK]', '[VERSION]'], ['<a href="'.$array[1].'" target="_blank">', '</a>', $version], $locale['new_update_avalaible']);
+                $result .= ' '.str_replace(
+                        ['[LINK]', '[/LINK]'],
+                        ['<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">', '</a>'],
+                        $locale['upgrade_now']
+                    );
 
-            header('Content-Type: application/json');
-            echo json_encode(['result' => $result]);
+                header('Content-Type: application/json');
+                echo json_encode(['result' => $result]);
+            }
         }
     }
 }

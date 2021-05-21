@@ -25,6 +25,37 @@ $settings = fusion_get_settings();
 add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['U_0000']]);
 
 opentable($locale['U_0000']);
-echo '<div class="well text-center">'.$locale['U_0001'].'</div>';
+
+//$update = new PHPFusion\AutoUpdate(BASEDIR.'temp/', BASEDIR, 60); // production
+$update = new PHPFusion\AutoUpdate(BASEDIR.'temp/', BASEDIR.'test/', 60);
+$update->setCurrentVersion($settings['version']);
+
+//$update->setUpdateUrl('http://localhost/update/');
+
+// Check for a new update
+if ($update->checkUpdate() === FALSE) {
+    echo 'Could not check for updates!';
+}
+
+if ($update->newVersionAvailable()) {
+    // Install new update
+    echo 'New Version: '.$update->getLatestVersion().'<br>';
+
+    $result = $update->update();
+
+    if ($result === TRUE) {
+        if (isset($_GET['proceed'])) {
+            $update->doUpdate();
+        } else {
+            echo '<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&proceed">Proceed</a>';
+        }
+    }
+} else {
+    echo 'Current Version is up to date<br>';
+}
+
+echo '<br><br>Log:<br>';
+echo $update->getMessage();
+
 closetable();
 require_once THEMES.'templates/footer.php';
