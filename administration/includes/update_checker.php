@@ -35,11 +35,7 @@ if ($settings['update_checker'] == 1) {
                     $locale['new_update_avalaible']
                 );
 
-                $result .= ' '.str_replace(
-                        ['[LINK]', '[/LINK]'],
-                        ['<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">', '</a>'],
-                        $locale['upgrade_now']
-                    );
+                $result .= '<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">'.$locale['upgrade_now'].'</a>';
 
                 header('Content-Type: application/json');
                 echo json_encode(['result' => $result]);
