@@ -936,7 +936,7 @@ if (!function_exists("countdown")) {
      */
     function countdown($time) {
         $locale = fusion_get_locale();
-        $updated = $time;
+        $updated = $time - time();
         $second = 1;
         $minute = $second * 60;
         $hour = $minute * 60;
