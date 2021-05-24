@@ -104,7 +104,7 @@ class News_Preview extends News {
         $data['news_id'] = 0;
         $data['submit_id'] = 0;
         $data['news_reads'] = 0;
-        $data['count_comment'] = 0;
+        $data['comments_count'] = 0;
         $data['sum_rating'] = 0;
         $data['count_votes'] = 0;
         $data['news_show_comments'] = 0;

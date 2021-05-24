@@ -45,7 +45,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     $result = dbquery("SELECT p.*, pa.album_id, pa.album_title, pa.album_access, pa.album_keywords, pu.user_id, pu.user_name, pu.user_status,
         ($sql_sum) AS sum_rating,
         ($sql_count) AS count_votes,
-        (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.photo_id AND pc.comment_type = 'P' AND pc.comment_hidden = '0') AS count_comment
+        (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.photo_id AND pc.comment_type = 'P') AS comments_count
         FROM ".DB_PHOTOS." AS p
         LEFT JOIN ".DB_PHOTO_ALBUMS." AS pa USING (album_id)
         LEFT JOIN ".DB_USERS." AS pu ON p.photo_user=pu.user_id
@@ -139,7 +139,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         $info += [
             'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
             'photo_byte'        => parsebytesize(filesize($photo_path['photo_filename'])),
-            'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['count_comment']) : 0,
+            'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['comments_count']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
         ];
 
@@ -230,7 +230,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $result = dbquery("SELECT p.*, pu.user_id, pu.user_name, pu.user_status, pu.user_avatar,
                     ($sql_sum) AS sum_rating,
                     ($sql_count) AS count_votes,
-                    (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.photo_id AND pc.comment_type = 'P' AND pc.comment_hidden = '0') AS count_comment
+                    (SELECT COUNT(pc.comment_id) FROM ".DB_COMMENTS." AS pc WHERE pc.comment_item_id = p.photo_id AND pc.comment_type = 'P') AS comments_count
                     FROM ".DB_PHOTOS." AS p
                     LEFT JOIN ".DB_USERS." AS pu ON p.photo_user=pu.user_id
                     WHERE album_id='".intval($_GET['album_id'])."'
@@ -271,8 +271,8 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 'photo_votes'    => $data['count_votes'] > 0 ? $data['count_votes'] : '0',
                                 'photo_comments' => [
                                     'link' => $data['photo_link']['link'].'#comments',
-                                    'name' => $data['count_comment'],
-                                    'word' => format_word($data['count_comment'], $locale['fmt_comment'])
+                                    'name' => $data['comments_count'],
+                                    'word' => format_word($data['comments_count'], $locale['fmt_comment'])
                                 ]
                             ];
                         }

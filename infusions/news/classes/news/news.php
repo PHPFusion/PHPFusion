@@ -194,7 +194,7 @@ abstract class News extends NewsServer {
         return "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined,
             ($sql_sum) AS news_sum_rating,
             ($sql_count) AS news_count_votes,
-            (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." AS ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N' AND ncc.comment_hidden = '0') AS count_comment,
+            (SELECT COUNT(ncc.comment_id) FROM ".DB_COMMENTS." AS ncc WHERE ncc.comment_item_id = n.news_id AND ncc.comment_type = 'N') AS comments_count,
             ni.news_image, ni.news_image_t1, ni.news_image_t2
             FROM ".DB_NEWS." AS n
             LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=n.news_id AND ".(!empty($_GET['readmore']) ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
@@ -243,17 +243,17 @@ abstract class News extends NewsServer {
      *
      * @return int
      */
-    protected static function count_comments($id) {
+    protected static function comments_counts($id) {
         if (!isset(self::$news_comment_count[$id])) {
             self::$news_comment_count[$id] = dbarray(dbquery("SELECT
-                COUNT(comment_item_id) AS count_comment
+                COUNT(comment_item_id) AS comments_count
                 FROM ".DB_COMMENTS."
-                WHERE comment_item_id='".$id."' AND comment_type='N' AND comment_hidden='0'
+                WHERE comment_item_id='".$id."' AND comment_type='N'
              "));
 
         }
 
-        return (int)self::$news_comment_count[$id]['count_comment'];
+        return (int)self::$news_comment_count[$id]['comments_count'];
     }
 
     /**
@@ -279,9 +279,9 @@ abstract class News extends NewsServer {
             } else if ($current_filter == 'comment') {
                 // order by comment_count
                 $cat_filter = [
-                    'order' => 'count_comment DESC',
-                    //'count' => 'COUNT(td.comment_item_id) AS count_comment,',
-                    //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N' AND td.comment_hidden='0'",
+                    'order' => 'comments_count DESC',
+                    //'count' => 'COUNT(td.comment_item_id) AS comments_count,',
+                    //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N'",
                 ];
             } else if ($current_filter == 'rating') {
                 // order by download_title
@@ -460,11 +460,11 @@ abstract class News extends NewsServer {
                 "news_image_optimized"  => $imageSource, // optimized image
                 "news_ext"              => $data['news_extended'] ? "y" : "n",
                 "news_reads"            => $data['news_reads'],
-                "news_comments"         => $data['count_comment'],
+                "news_comments"         => $data['comments_count'],
                 'news_sum_rating'       => $news_sum_rating,
                 'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['comments_count'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
                 "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
                 'news_pagenav'          => $news_pagenav,

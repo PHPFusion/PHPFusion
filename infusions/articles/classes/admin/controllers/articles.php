@@ -454,7 +454,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Query
         $sql = "SELECT a.*, ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar,
             (SELECT COUNT(ar.rating_vote) FROM ".DB_RATINGS." ar WHERE ar.rating_item_id = a.article_id AND ar.rating_type = 'A') AS ratings_count,
-            (SELECT COUNT(ad.comment_id) FROM ".DB_COMMENTS." ad WHERE ad.comment_item_id = a.article_id AND ad.comment_type = 'A' AND ad.comment_hidden = '0') AS comments_count
+            (SELECT COUNT(ad.comment_id) FROM ".DB_COMMENTS." ad WHERE ad.comment_item_id = a.article_id AND ad.comment_type = 'A') AS comments_count
             FROM ".DB_ARTICLES." a
             LEFT JOIN ".DB_ARTICLE_CATS." ac ON ac.article_cat_id=a.article_cat
             INNER JOIN ".DB_USERS." u ON u.user_id=a.article_name

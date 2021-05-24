@@ -138,7 +138,7 @@ switch ($_GET['type']) {
         $filter_condition = 'b.blog_reads DESC';
         break;
     case 'comment':
-        $filter_condition = 'count_comment DESC';
+        $filter_condition = 'comments_count DESC';
         break;
     case 'rating':
         $filter_condition = 'sum_rating DESC';
@@ -158,7 +158,7 @@ if (isset($_GET['readmore'])) {
         $sql = "SELECT b.*, bu.*,
             ($sql_sum) AS sum_rating,
             ($sql_count) AS count_votes,
-            (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
+            (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B') AS comments_count,
             b.blog_datestamp as last_updated
             FROM ".DB_BLOG." AS b
             LEFT JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
@@ -313,7 +313,7 @@ if (isset($_GET['readmore'])) {
             $sql = "SELECT b.*, bu.user_id, bu.user_name, bu.user_status, bu.user_avatar , bu.user_level, bu.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
-                (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B' AND bc.comment_hidden = '0') AS count_comment,
+                (SELECT COUNT(bc.comment_id) FROM ".DB_COMMENTS." AS bc WHERE bc.comment_item_id = b.blog_id AND bc.comment_type = 'B') AS comments_count,
                 MAX(b.blog_datestamp) AS last_updated
                 FROM ".DB_BLOG." AS b
                 INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
@@ -382,7 +382,7 @@ if (isset($_GET['readmore'])) {
                 bu.user_id, bu.user_name, bu.user_status, bu.user_avatar , bu.user_level, bu.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
-                (SELECT COUNT(bcc.comment_id) FROM ".DB_COMMENTS." AS bcc WHERE bcc.comment_item_id = b.blog_id AND bcc.comment_type = 'B' AND bcc.comment_hidden = '0') AS count_comment,
+                (SELECT COUNT(bcc.comment_id) FROM ".DB_COMMENTS." AS bcc WHERE bcc.comment_item_id = b.blog_id AND bcc.comment_type = 'B') AS comments_count,
                 MAX(b.blog_datestamp) as last_updated
                 FROM ".DB_BLOG." AS b
                 LEFT JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
@@ -434,7 +434,7 @@ if (isset($_GET['readmore'])) {
             $condition = "SELECT b.*, bu.user_id, bu.user_name, bu.user_status, bu.user_avatar, bu.user_level, bu.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
-                (SELECT COUNT(bcc.comment_id) FROM ".DB_COMMENTS." AS bcc WHERE bcc.comment_item_id = b.blog_id AND bcc.comment_type = 'B' AND bcc.comment_hidden = '0') AS count_comment,
+                (SELECT COUNT(bcc.comment_id) FROM ".DB_COMMENTS." AS bcc WHERE bcc.comment_item_id = b.blog_id AND bcc.comment_type = 'B') AS comments_count,
                 MAX(b.blog_datestamp) AS last_updated
                 FROM ".DB_BLOG." AS b
                 LEFT JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
@@ -492,7 +492,7 @@ if (isset($_GET['readmore'])) {
                 'blog_lowRes_image_path' => $lowRes_image_path,
                 'blog_thumb'             => get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE),
                 "blog_reads"             => format_word($data['blog_reads'], $locale['fmt_read']),
-                "blog_comments"          => format_word($data['count_comment'], $locale['fmt_comment']),
+                "blog_comments"          => format_word($data['comments_count'], $locale['fmt_comment']),
                 'blog_sum_rating'        => format_word($data['sum_rating'], $locale['fmt_rating']),
                 'blog_count_votes'       => format_word($data['count_votes'], $locale['fmt_vote']),
                 'blog_user_avatar'       => display_avatar($data, '35px', '', TRUE, 'img-rounded'),

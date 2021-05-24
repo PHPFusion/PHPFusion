@@ -165,7 +165,7 @@ abstract class Articles extends ArticlesServer {
         return "SELECT a.*, ac.*, au.user_id, au.user_name, au.user_status, au.user_avatar, au.user_level, au.user_joined,
             ($sql_sum) AS sum_rating,
             ($sql_count) AS count_votes,
-            (SELECT COUNT(ad.comment_id) FROM ".DB_COMMENTS." ad WHERE ad.comment_item_id = a.article_id AND ad.comment_type = 'A' AND ad.comment_hidden = '0') AS count_comment
+            (SELECT COUNT(ad.comment_id) FROM ".DB_COMMENTS." ad WHERE ad.comment_item_id = a.article_id AND ad.comment_type = 'A') AS comments_count
             FROM ".DB_ARTICLES." AS a
             LEFT JOIN ".DB_USERS." AS au ON a.article_name=au.user_id
             LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON a.article_cat=ac.article_cat_id
@@ -197,7 +197,7 @@ abstract class Articles extends ArticlesServer {
                     $catfilter = "a.article_reads DESC";
                     break;
                 case "comment":
-                    $catfilter = "count_comment DESC";
+                    $catfilter = "comments_count DESC";
                     break;
                 case "rating":
                     $catfilter = "sum_rating DESC";
@@ -288,12 +288,12 @@ abstract class Articles extends ArticlesServer {
                 'article_reads'            => $data['article_reads'],
                 'article_date'             => $data['article_datestamp'],
                 # Comments and Ratings
-                'article_comments'         => $data['count_comment'],
+                'article_comments'         => $data['comments_count'],
                 'article_sum_rating'       => $data['sum_rating'] ? $data['sum_rating'] : 0,
                 'article_count_votes'      => $data['count_votes'],
                 'article_allow_comments'   => $data['article_allow_comments'],
                 'article_allow_ratings'    => $data['article_allow_ratings'],
-                'article_display_comments' => $data['article_allow_comments'] ? display_comments($data['count_comment'], INFUSIONS."articles/articles.php?article_id=".$data['article_id']."#comments", "", 2) : "",
+                'article_display_comments' => $data['article_allow_comments'] ? display_comments($data['comments_count'], INFUSIONS."articles/articles.php?article_id=".$data['article_id']."#comments", "", 2) : "",
                 'article_display_ratings'  => $data['article_allow_ratings'] ? display_ratings($data['sum_rating'], $data['count_votes'], INFUSIONS."articles/articles.php?article_id=".$data['article_id']."#postrating", "", 2) : "",
                 # Links and Admin Actions
                 'article_url'              => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],

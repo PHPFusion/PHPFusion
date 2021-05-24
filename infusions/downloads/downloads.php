@@ -134,9 +134,9 @@ switch ($_get_type) {
         $filter_condition = 'd.download_datestamp DESC';
         break;
     case 'comments':
-        $filter_condition = 'count_comment DESC';
-        //$filter_count = 'COUNT(td.comment_item_id) AS count_comment,';
-        //$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D' AND td.comment_hidden='0'";
+        $filter_condition = 'comments_count DESC';
+        //$filter_count = 'COUNT(td.comment_item_id) AS comments_count,';
+        //$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D'";
         break;
     case 'ratings':
         $filter_condition = 'sum_rating DESC';
@@ -160,7 +160,7 @@ if ($_get_download_id) {
         $result = dbquery("SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar, du.user_level, du.user_joined,
             ($sql_sum) AS sum_rating,
             ($sql_count) AS count_votes,
-            (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D' AND dcc.comment_hidden = '0') AS count_comment,
+            (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D') AS comments_count,
             d.download_datestamp AS last_updated
             FROM ".DB_DOWNLOADS." AS d
             INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat = dc.download_cat_id
@@ -272,7 +272,7 @@ if ($_get_download_id) {
                     $filter_condition = 'd.download_datestamp DESC';
                     break;
                 case 'comments':
-                    $filter_condition = 'count_comment DESC';
+                    $filter_condition = 'comments_count DESC';
                     break;
                 case 'ratings':
                     $filter_condition = 'sum_rating DESC';
@@ -290,7 +290,7 @@ if ($_get_download_id) {
             $sql = "SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
-                (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D' AND dcc.comment_hidden = '0') AS count_comment,
+                (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D') AS comments_count,
                 MAX(d.download_datestamp) AS last_updated
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
@@ -328,7 +328,7 @@ if ($_get_download_id) {
             $download_query = "SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
-                (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D' AND dcc.comment_hidden = '0') AS count_comment,
+                (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D') AS comments_count,
                 max(d.download_datestamp) as last_updated
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
@@ -361,7 +361,7 @@ if (!empty($info['download_max_rows']) && ($info['download_max_rows'] > $dl_sett
 
 if (!empty($info['download_rows'])) {
     while ($data = dbarray($result)) {
-        $data['count_comment'] = !empty($data['count_comment']) ? $data['count_comment'] : 0;
+        $data['comments_count'] = !empty($data['comments_count']) ? $data['comments_count'] : 0;
         $data['count_votes'] = !empty($data['count_votes']) ? $data['count_votes'] : 0;
         $data['sum_rating'] = !empty($data['sum_rating']) ? $data['sum_rating'] : 0;
         $data = array_merge($data, parseInfo($data));
@@ -471,7 +471,7 @@ function parseInfo($data) {
         'download_image'             => $download_image,
         'download_thumb'             => get_download_image_path($data['download_image'], $data['download_image_thumb'], FALSE),
         "download_count"             => format_word($data['download_count'], $locale['fmt_download']),
-        "download_comments"          => format_word($data['count_comment'], $locale['fmt_comment']),
+        "download_comments"          => format_word($data['comments_count'], $locale['fmt_comment']),
         'download_sum_rating'        => format_word($data['sum_rating'], $locale['fmt_rating']),
         'download_count_votes'       => format_word($data['count_votes'], $locale['fmt_vote']),
         'download_user_avatar'       => display_avatar($data, '25px', '', TRUE, 'img-rounded'),
