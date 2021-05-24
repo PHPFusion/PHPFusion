@@ -17,10 +17,10 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer\Steps;
 
-use PHPFusion\Installer\Install_Core;
+use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
-class InstallerPermissions extends Install_Core {
+class Permissions extends InstallCore {
 
     public function __view() {
 

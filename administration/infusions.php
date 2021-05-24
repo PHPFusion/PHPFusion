@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Installer\Infusion_Core;
+use PHPFusion\Installer\Infusions;
 
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
@@ -29,10 +29,10 @@ add_breadcrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' =>
 
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 if ($folder = post("infuse")) {
-    Infusion_Core::getInstance()->infuse($folder);
+    Infusions::getInstance()->infuse($folder);
     redirect(FUSION_REQUEST);
 } else if ($folder = post("defuse")) {
-    Infusion_Core::getInstance()->defuse($folder);
+    Infusions::getInstance()->defuse($folder);
     redirect(FUSION_REQUEST);
 }
 
@@ -42,7 +42,7 @@ echo "<div class='text-right m-b-20'><a href='https://phpfusion.com/infusions/ma
 $infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
-    $inf = Infusion_Core::load_infusion($folders);
+    $inf = Infusions::load_infusion($folders);
     if (!empty($inf)) {
         $infs[$folders] = $inf;
     }

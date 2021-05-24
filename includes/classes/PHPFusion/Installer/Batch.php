@@ -32,7 +32,7 @@ namespace PHPFusion\Installer;
  *
  * @package PHPFusion\Installer\Lib
  */
-class Batch_Core extends Install_Core {
+class Batch extends InstallCore {
 
     const PROGRESS = "setTimeout(
                     function(){
@@ -144,8 +144,6 @@ class Batch_Core extends Install_Core {
         if (self::$batch === NULL) {
             self::$batch = new static();
             self::$required_default = array_flip(['INT', 'BIGINT', 'MEDIUMINT', 'SMALLINT', 'TINYINT']);
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.tables.php";
-            require_once CLASSES."PHPFusion/Installer/Lib/Core.settings.php";
         }
 
         return self::$batch;
@@ -164,7 +162,7 @@ class Batch_Core extends Install_Core {
 
             if (dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], TRUE)) {
 
-                foreach (get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
+                foreach (\PHPFusion\Installer\Lib\CoreTables::get_core_tables(self::$localeset) as self::$table_name => self::$table_cols) {
 
                     if (db_exists(self::$connection['db_prefix'].self::$table_name)) {
                         /*
@@ -319,9 +317,9 @@ class Batch_Core extends Install_Core {
     private function get_table_attr($col_name, $col_attr) {
 
         // Register column primary_keys and keys
-        if (isset($col_attr['key'])) {
+        /*if (isset($col_attr['key'])) {
             $keys[$col_attr['key']] = $col_name;
-        }
+        }*/
 
         // Default Attr
         $default_create = '';
@@ -434,7 +432,7 @@ class Batch_Core extends Install_Core {
         return strtr(self::CREATE_TABLE_STATEMENT, [
             '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
             '{%table_attr%}' => implode(', ', $line),
-            '{%collation%}'  => Batch_Core::FUSION_TABLE_COLLATION
+            '{%collation%}'  => Batch::FUSION_TABLE_COLLATION
         ]);
 
     }
@@ -449,12 +447,12 @@ class Batch_Core extends Install_Core {
      */
     public static function batch_insert_rows($table_name, $localeset) {
 
-        if ($table_rows = get_table_rows($table_name, $localeset)) {
+        if ($table_rows = \PHPFusion\Installer\Lib\CoreSettings::get_table_rows($table_name, $localeset)) {
             if (isset($table_rows['insert'])) {
                 $values = [];
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
-                foreach ($table_rows['insert'] as $count => $inserts) {
+                foreach ($table_rows['insert'] as $inserts) {
                     $values[] = "('".implode("', '", array_values($inserts))."')";
                 }
 

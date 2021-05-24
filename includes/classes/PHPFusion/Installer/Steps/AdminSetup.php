@@ -16,14 +16,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\Steps;
+namespace PHPFusion\Installer\Steps;
 
-use PHPFusion\Installer\Batch_Core;
-use PHPFusion\Installer\Install_Core;
+//use PHPFusion\Installer\Batch;
+use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 use PHPFusion\PasswordAuth;
 
-class InstallerAdminSetup extends Install_Core {
+class AdminSetup extends InstallCore {
 
     public function __view() {
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
@@ -425,7 +425,7 @@ class InstallerAdminSetup extends Install_Core {
                 if (\defender::safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
-                    $batch_core = Batch_Core::getInstance();
+                    //$batch_core = Batch::getInstance();
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
                         self::$userData['user_id'] = 1;
@@ -456,7 +456,7 @@ class InstallerAdminSetup extends Install_Core {
                             }
                         }
 
-                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        /*$langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
                                 $sql_inserts = $batch_core::batch_insert_rows('site_links', $language);
@@ -464,7 +464,7 @@ class InstallerAdminSetup extends Install_Core {
                                     continue;
                                 }
                             }
-                        }
+                        }*/
                         unset($installed_languages);
 
                         $result = dbquery("SELECT admin_language FROM ".DB_PREFIX."admin GROUP BY admin_language ASC");
@@ -475,7 +475,7 @@ class InstallerAdminSetup extends Install_Core {
                             }
                         }
 
-                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        /*$langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
                                 $sql_inserts = $batch_core::batch_insert_rows('admin', $language);
@@ -483,7 +483,7 @@ class InstallerAdminSetup extends Install_Core {
                                     continue;
                                 }
                             }
-                        }
+                        }*/
                         unset($installed_languages);
 
                         /*
@@ -500,12 +500,12 @@ class InstallerAdminSetup extends Install_Core {
                         $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
 
-                            foreach ($langDiff as $language) {
+                            /*foreach ($langDiff as $language) {
                                 $sql_inserts = $batch_core::batch_insert_rows('email_templates', $language);
                                 if ($result = dbquery($sql_inserts)) {
                                     continue;
                                 }
-                            }
+                            }*/
 
                             // Update all UF Cat Fields
                             $ufc_result = dbquery("SELECT field_cat_id, field_cat_name FROM ".DB_PREFIX."user_field_cats");
@@ -535,12 +535,11 @@ class InstallerAdminSetup extends Install_Core {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
                         self::installer_step(self::STEP_INFUSIONS);
-                        redirect(FUSION_REQUEST);
                         //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_REQUEST);
                     } else {
                         self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
-                        redirect(FUSION_REQUEST);
                     }
+                    redirect(FUSION_REQUEST);
                 }
             }
         }

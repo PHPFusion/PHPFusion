@@ -19,7 +19,7 @@
 use Defender\ImageValidation;
 use Defender\Token;
 use PHPFusion\Authenticate;
-use PHPFusion\Installer\Infusion_core;
+use PHPFusion\Installer\Infusions;
 use PHPFusion\OutputHandler;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
@@ -309,4 +309,4 @@ if (dbrows($result)) {
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-Infusion_core::load_Configuration();
+Infusions::load_Configuration();

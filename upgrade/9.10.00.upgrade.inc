@@ -96,6 +96,13 @@ $deleted_files = [
     ADMIN.'images/theme_settings.png',
     ADMIN.'settings_theme.php',
     BASEDIR.'home.php',
+    CLASSES.'PHPFusion/Installer/Batch.core.php',
+    CLASSES.'PHPFusion/Installer/Console.core.php',
+    CLASSES.'PHPFusion/Installer/Infusion.core.php',
+    CLASSES.'PHPFusion/Installer/Install.core.php',
+    CLASSES.'PHPFusion/Installer/Requirements.core.php',
+    CLASSES.'PHPFusion/Installer/Lib/Core.settings.php',
+    CLASSES.'PHPFusion/Installer/Lib/Core.tables.php',
 ];
 
 foreach ($deleted_files as $file) {

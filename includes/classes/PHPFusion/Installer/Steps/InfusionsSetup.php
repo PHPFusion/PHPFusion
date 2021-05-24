@@ -15,13 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Steps;
+namespace PHPFusion\Installer\Steps;
 
-use PHPFusion\Installer\Infusion_Core;
-use PHPFusion\Installer\Install_Core;
+use PHPFusion\Installer\Infusions;
+use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
-class InstallerInfusions extends Install_Core {
+class InfusionsSetup extends InstallCore {
 
     public function __view() {
         self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
@@ -64,13 +64,17 @@ class InstallerInfusions extends Install_Core {
 
                 // Main language detection procedure
                 if (iMEMBER && valid_language($userdata['user_language'])) {
-                    define("LANGUAGE", $userdata['user_language']);
-                    define("LOCALESET", $userdata['user_language']."/");
+                    if (!defined('LANGUAGE')) {
+                        define("LANGUAGE", $userdata['user_language']);
+                        define("LOCALESET", $userdata['user_language']."/");
+                    }
                 } else {
                     $data = dbarray(dbquery("SELECT * FROM ".DB_LANGUAGE_SESSIONS." WHERE user_ip='".USER_IP."'"));
                     if (!empty($data['user_language'])) {
-                        define("LANGUAGE", $data['user_language']);
-                        define("LOCALESET", $data['user_language']."/");
+                        if (!defined('LANGUAGE')) {
+                            define("LANGUAGE", $data['user_language']);
+                            define("LOCALESET", $data['user_language']."/");
+                        }
                     }
                 }
                 // Check if definitions have been set, if not set the default language to system language
@@ -81,7 +85,7 @@ class InstallerInfusions extends Install_Core {
 
                 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
-                $inf_core = Infusion_Core::getInstance();
+                $inf_core = Infusions::getInstance();
                 $inf_core::load_Configuration();
                 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
                     $inf_core->infuse($folder);
@@ -92,7 +96,7 @@ class InstallerInfusions extends Install_Core {
                 $temp = opendir(INFUSIONS);
                 $infs = [];
                 while ($folder = readdir($temp)) {
-                    if (!in_array($folder, ["..", "."]) && ($inf = Infusion_Core::load_infusion($folder))) {
+                    if (!in_array($folder, ["..", "."]) && ($inf = Infusions::load_infusion($folder))) {
                         $infs[] = $inf;
                     }
                 }
@@ -112,7 +116,7 @@ class InstallerInfusions extends Install_Core {
                     $content .= "</div>\n</div>\n";
 
                     sort($infs);
-                    foreach ($infs as $i => $inf) {
+                    foreach ($infs as $inf) {
                         $content .= "<div class='list-group-item'>\n";
                         $content .= "<div class='row'>\n";
                         $content .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2'>\n";
@@ -131,8 +135,8 @@ class InstallerInfusions extends Install_Core {
                         $content .= "</div>\n";
                         $content .= "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";
                         $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
-                        $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-                        $content .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-3'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+                        $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
+                        $content .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-3'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
                         $content .= "</div>\n</div>\n";
                     }
                 } else {

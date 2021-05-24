@@ -15,17 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Steps;
+namespace PHPFusion\Installer\Steps;
 
-use PHPFusion\Installer\Install_Core;
+use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
 /**
- * Class InstallerIntroduction
+ * Class Introduction
  *
  * @package PHPFusion\Steps
  */
-class InstallerIntroduction extends Install_Core {
+class Introduction extends InstallCore {
 
     /**
      * @return string
@@ -168,14 +168,14 @@ class InstallerIntroduction extends Install_Core {
 
         if (check_post("uninstall")) {
             require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.php'; // See below previous comment
-            $coretables = get_core_tables(self::$localeset);
+            $coretables = \PHPFusion\Installer\Lib\CoreTables::get_core_tables(self::$localeset);
             $i = 0;
             foreach (array_keys($coretables) as $table) {
                 $result = dbquery("DROP TABLE IF EXISTS ".self::$connection['db_prefix'].$table);
                 if ($result) {
                     $i++;
                     usleep(600);
-                    continue;
+                    //continue;
                 }
             }
             @unlink(BASEDIR.'config_temp.php');

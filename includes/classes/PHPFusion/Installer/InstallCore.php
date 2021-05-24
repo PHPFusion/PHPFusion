@@ -18,21 +18,21 @@
 namespace PHPFusion\Installer;
 
 use Dynamics;
-use PHPFusion\Installer\Steps\InstallerPermissions;
+use PHPFusion\Installer\Steps\Introduction;
+use PHPFusion\Installer\Steps\Permissions;
 use PHPFusion\OutputHandler;
-use PHPFusion\Steps\InstallerAdminSetup;
-use PHPFusion\Steps\InstallerDbSetup;
-use PHPFusion\Steps\InstallerInfusions;
-use PHPFusion\Steps\InstallerIntroduction;
+use PHPFusion\Installer\Steps\AdminSetup;
+use PHPFusion\Installer\Steps\DatabaseSetup;
+use PHPFusion\Installer\Steps\InfusionsSetup;
 
 ini_set('display_errors', 1);
 
 /**
- * Class Install_Core
+ * Class InstallCore
  *
  * @package PHPFusion\Installer
  */
-class Install_Core extends Infusion_Core {
+class InstallCore extends Infusions {
 
     const STEP_INTRO = 1;
     const STEP_PERMISSIONS = 2;
@@ -232,13 +232,10 @@ class Install_Core extends Infusion_Core {
                             define('DB_PREFIX', self::$connection['DB_PREFIX']);
                         }
                         //self::set_empty_prefix();
-                        return TRUE;
                     }
                 }
             }
         }
-
-        return FALSE;
     }
 
     protected static function set_empty_prefix() {
@@ -336,8 +333,8 @@ class Install_Core extends Infusion_Core {
 
     public function install_phpfusion() {
         $current_content = $this->get_InstallerContent();
-        $content = Console_Core::getConsoleInstance()->getView($current_content);
-        echo strtr(Console_Core::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
+        $content = Console::getConsoleInstance()->getView($current_content);
+        echo strtr(Console::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
     }
 
     private function get_InstallerContent() {
@@ -356,22 +353,22 @@ class Install_Core extends Infusion_Core {
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
             default:
-                return InstallerIntroduction::servePage()->__view();
+                return Introduction::servePage()->__view();
                 break;
             case self::STEP_PERMISSIONS:
-                return InstallerPermissions::servePage()->__view();
+                return Permissions::servePage()->__view();
                 break;
             case self::STEP_DB_SETTINGS_SAVE:
             case self::STEP_DB_SETTINGS_FORM:
-                return InstallerDbSetup::servePage()->__view();
+                return DatabaseSetup::servePage()->__view();
                 break;
             case self::STEP_TRANSFER:
             case self::STEP_PRIMARY_ADMIN_SAVE:
             case self::STEP_PRIMARY_ADMIN_FORM:
-                return InstallerAdminSetup::servePage()->__view();
+                return AdminSetup::servePage()->__view();
                 break;
             case self::STEP_INFUSIONS:
-                return InstallerInfusions::servePage()->__view();
+                return InfusionsSetup::servePage()->__view();
                 break;
             case self::STEP_SETUP_COMPLETE:
                 if (file_exists(BASEDIR.'config_temp.php')) {
@@ -412,7 +409,7 @@ class Install_Core extends Infusion_Core {
     protected function tableCheck() {
         if (!empty(self::$connection['db_name'])) {
             $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
-            if ($rows = dbrows($result)) {
+            if (dbrows($result)) {
                 return TRUE;
             } else {
                 $_SESSION['step'] = 1;
@@ -426,15 +423,3 @@ class Install_Core extends Infusion_Core {
     }
 
 }
-
-/*
- * Debug the steps in each here
- * @Dependencies on Install.core.php
- */
-require(__DIR__.'/Requirements.core.php');
-require(__DIR__.'/Steps/Introduction.php');
-require(__DIR__.'/Steps/Permissions.php');
-require(__DIR__.'/Steps/DatabaseSetup.php');
-require(__DIR__.'/Steps/AdminSetup.php');
-require(__DIR__.'/Steps/InfusionsSetup.php');
-require(__DIR__.'/Steps/Complete.php');

@@ -17,14 +17,12 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer;
 
-use Exception;
-
 /**
- * Class Infusion_Core
+ * Class Infusions
  *
  * @package PHPFusion\Installer
  */
-class Infusion_Core {
+class Infusions {
 
     private static $locale = [];
     private static $instance = NULL;
@@ -291,7 +289,7 @@ class Infusion_Core {
                 'developer'       => $inf_developer ?: 'PHPFusion',
                 'email'           => $inf_email,
                 'url'             => $inf_weburl,
-                'image'           => $inf_image ? $inf_image : 'infusion_panel.png',
+                'image'           => !empty($inf_image) ? $inf_image : 'infusion_panel.png',
                 'folder'          => $inf_folder,
                 'newtable'        => $inf_newtable,
                 'newcol'          => $inf_newcol,
@@ -377,7 +375,7 @@ class Infusion_Core {
                 'developer'       => $inf_developer ?: 'PHPFusion',
                 'email'           => $inf_email,
                 'url'             => $inf_weburl,
-                'image'           => $inf_image ? $inf_image : 'infusion_panel.png',
+                'image'           => !empty($inf_image) ? $inf_image : 'infusion_panel.png',
                 'folder'          => $inf_folder,
                 'newtable'        => $inf_newtable,
                 'altertable'      => $inf_altertable,

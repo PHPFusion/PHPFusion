@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Steps;
+namespace PHPFusion\Installer\Steps;
 
-use PHPFusion\Installer\Install_Core;
+use PHPFusion\Installer\InstallCore;
 
-class InstallerComplete extends Install_Core {
+class Complete extends InstallCore {
 
     public function __view() {
         $content = "<h4 class='title'>".self::$locale['setup_1600']."</h4><p>".self::$locale['setup_1601']."</p>\n";

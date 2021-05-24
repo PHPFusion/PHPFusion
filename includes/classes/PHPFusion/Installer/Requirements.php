@@ -25,7 +25,7 @@ use PHPFusion\Database\DatabaseFactory;
  *
  * @package PHPFusion\Installer
  */
-class Requirements extends Install_Core {
+class Requirements extends InstallCore {
 
     /**
      * Get System Requirements for PHPFusion 9
@@ -202,11 +202,10 @@ class Requirements extends Install_Core {
             ];
             if (php_ini_loaded_file() == get_cfg_var('cfg_file_path')) {
                 $requirements['php_memory_limit']['value'] = str_replace('[CFG_FILE_PATH]', get_cfg_var('cfg_file_path'), self::$locale['setup_0119b']);
-                $requirements['php_memory_limit']['severability'] = -5;
             } else {
                 $requirements['php_memory_limit']['value'] = self::$locale['setup_0119c'];
-                $requirements['php_memory_limit']['severability'] = -5;
             }
+            $requirements['php_memory_limit']['severability'] = -5;
         }
 
         // Xdebug max nesting level.
@@ -261,7 +260,7 @@ class Requirements extends Install_Core {
             $requirements['files_check']['description'] = self::$locale['setup_0135'].$chmod;
         }
 
-        return (array)$requirements;
+        return $requirements;
     }
 
     /**
@@ -302,7 +301,7 @@ class Requirements extends Install_Core {
             DatabaseFactory::setDefaultDriver(isset(self::$connection['db_driver']) && self::$connection['db_driver'] === 'pdo' ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi);
 
             // There will be a connection issue present.
-            $connection_info = $connection = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], !empty(self::$connection['db_port']) ? self::$connection['db_port'] : 3306);
+            $connection_info = dbconnect(self::$connection['db_host'], self::$connection['db_user'], self::$connection['db_pass'], self::$connection['db_name'], !empty(self::$connection['db_port']) ? self::$connection['db_port'] : 3306);
             $db_connect = $connection_info['connection_success'];
             $db_select = $connection_info['dbselection_success'];
             if ($db_connect) {
@@ -389,7 +388,7 @@ class Requirements extends Install_Core {
             ];
         }
 
-        return (array)$validation;
+        return $validation;
     }
 
 }

@@ -19,7 +19,7 @@ namespace PHPFusion\Installer;
 
 use PHPFusion\OutputHandler;
 
-class Console_Core extends Install_Core {
+class Console extends InstallCore {
 
     private static $console_instance = NULL;
 
@@ -54,8 +54,8 @@ class Console_Core extends Install_Core {
 
         $html .= '<ul class="menu list-style-none m-t-15">';
         foreach ($steps as $key => $value) {
-            if ($key !== 4) {
-                $active = intval(INSTALLATION_STEP) === $key;
+            if ($key != 4) {
+                $active = intval(INSTALLATION_STEP) == $key;
                 $html .= '<li'.($active ? ' class="active"' : '').'>'.$value.'</li>';
             }
         }

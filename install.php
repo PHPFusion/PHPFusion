@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-define('BASEDIR', '');
-define("IN_FUSION", true);
+const BASEDIR = '';
+const IN_FUSION = TRUE;
 require_once __DIR__.'/includes/autoloader.php';
 // Start the installer
-PHPFusion\Installer\Install_Core::getInstallInstance()->install_phpfusion();
+PHPFusion\Installer\InstallCore::getInstallInstance()->install_phpfusion();

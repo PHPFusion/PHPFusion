@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-namespace PHPFusion\Steps;
+namespace PHPFusion\Installer\Steps;
 
 use PHPFusion\Installer;
-use PHPFusion\Installer\Batch_Core;
-use PHPFusion\Installer\Install_Core;
+use PHPFusion\Installer\Batch;
+use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
 /**
@@ -27,7 +27,7 @@ use PHPFusion\Installer\Requirements;
  *
  * @package PHPFusion\Steps
  */
-class InstallerDbSetup extends Install_Core {
+class DatabaseSetup extends InstallCore {
 
     public function __view() {
         return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatch_tables() : $this->step_form();
@@ -112,28 +112,28 @@ class InstallerDbSetup extends Install_Core {
 
                 require_once(INCLUDES.'multisite_include.php');
 
-                $to_create = Batch_Core::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
+                $to_create = Batch::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
 
-                $to_alter_column = Batch_Core::getInstance()->batch_runtime('alter_column');
+                $to_alter_column = Batch::getInstance()->batch_runtime('alter_column');
 
-                $to_add_column = Batch_Core::getInstance()->batch_runtime('add_column');
+                $to_add_column = Batch::getInstance()->batch_runtime('add_column');
 
-                $to_insert_rows = Batch_Core::getInstance()->batch_runtime('insert'); // must return array to insert with table.
+                $to_insert_rows = Batch::getInstance()->batch_runtime('insert'); // must return array to insert with table.
 
-                $to_upgrade = Batch_Core::getInstance()->batch_runtime("upgrade");
+                $to_upgrade = Batch::getInstance()->batch_runtime("upgrade");
 
                 //$final_message = self::$locale['setup_1210'];
                 // Go for point system differentiation
                 $query_count = 0;
 
-                if (Batch_Core::getInstance()->ProgressHasError() === FALSE) {
+                if (Batch::getInstance()->ProgressHasError() === FALSE) {
                     //$final_message = self::$locale['setup_1211'];
 
                     // Create missing new tables
                     if (!empty($to_create) && $debug_batching === FALSE) {
                         //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         if (!$debug_process) {
-                            foreach ($to_create as $table_name => $table_create) {
+                            foreach ($to_create as $table_create) {
 
                                 $query_count = $query_count + 1;
 
@@ -149,7 +149,7 @@ class InstallerDbSetup extends Install_Core {
                     if (!empty($to_alter_column) && $debug_batching === FALSE) {
                         //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
                         if (!$debug_process) {
-                            foreach ($to_alter_column as $table_name => $table_processes) {
+                            foreach ($to_alter_column as $table_processes) {
 
                                 if (!empty($table_processes)) {
 
@@ -169,7 +169,7 @@ class InstallerDbSetup extends Install_Core {
                     if (!empty($to_add_column) && $debug_batching === FALSE) {
                         //$message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
                         if (!$debug_process) {
-                            foreach ($to_add_column as $table_name => $table_processes) {
+                            foreach ($to_add_column as $table_processes) {
 
                                 if (!empty($table_processes)) {
                                     foreach ($table_processes as $table_add) {
@@ -188,7 +188,7 @@ class InstallerDbSetup extends Install_Core {
                     if (!empty($to_insert_rows) && $debug_batching === FALSE) {
                         // $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
                         if (!$debug_process) {
-                            foreach ($to_insert_rows as $table_name => $row_inserts) {
+                            foreach ($to_insert_rows as $row_inserts) {
 
                                 $query_count = $query_count + 1;
 
@@ -200,7 +200,7 @@ class InstallerDbSetup extends Install_Core {
 
                     //Checking for upgrade
                     if ($debug_batching === FALSE) {
-                        $to_upgrade = Batch_Core::getInstance()->check_upgrades(); // get upgrade queries
+                        $to_upgrade = Batch::getInstance()->check_upgrades(); // get upgrade queries
                         if (!empty($to_upgrade)) {
                             $error = FALSE;
                             //$message = "<strong>Building version upgrades...</strong>\n";
@@ -258,7 +258,7 @@ class InstallerDbSetup extends Install_Core {
                             $sql[] = $this->makeSQLImportLog("Insert rows into", $to_insert_rows);
                         }
                         if (!empty($to_upgrade)) {
-                            foreach ($to_upgrade as $version => $instructions) {
+                            foreach ($to_upgrade as $instructions) {
                                 $sql[] = $this->makeSQLImportLog("Upgrading..", $instructions, TRUE);
                             }
                         }
@@ -275,7 +275,7 @@ class InstallerDbSetup extends Install_Core {
                  * Generate final message
                  */
                 if (!isset($errors)) {
-                    $errors = Batch_Core::getInstance()->ProgressHasError();
+                    $errors = Batch::getInstance()->ProgressHasError();
                 }
 
                 if (!$errors) {
@@ -314,7 +314,7 @@ class InstallerDbSetup extends Install_Core {
     /**
      * @param $query
      *
-     * @return float|int|string
+     * @return bool
      */
     protected function doCoreBatch($query) {
         try {
@@ -435,7 +435,7 @@ class InstallerDbSetup extends Install_Core {
             'inline'           => TRUE,
             'required'         => FALSE,
             'placeholder'      => self::$locale['setup_1222'],
-            'autocomplete_off' => isset($_GET['upgrade']) ? FALSE : TRUE
+            'autocomplete_off' => !isset($_GET['upgrade'])
         ]);
         $content .= "<h4 class='title'>".self::$locale['setup_1092']."</h4>";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], [
