@@ -18,14 +18,11 @@
 namespace PHPFusion;
 
 use Exception;
+use PHPFusion\Installer\Batch;
 use RuntimeException;
 use ZipArchive;
 
-/**
- * Auto update class
- * Based on https://github.com/VisualAppeal/PHP-Auto-Update
- */
-class AutoUpdate {
+class AutoUpdate extends Installer\Infusions {
     /**
      * The latest version.
      *
@@ -282,8 +279,7 @@ class AutoUpdate {
                 $update = @file_get_contents($updateFile, FALSE);
 
                 if ($update === FALSE) {
-                    $this->setMessage(sprintf('Could not download update file "%s" via file_get_contents!',
-                        $updateFile));
+                    $this->setMessage(sprintf('Could not download update file "%s" via file_get_contents!', $updateFile));
 
                     throw new DownloadException($updateFile);
                 }
@@ -383,11 +379,7 @@ class AutoUpdate {
         $success = TRUE;
         if (curl_error($curl)) {
             $success = FALSE;
-            $this->setMessage(sprintf(
-                'Could not download update "%s" via curl: %s!',
-                $url,
-                curl_error($curl)
-            ));
+            $this->setMessage(sprintf('Could not download update "%s" via curl: %s!', $url, curl_error($curl)));
         }
         curl_close($curl);
 
@@ -453,59 +445,40 @@ class AutoUpdate {
     protected function install($updateFile, $version) {
         $this->setMessage(sprintf('Trying to install update "%s"', $updateFile));
 
-        clearstatcache();
+        $source = 'files';
+        $target = substr($this->installDir, 0, -1);
 
-        // Check if zip file could be opened
-        $zip = new ZipArchive();
-        $resource = $zip->open($updateFile);
-        if ($resource !== TRUE) {
-            $this->setMessage(sprintf('Could not open zip file "%s", error: %d', $updateFile, $resource));
+        $zip = new ZipArchive;
+        if ($zip->open($updateFile) === TRUE) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
 
-            return FALSE;
-        }
-
-        $temp = $this->tempDir.'latest/';
-
-        // Read every file from archive
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $fileStats = $zip->statIndex($i);
-            $filename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $fileStats['name']);
-            $foldername = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $temp.dirname($filename));
-            $absoluteFilename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $temp);
-            //$this->setMessage(sprintf('Updating file "%s"', $filename));
-
-            if (!is_dir($foldername) && !mkdir($foldername, $this->dirPermissions, TRUE) && !is_dir($foldername)) {
-                $this->setMessage(sprintf('Directory "%s" has to be writeable!', $foldername));
-
-                return FALSE;
-            }
-
-            // Skip if entry is a directory
-            if ($filename[strlen($filename) - 1] === DIRECTORY_SEPARATOR) {
-                continue;
-            }
-
-            // Extract file
-            if ($zip->extractTo($absoluteFilename, $fileStats['name']) === FALSE) {
-                $this->setMessage(sprintf('Coud not read zip entry "%s"', $fileStats['name']));
-            }
-        }
-
-        $zip->close();
-
-        // Move files to install dir
-        $temp = is_dir($temp.'files/') ? $temp.'files/' : $temp;
-
-        if ($dh = opendir($temp)) {
-            while (($file = readdir($dh)) !== FALSE) {
-                if (in_array($file, [".", ".."])) {
+                // Skip files not in $source
+                if (strpos($name, "$source/") !== 0) {
                     continue;
                 }
 
-                rename($temp.$file, $this->installDir.$file);
-            }
-            closedir($dh);
+                // Determine output filename (removing the $source prefix)
+                $file = $target.'/'.substr($name, strlen($source) + 1);
 
+                // Create the directories if necessary
+                $dir = dirname($file);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0777, TRUE);
+                }
+
+                // Read from Zip and write to disk
+                if ($dir != $target) {
+                    $fpr = $zip->getStream($name);
+                    $fpw = fopen($file, 'w');
+                    while ($data = fread($fpr, 1024)) {
+                        fwrite($fpw, $data);
+                    }
+                    fclose($fpr);
+                    fclose($fpw);
+                }
+            }
+            $zip->close();
         }
 
         $this->setMessage(sprintf('Update "%s" successfully installed', $version));
@@ -545,20 +518,17 @@ class AutoUpdate {
     }
 
     /**
-     * @param bool $deleteDownload Delete download after update (Default: true)
-     *
      * @return false|int
      * @throws DownloadException
      */
-    public function doUpdate($deleteDownload = TRUE) {
+    private function updateCoreFiles() {
         if ($this->newVersionAvailable()) {
             foreach ($this->updates as $update) {
                 $this->setMessage(sprintf('Update to version "%s"', $update['version']));
 
                 // Check for temp directory
                 if (empty($this->tempDir) || !is_dir($this->tempDir) || !is_writable($this->tempDir)) {
-                    $this->setMessage(sprintf('Temporary directory "%s" does not exist or is not writeable!',
-                        $this->tempDir));
+                    $this->setMessage(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->tempDir));
 
                     return self::ERROR_TEMP_DIR;
                 }
@@ -587,33 +557,91 @@ class AutoUpdate {
 
                 // Install update
                 $result = $this->install($updateFile, $update['version']);
-                if ($result === TRUE) {
-                    if ($deleteDownload) {
-                        $this->setMessage(sprintf('Trying to delete update file "%s" after successfull update', $updateFile));
-                        if (unlink($updateFile)) {
-                            $this->setMessage(sprintf('Update file "%s" deleted after successfull update', $updateFile));
-                        } else {
-                            $this->setMessage(sprintf('Could not delete update file "%s" after successfull update!', $updateFile));
 
-                            return self::ERROR_DELETE_TEMP_UPDATE;
-                        }
+                if ($result === TRUE) {
+                    $this->setMessage(sprintf('Trying to delete update file "%s" after successfull update', $updateFile));
+                    if (unlink($updateFile)) {
+                        $this->setMessage(sprintf('Update file "%s" deleted after successfull update', $updateFile));
+                    } else {
+                        $this->setMessage(sprintf('Could not delete update file "%s" after successfull update!', $updateFile));
+
+                        return self::ERROR_DELETE_TEMP_UPDATE;
                     }
                 } else {
-                    if ($deleteDownload) {
-                        $this->setMessage(sprintf('Trying to delete update file "%s" after failed update', $updateFile));
-                        if (unlink($updateFile)) {
-                            $this->setMessage(sprintf('Update file "%s" deleted after failed update', $updateFile));
-                        } else {
-                            $this->setMessage(sprintf('Could not delete update file "%s" after failed update!', $updateFile));
-                        }
+                    $this->setMessage(sprintf('Trying to delete update file "%s" after failed update', $updateFile));
+                    if (unlink($updateFile)) {
+                        $this->setMessage(sprintf('Update file "%s" deleted after failed update', $updateFile));
+                    } else {
+                        $this->setMessage(sprintf('Could not delete update file "%s" after failed update!', $updateFile));
                     }
 
                     return FALSE;
                 }
+
+                $this->setMessage('Deleting temp dir');
+                rrmdir($this->tempDir);
             }
         }
 
         return TRUE;
+    }
+
+    /**
+     * @param $method
+     * @param $code_array
+     *
+     * @return bool
+     */
+    protected function doUpgradeBatch($method, $code_array) {
+        try {
+            $method = $method.'_infuse';
+            return $this->$method($code_array);
+        } catch (\Exception $e) {
+            if (!is_file(BASEDIR.'installer_'.date('d-M-Y').'.errors.log')) {
+                touch(BASEDIR.'installer_'.date('d-M-Y').'.errors.log');
+            }
+            write_file(BASEDIR.'installer_'.date('d-M-Y').'.log.txt', $e->getMessage(), FILE_APPEND);
+            return TRUE;
+        }
+
+    }
+
+    /**
+     * Run upgrade scripts
+     */
+    private function doDbUpgrade() {
+        $to_upgrade = Batch::getInstance()->check_upgrades();
+        if (!empty($to_upgrade)) {
+            $this->setMessage('Running database upgrades');
+
+            foreach ($to_upgrade as $file_upgrades) {
+                if (!empty($file_upgrades)) {
+                    foreach ($file_upgrades as $callback_method => $upgrades) {
+                        if (!empty($upgrades)) {
+                            $method = $callback_method.'_infuse';
+                            if (method_exists($this, $method)) {
+                                $this->setMessage('Running method: '.$method);
+                                $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return TRUE;
+        }
+
+        return NULL;
+    }
+
+    public function upgradeCms() {
+        if ($this->updateCoreFiles()) {
+            $this->setMessage('Core files updated.');
+        }
+
+        if ($this->doDbUpgrade()) {
+            $this->setMessage('Database upgraded.');
+        }
     }
 
     private function setMessage($message) {

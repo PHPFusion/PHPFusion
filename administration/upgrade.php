@@ -26,10 +26,8 @@ add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $
 
 opentable($locale['U_0000']);
 
-//$update = new PHPFusion\AutoUpdate(BASEDIR.'temp/', BASEDIR, 60); // production
-$update = new PHPFusion\AutoUpdate(BASEDIR.'temp/', BASEDIR.'test/', 60);
+$update = new PHPFusion\AutoUpdate(BASEDIR.'temp/', BASEDIR, 60);
 $update->setCurrentVersion($settings['version']);
-
 //$update->setUpdateUrl('http://localhost/update/');
 
 // Check for a new update
@@ -45,7 +43,7 @@ if ($update->newVersionAvailable()) {
 
     if ($result === TRUE) {
         if (isset($_GET['proceed'])) {
-            $update->doUpdate();
+            $update->upgradeCms();
         } else {
             echo '<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&proceed">Proceed</a>';
         }
