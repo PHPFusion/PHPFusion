@@ -197,21 +197,23 @@ class PanelsAdministration {
                 $this->data['panel_languages'] = implode('.', $panel_languages);
             }
 
-            if ($this->data['panel_id'] && self::verifyPanel($this->data['panel_id'])) {
-                // Panel Update
-                dbquery_insert(DB_PANELS, $this->data, 'update');
-                addNotice('success', self::$locale['482']);
-            } else {
-                // Panel Save
-                $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
-                if (dbrows($result) != 0) {
-                    $data = dbarray($result);
-                    $this->data['panel_order'] = $data['panel_order'] + 1;
+            if (fusion_safe()) {
+                if ($this->data['panel_id'] && self::verifyPanel($this->data['panel_id'])) {
+                    // Panel Update
+                    dbquery_insert(DB_PANELS, $this->data, 'update');
+                    addNotice('success', self::$locale['482']);
                 } else {
-                    $this->data['panel_order'] = 1;
+                    // Panel Save
+                    $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
+                    if (dbrows($result) != 0) {
+                        $data = dbarray($result);
+                        $this->data['panel_order'] = $data['panel_order'] + 1;
+                    } else {
+                        $this->data['panel_order'] = 1;
+                    }
+                    dbquery_insert(DB_PANELS, $this->data, 'save');
+                    addNotice('success', self::$locale['485']);
                 }
-                dbquery_insert(DB_PANELS, $this->data, 'save');
-                addNotice('success', self::$locale['485']);
             }
 
             // Regulate Panel Ordering
