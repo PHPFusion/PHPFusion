@@ -507,6 +507,10 @@ class CoreSettings {
                     'settings_value' => 1
                 ],
                 [
+                    'settings_name'  => 'update_last_checked',
+                    'settings_value' => time()
+                ],
+                [
                     'settings_name'  => 'number_delimiter',
                     'settings_value' => '.'
                 ],

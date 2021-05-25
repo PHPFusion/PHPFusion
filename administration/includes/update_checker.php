@@ -17,29 +17,23 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-$settings = fusion_get_settings();
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+$settings = fusion_get_settings();
 
-if ($settings['update_checker'] == 1) {
+if ($settings['update_checker'] == 1 && ($settings['update_last_checked'] < (time() - 21600))) { // check every 6 hours
+    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => time(), ':name' => 'update_last_checked']);
+
     $update = new PHPFusion\AutoUpdate();
-    $url = $update->getUpdateUrl().$update->getUpdateFile();
-    $versions = $update->checkUpdate(10, TRUE);
-    $updates = [];
+    $url = $update->getUpdateUrl();
+    $version = $update->checkUpdate(TRUE);
 
-    if (!empty($versions)) {
-        foreach ($versions as $data) {
-            if (version_compare($data['version'], $settings['version'], '>')) {
-                $result = str_replace(
-                    ['[LINK]', '[/LINK]', '[VERSION]'],
-                    ['<a href="'.$data['url'].'" target="_blank">', '</a>', $data['version']],
-                    $locale['new_update_avalaible']
-                );
+    if (!empty($version)) {
+        if (version_compare($version, $settings['version'], '>')) {
+            $result = sprintf($locale['new_update_avalaible'], $version);
+            $result .= '<a class="btn btn-primary btn-sm m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">'.$locale['update_now'].'</a>';
 
-                $result .= '<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">'.$locale['upgrade_now'].'</a>';
-
-                header('Content-Type: application/json');
-                echo json_encode(['result' => $result]);
-            }
+            header('Content-Type: application/json');
+            echo json_encode(['result' => $result]);
         }
     }
 }

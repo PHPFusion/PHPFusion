@@ -17,326 +17,155 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
-use Exception;
 use PHPFusion\Installer\Batch;
-use RuntimeException;
 use ZipArchive;
 
 class AutoUpdate extends Installer\Infusions {
     /**
-     * The latest version.
+     * Temporary directory for downloads
      *
      * @var string
      */
-    private $latestVersion = '';
+    private $temp_dir = BASEDIR.'temp/';
 
     /**
-     * Current version.
+     * Install directory
      *
      * @var string
      */
-    protected $currentVersion = '';
+    private $install_dir = BASEDIR;
 
     /**
-     * Updates not yet installed.
+     * Url to the update folder on the server
      *
+     * @var string
+     */
+    private $update_url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/';
+    //private $update_url = 'http://localhost/update/';
+
+    /**
+     * Version filename on the server
+     *
+     * @var string
+     */
+    private $update_file = '9.json';
+
+    /**
+     * @var string
+     */
+    private $latest_version = '';
+
+    /**
+     * @var string
+     */
+    protected $current_version = '';
+
+    /**
      * @var array
      */
-    private $updates;
+    private $update = [];
 
     /**
-     * Temporary download directory.
-     *
-     * @var string
+     * @var array
      */
-    private $tempDir = BASEDIR.'temp/';
+    private $messages = [];
 
     /**
-     * Install directory.
-     *
-     * @var string
+     * @var array|string
      */
-    private $installDir = BASEDIR;
+    private $locale;
 
     /**
-     * Url to the update folder on the server.
-     *
-     * @var string
+     * AutoUpdate constructor
      */
-    protected $updateUrl = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/';
+    public function __construct() {
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
 
-    /**
-     * Version filename on the server.
-     *
-     * @var string
-     */
-    protected $updateFile = '9.json';
+        ini_set('max_execution_time', 300);
 
-    /**
-     * Create new folders with this privileges.
-     *
-     * @var int
-     */
-    public $dirPermissions = 0755;
-
-    private $message;
-
-    private $versions;
-
-    /**
-     * No update available.
-     */
-    const NO_UPDATE_AVAILABLE = 0;
-
-    /**
-     * Could not check for last version.
-     */
-    const ERROR_VERSION_CHECK = 20;
-
-    /**
-     * Temp directory does not exist or is not writable.
-     */
-    const ERROR_TEMP_DIR = 30;
-
-    /**
-     * Install directory does not exist or is not writable.
-     */
-    const ERROR_INSTALL_DIR = 35;
-
-    /**
-     * Could not download update.
-     */
-    const ERROR_DOWNLOAD_UPDATE = 40;
-
-    /**
-     * Could not delete zip update file.
-     */
-    const ERROR_DELETE_TEMP_UPDATE = 50;
-
-    /**
-     * Create new instance
-     *
-     * @param string|null $tempDir
-     * @param string|null $installDir
-     * @param int         $maxExecutionTime
-     */
-    public function __construct($tempDir = NULL, $installDir = NULL, $maxExecutionTime = 60) {
-        if (!empty($tempDir)) {
-            $this->setTempDir($tempDir);
-        }
-
-        if (!empty($installDir)) {
-            $this->setInstallDir($installDir);
-        }
-
-        ini_set('max_execution_time', $maxExecutionTime);
+        $this->current_version = fusion_get_settings('version');
     }
 
     /**
-     * Set the temporary download directory.
+     * Set the update url
      *
-     * @param string $dir
-     *
-     * @return bool
+     * @param string $update_url
      */
-    public function setTempDir($dir) {
-        if (!is_dir($dir)) {
-            $this->setMessage(sprintf('Creating new temporary directory "%s"', $dir));
-
-            if (!mkdir($dir, 0755, TRUE) && !is_dir($dir)) {
-                $this->setMessage(sprintf('Could not create temporary directory "%s"', $dir));
-
-                return FALSE;
-            }
-        }
-
-        $this->tempDir = $dir;
-
-        return TRUE;
+    public function setUpdateUrl($update_url) {
+        $this->update_url = $update_url;
     }
 
     /**
-     * Set the install directory.
+     * Set the update file
      *
-     * @param string $dir
-     *
-     * @return bool
+     * @param string $update_file
      */
-    public function setInstallDir($dir) {
-        if (!is_dir($dir)) {
-            $this->setMessage(sprintf('Creating new install directory "%s"', $dir));
-
-            if (!mkdir($dir, 0755, TRUE) && !is_dir($dir)) {
-                $this->setMessage(sprintf('Could not create install directory "%s"', $dir));
-
-                return FALSE;
-            }
-        }
-
-        $this->installDir = $dir;
-
-        return TRUE;
+    public function setUpdateFile($update_file) {
+        $this->update_file = $update_file;
     }
 
     /**
-     * Set the update filename.
+     * Get the update url
      *
-     * @param string $updateFile
-     *
-     * @return AutoUpdate
-     */
-    public function setUpdateFile($updateFile) {
-        $this->updateFile = $updateFile;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdateFile() {
-        return $this->updateFile;
-    }
-
-    /**
-     * Set the update filename.
-     *
-     * @param string $updateUrl
-     *
-     * @return AutoUpdate
-     */
-    public function setUpdateUrl($updateUrl) {
-        $this->updateUrl = $updateUrl;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getUpdateUrl() {
-        return $this->updateUrl;
+        return $this->update_url.$this->update_file;
     }
 
     /**
-     * Set the version of the current installed software.
-     *
-     * @param string $currentVersion
-     *
-     * @return AutoUpdate
-     */
-    public function setCurrentVersion($currentVersion) {
-        $this->currentVersion = $currentVersion;
-
-        return $this;
-    }
-
-    /**
-     * Get the name of the latest version.
+     * Get the number of the latest version
      *
      * @return string
      */
     public function getLatestVersion() {
-        return $this->latestVersion;
+        return $this->latest_version;
     }
 
     /**
      * Check for a new version
      *
-     * @param int $timeout Download timeout in seconds (Only applied for downloads via curl)
+     * @param false $return_version
      *
-     * @return int|bool|array
-     *         true: New version is available
-     *         false: Error while checking for update
-     *         int: Status code (i.e. AutoUpdate::NO_UPDATE_AVAILABLE)
-     * @throws DownloadException
-     * @throws ParserException
+     * @return array|bool
      */
-    public function checkUpdate($timeout = 10, $return_file = FALSE) {
-        $this->setMessage('Checking for a new update...');
-
-        // Reset previous updates
-        $this->latestVersion = '0.0.0';
-        $this->updates = [];
-
-        // Create absolute url to update file
-        $updateFile = $this->updateUrl.$this->updateFile;
-
-        // Check if cache is empty
-        if ($this->versions === NULL || $this->versions === FALSE) {
-            $this->setMessage(sprintf('Get new updates from %s', $updateFile));
-
-            // Read update file from update server
-            if (function_exists('curl_version') && $this->isValidUrl($updateFile)) {
-                $update = $this->downloadCurl($updateFile, $timeout);
-
-                if ($update === FALSE) {
-                    $this->setMessage(sprintf('Could not download update file "%s" via curl!', $updateFile));
-
-                    throw new DownloadException($updateFile);
-                }
-            } else {
-                $update = @file_get_contents($updateFile, FALSE);
-
-                if ($update === FALSE) {
-                    $this->setMessage(sprintf('Could not download update file "%s" via file_get_contents!', $updateFile));
-
-                    throw new DownloadException($updateFile);
-                }
-            }
-
-            $this->versions = (array)json_decode($update, FALSE);
-            if (!is_array($this->versions)) {
-                $this->setMessage('Unable to parse json update file!');
-
-                throw new ParserException(sprintf('Could not parse update json file %s!', $this->updateFile));
+    public function checkUpdate($return_version = FALSE) {
+        if (function_exists('curl_version') && $this->isValidUrl($this->getUpdateUrl())) {
+            $update = $this->downloadCurl($this->getUpdateUrl());
+            if ($update === FALSE) {
+                $this->setError(sprintf('Could not download update file %s via curl!', $this->getUpdateUrl()));
             }
         } else {
-            $this->setMessage('Got updates from cache');
+            $update = @file_get_contents($this->getUpdateUrl(), FALSE);
+            if ($update === FALSE) {
+                $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->getUpdateUrl()));
+            }
         }
 
-        if (!is_array($this->versions)) {
-            $this->setMessage(sprintf('Could not read versions from server %s', $updateFile));
-
-            return FALSE;
+        if ($update === FALSE) {
+            return FALSE; // Could not check for updates
         }
 
-        // Check for latest version
-        foreach ($this->versions as $version => $updateUrl) {
-            if (version_compare($version, $this->currentVersion, '>')) {
-                if (version_compare($version, $this->latestVersion, '>')) {
-                    $this->latestVersion = $version;
+        $versions = (array)json_decode($update, FALSE);
+
+        if (is_array($versions)) {
+            foreach ($versions as $version => $url) {
+                if (version_compare($version, $this->current_version, '>')) {
+                    $this->latest_version = $version;
+                    $this->update = ['version' => $version, 'url' => $url];
                 }
-
-                $this->updates[] = [
-                    'version' => $version,
-                    'url'     => $updateUrl,
-                ];
             }
         }
-
-        // Sort versions to install
-        usort($this->updates, static function ($a, $b) {
-            if (version_compare($a['version'], $b['version'], '==')) {
-                return 0;
-            }
-
-            return version_compare($a['version'], $b['version'], '<') ? -1 : 1;
-        });
 
         if ($this->newVersionAvailable()) {
-            $this->setMessage(sprintf('New version "%s" available', $this->latestVersion));
-
-            if ($return_file == TRUE) {
-                return $this->updates;
+            if ($return_version == TRUE) {
+                return $this->update['version'];
             } else {
                 return TRUE;
             }
         }
 
-        $this->setMessage('No new version available');
-
-        return self::NO_UPDATE_AVAILABLE;
+        return NULL; // No update available
     }
 
     /**
@@ -345,41 +174,39 @@ class AutoUpdate extends Installer\Infusions {
      * @return bool
      */
     public function newVersionAvailable() {
-        return version_compare($this->latestVersion, $this->currentVersion, '>');
+        return version_compare($this->latest_version, $this->current_version, '>');
     }
 
     /**
-     * Check if url is valid.
+     * Check if url is valid
      *
      * @param string $url
      *
      * @return bool
      */
     protected function isValidUrl($url) {
-        return (filter_var($url, FILTER_VALIDATE_URL) !== FALSE);
+        return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
     }
 
     /**
-     * Download file via curl.
+     * Download file via curl
      *
      * @param string $url URL to file
-     * @param int    $timeout
      *
      * @return string|false
      */
-    protected function downloadCurl($url, $timeout = 10) {
+    protected function downloadCurl($url) {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 15);
         $update = curl_exec($curl);
 
         $success = TRUE;
         if (curl_error($curl)) {
             $success = FALSE;
-            $this->setMessage(sprintf('Could not download update "%s" via curl: %s!', $url, curl_error($curl)));
         }
         curl_close($curl);
 
@@ -387,46 +214,41 @@ class AutoUpdate extends Installer\Infusions {
     }
 
     /**
-     * Download the update
+     * Download update
      *
-     * @param string $updateUrl  Url where to download from
-     * @param string $updateFile Path where to save the download
+     * @param string $update_url  Url where to download from
+     * @param string $update_file Path where to save the download
      *
      * @return bool
-     * @throws DownloadException
-     * @throws Exception
      */
-    protected function downloadUpdate($updateUrl, $updateFile) {
-        $this->setMessage(sprintf('Downloading update "%s" to "%s"', $updateUrl, $updateFile));
-        if (function_exists('curl_version') && $this->isValidUrl($updateUrl)) {
-            $update = $this->downloadCurl($updateUrl);
+    protected function downloadZip($update_url, $update_file) {
+        $this->setMessage(sprintf($this->locale['U_009'], $update_url));
+
+        if (function_exists('curl_version') && $this->isValidUrl($update_url)) {
+            $update = $this->downloadCurl($update_url);
             if ($update === FALSE) {
                 return FALSE;
             }
         } else if (ini_get('allow_url_fopen')) {
-            $update = @file_get_contents($updateUrl, FALSE);
-
+            $update = @file_get_contents($update_url, FALSE);
             if ($update === FALSE) {
-                $this->setMessage(sprintf('Could not download update "%s"!', $updateUrl));
-
-                throw new DownloadException($updateUrl);
+                $this->setError(sprintf('Could not download update "%s"!', $update_url));
             }
-        } else {
-            throw new RuntimeException('No valid download method found!');
         }
 
-        $handle = fopen($updateFile, 'wb');
+        $handle = fopen($update_file, 'wb');
         if (!$handle) {
-            $this->setMessage(sprintf('Could not open file handle to save update to "%s"!', $updateFile));
-
+            $this->setError(sprintf('Could not open file handle to save update to "%s"!', $update_file));
             return FALSE;
         }
 
-        if (!fwrite($handle, $update)) {
-            $this->setMessage(sprintf('Could not write update to file "%s"!', $updateFile));
-            fclose($handle);
+        if (!empty($update)) {
+            if (!fwrite($handle, $update)) {
+                $this->setError(sprintf('Could not write update to file "%s"!', $update_file));
+                fclose($handle);
 
-            return FALSE;
+                return FALSE;
+            }
         }
 
         fclose($handle);
@@ -435,151 +257,116 @@ class AutoUpdate extends Installer\Infusions {
     }
 
     /**
-     * Install update.
-     *
-     * @param string $updateFile Path to the update file
-     * @param string $version
+     * @param string $zip_file Path to the update file
+     * @param string $dest     Destination directory
      *
      * @return bool
      */
-    protected function install($updateFile, $version) {
-        $this->setMessage(sprintf('Trying to install update "%s"', $updateFile));
+    protected function extractFiles($zip_file, $dest) {
+        $this->setMessage($this->locale['U_010']);
 
-        $source = 'files';
-        $target = substr($this->installDir, 0, -1);
+        $zip = new ZipArchive();
+        $resource = $zip->open($zip_file);
+        if ($resource !== TRUE) {
+            $this->setError(sprintf('Could not open zip file "%s", error: %d', $zip_file, $resource));
+            return FALSE;
+        }
 
-        $zip = new ZipArchive;
-        if ($zip->open($updateFile) === TRUE) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $name = $zip->getNameIndex($i);
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $file_stats = $zip->statIndex($i);
+            $filename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $file_stats['name']);
+            $foldername = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $dest.dirname($filename));
+            $absolute_filename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $dest);
 
-                // Skip files not in $source
-                if (strpos($name, "$source/") !== 0) {
-                    continue;
-                }
-
-                // Determine output filename (removing the $source prefix)
-                $file = $target.'/'.substr($name, strlen($source) + 1);
-
-                // Create the directories if necessary
-                $dir = dirname($file);
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0777, TRUE);
-                }
-
-                // Read from Zip and write to disk
-                if ($dir != $target) {
-                    $fpr = $zip->getStream($name);
-                    $fpw = fopen($file, 'w');
-                    while ($data = fread($fpr, 1024)) {
-                        fwrite($fpw, $data);
-                    }
-                    fclose($fpr);
-                    fclose($fpw);
-                }
+            if (!is_dir($foldername) && !mkdir($foldername, 0777, TRUE) && !is_dir($foldername)) {
+                $this->setError(sprintf('Directory "%s" has to be writeable!', $foldername));
+                return FALSE;
             }
-            $zip->close();
+
+            if ($filename[strlen($filename) - 1] === DIRECTORY_SEPARATOR) {
+                continue;
+            }
+
+            if ($zip->extractTo($absolute_filename, $file_stats['name']) === FALSE) {
+                $this->setError(sprintf('Coud not read zip entry "%s"', $file_stats['filename']));
+            }
         }
 
-        $this->setMessage(sprintf('Update "%s" successfully installed', $version));
+        $zip->close();
 
         return TRUE;
     }
 
     /**
-     * Update to the latest version
+     * Copy files
      *
-     * @return integer|bool
-     * @throws DownloadException
-     * @throws ParserException
+     * @param $source
+     * @param $target
      */
-    public function update() {
-        $this->setMessage('Trying to perform update');
+    private function copyFiles($source, $target) {
+        $this->setMessage($this->locale['U_011']);
 
-        // Check for latest version
-        if ($this->latestVersion === NULL || count($this->updates) === 0) {
-            $this->checkUpdate();
+        $directoryIterator = new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                $dir = $target.DIRECTORY_SEPARATOR.$iterator->getSubPathName();
+                if (!is_dir($dir)) {
+                    mkdir($dir);
+                }
+            } else {
+                copy($item, $target.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
+            }
         }
-
-        if ($this->latestVersion === NULL || count($this->updates) === 0) {
-            $this->setMessage('Could not get latest version from server!');
-
-            return self::ERROR_VERSION_CHECK;
-        }
-
-        // Check if current version is up to date
-        if (!$this->newVersionAvailable()) {
-            $this->setMessage('No update available!');
-
-            return self::NO_UPDATE_AVAILABLE;
-        }
-
-        return TRUE;
     }
 
     /**
-     * @return false|int
-     * @throws DownloadException
+     * Update core
+     *
+     * @return bool
      */
     private function updateCoreFiles() {
         if ($this->newVersionAvailable()) {
-            foreach ($this->updates as $update) {
-                $this->setMessage(sprintf('Update to version "%s"', $update['version']));
+            if (!is_dir($this->temp_dir) && !mkdir($this->temp_dir, 0755, TRUE)) {
+                $this->setError(sprintf('Could not create temporary directory %s.', $this->temp_dir));
+                return FALSE;
+            }
 
-                // Check for temp directory
-                if (empty($this->tempDir) || !is_dir($this->tempDir) || !is_writable($this->tempDir)) {
-                    $this->setMessage(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->tempDir));
+            if (empty($this->temp_dir) || !is_dir($this->temp_dir) || !is_writable($this->temp_dir)) {
+                $this->setError(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->temp_dir));
+                return FALSE;
+            }
 
-                    return self::ERROR_TEMP_DIR;
-                }
+            if (empty($this->install_dir) || !is_dir($this->install_dir) || !is_writable($this->install_dir)) {
+                $this->setError(sprintf('Install directory "%s" does not exist or is not writeable!', $this->install_dir));
+                return FALSE;
+            }
 
-                // Check for install directory
-                if (empty($this->installDir) || !is_dir($this->installDir) || !is_writable($this->installDir)) {
-                    $this->setMessage(sprintf('Install directory "%s" does not exist or is not writeable!', $this->installDir));
+            $update_zip_file = $this->temp_dir.$this->update['version'].'.zip';
 
-                    return self::ERROR_INSTALL_DIR;
-                }
-
-                $updateFile = $this->tempDir.$update['version'].'.zip';
-
-                // Download update
-                if (!is_file($updateFile)) {
-                    if (!$this->downloadUpdate($update['url'], $updateFile)) {
-                        $this->setMessage(sprintf('Failed to download update from "%s" to "%s"!', $update['url'], $updateFile));
-
-                        return self::ERROR_DOWNLOAD_UPDATE;
-                    }
-
-                    $this->setMessage(sprintf('Latest update downloaded to "%s"', $updateFile));
-                } else {
-                    $this->setMessage(sprintf('Latest update already downloaded to "%s"', $updateFile));
-                }
-
-                // Install update
-                $result = $this->install($updateFile, $update['version']);
-
-                if ($result === TRUE) {
-                    $this->setMessage(sprintf('Trying to delete update file "%s" after successfull update', $updateFile));
-                    if (unlink($updateFile)) {
-                        $this->setMessage(sprintf('Update file "%s" deleted after successfull update', $updateFile));
-                    } else {
-                        $this->setMessage(sprintf('Could not delete update file "%s" after successfull update!', $updateFile));
-
-                        return self::ERROR_DELETE_TEMP_UPDATE;
-                    }
-                } else {
-                    $this->setMessage(sprintf('Trying to delete update file "%s" after failed update', $updateFile));
-                    if (unlink($updateFile)) {
-                        $this->setMessage(sprintf('Update file "%s" deleted after failed update', $updateFile));
-                    } else {
-                        $this->setMessage(sprintf('Could not delete update file "%s" after failed update!', $updateFile));
-                    }
-
+            if (!is_file($update_zip_file)) {
+                if (!$this->downloadZip($this->update['url'], $update_zip_file)) {
+                    $this->setError(sprintf('Failed to download update from %s to %s!', $this->update['url'], $update_zip_file));
                     return FALSE;
                 }
+            }
 
-                $this->setMessage('Deleting temp dir');
-                rrmdir($this->tempDir);
+            if (is_file($update_zip_file)) {
+                $this->extractFiles($update_zip_file, $this->temp_dir);
+            }
+
+            if (is_dir($this->temp_dir.'files/')) {
+                $this->copyFiles($this->temp_dir.'files/', $this->install_dir);
+            }
+
+            if (!unlink($update_zip_file)) {
+                $this->setError(sprintf('Could not delete update file "%s"!', $update_zip_file));
+            }
+
+            $this->doDbUpgrade();
+
+            if (is_dir($this->temp_dir)) {
+                rrmdir($this->temp_dir);
             }
         }
 
@@ -612,7 +399,7 @@ class AutoUpdate extends Installer\Infusions {
     private function doDbUpgrade() {
         $to_upgrade = Batch::getInstance()->check_upgrades();
         if (!empty($to_upgrade)) {
-            $this->setMessage('Running database upgrades');
+            $this->setMessage($this->locale['U_012']);
 
             foreach ($to_upgrade as $file_upgrades) {
                 if (!empty($file_upgrades)) {
@@ -620,44 +407,46 @@ class AutoUpdate extends Installer\Infusions {
                         if (!empty($upgrades)) {
                             $method = $callback_method.'_infuse';
                             if (method_exists($this, $method)) {
-                                $this->setMessage('Running method: '.$method);
                                 $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
                             }
                         }
                     }
                 }
             }
-
-            return TRUE;
         }
-
-        return NULL;
-    }
-
-    public function upgradeCms() {
-        if ($this->updateCoreFiles()) {
-            $this->setMessage('Core files updated.');
-        }
-
-        if ($this->doDbUpgrade()) {
-            $this->setMessage('Database upgraded.');
-        }
-    }
-
-    private function setMessage($message) {
-        $this->message .= $message.'<br>';
     }
 
     /**
-     * @return mixed
+     * Run upgrade
      */
-    public function getMessage() {
-        return $this->message;
+    public function upgradeCms() {
+        if ($this->updateCoreFiles() == TRUE) {
+            $this->setMessage($this->locale['U_013']);
+        } else {
+            $this->setMessage($this->locale['U_014']);
+        }
     }
-}
 
-class ParserException extends Exception {
-}
+    /**
+     * Set message
+     *
+     * @param $message
+     */
+    private function setMessage($message) {
+        $this->messages[] = $message;
+    }
 
-class DownloadException extends Exception {
+    /**
+     * @return array
+     */
+    public function getMessages() {
+        return $this->messages;
+    }
+
+    /**
+     * @param $message
+     */
+    private function setError($message) {
+        set_error(1, $message, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
+    }
 }

@@ -124,7 +124,7 @@ if (!check_admin_pass('')) {
                 });
             }
             update_checker();
-            setInterval(update_checker, 30000);
+            setInterval(update_checker, 2000);
         ');
     }
 
