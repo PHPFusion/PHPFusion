@@ -26,19 +26,17 @@ add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $
 
 opentable($locale['U_000']);
 
+$update = new PHPFusion\AutoUpdate();
+
 echo '<div class="m-b-20">';
 echo sprintf($locale['U_002'], showdate('longdate', $settings['update_last_checked']));
 echo '<a href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&force=true" class="m-l-10 btn btn-default">'.$locale['U_003'].'</a>';
 
-$enabled_languages = fusion_get_settings('enabled_languages');
-if (!empty($enabled_languages) && $enabled_languages !== 'English') {
-    if (!check_get('updatelocales')) {
-        echo '<a class="btn btn-primary m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&updatelocales=true">'.$locale['U_016'].'</a>';
-    }
+if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
+    echo '<a class="btn btn-primary m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&updatelocales=true">'.$locale['U_016'].'</a>';
 }
-echo '</div>';
 
-$update = new PHPFusion\AutoUpdate();
+echo '</div>';
 
 $update_result = $update->checkUpdate();
 
@@ -67,8 +65,7 @@ if ($update->newVersionAvailable()) {
     echo '<p class="m-t-10">'.$locale['U_008'].'</p>';
 }
 
-$enabled_languages = fusion_get_settings('enabled_languages');
-if (!empty($enabled_languages) && $enabled_languages !== 'English') {
+if (is_array($update->getEnabledLanguages())) {
     echo '<div class="m-t-20 m-b-10">';
     if (check_get('updatelocales')) {
         if ($update->updateLocales() == TRUE) {

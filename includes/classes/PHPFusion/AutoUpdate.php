@@ -378,17 +378,36 @@ class AutoUpdate extends Installer\Infusions {
     }
 
     /**
+     * Get enabled languages
+     *
+     * @return false|string[]
+     */
+    public function getEnabledLanguages() {
+        $enabled_languages = fusion_get_settings('enabled_languages');
+
+        if (!empty($enabled_languages) && $enabled_languages !== 'English') {
+            return explode('.', $enabled_languages);
+        }
+
+        return FALSE;
+    }
+
+    /**
      * Update locales
      *
      * @return bool
      */
     public function updateLocales() {
-        $enabled_languages = fusion_get_settings('enabled_languages');
+        $enabled_languages = $this->getEnabledLanguages();
 
-        if (!empty($enabled_languages) && $enabled_languages !== 'English') {
+        if (is_array($enabled_languages)) {
             $this->setMessage($this->locale['U_013']);
 
-            foreach (explode('.', $enabled_languages) as $language) {
+            foreach ($enabled_languages as $language) {
+                if ($language !== 'English') {
+                    continue;
+                }
+
                 $lang_pack_zip = $this->temp_dir.$language.'.zip';
 
                 if (!is_file($lang_pack_zip)) {
