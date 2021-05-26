@@ -1,6 +1,6 @@
 <?php
 $locale['U_000'] = "Upgrade";
-$locale['U_001'] = "Before updating, plese back up the database and files.";
+$locale['U_001'] = "Before updating, please backup the database and files.";
 $locale['U_002'] = "Last checked on %s.";
 $locale['U_003'] = "Check again";
 $locale['U_004'] = "A new update is available";
