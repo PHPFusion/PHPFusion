@@ -107,6 +107,10 @@ class CoreSettings {
                     'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
                 ],
                 [
+                    'settings_name'  => 'enabled_languages',
+                    'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
+                ],
+                [
                     'settings_name'  => 'theme',
                     'settings_value' => 'Magazine'
                 ],
@@ -473,10 +477,6 @@ class CoreSettings {
                 [
                     'settings_name'  => 'pm_save_sent',
                     'settings_value' => 2
-                ],
-                [
-                    'settings_name'  => 'enabled_languages',
-                    'settings_value' => $_GET['localeset']
                 ],
                 [
                     'settings_name'  => 'username_ban',

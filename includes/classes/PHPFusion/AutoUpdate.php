@@ -18,7 +18,6 @@
 namespace PHPFusion;
 
 use PHPFusion\Installer\Batch;
-use ZipArchive;
 
 class AutoUpdate extends Installer\Infusions {
     /**
@@ -41,7 +40,6 @@ class AutoUpdate extends Installer\Infusions {
      * @var string
      */
     private $update_url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/';
-    //private $update_url = 'http://localhost/update/';
 
     /**
      * Version filename on the server
@@ -49,6 +47,13 @@ class AutoUpdate extends Installer\Infusions {
      * @var string
      */
     private $update_file = '9.json';
+
+    /**
+     * The URL from which the translations will be downloaded
+     *
+     * @var string
+     */
+    private $lang_url = 'https://www.php-fusion.co.uk/translations/tmp/v9/';
 
     /**
      * @var string
@@ -80,6 +85,10 @@ class AutoUpdate extends Installer\Infusions {
      */
     public function __construct() {
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
+
+        if (!is_dir($this->temp_dir) && !mkdir($this->temp_dir, 0755, TRUE)) {
+            $this->setError(sprintf('Could not create temporary directory %s.', $this->temp_dir));
+        }
 
         ini_set('max_execution_time', 300);
 
@@ -265,7 +274,7 @@ class AutoUpdate extends Installer\Infusions {
     protected function extractFiles($zip_file, $dest) {
         $this->setMessage($this->locale['U_010']);
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $resource = $zip->open($zip_file);
         if ($resource !== TRUE) {
             $this->setError(sprintf('Could not open zip file "%s", error: %d', $zip_file, $resource));
@@ -321,17 +330,106 @@ class AutoUpdate extends Installer\Infusions {
     }
 
     /**
+     * @param $method
+     * @param $code_array
+     *
+     * @return bool
+     */
+    protected function doUpgradeBatch($method, $code_array) {
+        try {
+            $method = $method.'_infuse';
+            return $this->$method($code_array);
+        } catch (\Exception $e) {
+            if (!is_file(BASEDIR.'installer_'.date('d-M-Y').'.errors.log')) {
+                touch(BASEDIR.'installer_'.date('d-M-Y').'.errors.log');
+            }
+            write_file(BASEDIR.'installer_'.date('d-M-Y').'.log.txt', $e->getMessage(), FILE_APPEND);
+            return FALSE;
+        }
+    }
+
+    /**
+     * Run upgrade scripts
+     *
+     * @return bool
+     */
+    private function doDbUpgrade() {
+        $to_upgrade = Batch::getInstance()->check_upgrades();
+        if (!empty($to_upgrade)) {
+            $this->setMessage($this->locale['U_012']);
+
+            foreach ($to_upgrade as $file_upgrades) {
+                if (!empty($file_upgrades)) {
+                    foreach ($file_upgrades as $callback_method => $upgrades) {
+                        if (!empty($upgrades)) {
+                            $method = $callback_method.'_infuse';
+                            if (method_exists($this, $method)) {
+                                $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return TRUE;
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Update locales
+     *
+     * @return bool
+     */
+    public function updateLocales() {
+        $enabled_languages = fusion_get_settings('enabled_languages');
+
+        if (!empty($enabled_languages) && $enabled_languages !== 'English') {
+            $this->setMessage($this->locale['U_013']);
+
+            foreach (explode('.', $enabled_languages) as $language) {
+                $lang_pack_zip = $this->temp_dir.$language.'.zip';
+
+                if (!is_file($lang_pack_zip)) {
+                    if (!$this->downloadZip($this->lang_url.$language.'.zip', $lang_pack_zip)) {
+                        $this->setError(sprintf('Failed to download pack from %s to %s!', $this->lang_url.$language, $lang_pack_zip));
+                        return FALSE;
+                    }
+                }
+
+                $dest = $this->temp_dir.$language.'/';
+
+                if (is_file($lang_pack_zip)) {
+                    $this->extractFiles($lang_pack_zip, $dest);
+                }
+
+                if (is_dir($dest)) {
+                    $this->copyFiles($dest, $this->install_dir);
+                }
+
+                if (!unlink($lang_pack_zip)) {
+                    $this->setError(sprintf('Could not delete lang pack "%s"!', $lang_pack_zip));
+                }
+
+                if (is_dir($dest)) {
+                    rrmdir($dest);
+                }
+            }
+
+            return TRUE;
+        }
+
+        return NULL;
+    }
+
+    /**
      * Update core
      *
      * @return bool
      */
     private function updateCoreFiles() {
         if ($this->newVersionAvailable()) {
-            if (!is_dir($this->temp_dir) && !mkdir($this->temp_dir, 0755, TRUE)) {
-                $this->setError(sprintf('Could not create temporary directory %s.', $this->temp_dir));
-                return FALSE;
-            }
-
             if (empty($this->temp_dir) || !is_dir($this->temp_dir) || !is_writable($this->temp_dir)) {
                 $this->setError(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->temp_dir));
                 return FALSE;
@@ -363,7 +461,15 @@ class AutoUpdate extends Installer\Infusions {
                 $this->setError(sprintf('Could not delete update file "%s"!', $update_zip_file));
             }
 
-            $this->doDbUpgrade();
+            if (!$this->updateLocales()) {
+                $this->setError('An error occurred while updating locales.');
+                return FALSE;
+            }
+
+            if (!$this->doDbUpgrade()) {
+                $this->setError('An error occurred while upgrading the database.');
+                return FALSE;
+            }
 
             if (is_dir($this->temp_dir)) {
                 rrmdir($this->temp_dir);
@@ -374,56 +480,13 @@ class AutoUpdate extends Installer\Infusions {
     }
 
     /**
-     * @param $method
-     * @param $code_array
-     *
-     * @return bool
-     */
-    protected function doUpgradeBatch($method, $code_array) {
-        try {
-            $method = $method.'_infuse';
-            return $this->$method($code_array);
-        } catch (\Exception $e) {
-            if (!is_file(BASEDIR.'installer_'.date('d-M-Y').'.errors.log')) {
-                touch(BASEDIR.'installer_'.date('d-M-Y').'.errors.log');
-            }
-            write_file(BASEDIR.'installer_'.date('d-M-Y').'.log.txt', $e->getMessage(), FILE_APPEND);
-            return TRUE;
-        }
-
-    }
-
-    /**
-     * Run upgrade scripts
-     */
-    private function doDbUpgrade() {
-        $to_upgrade = Batch::getInstance()->check_upgrades();
-        if (!empty($to_upgrade)) {
-            $this->setMessage($this->locale['U_012']);
-
-            foreach ($to_upgrade as $file_upgrades) {
-                if (!empty($file_upgrades)) {
-                    foreach ($file_upgrades as $callback_method => $upgrades) {
-                        if (!empty($upgrades)) {
-                            $method = $callback_method.'_infuse';
-                            if (method_exists($this, $method)) {
-                                $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Run upgrade
      */
     public function upgradeCms() {
         if ($this->updateCoreFiles() == TRUE) {
-            $this->setMessage($this->locale['U_013']);
-        } else {
             $this->setMessage($this->locale['U_014']);
+        } else {
+            $this->setMessage($this->locale['U_015']);
         }
     }
 
