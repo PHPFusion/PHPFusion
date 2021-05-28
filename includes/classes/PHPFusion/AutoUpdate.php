@@ -480,9 +480,10 @@ class AutoUpdate extends Installer\Infusions {
                 $this->setError(sprintf('Could not delete update file "%s"!', $update_zip_file));
             }
 
-            if (!$this->updateLocales()) {
-                $this->setError('An error occurred while updating locales.');
-                return FALSE;
+            if (is_array($this->getEnabledLanguages())) {
+                if (!$this->updateLocales()) {
+                    $this->setError('An error occurred while updating locales.');
+                }
             }
 
             if (!$this->doDbUpgrade()) {
