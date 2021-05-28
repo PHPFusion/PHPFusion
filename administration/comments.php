@@ -21,14 +21,14 @@ pageAccess('C');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/comments.php');
 
-add_breadcrumb(['link' => ADMIN.'comments.php'.fusion_get_aidlink(), 'title' => $locale['401']]);
+add_breadcrumb(['link' => ADMIN.'comments.php'.fusion_get_aidlink(), 'title' => $locale['C_401']]);
 
-$tabs['title'][] = $locale['401'];
+$tabs['title'][] = $locale['C_401'];
 $tabs['id'][] = 'comments_listing';
 $tabs['icon'][] = 'fa fa-comment';
 
 if (check_get('comments_edit') && check_get('comment_id')) {
-    $tabs['title'][] = $locale['400'];
+    $tabs['title'][] = $locale['C_400'];
     $tabs['id'][] = 'comments_edit';
     $tabs['icon'][] = 'fa fa-edit';
 }
@@ -40,7 +40,7 @@ $tabs['icon'][] = 'fa fa-cogs';
 $allowed_sections = ['comments_listing', 'comments_edit', 'comments_settings'];
 $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'comments_listing';
 
-opentable($locale['401']);
+opentable($locale['C_401']);
 echo opentab($tabs, $sections, 'comments_listing', TRUE, 'nav-tabs');
 
 switch ($sections) {
@@ -67,7 +67,7 @@ function comments_edit() {
             ':comment_message' => $comment_message,
             ':comment_id'      => get('comment_id')
         ]);
-        addNotice('success', $locale['410']);
+        addNotice('success', $locale['C_410']);
         redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
     }
 
@@ -79,13 +79,13 @@ function comments_edit() {
         echo form_textarea('comment_message', '', $data['comment_message'], [
             'autosize' => TRUE, 'bbcode' => TRUE, 'preview' => TRUE, 'form_name' => 'comment_edit_form'
         ]);
-        echo form_button('save_comment', $locale['421'], $locale['421'], ['class' => 'btn-primary']);
+        echo form_button('save_comment', $locale['C_421'], $locale['C_421'], ['class' => 'btn-primary']);
         echo closeform();
     }
 }
 
 function comments_settings() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+    $locale = fusion_get_locale();
     $settings = fusion_get_settings();
 
     if (check_post('savesettings')) {
@@ -105,36 +105,36 @@ function comments_settings() {
                 ]);
             }
 
-            addNotice('success', $locale['900']);
+            addNotice('success', $locale['settings_updated']);
             redirect(FUSION_REQUEST);
         }
     }
 
     openside('');
     echo openform('settingsform', 'post', FUSION_REQUEST);
-    echo form_checkbox('comments_enabled', $locale['671'], $settings['comments_enabled'], [
+    echo form_checkbox('comments_enabled', $locale['C_440'], $settings['comments_enabled'], [
         'toggle' => TRUE
     ]);
-    echo form_checkbox('guestposts', $locale['655'], $settings['guestposts'], [
+    echo form_checkbox('guestposts', $locale['C_441'], $settings['guestposts'], [
         'toggle' => TRUE
     ]);
-    echo form_checkbox('comments_avatar', $locale['656'], $settings['comments_avatar'], [
+    echo form_checkbox('comments_avatar', $locale['C_442'], $settings['comments_avatar'], [
         'toggle' => TRUE
     ]);
-    echo form_text('comments_per_page', $locale['913'], $settings['comments_per_page'], [
+    echo form_text('comments_per_page', $locale['C_443'], $settings['comments_per_page'], [
         'error_text'  => $locale['error_value'],
         'type'        => 'number',
         'inner_width' => '150px',
         'inline'      => TRUE
     ]);
 
-    echo form_checkbox('comments_sorting', $locale['684'], $settings['comments_sorting'], [
-        'options' => ['ASC' => $locale['685'], 'DESC' => $locale['686']],
+    echo form_checkbox('comments_sorting', $locale['C_444'], $settings['comments_sorting'], [
+        'options' => ['ASC' => $locale['C_445'], 'DESC' => $locale['C_446']],
         'type'    => 'radio',
         'inline'  => TRUE
     ]);
 
-    echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+    echo form_button('savesettings', $locale['save_settings'], $locale['save_settings'], ['class' => 'btn-success']);
     echo closeform();
     closeside();
 }
@@ -147,7 +147,7 @@ function comments_listing() {
 
     if (check_get('action') && get('action') == 'delete' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
-        addNotice('success', $locale['411']);
+        addNotice('success', $locale['C_411']);
         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
     }
 
@@ -162,14 +162,14 @@ function comments_listing() {
             'blacklist_ip'        => $data['comment_ip'],
             'blacklist_ip_type'   => $data['comment_ip_type'],
             'blacklist_email'     => '',
-            'blacklist_reason'    => $locale['436'],
+            'blacklist_reason'    => $locale['C_436'],
             'blacklist_datestamp' => time()
         ];
 
         dbquery_insert(DB_BLACKLIST, $info, 'save');
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
 
-        addNotice('success', $locale['412']);
+        addNotice('success', $locale['C_412']);
         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
     }
 
@@ -201,22 +201,22 @@ function comments_listing() {
         echo '<div class="list-group">';
         while ($data = dbarray($result)) {
             $edit = FUSION_SELF.fusion_get_aidlink()."&section=comments_edit&comment_id=".$data['comment_id'];
-            $delete = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delete&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['433']."');\"";
-            $delete_ban = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delban&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['435']."');\"";
+            $delete = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delete&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['C_433']."');\"";
+            $delete_ban = FUSION_SELF.fusion_get_aidlink()."&section=comments_listing&action=delban&comment_id=".$data['comment_id']."' onclick=\"return confirm('".$locale['C_435']."');\"";
 
             echo "<div class='list-group-item'>\n";
             echo "<div class='btn-group pull-right-lg m-b-10'>\n";
             echo "<a class='btn btn-xs btn-default' href='".$edit."'>".$locale['edit']."</a>\n";
             echo "<a class='btn btn-xs btn-default' href='".$delete."'>".$locale['delete']."</a>\n";
             if (!empty($data['user_id']) && $data['user_id'] != 1) {
-                echo "<a class='btn btn-xs btn-default' href='".$delete_ban."'>".$locale['431']."</a>\n";
+                echo "<a class='btn btn-xs btn-default' href='".$delete_ban."'>".$locale['C_431']."</a>\n";
             }
             echo "</div>\n";
 
             echo '<div>';
             echo $data['user_name'] ? profile_link($data['comment_name'], $data['user_name'], $data['user_status']) : $data['comment_name'];
             echo ' '.$locale['global_071'].showdate('longdate', $data['comment_datestamp']);
-            echo "<span class='label label-default m-l-10'>".$locale['432']." ".$data['comment_ip']."</span>";
+            echo "<span class='label label-default m-l-10'>".$locale['C_432']." ".$data['comment_ip']."</span>";
             echo '</div>';
 
             echo !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "";
@@ -232,7 +232,7 @@ function comments_listing() {
             echo '</div>';
         }
     } else {
-        echo "<div class='alert alert-info text-center'>".$locale['434']."</div>";
+        echo "<div class='alert alert-info text-center'>".$locale['C_434']."</div>";
     }
 }
 

@@ -109,8 +109,7 @@ $locale['651'] = "Bad words list:";
 $locale['652'] = "Enter one word per line.";
 $locale['653'] = "Leave empty if not required.";
 $locale['654'] = "Bad word replacement:";
-$locale['655'] = "Allow Guests to post?";
-$locale['656'] = "Enable avatar comments?";
+
 $locale['657'] = "Maintenance mode:";
 $locale['658'] = "Maintenance mode message:";
 $locale['659'] = "Bad words filter enabled?";
@@ -145,7 +144,7 @@ $locale['669'] = "News";
 $locale['669b'] = "Blog items per page";
 $locale['669c'] = "News items per page";
 $locale['670'] = "Should be an uneven number";
-$locale['671'] = "Enable comment system?";
+
 $locale['672'] = "Enable ratings system?";
 $locale['673'] = "Hide user profiles from public";
 $locale['674'] = "SMTP Port";
@@ -158,9 +157,7 @@ $locale['680'] = "Flood Auto Ban";
 $locale['681'] = "Maintenance";
 $locale['682'] = "Flood Settings";
 $locale['683'] = "Security Settings";
-$locale['684'] = "Comments Sorting";
-$locale['685'] = "Ascending";
-$locale['686'] = "Descending";
+
 $locale['687'] = "Bad Words";
 $locale['688'] = "Display render time";
 $locale['689'] = "Yes (all visitors)";
@@ -171,8 +168,6 @@ $locale['693'] = "Captcha";
 $locale['694'] = "Allow PHP Execution";
 $locale['695'] = "WARNING! Allowing PHP execution will open the system to SQL vulnerabilities.";
 $locale['696'] = "Please enter your public and private reCAPTCHA key!";
-
-$locale['913'] = "Base Comments per Page";
 
 $locale['955'] = "Original";
 $locale['956'] = "Square";
@@ -249,11 +244,6 @@ $locale['1030'] = "Create OpenGraph meta tags for Social networks";
 $locale['1031'] = "Allow index URLs in BB Codes";
 $locale['1032'] = "Allow index URLs in user profiles";
 
-$locale['error_rate'] = "Please enter a Rate.";
-$locale['error_type'] = "Please enter Extension Type.";
-$locale['error_width'] = "Please enter Width.";
-$locale['error_height'] = "Please enter Height.";
-$locale['error_value'] = "Please enter a value.";
 $locale['blog_description'] = "The configuration settings for Blog system";
 $locale['news_description'] = "The configuration settings for News system";
 $locale['forum_description'] = "The configuration settings for Forum system";

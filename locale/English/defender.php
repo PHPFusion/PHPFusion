@@ -84,6 +84,12 @@ $locale['df_422'] = "Unknown error (Query)";
 $locale['df_423'] = "File was not uploaded properly. Please try again";
 $locale['df_424'] = "Current upload files is more than the maximum limit. Please try again and attach less files.";
 
+$locale['error_rate'] = "Please enter a Rate.";
+$locale['error_type'] = "Please enter Extension Type.";
+$locale['error_width'] = "Please enter Width.";
+$locale['error_height'] = "Please enter Height.";
+$locale['error_value'] = "Please enter a value.";
+
 // ReCaptcha
 $locale['grecaptcha'] = "Google Recaptcha v2";
 $locale['grecaptcha3'] = "Google Recaptcha v3";
