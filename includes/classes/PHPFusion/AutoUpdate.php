@@ -482,7 +482,7 @@ class AutoUpdate extends Installer\Infusions {
 
             if (is_array($this->getEnabledLanguages())) {
                 if (!$this->updateLocales()) {
-                    $this->setError('An error occurred while updating locales.');
+                    $this->setError('An error occurred while updating the translations. After the update, you can update the translations separately.');
                 }
             }
 
