@@ -177,9 +177,6 @@ class PanelsAdministration {
                 // show on homepage only
                 $this->data['panel_display'] = 0;
                 $this->data['panel_url_list'] = '';
-                if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-                    $this->data['panel_url_list'] = fusion_get_settings('opening_page'); // because 1 and 4 directly overide panel_display.
-                }
             } else {
                 // require panel_url_list in this case
                 $this->data['panel_url_list'] = sanitizer('panel_url_list', '', 'panel_url_list');
