@@ -51,12 +51,14 @@ class Text extends \Defender\Validation {
                         return self::$inputDefault;
                     }
                 }
-                $value = stripinput(trim(preg_replace("/ +/i", " ", $val)));
+                $value = trim(preg_replace("/ +/i", " ", $val));
                 if (self::$inputConfig['censor_words']) {
                     $value = censorwords($value);
                 }
                 if (self::$inputConfig['descript']) {
                     $value = descript($value);
+                } else {
+                    $value = stripinput($value);
                 }
                 $vars[] = $value;
             }
@@ -71,12 +73,16 @@ class Text extends \Defender\Validation {
                     return FALSE;
                 }
             }
-            $value = stripinput(trim(preg_replace("/ +/i", " ", self::$inputValue)));
+
+            $value = trim(preg_replace("/ +/i", " ", self::$inputValue));
+
             if (self::$inputConfig['censor_words']) {
                 $value = censorwords($value);
             }
             if (self::$inputConfig['descript']) {
                 $value = descript($value);
+            } else {
+                $value = stripinput($value);
             }
         }
         if (self::$inputConfig['required'] && !$value) {
