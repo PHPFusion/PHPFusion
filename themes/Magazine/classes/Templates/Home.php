@@ -21,9 +21,11 @@ class Home {
     public static function displayHome($info) {
         if (!empty($info)) {
             // Push News to top
-            $temp = [DB_NEWS => $info[DB_NEWS]];
-            unset($info[DB_NEWS]);
-            $info = $temp + $info;
+            if (defined('NEWS_EXISTS')) {
+                $temp = [DB_NEWS => $info[DB_NEWS]];
+                unset($info[DB_NEWS]);
+                $info = $temp + $info;
+            }
 
             foreach ($info as $module) {
                 echo '<h2>'.$module['blockTitle'].'</h2>';
