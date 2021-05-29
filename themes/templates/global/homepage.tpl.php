@@ -78,7 +78,7 @@ if (!function_exists('display_home')) {
             ');
 
             // Push News to top
-            if (defined('NEWS_EXISTS')) {
+            if (!empty($info[DB_NEWS])) {
                 $temp = [DB_NEWS => $info[DB_NEWS]];
                 unset($info[DB_NEWS]);
                 $info = $temp + $info;
