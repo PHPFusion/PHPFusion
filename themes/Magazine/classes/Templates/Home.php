@@ -21,7 +21,7 @@ class Home {
     public static function displayHome($info) {
         if (!empty($info)) {
             // Push News to top
-            if (defined('NEWS_EXISTS')) {
+            if (defined('NEWS_EXISTS') && !empty($info[DB_NEWS])) {
                 $temp = [DB_NEWS => $info[DB_NEWS]];
                 unset($info[DB_NEWS]);
                 $info = $temp + $info;
