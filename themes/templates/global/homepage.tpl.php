@@ -78,9 +78,11 @@ if (!function_exists('display_home')) {
             ');
 
             // Push News to top
-            $temp = [DB_NEWS => $info[DB_NEWS]];
-            unset($info[DB_NEWS]);
-            $info = $temp + $info;
+            if (defined('NEWS_EXISTS')) {
+                $temp = [DB_NEWS => $info[DB_NEWS]];
+                unset($info[DB_NEWS]);
+                $info = $temp + $info;
+            }
 
             foreach ($info as $module) {
                 opentable($module['blockTitle']);
