@@ -24,8 +24,8 @@ class panelWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
         return fusion_get_locale('PW_0222', WIDGETS."panel/locale/".LANGUAGE.".php").": ".$panelData['panel_include'];
     }
 
-    public function display_widget($colData) {
-        $panelData = \defender::unserialize($colData['page_content']);
+    public function display_widget($columnData) {
+        $panelData = \defender::unserialize($columnData['page_content']);
         $panelPath = INFUSIONS.$panelData['panel_include']."/".$panelData['panel_include'].".php";
         if (!empty($panelData['panel_include']) && file_exists($panelPath)) {
             require_once $panelPath;

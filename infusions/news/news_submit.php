@@ -93,28 +93,36 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
         ];
         if (\defender::safe() && isset($_POST['preview_news'])) {
             $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['news_subject']);
-            $footer .= parse_textarea($criteriaArray['news_news'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
+            $footer .= parse_text($criteriaArray['news_news'], [
+                'parse_smileys'        => FALSE,
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => IMAGES_N,
+                'add_line_breaks'      => TRUE
+            ]);
             if ($criteriaArray['news_extended']) {
                 $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                $footer .= parse_textarea($criteriaArray['news_extended'], FALSE, FALSE, TRUE, IMAGES_N, TRUE);
+                $footer .= parse_text($criteriaArray['news_extended'], [
+                    'parse_smileys'        => FALSE,
+                    'parse_bbcode'         => FALSE,
+                    'default_image_folder' => IMAGES_N,
+                    'add_line_breaks'      => TRUE
+                ]);
             }
             $footer .= closemodal();
             add_to_footer($footer);
         }
     }
 
+    add_to_title($locale['news_0400']);
+
     if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
-        add_to_title($locale['news_0400']);
         echo strtr(display_news_confirm_submissions(), [
             '{%title%}'       => $locale['news_0400'],
             '{%message%}'     => $locale['news_0701'],
             '{%submit_link%}' => "<a href='".BASEDIR."submit.php?stype=n'>".$locale['news_0702']."</a>",
             '{%index_link%}'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['news_0704'])."</a>",
         ]);
-
     } else {
-        add_to_title($locale['news_0400']);
-
         $info = [
             'guidelines'             => str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['news_0703']),
             'news_subject_field'     => form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'],

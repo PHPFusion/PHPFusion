@@ -70,10 +70,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['blog_i
         $result = dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='".$del_data['blog_id']."' and comment_type='B'");
         $result = dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='".$del_data['blog_id']."' and rating_type='B'");
         addNotice('success', $locale['blog_0412']);
-        redirect(FUSION_SELF.$aidlink);
-    } else {
-        redirect(FUSION_SELF.$aidlink);
     }
+    redirect(FUSION_SELF.$aidlink);
 }
 $allowed_pages = [
     "blog", "blog_category", "blog_form", "submissions", "settings"
@@ -178,9 +176,7 @@ function blog_listing() {
         echo "<ul aria-labelledby='ddfilter' class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: scroll'>\n";
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
-            echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
-                    ["section", "rowstart", "aid"],
-                    TRUE)."'>\n";
+            echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, ["section", "rowstart", "aid"])."'>\n";
             echo $catName;
             echo "</a>\n</li>\n";
         }
@@ -226,7 +222,7 @@ function blog_listing() {
                 }
                 echo "</div>\n";
             }
-            $blogText = strip_tags(parse_textarea($data2['blog_blog']));
+            $blogText = strip_tags(parse_text($data2['blog_blog']));
             echo fusion_first_words($blogText, '50');
             echo "<div class='block m-t-10'><a href='".FUSION_SELF.$aidlink."&amp;action=edit&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."'>".$locale['edit']."</a> -\n";
             echo "<a href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;section=blog_form&amp;blog_id=".$data2['blog_id']."' onclick=\"return confirm('".$locale['blog_0451']."');\">".$locale['delete']."</a> -\n";

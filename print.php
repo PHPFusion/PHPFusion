@@ -77,10 +77,10 @@ if (isset($_GET['type'])) {
             if (dbrows($result)) {
                 $data = dbarray($result);
                 $res = TRUE;
-                $article = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['article_article']));
-                if ($data['article_breaks'] == "y") {
-                    $article = nl2br($article);
-                }
+                $article = str_replace("<--PAGEBREAK-->", "", parse_text($data['article_article'], [
+                    'parse_bbcode'    => FALSE,
+                    'add_line_breaks' => $data['article_breaks'] == 'y'
+                ]));
                 echo "<strong>".$data['article_subject']."</strong><br />\n";
                 echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
                 echo "<hr />".$article."\n";
@@ -103,17 +103,10 @@ if (isset($_GET['type'])) {
                 $data = dbarray($result);
                 if (checkgroup($data['blog_visibility'])) {
                     $res = TRUE;
-                    $blog = parse_textarea($data['blog_blog']);
-                    if ($data['blog_breaks'] == "y") {
-                        $blog = nl2br($blog);
-                    }
+                    $blog = parse_text($data['blog_blog'], ['parse_bbcode' => FALSE, 'add_line_breaks' => $data['blog_breaks'] == 'y']);
+                    $blog_extended = "";
                     if ($data['blog_extended']) {
-                        $blog_extended = parse_textarea($data['blog_extended']);
-                        if ($data['blog_breaks'] == "y") {
-                            $blog_extended = nl2br($blog_extended);
-                        }
-                    } else {
-                        $blog_extended = "";
+                        $blog_extended = parse_text($data['blog_extended'], ['parse_bbcode' => FALSE, 'add_line_breaks' => $data['blog_breaks'] == 'y']);
                     }
                     echo "<strong>".$data['blog_subject']."</strong><br />\n";
                     echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']))."</span>\n";
@@ -141,10 +134,11 @@ if (isset($_GET['type'])) {
             if (dbrows($result)) {
                 $data = dbarray($result);
                 $res = TRUE;
-                $faq = str_replace("<--PAGEBREAK-->", "", parse_textarea($data['faq_answer']));
-                if ($data['faq_breaks'] == "y") {
-                    $faq = nl2br($faq);
-                }
+                $faq = str_replace("<--PAGEBREAK-->", "", parse_text($data['faq_answer'], [
+                    'parse_bbcode'    => FALSE,
+                    'add_line_breaks' => $data['faq_breaks'] == 'y'
+                ]));
+
                 echo "<strong>".$data['faq_question']."</strong><br />\n";
                 echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']))."</span>\n";
                 echo "<hr />".$faq."\n";
@@ -175,7 +169,7 @@ if (isset($_GET['type'])) {
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
                         echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
-                        echo parse_textarea($data['post_message'], TRUE, TRUE, FALSE);
+                        echo parse_text($data['post_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]);
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
                             echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
@@ -184,9 +178,6 @@ if (isset($_GET['type'])) {
                         echo "</div>\n";
                         echo "<br />\n";
                     }
-                }
-                if (!$res) {
-                    redirect($settings['opening_page']);
                 }
             } else {
                 $posts_per_page = 20;
@@ -215,7 +206,7 @@ if (isset($_GET['type'])) {
                             }
                             echo "<div style='margin-left:20px'>\n";
                             echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
-                            echo parse_textarea($data['post_message'], TRUE, TRUE, FALSE);
+                            echo parse_text($data['post_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]);
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
                                 echo $locale['503'].$data['edit_name'].$locale['502'].showdate("forumdate", $data['post_edittime']);
@@ -227,9 +218,9 @@ if (isset($_GET['type'])) {
                         }
                     }
                 }
-                if (!$res) {
-                    redirect($settings['opening_page']);
-                }
+            }
+            if (!$res) {
+                redirect($settings['opening_page']);
             }
             break;
         case "N":
@@ -246,15 +237,9 @@ if (isset($_GET['type'])) {
                 $data = dbarray($result);
                 if (checkgroup($data['news_visibility'])) {
                     $res = TRUE;
-                    $news = parse_textarea($data['news_news']);
-                    if ($data['news_breaks'] == "y") {
-                        $news = nl2br($news);
-                    }
+                    $news = parse_text($data['news_news'], ['parse_bbcode' => FALSE, 'add_line_breaks' => $data['news_breaks'] == 'y']);
                     if ($data['news_extended']) {
-                        $news_extended = parse_textarea($data['news_extended']);
-                        if ($data['news_breaks'] == "y") {
-                            $news_extended = nl2br($news_extended);
-                        }
+                        $news_extended = parse_text($data['news_extended'], ['parse_bbcode' => FALSE, 'add_line_breaks' => $data['news_breaks'] == 'y']);
                     } else {
                         $news_extended = "";
                     }
@@ -274,14 +259,14 @@ if (isset($_GET['type'])) {
             if ($settings['enable_terms'] == 1) {
                 echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
                 echo "<small>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."<small>\n";
-                echo "<hr />".parse_textarea(\PHPFusion\QuantumFields::parse_label($settings['license_agreement']))."\n";
+                echo "<hr />".parse_text(\PHPFusion\QuantumFields::parse_label($settings['license_agreement']), ['add_line_breaks' => TRUE])."\n";
             } else {
                 redirect($settings['opening_page']);
             }
             break;
         case "P":
             echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-            echo "<hr />".parse_textarea(\PHPFusion\QuantumFields::parse_label($settings['privacy_policy']))."\n";
+            echo "<hr />".parse_text(\PHPFusion\QuantumFields::parse_label($settings['privacy_policy']), ['add_line_breaks' => TRUE])."\n";
             break;
     }
 } else {

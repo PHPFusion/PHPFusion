@@ -140,7 +140,12 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                     $footer = openmodal("faq_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$SaveinputArray['faq_question']);
                     if ($SaveinputArray['faq_answer']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= parse_textarea($SaveinputArray['faq_answer'], FALSE, FALSE, TRUE, NULL, $SaveinputArray['faq_breaks'] == "y");
+                        $footer .= parse_text($SaveinputArray['faq_answer'], [
+                            'parse_smileys'        => FALSE,
+                            'parse_bbcode'         => FALSE,
+                            'default_image_folder' => NULL,
+                            'add_line_breaks'      => $SaveinputArray['faq_breaks'] == 'y'
+                        ]);
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
@@ -195,7 +200,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 ?>
             </div>
         </div>
-        <?php self::displayFormButtons('formstart', TRUE); ?>
+        <?php self::displayFormButtons('formstart'); ?>
 
         <!-- Display Form -->
         <div class="row">

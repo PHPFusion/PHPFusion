@@ -64,7 +64,7 @@ echo opentab($tab, $_GET['section'], "download_admin", TRUE, "", "section", ['ro
 
 switch ($_GET['section']) {
     case "download_form":
-        if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "")) {
+        if (dbcount("('download_cat_id')", DB_DOWNLOAD_CATS)) {
             include "admin/downloads.php";
         } else {
             echo "<div class='well text-center m-t-20'>\n";
@@ -100,7 +100,7 @@ function download_listing() {
     $locale = fusion_get_locale();
 
     $limit = 15;
-    $total_rows = dbcount("(download_id)", DB_DOWNLOADS, "");
+    $total_rows = dbcount("(download_id)", DB_DOWNLOADS);
     $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
 
     // add a filter browser
@@ -150,9 +150,7 @@ function download_listing() {
         echo "<ul aria-labelledby='ddfilter' class='dropdown-menu' style='max-height:180px; width:200px; overflow-y: auto'>\n";
         foreach ($catOpts as $catID => $catName) {
             $active = isset($_GET['filter_cid']) && $_GET['filter_cid'] == $catID;
-            echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID,
-                    ["section", "rowstart", "aid"],
-                    TRUE)."'>\n";
+            echo "<li".($active ? " class='active'" : "").">\n<a class='text-smaller' href='".clean_request("filter_cid=".$catID, ["section", "rowstart", "aid"])."'>\n";
             echo $catName;
             echo "</a>\n</li>\n";
         }
@@ -160,7 +158,7 @@ function download_listing() {
         echo "</div>\n";
     }
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"])."&amp;");
     }
     echo "</div>\n";
 
@@ -188,7 +186,7 @@ function download_listing() {
             echo '</div>';
 
             echo '<div class="clearfix">';
-            $dlText = strip_tags(parse_textarea($data2['download_description_short']));
+            $dlText = strip_tags(parse_text($data2['download_description_short']));
             echo fusion_first_words($dlText, '50');
             echo '</div>';
 
@@ -208,6 +206,6 @@ function download_listing() {
     echo "</ul>\n";
 
     if ($total_rows > $rows) {
-        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"], TRUE)."&amp;");
+        echo makepagenav($rowstart, $limit, $total_rows, $limit, clean_request("", ["aid", "section"])."&amp;");
     }
 }

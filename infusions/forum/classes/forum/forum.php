@@ -167,8 +167,8 @@ class Forum extends ForumServer {
                     $this->forum_info['post_count'] = dbcount("(post_id)", DB_FORUM_POSTS, "forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]);
                     $this->forum_info['forum_postcount_word'] = format_word($this->forum_info['post_count'], $locale['fmt_post']);
 
-                    $this->forum_info['forum_description'] = parse_textarea($this->forum_info['forum_description'], TRUE, TRUE);
-                    $this->forum_info['forum_rules'] = parse_textarea($this->forum_info['forum_rules'], TRUE, TRUE);
+                    $this->forum_info['forum_description'] = parse_text($this->forum_info['forum_description'], ['decode' => FALSE]);
+                    $this->forum_info['forum_rules'] = parse_text($this->forum_info['forum_rules'], ['decode' => FALSE]);
 
                     if (!empty($this->forum_info['forum_description'])) {
                         set_meta('description', str_replace("\n", ' ', strip_tags($this->forum_info['forum_description'])));
@@ -564,7 +564,7 @@ class Forum extends ForumServer {
                 $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
                 $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
                 if ($data['thread_lastpost'] > $last_visited) {
-                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\\.|{$forum_match}$)", $userdata['user_threads']))) {
+                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\\.|{$forum_match}$)", $userdata['user_threads']))) {
                         $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
                     }
                 }
@@ -619,7 +619,7 @@ class Forum extends ForumServer {
             }
         }
 
-        return (array)$index;
+        return $index;
     }
 
     public function getSubForums($forum_id) {
@@ -668,7 +668,7 @@ class Forum extends ForumServer {
                     $forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
                     $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
                     if ($row['forum_lastpost'] > $last_visited) {
-                        if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("({$forum_match}\.|{$forum_match}$)", $userdata['user_threads']))) {
+                        if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\.|{$forum_match}$)", $userdata['user_threads']))) {
                             $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
                         }
                     }

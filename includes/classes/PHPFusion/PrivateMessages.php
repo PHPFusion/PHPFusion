@@ -310,8 +310,6 @@ class PrivateMessages {
             }
 
         } else {
-
-            $result = NULL;
             if ($to <= USER_LEVEL_MEMBER && $to >= USER_LEVEL_SUPER_ADMIN) { // -101, -102, -103 only
                 $result = dbquery("SELECT user_id FROM ".DB_USERS." WHERE user_level <=:level AND user_status=:status", [':level' => $to, ':status' => '0']);
             } else {
@@ -409,7 +407,12 @@ class PrivateMessages {
                         'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                         'name'           => $data['message_subject'],
                         'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                        'message_text'   => parse_textarea($data['message_message'], $data['message_smileys'] == "y", TRUE, FALSE, NULL, TRUE)
+                        'message_text'   => parse_text($data['message_message'], [
+                            'parse_smileys'        => $data['message_smileys'] == 'y',
+                            'decode'               => FALSE,
+                            'default_image_folder' => NULL,
+                            'add_line_breaks'      => TRUE
+                        ])
                     ];
                     $this->info['items'][$data['message_id']] = $data;
                 }
@@ -460,7 +463,12 @@ class PrivateMessages {
                 'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
                 'name'           => $data['message_subject'],
                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
-                'message_text'   => parse_textarea($data['message_message'], $data['message_smileys'] == "y", TRUE, FALSE, NULL, TRUE)
+                'message_text'   => parse_text($data['message_message'], [
+                    'parse_smileys'        => $data['message_smileys'] == 'y',
+                    'decode'               => FALSE,
+                    'default_image_folder' => NULL,
+                    'add_line_breaks'      => TRUE
+                ])
             ];
 
             $this->info['items'][$data['message_id']] = $data;
@@ -515,8 +523,6 @@ class PrivateMessages {
 
     /**
      * Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
-     *
-     * @return string
      */
     private function set_action_menu() {
         if (isset($_GET['msg_read'])) {
@@ -534,7 +540,7 @@ class PrivateMessages {
             }
 
             $this->info['actions_form'] = [
-                'openform'    => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', ''),
+                'openform'    => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM'),
                 'check'       => [
                     'check_all_pm'    => $this->locale['418'],
                     'check_unread_pm' => $this->locale['415'],
@@ -550,8 +556,6 @@ class PrivateMessages {
                 'closeform'   => closeform()
             ];
         }
-
-        return NULL;
     }
 
     /**
@@ -585,11 +589,11 @@ class PrivateMessages {
             $_GET['msg_to_group'] = $_POST['msg_to_group'];
         }
 
-        $unread_inbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_read=0 AND message_folder=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+        //$unread_inbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_read=0 AND message_folder=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
         $total_inbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
-        $unread_outbox = dbcount("(message_id)", DB_MESSAGES, "message_to=:mto AND message_folder=1 AND message_read=0", [':mto' => $userdata['user_id']]);
+        //$unread_outbox = dbcount("(message_id)", DB_MESSAGES, "message_to=:mto AND message_folder=1 AND message_read=0", [':mto' => $userdata['user_id']]);
         $total_outbox = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=1", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
-        $unread_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2 AND message_read=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
+        //$unread_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2 AND message_read=0", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
         $total_arc = dbcount("(message_id)", DB_MESSAGES, "message_user=:muser AND message_to=:mto AND message_folder=2", [':muser' => $userdata['user_id'], ':mto' => $userdata['user_id']]);
 
         $inbox_limit = user_pm_settings($userdata['user_id'], 'user_inbox');
@@ -606,12 +610,12 @@ class PrivateMessages {
                 'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404'], 'icon' => 'fa fa-archive'],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425'], 'icon' => 'fa fa-cog'],
             ],
-            'inbox_limit'   => (int)$inbox_limit,
-            'outbox_limit'  => (int)$outbox_limit,
-            'archive_limit' => (int)$archive_limit,
-            'inbox_count'   => (int)$total_inbox,
-            'outbox_count'  => (int)$total_outbox,
-            'archive_count' => (int)$total_arc,
+            'inbox_limit'   => $inbox_limit,
+            'outbox_limit'  => $outbox_limit,
+            'archive_limit' => $archive_limit,
+            'inbox_count'   => $total_inbox,
+            'outbox_count'  => $total_outbox,
+            'archive_count' => $total_arc,
             'inbox_total'   => $total_inbox."/".($inbox_limit == 0 ? '&#8734;' : $inbox_limit),
             'outbox_total'  => $total_outbox."/".($outbox_limit == 0 ? '&#8734;' : $outbox_limit),
             'archive_total' => $total_arc."/".($archive_limit == 0 ? '&#8734;' : $archive_limit),
@@ -633,8 +637,6 @@ class PrivateMessages {
 
     /**
      * Private message main viewer
-     *
-     * @return string|void
      */
     public function View() {
 
@@ -676,7 +678,7 @@ class PrivateMessages {
             $this->set_action_menu();
         }
 
-        return display_inbox($this->info);
+        display_inbox($this->info);
 
     }
 
@@ -750,7 +752,7 @@ class PrivateMessages {
     private function do_mark() {
         $userdata = fusion_get_userdata();
 
-        switch (form_sanitizer($_POST['mark'], "")) {
+        switch (form_sanitizer($_POST['mark'])) {
             case "mark_all": // mark all as read
                 if (!empty($this->info['items'])) {
                     foreach ($this->info['items'] as $message_id => $array) {
@@ -832,7 +834,7 @@ class PrivateMessages {
                 if (iADMIN && isset($_POST['chk_sendtoall']) && $this->data['msg_group_send']) {
                     self::send_pm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
                 } else {
-                    self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], FALSE);
+                    self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys']);
                 }
 
                 if (self::$is_sent == TRUE) {
@@ -862,13 +864,13 @@ class PrivateMessages {
                 'height'      => '300px',
                 'form_name'   => 'inputform',
                 'bbcode'      => TRUE,
-                "deactivate"  => ($show_form ? FALSE : TRUE)
+                "deactivate"  => !$show_form
             ]).form_button('send_message', $this->locale['430'], $this->locale['430'], [
                 'class'      => 'btn btn-primary m-r-10',
-                "deactivate" => ($show_form ? FALSE : TRUE),
+                "deactivate" => !$show_form,
             ]).form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], [
                 'class'      => 'btn-link',
-                "deactivate" => ($show_form ? FALSE : TRUE),
+                "deactivate" => !$show_form,
             ]).closeform();
     }
 

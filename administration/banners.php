@@ -42,7 +42,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
             if ($settings['allow_php_exe']) {
                 $modal .= eval("?>".stripslashes($settings_main['sitebanner1'])."<?php ");
             } else {
-                $modal .= parse_textarea($settings_main['sitebanner1'], FALSE, FALSE);
+                $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
             }
         }
         $modal .= fusion_get_function('closeside', '');
@@ -51,7 +51,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
             if ($settings['allow_php_exe']) {
                 $modal .= eval("?>".stripslashes($settings_main['sitebanner2'])."<?php ");
             } else {
-                $modal .= parse_textarea($settings_main['sitebanner2'], FALSE, FALSE);
+                $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
             }
         }
         $modal .= fusion_get_function('closeside', '');

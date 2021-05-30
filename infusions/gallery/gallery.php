@@ -26,7 +26,7 @@ include INFUSIONS."gallery/templates/gallery.tpl.php";
 require_once INCLUDES."infusions_include.php";
 
 if (!defined('SAFEMODE')) {
-    define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+    define("SAFEMODE", (bool)@ini_get("safe_mode"));
 }
 
 $gallery_settings = get_settings("gallery");
@@ -137,7 +137,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             ];
         }
         $info += [
-            'photo_description' => $data['photo_description'] ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE, FALSE)) : '',
+            'photo_description' => $data['photo_description'] ? parse_text($data['photo_description'], [
+                'decode'          => FALSE,
+                'add_line_breaks' => TRUE
+            ]) : '',
             'photo_byte'        => parsebytesize(filesize($photo_path['photo_filename'])),
             'photo_comment'     => $data['photo_allow_comments'] ? number_format($data['comments_count']) : 0,
             'photo_ratings'     => $data['photo_allow_ratings'] && $data['count_votes'] > 0 ? number_format(ceil($data['sum_rating'] / $data['count_votes'])) : '0'
@@ -179,7 +182,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         redirect(INFUSIONS.'gallery/gallery.php');
     }
 } else {
-
     if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
 
         /* View Album */
@@ -211,6 +213,10 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
                 'name' => $info['album_title']
             ];
+            $info['album_description'] = parse_text($info['album_description'], [
+                'parse_smileys' => FALSE,
+                'decode'        => FALSE
+            ]);
             $info['max_rows'] = dbcount("(photo_id)", DB_PHOTOS, "album_id='".$_GET['album_id']."'");
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
             if ($info['max_rows'] > 0) {
@@ -223,7 +229,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     ORDER BY photo_datestamp DESC LIMIT 1", [':albumid' => intval($_GET['album_id'])]));
                 $info['album_stats'] = $locale['gallery_422']." ".$info['max_rows']."<br />\n";
                 $info['album_stats'] .= $locale['gallery_423']." ".profile_link($latest_update['user_id'], $latest_update['user_name'], $latest_update['user_status'])." ".$locale['gallery_424']." ".showdate("longdate", $latest_update['photo_datestamp'])."\n";
-                $info['album_description'] = parse_textarea($info['album_description'], FALSE, TRUE, FALSE);
                 $pattern = "SELECT %s(pr.rating_vote) FROM ".DB_RATINGS." AS pr WHERE pr.rating_item_id = p.photo_id AND pr.rating_type = 'P'";
                 $sql_count = sprintf($pattern, 'COUNT');
                 $sql_sum = sprintf($pattern, 'SUM');
@@ -251,8 +256,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 'name' => $data['photo_title']
                             ],
                             'image'       => displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], $data['album_id']),
-                            'title'       => ($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'],
-                            'description' => ($data['photo_description']) ? nl2br(parse_textarea($data['photo_description'], FALSE, TRUE, FALSE)) : '',
+                            'title'       => !empty($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'],
+                            'description' => !empty($data['photo_description']) ? parse_text($data['photo_description'], [
+                                'parse_bbcode'    => TRUE,
+                                'decode'          => FALSE,
+                                'add_line_breaks' => TRUE
+                            ]) : '',
                             'photo_views' => format_word($data['photo_views'], $locale['fmt_views'])
                         ];
                         if (iADMIN && checkrights("PH")) {
@@ -309,9 +318,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         $info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['max_rows'] ? $_GET['rowstart'] : 0;
         if ($info['max_rows'] > 0) {
-            $info['page_nav'] = ($info['max_rows'] > $gallery_settings['gallery_pagination']) ? makepagenav($_GET['rowstart'],
-                $gallery_settings['gallery_pagination'],
-                $info['max_rows'], 3) : '';
+            $info['page_nav'] = ($info['max_rows'] > $gallery_settings['gallery_pagination']) ? makepagenav($_GET['rowstart'], $gallery_settings['gallery_pagination'], $info['max_rows']) : '';
             $result = dbquery("SELECT ta.album_id, ta.album_title, ta.album_description, ta.album_image, ta.album_thumb1, ta.album_thumb2, ta.album_datestamp,
             tu.user_id, tu.user_name, tu.user_status
             FROM ".DB_PHOTO_ALBUMS." AS ta
@@ -338,8 +345,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
                 $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], $data['album_id']);
 
-                $data['title'] = $data['album_title'] ? $data['album_title'] : $locale['gallery_402'];
-                $data['description'] = $data['album_description'] ? nl2br(parse_textarea($data['album_description'])) : '';
+                $data['title'] = !empty($data['album_title']) ? $data['album_title'] : $locale['gallery_402'];
+                $data['description'] = !empty($data['album_description']) ? parse_text($data['album_description'], [
+                    'parse_smileys' => FALSE,
+                    'decode'        => FALSE
+                ]) : '';
                 $_photo = dbquery("SELECT pp.photo_user, u.user_id, u.user_name, u.user_status, u.user_avatar
                     FROM ".DB_PHOTOS." AS pp
                     LEFT JOIN ".DB_USERS." AS u on u.user_id=pp.photo_user

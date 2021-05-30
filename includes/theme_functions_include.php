@@ -110,8 +110,12 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
                 $time = $current_time + $time;
             }
         }
-        $modal .= parse_textarea($modal_body, FALSE, TRUE, TRUE, NULL, FALSE, FALSE);
-        $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>", FALSE);
+        $modal .= parse_text($modal_body, [
+            'parse_smileys'        => FALSE,
+            'default_image_folder' => NULL,
+            'descript'             => FALSE
+        ]);
+        $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>");
         $modal .= closemodal();
         add_to_footer($modal);
     }
@@ -186,7 +190,7 @@ function showprivacypolicy() {
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
         $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
-        $modal .= parse_textarea(\PHPFusion\QuantumFields::parse_label(fusion_get_settings('privacy_policy')));
+        $modal .= parse_text(\PHPFusion\QuantumFields::parse_label(fusion_get_settings('privacy_policy')));
         $modal .= closemodal();
         add_to_footer($modal);
     }
@@ -340,8 +344,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
                 OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
             }
         }
-        $html = '';
-        $html .= "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
+        $html = "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
         $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
         $html .= "<div class='modal-content'>\n";
         if ($title) {
@@ -402,7 +405,7 @@ if (!function_exists("progress_bar")) {
     function progress_bar($num, $title = NULL, $options = []) {
         $default_options = [
             'class'          => '',
-            'height'         => '',
+            'height'         => '20px',
             'reverse'        => FALSE,
             'as_percent'     => TRUE,
             'disabled'       => FALSE,
@@ -411,7 +414,6 @@ if (!function_exists("progress_bar")) {
         ];
         $options += $default_options;
 
-        $height = ($options['height']) ? $options['height'] : '20px';
         if (!function_exists('bar_color')) {
             function bar_color($num, $reverse) {
                 $auto_class = $reverse ? "progress-bar-success" : "progress-bar-danger";
@@ -471,7 +473,7 @@ if (!function_exists("progress_bar")) {
                 $i++;
             }
             $html .= ($options['hide_info'] == FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$cTitle</span><span class='clearfix'>$cNum </span></div>\n" : "");
-            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
+            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$options['height']."'>\n";
             $html .= $chtml;
             $html .= "</div>\n";
         } else {
@@ -487,7 +489,7 @@ if (!function_exists("progress_bar")) {
             $class = (!$options['class']) ? $auto_class : $options['class'];
 
             $html .= ($options['hide_info'] === FALSE ? "<div class='text-right m-b-10'><span class='pull-left'>$title</span><span class='clearfix'>$num</span></div>\n" : "");
-            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$height."'>\n";
+            $html .= "<div class='progress ".$options['progress_class']."' style='height: ".$options['height']."'>\n";
             $html .= "<div class='progress-bar ".$class."' role='progressbar' aria-valuenow='$num' aria-valuemin='0' aria-valuemax='100' style='width: $int%'>\n";
             $html .= "</div></div>\n";
         }
@@ -527,7 +529,12 @@ if (!function_exists("showbanners")) {
                 if ($settings['allow_php_exe']) {
                     eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
                 } else {
-                    echo parse_textarea($settings['sitebanner2'], FALSE, FALSE, TRUE, NULL, TRUE);
+                    echo parse_text($settings['sitebanner2'], [
+                        'parse_smileys'        => FALSE,
+                        'parse_bbcode'         => FALSE,
+                        'default_image_folder' => NULL,
+                        'add_line_breaks'      => TRUE
+                    ]);
                 }
             }
         } else {
@@ -535,7 +542,12 @@ if (!function_exists("showbanners")) {
                 if ($settings['allow_php_exe']) {
                     eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
                 } else {
-                    echo parse_textarea($settings['sitebanner1'], FALSE, FALSE, TRUE, NULL, TRUE);
+                    echo parse_text($settings['sitebanner1'], [
+                        'parse_smileys'        => FALSE,
+                        'parse_bbcode'         => FALSE,
+                        'default_image_folder' => NULL,
+                        'add_line_breaks'      => TRUE
+                    ]);
                 }
             }
         }
@@ -1116,7 +1128,7 @@ if (!function_exists("tab_active")
                 }
             }
             $html = "<div class='nav-wrapper'>\n";
-            $html .= "<ul id='$id' class='nav ".($class ? $class : 'nav-tabs')."'>\n";
+            $html .= "<ul id='$id' class='nav ".(!empty($class) ? $class : 'nav-tabs')."'>\n";
             foreach ($tab_title['title'] as $arr => $v) {
                 $v_title = $v;
                 $tab_id = $tab_title['id'][$arr];
@@ -1166,7 +1178,7 @@ if (!function_exists("tab_active")
                 ");
             }
 
-            return (string)$html;
+            return $html;
         }
 
         /*
@@ -1176,9 +1188,7 @@ if (!function_exists("tab_active")
          * Commit title:
          * Using globals without adding parameter to pass $id set on previous opentabs() to next opentabbody()
          */
-        public function opentabbody($id, $link_active_arrkey = NULL, $key = NULL) {
-            $key = $key ? $key : 'section';
-
+        public function opentabbody($id, $link_active_arrkey = NULL, $key = 'section') {
             $bootstrap = defined('BOOTSTRAP4') ? ' show' : '';
 
             if (isset($_GET[$key]) && $this->link_mode) {

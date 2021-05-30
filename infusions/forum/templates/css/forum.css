@@ -1,7 +1,6 @@
 .forum-title {
     text-transform: uppercase;
     font-weight: 700;
-    margin-bottom: 15px;
 }
 
 .forum-title .sub-title {
@@ -11,11 +10,6 @@
 
 .forum-container {
     padding: 0;
-}
-
-.forum-description {
-    font-size: 13px;
-    text-transform: none;
 }
 
 .sub-forum, .forum-subforum {

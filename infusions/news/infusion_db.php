@@ -136,7 +136,7 @@ if (db_exists(DB_NEWS)) {
 
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $data['content'] = parse_textarea($data['content'], TRUE, FALSE, TRUE, NULL);
+                $data['content'] = parse_text($data['content'], ['parse_bbcode' => FALSE, 'default_image_folder' => NULL]);
                 $data['url'] = INFUSIONS.'news/news.php?readmore='.$data['id'];
                 $data['category_link'] = INFUSIONS.'news/news.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);

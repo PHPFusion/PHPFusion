@@ -154,7 +154,7 @@ class Panels {
                         if (fusion_get_settings("allow_php_exe")) {
                             eval(stripslashes($panelData['panel_content']));
                         } else {
-                            echo parse_textarea($panelData['panel_content']);
+                            echo parse_text($panelData['panel_content']);
                         }
                     }
                     $html = ob_get_contents();

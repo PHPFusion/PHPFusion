@@ -220,7 +220,7 @@ function comments_listing() {
             echo '</div>';
 
             echo !empty($data['comment_subject']) ? "<div class='m-t-10'>".$data['comment_subject']."</div>\n" : "";
-            echo "<div class='m-t-10'>".nl2br(parse_textarea($data['comment_message'], TRUE, TRUE, FALSE))."</div>\n";
+            echo '<div class="m-t-10">'.parse_text($data['comment_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]).'</div>';
 
             echo "</div>\n";
         }

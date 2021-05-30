@@ -18,8 +18,8 @@
 
 class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    public function display_widget($colData) {
-        $blockData = \defender::unserialize($colData['page_content']);
+    public function display_widget($columnData) {
+        $blockData = \defender::unserialize($columnData['page_content']);
         $block_margin = !empty($blockData['block_margin']) ? "margin:".$blockData['block_margin'].";" : "";
         $block_padding = !empty($blockData['block_padding']) ? "padding:".$blockData['block_padding'].";" : "";
         $block_style = ((!empty($block_margin) || !empty($block_padding)) ? " style=\"$block_margin $block_padding\"" : "");
@@ -28,8 +28,7 @@ class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
         ?>
         <div<?php echo $block_class.$block_style ?>>
             <h3><?php echo $blockData['block_title'] ?></h3>
-
-            <p><?php echo nl2br(parse_textarea($blockData['block_description'])) ?></p>
+            <p><?php echo parse_text($blockData['block_description'], ['add_line_breaks' => TRUE]); ?></p>
         </div>
         <?php
         return ob_get_clean();

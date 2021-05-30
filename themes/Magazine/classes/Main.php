@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace Magazine;
 
-use \PHPFusion\SiteLinks;
+use PHPFusion\SiteLinks;
 
 class Main {
     public function __construct() {
@@ -111,7 +111,7 @@ class Main {
                     echo '</div>';
 
                     echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 text-left">';
-                        echo nl2br(parse_textarea($settings['footer'], FALSE, TRUE));
+                        echo parse_text($settings['footer'], ['parse_smileys' => FALSE, 'add_line_breaks' => FALSE]);
                     echo '</div>';
 
                     echo '<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hidden-xs">';

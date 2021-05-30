@@ -51,7 +51,7 @@ abstract class News extends NewsServer {
         ]);
 
         $info = [
-            'news_cat_id'       => intval(0),
+            'news_cat_id'       => 0,
             'news_cat_name'     => self::$locale['news_0004'],
             'news_cat_image'    => '',
             'news_cat_language' => LANGUAGE,
@@ -67,7 +67,7 @@ abstract class News extends NewsServer {
 
         $this->info = $info;
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -78,7 +78,7 @@ abstract class News extends NewsServer {
     protected static function get_NewsFilter() {
         $array['allowed_filters'] = [
             'recent' => self::$locale['news_0011'],
-            'read' => self::$locale['news_0020']
+            'read'   => self::$locale['news_0020']
         ];
 
         if (fusion_get_settings('comments_enabled') == 1) {
@@ -95,13 +95,13 @@ abstract class News extends NewsServer {
             unset($filter_link);
         }
 
-        return (array)$array;
+        return $array;
     }
 
     /**
      * Outputs category variables
      *
-     * @return mixed
+     * @return array
      */
     public static function get_NewsCategory() {
         $array = [];
@@ -133,7 +133,7 @@ abstract class News extends NewsServer {
                 $news_cat['news_categories'][$id] = $data;
 
                 if ($id != 0 && $array['news_categories'] != 0) {
-                    foreach ($array['news_categories'] as $sub_cats_id => $sub_cats) {
+                    foreach ($array['news_categories'] as $sub_cats) {
                         foreach ($sub_cats as $sub_cat_id => $sub_cat_data) {
                             if (!empty($sub_cat_data['parent']) && $sub_cat_data['parent'] == $id) {
                                 $news_cat['news_categories'][$id]['sub'][$sub_cat_id] = $sub_cat_data;
@@ -177,7 +177,7 @@ abstract class News extends NewsServer {
             }
         }
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -394,8 +394,16 @@ abstract class News extends NewsServer {
             $news_pagenav = "";
             $pagecount = 1;
 
-            $data['news_news'] = parse_textarea($data['news_news'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
-            $data['news_extended'] = parse_textarea($data['news_extended'], TRUE, FALSE, TRUE, FALSE, ($data['news_breaks'] == "y" ? TRUE : FALSE));
+            $data['news_news'] = parse_text($data['news_news'], [
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $data['news_breaks'] == 'y'
+            ]);
+            $data['news_extended'] = parse_text($data['news_extended'], [
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $data['news_breaks'] == 'y'
+            ]);
 
             $news_news = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['news_news']);
             $news_extended = $data['news_extended'];
@@ -464,9 +472,9 @@ abstract class News extends NewsServer {
                 'news_sum_rating'       => $news_sum_rating,
                 'news_count_votes'      => $news_count_votes,
                 "news_allow_comments"   => $data['news_allow_comments'],
-                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['comments_count'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '', 1) : '',
+                "news_display_comments" => $data['news_allow_comments'] ? display_comments($data['comments_count'], INFUSIONS."news/news.php?readmore=".$data['news_id']."#comments", '') : '',
                 "news_allow_ratings"    => $data['news_allow_ratings'],
-                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '', 1) : '',
+                "news_display_ratings"  => $data['news_allow_ratings'] ? display_ratings($news_sum_rating, $news_count_votes, INFUSIONS."news/news.php?readmore=".$data['news_id']."#postrating", '') : '',
                 'news_pagenav'          => $news_pagenav,
                 'news_admin_actions'    => $admin_actions,
                 "news_sticky"           => $data['news_sticky'],
@@ -474,7 +482,7 @@ abstract class News extends NewsServer {
             ];
             $info += $data;
 
-            return (array)$info;
+            return $info;
         }
 
         return [];
@@ -599,7 +607,7 @@ abstract class News extends NewsServer {
         }
         $this->info = $info;
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -728,7 +736,7 @@ abstract class News extends NewsServer {
             redirect(INFUSIONS."news/news.php");
         }
 
-        return (array)$info;
+        return $info;
 
     }
 
@@ -763,7 +771,7 @@ abstract class News extends NewsServer {
             )->showComments();
         }
 
-        return (string)$html;
+        return $html;
     }
 
     protected static function get_NewsGalleryData($data) {
@@ -775,7 +783,7 @@ abstract class News extends NewsServer {
             }
         }
 
-        return (array)$row;
+        return $row;
     }
 
     protected function __clone() {

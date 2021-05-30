@@ -94,9 +94,19 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         $modal = openmodal('blog_preview', $locale['blog_0141']." - ".$data['blog_subject']);
         $modal .= "<div class='m-b-20'>\n";
         $modal .= "<div class='well'><p><strong>".$locale['blog_0425']."</strong></p>";
-        $modal .= parse_textarea($blog_blog, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+        $modal .= parse_text($blog_blog, [
+            'parse_smileys'        => FALSE,
+            'parse_bbcode'         => FALSE,
+            'default_image_folder' => IMAGES_B,
+            'add_line_breaks'      => $data['blog_breaks'] == 'y'
+        ]);
         $modal .= "</div>";
-        $modal .= parse_textarea($blog_extended, FALSE, FALSE, TRUE, IMAGES_B, $data['blog_breaks'] == 'y');
+        $modal .= parse_text($blog_extended, [
+            'parse_smileys'        => FALSE,
+            'parse_bbcode'         => FALSE,
+            'default_image_folder' => IMAGES_B,
+            'add_line_breaks'      => $data['blog_breaks'] == 'y'
+        ]);
         $modal .= "</div>\n";
         $modal .= closemodal();
         add_to_footer($modal);
@@ -141,13 +151,12 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
             if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
                 dbquery_insert(DB_BLOG, $data, 'update');
                 addNotice('success', $locale['blog_0411']);
-                redirect(FUSION_SELF.$aidlink);
             } else {
                 $data['blog_name'] = $userdata['user_id'];
                 dbquery_insert(DB_BLOG, $data, 'save');
                 addNotice('success', $locale['blog_0410']);
-                redirect(FUSION_SELF.$aidlink);
             }
+            redirect(FUSION_SELF.$aidlink);
         }
 
     }
@@ -216,7 +225,7 @@ echo form_select('blog_visibility[]', $locale['blog_0430'], $data['blog_visibili
     'options'     => fusion_get_groups(),
     'placeholder' => $locale['choose'],
     'width'       => '100%',
-    'multiple' => TRUE,
+    'multiple'    => TRUE,
 ]);
 
 if (multilang_table("BL")) {

@@ -24,10 +24,10 @@ if (!function_exists('render_latest_comments')) {
         openside($info['title']);
         if (!empty($info['item'])) {
             echo '<ul class="list-style-none">';
-            foreach ($info['item'] as $id => $data) {
+            foreach ($info['item'] as $data) {
                 $link = !empty($data['data']['user_id']);
                 $avatar = display_avatar($data['data'], '35px', '', $link, 'img-circle m-r-10 m-t-5');
-                $message = trim_text(strip_tags(parse_textarea($data['data']['comment_message'], FALSE, TRUE)), 35);
+                $message = trim_text(strip_tags(parse_text($data['data']['comment_message'], ['parse_smileys' => FALSE])), 35);
 
                 echo '<li>
                     <div class="pull-left">'.$avatar.'</div>

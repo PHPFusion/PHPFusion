@@ -263,8 +263,36 @@ if (!function_exists('closesidex')) {
  *
  * @return string
  *
- * @deprecated use formatcode()
+ * @deprecated use format_code()
  */
 function formatcode($value) {
     return format_code($value);
+}
+
+/**
+ * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
+ *
+ * @param string $value
+ * @param bool   $parse_smileys
+ * @param bool   $parse_bbcode
+ * @param bool   $decode
+ * @param string $default_image_folder
+ * @param bool   $add_line_breaks
+ * @param bool   $descript
+ *
+ * @return string
+ *
+ * @deprecated use parse_text()
+ */
+function parse_textarea($value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
+    $options = [
+        'parse_smileys'        => $parse_smileys,
+        'parse_bbcode'         => $parse_bbcode,
+        'decode'               => $decode,
+        'default_image_folder' => $default_image_folder,
+        'add_line_breaks'      => $add_line_breaks,
+        'descript'             => $descript
+    ];
+
+    return parse_text($value, $options);
 }

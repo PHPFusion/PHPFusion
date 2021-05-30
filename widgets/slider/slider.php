@@ -25,10 +25,10 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
     private static $sliderData = [];
     private static $sliderOptions = [];
 
-    public function display_widget($colData) {
-        if (!empty($colData['page_content'])) {
+    public function display_widget($columnData) {
+        if (!empty($columnData['page_content'])) {
 
-            self::$sliderData = \defender::unserialize($colData['page_content']);
+            self::$sliderData = \defender::unserialize($columnData['page_content']);
 
             $default_slider_options = [
                 'slider_id'         => '',
@@ -38,7 +38,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
                 'slider_interval'   => 0,
             ];
 
-            $slider_options = \defender::unserialize($colData['page_options']);
+            $slider_options = \defender::unserialize($columnData['page_options']);
             if (!empty($slider_options)) {
                 $slider_options += $default_slider_options;
             } else {
@@ -46,7 +46,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
             }
 
             if (empty($slider_options['slider_id'])) {
-                $slider_options['slider_id'] = $colData['page_grid_id']."-".$colData['page_content_id']."-carousel";
+                $slider_options['slider_id'] = $columnData['page_grid_id']."-".$columnData['page_content_id']."-carousel";
             }
 
             self::$sliderOptions = $slider_options;
@@ -129,7 +129,9 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
 
     /**
      * Fetches Description
+     *
      * @param $description - Running script inside a carousel - {eval} and {/eval} tag.
+     *
      * @return string
      */
     private static function get_sliderDescription($description) {
@@ -139,10 +141,10 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
             $html .= eval($description);
             $html .= "</div>\n";
 
-            return (string)$html;
+            return $html;
         }
 
-        return (string)nl2br(parse_textarea($description));
+        return parse_text($description, ['add_line_breaks' => TRUE]);
     }
 
 }

@@ -127,7 +127,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "album_id"          => $submit_criteria['album_id'],
                     "photo_title"       => $submit_criteria['photo_title'],
                     "photo_keywords"    => $submit_criteria['photo_keywords'],
-                    "photo_description" => parse_textarea($submit_criteria['photo_description']),
+                    "photo_description" => parse_text($submit_criteria['photo_description']),
                     "photo_filename"    => $submit_criteria['photo_filename'],
                     "photo_thumb1"      => $submit_criteria['photo_thumb1'],
                     "photo_thumb2"      => $submit_criteria['photo_thumb2'],
@@ -241,7 +241,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",
                     "aid"
-                ], TRUE)."'>".$submit_criteria['photo_title']."</a></td>\n";
+                ])."'>".$submit_criteria['photo_title']."</a></td>\n";
             echo "<td>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
             echo "<td>".timer($data['submit_datestamp'])."</td>\n";
             echo "<td>".$data['submit_id']."</td>\n";

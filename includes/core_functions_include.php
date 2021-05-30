@@ -747,36 +747,45 @@ function parse_imageDir($data, $prefix_ = "") {
  * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
  *
  * @param string $value
- * @param bool   $parse_smileys
- * @param bool   $parse_bbcode
- * @param bool   $decode
- * @param string $default_image_folder
- * @param bool   $add_line_breaks
- * @param bool   $descript
+ * @param array  $options
  *
  * @return string
  */
-function parse_textarea($value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE, $descript = TRUE) {
-    $charset = fusion_get_locale("charset");
+function parse_text($value, $options = []) {
+    $default_options = [
+        'parse_smileys'        => TRUE,
+        'parse_bbcode'         => TRUE,
+        'decode'               => TRUE,
+        'default_image_folder' => IMAGES,
+        'add_line_breaks'      => FALSE,
+        'descript'             => TRUE,
+        'parse_usres'          => TRUE
+    ];
+
+    $options += $default_options;
+
+    $charset = fusion_get_locale('charset');
     $value = stripslashes($value);
-    if ($descript === TRUE) {
+    if ($options['descript']) {
         $value = descript($value);
         $value = htmlspecialchars_decode($value);
     }
-    if ($default_image_folder) {
-        $value = parse_imageDir($value, $default_image_folder);
+    if ($options['default_image_folder']) {
+        $value = parse_imageDir($value, $options['default_image_folder']);
     }
-    if ($parse_bbcode) {
+    if ($options['parse_bbcode']) {
         $value = parseubb($value);
     }
-    if ($parse_smileys) {
+    if ($options['parse_smileys']) {
         $value = parsesmileys($value);
     }
-    if ($add_line_breaks === TRUE) {
+    if ($options['add_line_breaks']) {
         $value = nl2br($value);
     }
-    $value = fusion_parse_user($value);
-    if ($decode === TRUE) {
+    if ($options['parse_usres']) {
+        $value = fusion_parse_user($value);
+    }
+    if ($options['decode']) {
         $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
         $value = encode_code($value);
     }
@@ -2266,7 +2275,10 @@ function lang_switcher($icon = TRUE) {
         echo closeform();
         add_to_jquery("
             function showflag(item){
-                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\" alt=\"'+item.text + '\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
+                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\">
+                    <img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\" alt=\"'+item.text + '\"/>
+                    <span class=\"p-l-10\">'+ item.text +'</span>
+                </div>';
             }
             $('#lang_menu').select2({
             placeholder: '".$locale['global_ML103']."',
@@ -2597,7 +2609,8 @@ function get_current_url() {
     $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
     $port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":".$_SERVER["SERVER_PORT"]);
 
-    return $protocol."://".$_SERVER['SERVER_NAME'].$port.(str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
+    return $protocol."://".$_SERVER['SERVER_NAME'].$port.
+        (str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
 }
 
 function strleft($s1, $s2) {

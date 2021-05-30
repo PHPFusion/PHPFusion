@@ -34,9 +34,7 @@ if (!function_exists("display_maintenance")) {
         echo "<img class='img-responsive center-x' src='".$settings['sitebanner']."' alt='".$settings['sitename']."'/>\n";
         echo "<h3><b>".$settings['sitename']."</b></h3>\n";
 
-        if (!empty($settings['maintenance_message'])) {
-            echo parse_textarea($settings['maintenance_message'], TRUE, FALSE, TRUE, IMAGES, TRUE);
-        }
+        echo $info['maintenance_message'];
 
         if (!empty($info)) {
             echo "<hr/>\n";

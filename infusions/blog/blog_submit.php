@@ -58,15 +58,12 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
                     $criteriaArray['blog_image'] = $upload['image_name'];
                     $criteriaArray['blog_image_t1'] = $upload['thumb1_name'];
                     $criteriaArray['blog_image_t2'] = $upload['thumb2_name'];
-                    $criteriaArray['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left",
-                        "blog_ialign") : "pull-left");
                 } else {
                     $criteriaArray['blog_image'] = (isset($_POST['blog_image']) ? $_POST['blog_image'] : "");
                     $criteriaArray['blog_image_t1'] = (isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "");
                     $criteriaArray['blog_image_t2'] = (isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "");
-                    $criteriaArray['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left",
-                        "blog_ialign") : "pull-left");
                 }
+                $criteriaArray['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
             }
         }
         if (Defender::safe()) {
@@ -78,7 +75,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
             addNotice("success", $locale['blog_0701']);
-            redirect(clean_request("submitted=b", ["stype"], TRUE));
+            redirect(clean_request("submitted=b", ["stype"]));
         }
     } else if (isset($_POST['preview_blog'])) {
         /* lost data after preview */
@@ -106,10 +103,18 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
     $criteriaArray['submitted'] = FALSE;
     if (\Defender::safe() && isset($_POST['preview_blog'])) {
         $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
-        $footer .= nl2br(parse_textarea($criteriaArray['blog_blog'], FALSE, FALSE));
+        $footer .= parse_text($criteriaArray['blog_blog'], [
+            'parse_smileys'   => FALSE,
+            'parse_bbcode'    => FALSE,
+            'add_line_breaks' => TRUE
+        ]);
         if ($criteriaArray['blog_body']) {
             $footer .= "<hr class='m-t-20 m-b-20'>\n";
-            $footer .= nl2br(parse_textarea($criteriaArray['blog_body'], FALSE, FALSE));
+            $footer .= parse_text($criteriaArray['blog_body'], [
+                'parse_smileys'   => FALSE,
+                'parse_bbcode'    => FALSE,
+                'add_line_breaks' => TRUE
+            ]);
         }
         $footer .= closemodal();
         add_to_footer($footer);

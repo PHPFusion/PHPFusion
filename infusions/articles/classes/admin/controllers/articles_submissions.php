@@ -84,11 +84,20 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 // Preview Submission
                 if (isset($_POST['preview_submission'])) {
                     $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$this->inputArray['article_subject']);
-                    $footer .= parse_textarea($this->inputArray['article_snippet'], TRUE, TRUE, FALSE, NULL, $this->inputArray['article_breaks'] == "y");
+                    $footer .= parse_text($this->inputArray['article_snippet'], [
+                        'decode'               => FALSE,
+                        'default_image_folder' => NULL,
+                        'add_line_breaks'      => $this->inputArray['article_breaks'] == 'y'
+                    ]);
 
                     if ($this->inputArray['article_article']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                        $footer .= parse_textarea($this->inputArray['article_article'], FALSE, FALSE, TRUE, IMAGES_A, $this->inputArray['article_breaks'] == "y");
+                        $footer .= parse_text($this->inputArray['article_article'], [
+                            'parse_smileys'        => FALSE,
+                            'parse_bbcode'         => FALSE,
+                            'default_image_folder' => IMAGES_A,
+                            'add_line_breaks'      => $this->inputArray['article_breaks'] == 'y'
+                        ]);
                     }
                     $footer .= closemodal();
                     add_to_footer($footer);
@@ -132,7 +141,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'article_language'       => $submit_criteria['article_language'],
                 'article_datestamp'      => $data['submit_datestamp'],
                 'article_draft'          => 0,
-                'article_breaks'         => fusion_get_settings('tinyce_enabled') ? TRUE : FALSE,
+                'article_breaks'         => (bool)fusion_get_settings('tinyce_enabled'),
                 'article_name'           => $data['submit_user'],
                 'article_allow_comments' => 0,
                 'article_allow_ratings'  => 0
@@ -161,7 +170,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'path'        => IMAGES_A
             ];
             $articleExtendedSettings = [
-                'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'required'    => (bool)$this->articleSettings['article_extended_required'],
                 'preview'     => TRUE,
                 'html'        => TRUE,
                 'autosize'    => TRUE,
@@ -181,7 +190,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'form_name'  => 'submissionform'
             ];
             $articleExtendedSettings = [
-                'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'required'   => (bool)$this->articleSettings['article_extended_required'],
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0272'],
@@ -244,16 +253,16 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
                 <?php
 
-            openside($this->locale['article_0261']);
+                openside($this->locale['article_0261']);
 
-            echo form_select('article_draft', $this->locale['status'], $this->inputArray['article_draft'], [
-                'inner_width' => '100%',
-                'options'     => [
-                    1 => $this->locale['draft'],
-                    0 => $this->locale['publish']
-                ]
-            ]);
-            echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
+                echo form_select('article_draft', $this->locale['status'], $this->inputArray['article_draft'], [
+                    'inner_width' => '100%',
+                    'options'     => [
+                        1 => $this->locale['draft'],
+                        0 => $this->locale['publish']
+                    ]
+                ]);
+                echo form_select_tree('article_cat', $this->locale['article_0101'], $this->inputArray['article_cat'], [
                     'required'     => TRUE,
                     'error_text'   => $this->locale['article_0273'],
                     'inner_width'  => '100%',
@@ -392,7 +401,9 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                     <?php
                     endwhile;
                 else: ?>
-                    <tr><td colspan="5" class="text-center"><?php echo $this->locale['article_0063']; ?></td></tr>
+                    <tr>
+                        <td colspan="5" class="text-center"><?php echo $this->locale['article_0063']; ?></td>
+                    </tr>
                 <?php endif; ?>
                 </tbody>
             </table>

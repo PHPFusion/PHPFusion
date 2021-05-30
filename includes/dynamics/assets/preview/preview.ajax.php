@@ -37,14 +37,26 @@ if (fusion_safe()) {
     }
 
     switch ($editor) {
-        case "html":
-            $text = parse_textarea($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
+        case 'html':
+            $text = parse_text($text, [
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => TRUE
+            ]);
             break;
-        case "bbcode":
-            $text = parse_textarea($text, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE);
+        case 'bbcode':
+            $text = parse_text($text, [
+                'decode'               => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => TRUE
+            ]);
             break;
         default:
-            $text = parse_textarea($text, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE);
+            $text = parse_text($text, [
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => TRUE
+            ]);
     }
 
     echo $text ?: "<p class='text-center'>".$locale['nopreview']."</p>\n";

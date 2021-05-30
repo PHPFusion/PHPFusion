@@ -43,7 +43,7 @@ abstract class Articles extends ArticlesServer {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'articles/articles.php', 'title' => self::$locale['article_0000']]);
 
         $info = [
-            'article_cat_id'          => intval(0),
+            'article_cat_id'          => 0,
             'article_cat_name'        => self::$locale['article_0001'],
             'article_cat_description' => '',
             'article_cat_language'    => LANGUAGE,
@@ -57,7 +57,7 @@ abstract class Articles extends ArticlesServer {
         $info = array_merge($info, self::get_ArticleItems());
         $this->info = $info;
 
-        return (array)$info;
+        return $info;
 
     }
 
@@ -86,13 +86,13 @@ abstract class Articles extends ArticlesServer {
             unset($filter_link);
         }
 
-        return (array)$array;
+        return $array;
     }
 
     /**
      * Outputs category variables
      *
-     * @return mixed
+     * @return array
      */
     protected function get_ArticleCategories() {
         $info['article_categories'] = [];
@@ -111,7 +111,7 @@ abstract class Articles extends ArticlesServer {
             }
         }
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -148,7 +148,7 @@ abstract class Articles extends ArticlesServer {
             }
         }
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -209,7 +209,7 @@ abstract class Articles extends ArticlesServer {
             $catfilter = "a.article_datestamp DESC";
         }
 
-        return (string)$catfilter;
+        return $catfilter;
     }
 
     /**
@@ -231,14 +231,24 @@ abstract class Articles extends ArticlesServer {
             $pagecount = 1;
 
             // Article Texts
-            $data['article_snippet'] = parse_textarea($data['article_snippet'], FALSE, TRUE, TRUE, NULL, $data['article_breaks'] == "y");
-            $data['article_article'] = parse_textarea($data['article_article'], FALSE, FALSE, TRUE, NULL, $data['article_breaks'] == "y");
+            $data['article_snippet'] = parse_text($data['article_snippet'], [
+                'parse_smileys'        => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $data['article_breaks'] == 'y'
+            ]);
+
+            $data['article_article'] = parse_text($data['article_article'], [
+                'parse_smileys'        => FALSE,
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $data['article_breaks'] == 'y'
+            ]);
 
             $articleText = preg_replace("/<!?--\s*pagebreak\s*-->/i", "", $data['article_snippet']);
 
             // Handle Text
             if (isset($_GET['article_id'])) {
-                $articleText = $data['article_article'] ? $data['article_article'] : $data['article_snippet'];
+                $articleText = !empty($data['article_article']) ? $data['article_article'] : $data['article_snippet'];
 
                 // Handle Pages
                 $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $articleText);
@@ -289,7 +299,7 @@ abstract class Articles extends ArticlesServer {
                 'article_date'             => $data['article_datestamp'],
                 # Comments and Ratings
                 'article_comments'         => $data['comments_count'],
-                'article_sum_rating'       => $data['sum_rating'] ? $data['sum_rating'] : 0,
+                'article_sum_rating'       => !empty($data['sum_rating']) ? $data['sum_rating'] : 0,
                 'article_count_votes'      => $data['count_votes'],
                 'article_allow_comments'   => $data['article_allow_comments'],
                 'article_allow_ratings'    => $data['article_allow_ratings'],
@@ -307,7 +317,7 @@ abstract class Articles extends ArticlesServer {
             ];
             $info += $data;
 
-            return (array)$info;
+            return $info;
         }
 
         return [];
@@ -324,7 +334,7 @@ abstract class Articles extends ArticlesServer {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         $info = [
-            'article_cat_id'          => intval(0),
+            'article_cat_id'          => 0,
             'article_cat_name'        => self::$locale['article_0001'],
             'article_cat_description' => '',
             'article_cat_language'    => LANGUAGE,
@@ -360,7 +370,7 @@ abstract class Articles extends ArticlesServer {
             // build categorial data.
             $info['article_cat_id'] = $data['article_cat_id'];
             $info['article_cat_name'] = $data['article_cat_name'];
-            $info['article_cat_description'] = nl2br(parse_textarea($data['article_cat_description']));
+            $info['article_cat_description'] = parse_text($data['article_cat_description'], ['add_line_breaks', TRUE]);
             $info['article_cat_language'] = $data['article_cat_language'];
 
             $max_article_rows = dbcount("(article_id)", DB_ARTICLES, "article_cat='".$data['article_cat_id']."' AND ".groupaccess("article_visibility")." AND article_draft='0'");
@@ -396,7 +406,7 @@ abstract class Articles extends ArticlesServer {
 
         $this->info = $info;
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -523,7 +533,7 @@ abstract class Articles extends ArticlesServer {
             redirect(INFUSIONS."articles/articles.php");
         }
 
-        return (array)$info;
+        return $info;
 
     }
 

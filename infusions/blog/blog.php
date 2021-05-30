@@ -74,8 +74,8 @@ $info = [
 ];
 
 $info['allowed_filters'] = [
-    'recent'  => $locale['blog_2001'],
-    'read'  => $locale['blog_3004']
+    'recent' => $locale['blog_2001'],
+    'read'   => $locale['blog_3004']
 ];
 
 if (fusion_get_settings('comments_enabled') == 1) {
@@ -118,7 +118,7 @@ if (!empty($info['allowed_filters'])) {
             $preserved_keys[] = "author";
         }
 
-        $filter_link = clean_request("type=".$type, $preserved_keys, TRUE);
+        $filter_link = clean_request("type=".$type, $preserved_keys);
         $active = isset($_GET['type']) && $_GET['type'] === $type ? 1 : 0;
         $info['blog_filter'][$type] = ['title' => $filter_name, 'link' => $filter_link, 'active' => $active];
 
@@ -190,13 +190,19 @@ if (isset($_GET['readmore'])) {
                 'blog_nav'           => ''
             ];
 
-            $item['blog_blog'] = parse_textarea($item['blog_blog'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y");
-            $item['blog_extended'] = parse_textarea($item['blog_extended'], FALSE, FALSE, TRUE, FALSE, $item['blog_breaks'] == "y");
+            $parse_text_opt = [
+                'parse_smileys'        => FALSE,
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $item['blog_breaks'] == 'y'
+            ];
+            $item['blog_blog'] = parse_text($item['blog_blog'], $parse_text_opt);
+            $item['blog_extended'] = parse_text($item['blog_extended'], $parse_text_opt);
 
             $item['blog_image_link'] = '';
             $item['blog_thumb_1_link'] = '';
             $hiRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], TRUE);
-            $lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2'], FALSE);
+            $lowRes_image_path = get_blog_image_path($item['blog_image'], $item['blog_image_t1'], $item['blog_image_t2']);
             if ($hiRes_image_path || $lowRes_image_path) {
                 $item['blog_image'] = "<img class='img-responsive' src='".$hiRes_image_path."' alt='".$item['blog_subject']."' title='".$item['blog_subject']."'>";
                 $item['blog_image_link'] = $hiRes_image_path;
@@ -301,7 +307,7 @@ if (isset($_GET['readmore'])) {
 
             if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
                 \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                    'link'  => clean_request("", ["author"], TRUE),
+                    'link'  => clean_request("", ["author"]),
                     'title' => $info['allowed_filters'][$_GET['type']]
                 ]);
             }
@@ -410,7 +416,7 @@ if (isset($_GET['readmore'])) {
             $archiveSql = "AND blog_datestamp >=".intval($start_time)." AND blog_datestamp <= ".intval($end_time);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                'link'  => clean_request("", ["archive", "month"], TRUE),
+                'link'  => clean_request("", ["archive", "month"]),
                 'title' => showdate($locale['blog_archive'], $start_time),
             ]);
 
@@ -421,7 +427,7 @@ if (isset($_GET['readmore'])) {
 
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
-                "link"  => clean_request("", ["archive", "month"], TRUE),
+                "link"  => clean_request("", ["archive", "month"]),
                 "title" => $info['allowed_filters'][$_GET['type']]
             ]);
         }
@@ -455,7 +461,7 @@ if (isset($_GET['readmore'])) {
             $param = [
                 ':start_time' => TIME,
                 ':end_time'   => TIME,
-                ':rowstart'   => intval($_GET['rowstart']),
+                ':rowstart'   => $_GET['rowstart'],
                 ':limit'      => intval($blog_settings['blog_pagination'])
             ];
             $result = dbquery($sql, $param);
@@ -471,12 +477,18 @@ if (isset($_GET['readmore'])) {
             $lowRes_image_path = "";
             if ($data['blog_image']) {
                 $hiRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], TRUE);
-                $lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE);
+                $lowRes_image_path = get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']);
                 $blog_image = "<a href='".INFUSIONS."blog/blog.php?readmore=".$data['blog_id']."'>".thumbnail($lowRes_image_path, '150px')."</a>";
             }
 
-            $blog_blog = parse_textarea($data['blog_blog'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y');
-            $blog_extended = parse_textarea($data['blog_extended'], FALSE, FALSE, TRUE, FALSE, $data['blog_breaks'] == 'y');
+            $parse_text_opt = [
+                'parse_smileys'        => FALSE,
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => $data['blog_breaks'] == 'y'
+            ];
+            $blog_blog = parse_text($data['blog_blog'], $parse_text_opt);
+            $blog_extended = parse_text($data['blog_extended'], $parse_text_opt);
 
             $cdata = [
                 'blog_ialign'            => $data['blog_ialign'] == 'center' ? 'clearfix' : $data['blog_ialign'],
@@ -490,7 +502,7 @@ if (isset($_GET['readmore'])) {
                 'blog_image'             => $blog_image,
                 'blog_image_path'        => $hiRes_image_path,
                 'blog_lowRes_image_path' => $lowRes_image_path,
-                'blog_thumb'             => get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2'], FALSE),
+                'blog_thumb'             => get_blog_image_path($data['blog_image'], $data['blog_image_t1'], $data['blog_image_t2']),
                 "blog_reads"             => format_word($data['blog_reads'], $locale['fmt_read']),
                 "blog_comments"          => format_word($data['comments_count'], $locale['fmt_comment']),
                 'blog_sum_rating'        => format_word($data['sum_rating'], $locale['fmt_rating']),

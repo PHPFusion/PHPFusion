@@ -457,7 +457,7 @@ class PanelsAdministration {
                     ob_end_clean();
                     echo $eval;
                 } else {
-                    echo "<p>".nl2br(parse_textarea(post('panel_content'), FALSE, FALSE))."</p>\n";
+                    echo parse_text(post('panel_content'), ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE, 'add_line_breaks' => TRUE]);
                 }
                 echo closemodal();
                 add_to_footer(ob_get_contents());

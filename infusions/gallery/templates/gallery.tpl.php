@@ -28,8 +28,6 @@ if (!function_exists("render_gallery")) {
         }
         if (isset($info['item'])) {
             function render_photoAlbum(array $info = []) {
-                // add admin edit.
-                $gallery_settings = get_settings('gallery');
                 $locale = fusion_get_locale();
                 echo "<div class='panel panel-default'>\n";
                 echo "<div class='overflow-hide album_thumbnail'>\n";
@@ -97,13 +95,11 @@ if (!function_exists('render_photo_album')) {
         if (!empty($info['album_stats']) || !empty($info['album_description'])) {
             echo "<div class='clearfix well'>\n";
             if (isset($info['album_stats'])) {
-                echo "<span class='album_stats'>\n".$info['album_stats']."</span>\n";
+                echo "<span class='album_stats m-b-20'>\n".$info['album_stats']."</span>\n";
             }
             if ($info['album_description']) {
-                echo "<div class='m-t-20'>\n";
                 echo "<!--photogallery_album_desc-->\n";
                 echo "<span class='album_description'>\n".$info['album_description']."</span><br/>\n";
-                echo "</div>\n";
             }
             echo "</div>\n";
         }
@@ -172,7 +168,7 @@ if (!function_exists('render_photo')) {
         echo "<h2 class='photo_title'>".$info['photo_title']."</span>\n</h2>\n";
         echo "</div>\n";
         if ($info['photo_description']) {
-            echo "<span class='photo_description list-group-item'>".$info['photo_description']."</span>";
+            echo "<span class='photo_description list-group-item m-b-20'>".$info['photo_description']."</span>";
         }
         echo "<div class='m-b-20'>\n";
         echo "<div class='row'>\n";

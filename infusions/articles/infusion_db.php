@@ -114,7 +114,7 @@ if (db_exists(DB_ARTICLES)) {
 
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $data['content'] = parse_textarea($data['content'], FALSE, TRUE, TRUE, NULL);
+                $data['content'] = parse_text($data['content'], ['parse_smileys' => FALSE, 'default_image_folder' => NULL]);
                 $data['url'] = INFUSIONS.'articles/articles.php?article_id='.$data['id'];
                 $data['category_link'] = INFUSIONS.'articles/articles.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);

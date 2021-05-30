@@ -118,10 +118,8 @@ class UserFields extends QuantumFields {
 
     /**
      * Display Input Fields
-     *
-     * @param array $input
      */
-    public function display_profile_input($input = []) {
+    public function display_profile_input() {
         $this->method = 'input';
 
         $locale = fusion_get_locale();
@@ -168,7 +166,7 @@ class UserFields extends QuantumFields {
                         'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u134'].$locale['u143a'],
-                        'required'         => $this->admin_mode ? FALSE : TRUE,
+                        'required'         => !$this->admin_mode,
                         'ext_tip'          => $locale['u147']
                     ]
                 );
@@ -179,7 +177,7 @@ class UserFields extends QuantumFields {
                         'inline'           => TRUE,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133'],
-                        'required'         => $this->admin_mode ? FALSE : TRUE
+                        'required'         => !$this->admin_mode
                     ]
                 );
 
@@ -399,7 +397,7 @@ class UserFields extends QuantumFields {
                     $user_fields .= form_para($fieldData['title'], 'fieldcat'.$catID);
                 }
                 if (!empty($fieldData['fields'])) {
-                    foreach ($fieldData['fields'] as $_id => $_fields) {
+                    foreach ($fieldData['fields'] as $_fields) {
                         $user_fields .= $_fields;
                     }
                 }
@@ -453,7 +451,7 @@ class UserFields extends QuantumFields {
             }
         }
 
-        return (array)$section;
+        return $section;
     }
 
     /**
@@ -505,7 +503,7 @@ class UserFields extends QuantumFields {
         $html .= "</div>";
         $html .= "</div>";
 
-        return (string)$html;
+        return $html;
     }
 
     /**
@@ -522,7 +520,7 @@ class UserFields extends QuantumFields {
         );
 
         $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
-        $modal .= parse_textarea(self::parse_label(fusion_get_settings('license_agreement')));
+        $modal .= parse_text(self::parse_label(fusion_get_settings('license_agreement')));
         $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
         $modal .= modalfooter($modal_content, TRUE);
@@ -564,7 +562,7 @@ class UserFields extends QuantumFields {
                 "class"      => $this->options['btn_post_class']
             ]);
 
-        return (string)$html;
+        return $html;
     }
 
     /**
@@ -623,7 +621,7 @@ class UserFields extends QuantumFields {
                     if ($this->registration || $this->method == 'input') {
                         if (isset($item[$cat_id])) {
                             $fields['user_field'][$cat_id]['title'] = $cat;
-                            foreach ($item[$cat_id] as $field_id => $field) {
+                            foreach ($item[$cat_id] as $field) {
                                 $options = [
                                     'show_title' => TRUE,
                                     'inline'     => TRUE,
@@ -644,7 +642,7 @@ class UserFields extends QuantumFields {
                         // Display User Fields
                         if (isset($item[$cat_id])) {
                             $fields['user_field'][$cat_id]['title'] = $cat;
-                            foreach ($item[$cat_id] as $field_id => $field) {
+                            foreach ($item[$cat_id] as $field) {
                                 // Outputs array
                                 $field_output = $this->display_fields($field, $this->callback_data, $this->method);
                                 //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
@@ -660,7 +658,7 @@ class UserFields extends QuantumFields {
             }
         }
 
-        return (array)$fields;
+        return $fields;
     }
 
     /*
@@ -681,7 +679,7 @@ class UserFields extends QuantumFields {
 
             if (check_post('add_to_group') && $user_group = post('user_group', FILTER_VALIDATE_INT)) {
 
-                if (!preg_match("(^\.{$user_group}$|\.{$user_group}\.|\.{$user_group}$)", $this->userData['user_groups'])) {
+                if (!preg_match("(^\.{$user_group}$|\.$user_group\.|\.{$user_group}$)", $this->userData['user_groups'])) {
                     $userdata = [
                         'user_groups' => $this->userData['user_groups'].".".$user_group,
                         'user_id'     => $lookup
@@ -844,7 +842,7 @@ class UserFields extends QuantumFields {
         }
 
         // Display Template
-        echo display_user_profile($this->info);
+        display_user_profile($this->info);
     }
 
     /**

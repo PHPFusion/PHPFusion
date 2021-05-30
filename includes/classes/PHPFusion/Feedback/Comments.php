@@ -251,7 +251,7 @@ class Comments {
                         $_CAPTCHA_INPUT .= '</div>';
                     }
 
-                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE, '');
+                    $avatar = display_avatar(fusion_get_userdata(), "50px", "", FALSE);
 
                     $button = form_button('post_comment', $edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102'], ($edata['comment_message'] ? $this->locale['c103'] : $this->locale['c102']),
                         ['class' => 'btn-primary spacer-sm post_comment', 'input_id' => $this->getParams('comment_key').'-post_comment']
@@ -296,7 +296,7 @@ class Comments {
                 if (fusion_get_settings('ratings_enabled') && $this->getParams('comment_allow_ratings')) {
                     if (!empty($c_info['ratings_count'])) {
                         ob_start();
-                        display_comments_ratings($info = []);
+                        display_comments_ratings();
 
                         $stars = '';
                         $ratings = '';
@@ -724,7 +724,7 @@ class Comments {
     private static function format_clink($clink) {
         if (empty(self::$clink[$clink])) {
             $fusion_query = [];
-            $url = $url = ((array)parse_url(htmlspecialchars_decode($clink))) + [
+            $url = ((array)parse_url(htmlspecialchars_decode($clink))) + [
                     'path'  => '',
                     'query' => ''
                 ];
@@ -847,7 +847,7 @@ class Comments {
                         $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
                     }
                     $this->c_arr['c_info']['comments_per_page'] = $this->cpp;
-                    $this->c_arr['c_info']['comments_count'] = format_word(number_format($this->c_arr['c_info']['total_comments'], 0), $this->locale['fmt_comment']);
+                    $this->c_arr['c_info']['comments_count'] = format_word(number_format($this->c_arr['c_info']['total_comments']), $this->locale['fmt_comment']);
                 }
             }
         }
@@ -979,7 +979,7 @@ class Comments {
                 "comment_datestamp" => showdate('longdate', $row['comment_datestamp']),
                 "comment_time"      => timer($row['comment_datestamp']),
                 "comment_subject"   => $row['comment_subject'],
-                "comment_message"   => nl2br(parse_textarea($row['comment_message'], TRUE, TRUE, FALSE)),
+                "comment_message"   => parse_text($row['comment_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]),
                 "comment_name"      => isnum($row['comment_name']) ? profile_link($row['comment_name'], $row['user_name'], $row['user_status']) : $row['comment_name']
             ] + $actions;
 
@@ -995,7 +995,7 @@ class Comments {
 
         $id = $row['comment_id'];
         $parent_id = $row['comment_cat'] === NULL ? "0" : $row['comment_cat'];
-        $data[$id] = $row;
+        //$data[$id] = $row;
         $this->c_arr['c_con'][$parent_id][$id] = $row;
     }
 

@@ -61,16 +61,25 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                 ];
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
                 addNotice('success', $locale['article_0910']);
-                redirect(clean_request('submitted=a', ['stype'], TRUE));
+                redirect(clean_request('submitted=a', ['stype']));
             }
 
             // Display
             if (\defender::safe() && isset($_POST['preview_article'])) {
                 $footer = openmodal("article_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['article_subject']);
-                $footer .= parse_textarea($_POST['article_snippet'], TRUE, TRUE, FALSE, NULL, TRUE);
+                $footer .= parse_text(post('article_snippet'), [
+                    'decode'               => FALSE,
+                    'default_image_folder' => NULL,
+                    'add_line_breaks'      => TRUE
+                ]);
                 if ($criteriaArray['article_article']) {
                     $footer .= "<hr class='m-t-20 m-b-20'>\n";
-                    $footer .= parse_textarea($_POST['article_article'], FALSE, FALSE, TRUE, IMAGES_A, TRUE);
+                    $footer .= parse_text(post('article_article'), [
+                        'parse_smileys'        => FALSE,
+                        'parse_bbcode'         => FALSE,
+                        'default_image_folder' => IMAGES_A,
+                        'add_line_breaks'      => TRUE
+                    ]);
                 }
                 $footer .= closemodal();
                 add_to_footer($footer);
@@ -107,7 +116,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'path'        => IMAGES_A
                 ];
                 $articleExtendedSettings = [
-                    'required'    => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
+                    'required'    => (bool)$articleSettings['article_extended_required'],
                     'preview'     => TRUE,
                     'html'        => TRUE,
                     'autosize'    => TRUE,
@@ -126,7 +135,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'form_name'  => 'submissionform'
                 ];
                 $articleExtendedSettings = [
-                    'required'      => ($articleSettings['article_extended_required'] ? TRUE : FALSE),
+                    'required'      => (bool)$articleSettings['article_extended_required'],
                     'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                     'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
                     'tinymce_image' => FALSE,

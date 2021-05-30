@@ -61,7 +61,7 @@ abstract class Weblinks extends WeblinksServer {
         $this->def_cat['weblink_filter'] += self::get_WeblinkFilters();
         $this->def_cat['weblink_categories'] += self::get_WeblinkCategories();
 
-        return (array)$this->def_cat;
+        return $this->def_cat;
 
     }
 
@@ -88,13 +88,13 @@ abstract class Weblinks extends WeblinksServer {
             $wdi++;
         }
 
-        return (array)$info;
+        return $info;
     }
 
     /**
      * Outputs category variables
      *
-     * @return mixed
+     * @return array
      */
     protected function get_WeblinkCategories() {
         $info = [];
@@ -110,11 +110,16 @@ abstract class Weblinks extends WeblinksServer {
 
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
+                $data['weblink_cat_description'] = parse_text($data['weblink_cat_description'], [
+                    'decode'               => FALSE,
+                    'default_image_folder' => NULL,
+                    'add_line_breaks'      => TRUE
+                ]);
                 $info[$data['weblink_cat_parent']][$data['weblink_cat_id']] = $data;
             }
         }
 
-        return (array)$info;
+        return $info;
     }
 
     /**
@@ -174,7 +179,7 @@ abstract class Weblinks extends WeblinksServer {
                 }
             }
 
-            return (array)$this->def_data;
+            return $this->def_data;
         }
 
         redirect(INFUSIONS."weblinks/weblinks.php");
@@ -270,7 +275,7 @@ abstract class Weblinks extends WeblinksServer {
                     $catfilter = "w.weblink_datestamp DESC";
             }
         }
-        return (string)$catfilter;
+        return $catfilter;
     }
 
     /**
@@ -298,6 +303,13 @@ abstract class Weblinks extends WeblinksServer {
                 ];
             }
 
+            $data['weblink_description'] = parse_text($data['weblink_description'], [
+                'parse_smileys'        => FALSE,
+                'parse_bbcode'         => FALSE,
+                'default_image_folder' => NULL,
+                'add_line_breaks'      => TRUE
+            ]);
+
             // Build Array
             $info = [
                 # Links and Admin Actions
@@ -306,7 +318,7 @@ abstract class Weblinks extends WeblinksServer {
                 'admin_actions'    => $adminActions
             ];
             $info += $data;
-            return (array)$info;
+            return $info;
         }
 
         return [];

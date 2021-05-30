@@ -127,7 +127,11 @@ if (db_exists(DB_BLOG)) {
 
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $data['content'] = parse_textarea($data['content'], FALSE, FALSE, TRUE, NULL);
+                $data['content'] = parse_text($data['content'], [
+                    'parse_smileys'        => FALSE,
+                    'parse_bbcode'         => FALSE,
+                    'default_image_folder' => IMAGES_B
+                ]);
                 $data['url'] = INFUSIONS.'blog/blog.php?readmore='.$data['id'];
                 $data['category_link'] = INFUSIONS.'blog/blog.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);

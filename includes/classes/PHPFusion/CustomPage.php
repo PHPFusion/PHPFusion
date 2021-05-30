@@ -84,7 +84,7 @@ class CustomPage {
 
         if (!empty($data)) {
             echo "<tbody id='custompage-links' class='connected'>\n";
-            foreach ($data as $id => $pageData) {
+            foreach ($data as $pageData) {
                 $displayLanguage = "";
                 $pageLang = explode(".", $pageData['page_language']);
                 foreach ($pageLang as $languages) {
@@ -138,7 +138,7 @@ class CustomPage {
                     ob_end_clean();
                     $previewHtml .= $eval;
                 } else {
-                    $previewHtml .= "<p>".nl2br(parse_textarea($_POST['page_content']))."</p>\n";
+                    $previewHtml .= parse_text($_POST['page_content'], ['parse_bbcode' => FALSE, 'add_line_breaks' => TRUE]);
                 }
                 $previewHtml .= closemodal();
                 add_to_footer($previewHtml);
@@ -389,7 +389,7 @@ class CustomPage {
             );
         }
 
-        return (array)$array;
+        return $array;
     }
 
     /**
@@ -418,7 +418,7 @@ class CustomPage {
      *
      * @param $id
      *
-     * @return bool|string
+     * @return bool|int
      */
     protected function verify_customPage($id) {
         if (isnum($id)) {

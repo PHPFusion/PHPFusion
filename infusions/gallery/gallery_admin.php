@@ -195,7 +195,7 @@ function gallery_photo_listing() {
 
         echo "<h2><strong>\n".$album_data['album_title']."</strong></h2>\n";
 
-        echo "<strong>".$locale['album_0003']."</strong> ".parse_textarea($album_data['album_description'], FALSE, TRUE, FALSE);
+        echo "<strong>".$locale['album_0003']."</strong> ".parse_text($album_data['album_description'], ['parse_smileys' => FALSE, 'decode' => FALSE]);
 
         echo "<div class='clearfix m-t-10'>\n";
         echo "<div class='pull-right text-right col-xs-6 col-sm-6'>".sprintf($locale['gallery_0019'], $rows, $photoRows)."</div>\n";
@@ -266,7 +266,7 @@ function gallery_album_listing() {
 
     // xss
     $albumRows = dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "");
-    $photoRows = dbcount("(photo_id)", DB_PHOTOS, "");
+    $photoRows = dbcount("(photo_id)", DB_PHOTOS);
     $update = dbarray(dbquery("SELECT MAX(photo_datestamp) 'last_updated' FROM ".DB_PHOTOS.""));
     $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $albumRows ? $_GET['rowstart'] : 0;
     if (!empty($albumRows)) {

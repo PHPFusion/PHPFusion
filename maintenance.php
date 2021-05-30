@@ -58,7 +58,11 @@ if (!iMEMBER) {
         "login_button"         => form_button('login', $locale['global_104'], $locale['global_104'], ['class' => 'btn-primary btn-block m-b-20']),
         "registration_link"    => $settings['enable_registration'] ? "<p>".$locale['global_105']."</p>\n" : "",
         "forgot_password_link" => $locale['global_106'],
-        "close_form"           => closeform()
+        "close_form"           => closeform(),
+        'maintenance_message'  => parse_text($settings['maintenance_message'], [
+            'parse_bbcode'    => FALSE,
+            'add_line_breaks' => TRUE
+        ])
     ];
 }
 

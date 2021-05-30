@@ -117,7 +117,7 @@ if (db_exists(DB_DOWNLOADS)) {
 
         if (dbrows($result) > 0) {
             while ($data = dbarray($result)) {
-                $data['content'] = parse_textarea($data['content'], TRUE, TRUE, FALSE, NULL);
+                $data['content'] = parse_text($data['content'], ['decode' => FALSE, 'default_image_folder' => NULL]);
                 $data['url'] = INFUSIONS.'downloads/downloads.php?download_id='.$data['id'];
                 $data['category_link'] = INFUSIONS.'downloads/downloads.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_download']);

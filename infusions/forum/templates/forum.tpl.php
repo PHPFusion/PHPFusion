@@ -252,9 +252,8 @@ if (!function_exists('forum_viewforum')) {
     function forum_viewforum($info) {
         $locale = fusion_get_locale();
         if (!empty($info['forum_name'])) {
-            echo '<div class="forum-title">';
-            echo '<h4>'.$info['forum_name'].'</h4>';
-
+            echo '<div class="m-b-15">';
+            echo '<h4 class="forum-title">'.$info['forum_name'].'</h4>';
             if (!empty($info['forum_description'])) {
                 echo '<div class="forum-description">'.$info['forum_description'].'</div>';
             }
@@ -365,7 +364,7 @@ if (!function_exists('forum_viewforum')) {
                             echo '<div class="list-group">';
                             echo '<div class="list-group-item clearfix">';
                             echo '<div class="text-smaller text-lighter m-b-10"><b>'.$locale['forum_0023'].' '.$postData['thread_link']['title'].'</b></div>';
-                            echo parse_textarea($postData['post_message'], TRUE, TRUE, TRUE, IMAGES, TRUE);
+                            echo $postData['post_message'];
                             echo '</div>';
 
                             echo '<div class="list-group-item clearfix">';

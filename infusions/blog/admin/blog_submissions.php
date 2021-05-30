@@ -190,10 +190,16 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 if (Defender::safe()) {
                     echo openmodal('blog_preview', $locale['blog_0141']);
                     echo "<h3>".$callback_data['blog_subject']."</h3>\n";
-                    echo parse_textarea($callback_data['blog_blog'], FALSE, FALSE, TRUE);
+                    echo parse_text($callback_data['blog_blog'], [
+                        'parse_smileys' => FALSE,
+                        'parse_bbcode'  => FALSE
+                    ]);
                     echo "<hr/>\n";
                     if (isset($callback_data['blog_extended'])) {
-                        echo parse_textarea($callback_data['blog_extended'], FALSE, FALSE, TRUE);
+                        echo parse_text($callback_data['blog_extended'], [
+                            'parse_smileys' => FALSE,
+                            'parse_bbcode'  => FALSE
+                        ]);
                     }
                     echo closemodal();
                 }
@@ -378,7 +384,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo "<td><a class='btn btn-sm btn-default' href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",
                     "aid"
-                ], TRUE)."'><i class='fa fa-eye'></i> ".$locale['blog_0131']."</a></td>\n";
+                ])."'><i class='fa fa-eye'></i> ".$locale['blog_0131']."</a></td>\n";
             echo "</tr>\n";
         }
         echo "</tbody>\n";
