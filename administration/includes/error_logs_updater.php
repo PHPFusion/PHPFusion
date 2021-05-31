@@ -25,11 +25,11 @@ if (!empty($aid)) {
 $id = get('error_id', FILTER_SANITIZE_NUMBER_INT);
 $type = get('error_type', FILTER_SANITIZE_NUMBER_INT);
 
-if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
+if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && fusion_safe()) {
 
     $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated'];
 
-    $result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
+    $result = dbquery("SELECT error_status FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
 
     if (dbrows($result) > 0) {
         $data = dbarray($result);

@@ -63,7 +63,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             if (!empty(self::$colData['page_content'])) {
 
-                self::$slider_content = \defender::unserialize(self::$colData['page_content']);
+                self::$slider_content = \Defender::unserialize(self::$colData['page_content']);
 
                 // Delete
                 if (isset($_GET['widgetAction']) && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
@@ -91,7 +91,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                                         }
                                     }
 
-                                    self::$colData['page_content'] = \defender::serialize($slider_arr);
+                                    self::$colData['page_content'] = \Defender::serialize($slider_arr);
                                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                                     addNotice('success', self::$slider_locale['SLDW_0200']);
                                     redirect(clean_request('slider=cur_slider', ['widgetAction', 'widgetKey'], FALSE));
@@ -112,7 +112,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             // Parse Slider Settings
             if (!empty(self::$colData['page_options'])) {
-                self::$slider_settings = \defender::unserialize(self::$colData['page_options']);
+                self::$slider_settings = \Defender::unserialize(self::$colData['page_options']);
             }
             self::$slider_settings += self::$default_slider_settings;
 
@@ -153,7 +153,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         $widget_data = [];
 
         if (!empty(self::$colData['page_content'])) {
-            $widget_data = \defender::unserialize(self::$colData['page_content']);
+            $widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
 
         $data = [
@@ -172,7 +172,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             $data['slider_order'] = count($widget_data) + 1;
         }
 
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
                 if (empty($upload['error'])) {
@@ -210,8 +210,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             $count++;
         }
 
-        if (\defender::safe() && !empty($widget_data)) {
-            $widget_data = \defender::serialize($widget_data);
+        if (fusion_safe() && !empty($widget_data)) {
+            $widget_data = \Defender::serialize($widget_data);
             return $widget_data;
         }
 
@@ -227,8 +227,8 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             'slider_indicator'  => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
             'slider_interval'   => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
         ];
-        if (defender::safe() && !empty($widget_settings)) {
-            return \defender::serialize($widget_settings);
+        if (fusion_safe() && !empty($widget_settings)) {
+            return \Defender::serialize($widget_settings);
         }
 
         return NULL;
@@ -263,7 +263,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
     private function slider_content() {
         if (!empty(self::$colData['page_content'])) {
 
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
 
             if (!empty(self::$widget_data)) {
                 ?>

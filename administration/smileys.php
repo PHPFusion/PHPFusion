@@ -157,7 +157,7 @@ function add_smiley_form() {
         $error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_code=:smileycode", [':smileyid' => intval($data['smiley_id']), ':smileycode' => $data['smiley_code']]) ? $locale['SMLY_415'] : "";
         //$error .= dbcount("(smiley_id)", DB_SMILEYS, "smiley_id !=:smileyid AND smiley_text=:smileytext", [':smileyid' => intval($data['smiley_id']), ':smileytext' => $data['smiley_text']]) ? '<br>'.$locale['SMLY_414'] : "";
 
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             if ($error == "") {
                 dbquery_insert(DB_SMILEYS, $data, empty($data['smiley_id']) ? 'save' : 'update');
                 addNotice('success', empty($data['smiley_id']) ? $locale['SMLY_410'] : $locale['SMLY_411']);

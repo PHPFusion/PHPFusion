@@ -88,9 +88,9 @@ function blacklist_form() {
             'blacklist_datestamp' => empty(post('blacklist_datestamp')) ? time() : post('blacklist_datestamp')
         ];
 
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             if (empty($data['blacklist_ip']) && empty($data['blacklist_email'])) {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', $locale['BLS_010']);
             } else {
                 dbquery_insert(DB_BLACKLIST, $data, empty($data['blacklist_id']) ? 'save' : 'update');
@@ -133,7 +133,7 @@ function blacklist_form() {
 function blacklist_listing() {
     $locale = fusion_get_locale();
 
-    if (check_get('action') && get('action') == 'delete' && dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".get('blacklist_id', FILTER_SANITIZE_NUMBER_INT)."'") && \defender::safe()) {
+    if (check_get('action') && get('action') == 'delete' && dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".get('blacklist_id', FILTER_SANITIZE_NUMBER_INT)."'") && fusion_safe()) {
         dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".get('blacklist_id')."'");
         addNotice('success', $locale['BLS_013']);
         redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
@@ -145,7 +145,7 @@ function blacklist_listing() {
 
         if (!empty($input)) {
             foreach ($input as $blacklist_id) {
-                if (dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".intval($blacklist_id)."'") && \defender::safe()) {
+                if (dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".intval($blacklist_id)."'") && fusion_safe()) {
                     if (post('table_action') == 'delete') {
                         dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".$blacklist_id."'");
                         addNotice('success', $locale['BLS_013']);

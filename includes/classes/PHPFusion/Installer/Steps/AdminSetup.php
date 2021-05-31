@@ -60,10 +60,10 @@ class AdminSetup extends InstallCore {
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 addNotice('danger', self::$locale['setup_5016']);
-                \defender::stop();
+                fusion_stop();
             }
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
                 $user_auth->inputNewPassword = self::$userData['password1'];
                 $user_auth->inputNewPassword2 = self::$userData['password2'];
@@ -74,11 +74,11 @@ class AdminSetup extends InstallCore {
                         break;
                     case 2:
                         addNotice('danger', self::$locale['setup_5012']);
-                        \defender::stop();
+                        fusion_stop();
                         break;
                     case 3:
                         addNotice('danger', self::$locale['setup_5013']);
-                        \defender::stop();
+                        fusion_stop();
                         break;
                 }
                 $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
@@ -91,15 +91,15 @@ class AdminSetup extends InstallCore {
                         break;
                     case 2:
                         addNotice('danger', self::$locale['setup_5015']);
-                        \defender::stop();
+                        fusion_stop();
                         break;
                     case 3:
                         addNotice('danger', self::$locale['setup_5017']);
-                        \defender::stop();
+                        fusion_stop();
                         break;
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
                     addNotice('success', self::$locale['setup_1217']);
 
@@ -373,11 +373,11 @@ class AdminSetup extends InstallCore {
             self::$userData = $this->validate_UserData();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', self::$locale['setup_5016']);
             }
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
 
                 $user_auth = new PasswordAuth(self::INSTALLER_ALGO);
 
@@ -390,14 +390,14 @@ class AdminSetup extends InstallCore {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::stop();
-                        \defender::setInputError('password2');
+                        fusion_stop();
+                        \Defender::setInputError('password2');
                         addNotice('danger', self::$locale['setup_5012']);
 
                         break;
                     case 3:
-                        \defender::stop();
-                        \defender::setInputError('password1');
+                        fusion_stop();
+                        \Defender::setInputError('password1');
                         addNotice('danger', self::$locale['setup_5013']);
                         break;
                 }
@@ -411,18 +411,18 @@ class AdminSetup extends InstallCore {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        \defender::stop();
-                        \defender::setInputError('admin_password2');
+                        fusion_stop();
+                        \Defender::setInputError('admin_password2');
                         addNotice('danger', self::$locale['setup_5015']);
                         break;
                     case 3:
-                        \defender::stop();
-                        \defender::setInputError('admin_password1');
+                        fusion_stop();
+                        \Defender::setInputError('admin_password1');
                         addNotice('danger', self::$locale['setup_5017']);
                         break;
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
                     //$batch_core = Batch::getInstance();
@@ -531,7 +531,7 @@ class AdminSetup extends InstallCore {
                         }
                     }
 
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
                         self::installer_step(self::STEP_INFUSIONS);

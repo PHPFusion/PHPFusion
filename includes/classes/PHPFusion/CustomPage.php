@@ -128,7 +128,7 @@ class CustomPage {
         $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/custom_pages.php");
 
         if (isset($_POST['preview'])) {
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 $previewHtml = openmodal("cp_preview", $locale['429']);
                 $previewHtml .= "<h3>".$data['page_title']."</h3>\n";
                 if (fusion_get_settings("allow_php_exe")) {
@@ -152,7 +152,7 @@ class CustomPage {
                 'page_access'         => form_sanitizer($_POST['page_access'], 0, 'page_access'),
                 'page_content'        => form_sanitizer($_POST['page_content'], "", "page_content"),
                 'page_keywords'       => form_sanitizer($_POST['page_keywords'], '', 'page_keywords'),
-                //'page_language' => implode('.', isset($_POST['page_language']) ? \defender::sanitize_array($_POST['page_language']) : array()),
+                //'page_language' => implode('.', isset($_POST['page_language']) ? \Defender::sanitize_array($_POST['page_language']) : array()),
                 'page_language'       => isset($_POST['page_language']) ? form_sanitizer($_POST['page_language'], '', 'page_language') : LANGUAGE,
                 'page_allow_comments' => isset($_POST['page_allow_comments']) ? 1 : 0,
                 'page_allow_ratings'  => isset($_POST['page_allow_ratings']) ? 1 : 0
@@ -503,7 +503,7 @@ class CustomPage {
 
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     addNotice('success', $locale['411']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
@@ -518,7 +518,7 @@ class CustomPage {
                     self::set_customPageLinks($data);
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     addNotice('success', $locale['410']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }

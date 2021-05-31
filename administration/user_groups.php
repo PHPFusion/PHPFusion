@@ -72,7 +72,7 @@ class UserGroups {
                 break;
             case 'user_edit':
                 if (check_post('user_send') && empty(post('user_send'))) {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('danger', self::$locale['GRP_403']);
                     redirect(clean_request("section=user_group", ["", "aid"]));
                 }
@@ -86,14 +86,14 @@ class UserGroups {
                 break;
             case 'user_add':
                 if (empty(post('groups_add')) or empty(get('group_id'))) {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('danger', self::$locale['GRP_408']);
                     redirect(clean_request("", ["section=user_form", "aid"]));
                 }
                 break;
             case 'user_del':
                 if (empty(post('group')) or empty(get('group_id'))) {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('danger', self::$locale['GRP_408']);
                     redirect(clean_request("", ["section=user_form", "aid"]));
                 }
@@ -122,7 +122,7 @@ class UserGroups {
                 'group_description' => sanitizer('group_description', '', 'group_description'),
                 'group_icon'        => sanitizer('group_icon', '', "group_icon"),
             ];
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 dbquery_insert(DB_USER_GROUPS, $this->data, empty($this->data['group_id']) ? "save" : "update");
                 addNotice("success", empty($this->data['group_id']) ? self::$locale['GRP_401'] : self::$locale['GRP_400']);
                 redirect(clean_request("section=usergroup", ["", "aid"]));

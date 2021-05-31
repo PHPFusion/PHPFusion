@@ -47,7 +47,7 @@ if (check_post('savesettings')) {
         'error_logging_method'   => sanitizer('error_logging_method', '', 'error_logging_method'),
     ];
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,

@@ -33,7 +33,7 @@ if (check_post('save_settings')) {
         'pm_save_sent'     => sanitizer('pm_save_sent', '1', 'pm_save_sent')
     ];
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,

@@ -249,7 +249,7 @@ class MemberPoll {
             $i = 0;
             while ($i < $_POST['opt_count']) {
                 $opt_field = "poll_opt_".$i;
-                $this->data['poll_opt'][$i] = \defender::sanitize_array($_POST[$opt_field]);
+                $this->data['poll_opt'][$i] = \Defender::sanitize_array($_POST[$opt_field]);
                 $i++;
             }
             // Add new selection

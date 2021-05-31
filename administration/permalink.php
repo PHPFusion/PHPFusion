@@ -137,12 +137,12 @@ if (check_post('cancel')) {
 if (check_post('savesettings')) {
     foreach ($settings_seo as $key => $value) {
         $settings_seo[$key] = sanitizer($key, 0, $key);
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_seo[$key], ':name' => $key]);
         }
     }
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         require_once(INCLUDES.'htaccess_include.php');
         write_htaccess();
         addNotice('success', $locale['900']);
@@ -153,7 +153,7 @@ if (check_post('savesettings')) {
 if (check_post('savepermalinks')) {
     $error = 0;
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         if (check_post(['permalink']) && post(['permalink'])) {
             foreach (post(['permalink']) as $key => $value) {
                 $result = dbquery("UPDATE ".DB_PERMALINK_METHOD." SET pattern_source=:source WHERE pattern_id=:id", [':source' => $value, ':id' => $key]);

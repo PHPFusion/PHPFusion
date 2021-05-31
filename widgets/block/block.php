@@ -19,7 +19,7 @@
 class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
     public function display_widget($columnData) {
-        $blockData = \defender::unserialize($columnData['page_content']);
+        $blockData = \Defender::unserialize($columnData['page_content']);
         $block_margin = !empty($blockData['block_margin']) ? "margin:".$blockData['block_margin'].";" : "";
         $block_padding = !empty($blockData['block_padding']) ? "padding:".$blockData['block_padding'].";" : "";
         $block_style = ((!empty($block_margin) || !empty($block_padding)) ? " style=\"$block_margin $block_padding\"" : "");

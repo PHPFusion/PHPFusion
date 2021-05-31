@@ -24,7 +24,7 @@ namespace Defender;
  *
  * @package Defender
  */
-class Token extends \defender {
+class Token extends \Defender {
 
     /**
      * The remote file must begin with site_path
@@ -65,7 +65,7 @@ class Token extends \defender {
         if (!empty($_POST)) {
 
             if ($form_id = post('form_id')) {
-                $honeypot = (array) \defender::getInstance()->getHoneypot($form_id.'_honeypot');
+                $honeypot = (array) \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
                 if (!empty($honeypot['type']) && $honeypot['type'] == 'honeypot') {
                     if (post($honeypot['input_name'])) {
                         \Authenticate::logOut();
@@ -227,7 +227,7 @@ class Token extends \defender {
 
         $page_file = self::pageHash();
 
-        if (\Defender::safe()) {
+        if (fusion_safe()) {
 
             // Store into session
             $_SESSION['csrf_tokens'][$page_file][$form_id][] = $token;

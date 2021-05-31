@@ -324,7 +324,7 @@ class Admin {
     }
 
     public static function theme_uploader() {
-        $defender = \defender::getInstance();
+        $defender = \Defender::getInstance();
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
 

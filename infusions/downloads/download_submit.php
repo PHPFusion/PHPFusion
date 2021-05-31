@@ -94,7 +94,7 @@ if (iMEMBER && $dl_settings['download_allow_submission'] && checkgroup($dl_setti
             } else {
                 if ($dl_settings['download_screenshot_required']) {
                     fusion_stop();
-                    \defender::setInputError("download_image");
+                    \Defender::setInputError("download_image");
                 }
             }
         }

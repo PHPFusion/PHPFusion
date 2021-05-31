@@ -106,7 +106,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 "when_saving"   => "news_cat_name='".$inputArray['news_cat_name']."' ".(multilang_table("NS") ? "and ".in_group('news_cat_language', LANGUAGE) : ""),
             ];
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 // check category name is unique when updating
                 if (dbcount("(news_cat_id)", DB_NEWS_CATS, "news_cat_id='".$inputArray['news_cat_id']."'")) {
                     if (!dbcount("(news_cat_id)", DB_NEWS_CATS, $categoryNameCheck['when_updating'])) {
@@ -239,7 +239,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 foreach ($input as $news_cat_id) {
                     // check input table
                     if (dbcount("('news_cat_id')", DB_NEWS_CATS,
-                            "news_cat_id='".intval($news_cat_id)."'") && \defender::safe()
+                            "news_cat_id='".intval($news_cat_id)."'") && fusion_safe()
                     ) {
                         switch ($_POST['table_action']) {
                             case "publish":

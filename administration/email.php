@@ -36,7 +36,7 @@ if (check_post('save_template')) {
         'template_sender_name'  => sanitizer('template_sender_name', '', 'template_sender_name'),
         'template_sender_email' => sanitizer('template_sender_email', '', 'template_sender_email'),
     ];
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, "update");
         addNotice('success', $locale['MAIL_001']);
         redirect(FUSION_SELF.fusion_get_aidlink()."&template_id=".$data['template_id']);
@@ -52,7 +52,7 @@ if (check_post('save_template')) {
         'template_sender_name'  => sanitizer('template_sender_name', '', 'template_sender_name'),
         'template_sender_email' => sanitizer('template_sender_email', '', 'template_sender_email'),
     ];
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         require_once INCLUDES.'sendmail_include.php';
         dbquery_insert(DB_EMAIL_TEMPLATES, $data, 'update');
         sendemail_template($data['template_key'], $locale['MAIL_002'], $locale['MAIL_003'], $locale['MAIL_004'], $locale['MAIL_005'], $locale['MAIL_006'], fusion_get_userdata('user_email'), $data['template_sender_name'], $data['template_sender_email']);

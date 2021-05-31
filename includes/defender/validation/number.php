@@ -30,8 +30,8 @@ class Number extends \Defender\Validation {
     public function verify_number() {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
 
         if (is_array(self::$inputValue)) {

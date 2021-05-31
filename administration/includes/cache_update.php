@@ -39,7 +39,7 @@ if (isset($_REQUEST['form_id'])
             $status['response'] = 200;
             $_SESSION['form_cache'][$form_id][$form_type][$item_id] = form_sanitizer($_REQUEST['fields']);
             /*if ($item_id) {
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     $status['response'] = 201;
                     parse_str(urldecode($_SESSION['form_cache'][$form_id][$form_type][$item_id]), $data);
                     // you need an unobstrusive method. do not update the table, but recall only. Show that there are some version, and whether they want to output.

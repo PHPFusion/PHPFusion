@@ -97,7 +97,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $error_class = "";
     for ($i = 0; $i <= 5; $i++) {
-        if (\defender::inputHasError($input_name.'-'.$validation_key[$i])) {
+        if (\Defender::inputHasError($input_name.'-'.$validation_key[$i])) {
             $error_class = "has-error ";
             addNotice("danger", $error_key[$i]);
         }
@@ -117,7 +117,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "<input type='text' name='".$input_name."[]' class='form-control' id='".$input_id."-street' value='".$input_value['0']."' placeholder='".$locale['street1'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[0])) || \defender::inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name.'-'.$validation_key[0])) || \Defender::inputHasError($input_name.'-'.$validation_key[0])) ? "<div id='".$options['input_id']."-street-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
     $html .= "</div>";
 
@@ -140,7 +140,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "</select>";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[2])) || \defender::inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name.'-'.$validation_key[2])) || \Defender::inputHasError($input_name.'-'.$validation_key[2])) ? "<div id='".$options['input_id']."-country-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_3']."</div>" : "";
 
     $html .= "</div>";
 
@@ -150,7 +150,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "<input type='hidden' name='".$input_name."[]' id='$input_id-state' value='".$input_value['3']."' style='width:100%;' />";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[3])) || \defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name.'-'.$validation_key[3])) || \Defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
 
     $html .= "</div>";
 
@@ -158,7 +158,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."-city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-city-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_5']."</div>" : "";
 
     $html .= "</div>";
 
@@ -166,7 +166,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."-postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name.'-'.$validation_key[5])) || \defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name.'-'.$validation_key[5])) || \Defender::inputHasError($input_name.'-'.$validation_key[5])) ? "<div id='".$options['input_id']."-postcode-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_6']."</div>" : "";
 
     $html .= "</div>";
 
@@ -178,7 +178,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "</div>";
 
-    \defender::getInstance()->add_field_session([
+    \Defender::getInstance()->add_field_session([
         'input_name'   => $input_name,
         'type'         => 'address',
         'title'        => $title,
@@ -317,10 +317,10 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
     $length = "minimumInputLength: 1,";
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -413,13 +413,13 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
         $html .= form_hidden($input_name, "", $input_value, ["input_id" => $options['input_id']]);
     }
 
-    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
+    $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
 
     $html .= ($options['inline'] && $label) ? "</div>" : "";
 
     $html .= "</div>";
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'     => clean_input_name($input_name),
         'type'           => 'textbox',
         'title'          => trim($title, '[]'),

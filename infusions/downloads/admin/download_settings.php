@@ -38,10 +38,10 @@ if (isset($_POST['savesettings'])) {
         "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
         'download_submission_access'   => form_sanitizer($_POST['download_submission_access'], USER_LEVEL_MEMBER, 'download_submission_access')
     ];
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         foreach ($StoreArray as $key => $value) {
             $result = NULL;
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 $Array = ["settings_name" => $key, "settings_value" => $value, "settings_inf" => "downloads"];
                 dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }

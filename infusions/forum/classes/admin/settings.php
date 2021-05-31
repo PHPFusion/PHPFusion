@@ -75,7 +75,7 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         if (isset($_POST['save_forum_uf'])) {
             $current_uf = !empty($_POST['uf_field_enabled']) ? form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled') : '';
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 if ($_enabled === NULL) {
                     $result = dbquery("INSERT INTO ".DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('forum_enabled_userfields', :current_uf, 'forum')", [':current_uf' => $current_uf]);
                 } else {
@@ -191,7 +191,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'bounty_points'             => form_sanitizer($_POST['bounty_points'], 50, 'bounty_points'),
                 'min_rep_points'            => form_sanitizer($_POST['min_rep_points'], 50, 'min_rep_points'),
             ];
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                         ':settings_value' => $settings_value,
@@ -348,7 +348,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_last_post_avatar'     => form_sanitizer($_POST['forum_last_post_avatar'], 0, 'forum_last_post_avatar'),
                 'forum_editpost_to_lastpost' => form_sanitizer($_POST['forum_editpost_to_lastpost'], 0, 'forum_editpost_to_lastpost'),
             ];
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "forum",

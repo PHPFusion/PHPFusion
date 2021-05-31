@@ -41,11 +41,11 @@ if (check_post('save_robots')) {
     $robots_content = sanitizer('robots_content', '', 'robots_content');
 
     if (!preg_check("/^[-0-9A-Z._\*\:\.\!\/@\s]+$/i", $robots_content)) {
-        \defender::stop();
+        fusion_stop();
         addNotice("danger", $locale['ROBOT_417']);
     }
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         $message = !file_exists($file) ? $locale['ROBOT_416'] : $locale['ROBOT_412'];
         write_file($file, $robots_content);
         addNotice("success", $message);
@@ -56,10 +56,10 @@ if (check_post('save_robots')) {
 if (check_post('set_default')) {
 
     if (!is_writable($file)) {
-        \defender::stop();
+        fusion_stop();
         addNotice("danger", $locale['ROBOT_414']);
     }
-    if (\defender::safe() && !defined('FUSION_NULL')) {
+    if (fusion_safe() && !defined('FUSION_NULL')) {
         write_file($file, write_default());
         addNotice("success", $locale['ROBOT_412']);
         redirect(FUSION_REQUEST);

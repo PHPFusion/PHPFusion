@@ -42,7 +42,7 @@ class Members_Profile extends Members_Admin {
             $userInput->skipCurrentPass = TRUE;
             $userInput->saveInsert();
             unset($userInput);
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
@@ -91,7 +91,7 @@ class Members_Profile extends Members_Admin {
             $userInput->saveUpdate();
             self::$user_data = $userInput->getData(); // data overridden on error.
             unset($userInput);
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         }
@@ -294,7 +294,7 @@ class Members_Profile extends Members_Admin {
                     addNotice('warning', self::$locale['u153'], 'all');
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => get('lookup')]);
                     addNotice('success', self::$locale['u165']);
                     redirect(clean_request('', ['ref', 'lookup'], FALSE));

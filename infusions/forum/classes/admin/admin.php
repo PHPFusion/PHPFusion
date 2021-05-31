@@ -141,7 +141,7 @@ abstract class ForumAdminInterface extends ForumServer {
                 $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
             }
             if ($name_check) {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', self::$locale['forum_error_7']);
             } else {
                 return $forum_name;

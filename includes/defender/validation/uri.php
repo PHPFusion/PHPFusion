@@ -28,8 +28,8 @@ class Uri extends \Defender\Validation {
      */
     protected function verify_URL() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
 
         if (self::$inputValue) {
@@ -106,8 +106,8 @@ class Uri extends \Defender\Validation {
      */
     public function verify_path() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
         if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
             return self::$inputValue;

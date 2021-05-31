@@ -45,7 +45,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
             'faq_submission_access' => form_sanitizer($_POST['faq_submission_access'], USER_LEVEL_MEMBER, 'faq_submission_access')
         ];
         // Update
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
                 $inputSettings = [
                     'settings_name'  => $settings_name,

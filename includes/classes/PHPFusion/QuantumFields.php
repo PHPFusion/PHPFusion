@@ -2718,7 +2718,7 @@ class QuantumFields extends SqlHandler {
                 redirect(FUSION_REQUEST);
             }
         } else {
-            \defender::stop();
+            fusion_stop();
             addNotice('danger', $this->locale['fields_0109']);
         }*/
 

@@ -79,7 +79,7 @@ function photo_form() {
             if (empty($data['photo_order'])) {
                 $data['photo_order'] = dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS." where album_id=:albumid", [':albumid' => $data['album_id']]), 0) + 1;
             }
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 if (!empty($_FILES['photo_image']) && is_uploaded_file($_FILES['photo_image']['tmp_name'])) {
                     $upload_dir = is_dir(IMAGES_G.'album_'.$data['album_id'].'/') && $data['album_id'] > 0 ? IMAGES_G.'album_'.$data['album_id'].'/' : IMAGES_G;
 
@@ -138,12 +138,12 @@ function photo_form() {
                     }
                 } else {
                     // because we require the photo image must be uploaded.
-                    \defender::stop();
-                    \defender::setInputError("photo_image");
+                    fusion_stop();
+                    \Defender::setInputError("photo_image");
                     addNotice('danger', $locale['photo_0014']);
                 }
             }
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 if (dbcount("(photo_id)", DB_PHOTOS, "photo_id=:photoid", [':photoid' => intval($data['photo_id'])])) {
                     // update album
                     dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '', 'update');
@@ -297,7 +297,7 @@ function mass_photo_form() {
     if ($albumRows) {
         if (isset($_POST['upload_photo'])) {
             $data['album_id'] = form_sanitizer($_POST['album_id'], 0, 'album_id');
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 $upload_dir = is_dir(IMAGES_G.'album_'.$data['album_id'].'/') && $data['album_id'] > 0 ? IMAGES_G.'album_'.$data['album_id'].'/' : IMAGES_G;
 
                 \Defender::getInstance()->add_field_session([

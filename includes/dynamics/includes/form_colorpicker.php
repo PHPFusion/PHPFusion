@@ -55,10 +55,10 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $input_id = $options['input_id'] ?: $default_options['input_id'];
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -79,7 +79,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
     $html .= $options['inline'] && $label ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session([
+    \Defender::getInstance()->add_field_session([
         'input_name' => clean_input_name($input_name),
         'type'       => 'color',
         'title'      => $title,

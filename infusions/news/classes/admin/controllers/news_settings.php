@@ -59,7 +59,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
                 "news_file_types"             => form_sanitizer($_POST['news_file_types'], '.gif,.jpg,.png,.svg,.webp', "news_file_types"),
                 'news_submission_access'      => form_sanitizer($_POST['news_submission_access'], USER_LEVEL_MEMBER, 'news_submission_access')
             ];
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "news",

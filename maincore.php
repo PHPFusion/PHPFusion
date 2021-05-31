@@ -251,7 +251,7 @@ include INCLUDES."ip_handling_include.php";
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
 
-$defender = defender::getInstance();
+$defender = Defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new Token();

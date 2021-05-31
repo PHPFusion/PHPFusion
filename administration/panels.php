@@ -148,7 +148,7 @@ class PanelsAdministration {
             // panel name is unique
             $result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
             if ($result) {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', self::$locale['471']);
             }
             $this->data['panel_filename'] = sanitizer('panel_filename', '', 'panel_filename');
@@ -184,12 +184,12 @@ class PanelsAdministration {
                     $this->data['panel_url_list'] = str_replace(",", "\r\n", $this->data['panel_url_list']);
                     $this->data['panel_display'] = ($this->data['panel_side'] != 1 && $this->data['panel_side'] != 4) ? 1 : 0;
                 } else {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('danger', self::$locale['475']);
                 }
             }
 
-            $panel_languages = !empty(post(['panel_languages'])) ? \defender::sanitize_array(post(['panel_languages'])) : [];
+            $panel_languages = !empty(post(['panel_languages'])) ? \Defender::sanitize_array(post(['panel_languages'])) : [];
             if (!empty($panel_languages)) {
                 $this->data['panel_languages'] = implode('.', $panel_languages);
             }
@@ -229,7 +229,7 @@ class PanelsAdministration {
                     $current_side = $panel_side;
                 }
             }
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 redirect(FUSION_SELF.$aidlink."&section=listpanel");
             }
         }
@@ -447,7 +447,7 @@ class PanelsAdministration {
 
         if (check_post('panel_preview') && $settings['allow_php_exe']) {
             $panel_title = sanitizer('panel_name', "", "panel_name");
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 ob_start();
                 echo openmodal('cp_preview', $panel_title);
                 if ($settings['allow_php_exe']) {

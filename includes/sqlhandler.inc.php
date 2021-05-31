@@ -721,7 +721,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         'keep_session' => FALSE
     ];
 
-    if (!defender::safe()) {
+    if (!fusion_safe()) {
         if ($options['debug']) {
             print_p('Fusion Null Declared. Developer, check form tokens.');
         }
@@ -729,7 +729,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         return FALSE;
     }
 
-    $defender = defender::getInstance();
+    $defender = Defender::getInstance();
 
     $cresult = dbquery("SHOW COLUMNS FROM $table");
     $columns = [];

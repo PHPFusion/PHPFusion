@@ -106,7 +106,7 @@ if (isset($_POST['save_download'])) {
     ];
 
     /** Bugs with having Link and File together -- File will take precedence **/
-    if (\defender::safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
+    if (fusion_safe() && !empty($_FILES['download_file']['name']) && is_uploaded_file($_FILES['download_file']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_file'], '', 'download_file');
         if (empty($upload['error'])) {
             $data['download_file'] = !empty($upload['target_file']) ? $upload['target_file'] : $upload['name'];
@@ -118,13 +118,13 @@ if (isset($_POST['save_download'])) {
         $data['download_url'] = form_sanitizer($_POST['download_url'], "", "download_url");
         $data['download_file'] = '';
     } else if (empty($data['download_file']) && empty($data['download_url'])) {
-        \defender::stop();
+        fusion_stop();
         addNotice('danger', $locale['download_0111']);
     }
     /**
      * Image Section
      */
-    if (\defender::safe() && isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
+    if (fusion_safe() && isset($_POST['del_image']) && isset($_GET['download_id']) && isnum($_GET['download_id'])) {
         $result = dbquery("SELECT download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
         if (dbrows($result)) {
             $data += dbarray($result);
@@ -137,7 +137,7 @@ if (isset($_POST['save_download'])) {
         }
         $data['download_image'] = '';
         $data['download_image_thumb'] = '';
-    } else if (defender::safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
+    } else if (fusion_safe() && !empty($_FILES['download_image']['name']) && is_uploaded_file($_FILES['download_image']['tmp_name'])) {
         $upload = form_sanitizer($_FILES['download_image'], '', 'download_image');
         if (empty($upload['error'])) {
             $data['download_image'] = !empty($upload['image_name']) ? $upload['image_name'] : '';
@@ -147,13 +147,13 @@ if (isset($_POST['save_download'])) {
 
     if (dbcount("(download_id)", DB_DOWNLOADS, "download_id='".$data['download_id']."'")) {
         dbquery_insert(DB_DOWNLOADS, $data, 'update');
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             addNotice("success", $locale['download_0101']);
             redirect(FUSION_SELF.$aidlink);
         }
     } else {
         dbquery_insert(DB_DOWNLOADS, $data, 'save');
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             addNotice("success", $locale['download_0100']);
             redirect(FUSION_SELF.$aidlink);
         }

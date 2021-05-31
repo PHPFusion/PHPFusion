@@ -71,7 +71,7 @@ if (isset($_POST['delete_watermarks'])) {
             'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.gif,.jpg,.png,.svg,.webp', 'gallery_file_types'),
             'gallery_submission_access'   => form_sanitizer($_POST['gallery_submission_access'], USER_LEVEL_MEMBER, 'gallery_submission_access')
         ];
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
                 $inputSettings = [
                     'settings_name'  => $settings_name,

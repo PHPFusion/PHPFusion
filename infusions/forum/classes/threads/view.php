@@ -229,7 +229,7 @@ class ViewThread extends ForumServer {
                     // If you merge, the datestamp on all forum, threads, post will not be updated.
                     $update_forum_lastpost = FALSE;
 
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
                         // Prepare forum merging action
                         $last_post_author = dbarray(dbquery("
                         SELECT post_author FROM ".DB_FORUM_POSTS."
@@ -333,7 +333,7 @@ class ViewThread extends ForumServer {
                             }
                         }
 
-                        if (\defender::safe()) {
+                        if (fusion_safe()) {
                             redirect(FORUM."postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                         }
 
@@ -556,7 +556,7 @@ class ViewThread extends ForumServer {
 
                             $thread_data['thread_sticky'] = isset($_POST['thread_sticky']) ? 1 : 0;
 
-                            if (\defender::safe()) {
+                            if (fusion_safe()) {
 
                                 // If post delete checkbox
                                 $this->delete_post($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id']);
@@ -607,7 +607,7 @@ class ViewThread extends ForumServer {
                                     }
                                 }
 
-                                if (\defender::safe()) {
+                                if (fusion_safe()) {
                                     redirect(FORUM."postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
                                 }
                             }

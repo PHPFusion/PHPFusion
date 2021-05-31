@@ -180,7 +180,7 @@ class Infusions {
                                         }
                                         if ($error) {
                                             // Reports visually which method has error.
-                                            \defender::stop($callback_method);
+                                            fusion_stop($callback_method);
                                             addNotice('danger', self::$locale['403']);
 
                                             return $error;

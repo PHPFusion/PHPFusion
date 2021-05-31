@@ -30,12 +30,12 @@ if (check_post('migrate')) {
     $user_temp_id = sanitizer('user_migrate', 0, 'user_migrate');
 
     if ($user_primary_id == $user_temp_id || !isnum($user_primary_id) || !isnum($user_temp_id)) {
-        \defender::stop();
+        fusion_stop();
         addNotice('danger', $locale['MIG_101']);
         redirect(FUSION_REQUEST);
     }
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         $result = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_primary_id]);
         if (dbrows($result) > 0) {
             $result2 = dbquery("SELECT user_id, user_name FROM ".DB_USERS." WHERE user_id=:userid", [':userid' => $user_temp_id]);

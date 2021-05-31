@@ -199,10 +199,10 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     $options['week_start'] = (int)$options['week_start'];
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -225,7 +225,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $html .= "</div>\n";
 
-    $html .= (($options['required'] == 1 && \defender::inputHasError($input_name)) || \defender::inputHasError($input_name) ? "<div id='".$options["input_id"]."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "");
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name) ? "<div id='".$options["input_id"]."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "");
 
     $html .= $options['stacked'];
 
@@ -233,7 +233,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $html .= "</div>";
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'  => clean_input_name($input_name),
         'type'        => $options['type'],
         'title'       => $title,
@@ -293,7 +293,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         moment.updateLocale('".$locale['datepicker']."', {
             week: {dow: ".$options['week_start']."}
         });
-        
+
         let ".$options["input_id"]."_datepicker = $('#".$options["input_id"]."_datepicker').datetimepicker({
             locale: '".$locale['datepicker']."',
             ".$dpbuttons."

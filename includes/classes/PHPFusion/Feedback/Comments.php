@@ -206,7 +206,7 @@ class Comments {
                         $comments_form .= form_hidden('comment_id', '', '', ['input_id' => $this->getParams('comment_key').'-comment_id']);
                         $comments_form .= form_hidden('comment_cat', '', $edata['comment_cat'], ['input_id' => $this->getParams('comment_key').'-comment_cat']);
                         //$comments_form .= form_hidden('comment_key', '', $this->getParams('comment_key'), ['input_id' => $this->getParams('comment_key').'-comment_key']);
-                        //$comments_form .= form_hidden('comment_options', '', \defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
+                        //$comments_form .= form_hidden('comment_options', '', \Defender::serialize($this->getParams()), array('input_id' => $this->getParams('comment_key').'-comment_options'));
                         //$comments_form .= form_hidden('comment_item_id', '', $this->getParams('comment_item_id'), array('input_id' => $this->getParams('comment_key').'-comment_item_id'));
                         //$comments_form .= form_hidden('comment_item_type', '', $this->getParams('comment_item_type'), array('input_id' => $this->getParams('comment_key').'-comment_item_type'));
                         /*
@@ -412,7 +412,7 @@ class Comments {
                 $data['comment_ratings'] .= "</p>\n";
             }
 
-            $data_api = \defender::encode($options);
+            $data_api = \Defender::encode($options);
 
             $comments_html .= "<!---comment-".$data['comment_id']."--->\n";
             ob_start();
@@ -587,7 +587,7 @@ class Comments {
                 $_CAPTCHA_IS_VALID = FALSE;
                 include INCLUDES."captchas/".$this->settings['captcha']."/captcha_check.php";
                 if (!$_CAPTCHA_IS_VALID) {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice("danger", $this->locale['u194']);
                 }
             }
@@ -636,7 +636,7 @@ class Comments {
                         AND comment_item_id='".$this->getParams('comment_item_id')."'
                         AND comment_type='".$this->getParams('comment_item_type')."'
                         AND comment_name='".$this->userdata['user_id']."'
-                        AND comment_hidden='0'")) && \defender::safe()
+                        AND comment_hidden='0'")) && fusion_safe()
                 ) {
 
                     $c_name_query = "SELECT comment_name FROM ".DB_COMMENTS." WHERE comment_id='".$comment_data['comment_id']."'";
@@ -665,7 +665,7 @@ class Comments {
                             AND comment_type='".$this->getParams('comment_item_type')."'");
 
                     $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
                         addNotice("success", $this->locale['c114']);
                         $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                         $c_link = $this->getParams('clink');
@@ -676,7 +676,7 @@ class Comments {
 
                 $comment_data['comment_datestamp'] = TIME;
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
 
                     $c_start = 0;
 
@@ -879,7 +879,7 @@ class Comments {
         if ((iADMIN && checkrights("C")) || (iMEMBER && $row['comment_name'] == $this->userdata['user_id'] && isset($row['user_name']))) {
             $edit_link = $this->getParams('clink')."&amp;c_action=edit&amp;comment_id=".$row['comment_id']."#edit_comment"; //clean_request('c_action=edit&comment_id='.$row['comment_id'], array('c_action', 'comment_id'),FALSE)."#edit_comment";
             $delete_link = $this->getParams('clink')."&amp;c_action=delete&amp;comment_id=".$row['comment_id']; //clean_request('c_action=delete&comment_id='.$row['comment_id'], array('c_action', 'comment_id'), FALSE);
-            $data_api = \defender::serialize($this->getParams());
+            $data_api = \Defender::serialize($this->getParams());
             $comment_actions = "
                             <!---comment_actions-->
                             <div class='btn-group'>

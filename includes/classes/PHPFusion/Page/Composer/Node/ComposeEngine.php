@@ -201,7 +201,7 @@ class ComposeEngine extends PageAdmin {
                 }
             }
             dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'delete');
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 addNotice('success', self::$locale['page_0403']);
             }
         } else {
@@ -220,7 +220,7 @@ class ComposeEngine extends PageAdmin {
             $rowData['page_grid_id'] = 0;
             $rowId = dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
             if (!$rowId) {
-                \defender::stop();
+                fusion_stop();
                 addNotice("danger", self::$locale['page_0405']);
             }
             // now check for all content and also duplicate it.
@@ -231,12 +231,12 @@ class ComposeEngine extends PageAdmin {
                     $colData['page_grid_id'] = $rowId;
                     $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
                     if (!$colId) {
-                        \defender::stop();
+                        fusion_stop();
                         addNotice('danger', self::$locale['page_0406']);
                     }
                 }
             }
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 addNotice('success', self::$locale['page_0407']);
             }
         } else {
@@ -264,7 +264,7 @@ class ComposeEngine extends PageAdmin {
     }
 
     protected static function execute_RowUpdate() {
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             if (!empty(self::$rowData['page_grid_id'])) {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
                     self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
@@ -421,20 +421,20 @@ class ComposeEngine extends PageAdmin {
                 if ($button_val == 'widget') {
                     if (method_exists($object, 'validate_input')) {
                         $input = $object->validate_input(); // will yield error
-                        if ($input && \defender::unserialize($input)) {
+                        if ($input && \Defender::unserialize($input)) {
                             self::$colData['page_content'] = $input;
                         }
                     }
                 } else if ($button_val == 'settings') {
                     if (method_exists($object, 'validate_settings')) {
                         $input = $object->validate_settings();
-                        if ($input && \defender::unserialize($input)) {
+                        if ($input && \Defender::unserialize($input)) {
                             self::$colData['page_options'] = $input;
                         }
                     }
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     if (self::$colData['page_content_id'] > 0) {
                         dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
                             'page_content_order',
@@ -527,7 +527,7 @@ class ComposeEngine extends PageAdmin {
 
                 $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
                 if (!$colId) {
-                    \defender::stop();
+                    fusion_stop();
                     addNotice("danger", self::$locale['page_0406']);
                 }
                 addNotice("success", self::$locale['page_0411']);

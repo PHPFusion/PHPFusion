@@ -85,8 +85,8 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
                 self::$widget_data['box_icon_src'] = form_sanitizer($_POST['box_icon_src-mediaSelector'], '', 'box_icon_src-mediaSelector');
             }
         }
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+        if (fusion_safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
 
         return NULL;
@@ -122,7 +122,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
         ];
 
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
 
         echo form_text('box_title', $widget_locale['FBW_0200'], self::$widget_data['box_title'], ['inline' => TRUE]);

@@ -38,7 +38,7 @@ if (isset($_POST['savesettings'])) {
         "blog_file_types"             => form_sanitizer($_POST['blog_file_types'], '.gif,.jpg,.png,.svg,.webp', "blog_file_types"),
         'blog_submission_access'      => form_sanitizer($_POST['blog_submission_access'], USER_LEVEL_MEMBER, 'blog_submission_access')
     ];
-    if (Defender::safe()) {
+    if (fusion_safe()) {
         foreach ($inputArray as $settings_name => $settings_value) {
             $inputSettings = [
                 "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "blog",

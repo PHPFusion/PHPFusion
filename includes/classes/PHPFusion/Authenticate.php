@@ -303,7 +303,7 @@ class Authenticate {
                                 }
                                 // Check if any error was set
                                 if ($error !== FALSE) {
-                                    \defender::stop();
+                                    fusion_stop();
                                     addNotice("warning", $error);
 
                                     return FALSE;

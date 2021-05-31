@@ -66,7 +66,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
                 $criteriaArray['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
             }
         }
-        if (Defender::safe()) {
+        if (fusion_safe()) {
             $inputArray = [
                 "submit_type"      => "b",
                 "submit_user"      => $userdata['user_id'],
@@ -101,7 +101,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
         ];
     }
     $criteriaArray['submitted'] = FALSE;
-    if (\Defender::safe() && isset($_POST['preview_blog'])) {
+    if (fusion_safe() && isset($_POST['preview_blog'])) {
         $footer = openmodal("blog_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$locale['preview'].": ".$criteriaArray['blog_subject']);
         $footer .= parse_text($criteriaArray['blog_blog'], [
             'parse_smileys'   => FALSE,

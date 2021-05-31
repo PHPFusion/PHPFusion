@@ -139,7 +139,7 @@ class Poll {
                     $option_data[$i] = form_sanitizer($value, '', "poll_options");
                 }
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     $option_data = array_values(array_filter($option_data));
                     array_unshift($option_data, NULL);
                     unset($option_data[0]);
@@ -180,7 +180,7 @@ class Poll {
                         while ($_data = dbarray($poll_result)) {
                             $_poll[$_data['forum_poll_option_id']] = $_data;
                             // Prune the emptied fields AND field is not required.
-                            if (empty($option_data[$_data['forum_poll_option_id']]) && \defender::safe()) {
+                            if (empty($option_data[$_data['forum_poll_option_id']]) && fusion_safe()) {
                                 dbquery(
                                     "DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$_data['forum_poll_option_id']."'"
                                 );
@@ -189,7 +189,7 @@ class Poll {
                         foreach ($option_data as $option_text) {
                             if ($option_text) {
 
-                                if (\defender::safe()) {
+                                if (fusion_safe()) {
                                     if (isset($_poll[$i])) { // has record
                                         dbquery(
                                             "UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_text='".$option_text."' WHERE thread_id='".self::$data['thread_id']."' AND forum_poll_option_id='".$i."'"
@@ -207,7 +207,7 @@ class Poll {
                                 $i++;
                             }
                         }
-                        if (\defender::safe()) {
+                        if (fusion_safe()) {
                             redirect(fusion_get_settings('siteurl')."infusions/forum/postify.php?post=editpoll&error=0&forum_id=".self::$data['forum_id']."&thread_id=".self::$data['thread_id']);
                         }
                     }
@@ -285,7 +285,7 @@ class Poll {
                             $i++;
                         }
                     }
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
                         dbquery(
                             "UPDATE ".DB_FORUM_THREADS." SET thread_poll='1' WHERE thread_id='".self::$data['thread_id']."'"
                         );
@@ -416,7 +416,7 @@ class Poll {
 
                             $pollInput['poll_option_id'] = stripinput($_POST['poll_option']);
 
-                            if (\defender::safe()) {
+                            if (fusion_safe()) {
 
                                 dbquery(
                                     "UPDATE ".DB_FORUM_POLL_OPTIONS." SET forum_poll_option_votes=forum_poll_option_votes+1 WHERE thread_id='".intval(
@@ -536,7 +536,7 @@ class Poll {
      */
     public function delete_poll() {
         if (!empty(self::$data['thread_poll']) && $this->get_poll_permissions("can_edit_poll")) {
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".self::$data['thread_id']."'");
                 dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."'");
                 dbquery("DELETE FROM ".DB_FORUM_POLL_VOTERS." WHERE thread_id='".self::$data['thread_id']."'");

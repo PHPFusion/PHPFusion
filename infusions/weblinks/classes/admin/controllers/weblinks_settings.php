@@ -45,7 +45,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
             ];
 
             // Update
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
                     $inputSettings = [
                         'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => "weblinks",

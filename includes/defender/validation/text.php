@@ -46,8 +46,8 @@ class Text extends \Defender\Validation {
                 if (self::$inputConfig['max_length']) {
                     // Input max length needs a value.
                     if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", $val)) {
-                        \defender::stop();
-                        \defender::setInputError(self::$inputName);
+                        fusion_stop();
+                        \Defender::setInputError(self::$inputName);
                         return self::$inputDefault;
                     }
                 }
@@ -68,8 +68,8 @@ class Text extends \Defender\Validation {
         } else {
             if (self::$inputConfig['max_length']) {
                 if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", self::$inputValue)) {
-                    \defender::stop();
-                    \defender::setInputError(self::$inputName);
+                    fusion_stop();
+                    \Defender::setInputError(self::$inputName);
                     return FALSE;
                 }
             }
@@ -86,7 +86,7 @@ class Text extends \Defender\Validation {
             }
         }
         if (self::$inputConfig['required'] && !$value) {
-            \defender::setInputError(self::$inputName);
+            \Defender::setInputError(self::$inputName);
         }
         if (self::$inputConfig['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
             return FALSE;
@@ -105,8 +105,8 @@ class Text extends \Defender\Validation {
 
         // add min length, add max length, add strong password into roadmaps.
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
         if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
             self::$inputValue)) {
@@ -125,8 +125,8 @@ class Text extends \Defender\Validation {
      */
     protected function verify_email() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
         if (preg_check("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,}+)$/i", self::$inputValue)) {
             return self::$inputValue;

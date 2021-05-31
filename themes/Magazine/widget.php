@@ -25,7 +25,7 @@ if (isset($_POST['save_settings'])) {
         'twitter_url'  => form_sanitizer($_POST['twitter_url'], '', 'twitter_url')
     ];
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         foreach ($settings as $settings_name => $settings_value) {
             $db = [
                 'settings_name'  => $settings_name,

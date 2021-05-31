@@ -98,7 +98,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             ];
 
             // Handle
-            if (\defender::safe()) {
+            if (fusion_safe()) {
 
                 $update_datestamp = check_post('update_datestamp');
                 // Update
@@ -271,7 +271,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
             if (!empty($input)) {
                 foreach ($input as $weblink_id) {
                     // check input table
-                    if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]) && \defender::safe()) {
+                    if (dbcount("('weblink_id')", DB_WEBLINKS, "weblink_id = :weblinkid", [':weblinkid' => (int)$weblink_id]) && fusion_safe()) {
 
                         switch ($table_action) {
                             case "publish":

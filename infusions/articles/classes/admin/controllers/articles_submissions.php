@@ -71,7 +71,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             }
 
             // Handle
-            if (\defender::safe()) {
+            if (fusion_safe()) {
 
                 // Publish Submission
                 if (isset($_POST['publish_submission'])) {
@@ -130,7 +130,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
 
-            $submit_criteria = \defender::decode($data['submit_criteria']);
+            $submit_criteria = \Defender::decode($data['submit_criteria']);
             return [
                 'article_subject'        => $submit_criteria['article_subject'],
                 'article_snippet'        => phpentities(stripslashes($submit_criteria['article_snippet'])),
@@ -376,7 +376,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 <?php if (dbrows($result) > 0) :
                     while ($data = dbarray($result)) : ?>
                         <?php
-                        $submitData = \defender::decode($data['submit_criteria']);
+                        $submitData = \Defender::decode($data['submit_criteria']);
                         $submitUser = $this->locale['user_na'];
                         if ($data['user_name']) {
                             $submitUser = display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5');

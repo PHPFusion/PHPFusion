@@ -58,7 +58,7 @@ function bbcode_form() {
         $test_message = sanitizer('test_message', '', 'test_message');
         $smileys_checked = check_post('test_smileys') || preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si",
             $test_message) ? 1 : 0;
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             openside($locale['BBCA_417']);
             if (!$smileys_checked) {
                 echo parsesmileys(parseubb($test_message));

@@ -333,7 +333,7 @@ class UserFieldsInput {
                             break;
                         case '1':
                             // New Password equal old password
-                            Defender::stop();
+                            fusion_stop();
                             Defender::setInputError('user_password2');
                             Defender::setInputError('user_password2');
                             Defender::setErrorText('user_password', $locale['u134'].$locale['u146'].$locale['u133']);
@@ -341,7 +341,7 @@ class UserFieldsInput {
                             break;
                         case '2':
                             // The two new passwords are not identical
-                            Defender::stop();
+                            fusion_stop();
                             Defender::setInputError('user_password1');
                             Defender::setInputError('user_password2');
                             Defender::setErrorText('user_password1', $locale['u148']);
@@ -491,7 +491,7 @@ class UserFieldsInput {
                         ":email like replace(if (blacklist_email like '%@%' or blacklist_email like '%\\%%', blacklist_email, concat('%@', blacklist_email)), '_', '\\_')",
                         [':email' => $this->_userEmail])) {
                         // this email blacklisted.
-                        Defender::stop();
+                        fusion_stop();
                         Defender::setInputError('user_email');
                         Defender::setErrorText('user_email', $locale['u124']);
 
@@ -599,7 +599,7 @@ class UserFieldsInput {
             addNotice('warning', $locale['u153']."<br />".$message, 'all');
         }
         $userInfo = base64_encode(serialize($this->data));
-        if (Defender::safe()) {
+        if (fusion_safe()) {
             dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
@@ -789,7 +789,7 @@ class UserFieldsInput {
                         break;
                     case '1':
                         // new password is old password
-                        Defender::stop();
+                        fusion_stop();
                         Defender::setInputError('user_admin_password');
                         Defender::setInputError('user_admin_password1');
                         Defender::setErrorText('user_admin_password', $locale['u144'].$locale['u146'].$locale['u133']);
@@ -797,7 +797,7 @@ class UserFieldsInput {
                         break;
                     case '2':
                         // The two new passwords are not identical
-                        Defender::stop();
+                        fusion_stop();
                         Defender::setInputError('user_admin_password1');
                         Defender::setInputError('user_admin_password2');
                         Defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u148a']);
@@ -805,13 +805,13 @@ class UserFieldsInput {
                         break;
                     case '3':
                         // New password contains invalid chars / symbols
-                        Defender::stop();
+                        fusion_stop();
                         Defender::setInputError('user_admin_password1');
                         Defender::setErrorText('user_admin_password1', $locale['u144'].$locale['u142']."<br />".$locale['u147']);
                         break;
                 }
             } else {
-                Defender::stop();
+                fusion_stop();
                 Defender::setInputError('user_admin_password');
                 Defender::setErrorText('user_admin_password', $locale['u149a']);
             }
@@ -821,7 +821,7 @@ class UserFieldsInput {
                 $require_valid_password = $this->userData['user_admin_password'];
                 if (!$require_valid_password) {
                     // 149 for admin
-                    Defender::stop();
+                    fusion_stop();
                     Defender::setInputError('user_admin_password');
                     Defender::setErrorText('user_admin_password', $locale['u149a']);
                 }

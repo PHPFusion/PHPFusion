@@ -33,7 +33,7 @@ class Contact extends Validation {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
             fusion_stop();
-            defender::setInputError(self::$inputName);
+            Defender::setInputError(self::$inputName);
             return FALSE;
         }
 
@@ -50,9 +50,9 @@ class Contact extends Validation {
             if (self::$inputConfig["required"]) {
                 fusion_stop();
 
-                defender::setInputError(self::$inputName."_prefix");
+                Defender::setInputError(self::$inputName."_prefix");
 
-                defender::setInputError(self::$inputName);
+                Defender::setInputError(self::$inputName);
 
                 return FALSE;
             }
@@ -65,7 +65,7 @@ class Contact extends Validation {
 
                 fusion_stop();
 
-                defender::setInputError(self::$inputName."_prefix");
+                Defender::setInputError(self::$inputName."_prefix");
 
                 return FALSE;
             }

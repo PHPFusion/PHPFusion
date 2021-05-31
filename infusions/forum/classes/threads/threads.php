@@ -687,7 +687,7 @@ class ForumThreads extends ForumServer {
 
         if (isset($_POST['post_quick_reply'])) {
 
-            if ($this->getThreadPermission("can_reply") && \defender::safe()) {
+            if ($this->getThreadPermission("can_reply") && fusion_safe()) {
                 $this->thread_data = $this->thread_info['thread'];
                 require_once INCLUDES."flood_include.php";
                 if (!flood_control("post_datestamp", DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) { // have notice
@@ -709,7 +709,7 @@ class ForumThreads extends ForumServer {
                         'post_locked'     => $forum_settings['forum_edit_lock'] || isset($_POST['post_locked']) ? 1 : 0
                     ];
 
-                    if (\defender::safe()) { // post message is invalid or whatever is invalid
+                    if (fusion_safe()) { // post message is invalid or whatever is invalid
                         $update_forum_lastpost = FALSE;
 
                         // Prepare forum merging action
@@ -775,7 +775,7 @@ class ForumThreads extends ForumServer {
                         }
                     }
 
-                    if (\defender::safe()) {
+                    if (fusion_safe()) {
                         redirect(INFUSIONS."forum/postify.php?post=reply&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
                     }
                 }

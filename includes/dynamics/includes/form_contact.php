@@ -102,10 +102,10 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
     }
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = " has-error";
         if (!empty($options['error_text'])) {
-            $new_error_text = \defender::getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
@@ -167,13 +167,13 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= ($options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "");
 
-    $html .= \defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['append_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
+    $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['append_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
     $html .= "</div>";
 
     $html .= "</div>";
 
-    \defender::add_field_session([
+    \Defender::add_field_session([
         'input_name'     => clean_input_name($input_name),
         'title'          => $title,
         'id'             => $options['input_id'],

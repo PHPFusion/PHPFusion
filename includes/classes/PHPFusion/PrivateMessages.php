@@ -322,7 +322,7 @@ class PrivateMessages {
                 }
 
             } else {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', $locale['492']);
             }
         }

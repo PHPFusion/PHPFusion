@@ -29,8 +29,8 @@ class Checkbox extends \Defender\Validation {
      */
     protected function verify_checked() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::getInstance()->setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::getInstance()->setInputError(self::$inputName);
         }
         if (is_array(self::$inputValue)) {
             $vars = [];

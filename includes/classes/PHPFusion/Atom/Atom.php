@@ -309,7 +309,7 @@ class Atom {
                     foreach ($theme_newtable as $item) {
                         $result = dbquery("CREATE TABLE ".$item);
                         if (!$result) {
-                            \defender::stop();
+                            fusion_stop();
                         }
                     }
                 }
@@ -318,7 +318,7 @@ class Atom {
                     foreach ($theme_insertdbrow as $item) {
                         $result = dbquery("INSERT INTO ".$item);
                         if (!$result) {
-                            \defender::stop();
+                            fusion_stop();
                         }
                     }
                 }
@@ -342,7 +342,7 @@ class Atom {
                     foreach ($theme_droptable as $item) {
                         $result = dbquery("DROP TABLE ".$item);
                         if (!$result) {
-                            \defender::stop();
+                            fusion_stop();
                         }
                     }
                 }
@@ -351,7 +351,7 @@ class Atom {
                     foreach ($theme_deldbrow as $item) {
                         $result = dbquery("DELETE FROM ".$item);
                         if (!$result) {
-                            \defender::stop();
+                            fusion_stop();
                         }
                     }
                 }
@@ -510,7 +510,7 @@ class Atom {
                 "theme_datestamp" => time()
             ];
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
 
                 $data['theme_file'] = $this->buildCss();
 
@@ -523,7 +523,7 @@ class Atom {
                                 unlink(THEMES.$old_file);
                             }
                             dbquery_insert(DB_THEME, $data, 'update');
-                            if (\defender::safe()) {
+                            if (fusion_safe()) {
                                 addNotice('success', $locale['theme_success_003']);
                                 redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                             }
@@ -539,7 +539,7 @@ class Atom {
                         $data['theme_active'] = $rows < 1 ? 1 : 0;
                         $data['theme_config'] = addslashes(serialize($this->data));
                         dbquery_insert(DB_THEME, $data, 'save');
-                        if (\defender::safe()) {
+                        if (fusion_safe()) {
                             addNotice('success', $locale['theme_success_004']);
                             redirect(clean_request("", ["aid", "action", "theme"], TRUE));
                         }
@@ -567,7 +567,7 @@ class Atom {
         $options = ['output' => $outputFile, 'compress' => $this->compress,];
         $this->set_less_variables();
 
-        if (!empty($this->less_var) && \defender::safe() && $this->Compiler) {
+        if (!empty($this->less_var) && fusion_safe() && $this->Compiler) {
             if ($this->debug) {
                 print_p("current less var");
                 print_p($this->less_var);
@@ -595,11 +595,11 @@ class Atom {
                 }
             } catch (\Exception $e) {
                 $error_message = $e->getMessage();
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', $error_message);
             }
         } else {
-            \defender::stop();
+            fusion_stop();
             if (!$this->Compiler) {
                 addNotice('danger', $locale['theme_error_008']);
             } else {

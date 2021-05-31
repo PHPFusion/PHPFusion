@@ -38,7 +38,7 @@ class PageList extends PageAdmin {
             if (!empty($input)) {
                 foreach ($input as $page_id) {
                     // check input table
-                    if (dbcount("('page_id')", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => intval($page_id)]) && \defender::safe()) {
+                    if (dbcount("('page_id')", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => intval($page_id)]) && fusion_safe()) {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '1', ':pageid' => intval($page_id)]);

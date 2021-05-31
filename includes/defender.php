@@ -51,7 +51,7 @@ class Defender {
     /**
      * Generates and return class instance
      * Eliminates global usage in functions
-     * Instead of using - `global $defender`, try `\defender->getInstance()`
+     * Instead of using - `global $defender`, try `\Defender->getInstance()`
      *
      * @return null|static
      */

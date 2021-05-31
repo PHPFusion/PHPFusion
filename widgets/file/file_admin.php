@@ -44,8 +44,8 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
             'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
             'file_url'   => form_sanitizer($_POST['file_url'], '', 'file_url'),
         ];
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+        if (fusion_safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
 
         return NULL;
@@ -63,7 +63,7 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
             'file_url'   => '',
         ];
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
         echo form_text('file_title', $widget_locale['f0100'], self::$widget_data['file_title'], ['inline' => TRUE, 'required' => TRUE]);
         echo form_text('file_url', $widget_locale['f0102'], self::$widget_data['file_url'], ['inline' => TRUE, 'required' => TRUE]);

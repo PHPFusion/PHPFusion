@@ -35,7 +35,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
         'sitebanner2' => sanitizer('sitebanner2', '', 'sitebanner2')
     ];
 
-    if (check_post('preview_banners') && \defender::safe()) {
+    if (check_post('preview_banners') && fusion_safe()) {
         $modal = openmodal('banners_preview', $locale['855']);
         $modal .= fusion_get_function('openside', $locale['851']);
         if (!empty($settings_main['sitebanner1'])) {
@@ -58,7 +58,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
         $modal .= closemodal();
         add_to_footer($modal);
     } else {
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             foreach ($settings_main as $settings_key => $settings_value) {
                 dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
                 addNotice('success', $locale['900']);

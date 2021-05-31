@@ -116,7 +116,7 @@ class Admin extends ForumServer {
 
                 addnotice('success', $locale['forum_notice_10']);
 
-                if (\defender::safe()) {
+                if (fusion_safe()) {
                     redirect(FUSION_SELF.$aidlink.$this->ext);
                 }
 
@@ -266,7 +266,7 @@ class Admin extends ForumServer {
                 }
                 if ($alias_check) {
 
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('warning', $locale['forum_error_6']);
 
                 }
@@ -294,7 +294,7 @@ class Admin extends ForumServer {
                 $upload = copy_file($this->data['forum_image'], FORUM."images/");
                 if ($upload['error'] == TRUE) {
 
-                    \defender::stop();
+                    fusion_stop();
                     addNotice('danger', $locale['forum_error_9']);
 
                 } else {
@@ -322,7 +322,7 @@ class Admin extends ForumServer {
                         0) + 1;
             }
 
-            if (\defender::safe()) {
+            if (fusion_safe()) {
 
                 if ($this->verify_forum($this->data['forum_id'])) {
 
@@ -398,7 +398,7 @@ class Admin extends ForumServer {
                 $name_check = dbcount("('forum_name')", DB_FORUMS, "forum_name='".$forum_name."'");
             }
             if ($name_check) {
-                \defender::stop();
+                fusion_stop();
                 addNotice('danger', $locale['forum_error_7']);
             } else {
                 return $forum_name;
@@ -501,7 +501,7 @@ class Admin extends ForumServer {
                             self::recalculate_post($action_data['forum_id']); // wipe
 
                         } else {
-                            \defender::stop();
+                            fusion_stop();
                             addNotice('danger', $locale['forum_notice_na']);
                         }
 
@@ -513,11 +513,11 @@ class Admin extends ForumServer {
                                     $action_data['subforums_to_forum'])."'
                 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } else if (!$action_data['delete_forums']) {
-                            \defender::stop();
+                            fusion_stop();
                             addNotice('danger', $locale['forum_notice_na']);
                         }
                     } else {
-                        \defender::stop();
+                        fusion_stop();
                         addNotice('error', $locale['forum_notice_na']);
                     }
 
@@ -795,7 +795,7 @@ class Admin extends ForumServer {
                 $res = TRUE;
             }
         }
-        if ($res == TRUE or (isset($_POST['save_forum']) && !\defender::safe()) or
+        if ($res == TRUE or (isset($_POST['save_forum']) && !fusion_safe()) or
             isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['forum_id']) && isnum($_GET['forum_id'])
         ) {
 

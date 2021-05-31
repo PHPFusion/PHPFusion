@@ -36,7 +36,7 @@ if (check_post('savesettings')) {
         'week_start'       => sanitizer('week_start', 0, 'week_start')
     ];
 
-    if (\defender::safe()) {
+    if (fusion_safe()) {
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,

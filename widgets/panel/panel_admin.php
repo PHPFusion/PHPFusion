@@ -43,8 +43,8 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         self::$widget_data = [
             'panel_include' => form_sanitizer($_POST['panel_include'], '', 'panel_include')
         ];
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+        if (fusion_safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
 
         return NULL;
@@ -61,7 +61,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
             'panel_include' => '',
         ];
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
         // Installed panel is displayed here. The visibility should be also seperately configured
         $panel_alt = strtr($widget_locale['PW_0201'], [

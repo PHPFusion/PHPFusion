@@ -58,7 +58,7 @@ function backup_form() {
         }
 
         $db_tables = post(['db_tables']);
-        if (count($db_tables) && defender::safe()) {
+        if (count($db_tables) && fusion_safe()) {
             $crlf = "\n";
             ob_start();
             @ob_implicit_flush(0);
