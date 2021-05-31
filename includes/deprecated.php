@@ -296,3 +296,86 @@ function parse_textarea($value, $parse_smileys = TRUE, $parse_bbcode = TRUE, $de
 
     return parse_text($value, $options);
 }
+
+/**
+ * This option has been removed from PHP ini.
+ *
+ * @deprecated
+ */
+define("QUOTES_GPC", (bool)ini_get('magic_quotes_gpc'));
+
+/**
+ * Strip Slash Function, only stripslashes if magic_quotes_gpc is on.
+ *
+ * @param string $text The input string.
+ *
+ * @return string String with backslashes stripped off (\' becomes ' and so on), double backslashes (\) are made into a single backslash (\).
+ *
+ * @deprecated use stripslashes()
+ */
+function stripslash($text) {
+    if (QUOTES_GPC) {
+        $text = stripslashes($text);
+    }
+
+    return $text;
+}
+
+/**
+ * Add Slash Function, add correct number of slashes depending on quotes_gpc
+ *
+ * @param string $text
+ *
+ * @return string
+ *
+ * @deprecated use addslashes()
+ */
+function addslash($text) {
+    if (!QUOTES_GPC) {
+        $text = addslashes(addslashes($text));
+    } else {
+        $text = addslashes($text);
+    }
+
+    return $text;
+}
+
+/**
+ * Create <option></option> from the entries in a given array.
+ *
+ * @param array  $options  Options.
+ * @param string $selected The item in the options that you want to select by default.
+ *
+ * @return string Array as a list of options for a select.
+ *
+ * @deprecated use form_select()
+ */
+function makefileopts($options, $selected = "") {
+    $res = "";
+    foreach ($options as $item) {
+        $sel = ($selected == $item ? " selected='selected'" : "");
+        $res .= "<option value='".$item."' $sel>".$item."</option>\n";
+    }
+
+    return $res;
+}
+
+/**
+ * Create a selection list of possible languages in list.
+ *
+ * @param string $selected_language
+ *
+ * @return string
+ * @deprecated use form_select()
+ */
+function get_available_languages_list($selected_language = "") {
+    $enabled_languages = fusion_get_enabled_languages();
+    $res = "";
+    foreach ($enabled_languages as $language) {
+        $sel = ($selected_language == $language ? " selected='selected'" : "");
+        $label = str_replace('_', ' ', $language);
+        $res .= "<option value='".$language."' $sel>".$label."</option>\n";
+    }
+
+    return $res;
+}

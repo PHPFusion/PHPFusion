@@ -547,7 +547,7 @@ function fusion_table($table_id, array $options = []) {
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
-                if (isJson($file_output)) {
+                if (is_json($file_output)) {
                     $output_array = json_decode($file_output, TRUE);
                     //print_P($output_array);
                     if ($options['reponse_debug']) {

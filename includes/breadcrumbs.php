@@ -38,6 +38,15 @@ function get_breadcrumbs() {
     return BreadCrumbs::getInstance()->toArray();
 }
 
+/**
+ * @param string $cat_id
+ * @param string $cat_tbl
+ * @param string $col_id
+ * @param string $col_parent
+ * @param string $col_title
+ *
+ * @return array|bool
+ */
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {
     $tmp_id = $cat_id;
     $cat_list = [];

@@ -25,6 +25,8 @@ defined('IN_FUSION') || exit;
 if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
     global $current_user_language;
 
+    $matches = [];
+
     // Articles
     if (preg_match('/articles.php/i', $_SERVER['PHP_SELF']) && multilang_table("AR")) {
 
@@ -71,7 +73,6 @@ if (!preg_match('/administration/i', $_SERVER['PHP_SELF'])) {
 
     } // Custom Pages
     else if (preg_match('/viewpage.php/i', $_SERVER['PHP_SELF']) || preg_match('|/pages/([0-9]+)/|', $_SERVER['REQUEST_URI'], $matches) && multilang_table("CP")) {
-        $matches = [];
         if (isset($_GET['page_id']) && isnum($_GET['page_id']) || !empty($matches) && $matches['1'] > 0) {
             $data = dbarray(dbquery("SELECT page_language FROM ".DB_CUSTOM_PAGES." WHERE page_id='".(isset($_GET['page_id']) ? $_GET['page_id'] : $matches['1'])."'"));
             $page_lang = explode(".", $data['page_language']);

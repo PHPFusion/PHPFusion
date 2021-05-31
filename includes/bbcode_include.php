@@ -17,6 +17,16 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Display BBCode buttons for a given textarea.
+ *
+ * @param string $width          Width of the DIV which holds all the BBCode buttons.
+ * @param string $textarea_name  The name of the textarea the BBCodes will be inserted to.
+ * @param string $inputform_name The name of the form the BBCodes will be inserted to.
+ * @param string $selected       Show only certain BBCodes separated by |.
+ *
+ * @return string
+ */
 function display_bbcodes($width, $textarea_name = "message", $inputform_name = "inputform", $selected = "") {
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = '';
@@ -139,6 +149,13 @@ function display_bbcodes($width, $textarea_name = "message", $inputform_name = "
     return "<div style='width:".$width."'>\n".$bbcodes."</div>\n";
 }
 
+/**
+ * Strip declared BBCodes and their content away from quoted messages.
+ *
+ * @param string $text A string containing text with bbcodes.
+ *
+ * @return string
+ */
 function strip_bbcodes($text) {
     return $text;
 

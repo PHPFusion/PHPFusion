@@ -643,6 +643,39 @@ if (!function_exists("panelstate")) {
     }
 }
 
+if (!function_exists('profile_link')) {
+    /**
+     * User profile link
+     *
+     * @param int    $user_id
+     * @param string $user_name
+     * @param int    $user_status
+     * @param string $class html class of link
+     * @param bool   $display_link
+     *
+     * @return string
+     */
+    function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
+        if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
+            $user = fusion_get_user($user_id);
+            $group_class = '';
+            if (!empty($user['user_level'])) {
+                $group = getgroupdata($user['user_level']);
+                $group_class = 'group-'.$group[0];
+            }
+            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="'.$group_class.' '.$class.'">'.$user_name.'</a>';
+        } else if ($user_status == "5" || $user_status == "6") {
+            $link = $locale['user_anonymous'];
+        } else {
+            $link = $user_name;
+        }
+
+        return $link;
+    }
+}
+
 if (!function_exists('display_avatar')) {
     /**
      * Display user avatar
@@ -1516,20 +1549,6 @@ if (!function_exists('social_media_links')) {
 
         return $html;
     }
-}
-
-/**
- * Adds a whitespace if value is present
- *
- * @param $value
- *
- * @return string
- */
-function whitespace($value) {
-    if ($value) {
-        return " ".$value;
-    }
-    return "";
 }
 
 /**
