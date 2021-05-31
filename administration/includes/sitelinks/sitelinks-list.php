@@ -24,8 +24,6 @@ function display_sitelinks() {
         $aidlink = fusion_get_aidlink();
         $locale = fusion_get_locale();
 
-        require_once INCLUDES."theme_functions_include.php";
-
         $rowstart = (int)post("start", FILTER_VALIDATE_INT);
 
         $limit = (int)(post("length", FILTER_VALIDATE_INT) ?: 36);

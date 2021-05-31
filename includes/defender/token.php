@@ -114,7 +114,6 @@ class Token extends \defender {
             }
 
             if (self::$debug) {
-                require_once INCLUDES."theme_functions_include.php";
                 define('STOP_REDIRECT', TRUE);
                 if (isset($_POST['form_id'])) {
                     $token_ring = $_SESSION['csrf_tokens'][self::pageHash()][$_POST['form_id']];

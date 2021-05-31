@@ -17,25 +17,25 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-define("ADMIN", BASEDIR."administration/");
-define("CLASSES", BASEDIR."includes/classes/");
-define("DYNAMICS", BASEDIR."includes/dynamics/");
-define("INFUSIONS", BASEDIR."infusions/");
-define("IMAGES", BASEDIR."images/");
-define("INCLUDES", BASEDIR."includes/");
-define("LOCALE", BASEDIR."locale/");
-define("THEMES", BASEDIR."themes/");
-define("ADMIN_THEMES", BASEDIR."themes/admin_themes/");
-define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
+const ADMIN = BASEDIR."administration/";
+const CLASSES = BASEDIR."includes/classes/";
+const DYNAMICS = BASEDIR."includes/dynamics/";
+const INFUSIONS = BASEDIR."infusions/";
+const IMAGES = BASEDIR."images/";
+const INCLUDES = BASEDIR."includes/";
+const LOCALE = BASEDIR."locale/";
+const THEMES = BASEDIR."themes/";
+const ADMIN_THEMES = BASEDIR."themes/admin_themes/";
+const DB_HANDLERS = BASEDIR."includes/db_handlers/";
+const WIDGETS = BASEDIR."widgets/";
 define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
-define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
 define("USER_IP", $_SERVER['REMOTE_ADDR']);
-define("WIDGETS", BASEDIR."widgets/");
 
 // Define script start time
 define("START_TIME", microtime(TRUE));
 define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
 define("TIME", time());
+
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;

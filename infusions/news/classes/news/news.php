@@ -299,8 +299,6 @@ abstract class News extends NewsServer {
     }
 
     public static function get_NewsImage($data, $thumbnail = FALSE, $link = FALSE, $image_width = '') {
-        require_once(INCLUDES.'theme_functions_include.php');
-
         $imageOptimized = IMAGES_N."news_default.jpg";
         $imageRaw = '';
 

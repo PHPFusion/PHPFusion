@@ -33,8 +33,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 'blog_subject'        => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
                 'blog_cat'            => form_sanitizer($_POST['blog_cat'], 0, 'blog_cat'),
                 'blog_name'           => $data['user_id'],
-                'blog_blog'           => addslash(preg_replace("(^<p>\s</p>$)", "", descript($_POST['blog_blog']))),
-                'blog_extended'       => addslash(preg_replace("(^<p>\s</p>$)", "", descript($_POST['blog_extended']))),
+                'blog_blog'           => addslashes(preg_replace("(^<p>\s</p>$)", "", descript($_POST['blog_blog']))),
+                'blog_extended'       => addslashes(preg_replace("(^<p>\s</p>$)", "", descript($_POST['blog_extended']))),
                 'blog_keywords'       => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
                 'blog_datestamp'      => form_sanitizer($_POST['blog_datestamp'], time(), 'blog_datestamp'),
                 'blog_start'          => form_sanitizer($_POST['blog_start'], 0, 'blog_start'),
@@ -153,13 +153,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             if (isset($_POST['preview'])) {
                 $blog_blog = "";
                 if ($_POST['blog_blog']) {
-                    $blog_blog = phpentities(stripslash($_POST['blog_blog']));
-                    $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_blog']));
+                    $blog_blog = phpentities(stripslashes($_POST['blog_blog']));
+                    $blog_blog = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_blog']));
                 }
                 $blog_extended = "";
                 if ($_POST['blog_extended']) {
-                    $blog_extended = phpentities(stripslash($_POST['blog_extended']));
-                    $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslash($_POST['blog_extended']));
+                    $blog_extended = phpentities(stripslashes($_POST['blog_extended']));
+                    $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
                 }
                 $callback_data = [
                     "blog_subject"    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
