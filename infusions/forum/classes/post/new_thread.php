@@ -596,10 +596,10 @@ class NewThread extends ForumServer {
                                 }
 
                             } else {
-                                addNotice("danger", self::$locale['forum_0186']);
+                                addnotice("danger", self::$locale['forum_0186']);
                             }
                         } else {
-                            addNotice("danger", self::$locale['forum_0187']);
+                            addnotice("danger", self::$locale['forum_0187']);
                             redirect(INFUSIONS."forum/index.php");
                         }
                     }

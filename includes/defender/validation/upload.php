@@ -140,19 +140,19 @@ class Upload extends Validation {
                             fusion_stop();
                             switch ($upload['error']) {
                                 case 1: // Maximum file size exceeded
-                                    addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
+                                    addnotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
                                     Defender::setInputError(self::$inputName);
                                     break;
                                 case 2: // Invalid File extensions
-                                    addNotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
+                                    addnotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
                                     Defender::setInputError(self::$inputName);
                                     break;
                                 case 3: // Invalid Query String
-                                    addNotice('danger', $locale['df_422']);
+                                    addnotice('danger', $locale['df_422']);
                                     Defender::setInputError(self::$inputName);
                                     break;
                                 case 4: // File not uploaded
-                                    addNotice('danger', $locale['df_423']);
+                                    addnotice('danger', $locale['df_423']);
                                     Defender::setInputError(self::$inputName);
                                     break;
                             }
@@ -170,19 +170,19 @@ class Upload extends Validation {
                     fusion_stop();
                     switch ($upload['error']) {
                         case 1: // Maximum file size exceeded
-                            addNotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
+                            addnotice('danger', sprintf($locale['df_416'], parsebytesize(self::$inputConfig['max_byte'])));
                             Defender::setInputError(self::$inputName);
                             break;
                         case 2: // Invalid File extensions
-                            addNotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
+                            addnotice('danger', sprintf($locale['df_417'], self::$inputConfig['valid_ext']));
                             Defender::setInputError(self::$inputName);
                             break;
                         case 3: // Invalid Query String
-                            addNotice('danger', $locale['df_422']);
+                            addnotice('danger', $locale['df_422']);
                             Defender::setInputError(self::$inputName);
                             break;
                         case 4: // File not uploaded
-                            addNotice('danger', $locale['df_423']);
+                            addnotice('danger', $locale['df_423']);
                             Defender::setInputError(self::$inputName);
                             break;
                     }
@@ -427,7 +427,7 @@ class Upload extends Validation {
                 break;
         }
 
-        addNotice('danger', $error_message);
+        addnotice('danger', $error_message);
         Defender::setInputError(self::$inputName);
 
         return $error_message;

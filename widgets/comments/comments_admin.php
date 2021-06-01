@@ -55,9 +55,9 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
         if ($colId) {
-            addNotice('success', $widget_locale['CMW_0102']);
+            addnotice('success', $widget_locale['CMW_0102']);
         } else {
-            addNotice('danger', $widget_locale['CMW_0104']);
+            addnotice('danger', $widget_locale['CMW_0104']);
         }
         redirect(clean_request('', self::getComposerExclude(), FALSE));
     }

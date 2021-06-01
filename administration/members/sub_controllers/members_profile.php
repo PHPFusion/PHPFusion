@@ -273,7 +273,7 @@ class Members_Profile extends Members_Admin {
         dbquery_insert(DB_USERS, $user_info, 'save');
         dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code", [':code' => get('code')]);
 
-        addNotice('success', self::$locale['ME_469']);
+        addnotice('success', self::$locale['ME_469']);
         redirect(clean_request('', ['ref', 'lookup', 'code'], FALSE));
     }
 
@@ -291,12 +291,12 @@ class Members_Profile extends Members_Admin {
                 $subject = str_replace("[SITENAME]", self::$settings['sitename'], self::$locale['email_resend_subject']);
 
                 if (!sendemail(self::$user_data['user_name'], self::$user_data['user_email'], self::$settings['siteusername'], self::$settings['siteemail'], $subject, $message)) {
-                    addNotice('warning', self::$locale['u153'], 'all');
+                    addnotice('warning', self::$locale['u153'], 'all');
                 }
 
                 if (fusion_safe()) {
                     dbquery("UPDATE ".DB_NEW_USERS." SET user_datestamp = '".time()."' WHERE user_name=:user_name", [':user_name' => get('lookup')]);
-                    addNotice('success', self::$locale['u165']);
+                    addnotice('success', self::$locale['u165']);
                     redirect(clean_request('', ['ref', 'lookup'], FALSE));
                 }
 

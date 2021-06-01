@@ -239,7 +239,7 @@ class ForumAdminView extends ForumAdminInterface {
                 if ($alias_check) {
 
                     fusion_stop();
-                    addNotice('warning', self::$locale['forum_error_6']);
+                    addnotice('warning', self::$locale['forum_error_6']);
 
                 }
             }
@@ -267,7 +267,7 @@ class ForumAdminView extends ForumAdminInterface {
                 $upload = copy_file($this->data['forum_image'], FORUM."images/");
                 if ($upload['error'] == TRUE) {
                     fusion_stop();
-                    addNotice('danger', self::$locale['forum_error_9']);
+                    addnotice('danger', self::$locale['forum_error_9']);
 
                 } else {
                     $this->data['forum_image'] = $upload['name'];
@@ -306,7 +306,7 @@ class ForumAdminView extends ForumAdminInterface {
                         dbquery_insert(DB_FORUMS, $this->data, 'update');
                     }
 
-                    addNotice('success', self::$locale['forum_notice_9']);
+                    addnotice('success', self::$locale['forum_notice_9']);
 
                     redirect(FUSION_SELF.$aidlink.$this->ext);
 
@@ -329,16 +329,16 @@ class ForumAdminView extends ForumAdminInterface {
 
                         switch ($this->data['forum_type']) {
                             case '1':
-                                addNotice('success', self::$locale['forum_notice_1']);
+                                addnotice('success', self::$locale['forum_notice_1']);
                                 break;
                             case '2':
-                                addNotice('success', self::$locale['forum_notice_2']);
+                                addnotice('success', self::$locale['forum_notice_2']);
                                 break;
                             case '3':
-                                addNotice('success', self::$locale['forum_notice_3']);
+                                addnotice('success', self::$locale['forum_notice_3']);
                                 break;
                             case '4':
-                                addNotice('success', self::$locale['forum_notice_4']);
+                                addnotice('success', self::$locale['forum_notice_4']);
                                 break;
                         }
 
@@ -368,7 +368,7 @@ class ForumAdminView extends ForumAdminInterface {
 
             dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order-1 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".intval($_GET['forum_id'])."'");
 
-            addNotice('success', self::$locale['forum_notice_6']." ".sprintf(self::$locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
+            addnotice('success', self::$locale['forum_notice_6']." ".sprintf(self::$locale['forum_notice_13'], $_GET['forum_id'], $_GET['order']));
 
             redirect(FUSION_SELF.$aidlink.$this->ext);
         }
@@ -387,7 +387,7 @@ class ForumAdminView extends ForumAdminInterface {
                 $result = dbquery("UPDATE ".DB_FORUMS." SET forum_order=forum_order+1 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_id='".$_GET['forum_id']."'");
             }
             if ($result) {
-                addNotice('success', self::$locale['forum_notice_7']." ".sprintf(self::$locale['forum_notice_13'],
+                addnotice('success', self::$locale['forum_notice_7']." ".sprintf(self::$locale['forum_notice_13'],
                         $_GET['forum_id'], $_GET['order']));
                 redirect(FUSION_SELF.$aidlink.$this->ext);
             }
@@ -447,7 +447,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                         } else {
                             fusion_stop();
-                            addNotice('danger', self::$locale['forum_notice_na']);
+                            addnotice('danger', self::$locale['forum_notice_na']);
                         }
 
                         // Subforum action
@@ -459,16 +459,16 @@ class ForumAdminView extends ForumAdminInterface {
                 ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".$action_data['forum_id']."'");
                         } else if (!$action_data['delete_forums']) {
                             fusion_stop();
-                            addNotice('danger', self::$locale['forum_notice_na']);
+                            addnotice('danger', self::$locale['forum_notice_na']);
                         }
                     } else {
                         fusion_stop();
-                        addNotice('error', self::$locale['forum_notice_na']);
+                        addnotice('error', self::$locale['forum_notice_na']);
                     }
 
                     self::prune_forums($action_data['forum_id']);
 
-                    addNotice('info', self::$locale['forum_notice_5']);
+                    addnotice('info', self::$locale['forum_notice_5']);
                     redirect(FUSION_SELF.$aidlink);
                 }
 
@@ -486,7 +486,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                 dbquery("DELETE FROM ".DB_FORUMS." WHERE forum_id='".intval($_GET['forum_id'])."'");
 
-                addNotice('info', self::$locale['forum_notice_5']);
+                addnotice('info', self::$locale['forum_notice_5']);
 
                 redirect(FUSION_SELF.$aidlink);
             }
@@ -821,7 +821,7 @@ class ForumAdminView extends ForumAdminInterface {
                     }
 
                     dbquery_insert(DB_FORUMS, $data, 'update');
-                    addNotice('success', self::$locale['forum_notice_8']);
+                    addnotice('success', self::$locale['forum_notice_8']);
                     redirect(FUSION_REQUEST);
                 }
             }

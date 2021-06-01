@@ -102,7 +102,7 @@ class ShoutBox {
                 }
             }
 
-            addNotice('success', self::$locale['SB_shout_deleted']);
+            addnotice('success', self::$locale['SB_shout_deleted']);
         }
 
         defined('ADMIN_PANEL') ?
@@ -216,7 +216,7 @@ class ShoutBox {
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
                 if (fusion_safe()) {
                     dbquery_insert(DB_SHOUTBOX, $this->data, empty($this->data['shout_id']) ? "save" : "update");
-                    addNotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
+                    addnotice("success", empty($this->data['shout_id']) ? self::$locale['SB_shout_added'] : self::$locale['SB_shout_updated']);
                 }
             } else {
                 fusion_stop(sprintf(self::$locale['SB_flood'], fusion_get_settings("flood_interval")));
@@ -240,7 +240,7 @@ class ShoutBox {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addNotice("success", self::$locale['SB_update_ok']);
+                addnotice("success", self::$locale['SB_update_ok']);
                 redirect(clean_request("section=shoutbox_settings", ["", "aid"]));
             }
         }
@@ -249,7 +249,7 @@ class ShoutBox {
             $deletetime = time() - (intval($_POST['num_days']) * 86400);
             $numrows = dbcount("(shout_id)", DB_SHOUTBOX, "shout_datestamp < '".$deletetime."'");
             dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_datestamp < '".$deletetime."'");
-            addNotice("warning", number_format($numrows)." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
+            addnotice("warning", number_format($numrows)." / ".$_POST['num_days'].self::$locale['SB_delete_old']);
             defined('ADMIN_PANEL') ?
                 redirect(clean_request("section=shoutbox", ["", "aid"])) :
                 redirect($this->postLink);

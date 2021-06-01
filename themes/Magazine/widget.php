@@ -36,7 +36,7 @@ if (isset($_POST['save_settings'])) {
             dbquery_insert(DB_SETTINGS_THEME, $db, 'update');
         }
 
-        addNotice('success', $locale['MG_201']);
+        addnotice('success', $locale['MG_201']);
         redirect(FUSION_REQUEST);
     }
 }

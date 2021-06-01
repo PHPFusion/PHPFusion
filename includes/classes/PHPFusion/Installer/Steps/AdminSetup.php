@@ -59,7 +59,7 @@ class AdminSetup extends InstallCore {
             self::$userData['user_id'] = 1;
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
-                addNotice('danger', self::$locale['setup_5016']);
+                addnotice('danger', self::$locale['setup_5016']);
                 fusion_stop();
             }
 
@@ -73,11 +73,11 @@ class AdminSetup extends InstallCore {
                         self::$userData['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
-                        addNotice('danger', self::$locale['setup_5012']);
+                        addnotice('danger', self::$locale['setup_5012']);
                         fusion_stop();
                         break;
                     case 3:
-                        addNotice('danger', self::$locale['setup_5013']);
+                        addnotice('danger', self::$locale['setup_5013']);
                         fusion_stop();
                         break;
                 }
@@ -90,18 +90,18 @@ class AdminSetup extends InstallCore {
                         self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
-                        addNotice('danger', self::$locale['setup_5015']);
+                        addnotice('danger', self::$locale['setup_5015']);
                         fusion_stop();
                         break;
                     case 3:
-                        addNotice('danger', self::$locale['setup_5017']);
+                        addnotice('danger', self::$locale['setup_5017']);
                         fusion_stop();
                         break;
                 }
 
                 if (fusion_safe()) {
                     dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
-                    addNotice('success', self::$locale['setup_1217']);
+                    addnotice('success', self::$locale['setup_1217']);
 
                     require_once(INCLUDES."multisite_include.php");
                     self::installer_step(self::STEP_INTRO);
@@ -200,7 +200,7 @@ class AdminSetup extends InstallCore {
         $content = "<h4 class='title'>".self::$locale['setup_1212']."</h4><p>".self::$locale['setup_1213']."</p>\n";
         $content .= "<hr/>\n";
 
-        $content .= renderNotices(getNotices());
+        $content .= rendernotices(getnotices());
 
         $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
             [
@@ -374,7 +374,7 @@ class AdminSetup extends InstallCore {
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 fusion_stop();
-                addNotice('danger', self::$locale['setup_5016']);
+                addnotice('danger', self::$locale['setup_5016']);
             }
 
             if (fusion_safe()) {
@@ -392,13 +392,13 @@ class AdminSetup extends InstallCore {
                     case 2:
                         fusion_stop();
                         \Defender::setInputError('password2');
-                        addNotice('danger', self::$locale['setup_5012']);
+                        addnotice('danger', self::$locale['setup_5012']);
 
                         break;
                     case 3:
                         fusion_stop();
                         \Defender::setInputError('password1');
-                        addNotice('danger', self::$locale['setup_5013']);
+                        addnotice('danger', self::$locale['setup_5013']);
                         break;
                 }
 
@@ -413,12 +413,12 @@ class AdminSetup extends InstallCore {
                     case 2:
                         fusion_stop();
                         \Defender::setInputError('admin_password2');
-                        addNotice('danger', self::$locale['setup_5015']);
+                        addnotice('danger', self::$locale['setup_5015']);
                         break;
                     case 3:
                         fusion_stop();
                         \Defender::setInputError('admin_password1');
-                        addNotice('danger', self::$locale['setup_5017']);
+                        addnotice('danger', self::$locale['setup_5017']);
                         break;
                 }
 

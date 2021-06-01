@@ -71,10 +71,10 @@ function admins_form() {
                 ':userRights' => $admin_rights, ':userId' => post('user_id'),
             ]);
         } else {
-            addNotice('warning', $locale['ADM_463']);
+            addnotice('warning', $locale['ADM_463']);
             redirect(FUSION_REQUEST);
         }
-        addNotice('success', $locale['ADM_400']);
+        addnotice('success', $locale['ADM_400']);
         redirect(FUSION_REQUEST);
     }
 
@@ -93,7 +93,7 @@ function admins_form() {
             ]);
         }
 
-        addNotice('success', $locale['ADM_401']);
+        addnotice('success', $locale['ADM_401']);
         redirect(FUSION_REQUEST);
     }
 
@@ -283,7 +283,7 @@ function admins_list() {
     if (check_get('remove') && get('remove', FILTER_SANITIZE_NUMBER_INT) != 1) {
         dbquery("UPDATE ".DB_USERS." SET user_admin_password='', user_admin_salt='', user_level=".USER_LEVEL_MEMBER.", user_rights='' WHERE user_id='".get('remove')."' AND user_level<=".USER_LEVEL_ADMIN);
 
-        addNotice('success', $locale['ADM_402']);
+        addnotice('success', $locale['ADM_402']);
         redirect(clean_request('', ['remove'], FALSE));
     }
 

@@ -279,7 +279,7 @@ function restore_form() {
                     }
                 }
             }
-            addNotice('success', $locale['404']);
+            addnotice('success', $locale['404']);
             redirect(FUSION_SELF.fusion_get_aidlink());
         } else {
             echo openform("frm_info", "post", clean_request('section=restore_db', ['action', 'section'], FALSE));

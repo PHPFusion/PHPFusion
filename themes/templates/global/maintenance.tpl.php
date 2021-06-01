@@ -25,9 +25,9 @@ if (!function_exists("display_maintenance")) {
         $settings = fusion_get_settings();
 
         echo "<section class='maintenance container'>\n";
-        $notices = getNotices();
+        $notices = getnotices();
         if ($notices) {
-            echo renderNotices($notices);
+            echo rendernotices($notices);
         }
 
         echo "<div class='m-t-20 jumbotron text-center'>\n";

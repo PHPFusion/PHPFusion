@@ -88,7 +88,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 dbquery_insert(DB_PHOTOS, $callback_data, "save");
 
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
-                addNotice("success", $locale['gallery_0160']);
+                addnotice("success", $locale['gallery_0160']);
                 redirect(clean_request("", ["submit_id"], FALSE));
 
             }
@@ -108,7 +108,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $criteriaArray = unserialize(stripslashes($data['submit_criteria']));
                 purgeSubmissionsPhotoImage($criteriaArray);
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($data['submit_id'])."'");
-                addNotice("success", $locale['gallery_0161']);
+                addnotice("success", $locale['gallery_0161']);
             }
             redirect(clean_request("", ["submit_id"], FALSE));
         } else {

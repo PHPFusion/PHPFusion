@@ -80,10 +80,10 @@ if (isset($_POST['delete_watermarks'])) {
                 ];
                 dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
             }
-            addNotice('success', $locale['900']);
+            addnotice('success', $locale['900']);
             redirect(FUSION_REQUEST);
         } else {
-            addNotice('danger', $locale['901']);
+            addnotice('danger', $locale['901']);
         }
     }
 }
@@ -241,7 +241,7 @@ echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $g
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
 ]);
 require_once INCLUDES."mimetypes_include.php";
-$mime = mimeTypes();
+$mime = mimetypes();
 $mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";

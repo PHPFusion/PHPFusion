@@ -98,7 +98,7 @@ class SqlHandler {
                 $i++;
             }
             if (!fusion_safe()) {
-                addNotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
+                addnotice("danger", "Unable to move all columns from ".$old_table." to " > $new_table);
             }
         }
     }
@@ -116,7 +116,7 @@ class SqlHandler {
             fusion_stop();
         }
         if (!fusion_safe()) {
-            addNotice("danger", "Unable to drop ".$old_table);
+            addnotice("danger", "Unable to drop ".$old_table);
         }
 
     }
@@ -166,7 +166,7 @@ class SqlHandler {
                 fusion_stop();
             }
             if (!fusion_safe()) {
-                addNotice("danger", "Cannot move ".$column_name);
+                addnotice("danger", "Cannot move ".$column_name);
             }
         }
     }

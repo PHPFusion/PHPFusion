@@ -296,7 +296,7 @@ class DatabaseSetup extends InstallCore {
             } else {
                 foreach ($validate as $validate_result) {
                     if (!$validate_result['result']) {
-                        addNotice('danger', $validate_result['description']);
+                        addnotice('danger', $validate_result['description']);
                     }
                 }
                 self::installer_step(self::STEP_DB_SETTINGS_FORM);
@@ -410,7 +410,7 @@ class DatabaseSetup extends InstallCore {
         $content = "<h4 class='title'>".self::$locale['setup_1200']."</h4><p>".self::$locale['setup_1201']."</p>\n";
         $content .= "<hr/>\n";
 
-        $content .= renderNotices(getNotices());
+        $content .= rendernotices(getnotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], !empty(self::$connection['db_host']) ? self::$connection['db_host'] : 'localhost', [
             'inline'      => TRUE,
             'required'    => TRUE,

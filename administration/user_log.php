@@ -81,7 +81,7 @@ if (check_post('log_id')) {
         }
     }
 
-    addNotice('info', $locale['UL_006']);
+    addnotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], FALSE));
 }
 
@@ -90,13 +90,13 @@ if (check_post('day_delete') && post('day_delete', FILTER_VALIDATE_INT)) {
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:time", [
         ':time' => time() - $delete * 24 * 60 * 60,
     ]);
-    addNotice('info', sprintf($locale['UL_005'], $delete));
+    addnotice('info', sprintf($locale['UL_005'], $delete));
     redirect(clean_request('', ['delete'], FALSE));
 }
 
 if (check_get('delete') && get('delete', FILTER_VALIDATE_INT)) {
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => get('delete')]);
-    addNotice('info', $locale['UL_006']);
+    addnotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], FALSE));
 }
 

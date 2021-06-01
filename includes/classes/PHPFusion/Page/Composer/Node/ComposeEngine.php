@@ -92,7 +92,7 @@ class ComposeEngine extends PageAdmin {
 
                             dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
 
-                            addNotice("success", self::$locale['page_0409a']);
+                            addnotice("success", self::$locale['page_0409a']);
                         }
                     }
                     redirect(clean_request('', self::$composer_exclude, FALSE));
@@ -202,10 +202,10 @@ class ComposeEngine extends PageAdmin {
             }
             dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'delete');
             if (fusion_safe()) {
-                addNotice('success', self::$locale['page_0403']);
+                addnotice('success', self::$locale['page_0403']);
             }
         } else {
-            addNotice('danger', self::$locale['page_0404']);
+            addnotice('danger', self::$locale['page_0404']);
         }
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
@@ -221,7 +221,7 @@ class ComposeEngine extends PageAdmin {
             $rowId = dbquery_insert(DB_CUSTOM_PAGES_GRID, $rowData, 'save');
             if (!$rowId) {
                 fusion_stop();
-                addNotice("danger", self::$locale['page_0405']);
+                addnotice("danger", self::$locale['page_0405']);
             }
             // now check for all content and also duplicate it.
             $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=:pagegrid", [':pagegrid' => self::$rowData['page_grid_id']]);
@@ -232,15 +232,15 @@ class ComposeEngine extends PageAdmin {
                     $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $colData, 'save');
                     if (!$colId) {
                         fusion_stop();
-                        addNotice('danger', self::$locale['page_0406']);
+                        addnotice('danger', self::$locale['page_0406']);
                     }
                 }
             }
             if (fusion_safe()) {
-                addNotice('success', self::$locale['page_0407']);
+                addnotice('success', self::$locale['page_0407']);
             }
         } else {
-            addNotice('danger', self::$locale['page_0404']);
+            addnotice('danger', self::$locale['page_0404']);
         }
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
@@ -443,7 +443,7 @@ class ComposeEngine extends PageAdmin {
                             FALSE, '', 'update');
 
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
-                        addNotice('success', self::$locale['page_0408']);
+                        addnotice('success', self::$locale['page_0408']);
                     } else {
                         dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
                             'page_content_order',
@@ -453,7 +453,7 @@ class ComposeEngine extends PageAdmin {
 
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
                         self::$colData['page_content_id'] = dblastid();
-                        addNotice('success', self::$locale['page_0409']);
+                        addnotice('success', self::$locale['page_0409']);
                     }
 
                     if (method_exists($object, 'exclude_return')) {
@@ -528,11 +528,11 @@ class ComposeEngine extends PageAdmin {
                 $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, $data, 'save');
                 if (!$colId) {
                     fusion_stop();
-                    addNotice("danger", self::$locale['page_0406']);
+                    addnotice("danger", self::$locale['page_0406']);
                 }
-                addNotice("success", self::$locale['page_0411']);
+                addnotice("success", self::$locale['page_0411']);
             } else {
-                addNotice("danger", self::$locale['page_0412']);
+                addnotice("danger", self::$locale['page_0412']);
             }
         }
         redirect(clean_request('', self::$composer_exclude, FALSE));

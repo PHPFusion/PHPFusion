@@ -50,10 +50,10 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice('success', $locale['900']);
+                addnotice('success', $locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('danger', $locale['901']);
+                addnotice('danger', $locale['901']);
                 $article_settings = $inputArray;
             }
         }

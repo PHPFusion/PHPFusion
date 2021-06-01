@@ -37,7 +37,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $locale['WLS_0001']]);
 
         if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='l'")) {
-            addNotice("info", sprintf($locale['WLS_0063'], format_word($submissions, $locale['fmt_submission'])));
+            addnotice("info", sprintf($locale['WLS_0063'], format_word($submissions, $locale['fmt_submission'])));
         }
 
         // Handle Tabs

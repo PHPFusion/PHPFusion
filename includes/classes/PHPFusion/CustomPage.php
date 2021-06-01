@@ -407,7 +407,7 @@ class CustomPage {
                 $result = dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url=:pageurl", [':pageurl' => 'viewpage.php?page_id='.intval($page_id)]);
             }
             if ($result) {
-                addNotice('success', $locale['413']);
+                addnotice('success', $locale['413']);
                 redirect(FUSION_SELF.$aidlink);
             }
         }
@@ -504,7 +504,7 @@ class CustomPage {
                 dbquery_insert(DB_CUSTOM_PAGES, $data, 'update');
 
                 if (fusion_safe()) {
-                    addNotice('success', $locale['411']);
+                    addnotice('success', $locale['411']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
 
@@ -519,7 +519,7 @@ class CustomPage {
                 }
 
                 if (fusion_safe()) {
-                    addNotice('success', $locale['410']);
+                    addnotice('success', $locale['410']);
                     redirect(FUSION_SELF.$aidlink."&amp;pid=".$data['page_id']);
                 }
             }

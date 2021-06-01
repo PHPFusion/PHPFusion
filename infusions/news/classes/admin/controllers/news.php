@@ -150,7 +150,7 @@ class NewsAdmin extends NewsAdminModel {
                     }
                     if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
                         dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
-                        addNotice('success', self::$locale['news_0101']);
+                        addnotice('success', self::$locale['news_0101']);
                     } else {
                         $this->data['news_name'] = fusion_get_userdata('user_id');
                         $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session' => TRUE]);
@@ -163,7 +163,7 @@ class NewsAdmin extends NewsAdminModel {
                                 ':news_id'       => $this->news_data['news_id']
                             ]);
                         }
-                        addNotice('success', self::$locale['news_0100']);
+                        addnotice('success', self::$locale['news_0100']);
                     }
 
                     if (isset($_POST['save_and_close'])) {
@@ -530,9 +530,9 @@ class NewsAdmin extends NewsAdminModel {
                         $failed_upload++;
                     }
                 }
-                addNotice("success", sprintf(self::$locale['news_0268'], $success_upload));
+                addnotice("success", sprintf(self::$locale['news_0268'], $success_upload));
                 if ($failed_upload) {
-                    addNotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
+                    addnotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
                 }
                 if (fusion_safe()) {
                     redirect(FUSION_REQUEST);
@@ -556,7 +556,7 @@ class NewsAdmin extends NewsAdminModel {
                     unlink(IMAGES_N_T.$data['news_image_t2']);
                 }
                 dbquery_insert(DB_NEWS_IMAGES, $data, 'delete');
-                addNotice('success', self::$locale['news_0104']);
+                addnotice('success', self::$locale['news_0104']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -702,19 +702,19 @@ class NewsAdmin extends NewsAdminModel {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_NEWS." SET news_draft='0' WHERE news_id='".intval($news_id)."'");
-                                addNotice("success", self::$locale['news_0101']);
+                                addnotice("success", self::$locale['news_0101']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_NEWS." SET news_draft='1' WHERE news_id='".intval($news_id)."'");
-                                addNotice("success", self::$locale['news_0101']);
+                                addnotice("success", self::$locale['news_0101']);
                                 break;
                             case "sticky":
                                 dbquery("UPDATE ".DB_NEWS." SET news_sticky='1' WHERE news_id='".intval($news_id)."'");
-                                addNotice("success", self::$locale['news_0101']);
+                                addnotice("success", self::$locale['news_0101']);
                                 break;
                             case "unsticky":
                                 dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_id='".intval($news_id)."'");
-                                addNotice("success", self::$locale['news_0101']);
+                                addnotice("success", self::$locale['news_0101']);
                                 break;
                             case "delete":
                                 $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
@@ -735,7 +735,7 @@ class NewsAdmin extends NewsAdminModel {
                                 }
                                 dbquery("DELETE FROM  ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
                                 dbquery("DELETE FROM  ".DB_NEWS." WHERE news_id='".intval($news_id)."'");
-                                addNotice("success", self::$locale['news_0102']);
+                                addnotice("success", self::$locale['news_0102']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);
@@ -744,7 +744,7 @@ class NewsAdmin extends NewsAdminModel {
                 }
                 redirect(FUSION_REQUEST);
             }
-            addNotice("warning", self::$locale['news_0108']);
+            addnotice("warning", self::$locale['news_0108']);
             redirect(FUSION_REQUEST);
         }
 
@@ -1084,7 +1084,7 @@ class NewsAdmin extends NewsAdminModel {
                 dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='$news_id' and comment_type='N'");
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$news_id' and rating_type='N'");
                 dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='$news_id'");
-                addNotice('success', self::$locale['news_0102']);
+                addnotice('success', self::$locale['news_0102']);
 
                 redirect(FUSION_SELF.fusion_get_aidlink());
             } else {

@@ -46,12 +46,12 @@ if (isset($_POST['savesettings'])) {
                 dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }
         }
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
     } else {
         // send message your settings was not safe.
-        addNotice('danger', $locale['901']);
-        addNotice('danger', $locale['696']);
-        addNotice('danger', $locale['900']);
+        addnotice('danger', $locale['901']);
+        addnotice('danger', $locale['696']);
+        addnotice('danger', $locale['900']);
     }
     redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
@@ -62,7 +62,7 @@ $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
 $calc_bb = $dl_settings['download_screen_max_b'] / $calc_cc;
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
-$mime = mimeTypes();
+$mime = mimetypes();
 $mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";

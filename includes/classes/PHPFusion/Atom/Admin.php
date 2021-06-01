@@ -99,7 +99,7 @@ class Admin {
                     }
 
                     dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
-                    addNotice('success', $locale['theme_success_002']);
+                    addnotice('success', $locale['theme_success_002']);
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
                 }
                 /**
@@ -338,19 +338,19 @@ class Admin {
                 $defender->stop();
                 switch ($upload['error']) {
                     case 1:
-                        addNotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
+                        addnotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
                         break;
                     case 2:
-                        addNotice('danger', $locale['theme_error_002']);
+                        addnotice('danger', $locale['theme_error_002']);
                         break;
                     case 3:
-                        addNotice('danger', $locale['theme_error_003']);
+                        addnotice('danger', $locale['theme_error_003']);
                         break;
                     case 4:
-                        addNotice('danger', $locale['theme_error_004']);
+                        addnotice('danger', $locale['theme_error_004']);
                         break;
                     default :
-                        addNotice('danger', $locale['theme_error_003']);
+                        addnotice('danger', $locale['theme_error_003']);
                 }
             } else {
                 $target_file = $target_folder.$upload['target_file'];
@@ -363,17 +363,17 @@ class Admin {
                             if ($zip->locateName('theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
                                 // extract it to the path we determined above
                                 $zip->extractTo($path);
-                                addNotice('success', $locale['theme_success_001']);
+                                addnotice('success', $locale['theme_success_001']);
                             } else {
                                 $defender->stop();
-                                addNotice('danger', $locale['theme_error_009']);
+                                addnotice('danger', $locale['theme_error_009']);
                             }
                             $zip->close();
                         } else {
-                            addNotice('danger', $locale['theme_error_005']);
+                            addnotice('danger', $locale['theme_error_005']);
                         }
                     } else {
-                        addNotice('warning', $locale['theme_error_006']);
+                        addnotice('warning', $locale['theme_error_006']);
                     }
                     @unlink($target_file);
                     redirect(FUSION_SELF.$aidlink.'&section=list');
@@ -389,19 +389,19 @@ class Admin {
                 $defender->stop();
                 switch ($upload['error']) {
                     case 1:
-                        addNotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
+                        addnotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
                         break;
                     case 2:
-                        addNotice('danger', $locale['theme_error_002']);
+                        addnotice('danger', $locale['theme_error_002']);
                         break;
                     case 3:
-                        addNotice('danger', $locale['theme_error_003']);
+                        addnotice('danger', $locale['theme_error_003']);
                         break;
                     case 4:
-                        addNotice('danger', $locale['theme_error_004']);
+                        addnotice('danger', $locale['theme_error_004']);
                         break;
                     default :
-                        addNotice('danger', $locale['theme_error_003']);
+                        addnotice('danger', $locale['theme_error_003']);
                 }
             } else {
                 $target_file = $target_folder.$upload['target_file'];
@@ -414,17 +414,17 @@ class Admin {
                             if ($zip->locateName('acp_theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
                                 // extract it to the path we determined above
                                 $zip->extractTo($path);
-                                addNotice('success', $locale['theme_success_001']);
+                                addnotice('success', $locale['theme_success_001']);
                             } else {
                                 $defender->stop();
-                                addNotice('danger', $locale['theme_error_009']);
+                                addnotice('danger', $locale['theme_error_009']);
                             }
                             $zip->close();
                         } else {
-                            addNotice('danger', $locale['theme_error_005']);
+                            addnotice('danger', $locale['theme_error_005']);
                         }
                     } else {
-                        addNotice('warning', $locale['theme_error_006']);
+                        addnotice('warning', $locale['theme_error_006']);
                     }
                     @unlink($target_file);
                     redirect(FUSION_SELF.$aidlink.'&section=admin_themes');

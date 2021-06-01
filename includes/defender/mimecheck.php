@@ -31,7 +31,7 @@ class ImageValidation {
     public static function ValidateExtensions() {
         if (fusion_get_settings('mime_check')) {
             if (isset($_FILES) && count($_FILES)) {
-                $mime_types = mimeTypes();
+                $mime_types = mimetypes();
                 foreach ($_FILES as $each) {
                     // Here can be param,
 
@@ -110,7 +110,7 @@ class ImageValidation {
         if (extension_loaded('fileinfo')) {
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $type = $finfo->file($file_src);
-            $mime_types = mimeTypes();
+            $mime_types = mimetypes();
 
             // build the mime type according to the allowed extension.
             $check_type = [];

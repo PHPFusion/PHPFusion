@@ -518,18 +518,18 @@ class Defender {
 
                         // Add regex error message.
                         if ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) {
-                            addNotice('danger', sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
+                            addnotice('danger', sprintf(fusion_get_locale('regex_error'), $this->field_config['title']));
                         }
                         // Add a notice
                         if (self::$debug) {
-                            addNotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
+                            addnotice('warning', '<strong>'.$input_name.':</strong>'.($this->field_config['safemode'] ? ' is in SAFEMODE and the' : '').' check failed');
                         }
 
                         // Return user's input for correction
                         return $this->field_value;
                     } else {
                         if (self::$debug) {
-                            addNotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
+                            addnotice('info', $input_name.' = '.(is_array($secured) ? 'array' : $secured));
                         }
 
                         return $secured;
@@ -601,11 +601,11 @@ class Defender {
 
             } else {
                 self::stop();
-                addNotice('danger', sprintf($locale['df_406'], self::$input_name));
+                addnotice('danger', sprintf($locale['df_406'], self::$input_name));
             }
         } catch (Exception $e) {
             self::stop();
-            addNotice('danger', $e->getMessage());
+            addnotice('danger', $e->getMessage());
         }
 
         return NULL;
@@ -623,7 +623,7 @@ class Defender {
         if (!defined('FUSION_NULL')) {
             define('FUSION_NULL', TRUE);
             if ($notice) {
-                addNotice('danger', $notice);
+                addnotice('danger', $notice);
                 define('STOP_REDIRECT', TRUE);
             }
             //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');

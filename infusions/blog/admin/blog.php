@@ -150,11 +150,11 @@ if (isset($_POST['save']) or isset($_POST['preview'])) {
         if (fusion_safe()) {
             if (dbcount("('blog_id')", DB_BLOG, "blog_id='".$data['blog_id']."'")) {
                 dbquery_insert(DB_BLOG, $data, 'update');
-                addNotice('success', $locale['blog_0411']);
+                addnotice('success', $locale['blog_0411']);
             } else {
                 $data['blog_name'] = $userdata['user_id'];
                 dbquery_insert(DB_BLOG, $data, 'save');
-                addNotice('success', $locale['blog_0410']);
+                addnotice('success', $locale['blog_0410']);
             }
             redirect(FUSION_SELF.$aidlink);
         }

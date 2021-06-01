@@ -43,7 +43,7 @@ if (check_post('clear_cache')) {
         // Where system has been disabled and instance could not be found, invoke manually.
         dbquery("DELETE FROM ".DB_SESSIONS);
     }
-    addNotice('success', $locale['security_007']);
+    addnotice('success', $locale['security_007']);
     redirect(FUSION_REQUEST);
 }
 
@@ -97,11 +97,11 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
     } else {
-        addNotice('danger', $locale['901']);
-        addNotice('danger', $locale['696']);
-        addNotice('danger', $locale['900']);
+        addnotice('danger', $locale['901']);
+        addnotice('danger', $locale['696']);
+        addnotice('danger', $locale['900']);
     }
 
     redirect(FUSION_REQUEST);

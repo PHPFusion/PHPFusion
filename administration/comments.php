@@ -67,7 +67,7 @@ function comments_edit() {
             ':comment_message' => $comment_message,
             ':comment_id'      => get('comment_id')
         ]);
-        addNotice('success', $locale['C_410']);
+        addnotice('success', $locale['C_410']);
         redirect(clean_request('', ['section', 'comment_item_id', 'comment_id'], FALSE));
     }
 
@@ -105,7 +105,7 @@ function comments_settings() {
                 ]);
             }
 
-            addNotice('success', $locale['settings_updated']);
+            addnotice('success', $locale['settings_updated']);
             redirect(FUSION_REQUEST);
         }
     }
@@ -147,7 +147,7 @@ function comments_listing() {
 
     if (check_get('action') && get('action') == 'delete' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
-        addNotice('success', $locale['C_411']);
+        addnotice('success', $locale['C_411']);
         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
     }
 
@@ -169,7 +169,7 @@ function comments_listing() {
         dbquery_insert(DB_BLACKLIST, $info, 'save');
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);
 
-        addNotice('success', $locale['C_412']);
+        addnotice('success', $locale['C_412']);
         redirect(clean_request('', ['section', 'action', 'comment_id'], FALSE));
     }
 

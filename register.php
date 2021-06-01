@@ -69,9 +69,9 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
             $result = dbquery("DELETE FROM ".DB_NEW_USERS." WHERE user_code=:code LIMIT 1", [':code' => get('code')]);
 
             if ($settings['admin_activation'] == 1) {
-                addNotice("info", $locale['u171']." - ".$locale['u162'], $settings["opening_page"]);
+                addnotice("info", $locale['u171']." - ".$locale['u162'], $settings["opening_page"]);
             } else {
-                addNotice("info", $locale['u171']." - ".$locale['u161'], $settings["opening_page"]);
+                addnotice("info", $locale['u171']." - ".$locale['u161'], $settings["opening_page"]);
             }
 
         }

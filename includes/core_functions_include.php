@@ -126,7 +126,7 @@ function set_theme($theme) {
 
     if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
 
-        addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
+        addnotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
 
     } else {
 

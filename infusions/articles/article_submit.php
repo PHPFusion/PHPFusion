@@ -60,7 +60,7 @@ if (dbcount("(article_cat_id)", DB_ARTICLE_CATS, "article_cat_status='1' AND ".g
                     'submit_criteria'  => \Defender::encode($criteriaArray)
                 ];
                 dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-                addNotice('success', $locale['article_0910']);
+                addnotice('success', $locale['article_0910']);
                 redirect(clean_request('submitted=a', ['stype']));
             }
 

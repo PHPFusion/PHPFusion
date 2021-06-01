@@ -41,14 +41,14 @@ if (check_post('save_settings')) {
             ]);
         }
 
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 }
 
 if (check_post('delete_messages')) {
     dbquery("TRUNCATE TABLE ".DB_MESSAGES);
-    addNotice('success', $locale['712']);
+    addnotice('success', $locale['712']);
     redirect(FUSION_REQUEST);
 }
 

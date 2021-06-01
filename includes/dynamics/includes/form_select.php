@@ -346,7 +346,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            addnotice("danger", $options['error_text']);
         }
     }
 
@@ -577,7 +577,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         if (!empty($new_error_text)) {
             $options['error_text'] = $new_error_text;
         }
-        addNotice("danger", $options['error_text']);
+        addnotice("danger", $options['error_text']);
     }
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
@@ -776,7 +776,7 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
                 if (!empty($new_error_text)) {
                     $options['error_text'] = $new_error_text;
                 }
-                addNotice("danger", $options['error_text']);
+                addnotice("danger", $options['error_text']);
             }
         }
 

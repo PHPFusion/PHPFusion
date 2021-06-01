@@ -42,18 +42,18 @@ class PageList extends PageAdmin {
                         switch ($_POST['table_action']) {
                             case "publish":
                                 dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '1', ':pageid' => intval($page_id)]);
-                                addNotice('success', self::$locale['page_0402']);
+                                addnotice('success', self::$locale['page_0402']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_status=:status WHERE page_id=:pageid", [':status' => '0', ':pageid' => intval($page_id)]);
-                                addNotice('success', self::$locale['page_0402']);
+                                addnotice('success', self::$locale['page_0402']);
                                 break;
                             case "delete":
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => intval($page_id)]);
                                 dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url=:pageurl", [':pageurl' => 'viewpage.php?page_id='.intval($page_id)]);
-                                addNotice('success', self::$locale['page_0400']);
+                                addnotice('success', self::$locale['page_0400']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);
@@ -63,7 +63,7 @@ class PageList extends PageAdmin {
 
                 redirect(FUSION_REQUEST);
             }
-            addNotice('warning', self::$locale['page_0442']);
+            addnotice('warning', self::$locale['page_0442']);
             redirect(FUSION_REQUEST);
         }
 

@@ -88,19 +88,19 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 if (dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_id=:catid", [':catid' => $inputArray['weblink_cat_id']])) {
                     if (!dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, $categoryNameCheck['when_updating'])) {
                         dbquery_insert(DB_WEBLINK_CATS, $inputArray, 'update');
-                        addNotice('success', $this->locale['WLS_0041']);
+                        addnotice('success', $this->locale['WLS_0041']);
                     } else {
                         fusion_stop();
-                        addNotice('danger', $this->locale['WLS_0321']);
+                        addnotice('danger', $this->locale['WLS_0321']);
                     }
                     // Insert
                 } else {
                     if (!dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, $categoryNameCheck['when_saving'])) {
                         $inputArray['weblink_cat_id'] = dbquery_insert(DB_WEBLINK_CATS, $inputArray, 'save');
-                        addNotice('success', $this->locale['WLS_0040']);
+                        addnotice('success', $this->locale['WLS_0040']);
                     } else {
                         fusion_stop();
-                        addNotice('danger', $this->locale['WLS_0321']);
+                        addnotice('danger', $this->locale['WLS_0321']);
                     }
                 }
                 if (fusion_safe()) {
@@ -127,10 +127,10 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         } else if ((!empty($action) && $action == "delete") && $cat_id) {
             if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat = :catid", [':catid' => (int)$cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent = :catparent", [':catparent' => (int)$cat_id])) {
                 dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id = :catid", [':catid' => (int)$cat_id]);
-                addNotice("success", $this->locale['WLS_0042']);
+                addnotice("success", $this->locale['WLS_0042']);
             } else {
-                addNotice("warning", $this->locale['WLS_0043']);
-                addNotice("warning", $this->locale['WLS_0044']);
+                addnotice("warning", $this->locale['WLS_0043']);
+                addnotice("warning", $this->locale['WLS_0044']);
             }
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
@@ -212,19 +212,19 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         switch ($table_action) {
                             case "publish":
                                 dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '1', ':catid' => (int)$weblink_cat_id]);
-                                addNotice('success', $this->locale['WLS_0049']);
+                                addnotice('success', $this->locale['WLS_0049']);
                                 break;
                             case "unpublish":
                                 dbquery("UPDATE ".DB_WEBLINK_CATS." SET weblink_cat_status=:status WHERE weblink_cat_id=:catid", [':status' => '0', ':catid' => (int)$weblink_cat_id]);
-                                addNotice('success', $this->locale['WLS_0050']);
+                                addnotice('success', $this->locale['WLS_0050']);
                                 break;
                             case "delete":
                                 if (!dbcount("(weblink_id)", DB_WEBLINKS, "weblink_cat=:catid", [':catid' => (int)$weblink_cat_id]) && !dbcount("(weblink_cat_id)", DB_WEBLINK_CATS, "weblink_cat_parent=:catparent", [':catparent' => (int)$weblink_cat_id])) {
                                     dbquery("DELETE FROM  ".DB_WEBLINK_CATS." WHERE weblink_cat_id=:catid", [':catid' => (int)$weblink_cat_id]);
-                                    addNotice('success', $this->locale['WLS_0042']);
+                                    addnotice('success', $this->locale['WLS_0042']);
                                 } else {
-                                    addNotice('warning', $this->locale['WLS_0046']);
-                                    addNotice('warning', $this->locale['WLS_0044']);
+                                    addnotice('warning', $this->locale['WLS_0046']);
+                                    addnotice('warning', $this->locale['WLS_0044']);
                                 }
                                 break;
                             default:
@@ -234,7 +234,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 }
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('warning', $this->locale['WLS_0048']);
+                addnotice('warning', $this->locale['WLS_0048']);
                 redirect(FUSION_REQUEST);
             }
         }

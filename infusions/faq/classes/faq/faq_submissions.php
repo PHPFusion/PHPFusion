@@ -72,7 +72,7 @@ class FaqSubmissions extends FaqServer {
                         'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-                    addNotice('success', $this->locale['faq_0910']);
+                    addnotice('success', $this->locale['faq_0910']);
                     redirect(clean_request('submitted=q', ['stype'], TRUE));
                 }
             }

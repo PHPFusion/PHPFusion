@@ -40,7 +40,7 @@ class FaqAdminView extends FaqAdminModel {
         BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
 
         if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'")) {
-            addNotice("info", sprintf($locale['faq_0064'], format_word($submissions, $locale['fmt_submission'])));
+            addnotice("info", sprintf($locale['faq_0064'], format_word($submissions, $locale['fmt_submission'])));
         }
 
         if (!empty($_GET['section'])) {

@@ -135,8 +135,8 @@ class ThreadTags extends ForumServer {
         LEFT JOIN ".DB_FORUM_POSTS." p1 ON p1.thread_id = t.thread_id and p1.post_id = t.thread_lastpostid
         LEFT JOIN ".DB_FORUM_POLLS." p ON p.thread_id = t.thread_id
         #LEFT JOIN ".DB_FORUM_VOTES." v ON v.thread_id = t.thread_id AND p1.post_id = v.post_id
-        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id AND a.attach_mime IN ('".implode(",", img_mimeTypes())."')
-        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
+        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id AND a.attach_mime IN ('".implode(",", img_mimetypes())."')
+        LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimetypes())."')
         WHERE ".in_group('t.thread_tags', intval($tag_id), '.')."AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
         ".(isset($filter['condition']) ? $filter['condition'] : '')."
         GROUP BY tf.forum_id
@@ -199,8 +199,8 @@ class ThreadTags extends ForumServer {
             LEFT JOIN ".DB_FORUM_VOTES." v on v.thread_id = t.thread_id AND v.vote_user='".$userdata['user_id']."' AND v.forum_id = t.forum_id AND tf.forum_type='4'
             LEFT JOIN ".DB_FORUM_POLL_VOTERS." pv on pv.thread_id = t.thread_id AND pv.forum_vote_user_id='".$userdata['user_id']."' AND t.thread_poll=1
             LEFT JOIN ".DB_FORUM_ATTACHMENTS." a on a.thread_id = t.thread_id
-            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimeTypes())."')
-            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimeTypes())."')
+            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a1 on a1.thread_id = t.thread_id AND a1.attach_mime IN ('".implode(",", img_mimetypes())."')
+            LEFT JOIN ".DB_FORUM_ATTACHMENTS." a2 on a2.thread_id = t.thread_id AND a2.attach_mime NOT IN ('".implode(",", img_mimetypes())."')
             LEFT JOIN ".DB_FORUM_THREAD_NOTIFY." n on n.thread_id = t.thread_id and n.notify_user = '".$userdata['user_id']."'
             WHERE ".in_group('t.thread_tags', intval($tag_id), '.')." AND t.thread_hidden='0' AND ".groupaccess('tf.forum_access')."
             ".(isset($filter['condition']) ? $filter['condition'] : '')."

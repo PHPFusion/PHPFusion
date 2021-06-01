@@ -177,14 +177,14 @@ class ForumAdminTags extends ForumAdminInterface {
                      * Update
                      */
                     dbquery_insert(DB_FORUM_TAGS, $this->data, "update");
-                    addNotice('success', self::$locale['forum_tag_0106']);
+                    addnotice('success', self::$locale['forum_tag_0106']);
 
                 } else {
                     /**
                      * Save New
                      */
                     dbquery_insert(DB_FORUM_TAGS, $this->data, "save");
-                    addNotice('success', self::$locale['forum_tag_0105']);
+                    addnotice('success', self::$locale['forum_tag_0105']);
 
                 }
                 redirect(clean_request("section=ft", ["tag_id", "ref"], FALSE));
@@ -193,7 +193,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         if (isset($_GET['delete']) && isnum($_GET['delete'])) {
             dbquery("DELETE FROM ".DB_FORUM_TAGS." WHERE tag_id='".$_GET['delete']."'");
-            addNotice("success", self::$locale['forum_tag_0107']);
+            addnotice("success", self::$locale['forum_tag_0107']);
             redirect(clean_request("section=ft", ["delete", "ref"], FALSE));
         }
     }

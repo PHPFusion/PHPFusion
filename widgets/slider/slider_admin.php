@@ -93,7 +93,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
                                     self::$colData['page_content'] = \Defender::serialize($slider_arr);
                                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
-                                    addNotice('success', self::$slider_locale['SLDW_0200']);
+                                    addnotice('success', self::$slider_locale['SLDW_0200']);
                                     redirect(clean_request('slider=cur_slider', ['widgetAction', 'widgetKey'], FALSE));
                                 }
 

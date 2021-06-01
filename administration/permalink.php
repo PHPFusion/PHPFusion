@@ -145,7 +145,7 @@ if (check_post('savesettings')) {
     if (fusion_safe()) {
         require_once(INCLUDES.'htaccess_include.php');
         write_htaccess();
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
     }
     redirect(clean_request('section=pls', [], FALSE));
 }
@@ -165,9 +165,9 @@ if (check_post('savepermalinks')) {
             $error = 1;
         }
         if ($error == 0) {
-            addNotice('success', $locale['PL_421']);
+            addnotice('success', $locale['PL_421']);
         } else if ($error == 1) {
-            addNotice('danger', $locale['PL_420']);
+            addnotice('danger', $locale['PL_420']);
         }
     }
     redirect(clean_request('section=pl', ['edit'], FALSE));
@@ -205,12 +205,12 @@ if (check_get('enable') && !empty($rewrite_registers[get('enable')])) {
             }
         }
         if ($error == 0) {
-            addNotice('success', sprintf($locale['PL_424'], $permalink_name));
+            addnotice('success', sprintf($locale['PL_424'], $permalink_name));
         } else if ($error == 1) {
-            addNotice('danger', $locale['PL_420']);
+            addnotice('danger', $locale['PL_420']);
         }
     } else {
-        addNotice('warning', sprintf($locale['PL_425'], $permalink_name));
+        addnotice('warning', sprintf($locale['PL_425'], $permalink_name));
     }
     redirect(clean_request('', ['enable', 'section'], FALSE));
 } else if (check_get('disable')) {
@@ -230,7 +230,7 @@ if (check_get('enable') && !empty($rewrite_registers[get('enable')])) {
 
     $permalink_name = !empty($permalink_name) ? $permalink_name : ucfirst($rewrite_name);
 
-    addNotice('success', sprintf($locale['PL_426'], $permalink_name));
+    addnotice('success', sprintf($locale['PL_426'], $permalink_name));
     redirect(clean_request('', ['disable', 'section'], FALSE));
 } else if (check_get('reinstall') && !empty($rewrite_registers[get('reinstall')])) {
     /**
@@ -275,9 +275,9 @@ if (check_get('enable') && !empty($rewrite_registers[get('enable')])) {
         }
     }
     if ($error == 0) {
-        addNotice('success', sprintf($locale['PL_424'], $permalink_name));
+        addnotice('success', sprintf($locale['PL_424'], $permalink_name));
     } else if ($error == 1) {
-        addNotice('danger', $locale['PL_420']);
+        addnotice('danger', $locale['PL_420']);
     }
     redirect(clean_request('', ['reinstall', 'section'], FALSE));
 }
@@ -302,11 +302,11 @@ if (check_get('edit') && !empty($rewrite_registers[get('edit')])) {
             }
             $edit_name = sprintf($locale['PL_405'], $permalink_name);
         } else {
-            addNotice("danger", sprintf($locale['PL_422'], $permalink_name));
+            addnotice("danger", sprintf($locale['PL_422'], $permalink_name));
             redirect(clean_request('section=pl', ['edit'], FALSE));
         }
     } else {
-        addNotice('danger', $locale['PL_423']);
+        addnotice('danger', $locale['PL_423']);
         redirect(clean_request('section=pl', ['edit'], FALSE));
     }
 } else {

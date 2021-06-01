@@ -154,17 +154,17 @@ class ForumAdminMood extends ForumAdminInterface {
             if (fusion_safe()) {
                 if (!empty($this->data['mood_id'])) {
                     dbquery_insert(DB_FORUM_MOODS, $this->data, 'update');
-                    addNotice('success', self::$locale['forum_notice_16']);
+                    addnotice('success', self::$locale['forum_notice_16']);
                 } else {
                     dbquery_insert(DB_FORUM_MOODS, $this->data, 'save');
-                    addNotice('success', self::$locale['forum_notice_15']);
+                    addnotice('success', self::$locale['forum_notice_15']);
                 }
                 redirect(clean_request('', ['mood_id', 'ref'], FALSE));
             }
         }
 
         if (isset($_GET['delete']) && isnum($_GET['delete'])) {
-            addNotice('success', self::$locale['forum_notice_14']);
+            addnotice('success', self::$locale['forum_notice_14']);
             dbquery("DELETE FROM ".DB_FORUM_MOODS." WHERE mood_id='".intval($_GET['delete'])."'");
             redirect(clean_request("section=fmd", ["delete", "ref"], FALSE));
         }

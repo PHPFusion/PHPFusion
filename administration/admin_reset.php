@@ -190,7 +190,7 @@ function admin_reset_form() {
             ];
 
             dbquery_insert(DB_ADMIN_RESETLOG, $data1, 'save');
-            addNotice('success', $locale['apw_411']);
+            addnotice('success', $locale['apw_411']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }
@@ -230,7 +230,7 @@ function admin_reset_listing() {
         $id = $_GET['reset_id'];
         if (isnum($id) && dbcount("(reset_id)", DB_ADMIN_RESETLOG, "reset_id='".intval($id)."'")) {
             dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id='".intval($id)."'");
-            addNotice('success', $locale['apw_429']);
+            addnotice('success', $locale['apw_429']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }
@@ -243,7 +243,7 @@ function admin_reset_listing() {
                     dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => $reset_id]);
                 }
             }
-            addNotice('success', $locale['apw_429']);
+            addnotice('success', $locale['apw_429']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }

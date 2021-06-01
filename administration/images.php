@@ -42,12 +42,12 @@ class ImagesAdministration {
                 if (self::$settings['tinymce_enabled'] == 1) {
                     include INCLUDES."buildlist.php";
                 }
-                addNotice('success', self::$locale['401']);
+                addnotice('success', self::$locale['401']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
             case 'update':
                 include_once INCLUDES.'buildlist.php';
-                addNotice('success', self::$locale['465']);
+                addnotice('success', self::$locale['465']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
             default:
@@ -150,7 +150,7 @@ class ImagesAdministration {
                             include INCLUDES."buildlist.php";
                         }
                         if (fusion_safe()) {
-                            addNotice('success', self::$locale['420']);
+                            addnotice('success', self::$locale['420']);
                             redirect(clean_request("", ["section"], FALSE));
                         }
                     }

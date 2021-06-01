@@ -88,7 +88,7 @@ class PanelsAdministration {
                     $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'"));
                     dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'");
                     dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".intval($data['panel_side'])."' AND panel_order>='".intval($data['panel_order'])."'");
-                    addNotice('warning', self::$locale['489']);
+                    addnotice('warning', self::$locale['489']);
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
                 break;
@@ -149,7 +149,7 @@ class PanelsAdministration {
             $result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
             if ($result) {
                 fusion_stop();
-                addNotice('danger', self::$locale['471']);
+                addnotice('danger', self::$locale['471']);
             }
             $this->data['panel_filename'] = sanitizer('panel_filename', '', 'panel_filename');
             // panel content formatting
@@ -185,7 +185,7 @@ class PanelsAdministration {
                     $this->data['panel_display'] = ($this->data['panel_side'] != 1 && $this->data['panel_side'] != 4) ? 1 : 0;
                 } else {
                     fusion_stop();
-                    addNotice('danger', self::$locale['475']);
+                    addnotice('danger', self::$locale['475']);
                 }
             }
 
@@ -198,7 +198,7 @@ class PanelsAdministration {
                 if ($this->data['panel_id'] && self::verifyPanel($this->data['panel_id'])) {
                     // Panel Update
                     dbquery_insert(DB_PANELS, $this->data, 'update');
-                    addNotice('success', self::$locale['482']);
+                    addnotice('success', self::$locale['482']);
                 } else {
                     // Panel Save
                     $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
@@ -209,7 +209,7 @@ class PanelsAdministration {
                         $this->data['panel_order'] = 1;
                     }
                     dbquery_insert(DB_PANELS, $this->data, 'save');
-                    addNotice('success', self::$locale['485']);
+                    addnotice('success', self::$locale['485']);
                 }
             }
 
@@ -294,7 +294,7 @@ class PanelsAdministration {
                     ]);
                 }
 
-                addNotice('success', $locale['settings_updated']);
+                addnotice('success', $locale['settings_updated']);
                 redirect(FUSION_REQUEST);
             }
         }

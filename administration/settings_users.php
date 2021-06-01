@@ -54,7 +54,7 @@ if (check_post('savesettings')) {
             $result = dbquery("UPDATE ".DB_USERS." SET user_status='0' WHERE user_status='5'");
         }
 
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 }

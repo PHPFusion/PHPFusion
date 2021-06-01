@@ -119,7 +119,7 @@ class ComposeSettings extends PageAdmin {
 
                                         dbquery_insert(DB_SITE_LINKS, $data, 'update');
 
-                                        addNotice("success", self::$locale['page_0313']);
+                                        addnotice("success", self::$locale['page_0313']);
 
                                     } else {
 
@@ -135,7 +135,7 @@ class ComposeSettings extends PageAdmin {
 
                                         dbquery("UPDATE ".DB_CUSTOM_PAGES." SET page_link_cat='$id'");
 
-                                        addNotice("success", self::$locale['page_0314']);
+                                        addnotice("success", self::$locale['page_0314']);
 
                                     }
 

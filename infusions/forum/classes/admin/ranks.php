@@ -239,7 +239,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                      * Update
                      */
                     dbquery_insert(DB_FORUM_RANKS, $this->data, "update");
-                    addNotice('info', self::$locale['forum_rank_411']);
+                    addnotice('info', self::$locale['forum_rank_411']);
                     redirect(clean_request("section", ["rank_id", "ref"], FALSE));
 
                 } else if (!$this->check_duplicate_ranks()) {
@@ -247,7 +247,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                      * Save New
                      */
                     dbquery_insert(DB_FORUM_RANKS, $this->data, "save");
-                    addNotice('info', self::$locale['forum_rank_410']);
+                    addnotice('info', self::$locale['forum_rank_410']);
                     redirect(clean_request("section", ["rank_id", "ref"], FALSE));
 
                 }
@@ -256,7 +256,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if (isset($_GET['delete']) && isnum($_GET['delete'])) {
             dbquery("DELETE FROM ".DB_FORUM_RANKS." WHERE rank_id='".$_GET['delete']."'");
-            addNotice("success", self::$locale['forum_rank_412']);
+            addnotice("success", self::$locale['forum_rank_412']);
             redirect(clean_request("section=fr", ["delete", "ref"], FALSE));
         }
     }
@@ -273,7 +273,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 (multilang_table("FR") ? in_group('rank_language', LANGUAGE)." AND" : "")."
                                     rank_id!='".$this->data['rank_id']."' AND rank_apply='".$this->data['rank_apply']."'"))
         ) {
-            addNotice('info', self::$locale['forum_rank_413']);
+            addnotice('info', self::$locale['forum_rank_413']);
             redirect(clean_request("section=fr", [""], FALSE));
         }
 

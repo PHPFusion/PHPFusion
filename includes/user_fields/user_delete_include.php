@@ -56,7 +56,7 @@ if ($profile_method == "input") {
             }
             dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data."'");
 
-            addNotice('success', $locale['uf_delete_exit']);
+            addnotice('success', $locale['uf_delete_exit']);
             redirect('index.php');
         }
 

@@ -15,15 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Renders notices
- * Formats and renders notices
  *
- * @param array $notices the array contaning notices
+ * @param array $notices The array contaning notices.
  *
- * @return string the notices formatted as HTML
+ * @return string The notices formatted as HTML.
  */
-function renderNotices($notices) {
+function rendernotices($notices) {
     $messages = "";
 
     foreach ($notices as $status => $notice) {
@@ -40,18 +40,17 @@ function renderNotices($notices) {
         }
     }
 
-    return (string)$messages;
+    return $messages;
 }
 
 /**
- * Check for notices
  * Checks whether a group identified by the key provided has any notices
  *
- * @param string $key the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
+ * @param string $key The key identifying a group or more holding notices, by default the page name in which the notice was set
  *
- * @return bool TRUE if the group has any notices, FALSE otherwise
+ * @return bool Ture if the group has any notices.
  */
-function hasNotice($key = FUSION_SELF) {
+function hasnotice($key = FUSION_SELF) {
     if (!empty($_SESSION['notices'])) {
         if ((isset($_SESSION['notices']['once'][$key]) && !empty($_SESSION['notices']['once'][$key])) ||
             (isset($_SESSION['notices']['persist'][$key]) && !empty($_SESSION['notices']['persist'][$key]))
@@ -64,16 +63,15 @@ function hasNotice($key = FUSION_SELF) {
 }
 
 /**
- * Retrievs all notices
- * Retrievs all notices for the group identified by the key provided
+ * Retrievs all notices for the group identified by the key provided/
  *
- * @param string|array $key the key(s) identifying a group or more holding notices, by default the page name in which the notice was set
- * @param boolean      $delete whether to delete or keep a notice message after it was accessed. This only works if the notice
- * was set or added while having $removeAfterAccess set to FALSE
+ * @param string|array $key    The key(s) identifying a group or more holding notices, by default the page name in which the notice was set.
+ * @param bool         $delete Whether to delete or keep a notice message after it was accessed.
+ *                             This only works if the notice was set or added while having $remove_after_access set to false
  *
- * @return array the notices for the group identified by the provided key
+ * @return array The notices for the group identified by the provided key.
  */
-function getNotices($key = FUSION_SELF, $delete = TRUE) {
+function getnotices($key = FUSION_SELF, $delete = TRUE) {
     $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
     $notices = [];
     if (!empty($_SESSION['notices'])) {
@@ -82,18 +80,23 @@ function getNotices($key = FUSION_SELF, $delete = TRUE) {
                 if (isset($keys[$thiskey])) {
                     $notices = array_merge_recursive($notices, $keys[$thiskey]);
                     if (!fusion_get_settings('site_seo') && !defined('IN_PERMALINK')) {
-                        if ($delete)
+                        if ($delete) {
                             $_SESSION['notices'][$type][$thiskey] = [];
+                        }
                     }
                 }
             }
         }
     }
 
-    return (array)$notices;
+    return $notices;
 }
 
-
+/**
+ * Remove notice
+ *
+ * @param string|array $key The key(s) identifying a group or more holding notices.
+ */
 function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
     $key = is_array($key) ? $key : [$key]; // key can be arrays or a string
     if (!empty($_SESSION['notices'])) {
@@ -108,17 +111,16 @@ function remove_notice($key = ['all', FUSION_SELF, FUSION_REQUEST]) {
 }
 
 /**
- * Adds a notice message
  * Adds a notice message to the group identified by the key provided
  *
- * @param string  $status the status of the message
- * @param string  $value the message
- * @param string  $key the key identifying a group holding notices, by default the page name in which the notice was set
- * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once,
- * if set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed
+ * @param string  $status              The status of the message.
+ * @param string  $value               The message.
+ * @param string  $key                 The key identifying a group holding notices, by default the page name in which the notice was set.
+ * @param boolean $remove_after_access Whether the notice should be automatically removed after it was displayed once,
+ *                                     if set to false when getnotices() is called you have the option to keep the notice even after it was accesed.
  */
-function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
-    $type = $removeAfterAccess ? 'once' : 'persist';
+function addnotice($status, $value, $key = FUSION_SELF, $remove_after_access = TRUE) {
+    $type = $remove_after_access ? 'once' : 'persist';
     if (is_array($value)) {
         $return = "<ol style='list-style: decimal;'>\n";
         foreach ($value as $text) {
@@ -138,16 +140,15 @@ function addNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRU
 }
 
 /**
- * Sets a notice message
  * Sets a notice message for the whole group identified by the key provided, this will overwrite any other notices previously set
  *
- * @param string  $status the status of the message
- * @param string  $value the message
- * @param string  $key the key identifying a group holding notices, by default the page name in which the notice was set
- * @param boolean $removeAfterAccess whether the notice should be automatically removed after it was displayed once.
- * If set to FALSE when getNotices() is called you have the option to keep the notice even after it was accesed.
+ * @param string  $status              The status of the message.
+ * @param string  $value               The message.
+ * @param string  $key                 The key identifying a group holding notices, by default the page name in which the notice was set.
+ * @param boolean $remove_after_access Whether the notice should be automatically removed after it was displayed once.
+ *                                     If set to false when getnotices() is called you have the option to keep the notice even after it was accesed.
  */
-function setNotice($status, $value, $key = FUSION_SELF, $removeAfterAccess = TRUE) {
-    $type = $removeAfterAccess ? 'once' : 'persist';
+function setnotice($status, $value, $key = FUSION_SELF, $remove_after_access = TRUE) {
+    $type = $remove_after_access ? 'once' : 'persist';
     $_SESSION['notices'][$type][$key] = [$status => [$value]];
 }

@@ -72,15 +72,15 @@ class FaqAdmin extends FaqAdminModel {
             if (fusion_safe()) {
                 if ($this->cat_data['faq_cat_id']) {
                     dbquery_insert(DB_FAQ_CATS, $this->cat_data, 'update');
-                    addNotice('success', $this->locale['faq_0040']);
+                    addnotice('success', $this->locale['faq_0040']);
                 } else {
                     if (!dbcount("(faq_cat_id)", DB_FAQ_CATS, "faq_cat_name=:faq_cat_name", [':faq_cat_name' => $this->cat_data['faq_cat_name']])) {
                         dbquery_insert(DB_FAQ_CATS, $this->cat_data, 'save');
-                        addNotice('success', $this->locale['faq_0039']);
+                        addnotice('success', $this->locale['faq_0039']);
                     } else {
                         fusion_stop();
                         \Defender::inputHasError('faq_cat_name');
-                        addNotice('warning', $this->locale['faq_0042']);
+                        addnotice('warning', $this->locale['faq_0042']);
                     }
                 }
                 redirect(clean_request('', ['ref', 'cat_id', 'action'], FALSE));
@@ -152,7 +152,7 @@ class FaqAdmin extends FaqAdminModel {
             $faq_id = intval($_GET['faq_id']);
 
             dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
-            addNotice('success', $this->locale['faq_0032']);
+            addnotice('success', $this->locale['faq_0032']);
 
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
@@ -188,13 +188,13 @@ class FaqAdmin extends FaqAdminModel {
                 if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
                     $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
                     dbquery_insert(DB_FAQS, $this->faq_data, 'update');
-                    addNotice('success', $this->locale['faq_0031']);
+                    addnotice('success', $this->locale['faq_0031']);
 
                     // Create
                 } else {
                     $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
                     $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
-                    addNotice('success', $this->locale['faq_0030']);
+                    addnotice('success', $this->locale['faq_0030']);
                 }
 
                 // Redirect
@@ -359,15 +359,15 @@ class FaqAdmin extends FaqAdminModel {
                         switch ($_POST['table_action']) {
                             case 'publish':
                                 dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '1', ':faqid' => intval($faq_id)]);
-                                addNotice("success", $this->locale['faq_0037']);
+                                addnotice("success", $this->locale['faq_0037']);
                                 break;
                             case 'unpublish':
                                 dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '0', ':faqid' => intval($faq_id)]);
-                                addNotice("warning", $this->locale['faq_0038']);
+                                addnotice("warning", $this->locale['faq_0038']);
                                 break;
                             case 'delete':
                                 dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
-                                addNotice('success', $this->locale['faq_0032']);
+                                addnotice('success', $this->locale['faq_0032']);
                                 break;
                             default:
                                 redirect(FUSION_REQUEST);
@@ -376,7 +376,7 @@ class FaqAdmin extends FaqAdminModel {
                 }
                 redirect(FUSION_REQUEST);
             }
-            addNotice('warning', $this->locale['faq_0034']);
+            addnotice('warning', $this->locale['faq_0034']);
             redirect(FUSION_REQUEST);
         }
 
@@ -390,10 +390,10 @@ class FaqAdmin extends FaqAdminModel {
             if (dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $_POST['faq_cat_id']]) == 0) {
                 dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id'], ':uncategorized' => 0]);
                 dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id']]);
-                addNotice('success', $this->locale['faq_0041']);
+                addnotice('success', $this->locale['faq_0041']);
             } else {
-                addNotice('warning', $this->locale['faq_0035']);
-                addNotice('warning', $this->locale['faq_0036']);
+                addnotice('warning', $this->locale['faq_0035']);
+                addnotice('warning', $this->locale['faq_0036']);
             }
 
             redirect(FUSION_SELF.fusion_get_aidlink());

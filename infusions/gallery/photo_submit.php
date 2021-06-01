@@ -52,13 +52,13 @@ if (iMEMBER && $gll_settings['gallery_allow_submission'] && checkgroup($gll_sett
                     } else {
                         fusion_stop();
                         \Defender::setInputError("photo_image");
-                        addNotice("danger", $locale['photo_0014']);
+                        addnotice("danger", $locale['photo_0014']);
                     }
                 }
             } else {
                 fusion_stop();
                 \Defender::setInputError('photo_image');
-                addNotice('danger', $locale['photo_0014']);
+                addnotice('danger', $locale['photo_0014']);
             }
         }
         if (fusion_safe()) {
@@ -70,7 +70,7 @@ if (iMEMBER && $gll_settings['gallery_allow_submission'] && checkgroup($gll_sett
                 "submit_criteria"  => addslashes(serialize($criteriaArray))
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-            addNotice("success", $locale['gallery_0101']);
+            addnotice("success", $locale['gallery_0101']);
             redirect(clean_request("submitted=p", ["stype"]));
         }
     }

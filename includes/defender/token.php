@@ -144,8 +144,8 @@ class Token extends \Defender {
             self::stop();
             $token_notice = FALSE;
             if ($token_notice === TRUE) {
-                addNotice('danger', $_SERVER['PHP_SELF']);
-                addNotice('danger', $this->error);
+                addnotice('danger', $_SERVER['PHP_SELF']);
+                addnotice('danger', $this->error);
             }
         }
     }

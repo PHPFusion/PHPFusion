@@ -102,7 +102,7 @@ class InfusionsSetup extends InstallCore {
                 }
                 closedir($temp);
                 $content .= "<div>\n";
-                $content .= renderNotices(getNotices());
+                $content .= rendernotices(getnotices());
 
                 if ($infs) {
                     $content .= "<div class='list-group'>\n";

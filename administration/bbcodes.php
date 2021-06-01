@@ -102,14 +102,14 @@ function bbcode_list() {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => get('order', FILTER_SANITIZE_NUMBER_INT)]));
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcode", [':bbcode' => get('bbcode_id')]);
-        addNotice('info', $locale['BBCA_430']);
+        addnotice('info', $locale['BBCA_430']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
     } else if ((check_get('action') && get('action') == "mdown") && (check_get('bbcode_id') && get('bbcode_id', FILTER_SANITIZE_NUMBER_INT))) {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => get('order', FILTER_SANITIZE_NUMBER_INT)]));
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcode", [':bbcode' => get('bbcode_id')]);
-        addNotice('info', $locale['BBCA_431']);
+        addnotice('info', $locale['BBCA_431']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
     } else if (check_get('enable') && preg_match("/^!?([a-z0-9_-]){1,50}$/i", get('enable'))
@@ -126,7 +126,7 @@ function bbcode_list() {
             }
             dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".get('enable')."', '1')");
         }
-        addNotice('info', $locale['BBCA_432']);
+        addnotice('info', $locale['BBCA_432']);
         redirect(clean_request('', ['section', 'enable'], FALSE));
 
     } else if (check_get('disable') && get('disable', FILTER_SANITIZE_NUMBER_INT)) {
@@ -137,7 +137,7 @@ function bbcode_list() {
             dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=:norder WHERE bbcode_order=:bbcodeorder", [':norder' => $order, ':bbcodeorder' => $data['bbcode_order']]);
             $order++;
         }
-        addNotice('success', $locale['BBCA_433']);
+        addnotice('success', $locale['BBCA_433']);
         redirect(clean_request('', ['section', 'disable'], FALSE));
     }
 

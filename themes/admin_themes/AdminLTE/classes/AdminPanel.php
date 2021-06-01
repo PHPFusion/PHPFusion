@@ -38,7 +38,7 @@ class AdminPanel {
             $html .= '<div class="content-wrapper">';
                 $html .= '<div class="notices">';
                     $html .= '<div id="updatechecker_result" class="alert alert-info m-b-0" style="display:none;"></div>';
-                    $html .= renderNotices(getNotices());
+                    $html .= rendernotices(getnotices());
                 $html .= '</div>';
 
                 $html .= CONTENT;

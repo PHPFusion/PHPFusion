@@ -76,7 +76,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
             ];
 
             dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');
-            addNotice('success', $locale['news_0701']);
+            addnotice('success', $locale['news_0701']);
             redirect(clean_request('submitted=n', ['submitted', 'stype']));
         }
     }

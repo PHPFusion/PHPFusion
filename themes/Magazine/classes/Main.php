@@ -67,7 +67,7 @@ class Main {
                 }
 
                 echo '<div class="col-xs-12 col-sm-'.$content['sm'].' col-md-'.$content['md'].' col-lg-'.$content['lg'].'">';
-                    echo renderNotices(getNotices(['all', FUSION_SELF]));
+                    echo rendernotices(getnotices(['all', FUSION_SELF]));
                     echo defined('U_CENTER') && U_CENTER ? U_CENTER : '';
                     echo CONTENT;
                     echo defined('L_CENTER') && L_CENTER ? L_CENTER : '';

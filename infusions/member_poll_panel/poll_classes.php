@@ -66,7 +66,7 @@ class MemberPoll {
     private static function delete_poll($id) {
         if (self::verify_poll($id)) {
             dbquery("DELETE FROM ".DB_POLLS." WHERE poll_id='".intval($id)."'");
-            addNotice('success', self::$locale['POLL_007']);
+            addnotice('success', self::$locale['POLL_007']);
             redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
@@ -82,7 +82,7 @@ class MemberPoll {
     private static function start_poll($id) {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_started='".time()."' WHERE poll_id='".intval($id)."'");
-            addNotice('success', self::$locale['POLL_008']);
+            addnotice('success', self::$locale['POLL_008']);
             redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
@@ -91,7 +91,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_id='".intval($id)."'");
 
-            addNotice('success', self::$locale['POLL_009']);
+            addnotice('success', self::$locale['POLL_009']);
             redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
@@ -100,7 +100,7 @@ class MemberPoll {
         if (self::verify_poll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='0' WHERE poll_id='".intval($id)."'");
 
-            addNotice('success', self::$locale['POLL_010']);
+            addnotice('success', self::$locale['POLL_010']);
             redirect(clean_request("", ["section=poll", "aid"], TRUE));
         }
     }
@@ -137,11 +137,11 @@ class MemberPoll {
                 if (fusion_safe()) {
 
                     dbquery_insert(DB_POLL_VOTES, $vote_save, "save");
-                    addNotice('success', "<i class='fa fa-check-square-o fa-lg m-r-10'></i>".self::$locale['POLL_013']);
+                    addnotice('success', "<i class='fa fa-check-square-o fa-lg m-r-10'></i>".self::$locale['POLL_013']);
                 }
 
             } else {
-                addNotice('warning', "<i class='fa fa-close fa-lg m-r-10'></i>".self::$locale['POLL_014']);
+                addnotice('warning', "<i class='fa fa-close fa-lg m-r-10'></i>".self::$locale['POLL_014']);
             }
 
             redirect(clean_request());
@@ -174,7 +174,7 @@ class MemberPoll {
             ];
             if (fusion_safe()) {
 
-                addNotice("success", $this->data['poll_id'] == 0 ? self::$locale['POLL_005'] : self::$locale['POLL_006']);
+                addnotice("success", $this->data['poll_id'] == 0 ? self::$locale['POLL_005'] : self::$locale['POLL_006']);
                 dbquery_insert(DB_POLLS, $this->data, ($this->data['poll_id'] == 0 ? "save" : "update"));
                 redirect(clean_request("", ["section=poll", "aid"], TRUE));
             }

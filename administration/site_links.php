@@ -135,7 +135,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                 $link_order = dbresult(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id=:id", [":id" => $this->link_id]), 0);
                 dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order > :order", [":order" => (int)$link_order]);
                 dbquery("DELETE FROM  ".DB_SITE_LINKS." WHERE link_id=:id", [":id" => $this->link_id]);
-                addNotice("success", $this->locale['SL_0017']);
+                addnotice("success", $this->locale['SL_0017']);
                 redirect(FUSION_SELF.$this->aidlink."&section=links&refs=".get("refs", FILTER_VALIDATE_INT)."&cat=".get("cat", FILTER_VALIDATE_INT));
                 break;
             default:
@@ -212,7 +212,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                     $sql = "UPDATE ".DB_SETTINGS." SET settings_value = '$value' WHERE settings_name = '$key'";
                     dbquery($sql);
                 }
-                addNotice("success", $this->locale['SL_0018']);
+                addnotice("success", $this->locale['SL_0018']);
                 redirect(FUSION_REQUEST);
             }
         }
@@ -310,7 +310,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                             dbquery("UPDATE ".DB_SITE_LINKS." SET link_position='".$this->data['link_position']."' WHERE link_id='$child_id'");
                         }
                     }
-                    addNotice("success", $this->locale['SL_0016']);
+                    addnotice("success", $this->locale['SL_0016']);
 
                 } else {
 
@@ -318,7 +318,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
 
                     dbquery_insert(DB_SITE_LINKS, $this->data, 'save');
                     // New link will not have child
-                    addNotice("success", $this->locale['SL_0015']);
+                    addnotice("success", $this->locale['SL_0015']);
                 }
 
                 redirect(FUSION_SELF.$this->aidlink."&section=links&refs=".(int)$this->data["link_position"]."&cat=".(int)$this->data["link_cat"]);
@@ -629,14 +629,14 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                                 }
                             }
                         }
-                        addNotice("success", $this->locale['SL_0016']);
+                        addnotice("success", $this->locale['SL_0016']);
                         redirect(FUSION_REQUEST);
                     }
                 } else {
-                    addNotice("danger", $this->locale['SL_0087']);
+                    addnotice("danger", $this->locale['SL_0087']);
                 }
             } else {
-                addNotice("danger", "Invalid action");
+                addnotice("danger", "Invalid action");
                 redirect(FUSION_REQUEST);
             }
         }

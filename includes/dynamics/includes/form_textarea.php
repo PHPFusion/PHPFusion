@@ -361,7 +361,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            addnotice("danger", $options['error_text']);
         }
     }
 

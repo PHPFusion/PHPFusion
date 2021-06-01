@@ -102,7 +102,7 @@ class Postify_Vote extends Forum_Postify {
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['upvote_points']
                                         ]);
-                                        addNotice('success', self::$locale['forum_0515'], 'viewthread.php');
+                                        addnotice('success', self::$locale['forum_0515'], 'viewthread.php');
                                     } else {
                                         // I have not yet voted, I'm upvoting.
                                         $d['vote_points'] = 1;
@@ -130,11 +130,11 @@ class Postify_Vote extends Forum_Postify {
                                             ':points'         => self::$forum_settings['upvote_points']
                                         ]);
 
-                                        addNotice('success', self::$locale['forum_0516'], 'viewthread.php');
+                                        addnotice('success', self::$locale['forum_0516'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);
                                 } else {
-                                    addNotice('danger', strtr(self::$locale['forum_0519'], ['{%action%}' => self::$locale['forum_0510'], '{%points%}' => format_word(self::$forum_settings['points_to_upvote'], self::$locale['fmt_points'])]), 'viewthread.php');
+                                    addnotice('danger', strtr(self::$locale['forum_0519'], ['{%action%}' => self::$locale['forum_0510'], '{%points%}' => format_word(self::$forum_settings['points_to_upvote'], self::$locale['fmt_points'])]), 'viewthread.php');
                                 }
                                 break;
 
@@ -151,7 +151,7 @@ class Postify_Vote extends Forum_Postify {
                                             ':post_author_id' => $thread_data['post_author'],
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
-                                        addNotice('success', self::$locale['forum_0517'], 'viewthread.php');
+                                        addnotice('success', self::$locale['forum_0517'], 'viewthread.php');
                                     } else {
                                         // I have not yet voted, I'm downvoting.
                                         $d['vote_points'] = -1;
@@ -179,12 +179,12 @@ class Postify_Vote extends Forum_Postify {
                                             ':points'         => self::$forum_settings['downvote_points']
                                         ]);
 
-                                        addNotice('success', self::$locale['forum_0518'], 'viewthread.php');
+                                        addnotice('success', self::$locale['forum_0518'], 'viewthread.php');
                                     }
                                     redirect(self::$default_redirect_link);
 
                                 } else {
-                                    addNotice('danger', strtr(self::$locale['forum_0519'], [
+                                    addnotice('danger', strtr(self::$locale['forum_0519'], [
                                         '{%action%}' => self::$locale['forum_0511'],
                                         '{%points%}' => format_word(self::$forum_settings['points_to_downvote'], self::$locale['fmt_points'])]), 'viewthread.php');
                                 }
@@ -195,11 +195,11 @@ class Postify_Vote extends Forum_Postify {
                         }
                     } else {
                         // you cannot upvote or downvote on your own post.
-                        addNotice('danger', self::$locale['forum_0802'], 'viewthread.php');
+                        addnotice('danger', self::$locale['forum_0802'], 'viewthread.php');
                     }
                 } else {
                     // this one does not exist.
-                    addNotice('danger', self::$locale['forum_0529a'], 'viewthread.php');
+                    addnotice('danger', self::$locale['forum_0529a'], 'viewthread.php');
                 }
                 // print_p(self::$default_redirect_link);
                 redirect(self::$default_redirect_link);

@@ -55,7 +55,7 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addNotice('success', $locale['900']);
+        addnotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 }

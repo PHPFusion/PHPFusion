@@ -66,10 +66,10 @@ class NewsSettingsAdmin extends NewsAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addNotice("success", $locale['900']);
+                addnotice("success", $locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('danger', $locale['901']);
+                addnotice('danger', $locale['901']);
             }
         }
         $opts = ['0' => $locale['news_0201'], '1' => $locale['news_953']];
@@ -223,7 +223,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo form_select('news_image_readmore', $locale['news_958'], $news_settings['news_image_readmore'], ['options' => $cat_opts, 'width' => '100%', 'inner_width' => '100%']);
         echo form_select('news_thumb_ratio', $locale['news_954'], $news_settings['news_thumb_ratio'], ['options' => $thumb_opts, 'width' => '100%', 'inner_width' => '100%']);
 
-        $mime = mimeTypes();
+        $mime = mimetypes();
         $mime_opts = [];
         foreach ($mime as $m => $Mime) {
             $ext = ".$m";

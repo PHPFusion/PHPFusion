@@ -92,7 +92,7 @@ if (isset($_POST['save_album'])) {
             // update album
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE, 'album_language', 'update');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'update');
-            addNotice('success', $locale['album_0013']);
+            addnotice('success', $locale['album_0013']);
             redirect(FUSION_REQUEST);
         } else {
             // create album
@@ -106,7 +106,7 @@ if (isset($_POST['save_album'])) {
             @mkdir(IMAGES_G.'album_'.$album_id.'/thumbs', 0777);
             @copy(IMAGES.'index.php', IMAGES_G.'album_'.$album_id.'/thumbs/index.php');
 
-            addNotice('success', $locale['album_0014']);
+            addnotice('success', $locale['album_0014']);
             redirect(FUSION_REQUEST);
         }
     }

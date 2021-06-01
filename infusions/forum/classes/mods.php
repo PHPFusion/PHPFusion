@@ -618,7 +618,7 @@ class Moderator {
                         ':forum_id'          => (int)$forum_id
                     ]);
 
-                    addNotice('success', $this->locale['forum_0752']);
+                    addnotice('success', $this->locale['forum_0752']);
 
                 }
 
@@ -724,17 +724,17 @@ class Moderator {
                     }
                     $delete_thread = $thread_count ? FALSE : TRUE;
                     self::refresh_forum($delete_thread);
-                    addNotice('success', $this->locale['success-DP001']);
+                    addnotice('success', $this->locale['success-DP001']);
                     if ($thread_count === FALSE) { // no remaining thread
-                        addNotice('success', $this->locale['success-DP002']);
+                        addnotice('success', $this->locale['success-DP002']);
                         redirect(INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$this->forum_id."&amp;parent_id=".$this->parent_id);
                     }
                 } else {
-                    addNotice('danger', $this->locale['error-DP001']);
+                    addnotice('danger', $this->locale['error-DP001']);
                     redirect($this->form_action);
                 }
             } else {
-                addNotice('danger', $this->locale['error-DP001']);
+                addnotice('danger', $this->locale['error-DP001']);
                 redirect($this->form_action);
             }
         }
@@ -917,7 +917,7 @@ class Moderator {
                             // Redirect if there is no thread count
                             if (!dbcount("(thread_id)", DB_FORUM_THREADS, "thread_id=:new_thread_id AND forum_id=:new_forum_id", $param)) {
                                 if (!empty($_POST['new_thread_id'])) {
-                                    addNotice('danger', $this->locale['error-MP001']);
+                                    addnotice('danger', $this->locale['error-MP001']);
                                     redirect($this->form_action);
                                 }
                             }
@@ -1035,17 +1035,17 @@ class Moderator {
                                     }
 
                                     $pid = count($array_post) - 1;
-                                    addNotice('success', 'Posts have been moved');
+                                    addnotice('success', 'Posts have been moved');
                                     redirect(FORUM."viewthread.php?thread_id=".$param[':new_thread_id']."&amp;pid=".$array_post[$pid]."#post_".$array_post[$pid]);
 
                                 } else {
 
-                                    addNotice('danger', $this->locale['error-MP002']);
+                                    addnotice('danger', $this->locale['error-MP002']);
                                     redirect($this->form_action);
 
                                 }
                             } else {
-                                addNotice('danger', $this->locale['forum_0307']);
+                                addnotice('danger', $this->locale['forum_0307']);
                                 redirect($this->form_action);
                             }
                         }
@@ -1054,16 +1054,16 @@ class Moderator {
                         ob_end_clean();
 
                     } else {
-                        addNotice('danger', $this->locale['error-MP002']);
+                        addnotice('danger', $this->locale['error-MP002']);
                         redirect($this->form_action);
                     }
                 } else {
-                    addNotice('danger', $this->locale['forum_0307']); // No post to move
+                    addnotice('danger', $this->locale['forum_0307']); // No post to move
                     //redirect($this->form_action);
                 }
 
             } else {
-                addNotice('danger', $this->locale['forum_0307']); // No post to move
+                addnotice('danger', $this->locale['forum_0307']); // No post to move
                 //redirect($this->form_action);
             }
         }

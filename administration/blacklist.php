@@ -91,10 +91,10 @@ function blacklist_form() {
         if (fusion_safe()) {
             if (empty($data['blacklist_ip']) && empty($data['blacklist_email'])) {
                 fusion_stop();
-                addNotice('danger', $locale['BLS_010']);
+                addnotice('danger', $locale['BLS_010']);
             } else {
                 dbquery_insert(DB_BLACKLIST, $data, empty($data['blacklist_id']) ? 'save' : 'update');
-                addNotice('success', empty($data['blacklist_id']) ? $locale['BLS_011'] : $locale['BLS_012']);
+                addnotice('success', empty($data['blacklist_id']) ? $locale['BLS_011'] : $locale['BLS_012']);
                 redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
             }
         }
@@ -135,7 +135,7 @@ function blacklist_listing() {
 
     if (check_get('action') && get('action') == 'delete' && dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".get('blacklist_id', FILTER_SANITIZE_NUMBER_INT)."'") && fusion_safe()) {
         dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".get('blacklist_id')."'");
-        addNotice('success', $locale['BLS_013']);
+        addnotice('success', $locale['BLS_013']);
         redirect(clean_request('', ['section', 'action', 'blacklist_id'], FALSE));
     }
 
@@ -148,7 +148,7 @@ function blacklist_listing() {
                 if (dbcount("(blacklist_id)", DB_BLACKLIST, "blacklist_id='".intval($blacklist_id)."'") && fusion_safe()) {
                     if (post('table_action') == 'delete') {
                         dbquery("DELETE FROM ".DB_BLACKLIST." WHERE blacklist_id='".$blacklist_id."'");
-                        addNotice('success', $locale['BLS_013']);
+                        addnotice('success', $locale['BLS_013']);
                     }
                 }
             }

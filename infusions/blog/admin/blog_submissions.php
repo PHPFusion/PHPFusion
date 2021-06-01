@@ -89,9 +89,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 dbquery_insert(DB_BLOG, $data, "save");
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".$_GET['submit_id']."'");
                 if ($data['blog_draft']) {
-                    addNotice("success", $locale['blog_0147']);
+                    addnotice("success", $locale['blog_0147']);
                 } else {
-                    addNotice("success", $locale['blog_0146']);
+                    addnotice("success", $locale['blog_0146']);
                 }
                 redirect(clean_request("", ["submit_id"], FALSE));
             }
@@ -118,7 +118,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 unlink(IMAGES_B_T.$submit_criteria['blog_image_t2']);
             }
             $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($_GET['submit_id'])."'");
-            addNotice("success", $locale['blog_0145']);
+            addnotice("success", $locale['blog_0145']);
         }
         redirect(clean_request("", ["submit_id"], FALSE));
     } else {

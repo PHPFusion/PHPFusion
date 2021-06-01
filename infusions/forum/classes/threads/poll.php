@@ -436,13 +436,13 @@ class Poll {
                                     )."', '".USER_IP."', '".USER_IP_TYPE."')"
                                 );
 
-                                addNotice('success', $locale['forum_0614']);
+                                addnotice('success', $locale['forum_0614']);
 
                                 redirect(INFUSIONS."forum/viewthread.php?thread_id=".$thread_data['thread_id']);
 
                             } else {
 
-                                addNotice('danger', $locale['forum_0617']);
+                                addnotice('danger', $locale['forum_0617']);
                             }
                         }
                     }

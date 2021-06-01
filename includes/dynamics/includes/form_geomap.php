@@ -99,7 +99,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     for ($i = 0; $i <= 5; $i++) {
         if (\Defender::inputHasError($input_name.'-'.$validation_key[$i])) {
             $error_class = "has-error ";
-            addNotice("danger", $error_key[$i]);
+            addnotice("danger", $error_key[$i]);
         }
     }
 
@@ -324,7 +324,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            addnotice("danger", $options['error_text']);
         }
     }
 

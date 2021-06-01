@@ -84,7 +84,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_item_id=:commentid AND comment_type=:commenttype", [':commentid' => $article_id, ':commenttype' => 'A']);
                 dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id=:ratingid AND rating_type=:ratingtype", [':ratingid' => $article_id, ':ratingtype' => 'A']);
                 dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_id=:articleid", [':articleid' => $article_id]);
-                addNotice('success', $this->locale['article_0032']);
+                addnotice('success', $this->locale['article_0032']);
             }
 
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
@@ -135,13 +135,13 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 // Update
                 if (dbcount("('article_id')", DB_ARTICLES, "article_id=:articleid", [':articleid' => $this->article_data['article_id']])) {
                     dbquery_insert(DB_ARTICLES, $this->article_data, 'update');
-                    addNotice('success', $this->locale['article_0031']);
+                    addnotice('success', $this->locale['article_0031']);
 
                     // Create
                 } else {
                     $this->article_data['article_name'] = fusion_get_userdata('user_id');
                     $this->article_data['article_id'] = dbquery_insert(DB_ARTICLES, $this->article_data, 'save');
-                    addNotice('success', $this->locale['article_0030']);
+                    addnotice('success', $this->locale['article_0030']);
                 }
 
                 // Redirect
@@ -381,10 +381,10 @@ class ArticlesAdmin extends ArticlesAdminModel {
                         }
                     }
                 }
-                addNotice('success', $this->locale['article_0033']);
+                addnotice('success', $this->locale['article_0033']);
                 redirect(FUSION_REQUEST);
             }
-            addNotice('warning', $this->locale['article_0034']);
+            addnotice('warning', $this->locale['article_0034']);
             redirect(FUSION_REQUEST);
         }
 

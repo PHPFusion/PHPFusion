@@ -998,7 +998,7 @@ class ForumThreads extends ForumServer {
                             $aFiles_Count = 0;
                             $aImage_Count = 0;
                             while ($attachData = dbarray($attachResult)) {
-                                if (in_array($attachData['attach_mime'], img_mimeTypes())) {
+                                if (in_array($attachData['attach_mime'], img_mimetypes())) {
                                     $aImage .= display_image_attach($attachData['attach_name'], "70", "70", $pdata['post_id'])."\n";
                                     $aFiles_Count++;
                                 } else {

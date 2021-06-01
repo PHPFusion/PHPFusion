@@ -160,7 +160,7 @@ class UserFieldsInput {
             $this->data['new_password'] = $this->_getPasswordInput('user_password1');
 
             if ($this->_completeMessage) {
-                addNotice("info", $this->_completeMessage, fusion_get_settings("opening_page"));
+                addnotice("info", $this->_completeMessage, fusion_get_settings("opening_page"));
             }
 
             return TRUE;
@@ -556,7 +556,7 @@ class UserFieldsInput {
         $mailbody = str_replace("[USER_NAME]", $userdata['user_name'], $mailbody);
         $mailSubject = str_replace("[SITENAME]", $settings['sitename'], $locale['u202']);
         sendemail($this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody);
-        addNotice('warning', strtr($locale['u200'], ['(%s)' => $this->_userEmail]));
+        addnotice('warning', strtr($locale['u200'], ['(%s)' => $this->_userEmail]));
         dbquery("DELETE FROM ".DB_EMAIL_VERIFY." WHERE user_id='".$this->userData['user_id']."'");
         dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
     }
@@ -596,7 +596,7 @@ class UserFieldsInput {
                 '[LINK]'  => "<a href='".BASEDIR."contact.php'><strong>",
                 '[/LINK]' => "</strong></a>"
             ]);
-            addNotice('warning', $locale['u153']."<br />".$message, 'all');
+            addnotice('warning', $locale['u153']."<br />".$message, 'all');
         }
         $userInfo = base64_encode(serialize($this->data));
         if (fusion_safe()) {
@@ -701,7 +701,7 @@ class UserFieldsInput {
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
-                addNotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
+                addnotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
 
                 $input = [
                     "mailname" => $this->userData['user_name'],
@@ -727,7 +727,7 @@ class UserFieldsInput {
                 if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
                     $input['message'])
                 ) {
-                    addNotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
+                    addnotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
 
                 redirect(FUSION_REQUEST);
@@ -735,7 +735,7 @@ class UserFieldsInput {
                 return FALSE;
             }
 
-            addNotice('success', $locale['u169']);
+            addnotice('success', $locale['u169']);
 
             return TRUE;
         }
@@ -881,7 +881,7 @@ class UserFieldsInput {
                 if ($data['user_email'] != $userdata['user_email']) {
                     $result = dbquery("SELECT user_email FROM ".DB_USERS." WHERE user_email=:useremail", [':useremail' => $data['user_email']]);
                     if (dbrows($result) > 0) {
-                        addNotice("danger", $locale['u164']."<br />\n".$locale['u121']);
+                        addnotice("danger", $locale['u164']."<br />\n".$locale['u121']);
                     } else {
                         $this->_completeMessage = $locale['u169'];
                     }

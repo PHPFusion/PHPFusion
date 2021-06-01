@@ -60,7 +60,7 @@ function smiley_listing() {
                 unlink(IMAGES."smiley/".$data['smiley_image']);
             }
         }
-        addNotice('success', check_get('disable') ? $locale['SMLY_412'] : $locale['SMLY_413']);
+        addnotice('success', check_get('disable') ? $locale['SMLY_412'] : $locale['SMLY_413']);
         redirect(clean_request('', ['section=smiley_list', 'aid']));
     }
 
@@ -160,10 +160,10 @@ function add_smiley_form() {
         if (fusion_safe()) {
             if ($error == "") {
                 dbquery_insert(DB_SMILEYS, $data, empty($data['smiley_id']) ? 'save' : 'update');
-                addNotice('success', empty($data['smiley_id']) ? $locale['SMLY_410'] : $locale['SMLY_411']);
+                addnotice('success', empty($data['smiley_id']) ? $locale['SMLY_410'] : $locale['SMLY_411']);
                 redirect(clean_request('', ['section=smiley_list', 'aid']));
             } else {
-                addNotice('danger', $error);
+                addnotice('danger', $error);
             }
         }
     }

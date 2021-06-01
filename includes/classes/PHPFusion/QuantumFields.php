@@ -663,7 +663,7 @@ class QuantumFields extends SqlHandler {
                             }
                         }
 
-                        addNotice('success', $this->locale['field_0200']);
+                        addnotice('success', $this->locale['field_0200']);
                         redirect(FUSION_SELF.$aidlink);
                     }
 
@@ -682,7 +682,7 @@ class QuantumFields extends SqlHandler {
                     print_p($delete_cat_sql);
                 } else {
                     dbquery($delete_cat_sql);
-                    addNotice('success', $this->locale['field_0200']);
+                    addnotice('success', $this->locale['field_0200']);
                     redirect(FUSION_SELF.$aidlink);
                 }
             } else {
@@ -765,7 +765,7 @@ class QuantumFields extends SqlHandler {
                     }
                 } else {
                     if ($this->debug) {
-                        addNotice('info', 'Cat ID was not found. Please check again.<br/>Category ID was not found. Please check again.');
+                        addnotice('info', 'Cat ID was not found. Please check again.<br/>Category ID was not found. Please check again.');
                     } else {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -827,14 +827,14 @@ class QuantumFields extends SqlHandler {
                 }
 
                 if (!$this->debug) {
-                    addNotice('success', $this->locale['field_0201']);
+                    addnotice('success', $this->locale['field_0201']);
                     redirect(FUSION_SELF.$aidlink);
                 }
 
             } else {
 
                 if (!$this->debug) {
-                    addNotice('warning', $this->locale['field_0202']);
+                    addnotice('warning', $this->locale['field_0202']);
                     redirect(FUSION_SELF.$aidlink);
                 } else {
 
@@ -899,7 +899,7 @@ class QuantumFields extends SqlHandler {
                                     }
 
                                 } else {
-                                    addNotice('warning', $field_title.$this->locale['fields_0659']);
+                                    addnotice('warning', $field_title.$this->locale['fields_0659']);
                                 }
 
                             }
@@ -953,7 +953,7 @@ class QuantumFields extends SqlHandler {
                                                 }
 
                                             } else {
-                                                addNotice('warning', $field_title.$this->locale['fields_0659']);
+                                                addnotice('warning', $field_title.$this->locale['fields_0659']);
                                             }
                                         }
                                         unset($field_name);
@@ -999,7 +999,7 @@ class QuantumFields extends SqlHandler {
                                     }
 
                                 } else {
-                                    addNotice('warning', $field_title.$this->locale['fields_0659']);
+                                    addnotice('warning', $field_title.$this->locale['fields_0659']);
                                 }
                             }
                             unset($field_name);
@@ -1732,7 +1732,7 @@ class QuantumFields extends SqlHandler {
             if (dbrows($result)) {
                 $this->field_cat_data = dbarray($result);
             } else {
-                addNotice('danger', $this->locale['field_0206']);
+                addnotice('danger', $this->locale['field_0206']);
                 redirect(FUSION_SELF.$aidlink);
             }
         }
@@ -1819,7 +1819,7 @@ class QuantumFields extends SqlHandler {
 
                             dbquery_insert($this->category_db, $this->field_cat_data, 'update');
 
-                            addNotice('success', $this->locale['field_0207']);
+                            addnotice('success', $this->locale['field_0207']);
                         }
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -1856,7 +1856,7 @@ class QuantumFields extends SqlHandler {
 
                     dbquery_insert($this->category_db, $this->field_cat_data, 'save');
 
-                    addNotice('success', $this->locale['field_0208']);
+                    addnotice('success', $this->locale['field_0208']);
 
                     redirect(FUSION_SELF.$aidlink);
 
@@ -2192,12 +2192,12 @@ class QuantumFields extends SqlHandler {
             require_once(INCLUDES.'mimetypes_include.php');
             $file_type_list = [];
             $file_image_list = [];
-            foreach (mimeTypes() as $file_ext => $occ) {
-                if (!in_array($file_ext, array_flip(img_mimeTypes()))) {
+            foreach (mimetypes() as $file_ext => $occ) {
+                if (!in_array($file_ext, array_flip(img_mimetypes()))) {
                     $file_type_list[] = '.'.$file_ext;
                 }
             }
-            foreach (img_mimeTypes() as $file_ext => $occ) {
+            foreach (img_mimetypes() as $file_ext => $occ) {
                 $file_image_list[] = '.'.$file_ext;
             }
             $calc_opts = [
@@ -2529,7 +2529,7 @@ class QuantumFields extends SqlHandler {
                 if (!$this->debug) {
                     if (fusion_safe()) {
                         dbquery_insert($this->field_db, $data, 'update');
-                        addNotice('success', $this->locale['field_0203']);
+                        addnotice('success', $this->locale['field_0203']);
                         redirect(FUSION_SELF.$aidlink);
                     }
                 } else {
@@ -2569,7 +2569,7 @@ class QuantumFields extends SqlHandler {
                     if (fusion_safe()) {
                         dbquery("UPDATE ".$this->field_db." SET field_order=field_order+1 WHERE field_order > '".$data['field_order']."' AND field_cat='".$data['field_cat']."'");
                         dbquery_insert($this->field_db, $data, 'save');
-                        addNotice('success', $this->locale['field_0204']);
+                        addnotice('success', $this->locale['field_0204']);
                         redirect(FUSION_SELF.$aidlink);
                     }
                 } else {
@@ -2631,7 +2631,7 @@ class QuantumFields extends SqlHandler {
                     print_p($this->field_data);
                 }
             } else {
-                addNotice('info', $this->locale['field_0205']);
+                addnotice('info', $this->locale['field_0205']);
                 redirect(FUSION_SELF.$aidlink);
             }
         }
@@ -2660,7 +2660,7 @@ class QuantumFields extends SqlHandler {
 
                     if (!isset($user_field_dbinfo)) {
 
-                        addNotice('info', $this->locale['fields_0602']);
+                        addnotice('info', $this->locale['fields_0602']);
 
                     }
 
@@ -2676,7 +2676,7 @@ class QuantumFields extends SqlHandler {
                                 include($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php');
                                 $this->user_field_dbinfo = $user_field_dbinfo;
                                 if (!isset($user_field_dbinfo)) {
-                                    addNotice('info', $this->locale['fields_0602']);
+                                    addnotice('info', $this->locale['fields_0602']);
                                     redirect(FUSION_REQUEST);
                                 }
                                 $plugin_file_found = TRUE;
@@ -2696,7 +2696,7 @@ class QuantumFields extends SqlHandler {
                 include($plugin_folder.$folder.'/user_fields/'.$this->field_data['add_module'].'_include_var.php');
                 $this->user_field_dbinfo = $user_field_dbinfo;
                 if (!isset($user_field_dbinfo)) {
-                    addNotice('info', $this->locale['fields_0602']);
+                    addnotice('info', $this->locale['fields_0602']);
                     redirect(FUSION_REQUEST);
                 }
                 $plugin_file_found = TRUE;

@@ -746,7 +746,7 @@ class ViewThread extends ForumServer {
                     $object->download();
                     exit;
                 } else {
-                    addNotice("warning", $locale['forum_0398']);
+                    addnotice("warning", $locale['forum_0398']);
                 }
             }
         }

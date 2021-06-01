@@ -74,7 +74,7 @@ if (iMEMBER && $blog_settings['blog_allow_submission'] && checkgroup($blog_setti
                 "submit_criteria"  => addslashes(serialize($criteriaArray))
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");
-            addNotice("success", $locale['blog_0701']);
+            addnotice("success", $locale['blog_0701']);
             redirect(clean_request("submitted=b", ["stype"]));
         }
     } else if (isset($_POST['preview_blog'])) {

@@ -34,7 +34,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md
                 if ($_GET['order'] < $album_max_order && $_GET['order'] >= 1) {
                     dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order = album_order+1 WHERE album_order='".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order= '".$_GET['order']."' WHERE album_id ='".$_GET['cat_id']."'");
-                    addNotice("success", $locale['album_0025']);
+                    addnotice("success", $locale['album_0025']);
                     redirect(FUSION_SELF.$aidlink);
                 }
                 break;
@@ -43,7 +43,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "mu" || $_GET['action'] == "md
                 if ($_GET['order'] <= $album_max_order && $_GET['order'] > 1) {
                     dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order = album_order-1 WHERE album_order = '".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTO_ALBUMS." SET album_order= '".$_GET['order']."' WHERE album_id ='".$_GET['cat_id']."'");
-                    addNotice("success", $locale['album_0026']);
+                    addnotice("success", $locale['album_0026']);
                     redirect(FUSION_SELF.$aidlink);
                 }
                 break;
@@ -63,7 +63,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
                 if ($_GET['order'] < $photo_max_order && $_GET['order'] >= 1) {
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order+1 WHERE photo_order='".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
-                    addNotice("success", $locale['photo_0022']);
+                    addnotice("success", $locale['photo_0022']);
                     redirect(clean_request("", ["album_id", "aid"], TRUE));
                 }
                 break;
@@ -71,7 +71,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
                 if ($_GET['order'] <= $photo_max_order && $_GET['order'] > 1) {
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order-1 WHERE photo_order = '".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
-                    addNotice("success", $locale['photo_0023']); //change
+                    addnotice("success", $locale['photo_0023']); //change
                     redirect(clean_request("", ["album_id", "aid"], TRUE));
                 }
                 break;
@@ -110,7 +110,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                             dbquery("UPDATE ".DB_PHOTOS." SET album_id='".intval($targetAlbum)."' WHERE photo_id='".$photo_data['photo_id']."'");
                             $target_max_order++;
                         }
-                        addNotice("success", sprintf($locale['album_0031'], $albumArray[$targetAlbum]));
+                        addnotice("success", sprintf($locale['album_0031'], $albumArray[$targetAlbum]));
                     } else {
                         // delete all
                         $photoRows = 0;
@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                             dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
                             $photoRows++;
                         }
-                        addNotice("success", sprintf($locale['album_0032'], $photoRows));
+                        addnotice("success", sprintf($locale['album_0032'], $photoRows));
                     }
                 }
                 purgeAlbumImage($albumData);
@@ -149,7 +149,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
             purgeAlbumImage($albumData);
             rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
             dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
-            addNotice("success", $locale['album_0030']);
+            addnotice("success", $locale['album_0030']);
             redirect(clean_request("", ["aid"], TRUE));
         }
     } else {
@@ -166,7 +166,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
         dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
         dbquery_order(DB_PHOTOS, $photo_data['photo_order'], "photo_order", $photo_data['photo_id'], "photo_id", $photo_data['album_id'], "album_id", FALSE, FALSE, "delete");
         dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
-        addNotice("success", $locale['photo_0024']);
+        addnotice("success", $locale['photo_0024']);
         redirect(clean_request("", ["aid"], TRUE));
     }
 }

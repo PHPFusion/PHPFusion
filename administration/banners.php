@@ -61,7 +61,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
         if (fusion_safe()) {
             foreach ($settings_main as $settings_key => $settings_value) {
                 dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
-                addNotice('success', $locale['900']);
+                addnotice('success', $locale['900']);
             }
 
             redirect(FUSION_REQUEST);

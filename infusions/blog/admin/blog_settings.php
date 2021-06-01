@@ -45,10 +45,10 @@ if (isset($_POST['savesettings'])) {
             ];
             dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
         }
-        addNotice("success", $locale['900']);
+        addnotice("success", $locale['900']);
         redirect(FUSION_REQUEST);
     } else {
-        addNotice('danger', $locale['901']);
+        addnotice('danger', $locale['901']);
     }
 }
 $opts = ['0' => $locale['blog_952'], '1' => $locale['blog_953']];
@@ -145,7 +145,7 @@ openside('');
 echo form_select('blog_image_link', $locale['blog_951'], $blog_settings['blog_image_link'], ["options" => $opts, "width" => "100%"]);
 echo form_select('blog_thumb_ratio', $locale['blog_954'], $blog_settings['blog_thumb_ratio'], ["options" => $thumb_opts, "width" => "100%"]);
 require_once INCLUDES."mimetypes_include.php";
-$mime = mimeTypes();
+$mime = mimetypes();
 $mime_opts = [];
 foreach ($mime as $m => $Mime) {
     $ext = ".$m";

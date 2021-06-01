@@ -323,7 +323,7 @@ class PrivateMessages {
 
             } else {
                 fusion_stop();
-                addNotice('danger', $locale['492']);
+                addnotice('danger', $locale['492']);
             }
         }
     }
@@ -503,7 +503,7 @@ class PrivateMessages {
                 'user_pm_save_sent'    => form_sanitizer($_POST['pm_save_sent'], 0, 'pm_save_sent'),
             ];
             dbquery_insert(DB_USERS, $data, 'update');
-            addNotice('success', $this->locale['445']);
+            addnotice('success', $this->locale['445']);
             redirect(BASEDIR."messages.php?folder=options");
         }
         $this->info['options_form'] = openform('pm_form', 'post', FUSION_REQUEST);
@@ -699,7 +699,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice('success', $this->locale['489']);
+            addnotice('success', $this->locale['489']);
             redirect(clean_request('', ['folder'], TRUE));
         }
     }
@@ -721,7 +721,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'update');
                 }
             }
-            addNotice('success', $this->locale['489b']);
+            addnotice('success', $this->locale['489b']);
             redirect(clean_request('', ['folder'], TRUE));
         }
     }
@@ -741,7 +741,7 @@ class PrivateMessages {
                     dbquery_insert(DB_MESSAGES, $moveData, 'delete');
                 }
             }
-            addNotice('success', $this->locale['490']);
+            addnotice('success', $this->locale['490']);
             redirect(BASEDIR.'messages.php');
         }
     }
@@ -838,7 +838,7 @@ class PrivateMessages {
                 }
 
                 if (self::$is_sent == TRUE) {
-                    addNotice('success', $this->locale['491']);
+                    addnotice('success', $this->locale['491']);
                     redirect(BASEDIR."messages.php");
                 }
             }

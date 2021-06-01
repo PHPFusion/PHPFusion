@@ -74,7 +74,7 @@ class NewsAdminView extends NewsAdminModel {
         $edit = (check_get('action') && get('action') == 'edit' && check_get('cat_id') && isnum(get('cat_id')));
 
         if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
-            addNotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
+            addnotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
         }
 
         $tab['title'][] = $news_cat_title;

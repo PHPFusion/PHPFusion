@@ -142,7 +142,7 @@ abstract class ForumAdminInterface extends ForumServer {
             }
             if ($name_check) {
                 fusion_stop();
-                addNotice('danger', self::$locale['forum_error_7']);
+                addnotice('danger', self::$locale['forum_error_7']);
             } else {
                 return $forum_name;
             }

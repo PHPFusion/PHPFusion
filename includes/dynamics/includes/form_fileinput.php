@@ -106,7 +106,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", $options['error_text']);
+            addnotice("danger", $options['error_text']);
         }
     }
 

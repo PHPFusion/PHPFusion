@@ -26,7 +26,7 @@ $aidlink = fusion_get_aidlink();
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
     $result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
     if (!empty($result)) {
-        addNotice("danger", $locale['blog_0522']." - <span class='small'>".$locale['blog_0523']."</span>");
+        addnotice("danger", $locale['blog_0522']." - <span class='small'>".$locale['blog_0523']."</span>");
         redirect(FUSION_SELF.$aidlink);
     } else {
         $result = dbquery("SELECT blog_cat_image FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
@@ -38,7 +38,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         }
 
          dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
-        addNotice("success", $locale['blog_0524b']);
+        addnotice("success", $locale['blog_0524b']);
         redirect(FUSION_SELF.$aidlink);
     }
     redirect(clean_request("", ["action", "ref", "cat_id"], FALSE));
@@ -71,20 +71,20 @@ if (isset($_POST['save_cat'])) {
         if (dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_id='".$inputArray['blog_cat_id']."'")) {
             if (!dbcount("(blog_cat_id)", DB_BLOG_CATS, $categoryNameCheck['when_updating'])) {
                 dbquery_insert(DB_BLOG_CATS, $inputArray, "update");
-                addNotice("success", $locale['blog_0521']);
+                addnotice("success", $locale['blog_0521']);
                 // FUSION_REQUEST without the "action" gets
                 redirect(clean_request("", ["action"], FALSE));
             } else {
-                addNotice('danger', $locale['blog_0561']);
+                addnotice('danger', $locale['blog_0561']);
             }
         } else {
             // check category name is unique when saving new
             if (!dbcount("(blog_cat_id)", DB_BLOG_CATS, $categoryNameCheck['when_saving'])) {
                 dbquery_insert(DB_BLOG_CATS, $inputArray, "save");
-                addNotice("success", $locale['blog_0520']);
+                addnotice("success", $locale['blog_0520']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice('danger', $locale['blog_0561']);
+                addnotice('danger', $locale['blog_0561']);
             }
         }
     }

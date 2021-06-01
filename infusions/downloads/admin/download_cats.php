@@ -21,10 +21,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     if (dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."'")
         || dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_parent='".intval($_GET['cat_id'])."'")
     ) {
-        addNotice("danger", $locale['download_0152']." - ".$locale['download_0153']);
+        addnotice("danger", $locale['download_0152']." - ".$locale['download_0153']);
         redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
     } else {
-        addNotice("success", $locale['download_0154']);
+        addnotice("success", $locale['download_0154']);
         $result = dbquery("DELETE FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".intval($_GET['cat_id'])."'");
         redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
     }
@@ -72,20 +72,20 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             if (dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_id='".$data['download_cat_id']."'")) {
                 if (!dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, $categoryNameCheck['when_updating'])) {
                     dbquery_insert(DB_DOWNLOAD_CATS, $data, "update");
-                    addNotice("success", $locale['download_0151']);
+                    addnotice("success", $locale['download_0151']);
                     redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
                 } else {
                     fusion_stop();
-                    addNotice("danger", $locale['download_0352']);
+                    addnotice("danger", $locale['download_0352']);
                 }
             } else {
                 if (!dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, $categoryNameCheck['when_saving'])) {
                     dbquery_insert(DB_DOWNLOAD_CATS, $data, "save");
-                    addNotice("success", $locale['download_0150']);
+                    addnotice("success", $locale['download_0150']);
                     redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
                 } else {
                     fusion_stop();
-                    addNotice("danger", $locale['download_0352']);
+                    addnotice("danger", $locale['download_0352']);
                 }
             }
         }

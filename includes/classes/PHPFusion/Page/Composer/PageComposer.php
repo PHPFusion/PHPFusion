@@ -156,11 +156,11 @@ class PageComposer extends PageAdmin {
     private static function execute_PageSQL() {
         if (self::verify_customPage(self::$data['page_id'])) {
             dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
-            addNotice('success', self::$locale['page_0402']);
+            addnotice('success', self::$locale['page_0402']);
         } else {
             dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'save');
             self::$data['page_id'] = dblastid();
-            addNotice('success', self::$locale['page_0401']);
+            addnotice('success', self::$locale['page_0401']);
         }
     }
 

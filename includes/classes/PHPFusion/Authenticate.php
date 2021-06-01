@@ -235,14 +235,14 @@ class Authenticate {
                     unset($_SESSION['notices']);
                     redirect(FUSION_REQUEST);
                 } else {
-                    addNotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
+                    addnotice("danger", $locale['cookie_error'], $locale['cookie_error_description']);
                 }
             } else {
-                addNotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
+                addnotice("danger", $locale['password_invalid'], $locale['password_invalid_description']);
             }
         }
         if (defined('ADMIN_PANEL') && !isset($_COOKIE[COOKIE_PREFIX."admin"])) {
-            setNotice("danger", $locale['cookie_title'], $locale['cookie_description']);
+            setnotice("danger", $locale['cookie_title'], $locale['cookie_description']);
         }
     }
 
@@ -304,7 +304,7 @@ class Authenticate {
                                 // Check if any error was set
                                 if ($error !== FALSE) {
                                     fusion_stop();
-                                    addNotice("warning", $error);
+                                    addnotice("warning", $error);
 
                                     return FALSE;
                                 }
@@ -363,7 +363,7 @@ class Authenticate {
 
         if (get("logoff", FILTER_VALIDATE_INT)) {
             session_remove("login_as");
-            addNotice("success", fusion_get_locale('global_185', $locale_file), BASEDIR.$settings["opening_page"]);
+            addnotice("success", fusion_get_locale('global_185', $locale_file), BASEDIR.$settings["opening_page"]);
             redirect(BASEDIR.$settings["opening_page"]);
         }
 
@@ -379,7 +379,7 @@ class Authenticate {
 
                         if (!$user["user_session"]) {
                             // here we need to add a notice
-                            addNotice("danger", fusion_get_locale('global_183', $locale_file));
+                            addnotice("danger", fusion_get_locale('global_183', $locale_file));
                             self::logOut();
                         }
 
@@ -392,7 +392,7 @@ class Authenticate {
                                 if (isnum($login_id)) {
                                     $login_user = fusion_get_user(session_get("login_as"));
                                     if (!empty($login_user["user_id"]) && $login_user["user_status"] == 0 && $login_user["user_actiontime"] == 0) {
-                                        addNotice("success", sprintf(fusion_get_locale('global_184', $locale_file), $login_user["user_name"]));
+                                        addnotice("success", sprintf(fusion_get_locale('global_184', $locale_file), $login_user["user_name"]));
                                         $user = $login_user;
                                     }
                                 }
