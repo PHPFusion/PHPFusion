@@ -393,3 +393,19 @@ function get_available_languages_list($selected_language = "") {
 function setError($error_level, $error_message, $error_file, $error_line) {
     set_error($error_level, $error_message, $error_file, $error_line);
 }
+
+/**
+ * Load a HTML template
+ *
+ * @param $source_file
+ *
+ * @return string
+ *
+ * @deprecated not used anywhere
+ */
+function fusion_get_template($source_file) {
+    ob_start();
+    include $source_file;
+
+    return ob_get_clean();
+}

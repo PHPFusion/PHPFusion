@@ -327,7 +327,7 @@ class AdminPanel {
             $html .= showfootererrors();
 
             if (fusion_get_settings('rendertime_enabled')) {
-                $html .= showrendertime().' '.showMemoryUsage().'<br />';
+                $html .= showrendertime().' '.showmemoryusage().'<br />';
             }
 
             $html .= '<strong>';

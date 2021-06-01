@@ -140,7 +140,7 @@ class Main {
                 if ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) {
                     echo '<div class="text-center">';
                     echo showrendertime();
-                    echo showMemoryUsage();
+                    echo showmemoryusage();
                     echo '</div>';
                 }
                 echo '<div class="text-center strong">Magazine theme &copy; '.date('Y').' '.$locale['created_by'].' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a></div>';

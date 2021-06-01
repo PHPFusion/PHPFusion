@@ -23,9 +23,9 @@ use PHPFusion\Panels;
 defined('IN_FUSION') || exit;
 
 /**
- * Show PHPFusion Performance
+ * Show PHPFusion performance.
  *
- * @param bool $queries
+ * @param bool $queries Show the number of queries used on the current page.
  *
  * @return string
  */
@@ -34,7 +34,7 @@ function showrendertime($queries = TRUE) {
     $db_connection = DatabaseFactory::getConnection('default');
     $mysql_queries_count = $db_connection::getGlobalQueryCount();
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
-        $res = showBenchmark();
+        $res = showbenchmark();
         $res .= " | ";
         $res .= ($queries ? ucfirst($locale['global_173']).": ".$mysql_queries_count." | " : '');
 
@@ -53,7 +53,7 @@ function showrendertime($queries = TRUE) {
  *
  * @return string
  */
-function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
+function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '0.01') {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
         $query_log = DatabaseFactory::getConnection('default')->getQueryLog();
@@ -140,7 +140,7 @@ function showBenchmark($show_sql_performance = FALSE, $performance_threshold = '
  *
  * @return string
  */
-function showMemoryUsage() {
+function showmemoryusage() {
     $locale = fusion_get_locale();
     $memory_allocated = parsebytesize(memory_get_peak_usage(TRUE));
     $memory_used = parsebytesize(memory_get_peak_usage(FALSE));
@@ -149,10 +149,10 @@ function showMemoryUsage() {
 }
 
 /**
- * Show PHPFusion copyright.
+ * Show the PHPFusion copyright.
  *
- * @param string $class
- * @param false  $nobreak
+ * @param string $class   The class attribute of the link.
+ * @param false  $nobreak If true <br> tag will be removed between copyright and license.
  *
  * @return string
  */
@@ -166,7 +166,7 @@ function showcopyright($class = "", $nobreak = FALSE) {
 }
 
 /**
- * Visitor counter
+ * If the visitor counter is enabled in settings this function will return the number of visitors.
  *
  * @return string
  */
@@ -181,7 +181,7 @@ function showcounter() {
 }
 
 /**
- * Show privacy policy
+ * Show popup with privacy policy text.
  *
  * @return string
  */
@@ -198,11 +198,11 @@ function showprivacypolicy() {
     return $html;
 }
 
-if (!function_exists("alert")) {
+if (!function_exists('alert')) {
     /**
-     * Creates an alert bar
+     * Creates an alert bar.
      *
-     * @param string $title
+     * @param string $title Text inside the alert.
      * @param array  $options
      *
      * @return string
@@ -225,11 +225,11 @@ if (!function_exists("alert")) {
 
 if (!function_exists('get_theme_settings')) {
     /**
-     * Get the widget settings for the theme settings table
+     * Get the theme settings from database.
      *
-     * @param $theme_folder
+     * @param string $theme_folder The name of the theme folder.
      *
-     * @return array|false
+     * @return array|bool
      */
     function get_theme_settings($theme_folder) {
         $settings_arr = [];
@@ -247,9 +247,9 @@ if (!function_exists('get_theme_settings')) {
 }
 
 /**
- * Java script that transform html table sortable
+ * JavaScript that makes HTML table sortable.
  *
- * @param $table_id - table ID
+ * @param string $table_id Table ID
  *
  * @return string
  */
@@ -263,9 +263,9 @@ function fusion_sort_table($table_id) {
     return "tablesorter";
 }
 
-if (!function_exists("label")) {
+if (!function_exists('label')) {
     /**
-     * Creates label
+     * Creates label.
      *
      * @param string $label
      * @param array  $options
@@ -282,9 +282,9 @@ if (!function_exists("label")) {
     }
 }
 
-if (!function_exists("badge")) {
+if (!function_exists('badge')) {
     /**
-     * Creates badge
+     * Creates badge.
      *
      * @param string $label
      * @param array  $options
@@ -301,7 +301,10 @@ if (!function_exists("badge")) {
     }
 }
 
-if (!function_exists("openmodal") && !function_exists("closemodal") && !function_exists("modalfooter")) {
+if (!function_exists('openmodal') &&
+    !function_exists('closemodal') &&
+    !function_exists('modalfooter')
+) {
     /**
      * To get the best results for Modal z-index overlay, try :
      * ob_start();
@@ -310,10 +313,10 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
      */
 
     /**
-     * Generate modal
+     * Generate modal.
      *
-     * @param string $id    Unique modal ID
-     * @param string $title Modal title
+     * @param string $id    Unique modal ID.
+     * @param string $title Modal title.
      * @param array  $options
      *
      * @return string
@@ -377,7 +380,7 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     }
 
     /**
-     * Close the modal
+     * Close the modal.
      *
      * @return string
      */
@@ -386,31 +389,25 @@ if (!function_exists("openmodal") && !function_exists("closemodal") && !function
     }
 }
 
-if (!function_exists("progress_bar")) {
+if (!function_exists('progress_bar')) {
     /**
-     * Render a progress bar
+     * Render a progress bar.
      *
-     * @param int|int[]            $num   Max of 100
-     * @param string|string[]|null $title Label for the progress bar
-     * @param array                $options
-     *                                    class           additional class for the progress bar
-     *                                    height          the height of the progress bar in px
-     *                                    reverse         set to true to have the color counting reversed
-     *                                    disable         set to true to have the progress bar disabled status
-     *                                    hide_info       set to true to hide the information in the progress bar rendering
-     *                                    progress_class  have it your custom progress bar class with your own custom class
+     * @param int|int[]       $num   Max of 100 or array of numbers.
+     * @param string|string[] $title Label for the progress bar or array with multiple titles.
+     * @param array           $options
      *
      * @return string
      */
     function progress_bar($num, $title = NULL, $options = []) {
         $default_options = [
-            'class'          => '',
-            'height'         => '20px',
-            'reverse'        => FALSE,
-            'as_percent'     => TRUE,
-            'disabled'       => FALSE,
-            'hide_info'      => FALSE,
-            'progress_class' => ''
+            'class'          => '', // Additional class for the progress bar
+            'height'         => '20px', // The height of the progress bar in px
+            'reverse'        => FALSE, // Set to true to have the color counting reversed
+            'as_percent'     => TRUE, // Show percentages.
+            'disabled'       => FALSE, // Set to true to have the progress bar disabled status
+            'hide_info'      => FALSE, // Set to true to hide the information in the progress bar rendering
+            'progress_class' => '' // Have it your custom progress bar class with your own custom class
         ];
         $options += $default_options;
 
@@ -498,12 +495,11 @@ if (!function_exists("progress_bar")) {
     }
 }
 
-if (!function_exists("check_panel_status")) {
+if (!function_exists('check_panel_status')) {
     /**
-     * Check panel exclusions in certain page, which will be dropped sooner or later
-     * Because we will need page composition database soon
+     * Checks the panel status for given side.
      *
-     * @param string $side
+     * @param string $side Possible value: left, right, upper, aupper, lower, blower, user1, user2, user3, user4
      *
      * @return bool
      */
@@ -512,11 +508,11 @@ if (!function_exists("check_panel_status")) {
     }
 }
 
-if (!function_exists("showbanners")) {
+if (!function_exists('showbanners')) {
     /**
-     * Displays the system settings banner
+     * Display the site banner you specify through the Banner settings.
      *
-     * @param null $display
+     * @param int $display Possible value: 1, 2. If empty it shows banner 1.
      *
      * @return string
      */
@@ -558,11 +554,11 @@ if (!function_exists("showbanners")) {
     }
 }
 
-if (!function_exists("showlogo")) {
+if (!function_exists('showlogo')) {
     /**
-     * Show site logo
+     * Show site logo.
      *
-     * @param string $class
+     * @param string $class CSS class.
      *
      * @return string
      */
@@ -571,13 +567,12 @@ if (!function_exists("showlogo")) {
     }
 }
 
-if (!function_exists("showsublinks")) {
-
+if (!function_exists('showsublinks')) {
     /**
-     * Displays Site Links Navigation Bar
+     * Displays Site Links navigation bar.
      *
-     * @param string $sep   - Custom seperator text
-     * @param string $class - Class
+     * @param string $sep   Separator between links.
+     * @param string $class CSS class of the navbar.
      * @param array  $options
      *
      * Notice: There is a more powerful method now that offers more powerful manipulation methods
@@ -593,15 +588,14 @@ if (!function_exists("showsublinks")) {
         ];
         return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
     }
-
 }
 
-if (!function_exists("panelbutton")) {
+if (!function_exists('panelbutton')) {
     /**
-     * Show the collapse or expand button for panels which are collapsible
+     * Show the collapse or expand a button for panels which are collapsible.
      *
-     * @param string $state
-     * @param string $bname
+     * @param string $state Panel state.
+     * @param string $bname Button name.
      *
      * @return string
      */
@@ -619,13 +613,13 @@ if (!function_exists("panelbutton")) {
     }
 }
 
-if (!function_exists("panelstate")) {
+if (!function_exists('panelstate')) {
     /**
-     * Checks the state of a panel
+     * Checks the state of a panel.
      *
-     * @param string $state
-     * @param string $bname
-     * @param string $element
+     * @param string $state   Panel state. Possible value: on, off
+     * @param string $bname   Button name.
+     * @param string $element Element name.
      *
      * @return string
      */
@@ -645,15 +639,15 @@ if (!function_exists("panelstate")) {
 
 if (!function_exists('profile_link')) {
     /**
-     * User profile link
+     * User profile link.
      *
      * @param int    $user_id
      * @param string $user_name
      * @param int    $user_status
-     * @param string $class html class of link
-     * @param bool   $display_link
+     * @param string $class        CSS class for the profile link.
+     * @param bool   $display_link Allow clicking on the name, otherwise display only the name.
      *
-     * @return string
+     * @return string Link to the user's account along with the user name correctly depending on the user's status.
      */
     function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
         $locale = fusion_get_locale();
@@ -678,19 +672,14 @@ if (!function_exists('profile_link')) {
 
 if (!function_exists('display_avatar')) {
     /**
-     * Display user avatar
+     * Show user avatar.
      *
-     * @param array  $userdata
-     *                              Indexes:
-     *                              - user_id
-     *                              - user_name
-     *                              - user_avatar
-     *                              - user_status
-     * @param string $size          A valid size for CSS max-width and max-height.
-     * @param string $class         Classes for the link
-     * @param bool   $link          False if you want to display the avatar without link. TRUE by default.
-     * @param string $img_class     Classes for the image
-     * @param string $custom_avatar Custom default avatar
+     * @param array  $userdata      User data with user_id, user_name , user_avatar, user_status
+     * @param string $size          A size for CSS max-width and max-height.
+     * @param string $class         CSS class for <a> tag.
+     * @param bool   $link          Wrap image with <a> tag.
+     * @param string $img_class     CSS class for <img> tag.
+     * @param string $custom_avatar The path to own default avatar.
      *
      * @return string
      */
@@ -748,11 +737,11 @@ if (!function_exists('display_avatar')) {
 }
 
 /**
- * String to color code
+ * Generate HEX color code from string.
  *
- * @param string $text
+ * @param string $text Any string.
  *
- * @return string
+ * @return string HEX color code.
  */
 function string_to_color_code($text) {
     $min_brightness = 50; // integer between 0 and 100
@@ -784,7 +773,7 @@ function string_to_color_code($text) {
 /**
  * Get color brightness by given HEX code
  *
- * @param string $hex
+ * @param string $hex HEX color code.
  *
  * @return float
  */
@@ -799,13 +788,13 @@ function get_color_brightness($hex) {
 
 if (!function_exists('colorbox')) {
     /**
-     * Display image in colorbox
+     * Display image in colorbox.
      *
-     * @param string $img_path
-     * @param string $img_title
-     * @param bool   $responsive
-     * @param string $class
-     * @param false  $as_text
+     * @param string $img_path   The path to image.
+     * @param string $img_title  Image title.
+     * @param bool   $responsive Add img-responsive class.
+     * @param string $class      CSS class.
+     * @param bool   $as_text    Show clickable text instead image.
      *
      * @return string
      */
@@ -828,16 +817,16 @@ if (!function_exists('colorbox')) {
     }
 }
 
-if (!function_exists("thumbnail")) {
+if (!function_exists('thumbnail')) {
     /**
-     * Show image thumbnail
+     * Show image thumbnail.
      *
-     * @param string $src
-     * @param string $size
-     * @param bool   $url
-     * @param bool   $colorbox
-     * @param bool   $responsive
-     * @param string $class
+     * @param string $src        The path to image.
+     * @param string $size       Image size.
+     * @param bool   $url        Make image clickable.
+     * @param bool   $colorbox   Allow colorbox().
+     * @param bool   $responsive Add img-responsive class.
+     * @param string $class      CSS class.
      *
      * @return string
      */
@@ -884,11 +873,11 @@ if (!function_exists("thumbnail")) {
     }
 }
 
-if (!function_exists("lorem_ipsum")) {
+if (!function_exists('lorem_ipsum')) {
     /**
      * Generate random lorem ipsum text by given length.
      *
-     * @param int $length
+     * @param int $length String length.
      *
      * @return string
      */
@@ -903,11 +892,11 @@ if (!function_exists("lorem_ipsum")) {
     }
 }
 
-if (!function_exists("timer")) {
+if (!function_exists('timer')) {
     /**
      * Show time ago from timestamp.
      *
-     * @param int $time
+     * @param int $time Timestamp or if empty it use time().
      *
      * @return string
      */
@@ -957,9 +946,9 @@ if (!function_exists("timer")) {
     }
 }
 
-if (!function_exists("days_current_month")) {
+if (!function_exists('days_current_month')) {
     /**
-     * Days in the current month
+     * Days in the current month.
      *
      * @return int
      */
@@ -971,11 +960,11 @@ if (!function_exists("days_current_month")) {
     }
 }
 
-if (!function_exists("countdown")) {
+if (!function_exists('countdown')) {
     /**
      * Counts how many days remain until the specified date.
      *
-     * @param $time
+     * @param int $time Timestamp.
      *
      * @return string|null
      */
@@ -1021,15 +1010,15 @@ if (!function_exists("countdown")) {
     }
 }
 
-if (!function_exists("opencollapse")
-    && !function_exists("opencollapsebody")
-    && !function_exists("closecollapsebody")
-    && !function_exists("closecollapse")
+if (!function_exists('opencollapse')
+    && !function_exists('opencollapsebody')
+    && !function_exists('closecollapsebody')
+    && !function_exists('closecollapse')
 ) {
     /**
-     * Create accordion
+     * Create accordion.
      *
-     * @param string $id unique accordion ID
+     * @param string $id Unique accordion ID.
      *
      * @return string
      */
@@ -1038,13 +1027,13 @@ if (!function_exists("opencollapse")
     }
 
     /**
-     * Create collapsing panel
+     * Create collapsing panel.
      *
-     * @param string $title
-     * @param string $unique_id
-     * @param string $grouping_id
-     * @param bool   $active
-     * @param string $class
+     * @param string $title       Panel title.
+     * @param string $unique_id   Panel ID.
+     * @param string $grouping_id Parent's accordion ID.
+     * @param bool   $active      Panel state.
+     * @param string $class       Panel CSS class.
      *
      * @return string
      */
@@ -1063,7 +1052,7 @@ if (!function_exists("opencollapse")
     }
 
     /**
-     * Close collapsing panel
+     * Close collapsing panel.
      *
      * @return string
      */
@@ -1076,7 +1065,7 @@ if (!function_exists("opencollapse")
     }
 
     /**
-     * Close accordion
+     * Close accordion.
      *
      * @return string
      */
@@ -1085,20 +1074,28 @@ if (!function_exists("opencollapse")
     }
 }
 
-if (!function_exists("tab_active")
-    && !function_exists("opentab")
-    && !function_exists("opentabbody")
-    && !function_exists("closetabbody")
-    && !function_exists("closetab")
+if (!function_exists('tab_active')
+    && !function_exists('opentab')
+    && !function_exists('opentabbody')
+    && !function_exists('closetabbody')
+    && !function_exists('closetab')
 ) {
-
     class FusionTabs {
         private $remember = FALSE;
         private $cookie_prefix = 'tab_js';
         private $cookie_name = '';
         private $link_mode = FALSE;
 
-        public static function tab_active($array, $default_active, $getname = NULL) {
+        /**
+         * Current active tab selector.
+         *
+         * @param array  $array          Multidimension array consisting of keys title, id, icon.
+         * @param int    $default_active 0 if link_mode is false, $_GET if link_mode is true.
+         * @param string $getname        Set getname and turn tabs into link that listens to getname.
+         *
+         * @return string
+         */
+        public static function tabActive($array, $default_active, $getname = NULL) {
             if (!empty($getname)) {
                 $section = get($getname) ?: $default_active;
                 //$section = isset($_GET[$getname]) && $_GET[$getname] ? $_GET[$getname] : $default_active;
@@ -1120,9 +1117,11 @@ if (!function_exists("tab_active")
         }
 
         /**
-         * @param      $array
-         * @param      $default_active
-         * @param bool $getname
+         * Get current active tab index
+         *
+         * @param array  $array
+         * @param string $default_active
+         * @param bool   $getname
          *
          * @return int
          */
@@ -1143,17 +1142,49 @@ if (!function_exists("tab_active")
             return $default_active;
         }
 
-        public function set_remember($value) {
+        /**
+         * Automatically remember tab using cookie.
+         *
+         * @param bool $value
+         */
+        public function setRemember($value) {
             $this->remember = $value;
         }
 
-        public function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_GET = []) {
+        /**
+         * Render tab links.
+         *
+         * @param array  $tab_title          Multidimension array consisting of keys title, id, icon.
+         * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tabs['id'].
+         * @param string $id                 Unique ID.
+         * @param bool   $link               False for jquery, true for php (will reload page).
+         * @param string $class              CSS class for the nav.
+         * @param string $getname            Set getname and turn tabs into the link that listens to getname.
+         * @param array  $cleanup_get        The request key that needs to be deleted.
+         *
+         * Example:
+         * $tabs['title'][] = "Tab 1";
+         * $tabs['id'][] = "tab1";
+         * $tabs['title'][] = "Tab 2";
+         * $tabs['id'][] = "tab2";
+         * $tab_active = tab_active($tabs, 0);
+         *
+         * Jquery:
+         * echo opentab($tabs, $tab_active, 'myTab', FALSE, 'nav-pills', 'ref', ['action', 'subaction']);
+         *
+         * PHP:
+         * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
+         * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['*']); // clear all
+         *
+         * @return string
+         */
+        public function openTab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_get = []) {
             $this->cookie_name = $this->cookie_prefix.'-'.$id;
             $this->link_mode = $link;
 
             $getArray = [$getname];
-            if (!empty($cleanup_GET)) {
-                $getArray = array_merge_recursive($cleanup_GET, $getArray);
+            if (!empty($cleanup_get)) {
+                $getArray = array_merge_recursive($cleanup_get, $getArray);
             }
             if (empty($link) && $this->remember) {
                 if (isset($_COOKIE[$this->cookie_name])) {
@@ -1172,7 +1203,7 @@ if (!function_exists("tab_active")
                     if ($link === TRUE) {
 
                         $keep_filtered = FALSE;
-                        if (in_array("*", $cleanup_GET)) {
+                        if (in_array("*", $cleanup_get)) {
                             $getArray = [];
                             $keep_filtered = TRUE;
                         }
@@ -1214,14 +1245,16 @@ if (!function_exists("tab_active")
             return $html;
         }
 
-        /*
-         * Deprecated $tab_title.
-         * Deprecated $link
+        /**
+         * Creates tab body.
          *
-         * Commit title:
-         * Using globals without adding parameter to pass $id set on previous opentabs() to next opentabbody()
+         * @param string $id                 Tab id from $tabs['id'].
+         * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tabd['id'].
+         * @param string $key                Set getname and turn tabs into link that listens to getname.
+         *
+         * @return string
          */
-        public function opentabbody($id, $link_active_arrkey = NULL, $key = 'section') {
+        public function openTabBody($id, $link_active_arrkey = NULL, $key = 'section') {
             $bootstrap = defined('BOOTSTRAP4') ? ' show' : '';
 
             if (isset($_GET[$key]) && $this->link_mode) {
@@ -1244,11 +1277,23 @@ if (!function_exists("tab_active")
             return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
         }
 
-        public function closetabbody() {
+        /**
+         * Close tab body.
+         *
+         * @return string
+         */
+        public function closeTabBody() {
             return "</div>\n";
         }
 
-        public function closetab($options = []) {
+        /**
+         * Close tab.
+         *
+         * @param array $options
+         *
+         * @return string
+         */
+        public function closeTab($options = []) {
             $locale = fusion_get_locale();
             $default_options = [
                 "tab_nav" => FALSE,
@@ -1273,24 +1318,24 @@ if (!function_exists("tab_active")
     }
 
     /**
-     * Current tab active selector
+     * Current active tab selector.
      *
-     * @param array  $array          multidimension array consisting of keys 'title', 'id', 'icon'
-     * @param int    $default_active 0 if link_mode is false, $_GET if link_mode is true
-     * @param string $getname        set getname and turn tabs into link that listens to getname
+     * @param array  $array          Multidimension array consisting of keys title, id, icon.
+     * @param int    $default_active 0 if link_mode is false, $_GET if link_mode is true.
+     * @param string $getname        Set getname and turn tabs into link that listens to getname.
      *
      * @return string
      */
     function tab_active($array, $default_active, $getname = NULL) {
-        return \FusionTabs::tab_active($array, $default_active, $getname);
+        return \FusionTabs::tabActive($array, $default_active, $getname);
     }
 
     /**
      * Get current active tab index
      *
-     * @param      $array
-     * @param      $default_active
-     * @param bool $getname
+     * @param array  $array
+     * @param string $default_active
+     * @param bool   $getname
      *
      * @return int
      */
@@ -1298,75 +1343,73 @@ if (!function_exists("tab_active")
         return FusionTabs::tabIndex($array, $default_active, $getname);
     }
 
-
     /**
-     * Render Tab Links
+     * Render tab links.
      *
-     * @param array  $tab_title          entire array consisting of ['title'], ['id'], ['icon']
-     * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id']
-     * @param string $id                 unique ID
-     * @param bool   $link               default false for jquery, true for php (will reload page)
-     * @param string $class              the class for the nav
-     * @param string $getname            the get request
-     * @param array  $cleanup_GET        the request key that needs to be deleted
-     * @param bool   $remember           set to true to automatically remember tab using cookie.
-     *                                   Example:
-     *                                   $tab_title['title'][] = "Tab 1";
-     *                                   $tab_title['id'][] = "tab1";
+     * @param array  $tab_title          Multidimension array consisting of keys title, id, icon.
+     * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tab_title['id'].
+     * @param string $id                 Unique ID.
+     * @param bool   $link               False for jquery, true for php (will reload page).
+     * @param string $class              CSS class for the nav.
+     * @param string $getname            Set getname and turn tabs into the link that listens to getname.
+     * @param array  $cleanup_get        The request key that needs to be deleted.
+     * @param bool   $remember           Set to true to automatically remember tab using cookie.
      *
-     * $tab_title['title'][] = "Tab 2";
-     * $tab_title['id'][] = "tab2";
-     *
-     * $tab_active = tab_active($tab_title, 0);
+     * Example:
+     * $tabs['title'][] = "Tab 1";
+     * $tabs['id'][] = "tab1";
+     * $tabs['title'][] = "Tab 2";
+     * $tabs['id'][] = "tab2";
+     * $tab_active = tab_active($tabs, 0);
      *
      * Jquery:
-     * echo opentab($tab_title, $tab_active, 'myTab', FALSE, 'nav-pills', 'ref', ['action', 'subaction']);
+     * echo opentab($tabs, $tab_active, 'myTab', FALSE, 'nav-pills', 'ref', ['action', 'subaction']);
      *
      * PHP:
-     * echo opentab($tab_title, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
-     * echo opentab($tab_title, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['*']); // clear all
+     * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
+     * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['*']); // clear all
      *
      * @return string
      */
-    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = NULL, $getname = "section", $cleanup_GET = [], $remember = FALSE) {
+    function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = NULL, $getname = "section", $cleanup_get = [], $remember = FALSE) {
         $fusion_tabs = new FusionTabs();
         if ($remember) {
-            $fusion_tabs->set_remember(TRUE);
+            $fusion_tabs->setRemember(TRUE);
         }
 
-        return $fusion_tabs->opentab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_GET);
+        return $fusion_tabs->openTab($tab_title, $link_active_arrkey, $id, $link, $class, $getname, $cleanup_get);
     }
 
     /**
-     * Creates tab body
+     * Creates tab body.
      *
-     * @param string $tab_title deprecated, however this function is replaceable, and the params are accessible.
-     * @param string $tab_id
-     * @param string $link_active_arrkey
-     * @param bool   $link      deprecated, however this function is replaceable, and the params are accessible.
-     * @param string $key
+     * @param string $tab_title          Deprecated, however this function is replaceable, and the params are accessible.
+     * @param string $tab_id             Tab id from $tabs['id'].
+     * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tabd['id'].
+     * @param bool   $link               Deprecated, however this function is replaceable, and the params are accessible.
+     * @param string $key                Set getname and turn tabs into link that listens to getname.
      *
      * @return string
      */
     function opentabbody($tab_title, $tab_id, $link_active_arrkey = NULL, $link = FALSE, $key = NULL) {
         $fusion_tabs = new FusionTabs();
 
-        return $fusion_tabs->opentabbody($tab_id, $link_active_arrkey, $key);
+        return $fusion_tabs->openTabBody($tab_id, $link_active_arrkey, $key);
     }
 
     /**
-     * Close tab body
+     * Close tab body.
      *
      * @return string
      */
     function closetabbody() {
         $fusion_tabs = new FusionTabs();
 
-        return $fusion_tabs->closetabbody();
+        return $fusion_tabs->closeTabBody();
     }
 
     /**
-     * Close tab
+     * Close tab.
      *
      * @param array $options
      *
@@ -1375,19 +1418,19 @@ if (!function_exists("tab_active")
     function closetab($options = []) {
         $fusion_tabs = new FusionTabs();
 
-        return $fusion_tabs->closetab($options);
+        return $fusion_tabs->closeTab($options);
     }
 }
 
-if (!function_exists("display_ratings")) {
+if (!function_exists('display_ratings')) {
     /**
-     * Standard ratings display
+     * Display ratings.
      *
-     * @param int    $total_sum
-     * @param int    $total_votes
-     * @param string $link
-     * @param string $class
-     * @param int    $mode
+     * @param int    $total_sum   Total number of ratings.
+     * @param int    $total_votes Total number of votes.
+     * @param string $link        Make item clickable.
+     * @param string $class       CSS class for the link.
+     * @param int    $mode        Show 2 out of 10 or 2/10 rating. Possible value: 1, 2.
      *
      * @return string
      */
@@ -1407,14 +1450,14 @@ if (!function_exists("display_ratings")) {
     }
 }
 
-if (!function_exists("display_comments")) {
+if (!function_exists('display_comments')) {
     /**
-     * Standard comment display
+     * Display comments.
      *
-     * @param int    $total_sum
-     * @param string $link
-     * @param string $class
-     * @param int    $mode
+     * @param int    $total_sum Total number of comments.
+     * @param string $link      Make item clickable.
+     * @param string $class     CSS class for the link.
+     * @param int    $mode      Show 2 out of 10 or 2/10 comments. Possible value: 1, 2.
      *
      * @return string
      */
@@ -1433,9 +1476,9 @@ if (!function_exists("display_comments")) {
     }
 }
 
-if (!function_exists("fusion_confirm_exit")) {
+if (!function_exists('fusion_confirm_exit')) {
     /**
-     * JS form exit confirmation if form has changed
+     * JS form exit confirmation if form has changed.
      */
     function fusion_confirm_exit() {
         OutputHandler::addToJQuery("
@@ -1453,10 +1496,10 @@ if (!function_exists("fusion_confirm_exit")) {
 
 if (!function_exists('social_media_links')) {
     /**
-     * Return a list of social media sharing services where an url can be shared
+     * Return a list of social media sharing services where an url can be shared.
      * Requires the loading of Font Awesome which can be enabled in theme settings.
      *
-     * @param string $url
+     * @param string $url The URL to share.
      * @param array  $options
      *
      * @return string
@@ -1552,23 +1595,10 @@ if (!function_exists('social_media_links')) {
 }
 
 /**
- * Load a HTML template
+ * Load any function and return it's value.
  *
- * @param $source_file
- *
- * @return string
- */
-function fusion_get_template($source_file) {
-    ob_start();
-    include $source_file;
-
-    return ob_get_clean();
-}
-
-/**
- * Load any function
- *
- * @param string $function
+ * @param string $function Function name.
+ * @params miexd  ...$args Zero or more parameters to be passed, depending on function.
  *
  * @return mixed|string
  */
@@ -1589,11 +1619,11 @@ function fusion_get_function($function) {
     return $content;
 }
 
-if (!function_exists("render_breadcrumbs")) {
+if (!function_exists('render_breadcrumbs')) {
     /**
-     * Render breadcrumbs template
+     * Render breadcrumbs.
      *
-     * @param string $key
+     * @param string $key Instance key.
      *
      * @return string
      */
@@ -1613,7 +1643,9 @@ if (!function_exists("render_breadcrumbs")) {
 
 if (!function_exists('render_favicons')) {
     /**
-     * @param string $folder
+     * Show meta tags for favicons.
+     *
+     * @param string $folder The folder where the icons are.
      *
      * @return string
      */
@@ -1634,12 +1666,11 @@ if (!function_exists('render_favicons')) {
 }
 
 if (!function_exists('render_user_tags')) {
-
     /**
-     * The callback function for fusion_parse_user()
+     * The callback function for fusion_parse_user().
      *
-     * @param string $m       The message
-     * @param string $tooltip The tooltip string
+     * @param string $m       The message.
+     * @param string $tooltip The tooltip string.
      *
      * @return string
      */

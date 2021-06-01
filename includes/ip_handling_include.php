@@ -40,49 +40,59 @@ if (!function_exists('uncompressipv6')) {
     }
 }
 
-// Check if users full or partial ip is blacklisted and set USER_IP and USER_IP_TYPE
-if (strpos(FUSION_IP, ".")) {
-    if (strpos(FUSION_IP, ":") === FALSE) {
-        // IPv4
+/**
+ * Check if user's full or partial ip is blacklisted.
+ *
+ * @return bool
+ */
+function is_blacklisted() {
+    if (strpos(FUSION_IP, ".")) {
+        if (strpos(FUSION_IP, ":") === FALSE) {
+            // IPv4
+            if (!defined('USER_IP_TYPE')) {
+                define("USER_IP_TYPE", 4);
+            }
+            if (!defined('USER_IP')) {
+                define("USER_IP", FUSION_IP);
+            }
+            $check_value = "blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
+            $check_value .= str_replace(".", "(\.", USER_IP, $i);
+            $check_value .= str_repeat(")?", $i);
+            $check_value .= "$'";
+        } else {
+            // Mixed IPv4 and IPv6
+            define("USER_IP_TYPE", 5);
+            $last_pos = strrpos(FUSION_IP, ":");
+            $ipv4 = substr(FUSION_IP, $last_pos + 1);
+            $ipv6 = substr(FUSION_IP, 0, $last_pos);
+            $ipv6 = uncompressipv6($ipv6, 5);
+            define("USER_IP", $ipv6.":".$ipv4);
+            $check_value = "(blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
+            $check_value .= str_replace(".", "(\.", $ipv4, $i);
+            $check_value .= str_repeat(")?", $i);
+            $check_value .= "$') OR (blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
+            $check_value .= str_replace(":", "(:", $ipv6, $i);
+            $check_value .= str_repeat(")?", $i);
+            $check_value .= "$') OR (blacklist_ip_type='5' AND blacklist_ip='".USER_IP."')";
+            unset($ipv4, $ipv6, $last_pos);
+        }
+    } else {
+        // IPv6
         if (!defined('USER_IP_TYPE')) {
-            define("USER_IP_TYPE", 4);
+            define("USER_IP_TYPE", 6);
         }
         if (!defined('USER_IP')) {
-            define("USER_IP", FUSION_IP);
+            define("USER_IP", uncompressipv6(FUSION_IP));
         }
-        $check_value = "blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
-        $check_value .= str_replace(".", "(\.", USER_IP, $i);
+        $check_value = "blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
+        $check_value .= str_replace(":", "(:", USER_IP, $i);
         $check_value .= str_repeat(")?", $i);
         $check_value .= "$'";
-    } else {
-        // Mixed IPv4 and IPv6
-        define("USER_IP_TYPE", 5);
-        $last_pos = strrpos(FUSION_IP, ":");
-        $ipv4 = substr(FUSION_IP, $last_pos + 1);
-        $ipv6 = substr(FUSION_IP, 0, $last_pos);
-        $ipv6 = uncompressipv6($ipv6, 5);
-        define("USER_IP", $ipv6.":".$ipv4);
-        $check_value = "(blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
-        $check_value .= str_replace(".", "(\.", $ipv4, $i);
-        $check_value .= str_repeat(")?", $i);
-        $check_value .= "$') OR (blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
-        $check_value .= str_replace(":", "(:", $ipv6, $i);
-        $check_value .= str_repeat(")?", $i);
-        $check_value .= "$') OR (blacklist_ip_type='5' AND blacklist_ip='".USER_IP."')";
-        unset($ipv4, $ipv6, $last_pos);
     }
-} else {
-    // IPv6
-    if (!defined('USER_IP_TYPE'))
-        define("USER_IP_TYPE", 6);
-    if (!defined('USER_IP'))
-        define("USER_IP", uncompressipv6(FUSION_IP));
-    $check_value = "blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
-    $check_value .= str_replace(":", "(:", USER_IP, $i);
-    $check_value .= str_repeat(")?", $i);
-    $check_value .= "$'";
+
+    return dbcount("(blacklist_id)", DB_BLACKLIST, $check_value) > 0;
 }
-if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
+
+if (is_blacklisted()) {
     redirect("http://www.google.com/"); // TODO: add setting for this
 }
-unset($check_value);

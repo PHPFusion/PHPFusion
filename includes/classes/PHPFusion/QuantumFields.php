@@ -1075,12 +1075,12 @@ class QuantumFields extends SqlHandler {
             $default_active = key($tab_title['title']);
 
             // Tab
-            $tab_active = FusionTabs::tab_active($tab_title, $active ?: $default_active);
+            $tab_active = FusionTabs::tabActive($tab_title, $active ?: $default_active);
             $tabs = new FusionTabs();
-            $tabs->set_remember(TRUE);
-            echo $tabs->opentab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', []);
+            $tabs->setRemember(TRUE);
+            echo $tabs->openTab($tab_title, $tab_active, 'uftab', FALSE, FALSE, '', []);
             foreach ($this->page[0] as $page_id => $page_details) {
-                echo $tabs->opentabbody($tab_title['id'][$page_id], $tab_active);
+                echo $tabs->openTabBody($tab_title['id'][$page_id], $tab_active);
                 // load all categories here.
                 if ($this->debug) {
                     echo "<div class='m-t-20 text-dark'>";
@@ -1195,9 +1195,9 @@ class QuantumFields extends SqlHandler {
                     // display no category
                     echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>";
                 }
-                echo $tabs->closetabbody();
+                echo $tabs->closeTabBody();
             }
-            echo $tabs->closetab();
+            echo $tabs->closeTab();
         } else {
             echo "<div class='well text-center'>".$this->locale['fields_0103']."</div>";
         }
@@ -1617,8 +1617,8 @@ class QuantumFields extends SqlHandler {
 
         $tabs = new FusionTabs();
 
-        echo $tabs->opentab($tab_title, $tab_active, 'amd', FALSE, FALSE, 'action', []);
-        echo $tabs->opentabbody($tab_title['id'][0], $tab_active);
+        echo $tabs->openTab($tab_title, $tab_active, 'amd', FALSE, FALSE, 'action', []);
+        echo $tabs->openTabBody($tab_title['id'][0], $tab_active);
         echo openform('addfield', 'post', FUSION_SELF.$aidlink);
         echo form_button('add_cat', $this->locale['fields_0311'], 'add_cat', [
             'class'    => 'm-t-20 m-b-20 btn-sm btn-primary btn-block',
@@ -1637,10 +1637,10 @@ class QuantumFields extends SqlHandler {
         }
 
         echo closeform();
-        echo $tabs->closetabbody();
+        echo $tabs->closeTabBody();
 
         if (!empty($this->cat_list)) {
-            echo $tabs->opentabbody($tab_title['id'][1], $tab_active);
+            echo $tabs->openTabBody($tab_title['id'][1], $tab_active);
             // list down modules.
             echo openform('addmodule', 'post', FUSION_SELF.$aidlink, ['notice' => 0, 'max_tokens' => 1]);
             echo "<div class='m-t-20'>";
@@ -1659,32 +1659,32 @@ class QuantumFields extends SqlHandler {
             }
             echo "</div>";
             echo closeform();
-            echo $tabs->closetabbody();
+            echo $tabs->closeTabBody();
         }
 
         if (isset($_POST['add_cat']) or (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
             if (!empty($this->cat_list)) {
-                echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
+                echo $tabs->openTabBody($tab_title['id'][2], $tab_active);
             } else {
-                echo $tabs->opentabbody($tab_title['id'][1], $tab_active);
+                echo $tabs->openTabBody($tab_title['id'][1], $tab_active);
             }
             echo "<div class='m-t-20'>";
             echo $this->quantum_category_form();
             echo "</div>";
-            echo $tabs->closetabbody();
+            echo $tabs->closeTabBody();
 
         } else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
-            echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
+            echo $tabs->openTabBody($tab_title['id'][2], $tab_active);
             $this->quantum_dynamics_form();
-            echo $tabs->closetabbody();
+            echo $tabs->closeTabBody();
 
         } else if (isset($_POST['add_module']) && in_array($_POST['add_module'], array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))) {
-            echo $tabs->opentabbody($tab_title['id'][2], $tab_active);
+            echo $tabs->openTabBody($tab_title['id'][2], $tab_active);
             $this->display_module_form();
-            echo $tabs->closetabbody();
+            echo $tabs->closeTabBody();
 
         }
-        echo $tabs->closetab();
+        echo $tabs->closeTab();
     }
 
     public function get_dynamics_type() {
