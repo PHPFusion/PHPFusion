@@ -17,9 +17,17 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-// Uncompress an IPv6 address
-if (!function_exists('uncompressIPv6')) {
-    function uncompressIPv6($ip, $count = 7) {
+if (!function_exists('uncompressipv6')) {
+    /**
+     * Convert a shortened IPv6 address to its full length form.
+     *
+     * @param string $ip    IPv6 address to convert.
+     * @param int    $count This parameter shows how many : are in the full length version.
+     *                      Note: IPv6 address has 7 of them, but the mixed (IPv6 and IPv4) address has only 5.
+     *
+     * @return string
+     */
+    function uncompressipv6($ip, $count = 7) {
         if (strpos($ip, "::") !== FALSE) {
             $ip = str_replace("::", str_repeat(":", $count + 2 - substr_count($ip, ":")), $ip);
         }
@@ -52,7 +60,7 @@ if (strpos(FUSION_IP, ".")) {
         $last_pos = strrpos(FUSION_IP, ":");
         $ipv4 = substr(FUSION_IP, $last_pos + 1);
         $ipv6 = substr(FUSION_IP, 0, $last_pos);
-        $ipv6 = uncompressIPv6($ipv6, 5);
+        $ipv6 = uncompressipv6($ipv6, 5);
         define("USER_IP", $ipv6.":".$ipv4);
         $check_value = "(blacklist_ip_type='4' AND blacklist_ip REGEXP '^";
         $check_value .= str_replace(".", "(\.", $ipv4, $i);
@@ -65,14 +73,16 @@ if (strpos(FUSION_IP, ".")) {
     }
 } else {
     // IPv6
-    if (!defined('USER_IP_TYPE')) define("USER_IP_TYPE", 6) ;
-    if (!defined('USER_IP')) define("USER_IP", uncompressIPv6(FUSION_IP, 7));
+    if (!defined('USER_IP_TYPE'))
+        define("USER_IP_TYPE", 6);
+    if (!defined('USER_IP'))
+        define("USER_IP", uncompressipv6(FUSION_IP));
     $check_value = "blacklist_ip_type='6' AND blacklist_ip REGEXP '^";
     $check_value .= str_replace(":", "(:", USER_IP, $i);
     $check_value .= str_repeat(")?", $i);
     $check_value .= "$'";
 }
 if (dbcount("(blacklist_id)", DB_BLACKLIST, $check_value)) {
-    redirect("http://www.google.com/");
+    redirect("http://www.google.com/"); // TODO: add setting for this
 }
 unset($check_value);

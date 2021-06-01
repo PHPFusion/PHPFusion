@@ -17,8 +17,14 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Display a ratings form.
+ *
+ * @param string $rating_type    The rating type you want to display.
+ * @param int    $rating_item_id The item id you are rating.
+ * @param string $rating_link    The link for the page which the rating is on.
+ */
 function showratings($rating_type, $rating_item_id, $rating_link) {
-
     $locale = fusion_get_locale("", LOCALE.LOCALESET."ratings.php");
     $userdata = fusion_get_userdata();
     $settings = \fusion_get_settings();

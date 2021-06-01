@@ -20,7 +20,8 @@
 use PHPFusion\OutputHandler;
 
 /**
- * Set the new title of the page
+ * Set the new title of the page.
+ * Function will replace the title meta tag's content by the one specified by the $title argument.
  *
  * @param string $title
  */
@@ -29,7 +30,9 @@ function set_title($title = "") {
 }
 
 /**
- * Get Current Page Title
+ * Get current page title
+ *
+ * @return string
  */
 function get_title() {
     return OutputHandler::getTitle();

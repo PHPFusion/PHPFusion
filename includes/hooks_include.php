@@ -19,12 +19,12 @@
 use PHPFusion\Hooks;
 
 /**
- * Add a hook
+ * Add a hook.
  *
- * @param string $name          The name of the hook, this is your identifier
- * @param string $function      The callback function to run when the filter runs
- * @param int    $que           Optional, values 1-10, where 1 runs first and 10 runs last
- * @param array  $default_args  Optional, the default state of parameter during adding hook
+ * @param string $name          The name of the hook, this is your identifier.
+ * @param string $function      The callback function to run when the filter runs.
+ * @param int    $que           Optional, values 1-10, where 1 runs first and 10 runs last.
+ * @param array  $default_args  Optional, the default state of parameter during adding hook.
  * @param int    $accepted_args Optional, the limitation of the hook parameters the hook can accept.
  *
  * @return bool
@@ -35,10 +35,10 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
 }
 
 /**
- * Checks if there is a hook by the $name and $function specified registered into the hook instance
+ * Checks if there is a hook by the $name and $function specified registered into the hook instance.
  *
- * @param string $name     The name of the hook, this is your identifier
- * @param string $function The callback function to run when the filter runs
+ * @param string $name     The name of the hook, this is your identifier.
+ * @param string $function The callback function to run when the filter runs.
  *
  * @return bool
  */
@@ -51,10 +51,10 @@ function fusion_check_hook($name, $function) {
 }
 
 /**
- * Remove hook
+ * Remove hook.
  *
- * @param string $name     The name of the hook, this is your identifier
- * @param string $function The callback function to run when the filter runs
+ * @param string $name     The name of the hook, this is your identifier.
+ * @param string $function The callback function to run when the filter runs.
  * @param int    $que
  *
  * @return bool
@@ -64,7 +64,7 @@ function fusion_remove_hook($name, $function = '', $que = 10) {
 }
 
 /**
- * Run the hooks without any output
+ * Run the hooks without any output.
  *
  * @param $name
  *

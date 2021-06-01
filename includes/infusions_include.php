@@ -16,11 +16,16 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use defender\ImageValidation;
-use PHPFusion\PrivateMessages;
-
 defined('IN_FUSION') || exit;
 
+/**
+ * Get max rowstart from a query to prevent renumbering pagenav.
+ *
+ * @param string $key $_GET key
+ * @param int    $max_limit
+ *
+ * @return int
+ */
 function get_rowstart($key, $max_limit) {
     $rowstart = get($key, FILTER_VALIDATE_INT);
     if ($rowstart <= $max_limit) {
@@ -29,8 +34,14 @@ function get_rowstart($key, $max_limit) {
     return 0;
 }
 
-// Protect filename from uploader by renaming file.
 if (!function_exists('random_filename')) {
+    /**
+     * Generate random filename.
+     *
+     * @param string $filename The filename.
+     *
+     * @return string
+     */
     function random_filename($filename) {
         $secret_rand = rand(1000000, 9999999);
         $ext = strrchr($filename, ".");
@@ -41,18 +52,16 @@ if (!function_exists('random_filename')) {
 
 if (!function_exists('filename_exists')) {
     /**
-     * Creates an unique filename if file already exists
+     * Checks if the file exists inside the folder.
+     * If not it will create a unique name for the file.
      *
-     * @param        $directory
-     * @param string $file path of file if basename is empty. Otherwise path of parent directory
-     * @param bool   $options
+     * @param string $directory The directory to check for the image.
+     * @param string $file      The file in the directory you want to check.
+     * @param array  $options   dateformat - d,m,y, php date format constant, hash - false to remove hash string
      *
      * @return string  New unique filepath
-     * @options array -
-     *                           $options['dateformat'] d,m,y, php date format constant
-     *                           $options['hash'] '0' by default, '1' to add hash string
      */
-    function filename_exists($directory, $file = '', $options = FALSE) {
+    function filename_exists($directory, $file = '', $options = []) {
         $parts = pathinfo($directory.$file) + [
                 'dirname'   => '',
                 'basename'  => '',
@@ -104,7 +113,15 @@ if (!function_exists('filename_exists')) {
 }
 
 if (!function_exists('set_setting')) {
-    // Sets the value of a setting in the settings_inf table
+    /**
+     * Update a setting for the given infusion or create it if the setting does not exist.
+     *
+     * @param string $setting_name  The name of the setting, must be unique for each infusion.
+     * @param string $setting_value The value of the setting.
+     * @param string $setting_inf   The infusion name this setting belongs to.
+     *
+     * @return bool Returns true on successful update / insert or false on error.
+     */
     function set_setting($setting_name, $setting_value, $setting_inf) {
         $return = TRUE;
 
@@ -143,9 +160,9 @@ if (!function_exists('set_setting')) {
 
 if (!function_exists('infusion_exists')) {
     /**
-     * Check whether an infusion is installed or not from the infusions table
+     * Check whether an infusion is installed or not from the infusions table.
      *
-     * @param $infusion_folder
+     * @param string $infusion_folder
      *
      * @return bool
      */
@@ -165,15 +182,15 @@ if (!function_exists('infusion_exists')) {
     }
 }
 
-/**
- * Get the settings for the infusion from the settings_inf table
- *
- * @param      $settings_inf
- * @param null $key
- *
- * @return mixed|null
- */
 if (!function_exists('get_settings')) {
+    /**
+     * Get all the settings for the given infusion.
+     *
+     * @param string $settings_inf The infusion you'll get the settings for.
+     * @param string $key          The key of one setting.
+     *
+     * @return mixed|null
+     */
     function get_settings($settings_inf, $key = NULL) {
         static $settings_arr = [];
         if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
@@ -192,24 +209,35 @@ if (!function_exists('get_settings')) {
 
 if (!function_exists('send_pm')) {
     /**
-     * Send PM to a user or group
+     * Sends a Private Message to specified user with email notification if the receiver has enabled it.
      *
-     * @param        $to       - Recepient Either group_id or user_id
-     * @param        $from     - Sender's user id
-     * @param        $subject  - Message subject
-     * @param        $message  - Message body
-     * @param string $smileys  - use smileys or not
-     * @param bool   $to_group - set to true if sending to the entire user group's members
+     * @param int    $to       Recepient either group_id or user_id
+     * @param int    $from     Sender's user id
+     * @param string $subject  Message subject
+     * @param string $message  Message body
+     * @param string $smileys  Use smileys or not
+     * @param bool   $to_group Set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
-        PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
+        PHPFusion\PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
     }
 }
 
-// Upload file function
 if (!function_exists('upload_file')) {
-
-    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = "15000", $query = "", $replace_upload = FALSE) {
+    /**
+     * File uploading.
+     *
+     * @param string $source_file    The key of the $_FILE which holds the uploaded file.
+     * @param string $target_file    Name for the uploaded file, leave this blank to use the uploaded file's name.
+     * @param string $target_folder  Folder the uploaded file will be moved to.
+     * @param string $valid_ext      Valid file extensions for uploaded files.
+     * @param int    $max_size       Maximum allowed file size.
+     * @param string $query          DB Query when the file is uploaded.
+     * @param false  $replace_upload Replace the file if exists in the target folder.
+     *
+     * @return array Array with information about the upload.
+     */
+    function upload_file($source_file, $target_file = "", $target_folder = DOWNLOADS, $valid_ext = ".zip,.rar,.tar,.bz2,.7z", $max_size = 15000, $query = "", $replace_upload = FALSE) {
         // only lower case accepted
         $valid_ext = strtolower($valid_ext);
 
@@ -247,7 +275,7 @@ if (!function_exists('upload_file')) {
             } else if (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
-            } else if (fusion_get_settings('mime_check') && ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+            } else if (fusion_get_settings('mime_check') && Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
                 $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
@@ -273,11 +301,36 @@ if (!function_exists('upload_file')) {
     }
 }
 
-// Upload image function
 if (!function_exists('upload_image')) {
-
-    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = "1800", $target_height = "1600", $max_size = "150000", $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = "100", $thumb1_height = "100", $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = "400", $thumb2_height = "300", $query = "", array $allowed_extensions = ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'], $replace_upload = FALSE) {
-
+    /**
+     * Image uploading.
+     *
+     * @param string $source_image       Key for the uploaded file in the $_FILES[] array.
+     * @param string $target_name        Name of the uploaded image, leave this blank to use the original image name.
+     * @param string $target_folder      The folder you are uploading the image to.
+     * @param int    $target_width       Maximum allowed width of image in pixels.
+     * @param int    $target_height      Maximum allowed height of image in pixels.
+     * @param int    $max_size           Max size of image in bytes.
+     * @param false  $delete_original    Set this to true if you wish the original image to be delete after upload.
+     * @param bool   $thumb1             Set this to true if you wish to generate a thumbnail number 1.
+     * @param bool   $thumb2             Set this to true if you wish to generate a thumbnail number 2.
+     * @param int    $thumb1_ratio       Image ratio for the first thumbnail. 0 means original image ratio, 1 means square image ratio.
+     * @param string $thumb1_folder      Folder for the first thumbnail.
+     * @param string $thumb1_suffix      Text which will be appended at the end of the image name of the first thumbnail.
+     * @param int    $thumb1_width       Width of first thumbnail in pixels.
+     * @param int    $thumb1_height      Height of first thumbnail in pixels.
+     * @param int    $thumb2_ratio       Image ratio for the second thumbnail. 0 means original image ratio, 1 means square image ratio.
+     * @param string $thumb2_folder      Folder for the second thumbnail.
+     * @param string $thumb2_suffix      Text which will be appended at the end of the image name of the second thumbnail.
+     * @param int    $thumb2_width       Width of second thumbnail in pixels.
+     * @param int    $thumb2_height      Height of first thumbnail in pixels.
+     * @param string $query              DB Query when the image is uploaded.
+     * @param array  $allowed_extensions Allowed image extensions.
+     * @param false  $replace_upload     Replace image if exists in the target folder.
+     *
+     * @return array Array with information about the upload.
+     */
+    function upload_image($source_image, $target_name = "", $target_folder = IMAGES, $target_width = 1800, $target_height = 1600, $max_size = 150000, $delete_original = FALSE, $thumb1 = TRUE, $thumb2 = TRUE, $thumb1_ratio = 0, $thumb1_folder = IMAGES, $thumb1_suffix = "_t1", $thumb1_width = 100, $thumb1_height = 100, $thumb2_ratio = 0, $thumb2_folder = IMAGES, $thumb2_suffix = "_t2", $thumb2_width = 400, $thumb2_height = 300, $query = "", array $allowed_extensions = ['.jpg', '.jpeg', '.png', '.png', '.svg', '.gif', '.bmp'], $replace_upload = FALSE) {
         $settings = fusion_get_settings();
 
         if (strlen($target_folder) > 0 && substr($target_folder, -1) !== '/') {
@@ -315,7 +368,7 @@ if (!function_exists('upload_image')) {
 
             if ($image['size']) {
 
-                if (ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
+                if (Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
 
                     $image_res = [0, 1];
 
@@ -445,8 +498,12 @@ if (!function_exists('upload_image')) {
     }
 }
 
-// Download file from server
 if (!function_exists('download_file')) {
+    /**
+     * Download file from server.
+     *
+     * @param string $file The path to file.
+     */
     function download_file($file) {
         require_once INCLUDES."class.httpdownload.php";
         ob_end_clean();
@@ -461,33 +518,21 @@ if (!function_exists('download_file')) {
 /**
  * Initiliazes Datatables
  *
- * @param       $table_id
- * @param array $options    - Example $options usage:
- *                          $options = array(
- *                          "remote_file" => INFUSIONS."file-path.php", // iMEMBER will work with these, but https:// those will have no maincore parsing and no access to globals.
- *                          );
+ * @param string $table_id
+ * @param array  $options
  *
  * Options for columns parameters (Example)
- *                          $options["columns"] = array(
- *                          array("data" => "column_1_name", "orderable"=>FALSE, "width"=>200, "class"=>"min"),
- *                          array("data" => "column_1_name")
- *                          )
- *
- *                          'orderable' - boolean (true/false)
- *                          'width' - width of column
- *                          'class' - class name,
- *                          'responsive' - boolean (true/false)
- *                          'className' -   'never' // hide on all devices
- *                                      -   'all' //show on all devices
- *                                      -   'not-mobile' // hide on mobile
- *
+ * $options["columns"] = array(
+ *     array("data" => "column_1_name", "orderable"=>FALSE, "width"=>200, "class"=>"min"),
+ *     array("data" => "column_1_name")
+ * )
  * The response for the item must contains such:
- *  [
- *       "data" => array( 0 => array("column_1" => "data", "column_2" => "data"...), 1 => ... ),
- *       "recordsTotal" => $rows,
- *       "recordsFiltered" => $max_rows,
- *       "responsive" => TRUE
- *  ]
+ * array(
+ *     "data" => array( 0 => array("column_1" => "data", "column_2" => "data"...), 1 => ... ),
+ *     "recordsTotal" => $rows,
+ *     "recordsFiltered" => $max_rows,
+ *     "responsive" => TRUE
+ * )
  *
  * @return string
  */
@@ -500,7 +545,7 @@ function fusion_table($table_id, array $options = []) {
     $js_filter_function = "";
 
     $default_options = [
-        'remote_file'       => '',
+        'remote_file'       => '', // "remote_file" => INFUSIONS."file-path.php", // iMEMBER will work with these, but https:// those will have no maincore parsing and no access to globals.
         'boilerplate'       => "bootstrap3", // @todo: implement boilerplate switch functions
         'cdnurl'            => fusion_get_settings("siteurl"),
         'page_length'       => 0,
@@ -568,7 +613,7 @@ function fusion_table($table_id, array $options = []) {
                     }
                 }
             } else {
-                addNotice("danger", "Table columns could not be loaded automatically.");
+                addnotice("danger", "Table columns could not be loaded automatically.");
             }
         }
 

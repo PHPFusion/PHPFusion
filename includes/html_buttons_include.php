@@ -18,33 +18,31 @@
 defined('IN_FUSION') || exit;
 
 /**
- * Get the color name
+ * Get the color name.
  *
- * @param $id - color locale ID
+ * @param string $id Color locale ID
  *
  * @return string
  */
 function getcolorname($id) {
-
     $locale = fusion_get_locale("", LOCALE.LOCALESET."colors.php");
 
-    $id = "{$locale['color_'.$id]}";
-
-    return $id;
+    return "{$locale['color_'.$id]}";
 }
 
 /**
- * @param        $formname
- * @param        $textarea
- * @param bool   $html
- * @param bool   $colors
- * @param bool   $images
- * @param string $folder
+ * Display set of buttons.
+ *
+ * @param string $formname The name of the form you are using the HTML buttons for.
+ * @param string $textarea The name of the textarea which html will be inserted to.
+ * @param bool   $html     Setting this to true will display the HTML buttons.
+ * @param bool   $colors   Setting this to true will display the HTML colors,.
+ * @param bool   $images   Setting this to true will display the select field with images.
+ * @param string $folder   If you have $images set to true, use this to define what image folder you want to get images from.
  *
  * @return string
  */
 function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $images = FALSE, $folder = "") {
-
     $locale = fusion_get_locale("", [LOCALE.LOCALESET."colors.php", LOCALE.LOCALESET."admin/html_buttons.php"]);
 
     $res = "";

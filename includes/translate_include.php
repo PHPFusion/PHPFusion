@@ -15,24 +15,48 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+/**
+ * Returns a grammatical number word.
+ *
+ * @param int    $count Number of items.
+ * @param string $words A string consisting of singular and plural delimited by a | symbol.
+ * @param array  $options
+ *
+ * @return string
+ */
 function format_word($count, $words, $options = []) {
     return PHPFusion\Locale::format_word($count, $words, $options);
 }
 
+/**
+ * Translate locale folder name into localized language.
+ *
+ * @param string $language
+ *
+ * @return array|string
+ */
 function translate_lang_names($language) {
     return PHPFusion\Locale::translate_lang_names($language);
 }
 
+/**
+ * Given English as base, find out the localized version.
+ *
+ * @param $country
+ *
+ * @return mixed|string
+ */
 function translate_country_names($country) {
     return PHPFusion\Locale::translate_country_names($country);
 }
 
 /**
- * Returns a string of quantitative sentence from an array
+ * Returns a string of quantitative sentence from an array.
  *
  * @param array $words
  *
- * @return string - orange, banana and apples
+ * @return string E.g. orange, banana and apples
  */
 function format_sentence(array $words) {
     if (!empty($words)) {
@@ -44,5 +68,6 @@ function format_sentence(array $words) {
         }
         return $string;
     }
-    return (string)"";
+
+    return NULL;
 }

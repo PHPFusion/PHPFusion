@@ -17,6 +17,15 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Create a thumbnail image from an already uploaded image on your server.
+ *
+ * @param string $filetype  This function only supports three filetypes: gif, jpeg, png, webp
+ * @param string $origfile  Path to the orginal file you want to create a thumbnail of.
+ * @param string $thumbfile Path to the thumbnail file you want to create.
+ * @param int    $new_w     Max width for thumbnail image.
+ * @param int    $new_h     Max height for thumbnail image.
+ */
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     $settings = fusion_get_settings();
     $origimage = '';
@@ -69,6 +78,14 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     imagedestroy($thumbimage);
 }
 
+/**
+ * Create a square thumbnail image from an already uploaded image on your server.
+ *
+ * @param string $filetype  This function only supports three filetypes: gif, jpeg, png, webp
+ * @param string $origfile  Path to the orginal file you want to create a thumbnail of.
+ * @param string $thumbfile Path to the thumbnail file you want to create.
+ * @param int    $new_size  Max size for thumbnail image.
+ */
 function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     $settings = fusion_get_settings();
     $origimage = '';
@@ -78,7 +95,7 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
         $origimage = imagecreatefromjpeg($origfile);
     } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
-    }else if ($filetype == 4) {
+    } else if ($filetype == 4) {
         $origimage = imagecreatefromwebp($origfile);
     }
 
@@ -113,7 +130,14 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     imagedestroy($new_image);
 }
 
-// returns the image name.
+/**
+ * Find another available image name based on the image in the folder.
+ *
+ * @param string $dir   The directory to check for the image, remember a / at the end of the directory path.
+ * @param string $image The image inside the directory you want to check for.
+ *
+ * @return string
+ */
 function image_exists($dir, $image) {
     $i = 1;
     $image_name = substr($image, 0, strrpos($image, "."));
@@ -127,22 +151,22 @@ function image_exists($dir, $image) {
 }
 
 /**
- * Retrieve Information about a specific Image
+ * Get information about a specific image.
  *
- * @param $imagePath
+ * @param string $image_path Path to the image.
  *
  * @return array|bool
- * Courtesy of : drpain.webster.org.za @ php.net
  */
-function exif($imagePath) {
+function exif($image_path) {
     error_reporting(0); // turn off everything. most of Photoshop images are unsupported.
     // Check if the variable is set and if the file itself exists before continuing
-    if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
+    if ((isset($image_path)) and (file_exists($image_path)) and !is_dir($image_path)) {
         // There are 2 arrays which contains the information we are after, so it's easier to state them both
-        $exif_base = @getimagesize($imagePath);
-        $exif_ifd0 = @exif_read_data($imagePath, 'IFD0', 0);
-        $exif_exif = @exif_read_data($imagePath, 'EXIF', 0);
-        //error control
+        $exif_base = getimagesize($image_path);
+        if (function_exists('exif_read_data')) {
+            $exif_ifd0 = exif_read_data($image_path, 'IFD0', 0);
+            $exif_exif = exif_read_data($image_path, 'EXIF', 0);
+        }
         $notFound = fusion_get_locale('na');
         // Make
         if (isset($exif_ifd0['Make'])) {
@@ -200,12 +224,12 @@ function exif($imagePath) {
 }
 
 /**
- * Copy a file from any source to any destination
+ * Copy a file from any source to any destination.
  *
- * @param $source -- copy file from URL
- * @param $destination -- copy file to folder
+ * @param string $source      Copy file from URL.
+ * @param string $destination Destination folder.
  *
- * @return mixed
+ * @return array
  */
 function copy_file($source, $destination) {
     $upload['name'] = '';

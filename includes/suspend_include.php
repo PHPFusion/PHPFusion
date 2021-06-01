@@ -17,14 +17,30 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Get suspension.
+ *
+ * @param int  $type
+ * @param bool $action
+ *
+ * @return mixed
+ */
 function getsuspension($type, $action = FALSE) {
-
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
     $i = ($action ? 1 : 0);
     return $type > 8 ? $locale['susp_sys'] : $locale['susp'.$i.$type];
 }
 
+/**
+ * Save suspendation to log.
+ *
+ * @param int    $user_id
+ * @param int    $type
+ * @param string $reason
+ * @param false  $system
+ * @param bool   $time
+ */
 function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRUE) {
     $userdata = fusion_get_userdata();
     dbquery("INSERT INTO ".DB_SUSPENDS." (
@@ -46,6 +62,14 @@ function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRU
         )");
 }
 
+/**
+ * Unsuspend user.
+ *
+ * @param int    $user_id
+ * @param int    $type
+ * @param string $reason
+ * @param bool   $system
+ */
 function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
     $userdata = fusion_get_userdata();
 
@@ -64,11 +88,18 @@ function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
     ");
 }
 
+/**
+ * Display suspend log.
+ *
+ * @param int    $user_id
+ * @param string $type
+ * @param int    $rowstart
+ * @param int    $limit
+ */
 function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0) {
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
     $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
-    $rows = dbcount("(suspend_id)", DB_SUSPENDS, "suspended_user='$user_id'$db_type");
 
     $result = dbquery("SELECT sp.suspend_id, sp.suspend_ip, sp.suspend_ip_type, sp.suspend_date, sp.suspend_reason,
         sp.suspend_type, sp.reinstate_date, sp.reinstate_reason, sp.reinstate_ip, sp.reinstate_ip_type,
@@ -90,11 +121,11 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
 
     if ($rows) {
         echo "<table class='table table-responsive table-striped table-hover'>\n<tr>\n";
-        if ($type == "all") {
+        /*if ($type == "all") {
             $description = sprintf($locale['susp101'], $udata['user_name']);
         } else {
             $description = sprintf(str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['susp102']), getsuspension($type), $udata['user_name']);
-        }
+        }*/
         echo "<td class='tbl2' width='30'>".$locale['susp103']."</td>\n";
         echo "<td class='tbl2' width='120'>".$locale['susp104']."</td>\n";
         echo "<td class='tbl2' width='250'>".$locale['susp105']."</td>\n";
@@ -129,6 +160,10 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
     closetable();
 }
 
+/**
+ * @param string $second
+ * @param string $third
+ */
 function member_nav($second = "", $third = "") {
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
@@ -146,7 +181,12 @@ function member_nav($second = "", $third = "") {
     echo "</div>\n";
 }
 
+/**
+ * @param $step
+ * @param $user_id
+ *
+ * @return string
+ */
 function member_url($step, $user_id) {
-
-    return FUSION_SELF.fusion_get_aidlink()."&amp;ref=".$step.($user_id ? "&amp;lookup=$user_id" : "");
+    return FUSION_SELF.fusion_get_aidlink()."&]=ref=".$step.($user_id ? "&lookup=$user_id" : "");
 }

@@ -17,8 +17,13 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (!function_exists('mimeTypes')) {
-    function mimeTypes() {
+if (!function_exists('mimetypes')) {
+    /**
+     * Array of mime types.
+     *
+     * @return array Map of extensions to mime types.
+     */
+    function mimetypes() {
         /*-------------------------------------------------------+
         | Taken From CodeIgniter 4.1.1, 25.3.2021
         | https://github.com/codeigniter4/CodeIgniter4/blob/develop/app/Config/Mimes.php
@@ -488,8 +493,13 @@ if (!function_exists('mimeTypes')) {
     }
 }
 
-if (!function_exists('img_mimeTypes')) {
-    function img_mimeTypes() {
+if (!function_exists('img_mimetypes')) {
+    /**
+     * Array of image mime types.
+     *
+     * @return array
+     */
+    function img_mimetypes() {
         return [
             'jpg'  => 'image/jpg',
             'jpeg' => 'image/jpeg',
@@ -503,8 +513,13 @@ if (!function_exists('img_mimeTypes')) {
         ];
     }
 }
-if (!function_exists('video_mimeTypes')) {
-    function video_mimeTypes() {
+if (!function_exists('video_mimetypes')) {
+    /**
+     * Array of video mime types.
+     *
+     * @return array
+     */
+    function video_mimetypes() {
         return [
             'mpeg' => 'video/mpeg',
             'mpg'  => 'video/mpeg',

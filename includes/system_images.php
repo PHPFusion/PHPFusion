@@ -20,36 +20,35 @@
 use PHPFusion\ImageRepo;
 
 /**
- * Get the imagepath or the html "img" tag
+ * Get the imagepath or <img> tag.
  *
- * @param string $image The name of the image.
- * @param string $alt "alt" attribute of the image
- * @param string $style "style" attribute of the image
- * @param string $title "title" attribute of the image
- * @param string $atts Custom attributes of the image
+ * @param string $image The name of the image. Default system images: up, down, imagenotfound, left, right, noavatar, panel_on, panel_off
+ * @param string $alt   The alt attribute of the image.
+ * @param string $style The style attribute of the image.
+ * @param string $title The title attribute of the image.
+ * @param string $atts  Custom attributes of the image.
  *
- * @return string The path of the image if the first argument is given,
- * but others not. Otherwise the html "img" tag
+ * @return string The path of the image if the first argument is given, but others not. Otherwise <img> tag.
  */
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
     return ImageRepo::getImage($image, $alt, $style, $title, $atts);
 }
 
 /**
- * Set a path of an image
+ * Set a path of an image.
  *
- * @param string $name
- * @param string $path
+ * @param string $name The name of an already defined image whose location you want to change, or your own image.
+ * @param string $path The path to the image you are setting.
  */
 function set_image($name, $path) {
     ImageRepo::setImage($name, $path);
 }
 
 /**
- * Replace a part in each path
+ * Replace a part in each image path.
  *
- * @param string $source
- * @param string $target
+ * @param string $source Source path.
+ * @param string $target Target path.
  */
 function redirect_img_dir($source, $target) {
     ImageRepo::replaceInAllPath($source, $target);

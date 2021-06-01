@@ -17,7 +17,17 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-// Enable ajax based flood control
+/**
+ * Prevent users from flooding the system, typical spam bots and others.
+ * This function should be used whenever users have the ability to post to the database.
+ *
+ * @param string $field The field in the table which holds the Unix timestamp.
+ * @param string $table The table you are flood controlling and where the UNIX timestamp field is located in.
+ * @param string $where The where statement to select the right rows and the right timestamp. This should either be a user_id or a user_id.
+ * @param false  $debug
+ *
+ * @return false|string
+ */
 function flood_control($field, $table, $where, $debug = FALSE) {
     $userdata = fusion_get_userdata('user_id');
     $settings = fusion_get_settings();
@@ -52,7 +62,7 @@ function flood_control($field, $table, $where, $debug = FALSE) {
                             dbquery("INSERT INTO ".DB_BLACKLIST." (blacklist_ip, blacklist_ip_type, blacklist_email, blacklist_reason) VALUES ('".USER_IP."', '".USER_IP_TYPE."', '', '".$locale['global_440']."')");
                         }
                     } else {
-                        addNotice('info',
+                        addnotice('info',
                             "DEBUG MESSAGE: Triggered flood control action due to repeated offences. This could've resulted in a ban or suspension");
                     }
 

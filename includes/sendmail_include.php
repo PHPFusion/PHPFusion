@@ -17,22 +17,24 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-/**
- * Send Email via PHPMailer Class
- *
- * @param        $toname
- * @param        $toemail
- * @param        $fromname
- * @param        $fromemail
- * @param        $subject
- * @param        $message
- * @param string $type
- * @param string $cc
- * @param string $bcc
- *
- * @return bool
- */
 if (!function_exists('sendemail')) {
+    /**
+     * Send email via PHPMailer Class
+     *
+     * @param string $toname    The name of the receiver.
+     * @param string $toemail   The mail of the receiver.
+     * @param string $fromname  Sender's name.
+     * @param string $fromemail Sender's email.
+     * @param string $subject   Email subject.
+     * @param string $message   Email message.
+     * @param string $type      Text type. Possible value: text, html.
+     * @param string $cc        Carbon copy, whom do you want to send copies of this mail to.
+     * @param string $bcc       Blind carbon copy, this receiver will not be able to see from
+     *                          whom this mail has been sent to others than the receiver.
+     *
+     * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     function sendemail($toname, $toemail, $fromname, $fromemail, $subject, $message, $type = "html", $cc = "", $bcc = "") {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
@@ -83,7 +85,6 @@ if (!function_exists('sendemail')) {
         $mail->Subject = $subject;
         $mail->Body = $message;
         if (!$mail->send()) {
-            $mail->ErrorInfo;
             $mail->clearAllRecipients();
             $mail->clearReplyTos();
 
@@ -96,24 +97,25 @@ if (!function_exists('sendemail')) {
         }
     }
 }
-/**
- * Template
- *
- * @param        $template_key
- * @param        $subject
- * @param        $message
- * @param        $user
- * @param        $receiver
- * @param string $thread_url
- * @param        $toemail
- * @param string $sender
- * @param string $fromemail
- *
- * @return bool
- */
-if (!function_exists('sendemail_template')) {
-    function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url, $toemail, $sender = "", $fromemail = "") {
 
+if (!function_exists('sendemail_template')) {
+    /**
+     * Send email with template
+     *
+     * @param string $template_key Template key.
+     * @param string $subject      Email subject.
+     * @param string $message      Email message.
+     * @param string $user         User name.
+     * @param string $receiver     The name of the receiver.
+     * @param string $thread_url   Forum thread url.
+     * @param string $toemail      The mail of the receiver.
+     * @param string $sender       Sender's name.
+     * @param string $fromemail    Sender's email.
+     *
+     * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    function sendemail_template($template_key, $subject, $message, $user, $receiver, $thread_url, $toemail, $sender = "", $fromemail = "") {
         $settings = fusion_get_settings();
 
         $data = dbarray(dbquery("SELECT * FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='".$template_key."' LIMIT 1"));

@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Generate .htaccess file
+ */
 function write_htaccess() {
     $site_path = fusion_get_settings('site_path');
     if (empty($site_path)) {
