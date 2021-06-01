@@ -563,7 +563,7 @@ class Defender {
             }
         }
 
-        //setError(E_USER_NOTICE, "The form sanitizer could not handle the request! (input: $input_name)", "", "");
+        //set_error(E_USER_NOTICE, "The form sanitizer could not handle the request! (input: $input_name)", "", "");
     }
 
     /**

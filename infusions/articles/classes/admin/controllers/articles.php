@@ -33,7 +33,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-        pageAccess("A");
+        pageaccess("A");
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }

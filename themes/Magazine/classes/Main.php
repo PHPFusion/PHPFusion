@@ -102,7 +102,7 @@ class Main {
                 echo defined('USER4') && USER4 ? '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">'.USER4.'</div>' : '';
             echo '</div>';
 
-            echo '<div class="text-center">'.showFooterErrors().'</div>';
+            echo '<div class="text-center">'.showfootererrors().'</div>';
 
             echo '<div class="m-t-20">';
                 echo '<div class="row">';

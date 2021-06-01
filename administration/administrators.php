@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-pageAccess('AD');
+pageaccess('AD');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/admins.php");
 

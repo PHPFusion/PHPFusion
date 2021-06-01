@@ -324,7 +324,7 @@ class AdminPanel {
         $locale = fusion_get_locale();
 
         $html = '<footer class="main-footer">';
-            $html .= showFooterErrors();
+            $html .= showfootererrors();
 
             if (fusion_get_settings('rendertime_enabled')) {
                 $html .= showrendertime().' '.showMemoryUsage().'<br />';

@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-pageAccess("PH");
+pageaccess("PH");
 
 $locale = fusion_get_locale();
 $gll_settings = get_settings("gallery");

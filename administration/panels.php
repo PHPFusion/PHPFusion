@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-pageAccess('P');
+pageaccess('P');
 
 class PanelsAdministration {
     private static $locale = [];

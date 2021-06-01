@@ -32,7 +32,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
     }
 
     public function displayWeblinksAdmin() {
-        pageAccess("W");
+        pageaccess("W");
         if (check_get('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }

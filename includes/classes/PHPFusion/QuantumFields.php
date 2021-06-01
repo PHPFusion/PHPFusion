@@ -342,7 +342,7 @@ class QuantumFields extends SqlHandler {
     /* Move Fields Order - Up and Down */
 
     public function displayQuantumAdmin() {
-        pageAccess($this->admin_rights);
+        pageaccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
 
         if ($this->system_title) {

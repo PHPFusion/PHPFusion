@@ -32,7 +32,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
     public function displayNewsAdmin() {
 
-        pageAccess('N');
+        pageaccess('N');
 
         self::$locale = self::get_newsAdminLocale();
 

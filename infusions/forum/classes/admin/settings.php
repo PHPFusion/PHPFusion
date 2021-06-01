@@ -27,7 +27,7 @@ use PHPFusion\QuantumFields;
 class ForumAdminSettings extends ForumAdminInterface {
 
     public function viewSettingsAdmin() {
-        pageAccess('F');
+        pageaccess('F');
 
         if (isset($_POST['recount_user_post'])) {
             $result = dbquery("SELECT post_author, COUNT(post_id) as num_posts FROM ".DB_FORUM_POSTS." GROUP BY post_author");

@@ -42,23 +42,11 @@ function set_error($error_level, $error_message, $error_file, $error_line) {
 }
 
 /**
- * Fallback function
- *
- * @param $error_level
- * @param $error_message
- * @param $error_file
- * @param $error_line
- */
-function setError($error_level, $error_message, $error_file, $error_line) {
-    set_error($error_level, $error_message, $error_file, $error_line);
-}
-
-/**
  * Return footer error notice
  *
  * @return null
  */
-function showFooterErrors() {
+function showfootererrors() {
     $errors = PHPFusion\Errors::getInstance();
     if (method_exists($errors, "showFooterErrors")) {
         return $errors->showFooterErrors();

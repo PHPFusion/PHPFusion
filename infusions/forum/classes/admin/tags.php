@@ -34,7 +34,7 @@ class ForumAdminTags extends ForumAdminInterface {
      */
     public function viewTagsAdmin() {
 
-        pageAccess('F');
+        pageaccess('F');
 
         echo "<div class='well m-t-15'>".self::$locale['forum_tag_0101']."</div>\n";
         $tag_pages = ["tag_list", "tag_form"];

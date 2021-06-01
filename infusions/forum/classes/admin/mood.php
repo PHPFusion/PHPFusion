@@ -36,7 +36,7 @@ class ForumAdminMood extends ForumAdminInterface {
     ];
 
     public function viewMoodAdmin() {
-        pageAccess('F');
+        pageaccess('F');
 
         echo "<div class='well m-t-15'>".self::$locale['forum_090']."</div>\n";
         $mood_pages = ["mood_list", "mood_form"];

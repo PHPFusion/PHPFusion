@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-pageAccess('B');
+pageaccess('B');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/blacklist.php');
 

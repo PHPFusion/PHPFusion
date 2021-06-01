@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
 $locale = fusion_get_locale("", LOCALE.LOCALESET.'admin/panels.php');
-pageAccess("P");
+pageaccess("P");
 
 if (check_get(['listItem']) && get(['listItem'])) {
     $sql_side = "";

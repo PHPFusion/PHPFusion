@@ -109,7 +109,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
      * @throws Exception
      */
     public function adminForm() {
-        pageAccess("SL");
+        pageaccess("SL");
 
         if (check_post("cancel")) {
             redirect(FUSION_SELF.$this->aidlink);

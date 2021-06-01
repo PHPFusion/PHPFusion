@@ -415,7 +415,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
      * Display Admin Area
      */
     public function displayArticlesAdmin() {
-        pageAccess("A");
+        pageaccess("A");
 
         $this->locale = self::get_articleAdminLocale();
         $this->articleSettings = self::get_article_settings();

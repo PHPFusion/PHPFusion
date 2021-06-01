@@ -30,7 +30,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
 
     public function displayWeblinksAdmin() {
 
-        pageAccess("W");
+        pageaccess("W");
         $locale = self::get_WeblinkAdminLocale();
         $weblink_settings = self::get_weblink_settings();
 

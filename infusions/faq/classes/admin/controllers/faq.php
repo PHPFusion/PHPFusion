@@ -38,7 +38,7 @@ class FaqAdmin extends FaqAdminModel {
     }
 
     public function displayFaqAdmin() {
-        pageAccess('FQ');
+        pageaccess('FQ');
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }

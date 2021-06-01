@@ -379,3 +379,17 @@ function get_available_languages_list($selected_language = "") {
 
     return $res;
 }
+
+/**
+ * Custom Error Handler.
+ *
+ * @param $error_level
+ * @param $error_message
+ * @param $error_file
+ * @param $error_line
+ *
+ * @deprecated use set_error()
+ */
+function setError($error_level, $error_message, $error_file, $error_line) {
+    set_error($error_level, $error_message, $error_file, $error_line);
+}

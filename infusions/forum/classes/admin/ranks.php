@@ -36,7 +36,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
     public function viewRanksAdmin() {
 
-        pageAccess('F');
+        pageaccess('F');
 
         $forum_settings = $this->get_forum_settings();
 

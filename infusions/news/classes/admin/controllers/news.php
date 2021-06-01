@@ -29,7 +29,7 @@ class NewsAdmin extends NewsAdminModel {
     private $data = [];
 
     public static function getInstance() {
-        pageAccess('N');
+        pageaccess('N');
         if (self::$instance == NULL) {
             self::$instance = new static();
         }

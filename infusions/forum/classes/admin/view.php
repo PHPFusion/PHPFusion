@@ -748,7 +748,7 @@ class ForumAdminView extends ForumAdminInterface {
             }
 
         } else {
-            pageAccess('F');
+            pageaccess('F');
             $this->display_forum_index();
         }
         echo closetab();

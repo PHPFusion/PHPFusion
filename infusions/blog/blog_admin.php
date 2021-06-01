@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-pageAccess('BLOG');
+pageaccess('BLOG');
 require_once THEMES.'templates/admin_header.php';
 
 $locale = fusion_get_locale('', [

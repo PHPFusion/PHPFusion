@@ -313,7 +313,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * Display Admin Area
      */
     public function displayWeblinksAdmin() {
-        pageAccess("W");
+        pageaccess("W");
 
         $this->locale = self::get_WeblinkAdminLocale();
 

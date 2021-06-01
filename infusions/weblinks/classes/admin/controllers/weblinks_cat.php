@@ -30,7 +30,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
     }
 
     public function displayWeblinksAdmin() {
-        pageAccess("W");
+        pageaccess("W");
         $this->locale = self::get_WeblinkAdminLocale();
 
         // Cancel Form

@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
-pageAccess("PH");
+pageaccess("PH");
 require_once THEMES.'templates/admin_header.php';
 $aidlink = fusion_get_aidlink();
 $locale = fusion_get_locale('', [GALLERY_ADMIN_LOCALE, LOCALE.LOCALESET."admin/settings.php"]);

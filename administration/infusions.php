@@ -20,7 +20,7 @@ use PHPFusion\Installer\Infusions;
 
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-pageAccess('I');
+pageaccess('I');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 $settings = fusion_get_settings();

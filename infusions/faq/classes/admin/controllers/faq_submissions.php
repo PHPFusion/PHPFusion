@@ -38,7 +38,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
      * Display Admin Area
      */
     public function displayFaqAdmin() {
-        pageAccess("FQ");
+        pageaccess("FQ");
 
         $this->locale = self::get_faqAdminLocale();
         // Handle a Submission

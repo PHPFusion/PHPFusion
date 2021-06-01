@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 $locale = fusion_get_locale();
-pageAccess('D');
+pageaccess('D');
 if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat_id']) && isnum($_GET['cat_id']))) {
     if (dbcount("(download_cat)", DB_DOWNLOADS, "download_cat='".intval($_GET['cat_id'])."'")
         || dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_parent='".intval($_GET['cat_id'])."'")

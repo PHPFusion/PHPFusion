@@ -119,7 +119,7 @@ class Members_Admin {
 
     public static function getInstance() {
         if (self::$instance == NULL) {
-            pageAccess('M');
+            pageaccess('M');
             self::$instance = new static();
         }
 

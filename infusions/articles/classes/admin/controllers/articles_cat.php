@@ -29,7 +29,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-        pageAccess("A");
+        pageaccess("A");
         $this->locale = self::get_articleAdminLocale();
         // Cancel Form
         if (isset($_POST['cancel'])) {

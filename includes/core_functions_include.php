@@ -1209,7 +1209,7 @@ function checkrights($rights) {
  * @param string $rights Rights you want to check for the administrator.
  * @param bool   $debug  For debugging purposes.
  */
-function pageAccess($rights, $debug = FALSE) {
+function pageaccess($rights, $debug = FALSE) {
     $error = [];
     if ($debug) {
         print_p('Admin Panel mode');
@@ -1564,7 +1564,7 @@ function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext
             '{%folder%}'   => $folder,
             '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
         ]);
-        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
+        set_error(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
     }
 
     return $res;
@@ -2425,7 +2425,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
                 }
             }
         } catch (Exception $e) {
-            setError(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+            set_error(E_COMPILE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
         }
     }
 

@@ -29,7 +29,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-        pageAccess("A");
+        pageaccess("A");
         $locale = self::get_articleAdminLocale();
         $article_settings = self::get_article_settings();
 
