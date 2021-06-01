@@ -244,14 +244,20 @@ class PanelsAdministration {
         $tabs['icon'][] = '';
         $tabs['title'][] = $edit ? self::$locale['409'] : self::$locale['408'];
         $tabs['id'][] = 'panelform';
-        $tabs['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
+        $tabs['icon'][] = '';
+        $tabs['title'][] = fusion_get_locale('448', LOCALE.LOCALESET.'admin/settings.php');
+        $tabs['id'][] = 'settings';
+        $tabs['icon'][] = '';
 
-        $allowed_sections = ['listpanel', 'panelform'];
+        $allowed_sections = ['listpanel', 'panelform', 'settings'];
         $sections = in_array(get('section'), $allowed_sections) ? get('section') : 'listpanel';
         echo opentab($tabs, $sections, 'id', TRUE);
         switch ($sections) {
             case 'panelform':
                 $this->addPanelForm();
+                break;
+            case 'settings':
+                $this->settings();
                 break;
             default:
                 $this->panelListing();
@@ -260,6 +266,81 @@ class PanelsAdministration {
 
         echo closetab();
         closetable();
+    }
+
+    private function settings() {
+        $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
+
+        if (check_post('savesettings')) {
+            $inputData = [
+                'exclude_left'   => sanitizer('exclude_left', '', 'exclude_left'),
+                'exclude_upper'  => sanitizer('exclude_upper', '', 'exclude_upper'),
+                'exclude_aupper' => sanitizer('exclude_aupper', '', 'exclude_aupper'),
+                'exclude_lower'  => sanitizer('exclude_lower', '', 'exclude_lower'),
+                'exclude_blower' => sanitizer('exclude_blower', '', 'exclude_blower'),
+                'exclude_right'  => sanitizer('exclude_right', '', 'exclude_right'),
+                'exclude_user1'  => sanitizer('exclude_user1', '', 'exclude_user1'),
+                'exclude_user2'  => sanitizer('exclude_user2', '', 'exclude_user2'),
+                'exclude_user3'  => sanitizer('exclude_user3', '', 'exclude_user3'),
+                'exclude_user4'  => sanitizer('exclude_user4', '', 'exclude_user4')
+            ];
+
+            if (fusion_safe()) {
+                foreach ($inputData as $settings_name => $settings_value) {
+                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                        ':settings_value' => $settings_value,
+                        ':settings_name'  => $settings_name
+                    ]);
+                }
+
+                addNotice('success', $locale['settings_updated']);
+                redirect(FUSION_REQUEST);
+            }
+        }
+
+        echo "<div class='m-b-20'>".$locale['463']." <br />
+        /index.php <br />
+        /infusions/news* <br />
+        /infusions/news/news.php <br />
+        /infusions/forum* <br />
+        /infusions/forum/index.php <br />
+        </div>\n";
+
+        echo openform('settingsform', 'post', FUSION_REQUEST);
+        echo form_textarea('exclude_aupper', $locale['426'], $settings['exclude_aupper'], ['autosize' => TRUE]);
+        echo '<div class="row">';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_left', $locale['420'], $settings['exclude_left'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-6">';
+        echo form_textarea('exclude_upper', $locale['421'], $settings['exclude_upper'], ['autosize' => TRUE]);
+        echo '<div class="hidden-xs hidden-sm well text-center">'.fusion_get_locale('page_0441', LOCALE.LOCALESET.'admin/custom_pages.php').'</div>';
+        echo form_textarea('exclude_lower', $locale['425'], $settings['exclude_lower'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_right', $locale['422'], $settings['exclude_right'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '</div>';
+
+        echo form_textarea('exclude_blower', $locale['427'], $settings['exclude_blower'], ['autosize' => TRUE]);
+
+        echo '<div class="row">';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_user1', $locale['428a'], $settings['exclude_user1'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_user2', $locale['428b'], $settings['exclude_user2'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_user3', $locale['428c'], $settings['exclude_user3'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '<div class="col-xs-12 col-sm-3">';
+        echo form_textarea('exclude_user4', $locale['428d'], $settings['exclude_user4'], ['autosize' => TRUE]);
+        echo '</div>';
+        echo '</div>';
+        echo form_button('savesettings', $locale['save_settings'], $locale['save_settings'], ['class' => 'btn-primary']);
+        echo closeform();
     }
 
     /**

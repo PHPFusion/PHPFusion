@@ -133,16 +133,6 @@ if (check_post('savesettings')) {
         'keywords'       => sanitizer('keywords', '', 'keywords'),
         'opening_page'   => sanitizer('opening_page', '', 'opening_page'),
         'default_search' => sanitizer('default_search', '', 'default_search'),
-        'exclude_left'   => sanitizer('exclude_left', '', 'exclude_left'),
-        'exclude_upper'  => sanitizer('exclude_upper', '', 'exclude_upper'),
-        'exclude_aupper' => sanitizer('exclude_aupper', '', 'exclude_aupper'),
-        'exclude_lower'  => sanitizer('exclude_lower', '', 'exclude_lower'),
-        'exclude_blower' => sanitizer('exclude_blower', '', 'exclude_blower'),
-        'exclude_right'  => sanitizer('exclude_right', '', 'exclude_right'),
-        'exclude_user1'  => sanitizer('exclude_user1', '', 'exclude_user1'),
-        'exclude_user2'  => sanitizer('exclude_user2', '', 'exclude_user2'),
-        'exclude_user3'  => sanitizer('exclude_user3', '', 'exclude_user3'),
-        'exclude_user4'  => sanitizer('exclude_user4', '', 'exclude_user4'),
         'domain_server'  => sanitizer('domain_server', '', 'domain_server')
     ];
 
@@ -181,9 +171,6 @@ $tabs['id'][] = 'general';
 $tabs['icon'][] = '';
 $tabs['title'][] = $locale['447'];
 $tabs['id'][] = 'url';
-$tabs['icon'][] = '';
-$tabs['title'][] = $locale['448'];
-$tabs['id'][] = 'panels';
 $tabs['icon'][] = '';
 
 $tab_active = tab_active($tabs, 0);
@@ -302,42 +289,6 @@ echo "</div>\n<div class='col-xs-12 col-sm-8'>\n";
 $domain_server = str_replace('|', PHP_EOL, $settings['domain_server']);
 echo form_textarea('domain_server', $locale['444b'], $domain_server, ['autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
 echo "</div>\n</div>\n";
-echo closetabbody();
-
-echo opentabbody($tabs['title'][2], 'panels', $tab_active);
-echo "<div class='alert alert-info'>".$locale['424']."</div>";
-
-echo form_textarea('exclude_aupper', $locale['435'], $settings['exclude_aupper'], ['autosize' => TRUE]);
-echo '<div class="row">';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_left', $locale['420'], $settings['exclude_left'], ['autosize' => TRUE]);
-echo '</div>';
-echo '<div class="col-xs-12 col-sm-6">';
-echo form_textarea('exclude_upper', $locale['421'], $settings['exclude_upper'], ['autosize' => TRUE]);
-echo '<div class="hidden-xs hidden-sm well text-center">'.fusion_get_locale('page_0441', LOCALE.LOCALESET.'admin/custom_pages.php').'</div>';
-echo form_textarea('exclude_lower', $locale['422'], $settings['exclude_lower'], ['autosize' => TRUE]);
-echo '</div>';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_right', $locale['423'], $settings['exclude_right'], ['autosize' => TRUE]);
-echo '</div>';
-echo '</div>';
-
-echo '<div class="row">';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_user1', $locale['443a'], $settings['exclude_user1'], ['autosize' => TRUE]);
-echo '</div>';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_user2', $locale['443b'], $settings['exclude_user2'], ['autosize' => TRUE]);
-echo '</div>';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_user3', $locale['443c'], $settings['exclude_user3'], ['autosize' => TRUE]);
-echo '</div>';
-echo '<div class="col-xs-12 col-sm-3">';
-echo form_textarea('exclude_user4', $locale['443d'], $settings['exclude_user4'], ['autosize' => TRUE]);
-echo '</div>';
-echo '</div>';
-echo form_textarea('exclude_blower', $locale['436'], $settings['exclude_blower'], ['autosize' => TRUE]);
-
 echo closetabbody();
 
 echo closetab();
