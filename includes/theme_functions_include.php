@@ -704,16 +704,11 @@ if (!function_exists('display_avatar')) {
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
         $name = !empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest';
 
+        $imgTpl = '<img class="avatar img-responsive '.$img_class.'" alt="'.$name.'" data-pin-nopin="true" style="display:inline; width:'.$size.'; max-height:'.$size.'" src="%s">';
         if ($hasAvatar) {
-            // Check if remote load avatar will break image paths or not
-            //$user_avatar = fusion_get_settings('siteurl')."images/avatars/".$userdata['user_avatar'];
-            //$imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
-            //$img = sprintf($imgTpl, $user_avatar);
-            $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
             $img = sprintf($imgTpl, IMAGES."avatars/".$userdata['user_avatar']);
         } else {
             if (!empty($custom_avatar) && file_exists($custom_avatar)) {
-                $imgTpl = "<img class='avatar img-responsive $img_class' alt='".$name."' data-pin-nopin='true' style='display:inline; width:$size; max-height:$size;' src='%s'>";
                 $img = sprintf($imgTpl, $custom_avatar);
             } else {
                 $color = string_to_color_code($userdata['user_name']);
@@ -732,7 +727,7 @@ if (!function_exists('display_avatar')) {
             }
         }
 
-        return $link ? sprintf("<a $class title='".$userdata['user_name']."' href='".BASEDIR."profile.php?lookup=".$userdata['user_id']."'>%s</a>", $img) : $img;
+        return $link ? sprintf('<a '.$class.' title="'.$userdata['user_name'].'" href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'">%s</a>', $img) : $img;
     }
 }
 
@@ -1667,39 +1662,28 @@ if (!function_exists('render_favicons')) {
 
 if (!function_exists('render_user_tags')) {
     /**
-     * The callback function for fusion_parse_user().
+     * Render user tags template.
      *
-     * @param string $m       The message.
+     * @param array  $data    User data.
      * @param string $tooltip The tooltip string.
      *
      * @return string
      */
-    function render_user_tags($m, $tooltip) {
+    function render_user_tags($data, $tooltip) {
         $locale = fusion_get_locale();
-        add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
-        $user = preg_replace('/[^A-Za-z0-9\-]/', '', $m[0]);
-        $user = str_replace('@', '', $user);
-        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar
-                FROM ".DB_USERS."
-                WHERE (user_name=:user_00 OR user_name=:user_01 OR user_name=:user_02 OR user_name=:user_03) AND user_status='0'
-                LIMIT 1
-            ", [
-            ':user_00' => $user,
-            ':user_01' => ucwords($user),
-            ':user_02' => strtoupper($user),
-            ':user_03' => strtolower($user)
-        ]);
-        if (dbrows($result) > 0) {
-            $data = dbarray($result);
-            $avatar = !empty($data['user_avatar']) ? "<div class='pull-left m-r-10'>".display_avatar($data, '32px', '', FALSE, 'icon-sm')."</div>" : '';
-            $title = "<div class='user-tooltip'>".$avatar."<div class='clearfix'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."<br/><span class='user_level'>".getuserlevel($data['user_level'])."</span></div>";
-            $content = $tooltip."<a class='btn btn-block btn-primary' href='".BASEDIR."messages.php?msg_send=".$data['user_id']."'>".$locale['send_message']."</a>";
-            $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title="'.$title.'" data-content="'.$content.'">';
-            $html .= "<span class='user-label'>".$m[0]."</span>";
-            $html .= "</a>";
-            return $html;
+
+        if (!defined('USERPOPOVER')) {
+            define('USERPOPOVER', TRUE);
+            add_to_jquery("$('[data-toggle=\"user-tooltip\"]').popover();");
         }
 
-        return $m[0];
+        $avatar = !empty($data['user_avatar']) ? '<div class="pull-left m-r-10">'.display_avatar($data, '32px', '', FALSE, 'icon-sm').'</div>' : '';
+        $title = '<div class="user-tooltip">'.$avatar.'<div class="clearfix">'.profile_link($data['user_id'], $data['user_name'], $data['user_status']).'<br><span class="user_level">'.getuserlevel($data['user_level']).'</span></div>';
+        $content = $tooltip.'<a class="btn btn-block btn-primary" href="'.BASEDIR.'messages.php?msg_send='.$data['user_id'].'">'.$locale['send_message'].'</a>';
+        $html = '<a class="strong pointer" tabindex="0" role="button" data-html="true" data-trigger="focus" data-placement="top" data-toggle="user-tooltip" title=\''.$title.'\' data-content=\''.$content.'\'>';
+        $html .= '<span class="user-label">@'.$data['user_name'].'</span>';
+        $html .= '</a>';
+
+        return $html;
     }
 }

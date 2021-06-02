@@ -671,10 +671,25 @@ function displaysmileys($textarea, $form = "inputform") {
  *
  * @return string Tooltip with info.
  */
-function fusion_parse_user($user_name, $tooltip = "") {
-    $user_regex = '@[-0-9A-Z_\.]{1,50}';
-    return preg_replace_callback("#$user_regex#im", function ($user_name) use ($tooltip) {
-        return render_user_tags($user_name, $tooltip);
+function fusion_parse_user($user_name, $tooltip = '') {
+    return preg_replace_callback("/\@([A-Za-z0-9\-_!\.]+)/", function ($user_name) use ($tooltip) {
+        $user = $user_name[1];
+        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar
+            FROM ".DB_USERS."
+            WHERE (user_name=:user_00 OR user_name=:user_01 OR user_name=:user_02 OR user_name=:user_03) AND user_status='0'
+            LIMIT 1
+        ", [
+            ':user_00' => $user,
+            ':user_01' => ucwords($user),
+            ':user_02' => strtoupper($user),
+            ':user_03' => strtolower($user)
+        ]);
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            return render_user_tags($data, $tooltip);
+        }
+
+        return $user_name[0];
     }, $user_name);
 }
 
