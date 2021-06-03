@@ -40,7 +40,7 @@ class UserFields extends QuantumFields {
         "user_password"       => '',
         "user_admin_password" => '',
         "user_email"          => '',
-        'user_hide_email'     => 0,
+        'user_hide_email'     => 1,
         "user_language"       => LANGUAGE,
         'user_timezone'       => 'Europe/London'
     ];
