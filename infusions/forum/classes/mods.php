@@ -267,12 +267,12 @@ class Moderator {
                 $data = dbarray($result);
 
                 // update the last post timestamp
-                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp=:time WHERE post_id=:post_id", [':time' => TIME, ':post_id' => $data['post_id']]);
+                dbquery("UPDATE ".DB_FORUM_POSTS." SET post_datestamp=:time WHERE post_id=:post_id", [':time' => time(), ':post_id' => $data['post_id']]);
 
                 // update the thread last post timestamp
                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_lastpost=:time, thread_lastpostid=:post_id, thread_lastuser=:post_author WHERE thread_id=:thread_id",
                     [
-                        ':time'        => TIME,
+                        ':time'        => time(),
                         ':post_id'     => $data['post_id'],
                         ':post_author' => $data['post_author'],
                         ':thread_id'   => intval($this->thread_id)
@@ -281,7 +281,7 @@ class Moderator {
                 // update forum lastpost timestamp
                 dbquery("UPDATE ".DB_FORUMS." SET forum_lastpost=:time, forum_lastuser=:post_author WHERE forum_id=:forum_id",
                     [
-                        ':time'        => TIME,
+                        ':time'        => time(),
                         ':post_author' => $data['post_author'],
                         ':forum_id'    => $data['forum_id']
                     ]);
@@ -957,7 +957,7 @@ class Moderator {
                                     }
 
                                     // Update all selected posts with new thread and forum ID
-                                    dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=:new_forum_id, thread_id=:new_thread_id, post_datestamp='".TIME."' WHERE post_id IN (".$move_posts_add.")", $param);
+                                    dbquery("UPDATE ".DB_FORUM_POSTS." SET forum_id=:new_forum_id, thread_id=:new_thread_id, post_datestamp='".time()."' WHERE post_id IN (".$move_posts_add.")", $param);
                                     // Update all thread attachments with new thread ID
                                     dbquery("UPDATE ".DB_FORUM_ATTACHMENTS." SET thread_id=:new_thread_id WHERE post_id IN(".$move_posts_add.")", [':new_thread_id' => $param[':new_thread_id']]);
 

@@ -26,7 +26,7 @@ if (!iMEMBER) {
 
 require_once THEMES.'templates/header.php';
 
-$lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
+$lastvisited = defined('LASTVISITED') ? LASTVISITED : time();
 $inf_settings = get_settings('forum');
 $locale = fusion_get_locale();
 

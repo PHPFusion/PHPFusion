@@ -324,7 +324,7 @@ if (isset($_GET['readmore'])) {
                 FROM ".DB_BLOG." AS b
                 INNER JOIN ".DB_USERS." AS bu ON b.blog_name=bu.user_id
                 ".(multilang_table('BL') ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')."
-                AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 AND blog_name=:author_id
+                AND (blog_start=0 || blog_start<=".time().") AND (blog_end=0 || blog_end>=".time().") AND blog_draft=0 AND blog_name=:author_id
                 GROUP BY blog_id
                 ORDER BY blog_sticky DESC, ".$filter_condition." LIMIT :rowstart, :limit
             ";
@@ -373,7 +373,7 @@ if (isset($_GET['readmore'])) {
             ]);
         }
 
-        $max_rows_sql = "SELECT blog_id from ".DB_BLOG." ".(multilang_table("BL") ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess("blog_visibility")." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft='0' $catFilter";
+        $max_rows_sql = "SELECT blog_id from ".DB_BLOG." ".(multilang_table("BL") ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess("blog_visibility")." AND (blog_start=0 || blog_start<=".time().") AND (blog_end=0 || blog_end>=".time().") AND blog_draft='0' $catFilter";
         $info['blog_max_rows'] = dbrows(dbquery($max_rows_sql));
 
         //xss
@@ -422,7 +422,7 @@ if (isset($_GET['readmore'])) {
 
         }
 
-        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, (multilang_table("BL") ? in_group('blog_language', LANGUAGE)." AND " : '').groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 ".$archiveSql);
+        $info['blog_max_rows'] = dbcount("('blog_id')", DB_BLOG, (multilang_table("BL") ? in_group('blog_language', LANGUAGE)." AND " : '').groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".time().") AND (blog_end=0 || blog_end>=".time().") AND blog_draft=0 ".$archiveSql);
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? intval($_GET['rowstart']) : 0;
 
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
@@ -459,8 +459,8 @@ if (isset($_GET['readmore'])) {
             ]);
 
             $param = [
-                ':start_time' => TIME,
-                ':end_time'   => TIME,
+                ':start_time' => time(),
+                ':end_time'   => time(),
                 ':rowstart'   => $_GET['rowstart'],
                 ':limit'      => intval($blog_settings['blog_pagination'])
             ];
@@ -549,7 +549,7 @@ if (!empty($info['blog_max_rows']) && ($info['blog_max_rows'] > $blog_settings['
 
 // Archive Menu
 $sql = "SELECT YEAR(from_unixtime(blog_datestamp)) as blog_year, MONTH(from_unixtime(blog_datestamp)) AS blog_month, count(blog_id) AS blog_count
-        FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".TIME.") AND (blog_end=0 || blog_end>=".TIME.") AND blog_draft=0 GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC";
+        FROM ".DB_BLOG." ".(multilang_table("BL") ? "WHERE ".in_group('blog_language', LANGUAGE)." AND " : "WHERE ").groupaccess('blog_visibility')." AND (blog_start=0 || blog_start<=".time().") AND (blog_end=0 || blog_end>=".time().") AND blog_draft=0 GROUP BY blog_year, blog_month ORDER BY blog_datestamp DESC";
 $archive_result = dbquery($sql);
 
 if (dbrows($archive_result)) {

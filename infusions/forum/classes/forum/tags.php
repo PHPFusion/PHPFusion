@@ -118,7 +118,7 @@ class ThreadTags extends ForumServer {
         $userdata = fusion_get_userdata();
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
 
-        $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
+        $lastVisited = defined('LASTVISITED') ? LASTVISITED : time();
         /**
          * Get threads with filter conditions (XSS prevention)
          */

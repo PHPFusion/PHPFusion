@@ -504,7 +504,7 @@ class Comments {
             'comment_name'      => '',
             'comment_subject'   => '',
             'comment_message'   => '',
-            'comment_datestamp' => TIME,
+            'comment_datestamp' => time(),
             'comment_item_id'   => $this->getParams('comment_item_id'),
             'comment_type'      => $this->getParams('comment_item_type'),
             'comment_cat'       => 0,
@@ -624,7 +624,7 @@ class Comments {
                     'rating_type'      => $this->getParams('comment_item_type'),
                     'rating_user'      => $comment_data['comment_name'],
                     'rating_vote'      => form_sanitizer($_POST['comment_rating'], 0, 'comment_rating'),
-                    'rating_datestamp' => TIME,
+                    'rating_datestamp' => time(),
                     'rating_ip'        => USER_IP,
                     'rating_ip_type'   => USER_IP_TYPE
                 ];
@@ -674,7 +674,7 @@ class Comments {
                 }
             } else {
 
-                $comment_data['comment_datestamp'] = TIME;
+                $comment_data['comment_datestamp'] = time();
 
                 if (fusion_safe()) {
 

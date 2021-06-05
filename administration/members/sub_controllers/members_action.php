@@ -200,7 +200,7 @@ class Members_Action extends Members_Admin {
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
                     $duration = sanitizer('duration', '', 'duration');
-                    $duration = ($duration * 86400) + TIME;
+                    $duration = ($duration * 86400) + time();
                 }
 
                 if (fusion_safe()) {

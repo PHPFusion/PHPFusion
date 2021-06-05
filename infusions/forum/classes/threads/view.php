@@ -327,7 +327,7 @@ class ViewThread extends ForumServer {
                                 dbquery("
                                 INSERT INTO ".DB_FORUM_THREAD_NOTIFY."
                                 (thread_id, notify_datestamp, notify_user, notify_status)
-                                VALUES ('".intval($thread_data['thread_id'])."', '".TIME."', '".intval($post_data['post_author'])."', 1)
+                                VALUES ('".intval($thread_data['thread_id'])."', '".time()."', '".intval($post_data['post_author'])."', 1)
                                 ");
 
                             }
@@ -501,7 +501,7 @@ class ViewThread extends ForumServer {
                     }
 
                     // no edit if time limit reached
-                    if (!iMOD && (self::getEditTimelimit() > 0 && (TIME - self::getEditTimelimit()) > $post_data['post_datestamp'])) {
+                    if (!iMOD && (self::getEditTimelimit() > 0 && (time() - self::getEditTimelimit()) > $post_data['post_datestamp'])) {
                         redirect(FORUM."postify.php?post=edit&error=6&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$post_data['post_id']);
                     }
 

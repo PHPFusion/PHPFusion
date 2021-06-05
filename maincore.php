@@ -94,7 +94,7 @@ unset($db_host, $db_user, $db_pass);
 if (empty($settings)) {
     if (file_exists(BASEDIR.'install.php')) {
         if (file_exists(BASEDIR.'config.php')) {
-            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.TIME.'.php');
+            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.time().'.php');
         }
         redirect(BASEDIR.'install.php');
     }
@@ -265,7 +265,7 @@ if (iADMIN) {
     define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
-    $token_time = TIME;
+    $token_time = time();
     $algo = fusion_get_settings('password_algorithm');
     $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
     $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);

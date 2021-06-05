@@ -138,7 +138,7 @@ $weekdayslist = explode("|", $locale['weekdays']);
 
 $date_opts = [];
 foreach ($locale['dateformats'] as $dateformat) {
-    $date_opts[$dateformat] = showdate($dateformat, TIME);
+    $date_opts[$dateformat] = showdate($dateformat, time());
 }
 unset($dateformat);
 opentable($locale['time_settings']);
@@ -151,22 +151,22 @@ echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
 echo '<div>';
 echo '<span class="strong">'.$locale['458'].' ('.$locale['459'].')</span>';
-echo '<span class="pull-right">'.showdate($settings['longdate'], TIME, ['tz_override' => $settings['serveroffset']]).'</span>';
+echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['serveroffset']]).'</span>';
 echo '</div>';
 echo '<hr class="m-t-5 m-b-5">';
 echo '<div>';
 echo '<span class="strong">'.$locale['458'].' ('.$locale['460'].')</span>';
-echo '<span class="pull-right">'.(column_exists('users', 'user_timezone') ? showdate($settings['longdate'], TIME, ['tz_override' => fusion_get_userdata('user_timezone')]) : $locale['na']).'</span>';
+echo '<span class="pull-right">'.(column_exists('users', 'user_timezone') ? showdate($settings['longdate'], time(), ['tz_override' => fusion_get_userdata('user_timezone')]) : $locale['na']).'</span>';
 echo '</div>';
 echo '<hr class="m-t-5 m-b-5">';
 echo '<div>';
 echo '<span class="strong">'.$locale['458'].' ('.$locale['461'].')</span>';
-echo '<span class="pull-right">'.showdate($settings['longdate'], TIME, ['tz_override' => $settings['timeoffset']]).'</span>';
+echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['timeoffset']]).'</span>';
 echo '</div>';
 echo '<hr class="m-t-5 m-b-5">';
 echo '<div>';
 echo '<span class="strong">'.$locale['458'].' ('.$locale['466'].')</span>';
-echo '<span class="pull-right">'.showdate($settings['longdate'], TIME, ['tz_override' => $settings['default_timezone']]).'</span>';
+echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['default_timezone']]).'</span>';
 echo '</div>';
 closeside();
 

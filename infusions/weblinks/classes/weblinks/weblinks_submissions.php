@@ -80,7 +80,7 @@ class WeblinksSubmissions extends WeblinksServer {
                     $inputArray = [
                         'submit_type'      => 'l',
                         'submit_user'      => fusion_get_userdata('user_id'),
-                        'submit_datestamp' => TIME,
+                        'submit_datestamp' => time(),
                         'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');

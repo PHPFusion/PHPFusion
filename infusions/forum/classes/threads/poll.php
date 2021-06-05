@@ -452,7 +452,7 @@ class Poll {
                         // skips flood interval settings
                         self::$poll_info['openform'] = openform(
                             'poll_vote_form', 'post', '', [
-                                'token_time' => TIME - fusion_get_settings('flood_interval')
+                                'token_time' => time() - fusion_get_settings('flood_interval')
                             ]
                         );
 

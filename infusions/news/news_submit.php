@@ -56,7 +56,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
                         'news_image'           => $upload['image_name'],
                         'news_image_t1'        => $upload['thumb1_name'],
                         'news_image_t2'        => $upload['thumb2_name'],
-                        'news_image_datestamp' => TIME
+                        'news_image_datestamp' => time()
                     ];
 
                     $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
@@ -71,7 +71,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
             $inputArray = [
                 'submit_type'      => 'n',
                 'submit_user'      => fusion_get_userdata('user_id'),
-                'submit_datestamp' => TIME,
+                'submit_datestamp' => time(),
                 'submit_criteria'  => \Defender::encode($criteriaArray)
             ];
 

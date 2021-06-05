@@ -66,7 +66,7 @@ if (iMEMBER && $gll_settings['gallery_allow_submission'] && checkgroup($gll_sett
                 "submit_id"        => 0,
                 "submit_type"      => 'p',
                 "submit_user"      => fusion_get_userdata('user_id'),
-                "submit_datestamp" => TIME,
+                "submit_datestamp" => time(),
                 "submit_criteria"  => addslashes(serialize($criteriaArray))
             ];
             dbquery_insert(DB_SUBMISSIONS, $inputArray, "save");

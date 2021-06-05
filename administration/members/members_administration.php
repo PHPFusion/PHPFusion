@@ -56,8 +56,8 @@ class Members_Admin {
     public function __construct() {
 
         self::$settings = fusion_get_settings();
-        self::$time_overdue = TIME - (86400 * self::$settings['deactivation_period']);
-        self::$response_required = TIME + (86400 * self::$settings['deactivation_response']);
+        self::$time_overdue = time() - (86400 * self::$settings['deactivation_period']);
+        self::$response_required = time() + (86400 * self::$settings['deactivation_response']);
         self::$deactivation_period = self::$settings['deactivation_period'];
 
         /*

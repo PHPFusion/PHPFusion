@@ -409,3 +409,10 @@ function fusion_get_template($source_file) {
 
     return ob_get_clean();
 }
+
+/**
+ * Unnecessary constant.
+ *
+ * @deprecated use time()
+ */
+define("TIME", time());

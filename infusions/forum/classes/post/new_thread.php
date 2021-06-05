@@ -84,7 +84,7 @@ class NewThread extends ForumServer {
                         $pollData = [
                             'thread_id'         => 0,
                             'forum_poll_title'  => (!empty($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : ''),
-                            'forum_poll_start'  => TIME, // time poll started
+                            'forum_poll_start'  => time(), // time poll started
                             'forum_poll_length' => 2, // how many poll options we have
                             'forum_poll_votes'  => 0, // how many vote this poll has
                         ];
@@ -96,7 +96,7 @@ class NewThread extends ForumServer {
                             $pollData = [
                                 'thread_id'         => 0,
                                 'forum_poll_title'  => isset($_POST['forum_poll_title']) ? form_sanitizer($_POST['forum_poll_title'], '', 'forum_poll_title') : '',
-                                'forum_poll_start'  => TIME, // time poll started
+                                'forum_poll_start'  => time(), // time poll started
                                 'forum_poll_length' => count($option_data), // how many poll options we have
                                 'forum_poll_votes'  => 0, // how many vote this poll has
                             ];

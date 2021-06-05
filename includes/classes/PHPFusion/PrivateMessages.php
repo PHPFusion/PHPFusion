@@ -184,7 +184,7 @@ class PrivateMessages {
                                     'message_message'   => $message,
                                     'message_smileys'   => $smileys,
                                     'message_read'      => 0,
-                                    'message_datestamp' => TIME,
+                                    'message_datestamp' => time(),
                                     'message_folder'    => 0,
                                 ];
                                 dbquery_insert(DB_MESSAGES, $inputData, 'save');
@@ -232,7 +232,7 @@ class PrivateMessages {
                                         'message_message'   => $message,
                                         'message_smileys'   => $smileys,
                                         'message_read'      => 0,
-                                        'message_datestamp' => TIME,
+                                        'message_datestamp' => time(),
                                         'message_folder'    => 0,
                                     ];
                                     dbquery_insert(DB_MESSAGES, $inputData, 'save');

@@ -36,7 +36,7 @@ function flood_control($field, $table, $where, $debug = FALSE) {
     if ((!iSUPERADMIN && !iADMIN && (!defined('iMOD') || !iMOD)) || $debug) {
         $result = dbquery("SELECT MAX(".$field.") 'last_post' FROM ".$table." WHERE ".$where);
         if (dbrows($result)) {
-            $time = TIME;
+            $time = time();
             $data = dbarray($result);
             if (($time - $data['last_post']) < $settings['flood_interval']) {
                 $flood = (sprintf($locale['flood'], countdown($settings['flood_interval'] - $data['last_post'])));

@@ -21,19 +21,19 @@ $settings = fusion_get_settings();
 /**
  * Cron Job (6 minutes)
  */
-if (fusion_get_settings("cronjob_hour") < (TIME - 360)) {
-    $crontime = (TIME - 360);
+if (fusion_get_settings("cronjob_hour") < (time() - 360)) {
+    $crontime = (time() - 360);
     dbquery("DELETE FROM ".DB_FLOOD_CONTROL." WHERE flood_timestamp < $crontime");
-    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => TIME, ':name' => 'cronjob_hour']);
+    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => time(), ':name' => 'cronjob_hour']);
 }
 
 /**
  * Cron Job (24 hours)
  */
-if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
-    $new_time = TIME;
-    $user_datestamp = [':user_datestamp' => TIME - 86400];
-    $notify_datestamp = [':notify_datestamp' => TIME - 1209600];
+if (fusion_get_settings("cronjob_day") < (time() - 86400)) {
+    $new_time = time();
+    $user_datestamp = [':user_datestamp' => time() - 86400];
+    $notify_datestamp = [':notify_datestamp' => time() - 1209600];
     if (defined('FORUM_EXISTS')) {
         dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", $notify_datestamp);
     }
@@ -49,7 +49,7 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
 			LIMIT 10", [
             ':status'            => 3,
             ':action_time_start' => 0,
-            ':action_time_end'   => TIME
+            ':action_time_end'   => time()
         ]);
 
         while ($data = dbarray($result)) {
@@ -73,7 +73,7 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
 
     $usr_deactivate = dbcount("(user_id)", DB_USERS, "user_actiontime < :action_time_start AND user_actiontime!=:action_time_end AND user_status=:user_status",
         [
-            ':action_time_start' => TIME,
+            ':action_time_start' => time(),
             ':action_time_end'   => 0,
             ':user_status'       => 7
         ]
@@ -81,7 +81,7 @@ if (fusion_get_settings("cronjob_day") < (TIME - 86400)) {
 
     if ($usr_deactivate) {
         $deactivate_param = [
-            ':action_time_start' => TIME,
+            ':action_time_start' => time(),
             ':action_time_end'   => 0,
             ':status'            => 0,
         ];

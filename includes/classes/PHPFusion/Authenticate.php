@@ -136,7 +136,7 @@ class Authenticate {
         if (!$userCookie) {
             $cookiePath = COOKIE_PATH; // also allow infusions admin.
             $cookieName = COOKIE_ADMIN;
-            $cookieExpiration = TIME + 172800; // 48 hours
+            $cookieExpiration = time() + 172800; // 48 hours
         }
         $key = hash_hmac($algo, $userID.$cookieExpiration, $salt);
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);

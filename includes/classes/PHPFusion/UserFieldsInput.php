@@ -603,7 +603,7 @@ class UserFieldsInput {
             dbquery("INSERT INTO ".DB_NEW_USERS."
 					(user_code, user_name, user_email, user_datestamp, user_info)
 					VALUES
-					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".TIME."', '".$userInfo."')
+					('".$userCode."', '".$this->data['user_name']."', '".$this->data['user_email']."', '".time()."', '".$userInfo."')
 					");
 
         }

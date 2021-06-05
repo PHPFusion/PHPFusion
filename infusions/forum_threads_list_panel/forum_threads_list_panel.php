@@ -23,7 +23,7 @@ if (defined('FORUM_EXISTS')) {
     $inf_settings = get_settings('forum');
     $userdata = fusion_get_userdata();
     $locale = fusion_get_locale('', FORUM_LOCALE);
-    $lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
+    $lastvisited = defined('LASTVISITED') ? LASTVISITED : time();
 
     // $numofthreads = $inf_settings['numofthreads'];
     $numofthreads = 7;

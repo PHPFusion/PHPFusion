@@ -20,7 +20,7 @@ $locale = fusion_get_locale();
 $time_sql = '';
 if (!empty($_POST['filter_date'])) {
     $time_filter = form_sanitizer($_POST['filter_date'], '', 'filter_date');
-    $time_filter = (TIME - ((int) $time_filter * 24 * 3600));
+    $time_filter = (time() - ((int) $time_filter * 24 * 3600));
     $time_sql = "t.thread_lastpost < '$time_filter' AND ";
 }
 $opts = [

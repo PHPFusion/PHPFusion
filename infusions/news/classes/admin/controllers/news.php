@@ -72,7 +72,7 @@ class NewsAdmin extends NewsAdminModel {
                 'news_news'                => form_sanitizer($news_news, "", "news_news"),
                 'news_extended'            => form_sanitizer($news_extended, "", "news_extended"),
                 'news_keywords'            => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
-                'news_datestamp'           => form_sanitizer($_POST['news_datestamp'], TIME, 'news_datestamp'),
+                'news_datestamp'           => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
                 'news_start'               => form_sanitizer($_POST['news_start'], 0, 'news_start'),
                 'news_end'                 => form_sanitizer($_POST['news_end'], 0, 'news_end'),
                 'news_visibility'          => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
@@ -114,7 +114,7 @@ class NewsAdmin extends NewsAdminModel {
                                     'news_image'           => $upload['image_name'],
                                     'news_image_t1'        => $upload['thumb1_name'],
                                     'news_image_t2'        => $upload['thumb2_name'],
-                                    'news_image_datestamp' => TIME
+                                    'news_image_datestamp' => time()
                                 ];
                                 $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
                                 $this->news_data['news_image_full_default'] = $photo_id;
@@ -522,7 +522,7 @@ class NewsAdmin extends NewsAdminModel {
                             'news_image'           => $current_upload['image_name'],
                             'news_image_t1'        => $current_upload['thumb1_name'],
                             'news_image_t2'        => $current_upload['thumb2_name'],
-                            'news_image_datestamp' => TIME
+                            'news_image_datestamp' => time()
                         ];
                         dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
                         $success_upload++;

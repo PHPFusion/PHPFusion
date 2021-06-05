@@ -24,7 +24,7 @@ class FaqAdminModel extends FaqServer {
         'faq_cat_id'     => 0,
         'faq_question'   => '',
         'faq_answer'     => '',
-        'faq_datestamp'  => TIME,
+        'faq_datestamp'  => time(),
         'faq_name'       => 0,
         'faq_breaks'     => 'n',
         'faq_visibility' => 0,

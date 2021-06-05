@@ -38,7 +38,7 @@ class NewsAdminModel extends NewsServer {
         'news_draft'               => 0,
         'news_sticky'              => 0,
         'news_news'                => '',
-        'news_datestamp'           => TIME,
+        'news_datestamp'           => time(),
         'news_extended'            => '',
         'news_keywords'            => '',
         'news_breaks'              => 'n',
@@ -68,7 +68,7 @@ class NewsAdminModel extends NewsServer {
         'news_image_name'      => '',
         'news_image_thumb_t1'  => '',
         'news_image_thumb_t2'  => '',
-        'news_image_datestamp' => TIME,
+        'news_image_datestamp' => time(),
     ];
 
     /**

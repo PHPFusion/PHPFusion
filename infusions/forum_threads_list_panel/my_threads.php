@@ -30,7 +30,7 @@ $userdata = fusion_get_userdata();
 
 add_to_title($locale['global_041']);
 
-$lastvisited = defined('LASTVISITED') ? LASTVISITED : TIME;
+$lastvisited = defined('LASTVISITED') ? LASTVISITED : time();
 
 $rows = dbrows(dbquery("SELECT tt.thread_id FROM ".DB_FORUM_THREADS." tt INNER JOIN ".DB_FORUMS." tf ON tt.forum_id = tf.forum_id
     ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('tf.forum_access')." AND tt.thread_author = '".$userdata['user_id']."' AND tt.thread_hidden='0'"));

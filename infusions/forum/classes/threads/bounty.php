@@ -67,7 +67,7 @@ class Forum_Bounty extends ForumServer {
                             'thread_bounty'             => $bounty_points,
                             'thread_bounty_user'        => fusion_get_userdata('user_id'),
                             'thread_bounty_description' => $bounty_description,
-                            'thread_bounty_start'       => TIME,
+                            'thread_bounty_start'       => time(),
                         ];
                         dbquery_insert(DB_FORUM_THREADS, $bounty_arr, 'update');
                     }
@@ -183,7 +183,7 @@ class Forum_Bounty extends ForumServer {
 
         // Cronjob on this thread
         self::$bounty_end = self::$data['thread_bounty_start'] + (7 * 24 * 3600);
-        if (TIME > self::$bounty_end) {
+        if (time() > self::$bounty_end) {
             if (self::$data['thread_bounty']) { // have a bounty
                 // find the highest post
                 $result = dbquery("

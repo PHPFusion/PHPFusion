@@ -96,7 +96,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                                         'news_image'           => $upload['image_name'],
                                         'news_image_t1'        => $upload['thumb1_name'],
                                         'news_image_t2'        => $upload['thumb2_name'],
-                                        'news_image_datestamp' => TIME
+                                        'news_image_datestamp' => time()
                                     ];
                                     $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
                                     $this->news_data['news_image_full_default'] = $photo_id;
@@ -545,7 +545,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                             'news_image'           => $current_upload['image_name'],
                             'news_image_t1'        => $current_upload['thumb1_name'],
                             'news_image_t2'        => $current_upload['thumb2_name'],
-                            'news_image_datestamp' => TIME
+                            'news_image_datestamp' => time()
                         ];
                         dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
                         $success_upload++;

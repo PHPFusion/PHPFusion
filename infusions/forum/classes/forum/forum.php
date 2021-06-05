@@ -69,7 +69,7 @@ class Forum extends ForumServer {
             'parent_id'        => 0,
             'forum_page_link'  => [],
             'new_thread_link'  => '',
-            'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : TIME,
+            'lastvisited'      => isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit']) ? $userdata['user_lastvisit'] : time(),
             'posts_per_page'   => $forum_settings['posts_per_page'],
             'threads_per_page' => $forum_settings['threads_per_page'],
             'forum_index'      => dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat', (multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('forum_access')), // waste resources here.
@@ -562,7 +562,7 @@ class Forum extends ForumServer {
 
                 // Calculate Forum New Status
                 $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
-                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : TIME;
+                $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
                 if ($data['thread_lastpost'] > $last_visited) {
                     if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\\.|{$forum_match}$)", $userdata['user_threads']))) {
                         $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";

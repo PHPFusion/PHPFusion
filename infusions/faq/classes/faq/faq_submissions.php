@@ -68,7 +68,7 @@ class FaqSubmissions extends FaqServer {
                     $inputArray = [
                         'submit_type'      => 'q',
                         'submit_user'      => fusion_get_userdata('user_id'),
-                        'submit_datestamp' => TIME,
+                        'submit_datestamp' => time(),
                         'submit_criteria'  => \Defender::encode($criteriaArray)
                     ];
                     dbquery_insert(DB_SUBMISSIONS, $inputArray, 'save');

@@ -34,7 +34,6 @@ define("USER_IP", $_SERVER['REMOTE_ADDR']);
 // Define script start time
 define("START_TIME", microtime(TRUE));
 define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
-define("TIME", time());
 
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;

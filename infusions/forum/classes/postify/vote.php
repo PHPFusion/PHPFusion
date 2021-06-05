@@ -63,8 +63,8 @@ class Postify_Vote extends Forum_Postify {
                     'vote_user'      => $user_id,
                     'voter_id'       => $user_id,
                     'user_id'        => $thread_data['post_author'],
-                    'vote_datestamp' => TIME,
-                    'datestamp'      => TIME,
+                    'vote_datestamp' => time(),
+                    'datestamp'      => time(),
                 ];
 
                 if (iMOD || (checkgroup($thread_data['forum_post_ratings']) &&

@@ -30,7 +30,7 @@ class ArticlesAdminModel extends ArticlesServer {
         'article_draft'          => 0,
         'article_snippet'        => '',
         'article_article'        => '',
-        'article_datestamp'      => TIME,
+        'article_datestamp'      => time(),
         'article_keywords'       => '',
         'article_breaks'         => 'n',
         'article_allow_comments' => 1,

@@ -156,7 +156,7 @@ abstract class News extends NewsServer {
      */
     public function get_NewsItem($filter = []) {
 
-        $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
+        $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".time()."') AND (news_end='0'||news_end>='".time()."') AND news_draft='0'");
         if ($info['news_total_rows']) {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
             $result = dbquery(self::get_NewsQuery($filter));
@@ -200,8 +200,8 @@ abstract class News extends NewsServer {
             LEFT JOIN ".DB_NEWS_IMAGES." AS ni ON ni.news_id=n.news_id AND ".(!empty($_GET['readmore']) ? "n.news_image_full_default=ni.news_image_id" : "n.news_image_front_default=ni.news_image_id")."
             LEFT JOIN ".DB_USERS." AS nu ON n.news_name=nu.user_id
             LEFT JOIN ".DB_NEWS_CATS." AS nc ON n.news_cat=nc.news_cat_id
-            ".(multilang_table("NS") ? "WHERE ".in_group('news_language', LANGUAGE)." AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
-            AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'
+            ".(multilang_table("NS") ? "WHERE ".in_group('news_language', LANGUAGE)." AND " : "WHERE ").groupaccess('news_visibility')." AND (news_start='0'||news_start<='".time()."')
+            AND (news_end='0'||news_end>='".time()."') AND news_draft='0'
             ".(!empty($filters['condition']) ? "AND ".$filters['condition'] : '')."
             GROUP BY ".(!empty($filters['group_by']) ? $filters['group_by'] : 'news_id')."
             ORDER BY ".(!empty($filters['order']) ? $filters['order'].',' : '')." news_sticky DESC, ".$cat_filter['order']."
@@ -543,7 +543,7 @@ abstract class News extends NewsServer {
 
             $info['news_cat_language'] = $data['news_cat_language'];
 
-            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<= '".TIME."') AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
+            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='".$data['news_cat_id']."' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<= '".time()."') AND (news_end='0'||news_end>='".time()."') AND news_draft='0'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
 
@@ -563,8 +563,8 @@ abstract class News extends NewsServer {
             //}
         } else if ($_GET['cat_id'] == 0) {
 
-            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".TIME."')
-            AND (news_end='0'||news_end>='".TIME."') AND news_draft='0'");
+            $max_news_rows = dbcount("(news_id)", DB_NEWS, "news_cat='0' AND ".groupaccess('news_visibility')." AND (news_start='0'||news_start<='".time()."')
+            AND (news_end='0'||news_end>='".time()."') AND news_draft='0'");
 
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_news_rows ? intval($_GET['rowstart']) : 0;
 

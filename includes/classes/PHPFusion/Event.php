@@ -118,7 +118,7 @@ class Event {
             // now i check for the tables and fetch again the unique ones. i need to compare and see if that is already fetched.
         } else if (!dbcount('(notice_id)', DB_USER_NOTIFY, 'notice_event=:event_name AND notice_to=:my_id AND notice_datestamp > :expiry_time',
             [
-                ':expiry_time' => TIME - (60 * self::$threshold_minute),
+                ':expiry_time' => time() - (60 * self::$threshold_minute),
                 ':my_id'       => self::get_UserID(),
                 ':event_name'  => $this->event_name,
             ])
@@ -136,7 +136,7 @@ class Event {
             'notice_from'      => $from,
             'notice_message'   => $message,
             'notice_event'     => $event_type,
-            'notice_timestamp' => TIME,
+            'notice_timestamp' => time(),
             'notice_datestamp' => $time,
             'notice_read'      => 0,
         ];

@@ -42,7 +42,7 @@ require_once INCLUDES."theme_functions_include.php";
 if (iMEMBER) {
     $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",
         [
-            ':time'    => TIME,
+            ':time'    => time(),
             ':ip'      => USER_IP,
             ':ip_type' => USER_IP_TYPE,
             ':user_id' => fusion_get_userdata('user_id')

@@ -218,12 +218,12 @@ class Token extends \Defender {
 
         $algo = !empty($settings['password_algorithm']) ? $settings['password_algorithm'] : 'sha256';
 
-        $key = $user_id.TIME.$form_id.$secret_key;
+        $key = $user_id.time().$form_id.$secret_key;
 
         $salt = md5(isset($userdata['user_salt']) ? $userdata['user_salt'].$secret_key_salt : $secret_key_salt);
 
         // generate a new token
-        $token = $user_id.'-'.TIME.'-'.hash_hmac($algo, $key, $salt);
+        $token = $user_id.'-'.time().'-'.hash_hmac($algo, $key, $salt);
 
         $page_file = self::pageHash();
 

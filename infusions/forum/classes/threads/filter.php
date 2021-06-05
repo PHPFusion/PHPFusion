@@ -75,7 +75,7 @@ class ThreadFilter {
         if ($time) {
             if ($time !== 'today') {
                 $start_time = intval($time_array[$time]);
-                $timeCol = "AND (t.thread_lastpost BETWEEN '$start_time' AND '".TIME."')";
+                $timeCol = "AND (t.thread_lastpost BETWEEN '$start_time' AND '".time()."')";
             } else {
                 $timeCol = "AND (t.thread_lastpost >= ".intval($time_array[$time]).")";
             }

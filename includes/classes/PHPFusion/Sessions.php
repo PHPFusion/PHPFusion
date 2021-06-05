@@ -184,7 +184,7 @@ class Sessions {
     public function _write($name, $data) {
         $parameters = [
             ':name'   => $name,
-            ':access' => TIME,
+            ':access' => time(),
             ':data'   => $data,
         ];
         $query = "REPLACE INTO ".DB_SESSIONS." VALUES (:name, :access, :data)";
@@ -242,7 +242,7 @@ class Sessions {
      * @return mixed
      */
     public function _clean($max) {
-        $old = TIME - $max;
+        $old = time() - $max;
         $parameters = [
             ':old' => $old,
         ];

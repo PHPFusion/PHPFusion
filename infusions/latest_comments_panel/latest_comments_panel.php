@@ -65,8 +65,8 @@ function latest_comments_get_item_title($type, $item_id) {
             case 'N':
                 $query = 'SELECT ns.news_subject as title
                 FROM '.DB_NEWS.' AS ns
-                WHERE ns.news_id=:id AND (ns.news_start=0 OR ns.news_start<="'.TIME.'")
-                AND (ns.news_end=0 OR ns.news_end>="'.TIME.'") AND ns.news_draft=0
+                WHERE ns.news_id=:id AND (ns.news_start=0 OR ns.news_start<="'.time().'")
+                AND (ns.news_end=0 OR ns.news_end>="'.time().'") AND ns.news_draft=0
                 AND '.groupaccess('ns.news_visibility').'
                 '.(multilang_table('NS') ? 'AND '.in_group('ns.news_language', LANGUAGE) : '');
                 break;

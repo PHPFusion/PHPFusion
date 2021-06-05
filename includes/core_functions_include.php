@@ -667,7 +667,7 @@ function displaysmileys($textarea, $form = "inputform") {
  * Tag a user by simply just posting his name like @Nick and if found, returns a tooltip.
  *
  * @param string $user_name @Nick
- * @param string $tooltip   Additional info e.g. ($userdata['user_lastvisit'] - 120 < TIME ? 'Online' : 'Offline').
+ * @param string $tooltip   Additional info e.g. ($userdata['user_lastvisit'] - 120 < time() ? 'Online' : 'Offline').
  *
  * @return string Tooltip with info.
  */
@@ -2088,10 +2088,10 @@ function set_language($lang) {
             if ($rows != 0) {
                 dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
             } else {
-                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".TIME."');");
+                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
             }
             // Sanitize guest sessions occasionally
-            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(TIME - (86400 * 60))."'");
+            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time() - (86400 * 60))."'");
         }
     }
 }

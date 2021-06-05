@@ -44,7 +44,7 @@ if (defined('GALLERY_EXISTS')) {
         ];
         $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
-        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND photo_datestamp>='.(TIME - Search_Engine::get_param('datelimit').' OR album_datestamp>='.(TIME - Search_Engine::get_param('datelimit'))).' ' : '');
+        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND photo_datestamp>='.(time() - Search_Engine::get_param('datelimit').' OR album_datestamp>='.(time() - Search_Engine::get_param('datelimit'))).' ' : '');
 
         switch (Search_Engine::get_param('fields')) {
             case 2:

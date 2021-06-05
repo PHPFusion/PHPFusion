@@ -356,11 +356,11 @@ class CoreSettings {
                 ],
                 [
                     'settings_name'  => 'cronjob_day',
-                    'settings_value' => TIME
+                    'settings_value' => time()
                 ],
                 [
                     'settings_name'  => 'cronjob_hour',
-                    'settings_value' => TIME
+                    'settings_value' => time()
                 ],
                 [
                     'settings_name'  => 'flood_autoban',

@@ -57,7 +57,7 @@ class ForumThreads extends ForumServer {
         $forum_settings = ForumServer::get_forum_settings();
         $userdata = fusion_get_userdata();
         $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
-        $lastVisited = defined('LASTVISITED') ? LASTVISITED : TIME;
+        $lastVisited = defined('LASTVISITED') ? LASTVISITED : time();
 
         $join = '';
         if (isset($_GET['type']) && $_GET['type'] == 'poll') {
