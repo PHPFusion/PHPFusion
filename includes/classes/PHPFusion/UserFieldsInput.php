@@ -531,7 +531,7 @@ class UserFieldsInput {
             }
         }
 
-        $this->data['user_hide_email'] = check_post('user_hide_email');
+        $this->data['user_hide_email'] = post('user_hide_email');
 
     }
 
