@@ -405,34 +405,7 @@ class AutoUpdate extends Installer\Infusions {
 
             foreach ($enabled_languages as $language) {
                 if ($language !== 'English') {
-                    continue;
-                }
-
-                $lang_pack_zip = $this->temp_dir.$language.'.zip';
-
-                if (!is_file($lang_pack_zip)) {
-                    if (!$this->downloadZip($this->lang_url.$language.'.zip', $lang_pack_zip)) {
-                        $this->setError(sprintf('Failed to download pack from %s to %s!', $this->lang_url.$language, $lang_pack_zip));
-                        return FALSE;
-                    }
-                }
-
-                $dest = $this->temp_dir.$language.'/';
-
-                if (is_file($lang_pack_zip)) {
-                    $this->extractFiles($lang_pack_zip, $dest);
-                }
-
-                if (is_dir($dest)) {
-                    $this->copyFiles($dest, $this->install_dir);
-                }
-
-                if (!unlink($lang_pack_zip)) {
-                    $this->setError(sprintf('Could not delete lang pack "%s"!', $lang_pack_zip));
-                }
-
-                if (is_dir($dest)) {
-                    rrmdir($dest);
+                    $this->downloadLanguage($language);
                 }
             }
 
@@ -440,6 +413,46 @@ class AutoUpdate extends Installer\Infusions {
         }
 
         return NULL;
+    }
+
+    /**
+     * Download language
+     *
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function downloadLanguage($language) {
+        $this->setMessage(sprintf($this->locale['U_018'], $language));
+
+        $lang_pack_zip = $this->temp_dir.$language.'.zip';
+
+        if (!is_file($lang_pack_zip)) {
+            if (!$this->downloadZip($this->lang_url.$language.'.zip', $lang_pack_zip)) {
+                $this->setError(sprintf('Failed to download pack from %s to %s!', $this->lang_url.$language, $lang_pack_zip));
+                return FALSE;
+            }
+        }
+
+        $dest = $this->temp_dir.$language.'/';
+
+        if (is_file($lang_pack_zip)) {
+            $this->extractFiles($lang_pack_zip, $dest);
+        }
+
+        if (is_dir($dest)) {
+            $this->copyFiles($dest, $this->install_dir);
+        }
+
+        if (!unlink($lang_pack_zip)) {
+            $this->setError(sprintf('Could not delete lang pack "%s"!', $lang_pack_zip));
+        }
+
+        if (is_dir($dest)) {
+            rrmdir($dest);
+        }
+
+        return TRUE;
     }
 
     /**
