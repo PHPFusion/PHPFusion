@@ -40,7 +40,6 @@ body {
 
 .content-wrapper,
 .main-footer {
-    -webkit-transition: -webkit-transform 0.3s ease-in-out, margin 0.3s ease-in-out;
     -webkit-transition: margin 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
     transition: margin 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out, margin 0.3s ease-in-out;
@@ -138,8 +137,6 @@ body {
     padding: 15px;
     margin-right: auto;
     margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
 }
 
 h1,
@@ -283,7 +280,6 @@ a:focus {
 }
 
 .select2-search .select2-input.select2-active {
-    background: #FFF url("../../../images/loader.svg") no-repeat 100% !important;
     background: url("../../../images/loader.svg") no-repeat 100%, -webkit-gradient(linear, left top, left bottom, color-stop(85%, #FFF), color-stop(99%, #EEE)) !important;
     background: url("../../../images/loader.svg") no-repeat 100%, linear-gradient(top, #FFF 85%, #EEE 99%) !important;
 }
@@ -628,7 +624,6 @@ a:focus {
     min-height: 100%;
     width: 230px;
     z-index: 810;
-    -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
     -webkit-transition: width 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
     transition: width 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
@@ -764,10 +759,6 @@ a:focus {
 .sidebar-menu li > a > .pull-right-container > .fa-angle-left {
     padding: 0;
     margin-right: 10px;
-    -webkit-transition: transform 0.5s ease;
-    -webkit-transition: -webkit-transform 0.5s ease;
-    transition: -webkit-transform 0.5s ease;
-    transition: transform 0.5s ease;
     transition: transform 0.5s ease, -webkit-transform 0.5s ease;
 }
 
@@ -2653,12 +2644,15 @@ input[type="checkbox"]:checked:before {
 
 .display-flex-row {
     display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
     flex-direction: row;
     gap: 5px;
     -webkit-box-align: center;
+    -webkit-align-items: center;
     align-items: center;
 }
 
@@ -4126,7 +4120,7 @@ table.text-center th {
  * -----------
  */
 .skin-black .main-header {
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .skin-black .main-header .navbar-toggle {
@@ -4305,7 +4299,7 @@ table.text-center th {
  * -----------
  */
 .skin-black-light .main-header {
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .skin-black-light .main-header .navbar-toggle {
@@ -5855,10 +5849,12 @@ table.text-center th {
 .dataTables_paginate.paging_simple_numbers,
 .pagination {
     display: -webkit-box;
+    display: -webkit-flex;
     display: flex;
     -webkit-align-self: flex-end;
     align-self: flex-end;
     -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
     justify-content: flex-end;
 }
 

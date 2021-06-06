@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace AdminLTE;
 
-use \PHPFusion\Admins;
+use PHPFusion\Admins;
 
 class AdminPanel {
     protected static $instance = NULL;
@@ -285,7 +285,7 @@ class AdminPanel {
                             $html .= '</span>';
                         $html .= '</a>';
                         $html .= '<ul class="treeview-menu">';
-                            foreach ($admin_pages[$i] as $key => $data) {
+                            foreach ($admin_pages[$i] as $data) {
                                 if (checkrights($data['admin_rights'])) {
                                     $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
 

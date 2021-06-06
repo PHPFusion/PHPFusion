@@ -6,7 +6,7 @@
 +--------------------------------------------------------+
 | Filename: acp_theme.php
 | Author: RobiNN
-| Version: 1.4.1
+| Version: 1.5.2
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,11 +26,11 @@ if (!defined('ALTE_LOCALE')) {
     }
 }
 
-define('ADMINLTE', THEMES.'admin_themes/AdminLTE/');
+const ADMINLTE = THEMES.'admin_themes/AdminLTE/';
 require_once ADMINLTE.'acp_autoloader.php';
 
-define('BOOTSTRAP', TRUE);
-define('FONTAWESOME', TRUE);
+const BOOTSTRAP = TRUE;
+const FONTAWESOME = TRUE;
 
 if (!check_admin_pass('')) {
     define('THEME_BODY', '<body class="hold-transition lockscreen">');
