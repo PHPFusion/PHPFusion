@@ -38,12 +38,12 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
     die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
 
+require_once INCLUDES."theme_functions_include.php";
+
 // for compatibility
 if (!defined('THEME_BULLET')) {
     define('THEME_BULLET', '&middot;');
 }
-
-require_once INCLUDES."theme_functions_include.php";
 
 if (iMEMBER) {
     $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",

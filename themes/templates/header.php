@@ -40,14 +40,15 @@ require_once INCLUDES."breadcrumbs.php";
 if (file_exists(INCLUDES."header_includes.php")) {
     require_once INCLUDES."header_includes.php";
 }
+
 require_once THEME."theme.php";
+
+require_once INCLUDES."theme_functions_include.php";
 
 // for compatibility
 if (!defined('THEME_BULLET')) {
     define('THEME_BULLET', '&middot;');
 }
-
-require_once INCLUDES."theme_functions_include.php";
 
 $o_param = [
     ':user_id'   => (iMEMBER ? $userdata['user_id'] : 0),
