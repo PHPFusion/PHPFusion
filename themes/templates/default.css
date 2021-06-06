@@ -1338,29 +1338,13 @@ tr:hover > td .tbl_actions {
     border-color: #2185D0;
 }
 
-#site-links {
-    list-style: none;
-    min-height: 20px;
-    height: auto !important;
-}
-
-#site-links li {
-    display: block;
-    margin: 30px;
-    padding: 10px;
-}
-
-#site-links li img.handle {
-    cursor: ns-resize;
+.floatfix {
+    overflow: hidden;
 }
 
 .state-highlight {
     background: #FFC;
     height: 20px;
-}
-
-.floatfix {
-    overflow: hidden;
 }
 
 #panel-side1,
