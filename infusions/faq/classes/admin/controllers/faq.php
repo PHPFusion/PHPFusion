@@ -118,6 +118,19 @@ class FaqAdmin extends FaqAdminModel {
      * Displays Faq Form
      */
     private function display_faq_form() {
+        $default_data = [
+            'faq_id'         => 0,
+            'faq_cat_id'     => 0,
+            'faq_question'   => '',
+            'faq_answer'     => '',
+            'faq_datestamp'  => time(),
+            'faq_name'       => 0,
+            'faq_breaks'     => 'n',
+            'faq_visibility' => 0,
+            'faq_status'     => 1,
+            'faq_language'   => LANGUAGE
+        ];
+
         // Delete
         self::execute_Delete();
 
@@ -141,7 +154,7 @@ class FaqAdmin extends FaqAdminModel {
                 redirect(FUSION_SELF.fusion_get_aidlink());
             }
         } else {
-            $this->faq_data = $this->default_data;
+            $this->faq_data = $default_data;
             $this->faq_data['faq_breaks'] = (fusion_get_settings('tinymce_enabled') ? 'n' : 'y');
         }
         self::faqContent_form();

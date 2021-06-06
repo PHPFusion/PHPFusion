@@ -57,21 +57,6 @@ class NewsAdminModel extends NewsServer {
     ];
 
     /**
-     * News Gallery Table
-     *
-     * @var array
-     */
-    protected $default_image_data = [
-        'news_image_id'        => 0,
-        'news_id'              => '',
-        'news_image_user'      => 0,
-        'news_image_name'      => '',
-        'news_image_thumb_t1'  => '',
-        'news_image_thumb_t2'  => '',
-        'news_image_datestamp' => time(),
-    ];
-
-    /**
      * Get the admin locale
      *
      * @return array|null

@@ -21,24 +21,6 @@ class WeblinksAdminModel extends WeblinksServer {
 
     private static $admin_locale = [];
 
-    /**
-     * Articles Table
-     *
-     * @var array
-     */
-    protected $default_weblink_data = [
-        'weblink_id'          => 0,
-        'weblink_name'        => '',
-        'weblink_description' => '',
-        'weblink_url'         => '',
-        'weblink_cat'         => 0,
-        'weblink_datestamp'   => 0,
-        'weblink_visibility'  => 0,
-        'weblink_status'      => 0,
-        'weblink_count'       => 0,
-        'weblink_language'    => LANGUAGE,
-    ];
-
     public static function get_WeblinkAdminLocale() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE."English/admin/settings.php";

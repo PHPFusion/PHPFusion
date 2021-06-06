@@ -52,6 +52,22 @@ class ArticlesAdmin extends ArticlesAdminModel {
      * Displays Articles Form
      */
     private function display_article_form() {
+        $default_article_data = [
+            'article_id'             => 0,
+            'article_draft'          => 0,
+            'article_snippet'        => '',
+            'article_article'        => '',
+            'article_datestamp'      => time(),
+            'article_keywords'       => '',
+            'article_breaks'         => 'n',
+            'article_allow_comments' => 1,
+            'article_allow_ratings'  => 1,
+            'article_language'       => LANGUAGE,
+            'article_visibility'     => 0,
+            'article_subject'        => '',
+            'article_cat'            => 0
+        ];
+
         // Delete Article
         self::execute_ArticlesDelete();
 
@@ -71,7 +87,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         // Data
-        $this->article_data += $this->default_article_data;
+        $this->article_data += $default_article_data;
 
         self::articleContent_form();
     }

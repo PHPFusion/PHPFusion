@@ -50,6 +50,18 @@ class WeblinksAdmin extends WeblinksAdminModel {
      * Displays Weblinks Form
      */
     private function display_weblinks_form() {
+        $default_weblink_data = [
+            'weblink_id'          => 0,
+            'weblink_name'        => '',
+            'weblink_description' => '',
+            'weblink_url'         => '',
+            'weblink_cat'         => 0,
+            'weblink_datestamp'   => time(),
+            'weblink_visibility'  => 0,
+            'weblink_status'      => 0,
+            'weblink_count'       => 0,
+            'weblink_language'    => LANGUAGE,
+        ];
 
         // Delete Weblink
         self::execute_Delete();
@@ -72,7 +84,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         }
 
         // Data
-        $this->weblink_data += $this->default_weblink_data;
+        $this->weblink_data += $default_weblink_data;
         self::weblinkContent_form();
     }
 
