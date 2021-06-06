@@ -41,7 +41,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         }
 
         // Handle Tabs
-        if (!empty($_GET['ref']) || isset($_GET['submit_id'])) {
+        if (check_get('ref') || get('submit_id', FILTER_VALIDATE_INT)) {
             $master_title['title'][] = $locale['back'];
             $master_title['id'][] = "back";
             $master_title['icon'][] = "fa fa-fw fa-arrow-left";

@@ -39,8 +39,7 @@ class WeblinksAdmin extends WeblinksAdminModel {
         $this->locale = fusion_get_locale("", WEBLINK_ADMIN_LOCALE);
         $this->weblinksSettings = self::get_weblink_settings();
 
-        $ref = get('ref');
-        if (!empty($ref) && $ref == "weblinkform") {
+        if (check_get('ref') && get('ref') == "weblinkform") {
             $this->display_weblinks_form();
         } else {
             $this->display_weblinks_listing();

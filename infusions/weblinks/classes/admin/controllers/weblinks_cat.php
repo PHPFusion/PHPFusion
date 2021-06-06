@@ -34,13 +34,11 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         $this->locale = self::get_WeblinkAdminLocale();
 
         // Cancel Form
-        //$cancel = check_get('cancel');
         if (check_get('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=weblinks_category");
         }
 
-        $ref = get('ref');
-        if (!empty($ref) && $ref == "weblink_cat_form") {
+        if (check_get('ref') && get('ref') == "weblink_cat_form") {
             $this->display_weblinks_cat_form();
         } else {
             $this->display_weblinks_cat_listing();
@@ -151,9 +149,9 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         ], DB_WEBLINK_CATS, "weblink_cat_name", "weblink_cat_id", "weblink_cat_parent");
         echo form_textarea('weblink_cat_description', $this->locale['WLS_0254'], $data['weblink_cat_description'], [
             'autosize'  => TRUE,
-            'type'      => 'bbcode',
+            'bbcode'    => TRUE,
             'form_name' => 'catform',
-            'preview'   => TRUE,
+            'preview'   => TRUE
         ]);
         echo "</div>";
         //<!-- Right Column -->
