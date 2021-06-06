@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-define("ADMIN_PANEL", TRUE);
+const ADMIN_PANEL = TRUE;
 
 $settings = fusion_get_settings();
 $userdata = fusion_get_userdata();
@@ -27,16 +27,22 @@ if ($settings['maintenance'] == "1" && ((iMEMBER && $settings['maintenance_level
     redirect(BASEDIR."maintenance.php");
 }
 
+require_once INCLUDES."breadcrumbs.php";
+if (file_exists(INCLUDES."header_includes.php")) {
+    require_once INCLUDES."header_includes.php";
+}
+
 if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exists(THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php")) {
     require_once THEMES."admin_themes/".$settings['admin_theme']."/acp_theme.php";
 } else {
     die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
 
-require_once INCLUDES."breadcrumbs.php";
-if (file_exists(INCLUDES."header_includes.php")) {
-    require_once INCLUDES."header_includes.php";
+// for compatibility
+if (!defined('THEME_BULLET')) {
+    define('THEME_BULLET', '&middot;');
 }
+
 require_once INCLUDES."theme_functions_include.php";
 
 if (iMEMBER) {
@@ -57,7 +63,7 @@ ob_start();
 
 @list($title) = dbarraynum(dbquery("SELECT admin_title FROM ".DB_ADMIN." WHERE admin_link=:base_url", [':base_url' => FUSION_SELF]));
 
-set_title($locale['global_123'].$locale['global_201'].($title ? $title : ''));
+set_title($locale['global_123'].$locale['global_201'].(!empty($title) ? $title : ''));
 // If the user is not logged in as admin then don't parse the administration page
 // otherwise it could result in bypass of the admin password and one could do
 // changes to the system settings without even being logged into Admin Panel.

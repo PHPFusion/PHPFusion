@@ -41,6 +41,12 @@ if (file_exists(INCLUDES."header_includes.php")) {
     require_once INCLUDES."header_includes.php";
 }
 require_once THEME."theme.php";
+
+// for compatibility
+if (!defined('THEME_BULLET')) {
+    define('THEME_BULLET', '&middot;');
+}
+
 require_once INCLUDES."theme_functions_include.php";
 
 $o_param = [
