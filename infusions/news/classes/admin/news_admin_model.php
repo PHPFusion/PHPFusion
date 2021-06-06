@@ -38,7 +38,7 @@ class NewsAdminModel extends NewsServer {
         'news_draft'               => 0,
         'news_sticky'              => 0,
         'news_news'                => '',
-        'news_datestamp'           => time(),
+        'news_datestamp'           => 0,
         'news_extended'            => '',
         'news_keywords'            => '',
         'news_breaks'              => 'n',

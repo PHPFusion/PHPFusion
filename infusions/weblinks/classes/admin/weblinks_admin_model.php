@@ -32,7 +32,7 @@ class WeblinksAdminModel extends WeblinksServer {
         'weblink_description' => '',
         'weblink_url'         => '',
         'weblink_cat'         => 0,
-        'weblink_datestamp'   => time(),
+        'weblink_datestamp'   => 0,
         'weblink_visibility'  => 0,
         'weblink_status'      => 0,
         'weblink_count'       => 0,
