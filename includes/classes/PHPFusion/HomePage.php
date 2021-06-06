@@ -54,7 +54,8 @@ class HomePage {
                             $data['data'][$item_key] += [
                                 'author' => $profile,
                                 'meta'   => $locale['home_0105'].$profile.' '.$date.$locale['home_0106'].$cat,
-                                'date'   => $date
+                                'date'   => $date,
+                                'cat'    => !empty($item['cat_id']) ? $cat : $locale['home_0102']
                             ];
                         }
                     }
