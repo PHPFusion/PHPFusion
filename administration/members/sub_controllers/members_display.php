@@ -293,7 +293,7 @@ class Members_Display extends Members_Admin {
         $detail_span = count($selected_fields) + 1;
         $table_head = "<tr><th class='min'></th><th colspan='4' class='text-center'>".self::$locale['ME_408']."</th><th colspan='$detail_span' class='text-center'>".self::$locale['ME_409']."</th></tr>";
 
-        $table_subheader = "<th></th><th class='col-xs-2'>".self::$locale['ME_410']."</th><th>".self::$locale['actions']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th>".self::$locale['ME_427']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
+        $table_subheader = "<th></th><th>".self::$locale['ME_410']."</th><th>".self::$locale['actions']."</th><th class='min'>".self::$locale['ME_411']."</th>\n<th>".self::$locale['ME_427']."</th>\n<th class='min'>".self::$locale['ME_412']."</th>";
 
         foreach ($selected_fields as $column) {
             if (!empty($tLocale[$column])) {
@@ -326,13 +326,11 @@ class Members_Display extends Members_Admin {
         $html = openform('member_frm', 'post', FUSION_SELF.fusion_get_aidlink(), ['class' => 'form-inline']);
         $html .= form_hidden('aid', '', iAUTH);
 
-        //$table_id = fusion_table("user_table");
-
         $tpl = Template::getInstance('member_listing');
 
         $tpl->set_locale(self::$locale);
 
-        //$tpl->set_tag("user_table_id", $table_id);
+        //$tpl->set_tag("user_table_id", fusion_table("user_table"));
 
         $tpl->set_tag('filter_text', form_text('search_text', '', $search_text, [
             'placeholder'        => self::$locale['ME_401'],
@@ -389,7 +387,7 @@ class Members_Display extends Members_Admin {
     private static function list_func($user_id, $list, $selected_fields) {
         $html = "<tr id='user-".$user_id."'>\n
                 <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
-                <td class='col-xs-2'>".$list[$user_id]['user_name']."</td>\n
+                <td>".$list[$user_id]['user_name']."</td>\n
                 <td class='no-break'>".$list[$user_id]['user_actions']."</td>\n
                 <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
                 <td class='no-break'>\n".$list[$user_id]['user_status']."</td>\n
