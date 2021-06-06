@@ -121,7 +121,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
                 'faq_status'     => sanitizer('faq_status', 0, 'faq_status'),
                 'faq_breaks'     => 'n',
-                'faq_language'   => sanitizer('faq_language', LANGUAGE, 'faq_language')
+                'faq_language'   => sanitizer(['faq_language'], LANGUAGE, 'faq_language')
             ];
 
             // Line Breaks

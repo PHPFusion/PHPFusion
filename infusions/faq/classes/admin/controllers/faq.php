@@ -66,7 +66,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_cat_id'          => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
                 'faq_cat_name'        => sanitizer('faq_cat_name', '', 'faq_cat_name'),
                 'faq_cat_description' => sanitizer('faq_cat_description', '', 'faq_cat_description'),
-                'faq_cat_language'    => sanitizer('faq_cat_language', LANGUAGE, 'faq_cat_language'),
+                'faq_cat_language'    => sanitizer(['faq_cat_language'], LANGUAGE, 'faq_cat_language'),
             ];
 
             if (fusion_safe()) {
@@ -341,8 +341,8 @@ class FaqAdmin extends FaqAdminModel {
     /**
      * Generate sets of push buttons for Content form
      *
-     * @param      $unique_id
-     * @param bool $breaker
+     * @param string $unique_id
+     * @param bool   $breaker
      */
     private function display_faqButtons($unique_id, $breaker = TRUE) {
         ?>
@@ -401,7 +401,7 @@ class FaqAdmin extends FaqAdminModel {
 
         // delete category
         if (check_post('delete_faq_cat') && check_post('faq_cat_id') && post('faq_cat_id', FILTER_VALIDATE_INT)) {
-        	$faq_cat_id = post('faq_cat_id');
+            $faq_cat_id = post('faq_cat_id');
             // move everything to uncategorized.
             if (dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => (int)$faq_cat_id]) == 0) {
                 dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => (int)$faq_cat_id, ':uncategorized' => 0]);
@@ -450,9 +450,10 @@ class FaqAdmin extends FaqAdminModel {
 
         if (!empty($search_string)) {
             foreach ($search_string as $key => $values) {
-                if ($sql_condition)
+                if ($sql_condition) {
                     $sql_condition .= " AND ";
-                    $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                }
+                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
@@ -460,7 +461,7 @@ class FaqAdmin extends FaqAdminModel {
         $post_faq = post('faq_display');
         $get_faq = get('faq_display');
         if ((!empty($post_faq) && isnum($post_faq)) || (!empty($get_faq) && isnum($get_faq))) {
-            $limit = (!empty($post_faq) ? $post_faq : $get_weblink);
+            $limit = (!empty($post_faq) ? $post_faq : $get_faq);
         }
 
         $rowstart = 0;
