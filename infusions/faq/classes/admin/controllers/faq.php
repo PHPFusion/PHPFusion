@@ -39,12 +39,12 @@ class FaqAdmin extends FaqAdminModel {
 
     public function displayFaqAdmin() {
         pageaccess('FQ');
-        if (isset($_POST['cancel'])) {
+        if (check_get('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
         $this->locale = self::get_faqAdminLocale();
-        if (isset($_GET['ref'])) {
-            switch ($_GET['ref']) {
+        if (check_get('ref')) {
+            switch (get('ref')) {
                 case 'faq_cat_form':
                     $this->display_faq_category_form();
                     break;
@@ -61,12 +61,12 @@ class FaqAdmin extends FaqAdminModel {
     }
 
     private function display_faq_category_form() {
-        if (isset($_POST['save_cat'])) {
+        if (check_post('save_cat')) {
             $this->cat_data = [
-                'faq_cat_id'          => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
-                'faq_cat_name'        => form_sanitizer($_POST['faq_cat_name'], '', 'faq_cat_name'),
-                'faq_cat_description' => form_sanitizer($_POST['faq_cat_description'], '', 'faq_cat_description'),
-                'faq_cat_language'    => form_sanitizer($_POST['faq_cat_language'], LANGUAGE, 'faq_cat_language'),
+                'faq_cat_id'          => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
+                'faq_cat_name'        => sanitizer('faq_cat_name', '', 'faq_cat_name'),
+                'faq_cat_description' => sanitizer('faq_cat_description', '', 'faq_cat_description'),
+                'faq_cat_language'    => sanitizer('faq_cat_language', LANGUAGE, 'faq_cat_language'),
             ];
 
             if (fusion_safe()) {
@@ -88,8 +88,8 @@ class FaqAdmin extends FaqAdminModel {
 
         }
 
-        if (isset($_GET['cat_id']) && isnum($_GET['cat_id']) && isset($_GET['action']) && $_GET['action'] == 'edit') {
-            $result = dbquery("SELECT * FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_GET['cat_id']]);
+        if (check_get('cat_id') && get('cat_id', FILTER_VALIDATE_INT) && check_get('action') && get('action') == 'edit') {
+            $result = dbquery("SELECT * FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => get('cat_id')]);
             if (dbrows($result) > 0) {
                 $this->cat_data = dbarray($result);
             } else {
@@ -140,8 +140,8 @@ class FaqAdmin extends FaqAdminModel {
         /**
          * Global vars
          */
-        if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['faq_id']) && isnum($_POST['faq_id'])) || (isset($_GET['faq_id']) && isnum($_GET['faq_id']))) {
-            $id = (!empty($_POST['faq_id']) ? $_POST['faq_id'] : $_GET['faq_id']);
+        if ((check_get('action') && get('action') == "edit") && (check_post('faq_id') && post('faq_id', FILTER_VALIDATE_INT)) || (check_get('faq_id') && get('faq_id', FILTER_VALIDATE_INT))) {
+            $id = (check_post('faq_id') ? post('faq_id') : get('faq_id'));
             $criteria = [
                 'criteria' => "ac.*, u.user_id, u.user_name, u.user_status, u.user_avatar",
                 'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
@@ -161,10 +161,10 @@ class FaqAdmin extends FaqAdminModel {
     }
 
     private function execute_Delete() {
-        if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['faq_id']) && isnum($_GET['faq_id'])) {
-            $faq_id = intval($_GET['faq_id']);
+        if (check_get('action') && get('action') == "delete" && check_get('faq_id') && get('faq_id', FILTER_VALIDATE_INT)) {
+            $faq_id = (int)get('faq_id');
 
-            dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+            dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => $faq_id]);
             addnotice('success', $this->locale['faq_0032']);
 
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
@@ -175,43 +175,42 @@ class FaqAdmin extends FaqAdminModel {
      * Create or Update
      */
     private function execute_Update() {
-        if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
+        if ((check_post('save')) or (check_post('save_and_close'))) {
 
             $this->faq_data = [
-                'faq_id'         => form_sanitizer($_POST['faq_id'], 0, 'faq_id'),
-                'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
-                'faq_cat_id'     => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
+                'faq_id'         => sanitizer('faq_id', 0, 'faq_id'),
+                'faq_question'   => sanitizer('faq_question', '', 'faq_question'),
+                'faq_cat_id'     => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
                 'faq_answer'     => form_sanitizer(addslashes($_POST['faq_answer']), '', 'faq_answer'),
-                'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], '', 'faq_datestamp'),
-                'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
-                'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
-                'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
+                'faq_datestamp'  => sanitizer('faq_datestamp', '', 'faq_datestamp'),
+                'faq_visibility' => sanitizer('faq_visibility', 0, 'faq_visibility'),
+                'faq_status'     => sanitizer('faq_status', 0, 'faq_status'),
+                'faq_breaks'     => "n",
+                'faq_language'   => sanitizer('faq_language', LANGUAGE, 'faq_language'),
             ];
 
             // Line Breaks
             if (fusion_get_settings('tinymce_enabled') != 1) {
-                $this->faq_data['faq_breaks'] = isset($_POST['faq_breaks']) ? "y" : "n";
-            } else {
-                $this->faq_data['faq_breaks'] = "n";
+                $this->faq_data['faq_breaks'] = check_post('faq_breaks') ? "y" : "n";
             }
 
             // Handle
             if (fusion_safe()) {
                 // Update
                 if (dbcount("(faq_id)", DB_FAQS, "faq_id='".$this->faq_data['faq_id']."'")) {
-                    $this->faq_data['faq_datestamp'] = isset($_POST['update_datestamp']) ? time() : $this->faq_data['faq_datestamp'];
+                    $this->faq_data['faq_datestamp'] = check_post('update_datestamp') ? time() : $this->faq_data['faq_datestamp'];
                     dbquery_insert(DB_FAQS, $this->faq_data, 'update');
                     addnotice('success', $this->locale['faq_0031']);
 
                     // Create
                 } else {
                     $this->faq_data['faq_name'] = fusion_get_userdata('user_id');
-                    $this->faq_data['article_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
+                    $this->faq_data['faq_id'] = dbquery_insert(DB_FAQS, $this->faq_data, 'save');
                     addnotice('success', $this->locale['faq_0030']);
                 }
 
                 // Redirect
-                if (isset($_POST['save_and_close'])) {
+                if (check_post('save_and_close')) {
                     redirect(clean_request('', ['ref', 'action', 'faq_id'], FALSE));
                 } else {
                     redirect(FUSION_REQUEST);
@@ -310,21 +309,23 @@ class FaqAdmin extends FaqAdminModel {
                     echo form_hidden('faq_language', '', $this->faq_data['faq_language']);
                 }
                 echo form_hidden('faq_datestamp', '', $this->faq_data['faq_datestamp']);
-                if (!empty($_GET['action']) && $_GET['action'] == 'edit') {
-                    echo form_checkbox('update_datestamp', $this->locale['faq_0257'], '');
+                if (check_get('action') && get('action') == 'edit') {
+                    echo form_checkbox('update_datestamp', $this->locale['faq_0257'], '', [
+                        'toggle' => TRUE
+                    ]);
                 }
                 closeside();
                 openside($this->locale['faq_0258']);
                 echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->faq_data['faq_status'], [
-                    'class'         => 'm-b-5',
-                    'reverse_label' => TRUE
+                    'class'  => 'm-b-5',
+                    'toggle' => TRUE
                 ]);
 
                 if (fusion_get_settings("tinymce_enabled") != 1) {
                     echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->faq_data['faq_breaks'], [
-                        'value'         => 'y',
-                        'class'         => 'm-b-5',
-                        'reverse_label' => TRUE
+                        'value'  => 'y',
+                        'class'  => 'm-b-5',
+                        'toggle' => TRUE
                     ]);
                 }
                 closeside();
@@ -361,25 +362,26 @@ class FaqAdmin extends FaqAdminModel {
     private function display_faq_listing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete', 'faq_display']);
+        $table_action = post('table_action');
 
         // Table Actions
-        if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
-            $input = (isset($_POST['faq_id'])) ? explode(",", form_sanitizer($_POST['faq_id'], "", "faq_id")) : "";
+        if (check_post('table_action') && isset($allowed_actions[$table_action])) {
+            $input = (check_post('faq_id')) ? explode(",", form_sanitizer($_POST['faq_id'], 0, 'faq_id')) : "";
             if (!empty($input)) {
                 foreach ($input as $faq_id) {
                     // check input table
-                    if (dbcount("('faq_id')", DB_FAQS, "faq_id=:faqid", [':faqid' => intval($faq_id)]) && fusion_safe()) {
+                    if (dbcount("('faq_id')", DB_FAQS, "faq_id=:faqid", [':faqid' => (int)$faq_id]) && fusion_safe()) {
                         switch ($_POST['table_action']) {
                             case 'publish':
-                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '1', ':faqid' => intval($faq_id)]);
+                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '1', ':faqid' => (int)$faq_id]);
                                 addnotice("success", $this->locale['faq_0037']);
                                 break;
                             case 'unpublish':
-                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '0', ':faqid' => intval($faq_id)]);
+                                dbquery("UPDATE ".DB_FAQS." SET faq_status=:status WHERE faq_id=:faqid", ['status' => '0', ':faqid' => (int)$faq_id]);
                                 addnotice("warning", $this->locale['faq_0038']);
                                 break;
                             case 'delete':
-                                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => intval($faq_id)]);
+                                dbquery("DELETE FROM  ".DB_FAQS." WHERE faq_id=:faqid", [':faqid' => (int)$faq_id]);
                                 addnotice('success', $this->locale['faq_0032']);
                                 break;
                             default:
@@ -393,16 +395,17 @@ class FaqAdmin extends FaqAdminModel {
             redirect(FUSION_REQUEST);
         }
 
-        if (isset($_POST['edit_faq_cat']) && isset($_POST['faq_cat_id']) && isnum($_POST['faq_cat_id'])) {
-            redirect(clean_request('cat_id='.$_POST['faq_cat_id'].'&action=edit&ref=faq_cat_form', ['action', 'cat_id', 'ref'], FALSE));
+        if (check_post('edit_faq_cat') && check_post('faq_cat_id') && post('faq_cat_id', FILTER_VALIDATE_INT)) {
+            redirect(clean_request('cat_id='.post('faq_cat_id').'&action=edit&ref=faq_cat_form', ['action', 'cat_id', 'ref'], FALSE));
         }
 
         // delete category
-        if (isset($_POST['delete_faq_cat']) && isset($_POST['faq_cat_id']) && isnum($_POST['faq_cat_id'])) {
+        if (check_post('delete_faq_cat') && check_post('faq_cat_id') && post('faq_cat_id', FILTER_VALIDATE_INT)) {
+        	$faq_cat_id = post('faq_cat_id');
             // move everything to uncategorized.
-            if (dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => $_POST['faq_cat_id']]) == 0) {
-                dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id'], ':uncategorized' => 0]);
-                dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => $_POST['faq_cat_id']]);
+            if (dbcount("(faq_id)", DB_FAQS, "faq_cat_id=:faqcatid", [':faqcatid' => (int)$faq_cat_id]) == 0) {
+                dbquery("UPDATE ".DB_FAQS." SET faq_cat_id=:uncategorized WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => (int)$faq_cat_id, ':uncategorized' => 0]);
+                dbquery("DELETE FROM ".DB_FAQ_CATS." WHERE faq_cat_id=:faq_cat_id", [':faq_cat_id' => (int)$faq_cat_id]);
                 addnotice('success', $this->locale['faq_0041']);
             } else {
                 addnotice('warning', $this->locale['faq_0035']);
@@ -413,32 +416,35 @@ class FaqAdmin extends FaqAdminModel {
         }
 
         // Clear
-        if (isset($_POST['faq_clear'])) {
+        if (check_post('faq_clear')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
         // Search
         $search_string = [];
         $sql_condition = multilang_table("FQ") ? in_group('faq_language', LANGUAGE) : "";
-        if (isset($_POST['p-submit-faq_answer'])) {
+        if (check_post('p-submit-faq_answer')) {
             $search_string['faq_answer'] = [
-                'input' => form_sanitizer($_POST['faq_answer'], '', 'faq_answer'), 'operator' => 'LIKE'
+                'input' => sanitizer('faq_answer', '', 'faq_answer'), 'operator' => 'LIKE'
             ];
         }
 
-        if (!empty($_POST['faq_status']) && isnum($_POST['faq_status']) && $_POST['faq_status'] == '1') {
+        $faq_status = post('faq_status');
+        if (!empty($faq_status) && $faq_status == '1') {
             $search_string['faq_status'] = ['input' => 0, 'operator' => '='];
         }
 
-        if (!empty($_POST['faq_visibility'])) {
+        $faq_visibility = post('faq_visibility');
+        if (!empty($faq_visibility)) {
             $search_string['faq_visibility'] = [
-                'input' => form_sanitizer($_POST['faq_visibility'], '', 'faq_visibility'), 'operator' => '='
+                'input' => sanitizer('faq_visibility', '', 'faq_visibility'), 'operator' => '='
             ];
         }
 
-        if (!empty($_POST['faq_name'])) {
+        $faq_name = post('faq_name');
+        if (!empty($faq_name)) {
             $search_string['faq_name'] = [
-                'input' => form_sanitizer($_POST['faq_name'], '', 'faq_name'), 'operator' => '='
+                'input' => sanitizer('faq_name', '', 'faq_name'), 'operator' => '='
             ];
         }
 
@@ -446,20 +452,21 @@ class FaqAdmin extends FaqAdminModel {
             foreach ($search_string as $key => $values) {
                 if ($sql_condition)
                     $sql_condition .= " AND ";
-                $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
+                    $sql_condition .= "`$key` ".$values['operator'].($values['operator'] == "LIKE" ? "'%" : "'").$values['input'].($values['operator'] == "LIKE" ? "%'" : "'");
             }
         }
 
-        $default_display = 16;
-        $limit = $default_display;
-        if ((!empty($_POST['faq_display']) && isnum($_POST['faq_display'])) || (!empty($_GET['faq_display']) && isnum($_GET['faq_display']))) {
-            $limit = (!empty($_POST['faq_display']) ? $_POST['faq_display'] : $_GET['faq_display']);
+        $limit = 16;
+        $post_faq = post('faq_display');
+        $get_faq = get('faq_display');
+        if ((!empty($post_faq) && isnum($post_faq)) || (!empty($get_faq) && isnum($get_faq))) {
+            $limit = (!empty($post_faq) ? $post_faq : $get_weblink);
         }
 
         $rowstart = 0;
         $max_rows = dbcount("(faq_id)", DB_FAQS, (multilang_table("FQ") ? in_group('faq_language', LANGUAGE) : ""));
         if (!isset($_POST['faq_display'])) {
-            $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
+            $rowstart = get_rowstart("rowstart", $max_rows);
         }
 
         $criteria = [
@@ -467,13 +474,11 @@ class FaqAdmin extends FaqAdminModel {
             'join'     => "INNER JOIN ".DB_USERS." u ON u.user_id=ac.faq_name
             LEFT JOIN ".DB_FAQ_CATS." a ON a.faq_cat_id=ac.faq_cat_id",
             'where'    => $sql_condition,
-            //'sql_condition' => ,
             'limit'    => "LIMIT $rowstart, $limit"
         ];
 
         $result = self::FaqData($criteria);
         // Query
-
         $info['limit'] = $limit;
         $info['rowstart'] = $rowstart;
         $info['max_rows'] = $max_rows;
@@ -481,11 +486,11 @@ class FaqAdmin extends FaqAdminModel {
         // Filters
         $filter_values = [
             'faq_question'   => !empty($_POST['faq_question']) ? form_sanitizer($_POST['faq_question'], '', 'faq_question') : '',
-            'faq_answer'     => !empty($_POST['faq_answer']) ? form_sanitizer($_POST['faq_answer'], '', 'faq_answer') : '',
-            'faq_status'     => !empty($_POST['faq_status']) ? form_sanitizer($_POST['faq_status'], 0, 'faq_status') : '',
+            'faq_answer'     => check_post('faq_answer') ? sanitizer('faq_answer', '', 'faq_answer') : '',
+            'faq_status'     => !empty($faq_status) ? sanitizer('faq_status', 0, 'faq_status') : '',
             'faq_cat_id'     => !empty($_POST['faq_cat_id']) ? form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id') : '',
-            'faq_visibility' => !empty($_POST['faq_visibility']) ? form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility') : '',
-            'faq_name'       => !empty($_POST['faq_name']) ? form_sanitizer($_POST['faq_name'], '', 'faq_name') : '',
+            'faq_visibility' => !empty($faq_visibility) ? sanitizer('faq_visibility', 0, 'faq_visibility') : '',
+            'faq_name'       => !empty($faq_name) ? sanitizer('faq_name', '', 'faq_name') : '',
         ];
 
         $filter_empty = TRUE;

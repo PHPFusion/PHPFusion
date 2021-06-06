@@ -44,6 +44,7 @@ class FaqSubmissions extends FaqServer {
     }
 
     private function display_submission_form() {
+        $settings = fusion_get_settings();
         $criteriaArray = [
             'faq_id'       => 0,
             'faq_cat_id'   => 0,
@@ -57,10 +58,10 @@ class FaqSubmissions extends FaqServer {
             // Save
             if (check_post("submit_link")) {
                 $criteriaArray = [
-                    'faq_cat_id'   => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
-                    'faq_question' => form_sanitizer(post("faq_question"), '', 'faq_question'),
-                    'faq_answer'   => form_sanitizer(post("faq_answer"), '', 'faq_answer'),
-                    'faq_language' => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language'),
+                    'faq_cat_id'   => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
+                    'faq_question' => sanitizer('faq_question', '', 'faq_question'),
+                    'faq_answer'   => sanitizer('faq_answer', '', 'faq_answer'),
+                    'faq_language' => sanitizer('faq_language', LANGUAGE, 'faq_language'),
                     'faq_status'   => 1
                 ];
                 // Save
@@ -81,7 +82,7 @@ class FaqSubmissions extends FaqServer {
                 $info['confirm'] = [
                     'title'       => $this->locale['faq_0911'],
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
-                    'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0913'])."</a>"
+                    'index_link'  => "<a href='".BASEDIR.$settings['opening_page']."'>".str_replace("[SITENAME]", $settings['sitename'], $this->locale['faq_0913'])."</a>"
                 ];
                 $info += $this->info;
                 return (array)$info;
@@ -96,7 +97,7 @@ class FaqSubmissions extends FaqServer {
                 }
 
                 $info['item'] = [
-                    'guidelines'     => str_replace("[SITENAME]", fusion_get_settings("sitename"), $this->locale['faq_0920']),
+                    'guidelines'     => str_replace("[SITENAME]", $settings['sitename'], $this->locale['faq_0920']),
                     'openform'       => openform('submit_form', 'post', BASEDIR."submit.php?stype=q", ['enctype' => self::$faq_settings['faq_allow_submission'] ? TRUE : FALSE]),
                     'faq_question'   => form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'],
                         [
@@ -106,8 +107,8 @@ class FaqSubmissions extends FaqServer {
                     'faq_answer'     => form_textarea('faq_answer', $this->locale['faq_0251'], $criteriaArray['faq_answer'],
                         [
                             'required'      => TRUE,
-                            'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
-                            'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
+                            'type'          => $settings['tinymce_enabled'] ? 'tinymce' : 'html',
+                            'tinymce'       => $settings['tinymce_enabled'] && iADMIN ? 'advanced' : 'simple',
                             'tinymce_image' => FALSE,
                             'autosize'      => TRUE,
                             'form_name'     => 'submit_form'

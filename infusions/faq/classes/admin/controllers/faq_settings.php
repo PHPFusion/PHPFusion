@@ -21,6 +21,12 @@ class FaqSettingsAdmin extends FaqAdminModel {
     private static $instance = NULL;
     private $locale = [];
 
+    public function __construct() {
+        parent::__construct();
+
+        $this->locale = self::get_faqAdminLocale();
+    }
+
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
@@ -31,7 +37,6 @@ class FaqSettingsAdmin extends FaqAdminModel {
 
     public function displayFaqAdmin() {
         pageaccess("FQ");
-        $this->locale = self::get_faqAdminLocale();
         // Save
         if (!empty($this->save)) {
             $this->SaveFaqAdmin();
@@ -40,34 +45,36 @@ class FaqSettingsAdmin extends FaqAdminModel {
     }
 
     private function SaveFaqAdmin() {
-        $inputArray = [
-            'faq_allow_submission'  => form_sanitizer($this->faq_allow_submission, 0, 'faq_allow_submission'),
-            'faq_submission_access' => form_sanitizer($_POST['faq_submission_access'], USER_LEVEL_MEMBER, 'faq_submission_access')
-        ];
-        // Update
-        if (fusion_safe()) {
-            foreach ($inputArray as $settings_name => $settings_value) {
-                $inputSettings = [
-                    'settings_name'  => $settings_name,
-                    'settings_value' => $settings_value,
-                    'settings_inf'   => 'faq',
-                ];
-                dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
+        if (check_post('savesettings')) {
+            $inputArray = [
+                'faq_allow_submission'  => sanitizer('faq_allow_submission', 0, 'faq_allow_submission'),
+                'faq_submission_access' => sanitizer(['faq_submission_access'], USER_LEVEL_MEMBER, 'faq_submission_access')
+            ];
+            // Update
+            if (fusion_safe()) {
+                foreach ($inputArray as $settings_name => $settings_value) {
+                    $inputSettings = [
+                        'settings_name'  => $settings_name,
+                        'settings_value' => $settings_value,
+                        'settings_inf'   => 'faq'
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
+                }
+                addnotice('success', $this->locale['900']);
+                redirect(FUSION_REQUEST);
             }
-            addnotice('success', $this->locale['900']);
-            redirect(FUSION_REQUEST);
-        }
 
-        addnotice('danger', $this->locale['901']);
-        self::$faq_settings = $inputArray;
+            addnotice('danger', $this->locale['901']);
+            self::$faq_settings = $inputArray;
+        }
     }
 
     private function FaqAdminForm() {
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']).
             "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n".
-            form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
-                'inline'  => TRUE,
-                'options' => [$this->locale['disable'], $this->locale['enable']]
+            form_checkbox('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
+                'inline' => TRUE,
+                'toggle' => TRUE
             ]).
             form_select('faq_submission_access[]', $this->locale['submit_access'], self::$faq_settings['faq_submission_access'], [
                 'inline'   => TRUE,
