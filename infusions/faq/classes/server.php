@@ -35,9 +35,8 @@ class FaqServer {
 
     public function globinf() {
 
-        $this->save = (string)filter_input(INPUT_POST, 'savesettings', FILTER_DEFAULT);
-        $this->faq_allow_submission = filter_input(INPUT_POST, 'faq_allow_submission', FILTER_DEFAULT);
-        $this->catid = isset($_GET['cat_id']) ? $_GET['cat_id'] : 0;
+        $this->save = post('savesettings');
+        $this->catid = check_get('cat_id') ? get('cat_id', FILTER_VALIDATE_INT) : 0;
     }
 
     public static function Faq() {

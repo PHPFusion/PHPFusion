@@ -27,6 +27,11 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     private $locale = [];
     private $inputArray = [];
 
+    public function __construct() {
+        parent::__construct();
+
+        $this->locale = self::get_faqAdminLocale();
+    }
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
@@ -40,15 +45,15 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     public function displayFaqAdmin() {
         pageaccess("FQ");
 
-        $this->locale = self::get_faqAdminLocale();
+        //$this->locale = self::get_faqAdminLocale();
         // Handle a Submission
-        if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q'])) {
+        if (check_get('submit_id') && get('submit_id', FILTER_VALIDATE_INT) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => get('submit_id'), ':submittype' => 'q'])) {
             $criteria = [
                 'criteria'  => ", u.user_id, u.user_name, u.user_status, u.user_avatar",
                 'join'      => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=s.submit_user",
                 'where'     => 's.submit_type=:submit_type AND s.submit_id=:submit_id',
                 'wheredata' => [
-                    ':submit_id'   => $_GET['submit_id'],
+                    ':submit_id'   => get('submit_id'),
                     ':submit_type' => 'q'
                 ]
             ];
@@ -92,51 +97,51 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     }
 
     private function handleDeleteSubmission() {
-        if (isset($_POST['delete_submission'])) {
-            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
+        if (check_post('delete_submission')) {
+            dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => get('submit_id'), ':submittype' => 'q']);
             addnotice('success', $this->locale['faq_0062']);
             redirect(clean_request('', ['submit_id'], FALSE));
         }
     }
 
     private function handlePostSubmission() {
-        if (isset($_POST['publish_submission']) || isset($_POST['preview_submission'])) {
+        if (check_post('publish_submission') || check_post('preview_submission')) {
             // Check posted Informations
             $faq_answer = "";
-            if ($_POST['faq_answer']) {
-                $faq_answer = stripslashes($_POST['faq_answer']);
+            if (check_post('faq_answer')) {
+                $faq_answer = stripslashes(post('faq_answer'));
             }
 
             $SaveinputArray = [
-                'faq_question'   => form_sanitizer($_POST['faq_question'], '', 'faq_question'),
-                'faq_cat_id'     => form_sanitizer($_POST['faq_cat_id'], 0, 'faq_cat_id'),
-                'faq_visibility' => form_sanitizer($_POST['faq_visibility'], 0, 'faq_visibility'),
-                'faq_datestamp'  => form_sanitizer($_POST['faq_datestamp'], time(), 'faq_datestamp'),
-                'faq_name'       => form_sanitizer($_POST['faq_name'], 0, 'faq_name'),
+                'faq_question'   => sanitizer('faq_question', '', 'faq_question'),
+                'faq_cat_id'     => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
+                'faq_visibility' => sanitizer('faq_visibility', 0, 'faq_visibility'),
+                'faq_datestamp'  => sanitizer('faq_datestamp', time(), 'faq_datestamp'),
+                'faq_name'       => sanitizer('faq_name', 0, 'faq_name'),
                 'faq_answer'     => form_sanitizer($faq_answer, '', 'faq_answer'),
-                'faq_status'     => isset($_POST['faq_status']) ? '1' : '0',
+                'faq_status'     => sanitizer('faq_status', 0, 'faq_status'),
                 'faq_breaks'     => 'n',
-                'faq_language'   => form_sanitizer($_POST['faq_language'], LANGUAGE, 'faq_language')
+                'faq_language'   => sanitizer('faq_language', LANGUAGE, 'faq_language')
             ];
 
             // Line Breaks
             if (fusion_get_settings("tinymce_enabled") != 1) {
-                $SaveinputArray['faq_breaks'] = isset($_POST['faq_breaks']) ? "y" : "n";
+                $SaveinputArray['faq_breaks'] = check_post('faq_breaks') ? "y" : "n";
             }
 
             // Handle
             if (fusion_safe()) {
 
                 // Publish Submission
-                if (isset($_POST['publish_submission'])) {
-                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $_GET['submit_id'], ':submittype' => 'q']);
+                if (check_post('publish_submission')) {
+                    dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => get('submit_id'), ':submittype' => 'q']);
                     dbquery_insert(DB_FAQS, $SaveinputArray, 'save');
                     addnotice('success', ($SaveinputArray['faq_status'] ? $this->locale['faq_0060'] : $this->locale['faq_0061']));
                     redirect(clean_request('', ['submit_id'], FALSE));
                 }
 
                 // Preview Submission
-                if (isset($_POST['preview_submission'])) {
+                if (check_post('preview_submission')) {
                     $footer = openmodal("faq_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".$this->locale['preview'].": ".$SaveinputArray['faq_question']);
                     if ($SaveinputArray['faq_answer']) {
                         $footer .= "<hr class='m-t-20 m-b-20'>\n";
@@ -200,7 +205,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
                 ?>
             </div>
         </div>
-        <?php self::displayFormButtons('formstart'); ?>
 
         <!-- Display Form -->
         <div class="row">
@@ -208,12 +212,11 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             <!-- Display Left Column -->
             <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
                 <?php
-                echo form_text('faq_question', $this->locale['faq_0100'], $this->inputArray['faq_question'],
-                    [
-                        'required'   => TRUE,
-                        'max_lenght' => 200,
-                        'error_text' => $this->locale['faq_0270']
-                    ]);
+                echo form_text('faq_question', $this->locale['faq_0100'], $this->inputArray['faq_question'], [
+                    'required'   => TRUE,
+                    'max_lenght' => 200,
+                    'error_text' => $this->locale['faq_0270']
+                ]);
 
                 echo form_textarea('faq_answer', $this->locale['faq_0251'], $this->inputArray['faq_answer'], $faqExtendedSettings);
                 ?>
@@ -259,19 +262,15 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
                 openside($this->locale['faq_0259']);
 
-                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->inputArray['faq_status'],
-                    [
-                        'class'         => 'm-b-5',
-                        'reverse_label' => TRUE
-                    ]);
+                echo form_checkbox('faq_status', $this->locale['faq_0255'], $this->inputArray['faq_status'], [
+                    'toggle' => TRUE
+                ]);
 
                 if (fusion_get_settings('tinymce_enabled') != 1) {
-                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->inputArray['faq_breaks'],
-                        [
-                            'value'         => 'y',
-                            'class'         => 'm-b-5',
-                            'reverse_label' => TRUE
-                        ]);
+                    echo form_checkbox('faq_breaks', $this->locale['faq_0256'], $this->inputArray['faq_breaks'], [
+                        'value'  => 'y',
+                        'toggle' => TRUE
+                    ]);
                 }
 
                 closeside();
