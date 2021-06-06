@@ -479,7 +479,6 @@ class FaqAdmin extends FaqAdminModel {
 
         $result = self::FaqData($criteria);
         // Query
-        print_p($result);
         $info['limit'] = $limit;
         $info['rowstart'] = $rowstart;
         $info['max_rows'] = $max_rows;
