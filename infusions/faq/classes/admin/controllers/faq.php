@@ -39,7 +39,7 @@ class FaqAdmin extends FaqAdminModel {
 
     public function displayFaqAdmin() {
         pageaccess('FQ');
-        if (check_get('cancel')) {
+        if (check_post('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
         $this->locale = self::get_faqAdminLocale();
