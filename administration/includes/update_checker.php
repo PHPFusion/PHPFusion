@@ -23,7 +23,7 @@ $settings = fusion_get_settings();
 if ($settings['update_checker'] == 1 && ($settings['update_last_checked'] < (time() - 21600))) { // check every 6 hours
     dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => time(), ':name' => 'update_last_checked']);
 
-    $update = new PHPFusion\AutoUpdate();
+    $update = new PHPFusion\Update();
     $url = $update->getUpdateUrl();
     $version = $update->checkUpdate(TRUE);
 

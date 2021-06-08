@@ -26,7 +26,7 @@ add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $
 
 opentable($locale['U_000']);
 
-$update = new PHPFusion\AutoUpdate();
+$update = new PHPFusion\Update();
 
 echo '<div class="m-b-20">';
 echo sprintf($locale['U_002'], showdate('longdate', $settings['update_last_checked']));

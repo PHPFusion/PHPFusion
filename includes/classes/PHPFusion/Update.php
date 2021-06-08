@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: AutoUpdate.php
+| Filename: Update.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -19,7 +19,7 @@ namespace PHPFusion;
 
 use PHPFusion\Installer\Batch;
 
-class AutoUpdate extends Installer\Infusions {
+class Update extends Installer\Infusions {
     /**
      * Temporary directory for downloads
      *
