@@ -111,18 +111,28 @@ if (!check_admin_pass('')) {
         render_admin_login();
     }
 } else {
+    add_to_jquery('
+        function update_checker(force = false) {
+            let force_update = force == true ? "&force=true" : "";
+            
+            $.ajax({
+                url: "'.ADMIN.'includes/?api=update-checker" + force_update,
+                method: "get",
+                dataType: "json",
+                beforeSend: function () {
+                    $("#forceupdate > i").show();
+                },
+                success: function (e) {
+                    $("#updatechecker_result").html(e.result).show();
+                },
+                complete: function () {
+                    $("#forceupdate > i").hide();
+                }
+            });
+        }
+    ');
     if ($settings['update_checker'] == 1) {
         add_to_jquery('
-            function update_checker() {
-                $.ajax({
-                    url: "'.ADMIN.'includes/?api=update-checker",
-                    method: "get",
-                    dataType: "json",
-                    success: function (e) {
-                        $("#updatechecker_result").html(e.result).show();
-                    }
-                });
-            }
             update_checker();
             setInterval(update_checker, 2000);
         ');

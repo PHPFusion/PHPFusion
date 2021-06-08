@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Update.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

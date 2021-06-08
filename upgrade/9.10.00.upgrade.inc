@@ -90,6 +90,7 @@ $deleted_files = [
     THEMES.'templates/render_functions.php',
     LOCALE.'English/admin/banners.php',
     ADMIN.'updateuser.php',
+    ADMIN.'includes/update_checker.php',
     ADMIN.'images/phpinfo.png',
     ADMIN.'phpinfo.php',
     LOCALE.'English/admin/phpinfo.php',

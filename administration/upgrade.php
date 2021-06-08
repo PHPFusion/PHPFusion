@@ -30,7 +30,14 @@ $update = new PHPFusion\Update();
 
 echo '<div class="m-b-20">';
 echo sprintf($locale['U_002'], showdate('longdate', $settings['update_last_checked']));
-echo '<a href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&force=true" class="m-l-10 btn btn-default">'.$locale['U_003'].'</a>';
+echo '<a href="#" id="forceupdate" class="m-l-10 btn btn-default"><i class="fa fa-sync fa-spin" style="display:none;"></i> '.$locale['U_003'].'</a>';
+
+add_to_jquery('
+    $("#forceupdate").on("click", function (e) {
+        e.preventDefault();
+        update_checker(true);
+    });
+');
 
 if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
     echo '<a class="btn btn-primary m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&updatelocales=true">'.$locale['U_016'].'</a>';
@@ -42,14 +49,6 @@ $update_result = $update->checkUpdate();
 
 if ($update_result === FALSE) {
     echo '<h5 class="strong m-t-20">'.$locale['U_005'].'</h5>';
-}
-
-if (check_get('force')) {
-    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => time(), ':name' => 'update_last_checked']);
-
-    if ($update_result === NULL) {
-        echo '<h5 class="strong m-t-20">'.$locale['U_006'].'</h5>';
-    }
 }
 
 if ($update->newVersionAvailable()) {

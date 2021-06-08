@@ -15,27 +15,27 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__."/../../maincore.php";
+require_once __DIR__.'/../../maincore.php';
 
 if (iADMIN) {
     $endpoints = [
-        "sitelinks-list"  => "sitelinks/sitelinks-list.php",
-        "sitelinks-order" => "sitelinks/sitelinks-order.php",
-        "update-checker"  => "update_checker.php",
+        'sitelinks-list'  => 'sitelinks/sitelinks-list.php',
+        'sitelinks-order' => 'sitelinks/sitelinks-order.php',
+        'update-checker'  => 'update/update_checker.php',
     ];
-    if ($api = get("api")) {
+    if ($api = get('api')) {
         if (isset($endpoints[$api])) {
 
             require __DIR__.DIRECTORY_SEPARATOR.$endpoints[$api];
 
-            fusion_apply_hook("fusion_admin_hooks");
+            fusion_apply_hook('fusion_admin_hooks');
 
         } else {
-            throw new Exception("End point is faulty");
+            set_error(2, 'End point is faulty', debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
         }
     } else {
-        throw new Exception("API is not specified");
+        set_error(2, 'API is not specified', debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
     }
 } else {
-    throw new Exception("You are not authorized to view the data");
+    die('You are not authorized to view the data');
 }
