@@ -489,7 +489,7 @@ class Errors {
                 };
                 var sendData = form.serialize() + '&' + $.param(data);
                 $.ajax({
-                    url: '".FUSION_ROOT.ADMIN."includes/error_logs_updater.php',
+                    url: '".ADMIN."includes/?api=error-logs-updater',
                     dataType: 'json',
                     method : 'GET',
                     type: 'json',

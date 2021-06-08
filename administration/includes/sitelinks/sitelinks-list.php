@@ -15,10 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-(defined("IN_FUSION") || exit);
+defined("IN_FUSION") || exit;
 
+/**
+ * Display sitelinks
+ */
 function display_sitelinks() {
-
     if (iADMIN && checkrights("SL")) {
 
         $aidlink = fusion_get_aidlink();

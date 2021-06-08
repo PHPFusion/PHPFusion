@@ -19,10 +19,13 @@ require_once __DIR__.'/../../maincore.php';
 
 if (iADMIN) {
     $endpoints = [
-        'sitelinks-list'  => 'sitelinks/sitelinks-list.php',
-        'sitelinks-order' => 'sitelinks/sitelinks-order.php',
-        'update-checker'  => 'update/update_checker.php',
+        'sitelinks-list'     => 'sitelinks/sitelinks-list.php',
+        'sitelinks-order'    => 'sitelinks/sitelinks-order.php',
+        'update-checker'     => 'update/update_checker.php',
+        'cache-update'       => 'cache_update.php',
+        'error-logs-updater' => 'error_logs_updater.php',
     ];
+
     if ($api = get('api')) {
         if (isset($endpoints[$api])) {
 

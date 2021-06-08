@@ -15,8 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-(defined("IN_FUSION") || exit);
+defined("IN_FUSION") || exit;
 
+/**
+ * Update sitelinks order
+ */
 function update_sitelinks_order() {
     if (iADMIN && checkrights("SL")) {
         if (fusion_safe()) {
@@ -40,4 +43,3 @@ function update_sitelinks_order() {
  * @uses update_sitelinks_order()
  */
 fusion_add_hook("fusion_admin_hooks", "update_sitelinks_order");
-

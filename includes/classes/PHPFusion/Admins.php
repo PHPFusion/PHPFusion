@@ -137,60 +137,6 @@ class Admins {
      * @return string
      */
     public function requestCache($form_id, $form_type, $item_id, array $callback_fields = [], $cache_time = 30000) {
-        /*
-        add_to_footer("<script src='".INCLUDES."jquery/confirm/jquery-confirm.min.js'></script>");
-        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/confirm/jquery-confirm.min.css'>");
-        add_to_jquery("
-            var input_fields = $('#$form_id').serialize();
-            $.confirm({
-            title: 'Restore Editing Session',
-            content: 'There is a draft found for your previous editing session. Do you wish to restore?',
-            buttons: {
-                confirm: function () {
-                    $.ajax({
-                        url: '$remote',
-                        type: 'post',
-                        data: {
-                        'fusion_token': '$token',
-                        'aidlink': '".fusion_get_aidlink()."',
-                        'fields': input_fields,
-                        'form_id' : '$form_id',
-                        'item_id':'$item_id',
-                        'form_type':'$form_type',
-                        'callback':'read_cache'
-                        },
-                        dataType: 'json',
-                        success: function (e) {
-                            if (e.response == 200) {
-                                $.each(e.data, function(key, value) {
-                                    $('#'+key).val( value );
-                                });
-                                setTimeout(function(e) {
-                                    //$.alert('Your editing session has been restored');
-                                    setTimeout( function(e) {UpdateAdminCache() }, $cache_time);
-                                }, 100);
-                            }
-                        },
-                        error: function(e) {
-                        }
-                   });
-                },
-                cancel: function () {
-                    //$.alert('Canceled!');
-                }
-                /*somethingElse: {
-                    text: 'Something else',
-                    btnClass: 'btn-blue',
-                    keys: ['enter', 'shift'],
-                    action: function(){
-                        $.alert('Something else?');
-                    }
-                }
-            }
-        });
-        ");*/
-        $remote = fusion_get_settings('site_path')."administration/includes/cache_update.php";
-        $token = fusion_get_token($form_id, 5);
         add_to_jquery("
         function timedCacheRequest(timeout) {
             setTimeout(UpdateAdminCache, timeout);
@@ -199,11 +145,11 @@ class Admins {
             var input_fields = $('#$form_id').serialize();
             var ttl = '$cache_time';
             $.ajax({
-            url: '$remote',
+            url: '".ADMIN."includes/?api=cache-update',
             type: 'post',
             dataType: 'html',
             data: {
-                'fusion_token': '$token',
+                'fusion_token': '".fusion_get_token($form_id)."',
                 'aidlink': '".fusion_get_aidlink()."',
                 'fields': input_fields,
                 'form_id' : '$form_id',
@@ -242,7 +188,6 @@ class Admins {
                 $html .= "<div id='rev-window'>\n";
                 $html .= fusion_get_function('openside', "<h4><i class='fas fa-thumbtack m-r-10'></i>".self::$locale['292']."</h4>");
                 $session = htmlspecialchars_decode($_SESSION['form_cache'][$form_id][$form_type][$item_id]);
-                $session = descript($session);
                 $session = str_replace('&#039;', "'", $session);
                 parse_str($session, $data);
                 unset($data['form_id']);
@@ -251,6 +196,7 @@ class Admins {
                 $html .= "<dl id='restore_results' class='dl-horizontal'>\n";
                 $fill_js = "";
                 foreach ($data as $field_name => $value) {
+                    $value = descript($value);
                     if (isset($callback_fields[$field_name])) {
                         $html .= "<dt>".$callback_fields[$field_name]."</dt>\n";
                         $html .= "<dd class='m-b-15'><samp>";
@@ -379,7 +325,7 @@ class Admins {
         if (empty($active_key) && !empty(self::$admin_pages)) {
             foreach (self::$admin_pages as $key => $data) {
                 $link = [];
-                foreach ($data as $arr => $admin_data) {
+                foreach ($data as $admin_data) {
                     $link[] = $admin_data['admin_link'];
                 }
                 $data_link = array_flip($link);
@@ -447,7 +393,9 @@ class Admins {
      * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
-        defined(strtoupper($options['infusion_name']).'_EXISTS') ? $this->submit_data[$type] = $options : NULL;
+        if (defined(strtoupper($options['infusion_name']).'_EXISTS')) {
+            $this->submit_data[$type] = $options;
+        }
     }
 
     public function getSubmitLink($type = NULL) {
@@ -486,7 +434,9 @@ class Admins {
      * @param $options - array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
-        defined(strtoupper($type).'_EXISTS') ? $this->folder_permissions[$type] = $options : NULL;
+        if (defined(strtoupper($type).'_EXISTS')) {
+            $this->folder_permissions[$type] = $options;
+        }
     }
 
     /**
@@ -516,7 +466,7 @@ class Admins {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCurrentPage() {
         return $this->current_page;
@@ -547,7 +497,7 @@ class Admins {
                 $html .= "<a class='adl-link ".($active ? '' : 'collapsed')."' data-parent='#adl' data-toggle='collapse' href='#adl-$i' aria-expanded='false' aria-controls='#adl-$i'>".$this->get_admin_section_icons($i)." <span class='adl-section-name'>".$section_name."</span> ".($i > 0 ? "<span class='adl-drop pull-right'><i class='fa fa-angle-".($active ? "left" : "down")."'></i></span>" : '')."</a>\n";
                 $html .= "<ul id='adl-$i' class='admin-submenu collapse ".($active ? 'in' : '')."'>\n";
 
-                foreach ($admin_pages[$i] as $key => $data) {
+                foreach ($admin_pages[$i] as $data) {
                     $secondary_active = $data['admin_link'] == $this->_currentPage();
                     $icons = ($image_icon === TRUE) ? "<img class='admin-image' src='".get_image("ac_".$data['admin_rights'])."' alt='".$data['admin_title']."'>" : $this->get_admin_icons($data['admin_rights']);
 

@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Ajax update checker
+ */
 function ajax_update_checker() {
     $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/main.php', LOCALE.LOCALESET.'admin/upgrade.php']);
     $settings = fusion_get_settings();
