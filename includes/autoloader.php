@@ -136,3 +136,21 @@ if (is_file(__DIR__."/custom_includes.php")) {
     require_once __DIR__."/custom_includes.php";
 }
 //require_once __DIR__.'/db_handlers/all_functions_include.php';
+
+// Generate config file
+if (!is_file(__DIR__.'/config.inc.php')) {
+    $text = "<?php".PHP_EOL;
+    $text .= "/**".PHP_EOL;
+    $text .= " * Here you can configure additional system settings".PHP_EOL;
+    $text .= " */".PHP_EOL;
+    $text .= "\$config_inc = [".PHP_EOL;
+    $text .= "    'cache' => [".PHP_EOL;
+    $text .= "        'storage'        => 'file', // file|redis|memcache".PHP_EOL;
+    $text .= "        'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']".PHP_EOL;
+    $text .= "        'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']".PHP_EOL;
+    $text .= "        'path'           => BASEDIR.'cache/system/' // for FileCache".PHP_EOL;
+    $text .= "    ]".PHP_EOL;
+    $text .= "];".PHP_EOL;
+
+    write_file(__DIR__.'/config.inc.php', $text);
+}
