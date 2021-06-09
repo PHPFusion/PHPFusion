@@ -100,14 +100,11 @@ class DBCache {
 
         self::$array_counter = 0;
 
-        if ($cache = Cache::getInstance()->get($key)) {
-            if ($cache["delays"] === $this->seconds) {
-                return $cache;
-            }
+        if (!empty(Cache::getInstance()->get($key))) {
+            return Cache::getInstance()->get($key);
         }
 
         try {
-
             $dbfactory = DatabaseFactory::getConnection(self::$connect_id);
 
             $query = $dbfactory->query($query, $parameters);
@@ -115,16 +112,13 @@ class DBCache {
             $cache = [
                 "rows"     => $dbfactory->countRows($query),
                 "array"    => $dbfactory->fetchAllAssoc($query),
-                "arraynum" => $dbfactory->fetchRow($query),
-                "delays"   => $this->seconds
+                "arraynum" => $dbfactory->fetchRow($query)
             ];
 
             Cache::getInstance()->set($key, $cache, $this->seconds);
 
             return $cache;
-
         } catch (\Exception $e) {
-
             set_error(E_CORE_WARNING, $e->getMessage(), $e->getFile(), $e->getLine());
 
             return NULL;
@@ -142,7 +136,7 @@ class DBCache {
         if (is_array($result) && isset($result["rows"])) {
             return (int)$result["rows"];
         }
-        return (int)0;
+        return 0;
     }
 
     /**

@@ -60,6 +60,12 @@ function write_htaccess() {
     $htc .= "    Require all denied".PHP_EOL;
     $htc .= "</Files>".PHP_EOL.PHP_EOL;
 
+    $htc .= "# Protect .cache files".PHP_EOL;
+    $htc .= "<Files *.cache>".PHP_EOL;
+    $htc .= "    Order allow,deny".PHP_EOL;
+    $htc .= "    deny from all".PHP_EOL;
+    $htc .= "</Files>".PHP_EOL.PHP_EOL;
+
     $htc .= "<ifModule mod_headers.c>".PHP_EOL;
     $htc .= "    Header set X-Content-Type-Options \"nosniff\"".PHP_EOL;
     $htc .= "</ifModule>".PHP_EOL.PHP_EOL;

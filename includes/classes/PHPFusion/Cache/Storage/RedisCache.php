@@ -74,6 +74,8 @@ class RedisCache implements ICache {
      * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
+        $data = serialize($data);
+
         if ($seconds !== NULL) {
             $time = 0;
 
@@ -98,7 +100,7 @@ class RedisCache implements ICache {
      * @return mixed
      */
     public function get($key) {
-        return $this->redis->get($key);
+        return unserialize($this->redis->get($key));
     }
 
     /**

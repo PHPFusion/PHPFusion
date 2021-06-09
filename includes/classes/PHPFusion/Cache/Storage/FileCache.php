@@ -51,24 +51,17 @@ class FileCache implements ICache {
      * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
-        $data = serialize($data);
+        $key = md5($key);
 
-        if ($seconds !== NULL) {
-            $file_time = 0;
+        $cache_data = [
+            'expire' => $seconds,
+            'data'   => serialize($data)
+        ];
 
-            if (file_exists($this->path.$key.'.cache')) {
-                $file_time = filemtime($this->path.$key.'.cache');
-            }
-
-            if (($file_time + $seconds) < time()) {
-                if (@file_put_contents($this->path.$key.'.cache', $data, LOCK_EX) == strlen($data)) {
-                    @chmod($this->path.$key.'.cache', 0777);
-                }
-            }
-        } else {
-            if (@file_put_contents($this->path.$key.'.cache', $data, LOCK_EX) == strlen($data)) {
-                @chmod($this->path.$key.'.cache', 0777);
-            }
+        $file = $this->path.$key.'.cache';
+        $json = json_encode($cache_data);
+        if (@file_put_contents($file, $json, LOCK_EX) == strlen($json)) {
+            @chmod($file, 0777);
         }
     }
 
@@ -80,13 +73,30 @@ class FileCache implements ICache {
      * @return mixed
      */
     public function get($key) {
+        $key = md5($key);
         $file = $this->path.$key.'.cache';
 
         if (is_file($file)) {
-            $data = file_get_contents($file);
-            $data = unserialize($data);
+            $file_data = file_get_contents($file);
+            $cache_data = json_decode($file_data, TRUE);
 
-            return $data;
+            if ($cache_data['expire'] !== NULL) {
+                $file_time = 0;
+
+                if (file_exists($file)) {
+                    $file_time = filemtime($file);
+                }
+
+                if (($file_time + $cache_data['expire']) < time()) {
+                    $this->delete($key);
+                    return NULL;
+                }
+            } else {
+                $this->delete($key);
+                return NULL;
+            }
+
+            return unserialize($cache_data['data']);
         }
 
         return NULL;
@@ -98,8 +108,10 @@ class FileCache implements ICache {
      * @param string $key
      */
     public function delete($key) {
-        if (file_exists($this->path.$key.'.cache')) {
-            @unlink($this->path.$key.'.cache');
+        $key = md5($key);
+        $file = $this->path.$key.'.cache';
+        if (file_exists($file)) {
+            @unlink($file);
         }
     }
 

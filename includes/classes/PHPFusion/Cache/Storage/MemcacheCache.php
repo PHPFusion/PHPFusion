@@ -117,7 +117,7 @@ class MemcacheCache implements ICache {
      *
      * @param string $key
      *
-     * @return mixed
+     * @return array|false|string
      */
     public function get($key) {
         return $this->memcache->get($key);
