@@ -77,7 +77,7 @@ if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article
     ]
 ]);
 
-if (db_exists(DB_ARTICLES)) {
+if (defined('ARTICLES_EXISTS')) {
     function articles_home_module($limit) {
         $locale = fusion_get_locale();
 

@@ -83,7 +83,7 @@ if ((!empty($inf_settings['blog_allow_submission']) && $inf_settings['blog_allow
     ]
 ]);
 
-if (db_exists(DB_BLOG)) {
+if (defined('BLOG_EXISTS')) {
     function blog_home_module($limit) {
         $locale = fusion_get_locale();
 

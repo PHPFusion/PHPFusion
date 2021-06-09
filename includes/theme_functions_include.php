@@ -89,11 +89,11 @@ function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '
                             $debug_param = "";
                             if (!empty($debug_backtrace['args'][1])) {
                                 if (is_array($debug_backtrace['args'][1])) {
-                                    $debug_param .= "<br/>array(";
+                                    $debug_param .= "array(".PHP_EOL;
                                     foreach ($debug_backtrace['args'][1] as $key => $value) {
-                                        $debug_param .= "<br/><span class='m-l-15'>[$key] => $value,</span>";
+                                        $debug_param .= "&nbsp;&nbsp;&nbsp;&nbsp;[$key] => $value,".PHP_EOL;
                                     }
-                                    $debug_param .= "<br/>);";
+                                    $debug_param .= ");";
                                 } else {
                                     $debug_param .= $debug_backtrace['args'][1];
                                 }
@@ -111,9 +111,9 @@ function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '
             }
         }
         $modal .= parse_text($modal_body, [
-            'parse_smileys'        => FALSE,
-            'default_image_folder' => NULL,
-            'descript'             => FALSE
+            'parse_smileys' => FALSE,
+            'descript'      => FALSE,
+            'parse_usres'   => FALSE
         ]);
         $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>");
         $modal .= closemodal();
@@ -653,13 +653,7 @@ if (!function_exists('profile_link')) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         if ((in_array($user_status, [0, 3, 7]) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE && $user_id !== 0) {
-            $user = fusion_get_user($user_id);
-            $group_class = '';
-            if (!empty($user['user_level'])) {
-                $group = getgroupdata($user['user_level']);
-                $group_class = 'group-'.$group[0];
-            }
-            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="'.$group_class.' '.$class.'">'.$user_name.'</a>';
+            $link = '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'" class="'.$class.'">'.$user_name.'</a>';
         } else if ($user_status == "5" || $user_status == "6") {
             $link = $locale['user_anonymous'];
         } else {

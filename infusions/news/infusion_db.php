@@ -91,7 +91,7 @@ if ((!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow
     ]
 ]);
 
-if (db_exists(DB_NEWS)) {
+if (defined('NEWS_EXISTS')) {
     function news_home_module($limit) {
         $locale = fusion_get_locale();
 

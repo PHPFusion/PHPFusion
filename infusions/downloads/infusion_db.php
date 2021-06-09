@@ -78,7 +78,7 @@ if ((!empty($inf_settings['download_allow_submission']) && $inf_settings['downlo
     ]
 ]);
 
-if (db_exists(DB_DOWNLOADS)) {
+if (defined('DOWNLOADS_EXISTS')) {
     function downloads_home_module($limit) {
         $locale = fusion_get_locale();
 
