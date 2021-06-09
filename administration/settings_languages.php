@@ -347,7 +347,7 @@ echo "<div class='col-xs-12 col-sm-3'>\n";
 echo "<strong>".$locale['684ML']."</strong>\n";
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
-echo form_lang_checkbox(makefilelist(LOCALE, ".|..", TRUE, "folders"));
+echo form_lang_checkbox();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 echo "<div class='alert alert-info'>".$locale['685ML']."</div>";
@@ -366,25 +366,52 @@ while ($data = dbarray($result)) {
             <input id="'.$data['mlt_rights'].'" style="margin:0;" name="multilang_tables[]" value="'.$data['mlt_rights'].'" type="checkbox"'.($data['mlt_status'] == 1 ? ' checked' : '').'>
         </div>
     </div>';
-
-    //echo "<input type='checkbox' value='".$data['mlt_rights']."' id='".$data['mlt_rights']."' name='multilang_tables[]'  ".($data['mlt_status'] == '1' ? "checked='checked'" : "")." /> <label for='".$data['mlt_rights']."' class='m-b-0'>".$data['mlt_title']."</label><br />";
 }
 echo "</div>\n";
 echo "</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
 echo closeform();
+
+$update = new PHPFusion\Update();
+$list = $update->getAvailableLanguages();
+
+if (!empty($list) && is_array($list)) {
+    if (check_post('download_lang')) {
+        $update->downloadLanguage(post('lang_pack'));
+
+        addnotice('success', sprintf($locale['670a'], post('lang_pack')));
+        redirect(FUSION_REQUEST);
+    }
+
+    echo openform('dllangs', 'post', FUSION_REQUEST, ['class' => 'm-t-15']);
+    openside();
+
+    $langs = [];
+    foreach ($list as $lang) {
+        $langs[$lang] = $lang;
+    }
+    $langs = array_diff_key($langs, array_flip(makefilelist(LOCALE, '.svn|.|..', TRUE, 'folders')));
+
+    echo form_select('lang_pack', $locale['670b'], '', [
+        'options' => $langs,
+        'inline'  => TRUE
+    ]);
+
+    echo form_button('download_lang', $locale['670c'], 'download_lang');
+    closeside();
+    echo closeform();
+}
+
 closetable();
 require_once THEMES.'templates/footer.php';
 
-
 /**
- * Create Language Selector Checkboxes.
- *
- * @param string[] $language_list
+ * Create language selector checkboxes.
  *
  * @return string
  */
-function form_lang_checkbox(array $language_list) {
+function form_lang_checkbox() {
+    $language_list = makefilelist(LOCALE, ".|..", TRUE, "folders");
     $enabled_languages = fusion_get_enabled_languages();
     $res = "";
     foreach ($language_list as $language) {

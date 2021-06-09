@@ -145,6 +145,10 @@ $locale['669b'] = "Blog items per page";
 $locale['669c'] = "News items per page";
 $locale['670'] = "Should be an uneven number";
 
+$locale['670a'] = "Language pack %s has been downloaded.";
+$locale['670b'] = "Language pack";
+$locale['670c'] = "Download";
+
 $locale['672'] = "Enable ratings system?";
 $locale['673'] = "Hide user profiles from public";
 $locale['674'] = "SMTP Port";

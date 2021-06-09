@@ -56,6 +56,13 @@ class Update extends Installer\Infusions {
     private $lang_url = 'https://www.php-fusion.co.uk/translations/tmp/v9/';
 
     /**
+     * List of available languages
+     *
+     * @var string
+     */
+    private $available_languages = 'https://www.php-fusion.co.uk/translations/languages.php?version=9';
+
+    /**
      * @var string
      */
     private $latest_version = '';
@@ -521,6 +528,31 @@ class Update extends Installer\Infusions {
         } else {
             $this->setMessage($this->locale['U_015']);
         }
+    }
+
+    /**
+     * Get available languages
+     *
+     * @return array|false
+     */
+    public function getAvailableLanguages() {
+        if (function_exists('curl_version') && $this->isValidUrl($this->available_languages)) {
+            $list = $this->downloadCurl($this->available_languages);
+            if ($list === FALSE) {
+                $this->setError(sprintf('Could not download update file %s via curl!', $this->available_languages));
+            }
+        } else {
+            $list = @file_get_contents($this->available_languages, FALSE);
+            if ($list === FALSE) {
+                $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->available_languages));
+            }
+        }
+
+        if ($list === FALSE) {
+            return FALSE; // Could not check for available languages
+        }
+
+        return (array)json_decode($list, FALSE);
     }
 
     /**
