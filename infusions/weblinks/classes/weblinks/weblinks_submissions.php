@@ -72,7 +72,7 @@ class WeblinksSubmissions extends WeblinksServer {
                     'weblink_name'        => sanitizer('weblink_name', '', 'weblink_name'),
                     'weblink_description' => sanitizer('weblink_description', '', 'weblink_description'),
                     'weblink_url'         => sanitizer('weblink_url', '', 'weblink_url'),
-                    'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language'),
+                    'weblink_language'    => sanitizer(['weblink_language'], LANGUAGE, 'weblink_language'),
                 ];
 
                 // Save

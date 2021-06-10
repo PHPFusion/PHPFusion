@@ -82,7 +82,7 @@ abstract class Faq extends FaqServer {
             'cat_locale'     => self::$locale['faq_0001'],
             'cat_top'        => self::$locale['faq_0002'],
             'faq_get_name'   => '',
-            'faq_categories' => [],
+            'faq_categories' => []
         ];
 
         $c_result = dbquery("SELECT fc.*, count(fq.faq_id) 'faq_count'

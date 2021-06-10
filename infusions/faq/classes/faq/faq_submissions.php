@@ -61,7 +61,7 @@ class FaqSubmissions extends FaqServer {
                     'faq_cat_id'   => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
                     'faq_question' => sanitizer('faq_question', '', 'faq_question'),
                     'faq_answer'   => sanitizer('faq_answer', '', 'faq_answer'),
-                    'faq_language' => sanitizer('faq_language', LANGUAGE, 'faq_language'),
+                    'faq_language' => sanitizer(['faq_language'], LANGUAGE, 'faq_language'),
                     'faq_status'   => 1
                 ];
                 // Save

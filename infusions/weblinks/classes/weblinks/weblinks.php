@@ -35,9 +35,9 @@ abstract class Weblinks extends WeblinksServer {
     protected function __construct() {
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
         $this->weblink_settings = self::get_weblink_settings();
-        $this->type = filter_input(INPUT_GET, 'type', FILTER_DEFAULT);
-        $this->rowstart = filter_input(INPUT_GET, 'rowstart', FILTER_VALIDATE_INT);
-        $this->cat_id = filter_input(INPUT_GET, 'cat_id', FILTER_VALIDATE_INT);
+        $this->type = get('type', FILTER_DEFAULT);
+        $this->rowstart = get('rowstart', FILTER_VALIDATE_INT);
+        $this->cat_id = get('cat_id', FILTER_VALIDATE_INT);
         $this->rowstart = !empty($this->rowstart) ? $this->rowstart : 0;
     }
 
@@ -50,12 +50,11 @@ abstract class Weblinks extends WeblinksServer {
 
         set_title(self::$locale['web_0000']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(
-            [
-                'link'  => INFUSIONS."weblinks/weblinks.php",
-                'title' => self::$locale['web_0000']
-            ]
-        );
+        BreadCrumbs::getInstance()->addBreadCrumb([
+            'link'  => INFUSIONS."weblinks/weblinks.php",
+            'title' => self::$locale['web_0000']
+        ]);
+
 
         $this->def_cat['weblink_tablename'] = self::$locale['web_0000'];
         $this->def_cat['weblink_filter'] += self::get_WeblinkFilters();
