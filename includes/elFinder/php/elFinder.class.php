@@ -32,7 +32,7 @@ class elFinder
      *
      * @var integer
      */
-    protected static $ApiRevision = 57;
+    protected static $ApiRevision = 58;
 
     /**
      * Storages (root dirs)
@@ -530,6 +530,7 @@ class elFinder
     const ERROR_UPLOAD_TEMP = 'errUploadTemp';       // 'Unable to make temporary file for upload.'
     const ERROR_UPLOAD_TOTAL_SIZE = 'errUploadTotalSize';  // 'Data exceeds the maximum allowed size.'
     const ERROR_UPLOAD_TRANSFER = 'errUploadTransfer';   // '"$1" transfer error.'
+    const ERROR_MAX_MKDIRS = 'errMaxMkdirs'; // 'You can create up to $1 folders at one time.'
 
     /**
      * Constructor
@@ -569,6 +570,8 @@ class elFinder
         !defined('ELFINDER_ZIP_PATH') && define('ELFINDER_ZIP_PATH', 'zip');
         !defined('ELFINDER_UNZIP_PATH') && define('ELFINDER_UNZIP_PATH', 'unzip');
         !defined('ELFINDER_RAR_PATH') && define('ELFINDER_RAR_PATH', 'rar');
+        // Create archive in RAR4 format even when using RAR5 library (true or false)
+        !defined('ELFINDER_RAR_MA4') && define('ELFINDER_RAR_MA4', false);
         !defined('ELFINDER_UNRAR_PATH') && define('ELFINDER_UNRAR_PATH', 'unrar');
         !defined('ELFINDER_7Z_PATH') && define('ELFINDER_7Z_PATH', (substr(PHP_OS, 0, 3) === 'WIN') ? '7z' : '7za');
         !defined('ELFINDER_CONVERT_PATH') && define('ELFINDER_CONVERT_PATH', 'convert');
@@ -986,7 +989,7 @@ class elFinder
                             $errors[] = (string)$_err;
                         }
                         if ($_res['error']) {
-                            throw elFinderTriggerException();
+                            throw new elFinderTriggerException();
                         }
                     }
                 }
@@ -2167,6 +2170,10 @@ class elFinder
             return array('error' => $this->error(self::ERROR_MKDIR, $name, self::ERROR_TRGDIR_NOT_FOUND, '#' . $target));
         }
         if ($dirs) {
+            $maxDirs = $volume->getOption('uploadMaxMkdirs');
+            if ($maxDirs && $maxDirs < count($dirs)) {
+                return array('error' => $this->error(self::ERROR_MAX_MKDIRS, $maxDirs));
+            }
             sort($dirs);
             $reset = null;
             $mkdirs = array();
@@ -2862,7 +2869,8 @@ class elFinder
                 $type = 'finfo';
                 $finfo = finfo_open(FILEINFO_MIME);
             } elseif (function_exists('mime_content_type')
-                && preg_match($regexp, array_shift(explode(';', mime_content_type(__FILE__))))) {
+                && ($_ctypes = explode(';', mime_content_type(__FILE__)))
+                && preg_match($regexp, array_shift($_ctypes))) {
                 $type = 'mime_content_type';
             } elseif (function_exists('getimagesize')) {
                 $type = 'getimagesize';
@@ -5103,12 +5111,13 @@ var go = function() {
      * @param  string $output       stdout strings
      * @param  int    $return_var   process exit code
      * @param  string $error_output stderr strings
+     * @param  null   $cwd          cwd
      *
      * @return int exit code
      * @throws elFinderAbortException
      * @author Alexey Sukhotin
      */
-    public static function procExec($command, &$output = '', &$return_var = -1, &$error_output = '')
+    public static function procExec($command, &$output = '', &$return_var = -1, &$error_output = '', $cwd = null)
     {
 
         static $allowed = null;
@@ -5138,7 +5147,7 @@ var go = function() {
             2 => array("pipe", "w")   // stderr
         );
 
-        $process = proc_open($command, $descriptorspec, $pipes, null, null);
+        $process = proc_open($command, $descriptorspec, $pipes, $cwd, null);
 
         if (is_resource($process)) {
             stream_set_blocking($pipes[1], 0);
