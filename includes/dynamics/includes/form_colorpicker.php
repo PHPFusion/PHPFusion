@@ -26,8 +26,8 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         fusion_load_script(DYNAMICS.'assets/colorpick/bs4/css/bootstrap-colorpicker.min.css', 'css');
         fusion_load_script(DYNAMICS.'assets/colorpick/bs4/js/bootstrap-colorpicker.min.js');
     } else {
-        fusion_load_script(DYNAMICS.'assets/colorpick/css/bootstrap-colorpicker.min.css', 'css');
-        fusion_load_script(DYNAMICS.'assets/colorpick/js/bootstrap-colorpicker.min.js');
+        fusion_load_script(DYNAMICS.'assets/colorpick/bs3/css/bootstrap-colorpicker.min.css', 'css');
+        fusion_load_script(DYNAMICS.'assets/colorpick/bs3/js/bootstrap-colorpicker.min.js');
     }
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
