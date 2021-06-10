@@ -107,6 +107,8 @@ $deleted_files = [
     CLASSES.'PHPFusion/Installer/Lib/Core.tables.php',
     DYNAMICS.'assets/colorpick/css/',
     DYNAMICS.'assets/colorpick/js/',
+    DYNAMICS.'assets/datepicker/css/',
+    DYNAMICS.'assets/datepicker/js/',
 ];
 
 foreach ($deleted_files as $file) {
