@@ -313,7 +313,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         ".($options['hide_remove'] ? 'showRemove: false,' : '')."
                         $extra_data_js
                         layoutTemplates: {
-                            main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
+                            main2: '<div class=\"btn-photo-upload btn-link\">{preview}<div class=\"kv-upload-progress hide\"></div>{remove}{cancel}{upload}{browse}</div>'
                         },
                         ".$lang."
                     });
