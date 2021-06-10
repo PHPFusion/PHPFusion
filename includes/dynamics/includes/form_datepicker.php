@@ -98,15 +98,15 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         if (defined('BOOTSTRAP4')) {
             add_to_head("<link href='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>");
         } else {
-            add_to_head("<link href='".DYNAMICS."assets/datepicker/bs3/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>");
+            add_to_head("<link href='".DYNAMICS."assets/datepicker/bs3/bootstrap-datetimepicker.min.css' rel='stylesheet'>");
         }
 
-        add_to_footer("<script src='".DYNAMICS."assets/datepicker/js/moment.min.js'></script>");
+        add_to_footer("<script src='".DYNAMICS."assets/datepicker/moment.min.js'></script>");
 
         if (defined('BOOTSTRAP4')) {
             add_to_footer("<script src='".DYNAMICS."assets/datepicker/bs4/tempusdominus-bootstrap-4.min.js'></script>");
         } else {
-            add_to_footer("<script src='".DYNAMICS."assets/datepicker/bs3/js/bootstrap-datetimepicker.min.js'></script>");
+            add_to_footer("<script src='".DYNAMICS."assets/datepicker/bs3/bootstrap-datetimepicker.min.js'></script>");
         }
         add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
