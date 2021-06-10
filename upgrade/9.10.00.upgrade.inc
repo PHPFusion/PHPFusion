@@ -109,6 +109,11 @@ $deleted_files = [
     DYNAMICS.'assets/colorpick/js/',
     DYNAMICS.'assets/datepicker/css/',
     DYNAMICS.'assets/datepicker/js/',
+    INCLUDES.'jscripts/tinymce/langs/',
+    INCLUDES.'classes/PHPMailer/language/',
+    INCLUDES.'dynamics/assets/datepicker/locale/',
+    INCLUDES.'dynamics/assets/password/lang/',
+    INCLUDES.'dynamics/assets/fileinput/js/locales/',
 ];
 
 foreach ($deleted_files as $file) {
