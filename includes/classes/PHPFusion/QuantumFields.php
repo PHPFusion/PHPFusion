@@ -522,7 +522,7 @@ class QuantumFields extends SqlHandler {
             redirect(FUSION_SELF.$aidlink);
         }
 
-        if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
+        if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && $_GET['cat_id'] != 1 && self::validate_fieldCat($_GET['cat_id'])) {
 
             // do action of the interior form
             if (isset($_POST['delete_cat'])) {
@@ -1096,7 +1096,9 @@ class QuantumFields extends SqlHandler {
                 echo "<div class='m-t-20 m-b-10 pull-right'>";
                 echo "<div class='btn-group'>";
                 echo "<a class='btn btn-default' href='".FUSION_SELF.$aidlink."&amp;action=cat_edit&amp;cat_id=".$page_id."'>".$this->locale['fields_0308']."</a>";
-                echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
+                if ($page_id !== 1) {
+                    echo "<a class='btn btn-danger' href='".FUSION_SELF.$aidlink."&amp;action=cat_delete&amp;cat_id=".$page_id."'>".$this->locale['fields_0313']."</a>";
+                }
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
