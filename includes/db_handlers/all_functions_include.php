@@ -118,7 +118,7 @@ function dbquery($query, $parameters = []) {
  *
  * @param string $field      Parenthesized field name
  * @param string $table      Table name
- * @param string $conditions conditions after "where"
+ * @param string $conditions Conditions after "where"
  * @param array  $parameters
  *
  * @return int
@@ -210,6 +210,32 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306, $hal
 }
 
 /**
+ * Connect to the another database
+ *
+ * @param string $db_host
+ * @param string $db_user
+ * @param string $db_pass
+ * @param string $db_name
+ * @param int    $db_port
+ * @param string $dbid
+ *
+ * @return AbstractDatabaseDriver
+ */
+function custom_dbconnet($db_host, $db_user, $db_pass, $db_name, $db_port, $dbid) {
+    PHPFusion\Database\DatabaseFactory::registerConfiguration($dbid, [
+        'host'     => $db_host,
+        'user'     => $db_user,
+        'password' => $db_pass,
+        'database' => $db_name,
+        'port'     => $db_port,
+        'charset'  => 'utf8mb4',
+        'debug'    => PHPFusion\Database\DatabaseFactory::isDebug($dbid)
+    ]);
+
+    return PHPFusion\Database\DatabaseFactory::getConnection($dbid);
+}
+
+/**
  * Get the next auto_increment id of a table
  *
  * Try to avoid the use of it! {@link dblastid()} after insert
@@ -230,7 +256,7 @@ function dbnextid($table) {
  * @return int
  */
 function dblastid() {
-    return (int)DatabaseFactory::getConnection('default')->getLastId();
+    return DatabaseFactory::getConnection('default')->getLastId();
 }
 
 /**
