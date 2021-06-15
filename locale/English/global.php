@@ -295,8 +295,6 @@ $locale['global_409'] = "This account has been banned for security reasons.";
 $locale['global_410'] = "The reason for this is: ";
 $locale['global_411'] = "This account has been cancelled.";
 $locale['global_412'] = "This account has been anonymized, probably because of inactivity.";
-$locale['global_413'] = "Username is available";
-$locale['global_414'] = "Username is not available";
 // Flood control
 $locale['global_440'] = "Automatic Ban by Flood Control";
 $locale['global_441'] = "Your account on [SITENAME] has been banned";

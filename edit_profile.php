@@ -92,8 +92,8 @@ if (!defined('EDITPROFILE_JS_CHECK')) {
                     $(".userpass-checker").remove();
 
                     if (e.result === "valid") {
-                        r_userpass1.removeClass("is-invalid");
-                        r_userpass1_field.removeClass("has-error"); // BS3
+                        r_userpass1.addClass("is-valid").removeClass("is-invalid");
+                        r_userpass1_field.addClass("has-success").removeClass("has-error"); // BS3
                     } else if (e.result === "invalid") {
                         r_userpass1.addClass("is-invalid").removeClass("is-valid");
                         r_userpass1_field.addClass("has-error").removeClass("has-success"); // BS3
@@ -121,8 +121,8 @@ if (!defined('EDITPROFILE_JS_CHECK')) {
                     $(".adminpass-checker").remove();
 
                     if (e.result === "valid") {
-                        r_adminpass1.removeClass("is-invalid");
-                        r_adminpass1_field.removeClass("has-error"); // BS3
+                        r_adminpass1.addClass("is-valid").removeClass("is-invalid");
+                        r_adminpass1_field.addClass("has-success").removeClass("has-error"); // BS3
                     } else if (e.result === "invalid") {
                         r_adminpass1.addClass("is-invalid").removeClass("is-valid");
                         r_adminpass1_field.addClass("has-error").removeClass("has-success"); // BS3

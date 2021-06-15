@@ -61,10 +61,10 @@ $locale['u115'] = "Language";
 $locale['u116'] = "There are no group members.";
 $locale['u117'] = "No user groups.";
 // User name and email
-$locale['u119'] = "User name contains.";
+$locale['u119'] = "User name is prohibited.";
 $locale['u120'] = "User name contains invalid characters.";
 $locale['u121'] = "The chosen user name is already taken by another user.";
-$locale['u122'] = "User Name can not be left empty.";
+$locale['u122'] = "User name can not be left empty.";
 $locale['u123'] = "Your email address does not appear to be valid.";
 $locale['u124'] = "Your email address or email domain appears to be blacklisted.";
 $locale['u125'] = "The email address is already registered by another user.";

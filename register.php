@@ -136,8 +136,6 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                             if (e.result === "valid") {
                                 r_username.addClass("is-valid").removeClass("is-invalid");
                                 r_username_field.addClass("has-success").removeClass("has-error"); // BS3
-                                let feedback_html = "<div class=\"username-checker valid-feedback help-block\">" + e.response + "</div>";
-                                r_username.after(feedback_html);
                             } else if (e.result === "invalid") {
                                 r_username.addClass("is-invalid").removeClass("is-valid");
                                 r_username_field.addClass("has-error").removeClass("has-success"); // BS3
@@ -161,8 +159,8 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
                             $(".userpass-checker").remove();
 
                             if (e.result === "valid") {
-                                r_userpass1.removeClass("is-invalid");
-                                r_userpass1_field.removeClass("has-error"); // BS3
+                                r_userpass1.addClass("is-valid").removeClass("is-invalid");
+                                r_userpass1_field.addClass("has-success").removeClass("has-error"); // BS3
                             } else if (e.result === "invalid") {
                                 r_userpass1.addClass("is-invalid").removeClass("is-valid");
                                 r_userpass1_field.addClass("has-error").removeClass("has-success"); // BS3

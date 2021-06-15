@@ -234,8 +234,7 @@ class UserFieldsInput {
 
                 if ($this->_userName != $this->userData['user_name']) {
 
-
-                    if (!preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $this->_userName)) {
+                    if (!preg_match('/^[-a-z\p{L}\p{N}_]*$/ui', $this->_userName)) {
 
                         // Check for invalid characters
                         fusion_stop();
@@ -245,7 +244,7 @@ class UserFieldsInput {
 
                     } else if (in_array($this->_userName, $uban)) {
 
-                        // Check for contains username
+                        // Check for prohibited usernames
                         fusion_stop();
 
                         $defender::setInputError('user_name');

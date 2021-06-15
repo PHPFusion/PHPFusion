@@ -23,19 +23,24 @@ function xusername_validation() {
     $username = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
     $result = [];
     if (!empty($username)) {
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 
         $available = dbcount("(user_id)", DB_USERS, "user_name=:name", [':name' => $username]);
         $is_used = dbcount("(user_code)", DB_NEW_USERS, "user_name=:name", [':name' => $username]);
-        $check_string = preg_match("/^[\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z\p{N}]+\h?[\p{N}\p{Latin}\p{Arabic}\p{Cyrillic}\p{Han}\p{Hebrew}a-zA-Z]*$/um", $username);
-        $username_ban = explode(',', fusion_get_settings('username_ban'));
 
-        if ($available == 0 && $is_used == 0 && $check_string && !in_array($username, $username_ban)) {
-            $result['result'] = 'valid';
-            $result['response'] = $locale['global_413'];
-        } else {
+        if (!preg_match('/^[-a-z\p{L}\p{N}_]*$/ui', $username)) { // Check for invalid characters
             $result['result'] = 'invalid';
-            $result['response'] = $locale['global_414'];
+            $result['response'] = $locale['u120'];
+        } else if (in_array($username, explode(',', fusion_get_settings('username_ban')))) { // Check for prohibited usernames
+            $result['result'] = 'invalid';
+            $result['response'] = $locale['u119'];
+        } else {
+            if ($available == 0 && $is_used == 0) {
+                $result['result'] = 'valid';
+            } else {
+                $result['result'] = 'invalid';
+                $result['response'] = $locale['u121'];
+            }
         }
 
         header('Content-Type: application/json');
