@@ -109,7 +109,7 @@ $deleted_files = [
     DYNAMICS.'assets/colorpick/js/',
     DYNAMICS.'assets/datepicker/css/',
     DYNAMICS.'assets/datepicker/js/',
-    INCLUDES.'jscripts/tinymce/langs/',
+    INCLUDES.'jscripts/tinymce/',
     INCLUDES.'classes/PHPMailer/language/',
     INCLUDES.'dynamics/assets/datepicker/locale/',
     INCLUDES.'dynamics/assets/password/lang/',

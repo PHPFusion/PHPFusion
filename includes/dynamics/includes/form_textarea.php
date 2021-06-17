@@ -68,8 +68,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'input_bbcode'        => '',
         'wordcount'           => FALSE,
         'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
-        'tinymce_theme'       => 'modern',
-        'tinymce_skin'        => 'lightgray',
+        'tinymce_theme'       => 'silver', // silver|mobile
+        'tinymce_skin'        => 'oxide', // oxide|oxide-dark
         'tinymce_spellcheck'  => TRUE,
         'rows'                => 5,
         'censor_words'        => TRUE,
@@ -124,7 +124,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
             add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
-            add_to_head("<script src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+            add_to_head("<script src='".INCLUDES."jscripts/tinymce5/tinymce.min.js'></script>");
             add_to_head("<script src='".INCLUDES."elFinder/js/tinymceElfinder.min.js'></script>");
 
             add_to_jquery('
@@ -219,7 +219,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     plugins: [
                         'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                         'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                        'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
+                        'save table directionality template paste ".($options['inline_editing'] ? " save " : "")."'
                     ],
                     image_list: $tinymce_list,
                     content_css: '".$options['tinymce_css']."',
@@ -271,7 +271,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     plugins: [
                         'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
                         'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                        'contextmenu directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
+                        'directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
                     ],
                     width: '100%',
                     height: 100,
@@ -407,7 +407,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     if ($options['inline_editing'] == TRUE) {
         $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width: ".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width: ".$options['inner_width']."; height:".$options['height'].";".($options['no_resize'] ? ' resize: none;' : '')."' rows='".$options['rows']."' cols='' class='form-control m-0 ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border bbr-0" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."'".($options['deactivate'] ? ' readonly' : '')." ".($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='width: ".$options['inner_width']."; height:".$options['height'].";".($options['no_resize'] ? ' resize: none;' : '')."' rows='".$options['rows']."' cols='' class='form-control m-0 ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border bbr-0" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."'".($options['deactivate'] ? ' readonly' : '')." ".($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
