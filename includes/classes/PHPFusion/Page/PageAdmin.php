@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Page/PageAdmin.php
+| Filename: PageAdmin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -56,7 +56,7 @@ class PageAdmin extends PageModel {
     public static function getComposerAdminInstance() {
         if (empty(self::$page_instance)) {
             self::$page_instance = new static;
-            self::set_PageAdminConfig();
+            self::setPageAdminConfig();
         }
 
         return (object)self::$page_instance;
@@ -65,10 +65,8 @@ class PageAdmin extends PageModel {
     /**
      * Init
      */
-    public static function set_PageAdminConfig() {
-
-        self::$current_section = isset($_GET['section']) && in_array($_GET['section'],
-            self::$allowed_admin_pages) ? $_GET['section'] : self::$allowed_admin_pages[0];
+    public static function setPageAdminConfig() {
+        self::$current_section = isset($_GET['section']) && in_array($_GET['section'], self::$allowed_admin_pages) ? $_GET['section'] : self::$allowed_admin_pages[0];
         self::$current_status = isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : self::$current_status;
         self::$current_action = isset($_GET['action']) ? $_GET['action'] : self::$current_action;
         self::$current_pageId = isset($_GET['cpid']) && isnum($_GET['cpid']) ? intval($_GET['cpid']) : self::$current_pageId;
@@ -104,7 +102,10 @@ class PageAdmin extends PageModel {
         }
     }
 
-    public function display_page() {
+    /**
+     * Display page
+     */
+    public function displayPage() {
 
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink());
@@ -147,7 +148,7 @@ class PageAdmin extends PageModel {
         switch (self::$current_action) {
             case 'edit':
                 if (!empty(self::$current_pageId)) {
-                    self::$data = self::load_customPage(self::$current_pageId);
+                    self::$data = self::loadCustomPage(self::$current_pageId);
                     if (empty(self::$data)) {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
@@ -159,7 +160,7 @@ class PageAdmin extends PageModel {
                 break;
             case 'delete':
                 if (!empty(self::$current_pageId)) {
-                    self::delete_customPage(self::$current_pageId);
+                    self::deleteCustomPage(self::$current_pageId);
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_pageId);
                     dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_pageId);
                     addnotice('success', self::$locale['page_0400']);

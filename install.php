@@ -19,4 +19,4 @@ const BASEDIR = '';
 const IN_FUSION = TRUE;
 require_once __DIR__.'/includes/autoloader.php';
 // Start the installer
-PHPFusion\Installer\InstallCore::getInstallInstance()->install_phpfusion();
+PHPFusion\Installer\InstallCore::getInstallInstance()->installPhpfusion();

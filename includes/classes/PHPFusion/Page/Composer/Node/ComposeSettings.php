@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Network/ComposeSettings.php
+| Filename: ComposeSettings.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -114,8 +114,7 @@ class ComposeSettings extends PageAdmin {
                                             $data['link_id'],
                                             "link_id",
                                             $data['link_cat'], "link_cat", multilang_table("SL"),
-                                            "link_language",
-                                            "update");
+                                            "link_language");
 
                                         dbquery_insert(DB_SITE_LINKS, $data, 'update');
 

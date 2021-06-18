@@ -21,15 +21,17 @@ use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
 class Permissions extends InstallCore {
-
-    public function __view() {
+    /**
+     * @return string
+     */
+    public function view() {
 
         $content = "<h4 class='title'>".self::$locale['setup_1106']."</h4>\n";
         $content .= "<hr/>\n";
 
         $content .= "<div class='table-responsive'><table class='table  table-hover'>\n";
         $system_health = 10;
-        $system_requirements = Requirements::get_system_requirements();
+        $system_requirements = Requirements::getSystemRequirements();
         foreach ($system_requirements as $test) {
             $class = '';
             if (isset($test['severability'])) {
@@ -89,5 +91,4 @@ class Permissions extends InstallCore {
 
         return $content;
     }
-
 }

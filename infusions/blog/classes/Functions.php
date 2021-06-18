@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Blog;
 
-use PHPFusion\Feedback\Comments;
+use PHPFusion\Comments;
 
 /**
  * Functions for Blog System

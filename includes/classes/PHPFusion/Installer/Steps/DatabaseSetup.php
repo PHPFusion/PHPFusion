@@ -29,8 +29,11 @@ use PHPFusion\Installer\Requirements;
  */
 class DatabaseSetup extends InstallCore {
 
-    public function __view() {
-        return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatch_tables() : $this->step_form();
+    /**
+     * @return false|string
+     */
+    public function view() {
+        return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatchTables() : $this->stepForm();
     }
 
     /**
@@ -38,7 +41,7 @@ class DatabaseSetup extends InstallCore {
      *
      * @return string
      */
-    private function dispatch_tables() {
+    private function dispatchTables() {
         $debug_process = FALSE;
         $debug_batching = FALSE;
         $log_file = TRUE;
@@ -106,192 +109,177 @@ class DatabaseSetup extends InstallCore {
 
         if (fusion_safe()) {
 
-            $validate = Requirements::get_system_validation();
+            $validate = Requirements::getSystemValidation();
 
             if (isset($validate[4])) {
 
                 require_once(INCLUDES.'multisite_include.php');
 
-                $to_create = Batch::getInstance()->batch_runtime('create'); // this should just run once no matter how many times queried.
+                $to_create = Batch::getInstance()->batchRuntime('create'); // this should just run once no matter how many times queried.
 
-                $to_alter_column = Batch::getInstance()->batch_runtime('alter_column');
+                $to_alter_column = Batch::getInstance()->batchRuntime('alter_column');
 
-                $to_add_column = Batch::getInstance()->batch_runtime('add_column');
+                $to_add_column = Batch::getInstance()->batchRuntime('add_column');
 
-                $to_insert_rows = Batch::getInstance()->batch_runtime('insert'); // must return array to insert with table.
+                $to_insert_rows = Batch::getInstance()->batchRuntime('insert'); // must return array to insert with table.
 
-                $to_upgrade = Batch::getInstance()->batch_runtime("upgrade");
+                $to_upgrade = Batch::getInstance()->batchRuntime("upgrade");
 
-                //$final_message = self::$locale['setup_1210'];
-                // Go for point system differentiation
                 $query_count = 0;
 
-                if (Batch::getInstance()->ProgressHasError() === FALSE) {
-                    //$final_message = self::$locale['setup_1211'];
+                // Create missing new tables
+                if (!empty($to_create) && $debug_batching === FALSE) {
+                    if (!$debug_process) {
+                        foreach ($to_create as $table_create) {
 
-                    // Create missing new tables
-                    if (!empty($to_create) && $debug_batching === FALSE) {
-                        //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
-                        if (!$debug_process) {
-                            foreach ($to_create as $table_create) {
+                            $query_count = $query_count + 1;
 
-                                $query_count = $query_count + 1;
-
-                                $this->doCoreBatch($table_create);
-
-                                /*$message .= $table_name." created<br/>\n";*/
-                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, self::$locale['setup_1600'].$table_name.'...', $result);
-                            }
-                        }
-                    }
-
-                    // Alterations of inconsistent columns - varchar(200) to text
-                    if (!empty($to_alter_column) && $debug_batching === FALSE) {
-                        //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
-                        if (!$debug_process) {
-                            foreach ($to_alter_column as $table_processes) {
-
-                                if (!empty($table_processes)) {
-
-                                    foreach ($table_processes as $table_alter) {
-
-                                        $query_count = $query_count + 1;
-
-                                        $this->doCoreBatch($table_alter);
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Adding missing columns on a specific table
-                    if (!empty($to_add_column) && $debug_batching === FALSE) {
-                        //$message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
-                        if (!$debug_process) {
-                            foreach ($to_add_column as $table_processes) {
-
-                                if (!empty($table_processes)) {
-                                    foreach ($table_processes as $table_add) {
-
-                                        $query_count = $query_count + 1;
-
-                                        $this->doCoreBatch($table_add);
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Insert default rows on all required tables
-                    if (!empty($to_insert_rows) && $debug_batching === FALSE) {
-                        // $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
-                        if (!$debug_process) {
-                            foreach ($to_insert_rows as $row_inserts) {
-
-                                $query_count = $query_count + 1;
-
-                                $this->doCoreBatch($row_inserts);
-                            }
-                            //addNotice("info", $message);
-                        }
-                    }
-
-                    //Checking for upgrade
-                    if ($debug_batching === FALSE) {
-                        $to_upgrade = Batch::getInstance()->check_upgrades(); // get upgrade queries
-                        if (!empty($to_upgrade)) {
-                            $error = FALSE;
-                            //$message = "<strong>Building version upgrades...</strong>\n";
-                            if (!$debug_process) {
-                                $filename = '';
-                                foreach ($to_upgrade as $filename => $file_upgrades) {
-
-                                    //$microtime = microtime(TRUE);
-                                    if (!empty($file_upgrades)) {
-                                        foreach ($file_upgrades as $callback_method => $upgrades) {
-                                            if (!empty($upgrades)) {
-
-                                                self::$allow_delete = TRUE;
-
-                                                $method = $callback_method."_infuse";
-                                                if (method_exists($this, $method)) {
-                                                    //dynamically select object pairing dynamic assigned function on dynamic callback.
-                                                    $query_count = $query_count + 1;
-
-                                                    //$error = $this->$method([$callback_method => $upgrades]);
-                                                    $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
-
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    //$microtime = microtime(TRUE) - $microtime;
-                                    //$message .= "Building version upgrades -".$filename;
-                                    //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
-                                }
-
-                                if (!$error) {
-                                    dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
-                                        ':version_value' => $filename,
-                                        ':version_col'   => 'version'
-                                    ]);
-                                }
-                            }
-                        }
-                    }
-
-                    // Generate Log File
-                    if ($log_file === TRUE) {
-                        if (!empty($to_create)) {
-                            $sql[] = $this->makeSQLImportLog("Creates Table", $to_create);
-                        }
-                        if (!empty($to_alter_column)) {
-                            $sql[] = $this->makeSQLImportLog("Modifies Table", $to_alter_column);
-                        }
-                        if (!empty($to_add_column)) {
-                            $sql[] = $this->makeSQLImportLog("Adds Column Table on", $to_add_column);
-                        }
-                        if (!empty($to_insert_rows)) {
-                            $sql[] = $this->makeSQLImportLog("Insert rows into", $to_insert_rows);
-                        }
-                        if (!empty($to_upgrade)) {
-                            foreach ($to_upgrade as $instructions) {
-                                $sql[] = $this->makeSQLImportLog("Upgrading..", $instructions, TRUE);
-                            }
-                        }
-                        if (!empty($sql)) {
-                            if (!is_file(BASEDIR."installer_".date("d-M-Y").".process.log")) {
-                                touch(BASEDIR."installer_".date("d-M-Y").".process.log");
-                            }
-                            write_file(BASEDIR."installer_".date("d-M-Y").".process.log", implode("", $sql));
+                            $this->doCoreBatch($table_create);
                         }
                     }
                 }
+
+                // Alterations of inconsistent columns - varchar(200) to text
+                if (!empty($to_alter_column) && $debug_batching === FALSE) {
+                    //$message = "<strong>".self::$locale['setup_1600']."...</strong>\n";
+                    if (!$debug_process) {
+                        foreach ($to_alter_column as $table_processes) {
+
+                            if (!empty($table_processes)) {
+
+                                foreach ($table_processes as $table_alter) {
+
+                                    $query_count = $query_count + 1;
+
+                                    $this->doCoreBatch($table_alter);
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Adding missing columns on a specific table
+                if (!empty($to_add_column) && $debug_batching === FALSE) {
+                    //$message = "<strong>".self::$locale['setup_1602']."...</strong>\n";
+                    if (!$debug_process) {
+                        foreach ($to_add_column as $table_processes) {
+
+                            if (!empty($table_processes)) {
+                                foreach ($table_processes as $table_add) {
+
+                                    $query_count = $query_count + 1;
+
+                                    $this->doCoreBatch($table_add);
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Insert default rows on all required tables
+                if (!empty($to_insert_rows) && $debug_batching === FALSE) {
+                    // $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
+                    if (!$debug_process) {
+                        foreach ($to_insert_rows as $row_inserts) {
+
+                            $query_count = $query_count + 1;
+
+                            $this->doCoreBatch($row_inserts);
+                        }
+                        //addNotice("info", $message);
+                    }
+                }
+
+                //Checking for upgrade
+                if ($debug_batching === FALSE) {
+                    $to_upgrade = Batch::getInstance()->checkUpgrades(); // get upgrade queries
+                    if (!empty($to_upgrade)) {
+                        $error = FALSE;
+                        //$message = "<strong>Building version upgrades...</strong>\n";
+                        if (!$debug_process) {
+                            $filename = '';
+                            foreach ($to_upgrade as $filename => $file_upgrades) {
+
+                                //$microtime = microtime(TRUE);
+                                if (!empty($file_upgrades)) {
+                                    foreach ($file_upgrades as $callback_method => $upgrades) {
+                                        if (!empty($upgrades)) {
+
+                                            self::$allow_delete = TRUE;
+
+                                            $method = $callback_method."_infuse";
+                                            if (method_exists($this, $method)) {
+                                                //dynamically select object pairing dynamic assigned function on dynamic callback.
+                                                $query_count = $query_count + 1;
+
+                                                //$error = $this->$method([$callback_method => $upgrades]);
+                                                $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
+
+                                            }
+                                        }
+                                    }
+                                }
+
+                                //$microtime = microtime(TRUE) - $microtime;
+                                //$message .= "Building version upgrades -".$filename;
+                                //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
+                            }
+
+                            if (!$error) {
+                                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
+                                    ':version_value' => $filename,
+                                    ':version_col'   => 'version'
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+                // Generate Log File
+                if ($log_file === TRUE) {
+                    if (!empty($to_create)) {
+                        $sql[] = $this->makeSqlImportLog("Creates Table", $to_create);
+                    }
+                    if (!empty($to_alter_column)) {
+                        $sql[] = $this->makeSqlImportLog("Modifies Table", $to_alter_column);
+                    }
+                    if (!empty($to_add_column)) {
+                        $sql[] = $this->makeSqlImportLog("Adds Column Table on", $to_add_column);
+                    }
+                    if (!empty($to_insert_rows)) {
+                        $sql[] = $this->makeSqlImportLog("Insert rows into", $to_insert_rows);
+                    }
+                    if (!empty($to_upgrade)) {
+                        foreach ($to_upgrade as $instructions) {
+                            $sql[] = $this->makeSqlImportLog("Upgrading..", $instructions, TRUE);
+                        }
+                    }
+                    if (!empty($sql)) {
+                        if (!is_file(BASEDIR."installer_".date("d-M-Y").".process.log")) {
+                            touch(BASEDIR."installer_".date("d-M-Y").".process.log");
+                        }
+                        write_file(BASEDIR."installer_".date("d-M-Y").".process.log", implode("", $sql));
+                    }
+                }
+
 
                 /*
                  * Generate final message
                  */
-                if (!isset($errors)) {
-                    $errors = Batch::getInstance()->ProgressHasError();
-                }
-
-                if (!$errors) {
-                    if ($debug_process === FALSE) {
-                        require_once(INCLUDES.'htaccess_include.php');
-                        Installer\write_config(self::$connection);
-                        write_htaccess();
-                        if (!empty($to_upgrade)) {
-                            self::installer_step(self::STEP_INFUSIONS);
-                        } else {
-                            self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
-                        }
-                        redirect(FUSION_REQUEST);
+                if ($debug_process === FALSE) {
+                    require_once(INCLUDES.'htaccess_include.php');
+                    Installer\write_config(self::$connection);
+                    write_htaccess();
+                    if (!empty($to_upgrade)) {
+                        self::installerStep(self::STEP_INFUSIONS);
                     } else {
-                        print_p('Debug print end.');
+                        self::installerStep(self::STEP_PRIMARY_ADMIN_FORM);
                     }
+                    redirect(FUSION_REQUEST);
+                } else {
+                    print_p('Debug print end.');
                 }
             } else {
                 foreach ($validate as $validate_result) {
@@ -299,12 +287,12 @@ class DatabaseSetup extends InstallCore {
                         addnotice('danger', $validate_result['description']);
                     }
                 }
-                self::installer_step(self::STEP_DB_SETTINGS_FORM);
+                self::installerStep(self::STEP_DB_SETTINGS_FORM);
                 redirect(FUSION_REQUEST);
             }
             return $content;
         } else {
-            self::installer_step(self::STEP_DB_SETTINGS_FORM);
+            self::installerStep(self::STEP_DB_SETTINGS_FORM);
             redirect(FUSION_REQUEST);
         }
 
@@ -312,7 +300,7 @@ class DatabaseSetup extends InstallCore {
     }
 
     /**
-     * @param $query
+     * @param string $query
      *
      * @return bool
      */
@@ -330,8 +318,8 @@ class DatabaseSetup extends InstallCore {
     }
 
     /**
-     * @param $method
-     * @param $code_array
+     * @param string $method
+     * @param array  $code_array
      *
      * @return bool
      */
@@ -351,13 +339,13 @@ class DatabaseSetup extends InstallCore {
     }
 
     /**
-     * @param      $comment_message
-     * @param      $array
-     * @param bool $_SDK
+     * @param string $comment_message
+     * @param array  $array
+     * @param bool   $_SDK
      *
      * @return string
      */
-    protected function makeSQLImportLog($comment_message, $array, $_SDK = FALSE) {
+    protected function makeSqlImportLog($comment_message, $array, $_SDK = FALSE) {
         $sql = "";
         if (!empty($array)) {
             foreach ($array as $table => $syntax) { // table is method
@@ -392,16 +380,19 @@ class DatabaseSetup extends InstallCore {
         return $sql;
     }
 
-    private function step_form() {
+    /**
+     * @return string
+     */
+    private function stepForm() {
         // Back button prevention
         if (!empty(self::$connection)) {
             if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), "==")) {
-                self::installer_step(self::STEP_INTRO);
+                self::installerStep(self::STEP_INTRO);
                 redirect(FUSION_REQUEST);
             }
         }
 
-        self::set_empty_prefix();
+        self::setEmptyPrefix();
 
         if (!empty(session_get("db_config_connection"))) {
             self::$connection = $_SESSION['db_config_connection'];
@@ -469,5 +460,4 @@ class DatabaseSetup extends InstallCore {
 
         return $content;
     }
-
 }

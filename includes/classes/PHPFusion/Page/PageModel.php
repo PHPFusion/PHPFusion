@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Page/PageModel.php
+| Filename: PageModel.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -96,11 +96,11 @@ class PageModel {
     /**
      * Displays a single custom page data
      *
-     * @param $id - page_id
+     * @param int $id page_id
      *
      * @return array;
      */
-    public static function load_customPage($id) {
+    public static function loadCustomPage($id) {
         $array = [];
         $page_id = filter_var($id, FILTER_VALIDATE_INT);
         if ($page_id) {
@@ -111,10 +111,15 @@ class PageModel {
             );
         }
 
-        return (array)$array;
+        return $array;
     }
 
-    public static function query_customPage($id = NULL) {
+    /**
+     * @param int $id
+     *
+     * @return mixed
+     */
+    public static function queryCustomPage($id = NULL) {
         return dbquery("
             SELECT cp.*, link.link_id, link.link_order
             FROM ".DB_CUSTOM_PAGES." cp
@@ -127,7 +132,7 @@ class PageModel {
     /**
      * Displays Custom Page Selector
      */
-    public static function display_customPage_selector() {
+    public static function displayCustomPageSelector() {
 
         $aidlink = fusion_get_aidlink();
 
@@ -166,7 +171,7 @@ class PageModel {
     /**
      * Load page composer data
      */
-    protected static function load_ComposerData() {
+    protected static function loadComposerData() {
         $query = "SELECT crows.*, col.page_id, col.page_content_id, col.page_content_type, col.page_content, col.page_content_order, col.page_widget, col.page_options
         FROM ".DB_CUSTOM_PAGES_GRID." crows
         LEFT JOIN ".DB_CUSTOM_PAGES_CONTENT." col USING(page_grid_id)
@@ -201,9 +206,9 @@ class PageModel {
     /**
      * Cache widgets info and object
      *
-     * @return mixed
+     * @return array
      */
-    protected static function cache_widget() {
+    protected static function cacheWidget() {
         if (empty(self::$widgets)) {
             $list = [];
             $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
@@ -255,16 +260,12 @@ class PageModel {
     }
 
     /**
-     * @param $max_column_limit - max grid count per row
-     * @param $current_count - current actual count if is a fluid design
+     * @param int $max_column_limit Max grid count per row
      *
      * @return string
      */
-    protected static function calculateSpan($max_column_limit, $current_count) {
+    protected static function calculateSpan($max_column_limit) {
         $default_xs_size = 12;
-        $fluid_default_sm_size = $current_count >= $max_column_limit ? floor(12 / $max_column_limit) : floor(12 / $current_count);
-        $fluid_default_md_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
-        $fluid_default_lg_size = $current_count >= $max_column_limit ? 12 / $max_column_limit : floor(12 / $current_count);
         $default_sm_size = floor(12 / $max_column_limit);
         $default_md_size = floor(12 / $max_column_limit);
         $default_lg_size = floor(12 / $max_column_limit);
@@ -275,11 +276,11 @@ class PageModel {
     /**
      * SQL delete page
      *
-     * @param $pageid
+     * @param int $pageid
      */
-    protected function delete_customPage($pageid) {
+    protected function deleteCustomPage($pageid) {
         $page_id = filter_var($pageid, FILTER_VALIDATE_INT);
-        if ($page_id && self::verify_customPage($page_id)) {
+        if ($page_id && self::verifyCustomPage($page_id)) {
             $result = dbquery("DELETE FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid", [':pageid' => $page_id]);
             if ($result) {
                 dbquery("DELETE FROM ".DB_SITE_LINKS." WHERE link_url=:pageurl", [':pageurl' => 'viewpage.php?page_id='.intval($page_id)]);
@@ -290,11 +291,11 @@ class PageModel {
     /**
      * Authenticate the page ID is valid
      *
-     * @param $id
+     * @param int $id
      *
-     * @return bool|string
+     * @return bool
      */
-    protected static function verify_customPage($id) {
+    protected static function verifyCustomPage($id) {
         $page_id = filter_var($id, FILTER_VALIDATE_INT);
         if ($page_id) {
             return dbcount("(page_id)", DB_CUSTOM_PAGES, "page_id=:pageid", [':pageid' => $page_id]);

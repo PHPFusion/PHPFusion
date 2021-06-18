@@ -31,11 +31,11 @@ class Search extends Search_Engine {
      * Global view function
      */
     public static function display_search() {
-        self::display_search_form();
+        self::displaySearchForm();
         if (strlen(self::get_param('stext')) >= 3) {
-            self::display_results();
+            self::displayResults();
         } else if (isset($_POST['stext'])) {
-            self::display_noResults();
+            self::displayNoResults();
         }
     }
 

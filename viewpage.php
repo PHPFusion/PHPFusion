@@ -17,5 +17,5 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
-echo PHPFusion\Page\PageView::getInstance()->View();
+PHPFusion\Page\PageView::getInstance()->view();
 require_once THEMES.'templates/footer.php';

@@ -18,7 +18,12 @@
 namespace PHPFusion\Installer\Lib;
 
 class CoreSettings {
-    // the enabled languages in step 1. take it out. put it behind.
+    /**
+     * @param string $table_name
+     * @param string $localeset
+     *
+     * @return array[]|\array[][]|mixed|null
+     */
     public static function get_table_rows($table_name, $localeset = 'English') {
         $locale = fusion_get_locale();
 

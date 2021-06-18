@@ -36,7 +36,7 @@ class RSS {
         $this->settings = fusion_get_settings();
 
         if ($this->settings['site_seo'] == 1 && !defined('IN_PERMALINK')) {
-            \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing('');
+            \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting('');
         }
     }
 

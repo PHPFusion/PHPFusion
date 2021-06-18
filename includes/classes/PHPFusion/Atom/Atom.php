@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Atom/Atom.php
+| Filename: Atom.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -24,7 +24,7 @@ class Atom {
     public $theme_name = '';
     public $compress = TRUE;
     public $debug = FALSE;
-    public $Compiler = TRUE; // turn off compiler here.
+    public $compiler = TRUE; // turn off compiler here.
     private $font_decoration_options = [];
     private $fills = [];
     /**
@@ -386,8 +386,6 @@ class Atom {
         }
     }
 
-    /* Write CSS file - get bootstrap, fill in values, add to atom.min.css */
-
     /**
      * Theme Styler Page
      * Edit done, save done. Now load.
@@ -474,6 +472,9 @@ class Atom {
         echo closeform();
     }
 
+    /**
+     * Save theme
+     */
     public function save_theme() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
@@ -512,7 +513,7 @@ class Atom {
 
             if (fusion_safe()) {
 
-                $data['theme_file'] = $this->buildCss();
+                $data['theme_file'] = $this->build_css();
 
                 if (dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".intval($data['theme_id'])."'")) {
                     if (!empty($data['theme_file'])) {
@@ -554,9 +555,12 @@ class Atom {
         }
     }
 
-    /* Handling Posts and Feedback. Watch out for Unsets */
-
-    protected function buildCss() {
+    /**
+     * Build CSS
+     *
+     * @return string|null
+     */
+    protected function build_css() {
         $this->debug = FALSE;
 
         $locale = fusion_get_locale();
@@ -567,7 +571,7 @@ class Atom {
         $options = ['output' => $outputFile, 'compress' => $this->compress,];
         $this->set_less_variables();
 
-        if (!empty($this->less_var) && fusion_safe() && $this->Compiler) {
+        if (!empty($this->less_var) && fusion_safe() && $this->compiler) {
             if ($this->debug) {
                 print_p("current less var");
                 print_p($this->less_var);
@@ -600,7 +604,7 @@ class Atom {
             }
         } else {
             fusion_stop();
-            if (!$this->Compiler) {
+            if (!$this->compiler) {
                 addnotice('danger', $locale['theme_error_008']);
             } else {
                 addnotice('danger', $locale['theme_error_007']);
@@ -610,6 +614,9 @@ class Atom {
         return NULL;
     }
 
+    /**
+     * Set LESS vars
+     */
     private function set_less_variables() {
         $this->less_var = $this->data;
         // css which requires atom's custom parse rules.
@@ -692,8 +699,13 @@ class Atom {
         $this->less_var['navbar_link_decoration_active'] = $this->parse_font_decoration($this->data['navbar_link_decoration_active']);
     }
 
-    /* Administration Menus - Part I - Font Settings */
-
+    /**
+     * Parse fonts
+     *
+     * @param string $font
+     *
+     * @return string|null
+     */
     static function parse_fonts($font) {
         $_parsedFonts = [];
         if ($font) {
@@ -712,8 +724,13 @@ class Atom {
         }
     }
 
-    /* Administration Menus - Part II - Components & Layout Settings */
-
+    /**
+     * Parse font set
+     *
+     * @param string $font
+     *
+     * @return string
+     */
     static function parse_font_set($font) {
         $fonts_family_opts = [
             '0' => '@font-family-sans-serif',
@@ -724,15 +741,24 @@ class Atom {
         return $fonts_family_opts[$font];
     }
 
-    /* Administration Menus - Part III - Navigation Settings */
-
+    /**
+     * Parse font size
+     *
+     * @param string $font
+     *
+     * @return int|string
+     */
     static function parse_size($font) {
         return $font > 0 ? $font.'px' : 0;
     }
 
-    /* Returns list of google_fonts */
-    /*@todo: allow return of jquery Google Font real-time parsing via Google API */
-
+    /**
+     * Parse font weight
+     *
+     * @param string $font
+     *
+     * @return string
+     */
     private function parse_font_weight($font) {
         if (!$font) {
             return $this->text_weight[0];
@@ -741,8 +767,13 @@ class Atom {
         }
     }
 
-    /* Returns list of common base fonts */
-
+    /**
+     * Parse font style
+     *
+     * @param string $font
+     *
+     * @return string
+     */
     private function parse_font_style($font) {
         if (!$font) {
             return $this->text_style[0];
@@ -751,8 +782,13 @@ class Atom {
         }
     }
 
-    /* add quotes for font name with whitespace */
-
+    /**
+     * Parse text decoration
+     *
+     * @param string $font
+     *
+     * @return string
+     */
     private function parse_font_decoration($font) {
         if (!$font) {
             return $this->text_decoration[0];
@@ -761,8 +797,9 @@ class Atom {
         }
     }
 
-    /* return the font sets */
-
+    /**
+     * Fonts admin
+     */
     private function font_admin() {
         $locale = fusion_get_locale();
         $base_font = array_values(array_flip($this->base_font()));
@@ -937,8 +974,11 @@ class Atom {
         closeside();
     }
 
-    /* parse the font size metrics - can be edited to use 'px', 'em', 'rem' */
-
+    /**
+     * Return base fonts
+     *
+     * @return string[]
+     */
     static function base_font() {
         // OS Font Defaults
         return [
@@ -963,8 +1003,11 @@ class Atom {
         //print_p($os_faces);
     }
 
-    /* parse font-weight */
-
+    /**
+     * Return Google Fonts
+     *
+     * @return string[]
+     */
     static function google_font() {
         //api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
         return [
@@ -1616,8 +1659,9 @@ class Atom {
         ];
     }
 
-    /* parse text-decoration */
-
+    /**
+     * Administration
+     */
     private function layout_admin() {
         $locale = fusion_get_locale();
         $width_options = ["width" => "100%", 'placeholder' => 'px'];
@@ -1830,8 +1874,9 @@ class Atom {
         closeside();
     }
 
-    /* parse font-style */
-
+    /**
+     * Admin navigation
+     */
     private function nav_admin() {
         $locale = fusion_get_locale();
         $width_options = ["width" => "100%", 'placeholder' => 'px'];
@@ -1916,96 +1961,5 @@ class Atom {
         ]);
         echo "</div>\n</div>\n";
         closeside();
-    }
-
-    /* Outputs adjusted colors */
-    /*private function parse_background($hex, $fill_type) {
-        // possible fill types in atom
-        // darken or lighten functions via steps of 255 max.
-        $hex_value = str_replace('#', '', $hex);
-        $stop_hex = $this->adjustBrightness($hex_value, -20);
-        switch ($fill_type) {
-            case 0: // flat
-                return $hex;
-                break;
-            case 1: // horizontal
-                return "
-                    background: ".$hex.";
-                    background: -moz-linear-gradient(left, ".$hex." 0%, ".$stop_hex." 100%);
-                    background: -webkit-gradient(linear, left top, right top, color-stop(0%, ".$hex."), color-stop(100%, ".$stop_hex."));
-                    background: -webkit-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -o-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -ms-linear-gradient(left, ".$hex." 0%,".$stop_hex." 100%);
-                    background: linear-gradient(to right, ".$hex." 0%,".$stop_hex." 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
-                ";
-                break;
-            case 2: // vertical
-                return "
-                    background: ".$hex.";
-                    background: -moz-linear-gradient(top, ".$hex." 0%, ".$stop_hex." 100%);
-                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-                    background: -webkit-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -o-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -ms-linear-gradient(top, ".$hex." 0%,".$stop_hex." 100%);
-                    background: linear-gradient(to bottom, ".$hex." 0%,".$stop_hex." 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=0 );
-                ";
-                break;
-            case 3: //radial
-                return "
-                    background: ".$hex.";
-                    background: -moz-radial-gradient(center, ellipse cover, ".$hex." 0%, ".$stop_hex." 100%);
-                    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-                    background: -webkit-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -o-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -ms-radial-gradient(center, ellipse cover, ".$hex." 0%,".$stop_hex." 100%);
-                    background: radial-gradient(ellipse at center, ".$hex." 0%,".$stop_hex." 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1 );
-                ";
-                break;
-            case 4: // diagonal
-                return "
-                    background: ".$hex.";
-                    background: -moz-linear-gradient(-45deg, ".$hex." 0%, ".$stop_hex." 100%);
-                    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,".$hex."), color-stop(100%,".$stop_hex."));
-                    background: -webkit-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -o-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-                    background: -ms-linear-gradient(-45deg, ".$hex." 0%,".$stop_hex." 100%);
-                    background: linear-gradient(135deg, ".$hex." 0%,".$stop_hex." 100%);
-                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='".$hex."', endColorstr='".$stop_hex."',GradientType=1);
-                ";
-                break;
-            default:
-                return $hex;
-        }
-    }*/
-
-    /* Background parser */
-    static function adjustBrightness($hex, $percent) {
-        /* Function by Torkill Johnsen */
-        // Steps should be between -255 and 255. Negative = darker, positive = lighter
-        //$steps = max(-255, min(255));
-        $steps = $percent > 0 ? 255 * ($percent / 100) : -255 * ($percent / 100);
-        $steps = $steps >= 255 ? 255 : $steps;
-        $steps = $steps <= 255 ? -255 : $steps;
-        // Format the hex color string
-        $hex = str_replace('#', '', $hex);
-        if (strlen($hex) == 3) {
-            $hex = str_repeat(substr($hex, 0, 1), 2).str_repeat(substr($hex, 1, 1), 2).str_repeat(substr($hex, 2, 1), 2);
-        }
-        // Get decimal values
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-        // Adjust number of steps and keep it inside 0 to 255
-        $r = max(0, min(255, $r + $steps));
-        $g = max(0, min(255, $g + $steps));
-        $b = max(0, min(255, $b + $steps));
-        $r_hex = str_pad(dechex($r), 2, '0', STR_PAD_LEFT);
-        $g_hex = str_pad(dechex($g), 2, '0', STR_PAD_LEFT);
-        $b_hex = str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-
-        return '#'.$r_hex.$g_hex.$b_hex;
     }
 }

@@ -62,7 +62,7 @@ class Search_Engine extends Search_Model {
     /**
      * Controller for search form
      */
-    protected static function display_search_form() {
+    protected static function displaySearchForm() {
         $locale = self::$locale;
         add_to_title($locale['global_202']);
         $form_elements = self::$form_config['form_elements'];
@@ -71,7 +71,7 @@ class Search_Engine extends Search_Model {
          */
         $options_table = "<p><strong>".$locale['405']."</strong></p><table style='width:100%'>\n";
         if (!empty(self::$form_config['radio_button'])) {
-            foreach (self::$form_config['radio_button'] as $key => $value) {
+            foreach (self::$form_config['radio_button'] as $value) {
                 $options_table .= "<tr>\n<td>".$value."</td>\n</tr>\n";
             }
         }
@@ -125,7 +125,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields1',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("fields1", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $search_areas .= form_checkbox('fields', $locale['431'], self::get_param('fields'),
@@ -135,7 +135,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields2',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("fields2", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $search_areas .= form_checkbox('fields', $locale['432'], self::get_param('fields'),
@@ -145,7 +145,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'fields3',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("fields3", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("fields3", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $search_areas .= "</div></div>";
@@ -165,7 +165,7 @@ class Search_Engine extends Search_Model {
         $sort .= form_select('sort', '', self::get_param('sort'), [
             'inner_width' => '150px',
             'options'     => $sort_opts,
-            'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("sort", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+            'deactivate'  => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("sort", $form_elements[self::get_param('stype')]['disabled']))
         ]);
         $sort .= form_checkbox('order', $locale['450'], self::get_param('order'),
             [
@@ -174,7 +174,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'order1',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order1", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("order1", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $sort .= form_checkbox('order', $locale['451'], self::get_param('order'),
@@ -184,7 +184,7 @@ class Search_Engine extends Search_Model {
                 'reverse_label' => TRUE,
                 'input_id'      => 'order2',
                 'class'         => 'm-b-0',
-                'deactivate'    => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'    => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("order2", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $sort .= "</div></div>";
@@ -205,7 +205,7 @@ class Search_Engine extends Search_Model {
         $char_areas .= form_select('chars', '', self::get_param('chars'), [
                 'inner_width' => '150px',
                 'options'     => $char_opts,
-                'deactivate'  => (self::get_param('stype') != "all" ? (isset($form_elements[self::get_param('stype')]) && in_array("chars", $form_elements[self::get_param('stype')]['disabled'])) : FALSE)
+                'deactivate'  => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("chars", $form_elements[self::get_param('stype')]['disabled']))
             ]
         );
         $char_areas .= "</div></div>";
@@ -254,7 +254,7 @@ class Search_Engine extends Search_Model {
         foreach ($form_elements as $type => $array1) {
             $search_js .= "case '".$type."':\n";
             foreach ($array1 as $what => $array2) {
-                foreach ($array2 as $elements => $value) {
+                foreach ($array2 as $value) {
                     if ($what == "enabled") {
                         $search_js .= "document.getElementById('".$value."').disabled = false;\n";
                     } else {
@@ -290,11 +290,12 @@ class Search_Engine extends Search_Model {
     /**
      * Returns params
      *
-     * @param null $key
+     * @param string $key
      *
      * @return array|string
      */
     public static function get_param($key = NULL) {
+        $info = [];
         try {
             $info = [
                 'stype'        => stripinput(self::$search_type),
@@ -322,7 +323,7 @@ class Search_Engine extends Search_Model {
     /**
      * Controller for display the search results
      */
-    protected static function display_results() {
+    protected static function displayResults() {
         $locale = self::$locale;
         self::$composevars = "method=".self::get_param('method')."&amp;datelimit=".self::get_param('datelimit')."&amp;fields=".self::get_param('fields')."&amp;sort=".self::get_param('sort')."&amp;order=".self::get_param('order')."&amp;chars=".self::get_param('chars')."&amp;forum_id=".self::get_param('forum_id')."&amp;";
         add_to_title($locale['global_201'].$locale['408']);
@@ -373,40 +374,40 @@ class Search_Engine extends Search_Model {
          */
         if (self::get_param('stype') == "all") {
             $search_deffiles = [];
-            $search_includefiles = makefilelist(INCLUDES.'search/', '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
+            $search_includefiles = makefilelist(INCLUDES.'search/', '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE);
             $search_infusionfiles = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
             if (!empty($search_infusionfiles)) {
                 foreach ($search_infusionfiles as $files_to_check) {
                     if (is_dir(INFUSIONS.$files_to_check.'/search/')) {
-                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE, "files");
+                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE);
                         $search_deffiles = array_merge($search_deffiles, $search_checkfiles);
                     }
                 }
             }
             $search_files = array_merge($search_includefiles, $search_deffiles);
 
-            foreach ($search_files as $key => $file_to_check) {
+            foreach ($search_files as $file_to_check) {
                 if (preg_match("/include.php/i", $file_to_check)) {
                     if (file_exists(INCLUDES."search/".$file_to_check)) {
-                        self::__Load(INCLUDES."search/".$file_to_check);
+                        self::loadDriver(INCLUDES."search/".$file_to_check);
                     }
 
                     foreach ($search_infusionfiles as $inf_files_to_check) {
                         if (file_exists(INFUSIONS.$inf_files_to_check.'/search/'.$file_to_check)) {
-                            self::__Load(INFUSIONS.$inf_files_to_check.'/search/'.$file_to_check);
+                            self::loadDriver(INFUSIONS.$inf_files_to_check.'/search/'.$file_to_check);
                         }
                     }
                 }
             }
         } else {
             if (file_exists(INCLUDES."search/search_".self::get_param('stype')."_include.php")) {
-                self::__Load(INCLUDES."search/search_".self::get_param('stype')."_include.php");
+                self::loadDriver(INCLUDES."search/search_".self::get_param('stype')."_include.php");
             }
 
             $search_infusionfiles = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
             foreach ($search_infusionfiles as $inf_files_to_check) {
                 if (file_exists(INFUSIONS.$inf_files_to_check.'/search/search_'.self::get_param('stype').'_include.php')) {
-                    self::__Load(INFUSIONS.$inf_files_to_check.'/search/search_'.self::get_param('stype').'_include.php');
+                    self::loadDriver(INFUSIONS.$inf_files_to_check.'/search/search_'.self::get_param('stype').'_include.php');
                 }
             }
         }
@@ -469,16 +470,16 @@ class Search_Engine extends Search_Model {
      * Load the search driver file
      * - Prevents string mutation
      *
-     * @param $path
+     * @param string $path
      */
-    protected static function __Load($path) {
+    protected static function loadDriver($path) {
         include_once($path);
     }
 
     /**
      * Controller for omitting search
      */
-    protected static function display_noResults() {
+    protected static function displayNoResults() {
         $locale = self::$locale;
         add_to_title($locale['global_201'].$locale['408']);
         echo strtr(Search::render_search_no_result(), [

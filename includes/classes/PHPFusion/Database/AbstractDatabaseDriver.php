@@ -92,7 +92,7 @@ abstract class AbstractDatabaseDriver {
      */
     public static function getGlobalQueryCount() {
         $count = 0;
-        foreach (self::getGlobalQueryLog() as $connectionID => $queries) {
+        foreach (self::getGlobalQueryLog() as $queries) {
             $count = $count + count($queries);
         }
         /**
@@ -231,7 +231,7 @@ abstract class AbstractDatabaseDriver {
     /**
      * Fetch all rows as associative arrays
      *
-     * @param $result
+     * @param mixed $result
      *
      * @return array
      */
@@ -256,7 +256,7 @@ abstract class AbstractDatabaseDriver {
     /**
      * Fetch all rows as numeric arrays
      *
-     * @param $result
+     * @param mixed $result
      *
      * @return array
      */
@@ -381,7 +381,7 @@ abstract class AbstractDatabaseDriver {
      *
      * @see http://php.net/manual/en/pdo.quote.php
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */

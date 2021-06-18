@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Atom/Admin.php
+| Filename: Admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -40,7 +40,7 @@ class Admin {
     /**
      * Check if a theme widget file exist
      *
-     * @param $theme_name
+     * @param string $theme_name
      *
      * @return bool
      */
@@ -51,7 +51,7 @@ class Admin {
     /**
      * The Theme Editor - Manage UI
      *
-     * @param $theme_name
+     * @param string $theme_name
      */
     public static function display_theme_editor($theme_name) {
         $locale = fusion_get_locale();
@@ -143,7 +143,7 @@ class Admin {
     /**
      * Verify theme exist
      *
-     * @param $theme_name
+     * @param string $theme_name
      *
      * @return bool
      */
@@ -151,6 +151,9 @@ class Admin {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name);
     }
 
+    /**
+     * Display available site themes
+     */
     public static function display_theme_list() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -277,6 +280,9 @@ class Admin {
         );
     }
 
+    /**
+     * Display available admin themes
+     */
     public static function admin_themes_list() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
@@ -300,7 +306,7 @@ class Admin {
             $theme_screenshot = file_exists($themefolder.'screenshot.png') ? $themefolder.'screenshot.png' : $themefolder.'screenshot.jpg';
             $data[$status][$folder] = [
                 'title'      => $folder,
-                'screenshot'  => file_exists($theme_screenshot) ? $theme_screenshot : IMAGES.'imagenotfound.jpg',
+                'screenshot' => file_exists($theme_screenshot) ? $theme_screenshot : IMAGES.'imagenotfound.jpg',
             ];
         }
 
@@ -309,20 +315,23 @@ class Admin {
         foreach ($data as $status => $themes) {
             foreach ($themes as $theme_name => $theme_data) {
                 echo '<div class="col-xs-12 col-sm-6 col-lg-3">';
-                    echo '<div class="panel panel-default"><div class="panel-body">';
-                        echo '<img class="img-responsive" src="'.$theme_data['screenshot'].'" alt="'.$theme_name.'">';
-                        echo '<h3>'.$theme_data['title'].'</h3>';
+                echo '<div class="panel panel-default"><div class="panel-body">';
+                echo '<img class="img-responsive" src="'.$theme_data['screenshot'].'" alt="'.$theme_name.'">';
+                echo '<h3>'.$theme_data['title'].'</h3>';
 
-                        if ($status == 0) {
-                            echo '<a class="btn btn-primary btn-block" href="'.FUSION_SELF.$aidlink.'&section=admin_themes&action=set_active&theme='.$theme_name.'">'.$locale['theme_1012'].'</a>';
-                        }
-                    echo '</div></div>';
+                if ($status == 0) {
+                    echo '<a class="btn btn-primary btn-block" href="'.FUSION_SELF.$aidlink.'&section=admin_themes&action=set_active&theme='.$theme_name.'">'.$locale['theme_1012'].'</a>';
+                }
+                echo '</div></div>';
                 echo '</div>';
             }
         }
         echo '</div>';
     }
 
+    /**
+     * Upload site/admin theme
+     */
     public static function theme_uploader() {
         $defender = \Defender::getInstance();
         $locale = fusion_get_locale();

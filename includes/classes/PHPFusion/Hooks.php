@@ -30,6 +30,11 @@ final class Hooks {
     private static $instances = NULL;
 
     private $output = [];
+    private $filter_name;
+    /**
+     * @var array
+     */
+    private $hook_args;
 
     /**
      * Get an instance by key
@@ -38,9 +43,9 @@ final class Hooks {
      *
      * @return static
      */
-    public static function get_instances($key = 'default') {
+    public static function get_instance($key = 'default') {
         if (!isset(self::$instances[$key])) {
-            self::$instances[$key] = new static();
+            self::$instances[$key] = new Hooks();
         }
 
         return self::$instances[$key];
@@ -49,11 +54,11 @@ final class Hooks {
     /**
      * Register a hook into the $instance
      *
-     * @param $filter_name
-     * @param $function
-     * @param $que
-     * @param $default_args
-     * @param $accepted_args
+     * @param string $filter_name   The name of the hook, this is your identifier.
+     * @param string $function      The callback function to run when the filter runs.
+     * @param int    $que           Optional, values 1-10, where 1 runs first and 10 runs last.
+     * @param array  $default_args  Optional, the default state of parameter during adding hook.
+     * @param int    $accepted_args Optional, the limitation of the hook parameters the hook can accept.
      *
      * @return bool
      */
@@ -78,8 +83,8 @@ final class Hooks {
     /**
      * Returns the hook by $filter_name and $function
      *
-     * @param        $filter_name
-     * @param string $function
+     * @param string $filter_name The name of the hook, this is your identifier.
+     * @param string $function    The callback function to run when the filter runs.
      *
      * @return array
      */
@@ -109,9 +114,9 @@ final class Hooks {
     /**
      * Remove a specified hook from the $instance
      *
-     * @param $filter_name
-     * @param $function
-     * @param $que
+     * @param string $filter_name The name of the hook, this is your identifier.
+     * @param string $function    The callback function to run when the filter runs.
+     * @param int    $que
      *
      * @return bool
      */
@@ -157,11 +162,11 @@ final class Hooks {
      * @return array
      */
     /**
-     * @param $default_args
+     * @param mixed $default_args
      *
      * @return array
      */
-    private function getFunctionArgs($default_args) {
+    private function get_function_args($default_args) {
         if (!empty($this->hook_args)) {
             $this->hook_args = array_flip($this->hook_args);
             unset($this->hook_args[$this->filter_name]);
@@ -179,7 +184,7 @@ final class Hooks {
      * Run the hooks by $filter_name and $args parameters
      * There will be no output. If you need an output, use filter hook.
      *
-     * @param $filter_name
+     * @param string $filter_name
      *
      * @throws \Exception
      */
@@ -193,7 +198,7 @@ final class Hooks {
 
         if (!empty($current_hook)) {
 
-            foreach ($current_hook as $index => $hook) {
+            foreach ($current_hook as $hook) {
 
                 // prevent the current hook from being called twice, executed or not, else crash
                 $this->remove_hook($filter_name, $hook['function'], $hook['que']);
@@ -202,7 +207,7 @@ final class Hooks {
 
                     $args = (!empty($hook['default_args']) ? $hook['default_args'] : []);
 
-                    $this->hook_args = $this->getFunctionArgs($args);
+                    $this->hook_args = $this->get_function_args($args);
 
                     if ($hook['accepted_args'] && !empty($this->hook_args)) {
                         if ($hook['accepted_args'] !== count($this->hook_args)) {
@@ -221,7 +226,7 @@ final class Hooks {
             }
 
             if (!empty($this->get_hook($filter_name)))
-                $this->apply_hook($filter_name, $function_args);
+                $this->apply_hook($filter_name, $this->hook_args);
 
         }
     }
@@ -229,7 +234,7 @@ final class Hooks {
     /**
      * Run the hook filter, can be used multiple times within a loop to get the parse.
      *
-     * @param $filter_name
+     * @param string $filter_name
      *
      * @return mixed|string
      * @throws \Exception
@@ -268,7 +273,7 @@ final class Hooks {
     /**
      * Run the hook filter, can be used multiple times within a loop to get the parse.
      *
-     * @param $filter_name
+     * @param string $filter_name
      *
      * @return mixed|string
      * @throws \Exception
@@ -305,9 +310,9 @@ final class Hooks {
      * Run the hooks by $filter_name and $args parameters
      * This filter must only run once in application.
      *
-     * @param $filter_name
+     * @param string $filter_name
      *
-     * @return array|mixed
+     * @return array
      */
     public function filter_hook($filter_name) {
 
@@ -322,7 +327,7 @@ final class Hooks {
     }
 
     /**
-     * @param $filter_name
+     * @param string $filter_name
      *
      * @return string
      */
@@ -334,7 +339,7 @@ final class Hooks {
     }
 
     /**
-     * @param $filter_name
+     * @param string $filter_name
      *
      * @return string
      */

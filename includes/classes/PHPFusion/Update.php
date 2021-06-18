@@ -18,6 +18,7 @@
 namespace PHPFusion;
 
 use PHPFusion\Installer\Batch;
+use PHPFusion\Installer\Infusions;
 
 class Update extends Installer\Infusions {
     /**
@@ -341,6 +342,19 @@ class Update extends Installer\Infusions {
      * @param $code_array
      *
      * @return bool
+     *
+     * @uses adminpanel_infuse
+     * @uses dropcol_infuse
+     * @uses sitelink_infuse
+     * @uses mlt_insertdbrow_infuse
+     * @uses mlt_adminpanel_infuse
+     * @uses mlt_infuse
+     * @uses altertable_infuse
+     * @uses updatedbrow_infuse
+     * @uses newtable_infuse
+     * @uses newcol_infuse
+     * @uses insertdbrow_infuse
+     * @uses deldbrow_infuse
      */
     protected function doUpgradeBatch($method, $code_array) {
         try {
@@ -361,7 +375,7 @@ class Update extends Installer\Infusions {
      * @return bool
      */
     private function doDbUpgrade() {
-        $to_upgrade = Batch::getInstance()->check_upgrades();
+        $to_upgrade = Batch::getInstance()->checkUpgrades();
         if (!empty($to_upgrade)) {
             $this->setMessage($this->locale['U_012']);
 

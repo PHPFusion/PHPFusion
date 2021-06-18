@@ -297,12 +297,12 @@ class PageList extends PageAdmin {
             if ($max_pages > $rowCount) {
                 $page_uri = clean_request('', ['aid'], TRUE);
                 echo "<div class='pull-right'>\n";
-                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;', 'rowstart');
+                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;');
                 echo "</div>\n";
             }
 
             echo openform('cp_table', 'post', FUSION_REQUEST);
-            echo form_hidden('table_action', '', '');
+            echo form_hidden('table_action');
             echo "<div class='m-t-20 table-responsive'>\n";
             echo "<table id='cp_table_list' class='table".(!empty($data) ? " table-striped " : " ")."table-hover ".fusion_sort_table('cp_table_list')."'>\n";
             echo "<thead>\n";
@@ -337,7 +337,9 @@ class PageList extends PageAdmin {
                 echo "<td>".getgroupname($pageData['page_access'])."</td>\n";
                 echo "<td>".$pageLanguage."</td>\n";
                 echo "<td>$pageStatus</td><td>\n";
-                if ($pageData['page_status'] == 1) { echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;\n"; }
+                if ($pageData['page_status'] == 1) {
+                    echo "<a target='_new' href='".BASEDIR."viewpage.php?page_id=".$pageData['page_id']."'>".$locale['preview']."</a> &middot;\n";
+                }
                 echo "<a href='$edit_link'>".$locale['edit']."</a> &middot;\n";
                 echo "<a class='delete' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;cpid=".$pageData['page_id']."' onclick=\"return confirm('".$locale['page_0413']."');\">".$locale['delete']."</a>\n";
                 echo "</td>";
@@ -353,7 +355,7 @@ class PageList extends PageAdmin {
             if ($max_pages > $rowCount) {
                 $page_uri = clean_request('', ['aid'], TRUE);
                 echo "<div class='clearfix'><div class='pull-right'>\n";
-                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;', 'rowstart');
+                echo makepagenav($rowstart, $page_per_query, $max_pages, 3, $page_uri.'&amp;');
                 echo "</div></div>";
             }
 

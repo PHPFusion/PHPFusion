@@ -37,7 +37,7 @@ class PageComposer extends PageAdmin {
 
         $composer_mode = self::getComposerMode();
         if (!empty($composer_mode)) {
-            self::validate_PageSQL();
+            self::validatePageSql();
         }
 
         echo openform('inputform', 'post', FUSION_REQUEST, ["class" => "m-t-20"]);
@@ -86,7 +86,7 @@ class PageComposer extends PageAdmin {
      * SQL update or save data
      * Composer Mode Required - pg_settings, pg_composer, pg_content
      */
-    protected static function validate_PageSQL() {
+    protected static function validatePageSql() {
 
         if (isset($_POST['save']) or isset($_POST['save_and_close'])) {
 
@@ -108,8 +108,8 @@ class PageComposer extends PageAdmin {
                     ];
 
                     if (fusion_safe()) {
-                        self::execute_PageSQL();
-                        self::execute_PageRedirect();
+                        self::executePageSql();
+                        self::executePageRedirect();
                     }
                     break;
                 case 'pg_content';
@@ -141,9 +141,9 @@ class PageComposer extends PageAdmin {
                     }
 
                     if (fusion_safe()) {
-                        self::execute_PageSQL();
-                        self::compose_DefaultPage();
-                        self::execute_PageRedirect();
+                        self::executePageSql();
+                        self::composeDefaultPage();
+                        self::executePageRedirect();
                     }
                     break;
             }
@@ -153,8 +153,8 @@ class PageComposer extends PageAdmin {
     /**
      * Update/Insert and Redirect Sequence - Non Composer
      */
-    private static function execute_PageSQL() {
-        if (self::verify_customPage(self::$data['page_id'])) {
+    private static function executePageSql() {
+        if (self::verifyCustomPage(self::$data['page_id'])) {
             dbquery_insert(DB_CUSTOM_PAGES, self::$data, 'update');
             addnotice('success', self::$locale['page_0402']);
         } else {
@@ -164,7 +164,10 @@ class PageComposer extends PageAdmin {
         }
     }
 
-    private static function execute_PageRedirect() {
+    /**
+     * Execute page redirect
+     */
+    private static function executePageRedirect() {
         if (isset($_POST['save'])) {
             redirect(clean_request('action=edit&cpid='.self::$data['page_id'], ['section', 'composer_tab', 'aid'], TRUE));
         } else if (isset($_POST['save_and_close'])) {
@@ -175,7 +178,7 @@ class PageComposer extends PageAdmin {
     /**
      * Run sync between default and composer tables
      */
-    private static function compose_DefaultPage() {
+    private static function composeDefaultPage() {
 
         if (!empty(self::$data['page_id']) && fusion_safe()) {
 

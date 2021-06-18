@@ -24,7 +24,7 @@ if (!$settings['maintenance']) {
 }
 
 if ($settings['site_seo'] == 1 && !defined("IN_PERMALINK")) {
-    \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing("");
+    \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting("");
 }
 
 $locale = fusion_get_locale();

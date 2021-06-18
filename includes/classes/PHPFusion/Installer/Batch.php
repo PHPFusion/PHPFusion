@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Batch.core.php
+| Filename: Batch.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -33,26 +33,6 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch extends InstallCore {
-
-    const PROGRESS = "setTimeout(
-                    function(){
-                        $('.progress-bar').animate({
-                            width: '{%pcg%}%'
-                            }, {%progress_time%});
-                            {%next%}
-                            $('#content').html('{%content%}');
-                            $('#pcg').prop('Counter', {%last_count%}).animate({Counter: {%this_count%} }, {
-                            duration: 0,
-                                easing: 'swing',
-                                step: function (now) {
-                                    $(this).text(Math.ceil(now));
-                            }
-                            });
-                    }, {%microtime%}
-                    );
-                    ";
-    const TERMINATE_PROGRESS = "$('.progress-bar').addClass('progress-bar-warning').";
-
     const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     const CREATE_TABLE_STATEMENT = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
@@ -91,7 +71,6 @@ class Batch extends InstallCore {
      * - key - 1 for Unique Primary Key (Non Clustered Index), 2 for Key (Clustered Index)
      * - index - TRUE if index (primary key do not need to be indexed)
      * - unsigned - TRUE if column is unsigned (default no unsigned)
-
      */
 
     /*
@@ -108,11 +87,9 @@ class Batch extends InstallCore {
     private static $table_name = '';
     private static $table_cols = [];
 
-
     /*
      * Generate the statements required
      */
-
     private static $required_default = [];
 
     /*
@@ -132,7 +109,6 @@ class Batch extends InstallCore {
      * Use Infusions Core installer to perform upgrades
      */
     private static $upgrade_runtime = [];
-    private $js = [];
 
     /**
      * Return the instance for the Batcher
@@ -156,7 +132,7 @@ class Batch extends InstallCore {
      *
      * @return null
      */
-    public function batch_runtime($key = NULL) {
+    public function batchRuntime($key = NULL) {
 
         if (self::$runtime_results === NULL) {
 
@@ -168,13 +144,13 @@ class Batch extends InstallCore {
                         /*
                          * Existing Installation
                          */
-                        $this->check_existing_table(); //where is the one that runs upgrade?
+                        $this->checkExistingTable(); //where is the one that runs upgrade?
 
                     } else {
                         /*
                          * New Installation
                          */
-                        $this->create_new_table();
+                        $this->createNewTable();
                     }
                 }
 
@@ -191,9 +167,9 @@ class Batch extends InstallCore {
     /**
      * When table exists, need to be checked for data-types consistencies and column name consistencies
      */
-    private function check_existing_table() {
+    private function checkExistingTable() {
 
-        if ($schema_check = $this->get_table_schema(self::$table_name)) {
+        if ($schema_check = $this->getTableSchema(self::$table_name)) {
 
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
@@ -220,7 +196,7 @@ class Batch extends InstallCore {
 
                         self::$runtime_results['alter_column'][self::$table_name][$col_name] = strtr(self::ALTER_COLUMN_STATEMENT, [
                             '{%table%}'      => self::$connection['db_prefix'].self::$table_name,
-                            '{%table_attr%}' => $this->get_table_attr($col_name, $col_attr)
+                            '{%table_attr%}' => $this->getTableAttr($col_name, $col_attr)
                         ]);
                     }
 
@@ -228,7 +204,7 @@ class Batch extends InstallCore {
 
                     self::$runtime_results['add_column'][self::$table_name][$col_name] = strtr(self::ADD_COLUMN_STATEMENT, [
                         '{%table%}'         => self::$connection['db_prefix'].self::$table_name,
-                        '{%table_attr%}'    => $this->get_table_attr($col_name, $col_attr),
+                        '{%table_attr%}'    => $this->getTableAttr($col_name, $col_attr),
                         '{%column_before%}' => $last_column_name
                     ]);
 
@@ -242,11 +218,11 @@ class Batch extends InstallCore {
     /**
      * Fetches Existing Database Table Schema for comparisons
      *
-     * @param $table_name
+     * @param string $table_name
      *
      * @return null
      */
-    private function get_table_schema($table_name) {
+    private function getTableSchema($table_name) {
 
         if (empty(self::$schema_storage[$table_name])) {
 
@@ -309,12 +285,12 @@ class Batch extends InstallCore {
     /**
      * Get table column data-type attributes
      *
-     * @param $col_name
-     * @param $col_attr
+     * @param string $col_name
+     * @param array  $col_attr
      *
      * @return string
      */
-    private function get_table_attr($col_name, $col_attr) {
+    private function getTableAttr($col_name, $col_attr) {
 
         // Register column primary_keys and keys
         /*if (isset($col_attr['key'])) {
@@ -354,10 +330,10 @@ class Batch extends InstallCore {
     /**
      * Auto function - Table does not exist, and create new table and rows
      */
-    private function create_new_table() {
-        self::$runtime_results['create'][self::$table_name] = $this->batch_create_table();
+    private function createNewTable() {
+        self::$runtime_results['create'][self::$table_name] = $this->batchCreateTable();
         // Will only set and create on current locale only
-        $batch_inserts = self::batch_insert_rows(self::$table_name, self::$localeset);
+        $batch_inserts = self::batchInsertRows(self::$table_name, self::$localeset);
         if (!empty($batch_inserts)) {
             self::$runtime_results['insert'][self::$table_name] = $batch_inserts;
         }
@@ -368,7 +344,7 @@ class Batch extends InstallCore {
      *
      * @return string
      */
-    private function batch_create_table() {
+    private function batchCreateTable() {
         // No table found, just create the table as new
         $line = [];
         $keys = [];
@@ -440,12 +416,12 @@ class Batch extends InstallCore {
     /**
      * Add default row records
      *
-     * @param $table_name
-     * @param $localeset
+     * @param string $table_name
+     * @param string $localeset
      *
      * @return null|string
      */
-    public static function batch_insert_rows($table_name, $localeset) {
+    public static function batchInsertRows($table_name, $localeset) {
 
         if ($table_rows = \PHPFusion\Installer\Lib\CoreSettings::get_table_rows($table_name, $localeset)) {
             if (isset($table_rows['insert'])) {
@@ -473,7 +449,7 @@ class Batch extends InstallCore {
      *
      * @return array
      */
-    public function check_upgrades() {
+    public function checkUpgrades() {
 
         if (empty(self::$upgrade_runtime)) {
 
@@ -522,13 +498,5 @@ class Batch extends InstallCore {
         }
 
         return self::$upgrade_runtime;
-    }
-
-    public function getProgress() {
-        return end($this->js['jquery']);
-    }
-
-    public function ProgressHasError() {
-        return (!empty($this->js['error']));
     }
 }

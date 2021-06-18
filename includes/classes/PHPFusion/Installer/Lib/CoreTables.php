@@ -22,7 +22,7 @@ class CoreTables {
     /**
      * Core table configurations
      *
-     * @param $localeset
+     * @param string $localeset
      *
      * @return array
      */

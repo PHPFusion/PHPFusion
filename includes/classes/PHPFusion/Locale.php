@@ -51,7 +51,7 @@ class Locale {
     /**
      * Includes a locale file and logs a trace
      *
-     * @param $filename
+     * @param string $filename
      */
     public static function load_locale_file($filename) {
         $locale = [];
@@ -87,6 +87,11 @@ class Locale {
         }
     }
 
+    /**
+     * @param string $key
+     *
+     * @return array|mixed|string
+     */
     public function getLocale($key = NULL) {
         //self::$use_count++;
         //print_p(microtime(TRUE)-START_TIME);
@@ -95,24 +100,18 @@ class Locale {
     }
 
     /**
-     * @param       $count - integer
-     * @param       $words - 'member|members';
-     * @param array $options
-     *                     Indexes:
-     *                     -   add_count ...... true/false (default true) to show integer
-     *                     -   html ...... whether to output html as return
-     *                     -   html_template ..... custom html template
-     *                     -   language at use.
+     * @param int    $count
+     * @param string $words 'member|members';
+     * @param array  $options
      *
      * @return string
      */
     public static function format_word($count, $words, $options = []) {
-
         $default_options = [
-            'add_count'     => TRUE,
-            'html'          => FALSE,
-            'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>",
-            'language'      => LANGUAGE,
+            'add_count'     => TRUE, //  true/false (default true) to show integer
+            'html'          => FALSE, // whether to output html as return
+            'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>", //
+            'language'      => LANGUAGE, // language at use
         ];
 
         $options += $default_options;
@@ -186,9 +185,9 @@ class Locale {
     /**
      * Given English as base, find out the localized version
      *
-     * @param $country
+     * @param string $country
      *
-     * @return mixed
+     * @return string
      */
     public static function translate_country_names($country) {
         $translated_countries = [
@@ -225,9 +224,9 @@ class Locale {
      *
      * If key is not set, return a full array
      *
-     * @param null $key
+     * @param string $key
      *
-     * @return array|mixed|null
+     * @return array|string
      */
     public static function translate_lang_names($key = NULL) {
         $translated_langs = [
@@ -265,7 +264,7 @@ class Locale {
      * @param null $key
      * @param bool $iso_to_lang set false to translate iso-folder, default folder-iso
      *
-     * @return array|mixed|null
+     * @return array|int|string|null
      */
     public static function get_iso($key = NULL, $iso_to_lang = TRUE) {
         /**

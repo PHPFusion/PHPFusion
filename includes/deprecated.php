@@ -381,12 +381,12 @@ function get_available_languages_list($selected_language = "") {
 }
 
 /**
- * Custom Error Handler.
+ * Custom Error Handler
  *
- * @param $error_level
- * @param $error_message
- * @param $error_file
- * @param $error_line
+ * @param int    $error_level   Severity
+ * @param string $error_message $e->message
+ * @param string $error_file    The file in question, run a debug_backtrace()[2] in the file
+ * @param int    $error_line    The line in question, run a debug_backtrace()[2] in the file
  *
  * @deprecated use set_error()
  */

@@ -74,7 +74,7 @@ class DBCache {
     }
 
     /**
-     * @param $key
+     * @param string $key
      */
     public function delete($key) {
         Cache::getInstance()->delete($key);
@@ -90,9 +90,9 @@ class DBCache {
     /**
      * Cached query
      *
-     * @param $key
-     * @param $query
-     * @param $parameters
+     * @param string $key
+     * @param string $query
+     * @param array  $parameters
      *
      * @return false|int|mixed
      */
@@ -128,7 +128,7 @@ class DBCache {
     /**
      * Return number of rows
      *
-     * @param $result
+     * @param mixed $result
      *
      * @return int
      */
@@ -142,7 +142,7 @@ class DBCache {
     /**
      * Returns associative object array
      *
-     * @param     $result
+     * @param mixed $result
      *
      * @return array|null
      */
@@ -158,7 +158,7 @@ class DBCache {
     }
 
     /**
-     * @param $result
+     * @param mixed $result
      *
      * @return array|mixed
      */
@@ -170,10 +170,10 @@ class DBCache {
     }
 
     /**
-     * @param $result
-     * @param $column
+     * @param mixed  $result
+     * @param string $column
      *
-     * @return mixed|string
+     * @return mixed
      */
     public function dbresult($result, $column) {
         if (is_array($result) && isset($result["array"])) {
@@ -186,7 +186,7 @@ class DBCache {
                 }
             }
         }
-        return "";
+        return NULL;
     }
 
 }

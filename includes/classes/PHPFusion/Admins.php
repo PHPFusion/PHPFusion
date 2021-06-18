@@ -104,6 +104,9 @@ class Admins {
         self::$locale = self::getAdminLocale();
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public static function getAdminLocale() {
         if (empty(self::$locale)) {
             self::$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
@@ -128,11 +131,11 @@ class Admins {
     /**
      * Cache the Current Field Inputs within Login session.
      *
-     * @param       $form_id
-     * @param       $form_type
-     * @param       $item_id
-     * @param array $callback_fields
-     * @param int   $cache_time
+     * @param string $form_id
+     * @param string $form_type
+     * @param int    $item_id
+     * @param array  $callback_fields
+     * @param int    $cache_time
      *
      * @return string
      */
@@ -232,6 +235,9 @@ class Admins {
         return $html;
     }
 
+    /**
+     * Set admin sections
+     */
     public function setAdmin() {
         self::$admin_pages = $this->getAdminPages();
         $this->admin_sections = array_filter(array_merge([
@@ -289,16 +295,19 @@ class Admins {
     }
 
     /**
-     * @param $page          - 0-5 is core section pages. 6 and above are free to use.
-     * @param $section_title - Section title
-     * @param $icons         - Section Icons
+     * @param int    $page          0-5 is core section pages. 6 and above are free to use.
+     * @param string $section_title Section title
+     * @param string $icon          Section icon
      */
-    public function addAdminSection($page, $section_title, $icons) {
+    public function addAdminSection($page, $section_title, $icon) {
         $this->admin_sections[$page] = $section_title;
-        $this->admin_section_icons[$page] = $icons;
+        $this->admin_section_icons[$page] = $icon;
         self::$admin_pages[$page] = [];
     }
 
+    /**
+     * Set admin breadcrumbs
+     */
     public function setAdminBreadcrumbs() {
         BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => ADMIN.'index.php'.fusion_get_aidlink().'&amp;pagenum=0',
@@ -346,29 +355,34 @@ class Admins {
     }
 
     /**
-     * @param $rights
-     * @param $icons
+     * @param string $rights
+     * @param string $icons
      */
     public function setAdminPageIcons($rights, $icons) {
         $this->admin_page_icons[$rights] = $icons;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array|mixed|null
+     */
     public function getLinkType($type = NULL) {
         return ($type !== NULL ? (isset($this->link_type[$type]) ? $this->link_type[$type] : NULL) : $this->link_type);
     }
 
     /**
-     * @param $type - link prefix
-     * @param $link - link url
+     * @param string $type Link prefix
+     * @param string $link Link url
      */
     public function setLinkType($type, $link) {
         $this->link_type[$type] = $link;
     }
 
     /**
-     * Get Submit Type
+     * Get submit type
      *
-     * @param null $type submit stype prefix
+     * @param string $type submit stype prefix
      *
      * @return array|mixed|null
      */
@@ -377,20 +391,25 @@ class Admins {
     }
 
     /**
-     * @param $type  - submissions prefix
-     * @param $title - title
+     * @param string $type  Submissions prefix
+     * @param string $title Title
      */
     public function setSubmitType($type, $title) {
         $this->submit_type[$type] = $title;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array|mixed|null
+     */
     public function getSubmitData($type = NULL) {
         return ($type !== NULL ? (isset($this->submit_data[$type]) ? $this->submit_data[$type] : NULL) : $this->submit_data);
     }
 
     /**
-     * @param $type    - submissions prefix
-     * @param $options - array(infusion_name, link, submit_link, submit_locale, title,admin_link)
+     * @param string $type    Submissions prefix
+     * @param array  $options array(infusion_name, link, submit_link, submit_locale, title,admin_link)
      */
     public function setSubmitData($type, array $options = []) {
         if (defined(strtoupper($options['infusion_name']).'_EXISTS')) {
@@ -398,6 +417,11 @@ class Admins {
         }
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array|mixed|null
+     */
     public function getSubmitLink($type = NULL) {
         return ($type !== NULL ? (isset($this->submit_link[$type]) ? $this->submit_link[$type] : NULL) : $this->submit_link);
     }
@@ -410,28 +434,33 @@ class Admins {
         $this->submit_link[$type] = $link;
     }
 
+    /**
+     * @param string $type
+     *
+     * @return array|mixed|null
+     */
     public function getCommentType($type = NULL) {
         return ($type !== NULL ? (isset($this->comment_type[$type]) ? $this->comment_type[$type] : NULL) : $this->comment_type);
     }
 
     /**
-     * @param $type  - comment prefix
-     * @param $title - title
+     * @param string $type  Comment prefix
+     * @param string $title Title
      */
     public function setCommentType($type, $title) {
         $this->comment_type[$type] = $title;
     }
 
     /**
-     * @param $type - infusion_name
+     * @param string $type Infusion name
      */
     public function getFolderPermissions($type = NULL) {
         return ($type !== NULL ? (isset($this->folder_permissions[$type]) ? $this->folder_permissions[$type] : NULL) : $this->folder_permissions);
     }
 
     /**
-     * @param $type    - infusion_name
-     * @param $options - array(image_folder => TRUE or FALSE)
+     * @param string $type    Infusion name
+     * @param array  $options array(image_folder => TRUE or FALSE)
      */
     public function setFolderPermissions($type, array $options = []) {
         if (defined(strtoupper($type).'_EXISTS')) {
@@ -440,7 +469,7 @@ class Admins {
     }
 
     /**
-     * @param null $rights
+     * @param string $rights
      *
      * @return array|null
      */
@@ -451,8 +480,8 @@ class Admins {
     /**
      * A custom folder that appears in the file manager
      *
-     * @param $rights
-     * @param $options - setCustomFolder('N', [['path' => IMAGES_N, 'URL' => fusion_get_settings('siteurl').'infusions/news/images/', 'alias' => 'news']]);
+     * @param string $rights
+     * @param array  $options setCustomFolder('N', [['path' => IMAGES_N, 'URL' => fusion_get_settings('siteurl').'infusions/news/images/', 'alias' => 'news']]);
      */
     public function setCustomFolder($rights, $options = []) {
         $this->customfolders[$rights] = $options;
@@ -475,7 +504,7 @@ class Admins {
     /**
      * Displays vertical collapsible administration navigation
      *
-     * @param bool|FALSE $image_icon
+     * @param bool $image_icon
      *
      * @return string
      */
@@ -524,7 +553,7 @@ class Admins {
     }
 
     /**
-     * @param $page_number
+     * @param int $page_number
      *
      * @return string
      */
@@ -539,19 +568,19 @@ class Admins {
     /**
      * Replace admin page icons
      *
-     * @param $page
-     * @param $icons
+     * @param int    $page
+     * @param string $icon
      */
-    public function setAdminSectionIcons($page, $icons) {
+    public function setAdminSectionIcons($page, $icon) {
         if (isset($this->admin_section_icons[$page])) {
-            $this->admin_section_icons[$page] = $icons;
+            $this->admin_section_icons[$page] = $icon;
         }
     }
 
     /**
      * Get the administration page icons
      *
-     * @param $admin_rights
+     * @param string $admin_rights
      *
      * @return bool
      */

@@ -19,7 +19,7 @@
 namespace PHPFusion\News;
 
 use PHPFusion\BreadCrumbs;
-use PHPFusion\Feedback\Comments;
+use PHPFusion\Comments;
 
 abstract class News extends NewsServer {
     protected static $locale = [];

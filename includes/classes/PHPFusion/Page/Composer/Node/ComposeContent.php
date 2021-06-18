@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Network/ComposeContent.php
+| Filename: ComposeContent.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -20,6 +20,9 @@ namespace PHPFusion\Page\Composer\Node;
 use PHPFusion\Page\PageAdmin;
 
 class ComposeContent extends PageAdmin {
+    /**
+     * Display content
+     */
     public static function displayContent() {
         // add page row and grid data to custom page
         if (empty(self::$data['page_datestamp'])) {

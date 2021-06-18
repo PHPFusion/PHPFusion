@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Requirments.core.php
+| Filename: Requirments.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -32,7 +32,7 @@ class Requirements extends InstallCore {
      *
      * @return array
      */
-    public static function get_system_requirements() {
+    public static function getSystemRequirements() {
         // Web server information.
         $software = $_SERVER['SERVER_SOFTWARE'];
 
@@ -268,7 +268,7 @@ class Requirements extends InstallCore {
      *
      * @return array
      */
-    public static function get_system_validation() {
+    public static function getSystemValidation() {
 
         $microtime = microtime(TRUE);
         $system = self::$connection;
@@ -393,6 +393,11 @@ class Requirements extends InstallCore {
 
 }
 
+/**
+ * @param string $db_prefix
+ *
+ * @return bool
+ */
 function test_table($db_prefix) {
 
     $table_name = uniqid($db_prefix, FALSE);
@@ -411,6 +416,11 @@ function test_table($db_prefix) {
     return TRUE;
 }
 
+/**
+ * @param string $db_prefix
+ *
+ * @return int
+ */
 function check_table($db_prefix) {
     return dbrows(dbquery("SHOW TABLES LIKE '".str_replace("_", "\_", $db_prefix)."%'"));
 }

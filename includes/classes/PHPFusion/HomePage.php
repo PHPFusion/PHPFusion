@@ -21,6 +21,9 @@ namespace PHPFusion;
 class HomePage {
     private static $limit = 3;
 
+    /**
+     * Display homepage
+     */
     public static function displayHome() {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'homepage.php');
 

@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Install.core.php
+| Filename: InstallCore.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -140,8 +140,8 @@ class InstallCore extends Infusions {
 
             Dynamics::getInstance();
 
-            self::installer_step();
-            self::verify_requirements();
+            self::installerStep();
+            self::verifyRequirements();
 
             define('iMEMBER', FALSE);
             define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
@@ -170,7 +170,7 @@ class InstallCore extends Infusions {
      *
      * @param string $step
      */
-    protected static function installer_step($step = 'auto') {
+    protected static function installerStep($step = 'auto') {
         if (isset($_GET['session'])) {
             $_SESSION['step'] = $_GET['session'];
         }
@@ -193,7 +193,7 @@ class InstallCore extends Infusions {
     /**
      * Check the server minimum requirements
      */
-    private static function verify_requirements() {
+    private static function verifyRequirements() {
         if (version_compare(PHP_VERSION, '5.5.9') < 0) {
             print self::$locale['setup_0006'];
             exit;
@@ -204,12 +204,15 @@ class InstallCore extends Infusions {
         }
     }
 
+    /**
+     * Detect system upgrade
+     */
     private static function detectSystemUpgrade() {
 
         // Read the config_temp.php
-        self::set_empty_prefix();
+        self::setEmptyPrefix();
 
-        if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
+        if (self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php')) {
 
             if (empty(self::$connection['db_driver'])) {
                 self::$connection['db_driver'] = FALSE;
@@ -217,7 +220,7 @@ class InstallCore extends Infusions {
 
             require_once(INCLUDES.'multisite_include.php');
 
-            $validation = Requirements::get_system_validation();
+            $validation = Requirements::getSystemValidation();
 
             $version = fusion_get_settings('version');
 
@@ -238,7 +241,10 @@ class InstallCore extends Infusions {
         }
     }
 
-    protected static function set_empty_prefix() {
+    /**
+     * Set empty prefix
+     */
+    protected static function setEmptyPrefix() {
 
         $default_init = [
             'db_host'       => '',
@@ -252,7 +258,7 @@ class InstallCore extends Infusions {
 
 
         if (is_file(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
-            self::$connection = self::fusion_get_config(BASEDIR."config_temp.php"); // All fields must be not empty
+            self::$connection = self::fusionGetConfig(BASEDIR."config_temp.php"); // All fields must be not empty
         }
 
         self::$connection = self::$connection + $default_init;
@@ -276,7 +282,12 @@ class InstallCore extends Infusions {
 
     }
 
-    public static function fusion_get_config($config_path) {
+    /**
+     * @param string $config_path
+     *
+     * @return array
+     */
+    public static function fusionGetConfig($config_path) {
         if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
             include $config_path;
             $default_path = [];
@@ -319,6 +330,11 @@ class InstallCore extends Infusions {
         return self::$config;
     }
 
+    /**
+     * @param int $length
+     *
+     * @return string
+     */
     public static function createRandomPrefix($length = 5) {
         $chars = ["abcdefghijklmnpqrstuvwxyz", "123456789"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
@@ -331,13 +347,19 @@ class InstallCore extends Infusions {
         return $prefix;
     }
 
-    public function install_phpfusion() {
-        $current_content = $this->get_InstallerContent();
+    /**
+     * Install PHPFusion
+     */
+    public function installPhpfusion() {
+        $current_content = $this->getInstallerContent();
         $content = Console::getConsoleInstance()->getView($current_content);
         echo strtr(Console::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
     }
 
-    private function get_InstallerContent() {
+    /**
+     * @return false|string|null
+     */
+    private function getInstallerContent() {
 
         OutputHandler::addToJQuery("
             $('form').change(function() {
@@ -353,22 +375,22 @@ class InstallCore extends Infusions {
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
             default:
-                return Introduction::servePage()->__view();
+                return Introduction::servePage()->view();
                 break;
             case self::STEP_PERMISSIONS:
-                return Permissions::servePage()->__view();
+                return Permissions::servePage()->view();
                 break;
             case self::STEP_DB_SETTINGS_SAVE:
             case self::STEP_DB_SETTINGS_FORM:
-                return DatabaseSetup::servePage()->__view();
+                return DatabaseSetup::servePage()->view();
                 break;
             case self::STEP_TRANSFER:
             case self::STEP_PRIMARY_ADMIN_SAVE:
             case self::STEP_PRIMARY_ADMIN_FORM:
-                return AdminSetup::servePage()->__view();
+                return AdminSetup::servePage()->view();
                 break;
             case self::STEP_INFUSIONS:
-                return InfusionsSetup::servePage()->__view();
+                return InfusionsSetup::servePage()->view();
                 break;
             case self::STEP_SETUP_COMPLETE:
                 if (file_exists(BASEDIR.'config_temp.php')) {
@@ -378,7 +400,7 @@ class InstallCore extends Infusions {
                 }
                 unset($_SESSION['step']);
                 redirect(BASEDIR.'index.php');
-                //return InstallerComplete::servePage()->__view(); // this page is requested to go poof.
+                return NULL;
                 break;
             case self::STEP_EXIT:
                 if (file_exists(BASEDIR.'config_temp.php')) {
@@ -394,6 +416,9 @@ class InstallCore extends Infusions {
         return FALSE;
     }
 
+    /**
+     * @return static
+     */
     protected static function servePage() {
         if (empty(self::$document)) {
             self::$document = new static();
@@ -421,5 +446,4 @@ class InstallCore extends Infusions {
 
     private function __clone() {
     }
-
 }

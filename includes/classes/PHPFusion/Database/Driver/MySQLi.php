@@ -197,7 +197,7 @@ class MySQLi extends AbstractDatabaseDriver {
      * @param string $query SQL
      * @param array  $parameters
      *
-     * @return mixed The result of the query or FALSE on error
+     * @return bool|\mysqli_result The result of the query or FALSE on error
      */
     protected function _query($query, array $parameters = []) {
         if ($parameters) {
@@ -219,7 +219,7 @@ class MySQLi extends AbstractDatabaseDriver {
      *
      * @see http://php.net/manual/en/pdo.quote.php
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */

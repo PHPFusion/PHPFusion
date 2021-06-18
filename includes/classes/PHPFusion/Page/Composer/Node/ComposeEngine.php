@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Network/ComposeEngine.php
+| Filename: ComposeEngine.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -34,47 +34,47 @@ class ComposeEngine extends PageAdmin {
     }
 
     /**
-     * access       $gridData, $rowData, $composerData, $locale, $composer_exclude
+     * Display content
      */
     public static function displayContent() {
-        self::load_ComposerData();
-        self::cache_widget();
+        self::loadComposerData();
+        self::cacheWidget();
         if (isset($_POST['cancel_row'])) {
             redirect(clean_request('', self::$composer_exclude, FALSE));
         }
         if (isset($_GET['compose'])) {
             switch ($_GET['compose']) {
                 case "del_row":
-                    self::execute_RowDelete();
+                    self::executeRowDelete();
                     break;
                 case "copy_row":
                     // duplicate row
-                    self::execute_RowDuplicate();
+                    self::executeRowDuplicate();
                     break;
                 case "edit_row": // do not break
                 case "add_row":
                     if (isset($_POST['save_row'])) {
-                        self::validate_RowData();
-                        self::execute_RowUpdate();
+                        self::validateRowData();
+                        self::executeRowUpdate();
                     }
-                    self::display_row_form();
+                    self::displayRowForm();
                     break;
                 case "add_col":
-                    self::cache_widget();
-                    self::display_col_form();
+                    self::cacheWidget();
+                    self::displayColForm();
                     break;
                 case "configure_col":
                     // Do php execution for page content on Widgets
                     if (isset($_GET['row_id']) && isnum($_GET['row_id'])) {
-                        self::cache_widget();
-                        self::get_colData();
-                        self::display_widget_form();
+                        self::cacheWidget();
+                        self::getColData();
+                        self::displayWidgetForm();
                     }
                     break;
                 case "del_col":
                     if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['col_id']) && isnum($_GET['col_id'])) {
-                        self::cache_widget();
-                        self::get_colData();
+                        self::cacheWidget();
+                        self::getColData();
                         $delCondition = "page_content_id=".intval($_GET['col_id'])." AND page_grid_id=".intval($_GET['row_id']);
                         if (dbcount("('page_content_id')", DB_CUSTOM_PAGES_CONTENT, $delCondition)) {
                             dbquery_order(DB_CUSTOM_PAGES_CONTENT, self::$colData['page_content_order'],
@@ -98,7 +98,7 @@ class ComposeEngine extends PageAdmin {
                     redirect(clean_request('', self::$composer_exclude, FALSE));
                     break;
                 case 'copy_col':
-                    self::execute_ColDuplicate();
+                    self::executeColDuplicate();
                     break;
             }
         }
@@ -164,8 +164,8 @@ class ComposeEngine extends PageAdmin {
                     <div class='row spacer-xs'>
                         <?php if (!empty($columns)) : ?>
                             <?php
-                            foreach ($columns as $column_id => $columnData) :
-                                self::draw_cols($columnData, $columns);
+                            foreach ($columns as $columnData) :
+                                self::drawCols($columnData);
                             endforeach;
                             ?>
                         <?php endif; ?>
@@ -176,7 +176,7 @@ class ComposeEngine extends PageAdmin {
                         for ($i = $gridData['page_grid_column_count']; $i > $column_count; $i--) {
                             $style = "border:1px dashed #ccc; min-height:60px; content:''";
                             ?>
-                            <div class='<?php echo self::calculateSpan($gridData['page_grid_column_count'], count($columns)) ?>'>
+                            <div class='<?php echo self::calculateSpan($gridData['page_grid_column_count']) ?>'>
                                 <div style='<?php echo $style ?>'></div>
                             </div>
                             <?php
@@ -190,9 +190,9 @@ class ComposeEngine extends PageAdmin {
     }
 
     /**
-     * Deletes Row and associated Columns
+     * Deletes row and associated columns
      */
-    protected static function execute_RowDelete() {
+    protected static function executeRowDelete() {
         if (!empty(self::$rowData['page_grid_id'])) {
             $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_grid_id=:pagegrid", [':pagegrid' => self::$rowData['page_grid_id']]);
             if (dbrows($result) > 0) {
@@ -211,9 +211,9 @@ class ComposeEngine extends PageAdmin {
     }
 
     /**
-     * Duplicate Row and associated Columns
+     * Duplicate row and associated columns
      */
-    protected static function execute_RowDuplicate() {
+    protected static function executeRowDuplicate() {
         if (!empty(self::$rowData['page_grid_id'])) {
             // save new grid id.
             $rowData = self::$rowData;
@@ -245,7 +245,10 @@ class ComposeEngine extends PageAdmin {
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
-    protected static function validate_RowData() {
+    /**
+     * Validate row data
+     */
+    protected static function validateRowData() {
 
         self::$rowData = [
             'page_grid_id'           => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
@@ -263,11 +266,14 @@ class ComposeEngine extends PageAdmin {
         }
     }
 
-    protected static function execute_RowUpdate() {
+    /**
+     * Execute row update
+     */
+    protected static function executeRowUpdate() {
         if (fusion_safe()) {
             if (!empty(self::$rowData['page_grid_id'])) {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
-                    self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE, '', 'update');
+                    self::$rowData['page_grid_id'], 'page_grid_id', 0, FALSE, FALSE);
                 dbquery_insert(DB_CUSTOM_PAGES_GRID, self::$rowData, 'update');
             } else {
                 dbquery_order(DB_CUSTOM_PAGES_GRID, self::$rowData['page_grid_order'], 'page_grid_order',
@@ -278,7 +284,10 @@ class ComposeEngine extends PageAdmin {
         }
     }
 
-    private static function display_row_form() {
+    /**
+     * Display row form
+     */
+    private static function displayRowForm() {
         ob_start();
         echo openmodal('addRowfrm',
                 (isset($_GET['compose']) && $_GET['compose'] == 'edit_row' ? self::$locale['page_0352'] : self::$locale['page_0350']),
@@ -317,9 +326,11 @@ class ComposeEngine extends PageAdmin {
         add_to_footer(ob_get_clean());
     }
 
-    // Widget selection menu
-    private static function display_col_form() {
-        $widget_cache = self::cache_widget();
+    /**
+     * Widget selection menu
+     */
+    private static function displayColForm() {
+        $widget_cache = self::cacheWidget();
         ob_start();
         if (isset($_GET['row_id']) && isnum($_GET['row_id']) && isset($_GET['compose']) && $_GET['compose'] == 'add_col') :
             echo openmodal('addColfrm', self::$locale['page_0390'], ['static' => TRUE]); ?>
@@ -327,27 +338,28 @@ class ComposeEngine extends PageAdmin {
                 <?php
                 if (!empty($widget_cache)) : ?>
                     <div class='row'>
-                        <?php $i = 0; foreach (self::cache_widget() as $widget_file => $widget) :
+                    <?php $i = 0;
+                    foreach (self::cacheWidget() as $widget) :
                         if ($i > 3) {
-                        	?>  </div><div class='row'> <?php $i=0;
+                            ?>  </div><div class='row'> <?php $i = 0;
                         }
-                            ?>
-                            <div class='col-xs-4 col-sm-3 text-center'>
-                                <div class='panel panel-default'>
-                                    <div class='panel-body'>
-                                        <img style='width:40px; margin:15px;'
-                                             src='<?php echo self::get_widget_icon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>' alt="icon"/>
-                                        <h5 class='m-t-0 m-b-0'><?php echo $widget['widget_title'] ?></h5>
-                                        <?php echo $widget['widget_description'] ?>
-                                    </div>
-                                    <div class='panel-footer'>
-                                        <a class='btn btn-primary'
-                                           href='<?php echo clean_request('compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'], self::$composer_exclude, FALSE) ?>'>
-                                            <?php echo self::$locale['page_0391'] ?>
-                                        </a>
-                                    </div>
+                        ?>
+                        <div class='col-xs-4 col-sm-3 text-center'>
+                            <div class='panel panel-default'>
+                                <div class='panel-body'>
+                                    <img style='width:40px; margin:15px;'
+                                         src='<?php echo self::getWidgetIcon(WIDGETS.$widget['widget_folder'].'/'.$widget['widget_icon']) ?>' alt="icon"/>
+                                    <h5 class='m-t-0 m-b-0'><?php echo $widget['widget_title'] ?></h5>
+                                    <?php echo $widget['widget_description'] ?>
+                                </div>
+                                <div class='panel-footer'>
+                                    <a class='btn btn-primary'
+                                       href='<?php echo clean_request('compose=configure_col&row_id='.$_GET['row_id'].'&widget_type='.$widget['widget_name'], self::$composer_exclude, FALSE) ?>'>
+                                        <?php echo self::$locale['page_0391'] ?>
+                                    </a>
                                 </div>
                             </div>
+                        </div>
                         <?php $i++; endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -361,7 +373,10 @@ class ComposeEngine extends PageAdmin {
         endif;
     }
 
-    protected static function get_colData() {
+    /**
+     * @return array|mixed
+     */
+    protected static function getColData() {
         if (!empty(self::$composerData) && isset($_GET['row_id']) && isset($_GET['col_id']) &&
             !empty(self::$composerData[$_GET['row_id']][$_GET['col_id']])
         ) {
@@ -371,7 +386,10 @@ class ComposeEngine extends PageAdmin {
         return self::$colData;
     }
 
-    private static function display_widget_form() {
+    /**
+     * Display widget form
+     */
+    private static function displayWidgetForm() {
 
         if (!empty(self::$widgets[$_GET['widget_type']]) && isset($_GET['row_id']) && isnum($_GET['row_id'])) {
 
@@ -440,7 +458,7 @@ class ComposeEngine extends PageAdmin {
                             'page_content_order',
                             self::$data['page_content_id'], 'page_content_id', self::$colData['page_grid_id'],
                             'page_grid_id',
-                            FALSE, '', 'update');
+                            FALSE);
 
                         dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
                         addnotice('success', self::$locale['page_0408']);
@@ -517,7 +535,7 @@ class ComposeEngine extends PageAdmin {
     /**
      * Duplicate a Column
      */
-    protected static function execute_ColDuplicate() {
+    protected static function executeColDuplicate() {
         if (isset($_GET['col_id']) && isnum($_GET['col_id'])) {
             $result = dbquery("SELECT * FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_content_id=:pagecontent", [':pagecontent' => intval($_GET['col_id'])]);
             if (dbrows($result) > 0) {
@@ -538,25 +556,36 @@ class ComposeEngine extends PageAdmin {
         redirect(clean_request('', self::$composer_exclude, FALSE));
     }
 
-    protected static function get_widget_icon($widget_icon_path) {
+    /**
+     * Get widget icon
+     *
+     * @param string $widget_icon_path
+     *
+     * @return string
+     */
+    protected static function getWidgetIcon($widget_icon_path) {
         $default_widget = ADMIN.'images/widget.svg';
 
         return file_exists($widget_icon_path) && !is_dir($widget_icon_path) ? $widget_icon_path : $default_widget;
     }
 
-    // Internal Administration Column Renderer
-    protected static function draw_cols($colData, $columns) {
+    /**
+     * Internal Administration Column Renderer
+     *
+     * @param array $colData
+     */
+    protected static function drawCols($colData) {
         if ($colData['page_content_id']) :
             $widget_path = '';
             if (isset(self::$widgets[$colData['page_widget']]['widget_icon'])) {
                 $widget_path = WIDGETS.$colData['page_widget'].'/'.self::$widgets[$colData['page_widget']]['widget_icon'];
             }
-            $widget_img_path = self::get_widget_icon($widget_path);
+            $widget_img_path = self::getWidgetIcon($widget_path);
             $edit_link = clean_request('compose=configure_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'].'&widget_type='.$colData['page_widget'], self::$composer_exclude, FALSE);
             $copy_link = clean_request('compose=copy_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'], self::$composer_exclude, FALSE);
             $delete_link = clean_request('compose=del_col&col_id='.$colData['page_content_id'].'&row_id='.$colData['page_grid_id'], self::$composer_exclude, FALSE);
             ?>
-            <div class='<?php echo self::calculateSpan($colData['page_grid_column_count'], count($columns)) ?>'>
+            <div class='<?php echo self::calculateSpan($colData['page_grid_column_count']) ?>'>
                 <div class='list-group-item m-t-5 m-b-5' style='border:1px solid #ddd; background: #fff;'>
                     <?php if (!empty($colData['page_widget'])) : ?>
                         <div class='pull-left m-r-10' style='width:40px;'>

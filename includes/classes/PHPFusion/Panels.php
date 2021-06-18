@@ -254,7 +254,7 @@ class Panels {
                             $url = [];
 
                             if (fusion_get_settings('site_seo')) {
-                                $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                                $params = http_build_query(Router::getRouterInstance()->getFileParams());
                                 $path = Router::getRouterInstance()->getFilePath();
                                 $script_url = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                             } else {
@@ -417,7 +417,7 @@ class Panels {
 
         if (is_array($exclude_list)) {
             if (fusion_get_settings('site_seo')) {
-                $params = http_build_query(Router::getRouterInstance()->get_FileParams());
+                $params = http_build_query(Router::getRouterInstance()->getFileParams());
                 $path = Router::getRouterInstance()->getFilePath();
                 $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                 $script_url = explode("/", $file_path);

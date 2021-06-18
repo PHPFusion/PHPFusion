@@ -18,25 +18,27 @@
 
 namespace PHPFusion\Installer\Steps;
 
-//use PHPFusion\Installer\Batch;
 use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 use PHPFusion\PasswordAuth;
 
 class AdminSetup extends InstallCore {
 
-    public function __view() {
-        self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
+    /**
+     * @return string|null
+     */
+    public function view() {
+        self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php');
         require_once(INCLUDES.'multisite_include.php');
-        $validation = Requirements::get_system_validation();
+        $validation = Requirements::getSystemValidation();
         if (isset($validation[3])) {
             if ($this->tableCheck()) {
                 switch (INSTALLATION_STEP) {
                     case self::STEP_TRANSFER:
-                        return $this->_transfer();
+                        return $this->transfer();
                         break;
                     case self::STEP_PRIMARY_ADMIN_FORM:
-                        return $this->_setup();
+                        return $this->setup();
                         break;
                     default:
                         return NULL;
@@ -49,13 +51,16 @@ class AdminSetup extends InstallCore {
         return NULL;
     }
 
-    private function _transfer() {
+    /**
+     * @return string
+     */
+    private function transfer() {
 
         $content = "";
 
         if (isset($_POST['transfer'])) {
 
-            self::$userData = $this->validate_UserData();
+            self::$userData = $this->validateUserData();
             self::$userData['user_id'] = 1;
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
@@ -104,7 +109,7 @@ class AdminSetup extends InstallCore {
                     addnotice('success', self::$locale['setup_1217']);
 
                     require_once(INCLUDES."multisite_include.php");
-                    self::installer_step(self::STEP_INTRO);
+                    self::installerStep(self::STEP_INTRO);
                     new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                 }
@@ -155,7 +160,10 @@ class AdminSetup extends InstallCore {
         return $content;
     }
 
-    private function validate_UserData() {
+    /**
+     * @return array
+     */
+    private function validateUserData() {
         return [
             'user_name'           => stripinput(filter_input(INPUT_POST, 'user_name')),
             'user_email'          => stripinput(filter_input(INPUT_POST, 'user_email')),
@@ -185,7 +193,7 @@ class AdminSetup extends InstallCore {
         ];
     }
 
-    private function _setup() {
+    private function setup() {
 
         self::$siteData = [
             'sitename'         => fusion_get_settings('sitename'),
@@ -370,7 +378,7 @@ class AdminSetup extends InstallCore {
 
             self::$siteData = $this->validate_SiteData();
 
-            self::$userData = $this->validate_UserData();
+            self::$userData = $this->validateUserData();
 
             if (self::$userData['password1'] == self::$userData['admin_password1']) {
                 fusion_stop();
@@ -534,10 +542,10 @@ class AdminSetup extends InstallCore {
                     if (fusion_safe()) {
                         require_once BASEDIR."config_temp.php";
                         require_once INCLUDES."multisite_include.php";
-                        self::installer_step(self::STEP_INFUSIONS);
+                        self::installerStep(self::STEP_INFUSIONS);
                         //new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_REQUEST);
                     } else {
-                        self::installer_step(self::STEP_PRIMARY_ADMIN_FORM);
+                        self::installerStep(self::STEP_PRIMARY_ADMIN_FORM);
                     }
                     redirect(FUSION_REQUEST);
                 }

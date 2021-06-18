@@ -50,7 +50,7 @@ class Geomap {
      * @return mixed|string
      */
     static function getCountryResource() {
-        $map_repo = file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json");
+        $map_repo = file_get_contents(INCLUDES."geomap/countries.json");
 
         return json_decode($map_repo);
     }
@@ -65,7 +65,7 @@ class Geomap {
     static function get_Country($country_code = NULL) {
 
         if (empty(self::$country_list)) {
-            $resource = json_decode(file_get_contents(CLASSES."PHPFusion/Geomap/Countries.json"));
+            $resource = json_decode(file_get_contents(INCLUDES."geomap/countries.json"));
             foreach ($resource as $object) {
                 $country_name = $object->name->common;
                 self::$country_list[$object->cca2] = $country_name;

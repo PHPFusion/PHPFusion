@@ -50,7 +50,7 @@ $output = handle_output($output);
 // Search in output and replace normal links with SEF links
 if (!isset($_GET['aid'])) {
     if (fusion_get_settings('site_seo')) {
-        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handle_url_routing($output);
+        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting($output);
         $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput($output);
     }
 }

@@ -48,7 +48,15 @@ class Authenticate {
         "user_theme"  => "Default"
     ];
 
-    public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = FALSE) {
+    /**
+     * Authenticate constructor.
+     *
+     * @param string $inputUserName
+     * @param string $inputPassword
+     * @param bool   $remember
+     * @param string $authentication_url
+     */
+    public function __construct($inputUserName, $inputPassword, $remember, $authentication_url = NULL) {
 
         if ($authentication_url) {
             self::$authenticate_url = $authentication_url;
@@ -57,6 +65,13 @@ class Authenticate {
         $this->_authenticate($inputUserName, $inputPassword, $remember);
     }
 
+    /**
+     * @param string $inputUserName
+     * @param string $inputPassword
+     * @param bool   $remember
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     private function _authenticate($inputUserName, $inputPassword, $remember) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
@@ -89,7 +104,7 @@ class Authenticate {
                 }
 
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
-                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember, TRUE);
+                    Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember);
                     Authenticate::_setUserTheme($user);
                     Authenticate::storeUserSession($passAuth, $user["user_id"]);
                     $this->_userData = $user;
@@ -122,8 +137,13 @@ class Authenticate {
         }
     }
 
-    // Get user data when authenticating in user
-
+    /**
+     * @param int    $userID
+     * @param string $salt
+     * @param string $algo
+     * @param bool   $remember
+     * @param bool   $userCookie
+     */
     public static function setUserCookie($userID, $salt, $algo, $remember = FALSE, $userCookie = TRUE) {
         global $_COOKIE;
         $cookiePath = COOKIE_PATH;
@@ -149,7 +169,15 @@ class Authenticate {
         }
     }
 
-    // Set user Cookie
+    /**
+     * @param string $cookieName
+     * @param string $cookieContent
+     * @param int    $cookieExpiration
+     * @param string $cookiePath
+     * @param string $cookieDomain
+     * @param bool   $secure
+     * @param bool   $httpOnly
+     */
     public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
         if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
             setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
@@ -162,7 +190,7 @@ class Authenticate {
      * Get the redirection url
      * If there is a new authentication url, error request will not valid
      *
-     * @param        $errorId
+     * @param int    $errorId
      * @param string $userStatus
      * @param string $userId
      *
@@ -193,6 +221,11 @@ class Authenticate {
         return $return;
     }
 
+    /**
+     * @param array $user
+     *
+     * @return mixed|null
+     */
     public static function _setUserTheme($user) {
         if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
             return $user['user_level'];
@@ -207,6 +240,10 @@ class Authenticate {
         }
     }
 
+    /**
+     * @param PasswordAuth $passAuth
+     * @param int          $user_id
+     */
     private static function storeUserSession(PasswordAuth $passAuth, $user_id) {
         if ($passAuth->isValidCurrentPassword(TRUE)) {
             $session = $passAuth->getNewSalt().".".$passAuth->getNewHash();
@@ -214,6 +251,9 @@ class Authenticate {
         }
     }
 
+    /**
+     * Set admin login
+     */
     public static function setAdminLogin() {
         $locale = fusion_get_locale();
 
@@ -246,13 +286,18 @@ class Authenticate {
         }
     }
 
-    // Log out authenticated user
-
+    /**
+     * Expire admin cookie
+     */
     public static function expireAdminCookie() {
         Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
     }
 
-    // Checks or sets the lastvisit cookie
+    /**
+     * @param string $pass
+     *
+     * @return bool
+     */
     public static function validateAuthAdmin($pass = "") {
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -330,6 +375,11 @@ class Authenticate {
         return FALSE;
     }
 
+    /**
+     * @param string $inputPassword
+     *
+     * @return bool
+     */
     public static function setAdminCookie($inputPassword) {
         $userdata = fusion_get_userdata();
         if (iADMIN) {
@@ -356,7 +406,9 @@ class Authenticate {
         return FALSE;
     }
 
-    // Checks and sets the admin last visit cookie
+    /**
+     * @return array|string|null
+     */
     public static function validateAuthUser() {
         $settings = fusion_get_settings();
         $locale_file = LOCALE.$settings['locale'].'/global.php'; // fix for multilang issue
@@ -428,7 +480,11 @@ class Authenticate {
         }
     }
 
-    // Logout user
+    /**
+     * Log out
+     *
+     * @return array
+     */
     public static function logOut() {
 
         if (defined('COOKIE_USER') && isset($_COOKIE[COOKIE_USER]) && $_COOKIE[COOKIE_USER] != "") {
@@ -462,6 +518,9 @@ class Authenticate {
         return Authenticate::getEmptyUserData();
     }
 
+    /**
+     * @return array
+     */
     public static function getEmptyUserData() {
         return [
             "user_id"     => USER_IP,
@@ -474,6 +533,9 @@ class Authenticate {
         ];
     }
 
+    /**
+     * @return array|int|mixed|string|null
+     */
     public static function setLastVisitCookie() {
         $guest_lastvisit = time() - 3600;
         $set_cookie = TRUE;
@@ -515,6 +577,9 @@ class Authenticate {
         return $lastvisit;
     }
 
+    /**
+     * Set visitor counter
+     */
     public static function setVisitorCounter() {
         if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
@@ -522,6 +587,9 @@ class Authenticate {
         }
     }
 
+    /**
+     * @return array
+     */
     public function getUserData() {
         return $this->_userData;
     }

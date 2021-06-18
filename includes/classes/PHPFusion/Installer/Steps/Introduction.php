@@ -30,10 +30,10 @@ class Introduction extends InstallCore {
     /**
      * @return string
      */
-    public function __view() {
-        if ($mode = $this->__recovery()) {
+    public function view() {
+        if ($mode = $this->recovery()) {
             return $mode;
-        } else if ($mode = $this->__Index()) {
+        } else if ($mode = $this->index()) {
             return $mode;
         }
         return "";
@@ -42,20 +42,20 @@ class Introduction extends InstallCore {
     /**
      * @return string
      */
-    public function __recovery() {
+    public function recovery() {
 
         // Reset connection session if any during the initialization step.
         session_remove("db_config_connection");
 
-        if (self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php')) {
-            $validation = Requirements::get_system_validation();
+        if (self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php')) {
+            $validation = Requirements::getSystemValidation();
             $current_version = fusion_get_settings('version');
             if (!empty($current_version)) {
                 if (isset($validation[3])) {
                     if (version_compare(self::BUILD_VERSION, $current_version, ">")) {
-                        return $this->step_Upgrade();
+                        return $this->stepUpgrade();
                     } else {
-                        return $this->__RecoveryConsole();
+                        return $this->recoveryConsole();
                     }
                 }
                 die("Not a valid Super Administrator");
@@ -72,7 +72,7 @@ class Introduction extends InstallCore {
     /**
      * @return string
      */
-    private function step_Upgrade() {
+    private function stepUpgrade() {
         /*
          * Here we already have a working database, but config is not done so there will be errors.
          * Now I've already cured the config_temp.php to PF9 standard config_temp.php
@@ -80,14 +80,14 @@ class Introduction extends InstallCore {
          */
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;
-        $this->installer_step(self::STEP_INTRO);
-        return $this->__Index();
+        $this->installerStep(self::STEP_INTRO);
+        return $this->index();
     }
 
     /**
      * @return string
      */
-    private function __Index() {
+    private function index() {
 
         if (isset($_POST['step']) && $_POST['step'] == 1) {
             if (isset($_POST['license'])) {
@@ -152,7 +152,7 @@ class Introduction extends InstallCore {
     /**
      * @return string
      */
-    private function __RecoveryConsole() {
+    private function recoveryConsole() {
 
         $content = "<h4 class='title'>".self::$locale['setup_1002']."</h4>\n";
 
@@ -161,7 +161,7 @@ class Introduction extends InstallCore {
             require_once(INCLUDES.'htaccess_include.php');
             write_htaccess();
             addnotice('success', self::$locale['setup_1020']);
-            $this->installer_step(self::STEP_INTRO);
+            $this->installerStep(self::STEP_INTRO);
             redirect(FUSION_SELF."?localeset=".LANGUAGE);
 
         }

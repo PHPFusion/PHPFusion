@@ -68,14 +68,22 @@ class Router extends RewriteDriver {
         $this->requesturi = rtrim(urldecode($this->removeParam(PERMALINK_CURRENT_PATH)), '/');
     }
 
-    public function removeParam($urlValue) {
-        $urlArray = explode('?', $urlValue);
+    /**
+     * @param string $url
+     *
+     * @return mixed|string
+     */
+    public function removeParam($url) {
+        $urlArray = explode('?', $url);
         if (isset($urlArray)) {
             return $urlArray[0];
         }
-        return $urlValue;
+        return $url;
     }
 
+    /**
+     * @return static|null
+     */
     public static function getRouterInstance() {
         if (self::$router_instance === NULL) {
             self::$router_instance = new static();
@@ -84,7 +92,10 @@ class Router extends RewriteDriver {
         return self::$router_instance;
     }
 
-    public function get_FileParams() {
+    /**
+     * @return array
+     */
+    public function getFileParams() {
         return $this->get_parameters;
     }
 
@@ -102,7 +113,6 @@ class Router extends RewriteDriver {
         $this->get_parameters = $get_parameters;
     }
 
-
     /**
      * Call all the functions to process rewrite detection and further actions.
      * This will call all the other functions after all the included files have been included
@@ -112,13 +122,13 @@ class Router extends RewriteDriver {
      */
     public function rewritePage() {
         // Import the required Handlers
-        $this->loadSQLDrivers();
+        $this->loadSqlDrivers();
         // Include the Rewrites
         $this->includeRewrite();
         // Import Patterns from DB
         $this->importPatterns();
         // Prepare Search Strings
-        $this->prepare_searchRegex();
+        $this->prepareSearchRegex();
         // Check if there is any Alias matching with current URL
         if (!$this->checkAlias()) {
             // Check if any Alias Pattern is matching with current URL
@@ -148,7 +158,7 @@ class Router extends RewriteDriver {
     private function importPatterns() {
         if (!empty($this->handlers)) {
             $types = [];
-            foreach ($this->handlers as $key => $value) {
+            foreach ($this->handlers as $value) {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
             $types_str = implode(",", $types);
@@ -183,8 +193,8 @@ class Router extends RewriteDriver {
             $aliasdata = dbarray($result);
             // If Yes, then Exploded the corresponding php_url and render the page
             if ($aliasdata['alias_php_url'] != "") {
-                $alias_url = $this->getAliasURL($aliasdata['alias_url'], $aliasdata['alias_php_url'], $aliasdata['alias_type']);
-                $url_info = $this->explodeURL($alias_url, "&amp;");
+                $alias_url = $this->getAliasUrl($aliasdata['alias_url'], $aliasdata['alias_php_url'], $aliasdata['alias_type']);
+                $url_info = $this->explodeUrl($alias_url);
                 // File Path (Example: news.php)
                 $this->pathtofile = $url_info[0];
                 if (isset($url_info[1])) {
@@ -221,7 +231,7 @@ class Router extends RewriteDriver {
      * @access private
      * @return mixed|string
      */
-    private function getAliasURL($url, $php_url, $type) {
+    private function getAliasUrl($url, $php_url, $type) {
         if (isset($this->alias_pattern) && isset($this->alias_pattern[$type]) && is_array($this->alias_pattern[$type])) {
             foreach ($this->alias_pattern[$type] as $search => $replace) {
                 $search = str_replace("%alias%", $url, $search);
@@ -246,13 +256,14 @@ class Router extends RewriteDriver {
      * [rowstart] => 20
      * )
      *
-     * @param string $url             The URL
-     * @param string $param_delimiter The Parameters to explode by
+     * @param string $url The URL
      *
      * @access private
      * @return array
      */
-    private function explodeURL($url, $param_delimiter = "&amp;") {
+    private function explodeUrl($url) {
+        $param_delimiter = "&amp;";
+
         $url_info = [];
         // Explode URL
         $pathinfo = explode("?", $url);
@@ -262,7 +273,7 @@ class Router extends RewriteDriver {
             // Now calculate the query parameters
             $params = explode($param_delimiter, $pathinfo[1]); // 0=>thread_id=1, 1=>pid=25
             // Now again explode it with '='
-            foreach ($params as $paramkey => $paramval) { // 0=>thread_id=1, 1=>pid=25
+            foreach ($params as $paramval) { // 0=>thread_id=1, 1=>pid=25
                 // bug fix. sometimes is just ?create.
                 if (strpos($paramval, '=')) {
                     $get_params = explode("=", $paramval); // thread_id => 1, pid => 25
@@ -284,8 +295,8 @@ class Router extends RewriteDriver {
      * @access private
      */
     private function setVariables() {
-        $this->setservervars();
-        $this->setquerystring();
+        $this->setServerVars();
+        $this->setQueryString();
     }
 
     /**
@@ -296,7 +307,7 @@ class Router extends RewriteDriver {
      *
      * @access private
      */
-    public function setservervars() {
+    public function setServerVars() {
         if (!empty($this->pathtofile)) {
             $_SERVER['PHP_SELF'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['PHP_SELF'], 1);
             $_SERVER['SCRIPT_NAME'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['SCRIPT_NAME'], 1);
@@ -310,7 +321,7 @@ class Router extends RewriteDriver {
      *
      * @access private
      */
-    public function setquerystring() {
+    public function setQueryString() {
         if (!empty($_SERVER['QUERY_STRING'])) {
             $_SERVER['QUERY_STRING'] = $_SERVER['QUERY_STRING']."&amp;".$this->buildParams();
         } else {
@@ -375,7 +386,7 @@ class Router extends RewriteDriver {
                                 //$replace_with = $replace;
                                 // Replacing Tags with their suitable matches
                                 $replace = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
-                                $url_info = $this->explodeURL($replace, "&amp;");
+                                $url_info = $this->explodeUrl($replace);
                                 // File Path (Example: news.php)
                                 $this->pathtofile = $url_info[0];
                                 if (isset($url_info[1])) {
@@ -414,7 +425,7 @@ class Router extends RewriteDriver {
      * @param string $pattern
      * @param string $type
      *
-     * @return mixed|string
+     * @return string
      */
     protected function makeSearchRegex($pattern, $type) {
         $regex = $pattern;
@@ -422,9 +433,7 @@ class Router extends RewriteDriver {
             $regex = str_replace($this->rewrite_code[$type], $this->rewrite_replace[$type], $regex);
         }
         $regex = $this->cleanRegex($regex);
-        $regex = "/^".$regex."$/";
-
-        return $regex;
+        return "/^".$regex."$/";
     }
 
     /**
@@ -463,7 +472,7 @@ class Router extends RewriteDriver {
 
                                 if (preg_match($search, $this->requesturi, $matches)) {
 
-                                    $url_info = $this->explodeURL($replace_pattern, "&amp;");
+                                    $url_info = $this->explodeUrl($replace_pattern);
 
                                     $this->pathtofile = str_replace("../", "", $url_info[0]);
 
@@ -549,7 +558,7 @@ class Router extends RewriteDriver {
     private function displayWarnings() {
         echo "<div class='rewrites-queries' style='padding: 10px 10px 10px 10px; border: 1px double #000; background-color: #fbfbfb; line-height: 15px;'>\n";
         echo "<strong>Queries which were made for Rewriting:</strong><br /><br />\n";
-        foreach ($this->queries as $key => $query) {
+        foreach ($this->queries as $query) {
             echo $query.";<br />\n";
         }
         add_to_footer("<script type='text/javascript'>
@@ -646,7 +655,7 @@ class Router extends RewriteDriver {
         foreach ($this->pattern_tables as $type => $val) {
             $propHTML = '';
             foreach ($val as $val_pattern => $arrayProp) {
-                $propHTML .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$val_pattern} will be translated on ".$arrayProp['table']." WHERE ".$arrayProp['primary_key']." is equals to $val_pattern<br/>\n";
+                $propHTML .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- $val_pattern will be translated on ".$arrayProp['table']." WHERE ".$arrayProp['primary_key']." is equals to $val_pattern<br/>\n";
             }
             echo "&nbsp;&nbsp;&nbsp;&nbsp;".$type." rewrite module <br/>".$propHTML."<br />";
         }

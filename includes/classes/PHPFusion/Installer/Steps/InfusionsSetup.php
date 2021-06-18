@@ -22,14 +22,16 @@ use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 
 class InfusionsSetup extends InstallCore {
-
-    public function __view() {
-        self::$connection = self::fusion_get_config(BASEDIR.'config_temp.php');
+    /**
+     * @return string
+     */
+    public function view() {
+        self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php');
 
         require_once(INCLUDES.'multisite_include.php');
         require_once(INCLUDES.'infusions_include.php');
 
-        $validation = Requirements::get_system_validation();
+        $validation = Requirements::getSystemValidation();
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
@@ -86,7 +88,7 @@ class InfusionsSetup extends InstallCore {
                 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
                 $inf_core = Infusions::getInstance();
-                $inf_core::load_Configuration();
+                $inf_core::load_configuration();
                 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
                     $inf_core->infuse($folder);
                 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
@@ -161,5 +163,4 @@ class InfusionsSetup extends InstallCore {
 
         return $content;
     }
-
 }

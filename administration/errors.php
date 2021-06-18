@@ -18,5 +18,5 @@
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageaccess('ERRO');
-\PHPFusion\Errors::getInstance()->display_administration();
+\PHPFusion\Errors::getInstance()->displayAdministration();
 require_once THEMES.'templates/footer.php';

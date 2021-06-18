@@ -85,9 +85,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], [TRUE, 'simple', 'advanced']) ? $options['tinymce'] : "simple";
 
-        $default_tinymce_css = (defined("ADMIN_PANEL") && file_exists(THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/tinymce.css" : THEMES."templates/tinymce.css");
-
-        $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
+        $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : '');
 
         $options['tinymce_spellcheck'] = $options['tinymce_spellcheck'] == TRUE ? 'true' : 'false';
 
@@ -222,7 +220,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                         'save table directionality template paste ".($options['inline_editing'] ? " save " : "")."'
                     ],
                     image_list: $tinymce_list,
-                    content_css: '".$options['tinymce_css']."',
+                    ".(!empty($options['tinymce_css'] ? "content_css: '".$options['tinymce_css']."'," : ''))." 
                     toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
                     toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                     toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',

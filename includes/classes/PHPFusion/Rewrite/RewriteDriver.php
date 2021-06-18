@@ -150,7 +150,7 @@ abstract class RewriteDriver {
      *
      * @access protected
      */
-    protected function loadSQLDrivers() {
+    protected function loadSqlDrivers() {
         $query = "SELECT rewrite_name FROM ".DB_PERMALINK_REWRITE;
         $result = dbquery($query);
         $this->queries[] = $query;
@@ -169,7 +169,7 @@ abstract class RewriteDriver {
      *
      * @access protected
      */
-    private function AddRewrite($include_prefix) {
+    private function addRewrite($include_prefix) {
         if ($include_prefix != "" && !in_array($include_prefix, $this->handlers)) {
             $this->handlers[] = $include_prefix;
         }
@@ -184,7 +184,7 @@ abstract class RewriteDriver {
      */
     protected function includeRewrite() {
         if (is_array($this->handlers) && !empty($this->handlers)) {
-            foreach ($this->handlers as $key => $name) {
+            foreach ($this->handlers as $name) {
                 if (file_exists(BASEDIR."includes/rewrites/".$name."_rewrite_include.php")) {
                     // If the File is found, include it
                     include_once BASEDIR."includes/rewrites/".$name."_rewrite_include.php";
@@ -249,7 +249,7 @@ abstract class RewriteDriver {
     protected function verifyHandlers() {
         if (!empty($this->handlers)) {
             $types = [];
-            foreach ($this->handlers as $key => $value) {
+            foreach ($this->handlers as $value) {
                 $types[] = "'".$value."'"; // When working on string, the values should be inside single quotes.
             }
             $types_str = implode(",", $types);
@@ -268,7 +268,10 @@ abstract class RewriteDriver {
         }
     }
 
-    protected function prepare_searchRegex() {
+    /**
+     * Prepare search regex
+     */
+    protected function prepareSearchRegex() {
         /**
          * Buffer Regex on non SEF page will fail to match
          * Router must work to reroute to SEF page for Permalink to parse links.
@@ -325,9 +328,7 @@ abstract class RewriteDriver {
                 return $str;
             }
         }
-        $str = BASEDIR.$str;
-
-        return $str;
+        return BASEDIR.$str;
     }
 
     /**
@@ -356,7 +357,7 @@ abstract class RewriteDriver {
      *
      * @access protected
      */
-    protected function handle_permalink_requests() {
+    protected function handlePermalinkRequests() {
         $loop_count = 0;
         /**
          * Generate Permalink Search and Replacements Requests Statements
@@ -434,7 +435,7 @@ abstract class RewriteDriver {
 
                                 if (!empty($request_column)) {
                                     $columns = [];
-                                    foreach ($request_column as $position => $column_tag) {
+                                    foreach ($request_column as $column_tag) {
                                         $columns[$column_tag] = $table_info['columns'][$column_tag];
                                         $loop_count++;
                                     }
@@ -513,7 +514,7 @@ abstract class RewriteDriver {
                         $loop_count++;
                     }
 
-                    foreach ($statements as $rows => $value) {
+                    foreach ($statements as $value) {
 
                         $permalink_search = "~".$this->wrapQuotes($this->cleanRegex($this->appendSearchPath($value['search'])))."~i";
 
@@ -523,13 +524,13 @@ abstract class RewriteDriver {
 
                         $permalink_root_search_doublequote = "~".$this->wrapDoubleQuotes($this->cleanRegex(FUSION_ROOT.$this->appendSearchPath($value['search'])))."~i";
 
-                        $permalink_replace = $this->wrapQuotes($this->cleanURL($value['replace']));
+                        $permalink_replace = $this->wrapQuotes($this->cleanUrl($value['replace']));
 
-                        $permalink_replace_doublequote = $this->wrapDoubleQuotes($this->cleanURL($value['replace']));
+                        $permalink_replace_doublequote = $this->wrapDoubleQuotes($this->cleanUrl($value['replace']));
 
-                        $permalink_root_replace = $this->wrapQuotes($this->cleanURL(fusion_get_settings("site_path").$value['replace']));
+                        $permalink_root_replace = $this->wrapQuotes($this->cleanUrl(fusion_get_settings("site_path").$value['replace']));
 
-                        $permalink_root_replace_doublequote = $this->wrapDoubleQuotes($this->cleanURL(fusion_get_settings("site_path").$value['replace']));
+                        $permalink_root_replace_doublequote = $this->wrapDoubleQuotes($this->cleanUrl(fusion_get_settings("site_path").$value['replace']));
 
                         $this->regex_statements['pattern'][$field][$permalink_search] = $permalink_replace;
 
@@ -581,10 +582,7 @@ abstract class RewriteDriver {
      * @return string
      */
     protected static function wrapQuotes($str) {
-        $rep = $str;
-        $rep = "'".$rep."'";
-
-        return (string)$rep;
+        return "'".$str."'";
     }
 
     /**
@@ -595,10 +593,7 @@ abstract class RewriteDriver {
      * @return string
      */
     protected static function wrapDoubleQuotes($str) {
-        $rep = $str;
-        $rep = "\"".$rep."\"";
-
-        return (string)$rep;
+        return "\"".$str."\"";
     }
 
     /**
@@ -613,7 +608,7 @@ abstract class RewriteDriver {
      * @return string
      * @access protected
      */
-    protected static function cleanURL($string, $delimiter = "-") {
+    protected static function cleanUrl($string, $delimiter = "-") {
         if (fusion_get_settings("normalize_seo") == "1") {
             $string = normalize($string);
             if (function_exists('iconv')) {
@@ -638,11 +633,9 @@ abstract class RewriteDriver {
     }
 
     /**
-     * Validate_url
-     * Post Handling
      * If Page is Not SEO, Redirect to SEO one
      */
-    protected function handle_non_seo_url() {
+    protected function handleNonSeoUrl() {
         $this->requesturi = stripinput($this->requesturi);
         $loop_count = 0;
         foreach ($this->path_search_regex as $field => $searchRegex) {
@@ -694,7 +687,7 @@ abstract class RewriteDriver {
 
                                 if (!empty($request_column)) {
                                     $columns = [];
-                                    foreach ($request_column as $position => $column_tag) {
+                                    foreach ($request_column as $column_tag) {
                                         $columns[$column_tag] = $table_info['columns'][$column_tag];
                                         $loop_count++;
                                     }
@@ -765,7 +758,7 @@ abstract class RewriteDriver {
 
                     // Change Redirect via Scan
                     if (isset($statements[0]['replace'])) {
-                        $this->redirect_301($this->cleanURL($statements[0]['replace']));
+                        $this->redirect301($this->cleanUrl($statements[0]['replace']));
                     }
 
                     /*$output_capture_buffer = [
@@ -803,7 +796,7 @@ abstract class RewriteDriver {
      *
      * @access protected
      */
-    protected static function redirect_301($target, $debug = FALSE) {
+    protected static function redirect301($target, $debug = FALSE) {
         if ($debug) {
             debug_print_backtrace();
         } else {
@@ -834,7 +827,7 @@ abstract class RewriteDriver {
      */
     protected function replaceOtherTags($type, $search, $replace, $matches, $matchkey) {
         if (isset($this->rewrite_code[$type])) {
-            foreach ($this->rewrite_code[$type] as $other_tags_keys => $other_tags) {
+            foreach ($this->rewrite_code[$type] as $other_tags) {
                 if (strstr($replace, $other_tags)) {
                     $clean_tag = str_replace("%", "", $other_tags); // Remove % for Searching the Tag
 
@@ -913,7 +906,6 @@ abstract class RewriteDriver {
      *
      * @access       protected
      * @return string
-     * @todo         : Roadmap 9.1 to have this read seperately
      */
     protected function getUniqueIDtag($type) {
         $tag = "";
@@ -948,9 +940,7 @@ abstract class RewriteDriver {
 
         $regex = $this->wrapQuotes($regex);
 
-        $regex = "~".$regex."~i";
-
-        return (string)$regex;
+        return "~".$regex."~i";
     }
 
     /**
@@ -960,7 +950,7 @@ abstract class RewriteDriver {
      *
      * @param $output
      */
-    protected function set_output($output) {
+    protected function setOutput($output) {
         $this->output = $output;
     }
 

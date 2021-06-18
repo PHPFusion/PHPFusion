@@ -67,7 +67,7 @@ class Errors {
 
         if (check_post('error_status') && check_post('error_id')) {
 
-            dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id=:eid", [':eid' => (int)$this->posted_error_id]);
+            dbquery("UPDATE ".DB_ERRORS." SET error_status='".$this->error_status."' WHERE error_id=:eid", [':eid' => $this->posted_error_id]);
 
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
 
@@ -76,14 +76,14 @@ class Errors {
 
         if (check_post('delete_entries')) {
 
-            dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status=:status", [':status' => (int)$this->delete_status]);
+            dbquery("DELETE FROM ".DB_ERRORS." WHERE error_status=:status", [':status' => $this->delete_status]);
 
             $source_redirection_path = preg_replace("~".fusion_get_settings("site_path")."~", "", FUSION_REQUEST, 1);
 
             redirect(fusion_get_settings("siteurl").$source_redirection_path);
         }
 
-        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [':rowstart' => abs((int)$this->rowstart)]);
+        $result = dbquery("SELECT * FROM ".DB_ERRORS." ORDER BY error_timestamp DESC LIMIT :rowstart,20", [':rowstart' => abs($this->rowstart)]);
         while ($data = dbarray($result)) {
             // Sanitizes callback
             foreach ($data as $key => $value) {
@@ -93,7 +93,7 @@ class Errors {
             $this->errors[$data['error_id']] = $data;
         }
 
-        $this->rows = (int)($this->errors ? dbcount('(error_id)', DB_ERRORS) : 0);
+        $this->rows = ($this->errors ? dbcount('(error_id)', DB_ERRORS) : 0);
     }
 
     /**
@@ -114,10 +114,10 @@ class Errors {
     /**
      * Custom error handler for PHP processor
      *
-     * @param $error_level   - Severity
-     * @param $error_message - $e->message
-     * @param $error_file    - The file in question, run a debug_backtrace()[2] in the file
-     * @param $error_line    - The line in question, run a debug_backtrace()[2] in the file
+     * @param int    $error_level   Severity
+     * @param string $error_message $e->message
+     * @param string $error_file    The file in question, run a debug_backtrace()[2] in the file
+     * @param int    $error_line    The line in question, run a debug_backtrace()[2] in the file
      */
     public function setError($error_level, $error_message, $error_file, $error_line) {
         $userdata = fusion_get_userdata();
@@ -174,6 +174,11 @@ class Errors {
         }
     }
 
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
     private function showErrorRows($data) {
         $locale = self::$locale;
         $link_title = $this->getMaxFolders($data['error_file'], 1);
@@ -219,7 +224,7 @@ class Errors {
     /**
      * Administration Console
      */
-    public function display_administration() {
+    public function displayAdministration() {
         $aidlink = fusion_get_aidlink();
 
         $locale = self::$locale;
@@ -390,13 +395,13 @@ class Errors {
             $html .= "</tr>\n";
 
             if (!empty($this->new_errors)) {
-                foreach ($this->new_errors as $i => $data) {
+                foreach ($this->new_errors as $data) {
                     $html .= $this->showErrorRows($data);
                 }
             }
 
             if (!empty($this->errors)) {
-                foreach ($this->errors as $i => $data) {
+                foreach ($this->errors as $data) {
                     $html .= $this->showErrorRows($data);
                 }
             }
@@ -411,11 +416,14 @@ class Errors {
         } else {
             $html .= "<div class='text-center well'>".$locale['ERROR_418']."</div>\n";
         }
-        $this->errorjs();
+        $this->errorJs();
 
         return $html;
     }
 
+    /**
+     * @return array
+     */
     private function getErrorLogTypes() {
         $locale = self::$locale;
 
@@ -426,6 +434,12 @@ class Errors {
         ];
     }
 
+    /**
+     * @param string $url
+     * @param int    $level
+     *
+     * @return string
+     */
     private function getMaxFolders($url, $level = 2) {
         $return = "";
         $tmpUrlArr = explode("/", $url);
@@ -441,7 +455,11 @@ class Errors {
         return $return;
     }
 
-
+    /**
+     * @param int $type
+     *
+     * @return false|mixed
+     */
     private function getErrorTypes($type) {
         $locale = self::$locale;
         $error_types = [
@@ -467,7 +485,10 @@ class Errors {
         return FALSE;
     }
 
-    private function errorjs() {
+    /**
+     * JS code
+     */
+    private function errorJs() {
         if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
             // Show the "Apply"-button only when javascript is disabled"
             add_to_jquery("
@@ -516,6 +537,15 @@ class Errors {
         }
     }
 
+    /**
+     * @param string $source_code
+     * @param int    $starting_line
+     * @param string $error_line
+     * @param array  $error_message
+     * @param null   $title
+     *
+     * @return false|string
+     */
     private function printCode($source_code, $starting_line, $error_line = "", array $error_message = [], $title = NULL) {
         $locale = fusion_get_locale();
 
@@ -551,6 +581,12 @@ class Errors {
         return "<table class='table-bordered err_tbl-border center' cellspacing='0' cellpadding='0'>".$title."<tbody>".$formatted_code."</tbody></table>";
     }
 
+    /**
+     * @param string $code
+     * @param int    $maxLength
+     *
+     * @return string
+     */
     private function codeWrap($code, $maxLength = 150) {
         $lines = explode("\n", $code);
         $count = count($lines);
@@ -562,7 +598,9 @@ class Errors {
         return implode("\n", $lines);
     }
 
-    /** Use this function to show error logs */
+    /**
+     * Use this function to show error logs
+     */
     public function showFooterErrors() {
         $locale = self::$locale;
         $aidlink = fusion_get_aidlink();

@@ -71,14 +71,8 @@ abstract class Search_Model {
 
     public static function search_striphtmlbbcodes($text) {
         $text = preg_replace("[\[(.*?)\]]", "", $text);
-        $text = preg_replace("<\<(.*?)\>>", "", $text);
-
-        return $text;
+        return preg_replace("<\<(.*?)\>>", "", $text);
     }
-
-    /*
-     * Compile Search Results - HTML
-     */
 
     public static function search_textfrag($text) {
         if (Search_Engine::get_param('chars') != 0) {
@@ -115,7 +109,7 @@ abstract class Search_Model {
         for ($i = 0; $i < self::$c_swords; $i++) {
             if (isset(self::$swords_keys_for_query[$i])) {
                 $sword_var = self::$swords_keys_for_query[$i];
-                self::$conditions[$field_module][$field][] = $field." LIKE {$sword_var}".($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
+                self::$conditions[$field_module][$field][] = $field." LIKE $sword_var".($i < $last_sword_index ? ' '.Search_Engine::get_param('method').' ' : '');
             }
         }
     }
@@ -138,10 +132,6 @@ abstract class Search_Model {
         $navigation_result .= "\n</div>\n";
         self::$navigation_result = $navigation_result;
     }
-
-    /*
-     * Indexer to avoid duplication of fields search in other module.
-     */
 
     public static function search_globalarray($search_result) {
         if (!empty($search_result)) {
@@ -225,26 +215,24 @@ abstract class Search_Model {
         self::$memory_limit = $memory_limit - ceil($memory_limit / 4);
     }
 
-    // conditions parser
-
     protected function cache_modules() {
         if (empty(self::$available_modules)) {
             self::$available_modules = ['0' => 'all'];
             $search_deffiles = [];
-            $search_includefiles = makefilelist(INCLUDES."search/", '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE, 'files');
+            $search_includefiles = makefilelist(INCLUDES."search/", '.|..|index.php|location.json.php|users.json.php|.DS_Store', TRUE);
             $search_infusionfiles = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 
             if (!empty($search_infusionfiles)) {
                 foreach ($search_infusionfiles as $files_to_check) {
                     if (is_dir(INFUSIONS.$files_to_check.'/search/')) {
-                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE, "files");
+                        $search_checkfiles = makefilelist(INFUSIONS.$files_to_check.'/search/', ".|..|index.php", TRUE);
                         $search_deffiles = array_merge($search_deffiles, $search_checkfiles);
                     }
                 }
             }
 
             $search_files = array_merge($search_includefiles, $search_deffiles);
-            foreach ($search_files as $key => $file_to_check) {
+            foreach ($search_files as $file_to_check) {
                 if (preg_match("/include_button.php/i", $file_to_check)) {
                     $file_name = str_replace('_include_button.php', '', $file_to_check);
                     $file_name = str_replace('search_', '', $file_name);
@@ -257,8 +245,8 @@ abstract class Search_Model {
     }
 
     /**
-     * @param     $key
-     * @param int $flags
+     * @param string $key
+     * @param int    $flags
      *
      * @return string
      */
@@ -271,9 +259,6 @@ abstract class Search_Model {
         }
         return "";
     }
-
-
-    // generate search navigation
 
     public function load_search_modules() {
         $radio_button = [];
@@ -289,7 +274,7 @@ abstract class Search_Model {
                     if (!empty($infusions)) {
                         foreach ($infusions as $infusions_to_check) {
                             if (is_dir(INFUSIONS.$infusions_to_check.'/search/')) {
-                                $search_files = makefilelist(INFUSIONS.$infusions_to_check.'/search/', ".|..|index.php", TRUE, "files");
+                                $search_files = makefilelist(INFUSIONS.$infusions_to_check.'/search/', ".|..|index.php", TRUE);
 
                                 if (!empty($search_files)) {
                                     foreach ($search_files as $file_to_check) {

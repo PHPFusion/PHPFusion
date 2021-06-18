@@ -57,8 +57,8 @@ if ($settings['site_seo'] && !get('aid')) {
                     } else {
                         $router->setPathtofile('error.php');
                         $router->setGetParameters(['code' => '404']);
-                        $router->setservervars();
-                        $router->setquerystring();
+                        $router->setServerVars();
+                        $router->setQueryString();
                         require_once BASEDIR.'error.php';
                     }
                 }

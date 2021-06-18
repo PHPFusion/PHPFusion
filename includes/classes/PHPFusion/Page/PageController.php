@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Page/PageController.php
+| Filename: PageController.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -38,7 +38,12 @@ class PageController extends PageModel {
         'line_breaks' => ''
     ];
 
-    public static function display_Widget($colData) {
+    /**
+     * @param array $colData
+     *
+     * @return mixed|string|null
+     */
+    public static function displayWidget($colData) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."custom_pages.php");
         if ($colData['page_widget'] == 'content' || empty($colData['page_widget'])) {
 
@@ -63,7 +68,7 @@ class PageController extends PageModel {
     /**
      * Core page content display driver
      *
-     * @param $colData
+     * @param array $colData
      *
      * @return string
      */
@@ -100,11 +105,11 @@ class PageController extends PageModel {
     }
 
     /**
-     * Set Page Variables
+     * Set page variables
      *
-     * @param $page_id
+     * @param int $page_id
      */
-    protected static function set_PageInfo($page_id) {
+    protected static function setPageInfo($page_id) {
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
         $page_id = (((!empty($page_id)) ? intval($page_id) : isset($_GET['page_id']) && isnum($_GET['page_id'])) ? intval($_GET['page_id']) : 0);
@@ -146,8 +151,8 @@ class PageController extends PageModel {
                     Panels::getInstance()->hide_panel('L_CENTER');
                 }
 
-                self::load_ComposerData();
-                self::cache_widget();
+                self::loadComposerData();
+                self::cacheWidget();
 
                 // Construct Meta
                 add_to_title(self::$data['page_title']);
@@ -157,7 +162,7 @@ class PageController extends PageModel {
                 }
                 self::$info['title'] = self::$data['page_title'];
                 self::$info['line_breaks'] = self::$data['page_breaks'];
-                self::$info['body'] = PageView::display_Composer();
+                self::$info['body'] = PageView::displayComposer();
             } else {
                 add_to_title($locale['page_401']);
                 self::$info['title'] = $locale['page_401'];

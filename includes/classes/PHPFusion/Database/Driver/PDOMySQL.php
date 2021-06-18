@@ -94,19 +94,19 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Fetch the first column of a specific row
      *
-     * @param \PDOStatement $statement
+     * @param \PDOStatement $result
      * @param int           $row
      *
      * @return mixed
      */
-    public function fetchFirstColumn($statement, $row = 0) {
+    public function fetchFirstColumn($result, $row = 0) {
         //seek
-        if ($statement !== FALSE) {
+        if ($result !== FALSE) {
             for ($i = 0; $i < $row; $i++) {
-                $statement->fetchColumn();
+                $result->fetchColumn();
             }
             //returns false when an error occurs
-            return $statement->fetchColumn();
+            return $result->fetchColumn();
         }
 
         return NULL;
@@ -115,13 +115,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Count the number of affected rows by the given query
      *
-     * @param \PDOStatement $statement
+     * @param \PDOStatement $result
      *
      * @return int
      */
-    public function countRows($statement) {
-        if ($statement !== FALSE) {
-            return $statement->rowCount();
+    public function countRows($result) {
+        if ($result !== FALSE) {
+            return $result->rowCount();
         }
 
         return NULL;
@@ -130,13 +130,13 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Count the number of affected columns by the given query
      *
-     * @param \PDOStatement $statement
+     * @param \PDOStatement $result
      *
      * @return int
      */
-    public function countColumns($statement) {
-        if ($statement !== FALSE) {
-            return $statement->columnCount();
+    public function countColumns($result) {
+        if ($result !== FALSE) {
+            return $result->columnCount();
         }
 
         return NULL;
@@ -145,14 +145,14 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Fetch one row as an associative array
      *
-     * @param \PDOStatement $statement
+     * @param \PDOStatement $result
      *
      * @return array Associative array
      */
-    public function fetchAssoc($statement) {
-        if ($statement) {
-            $statement->setFetchMode(PDO::FETCH_ASSOC);
-            return $statement->fetch();
+    public function fetchAssoc($result) {
+        if ($result) {
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+            return $result->fetch();
         }
 
         return NULL;
@@ -161,15 +161,15 @@ class PDOMySQL extends AbstractDatabaseDriver {
     /**
      * Fetch one row as a numeric array
      *
-     * @param \PDOStatement $statement
+     * @param \PDOStatement $result
      *
      * @return array Numeric array
      */
-    public function fetchRow($statement) {
-        if ($statement !== FALSE) {
-            $statement->setFetchMode(PDO::FETCH_NUM);
+    public function fetchRow($result) {
+        if ($result !== FALSE) {
+            $result->setFetchMode(PDO::FETCH_NUM);
 
-            return $statement->fetch();
+            return $result->fetch();
         }
 
         return NULL;
@@ -189,7 +189,7 @@ class PDOMySQL extends AbstractDatabaseDriver {
      *
      * @see http://php.net/manual/en/pdo.quote.php
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */

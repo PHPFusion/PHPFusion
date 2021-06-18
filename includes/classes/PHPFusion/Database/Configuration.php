@@ -53,6 +53,12 @@ class Configuration {
         return (bool)$this->configuration['debug'];
     }
 
+    /**
+     * @param string $method
+     * @param mixed  $arguments
+     *
+     * @return mixed
+     */
     public function __call($method, $arguments) {
         $method = strtolower($method);
         if (substr($method, 0, 3) !== 'get') {
@@ -66,6 +72,9 @@ class Configuration {
         return $this->configuration[$index];
     }
 
+    /**
+     * @return array
+     */
     public function toArray() {
         return $this->configuration;
     }

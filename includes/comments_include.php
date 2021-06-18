@@ -28,7 +28,7 @@ defined('IN_FUSION') || exit;
  * @param bool   $ratings         Display ratings.
  */
 function showcomments($comment_type, $comment_db, $comment_col, $comment_item_id, $clink, $ratings = FALSE) {
-    $html = PHPFusion\Feedback\Comments::getInstance([
+    $html = PHPFusion\Comments::getInstance([
         'comment_item_type'     => $comment_type,
         'comment_db'            => $comment_db,
         'comment_col'           => $comment_col,

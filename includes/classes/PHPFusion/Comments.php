@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: PHPFusion/Feedback/Comments.php
+| Filename: Comments.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,12 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-namespace PHPFusion\Feedback;
+namespace PHPFusion;
 
 /**
  * Class Comments
  *
- * @package PHPFusion\Feedback
+ * @package PHPFusion
  *          Rating is not working
  *          Edit is not working
  */
@@ -91,6 +91,17 @@ class Comments {
     private $comment_data = [];
     private $cpp;
 
+    /**
+     * Removes comment reply
+     *
+     * @param string $clink
+     *
+     * @return string
+     */
+    private static $clink = [];
+
+    private static $c_start = 0;
+
     private function __construct() {
         // Set Settings
         $this->settings = fusion_get_settings();
@@ -132,13 +143,16 @@ class Comments {
         return self::$instances[$key];
     }
 
+    /**
+     * @param string $key
+     */
     private static function setInstance($key) {
         $obj = self::getInstance([], $key);
         $obj->setParams(self::$params);
         $obj->setEmptyCommentData();
         $obj->checkPermissions();
-        $obj->execute_CommentUpdate();
-        $obj->get_Comments();
+        $obj->executeCommentUpdate();
+        $obj->getComments();
     }
 
     /**
@@ -193,7 +207,7 @@ class Comments {
                     $can_post = iMEMBER || fusion_get_settings('guestposts');
                     // Comments form
                     //$form_action = fusion_get_settings('site_path').str_replace('../', '', self::format_clink($clink));
-                    $form_action = self::format_clink($clink);
+                    $form_action = self::formatClink($clink);
 
                     $comments_form = openform('inputform', 'post', $form_action, [
                             'form_id'    => $this->getParams('comment_key').'-inputform',
@@ -343,7 +357,7 @@ class Comments {
                 display_comments_listing();
                 $comments = strtr(ob_get_clean(), [
                         '{%comments_page%}'       => ($this->c_arr['c_info']['c_makepagenav'] ? "<div class='text-left'>".$this->c_arr['c_info']['c_makepagenav']."</div>\n" : ''),
-                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->display_all_comments($this->c_arr['c_con'], 0, $this->getParams()) : $no_comments_text),
+                        '{%comments_list%}'       => (!empty($this->c_arr['c_con']) ? $this->displayAllComments($this->c_arr['c_con'], 0, $this->getParams()) : $no_comments_text),
                         '{%comments_admin_link%}' => $this->c_arr['c_info']['admin_link'],
                     ]
                 );
@@ -386,13 +400,13 @@ class Comments {
     /**
      * Comments Listing
      *
-     * @param     $c_data
-     * @param int $index
-     * @param     $options
+     * @param array        $c_data
+     * @param int          $index
+     * @param string|array $options
      *
      * @return string
      */
-    private function display_all_comments($c_data, $index, $options) {
+    private function displayAllComments($c_data, $index, $options) {
         $comments_html = '';
         //print_p(debug_backtrace());
         foreach ($c_data[$index] as $comments_id => $data) {
@@ -429,7 +443,7 @@ class Comments {
                     '{%comment_edit_link%}'    => ($data['edit_link'] ? "<a href='".$data['edit_link']['link']."' class='edit-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-key='".$this->getParams('comment_key')."'>".$data['edit_link']['name']."</a>" : ''),
                     '{%comment_delete_link%}'  => ($data['delete_link'] ? "<a href='".$data['delete_link']['link']."' class='delete-comment display-inline' data-id='".$data['comment_id']."' data-api='$data_api' data-type='".$options['comment_item_type']."' data-item='".$options['comment_item_id']."' data-key='".$this->getParams('comment_key')."'>".$data['delete_link']['name']."</a>" : ''),
                     '{%comment_reply_form%}'   => ($data['reply_form'] ?: ''),
-                    '{%comment_sub_comments%}' => (isset($c_data[$data['comment_id']]) ? $this->display_all_comments($c_data, $data['comment_id'], $options) : '')
+                    '{%comment_sub_comments%}' => (isset($c_data[$data['comment_id']]) ? $this->displayAllComments($c_data, $data['comment_id'], $options) : '')
                 ]
             );
             $comments_html .= "<!---//comment-".$data['comment_id']."--->";
@@ -439,6 +453,9 @@ class Comments {
         return $comments_html;
     }
 
+    /**
+     * Check permissions
+     */
     private function checkPermissions() {
         $my_id = fusion_get_userdata('user_id');
         if (dbcount("(rating_id)", DB_RATINGS, "
@@ -465,7 +482,7 @@ class Comments {
     /**
      * Get Comment Object Parameter
      *
-     * @param null $key - null for all array
+     * @param null $key null for all array
      *
      * @return null
      */
@@ -498,6 +515,9 @@ class Comments {
         $this->comment_params[self::$key] = $params;
     }
 
+    /**
+     * Set empty comment data
+     */
     private function setEmptyCommentData() {
         $this->comment_data = [
             'comment_id'        => isset($_GET['comment_id']) && isnum($_GET['comment_id']) ? $_GET['comment_id'] : 0,
@@ -514,7 +534,10 @@ class Comments {
         ];
     }
 
-    private function execute_CommentUpdate() {
+    /**
+     * Execute comment update
+     */
+    private function executeCommentUpdate() {
 
         $this->replaceParam('comment_user', $this->userdata['user_id']);
 
@@ -572,7 +595,7 @@ class Comments {
                 AND rating_user = '$my_id'";
                 $result = dbquery($delete_ratings);
                 if ($result) {
-                    redirect(self::format_clink($this->getParams('clink')));
+                    redirect(self::formatClink($this->getParams('clink')));
                 }
             }
         }
@@ -669,7 +692,7 @@ class Comments {
                         addnotice("success", $this->locale['c114']);
                         $_c = (isset($c_start) && isnum($c_start) ? $c_start : "");
                         $c_link = $this->getParams('clink');
-                        redirect(self::format_clink("$c_link&amp;c_start=$_c"));
+                        redirect(self::formatClink("$c_link&amp;c_start=$_c"));
                     }
                 }
             } else {
@@ -704,7 +727,7 @@ class Comments {
                                 $c_start = (ceil($c_count / $this->settings['comments_per_page']) - 1) * $this->settings['comments_per_page'];
                             }
 
-                            redirect(self::format_clink($this->getParams('clink'))."&amp;c_start=".$c_start."#c".$id);
+                            redirect(self::formatClink($this->getParams('clink'))."&amp;c_start=".$c_start."#c".$id);
                         }
                     }
                 }
@@ -713,15 +736,11 @@ class Comments {
     }
 
     /**
-     * Removes comment reply
-     *
-     * @param $clink
+     * @param string $clink
      *
      * @return string
      */
-    private static $clink = [];
-
-    private static function format_clink($clink) {
+    private static function formatClink($clink) {
         if (empty(self::$clink[$clink])) {
             $fusion_query = [];
             $url = ((array)parse_url(htmlspecialchars_decode($clink))) + [
@@ -739,12 +758,10 @@ class Comments {
         return (string)self::$clink[$clink];
     }
 
-    private static $c_start = 0;
-
     /*
-     * Fetches Comment Data
+     * Fetches comment data
      */
-    private function get_Comments() {
+    private function getComments() {
 
         if (fusion_get_settings('comments_enabled')) {
 
@@ -843,7 +860,7 @@ class Comments {
                         $this->c_arr['c_info']['admin_link'] .= "<a href='".ADMIN."comments.php".fusion_get_aidlink()."&amp;ctype=".$this->getParams('comment_item_type')."&amp;comment_item_id=".$this->getParams('comment_item_id')."'>".$this->locale['c106']."</a>";
                     }
                     while ($row = dbarray($query)) {
-                        $this->parse_comments_data($row, $i);
+                        $this->parseCommentsData($row, $i);
                         $this->settings['comments_sorting'] == "ASC" ? $i++ : $i--;
                     }
                     $this->c_arr['c_info']['comments_per_page'] = $this->cpp;
@@ -854,9 +871,9 @@ class Comments {
     }
 
     /*
-     * Parse Comment Results
+     * Parse comment results
      */
-    private function parse_comments_data($row, $i) {
+    private function parseCommentsData($row, $i) {
         $can_reply = iMEMBER || fusion_get_settings('guestposts');
         $garray = [];
 
@@ -900,7 +917,7 @@ class Comments {
 
             $this->comment_data['comment_cat'] = $row['comment_id'];
 
-            $reply_form .= openform('comments_reply_frm-'.$row['comment_id'], 'post', self::format_clink($this->getParams('clink')), [
+            $reply_form .= openform('comments_reply_frm-'.$row['comment_id'], 'post', self::formatClink($this->getParams('clink')), [
                 'class' => 'comments_reply_form m-t-20 m-b-20'
             ]);
 
@@ -973,7 +990,7 @@ class Comments {
                     "user_avatar" => $row['user_avatar'],
                     "status"      => $row['user_status'],
                 ],
-                "reply_link"        => $can_reply == TRUE ? self::format_clink($this->getParams('clink')).'&amp;comment_reply='.$row['comment_id'].'#c'.$row['comment_id'] : '',
+                "reply_link"        => $can_reply == TRUE ? self::formatClink($this->getParams('clink')).'&amp;comment_reply='.$row['comment_id'].'#c'.$row['comment_id'] : '',
                 "reply_form"        => $reply_form,
                 'ratings'           => isset($row['ratings']) ? $row['ratings'] : '',
                 "comment_datestamp" => showdate('longdate', $row['comment_datestamp']),
@@ -988,7 +1005,7 @@ class Comments {
         if (dbrows($c_result)) {
             $x = 1;
             while ($c_rows = dbarray($c_result)) {
-                $this->parse_comments_data($c_rows, $x);
+                $this->parseCommentsData($c_rows, $x);
                 $this->settings['comments_sorting'] == "ASC" ? $x++ : $x--;
             }
         }
@@ -1001,4 +1018,4 @@ class Comments {
 
 }
 
-require_once(__DIR__.'/Comments.view.php');
+require_once THEMES.'templates/global/comments.tpl.php';

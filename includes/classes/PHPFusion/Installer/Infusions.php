@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Infusion.core.php
+| Filename: Infusions.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -31,7 +31,7 @@ class Infusions {
     /**
      * Version 7 compatible infusions load constants.
      */
-    public static function load_Configuration() {
+    public static function load_configuration() {
         /*
          * Non-core infusions_db.php inclusion.
          * These files are supposed to be infusion_db.php using Infusion SDK
@@ -49,7 +49,7 @@ class Infusions {
     }
 
     /**
-     * Method : Get Instance
+     * Get Instance
      *
      * @return null|static
      */
@@ -60,60 +60,6 @@ class Infusions {
         self::$locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 
         return self::$instance;
-    }
-
-    /**
-     * @param $inf
-     *
-     * @return bool
-     */
-    protected static function adminpanel_infuse($inf) {
-        $error = FALSE;
-
-        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
-
-            foreach ($inf['adminpanel'] as $adminpanel) {
-                // auto recovery
-                if (!empty($adminpanel['rights'])) {
-                    dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
-                }
-
-                $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
-                $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
-
-                if (empty($adminpanel['page'])) {
-                    $item_page = 5;
-                } else {
-                    $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
-                }
-
-                if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
-                    $adminpanel += [
-                        'rights'   => '',
-                        'title'    => '',
-                        'panel'    => '',
-                        'language' => LANGUAGE
-                    ];
-
-                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')";
-                    $result = dbquery($insert_sql);
-                    if (dbrows($result)) {
-                        $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I', '.'), [':admin' => USER_LEVEL_ADMIN]);
-                        while ($data = dbarray($result)) {
-                            $user_rights = explode('.', $data['user_rights']);
-
-                            if (!in_array($adminpanel['rights'], $user_rights)) {
-                                dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
-                            }
-                        }
-                    }
-                } else {
-                    $error = TRUE;
-                }
-            }
-        }
-
-        return $error;
     }
 
     /**
@@ -323,8 +269,8 @@ class Infusions {
     /**
      * Load upgrade folder
      *
-     * @param $folder
-     * @param $upgrade_file_path
+     * @param string $folder
+     * @param string $upgrade_file_path
      *
      * @return array
      */
@@ -403,7 +349,7 @@ class Infusions {
     }
 
     /**
-     * Method: Defuse
+     * Defuse
      *
      * @param $folder
      */
@@ -518,9 +464,63 @@ class Infusions {
     }
 
     /**
-     * Method: Drop column
+     * @param array $inf
      *
-     * @param $inf
+     * @return bool
+     */
+    protected static function adminpanel_infuse($inf) {
+        $error = FALSE;
+
+        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+
+            foreach ($inf['adminpanel'] as $adminpanel) {
+                // auto recovery
+                if (!empty($adminpanel['rights'])) {
+                    dbquery("DELETE FROM ".DB_ADMIN." WHERE admin_rights='".$adminpanel['rights']."'");
+                }
+
+                $link_prefix = (defined('ADMIN_PANEL') ? '' : '../').INFUSIONS.$inf['folder'].'/';
+                $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
+
+                if (empty($adminpanel['page'])) {
+                    $item_page = 5;
+                } else {
+                    $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
+                }
+
+                if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='".$adminpanel['rights']."'")) {
+                    $adminpanel += [
+                        'rights'   => '',
+                        'title'    => '',
+                        'panel'    => '',
+                        'language' => LANGUAGE
+                    ];
+
+                    $insert_sql = "INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$adminpanel['rights']."', '".$link_prefix.$inf_admin_image."', '".$adminpanel['title']."', '".$link_prefix.$adminpanel['panel']."', '".$item_page."', '".$adminpanel['language']."')";
+                    $result = dbquery($insert_sql);
+                    if (dbrows($result)) {
+                        $result = dbquery("SELECT user_id, user_rights FROM ".DB_USERS." WHERE user_level <=:admin AND ".in_group('user_rights', 'I', '.'), [':admin' => USER_LEVEL_ADMIN]);
+                        while ($data = dbarray($result)) {
+                            $user_rights = explode('.', $data['user_rights']);
+
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE ".DB_USERS." SET user_rights='".$data['user_rights'].".".$adminpanel['rights']."' WHERE user_id='".$data['user_id']."'");
+                            }
+                        }
+                    }
+                } else {
+                    $error = TRUE;
+                }
+            }
+        }
+
+        return $error;
+    }
+
+    /**
+     * Drop column
+     *
+     * @param array $inf
      *
      * @return bool
      */
@@ -543,9 +543,9 @@ class Infusions {
     }
 
     /**
-     * Method: Add Sitelinks
+     * Add Sitelinks
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -599,9 +599,9 @@ class Infusions {
     }
 
     /**
-     * Method: Register Multilang rights
+     *  Register Multilang rights
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -630,9 +630,9 @@ class Infusions {
     }
 
     /**
-     * Method: Register Multilang Admin Pages
+     * Register Multilang Admin Pages
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -674,9 +674,9 @@ class Infusions {
     }
 
     /**
-     * Method: Multilanguage Insert Rows
+     * Multilanguage Insert Rows
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -698,9 +698,9 @@ class Infusions {
     }
 
     /**
-     * Method: Change table structure
+     * Change table structure
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -720,9 +720,9 @@ class Infusions {
     }
 
     /**
-     * Method: Update Row Record
+     * Update Row Record
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -742,9 +742,9 @@ class Infusions {
     }
 
     /**
-     * Method: Install New Table
+     * Install New Table
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -775,9 +775,9 @@ class Infusions {
     }
 
     /**
-     * Method: Insert New Column
+     * Insert New Column
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -805,9 +805,9 @@ class Infusions {
     }
 
     /**
-     * Method: Insert Rows
+     * Insert Rows
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */
@@ -832,9 +832,9 @@ class Infusions {
     }
 
     /**
-     * Method: Delete rows
+     * Delete rows
      *
-     * @param $inf
+     * @param array $inf
      *
      * @return bool
      */

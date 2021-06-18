@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Console.core.php
+| Filename: Console.php
 | Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -34,6 +34,11 @@ class Console extends InstallCore {
         return self::$console_instance;
     }
 
+    /**
+     * @param $content
+     *
+     * @return string
+     */
     public function getView($content) {
         $steps = [
             '1' => self::$locale['setup_0101'],

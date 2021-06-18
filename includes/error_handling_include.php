@@ -27,10 +27,10 @@ if (fusion_get_settings('error_logging_enabled') == 1) {
 /**
  * Custom Error Handler
  *
- * @param $error_level
- * @param $error_message
- * @param $error_file
- * @param $error_line
+ * @param int    $error_level   Severity
+ * @param string $error_message $e->message
+ * @param string $error_file    The file in question, run a debug_backtrace()[2] in the file
+ * @param int    $error_line    The line in question, run a debug_backtrace()[2] in the file
  */
 function set_error($error_level, $error_message, $error_file, $error_line) {
     if (fusion_get_settings('error_logging_method') == 'database') {
