@@ -105,6 +105,11 @@ $deleted_files = [
     CLASSES.'PHPFusion/Installer/Requirements.core.php',
     CLASSES.'PHPFusion/Installer/Lib/Core.settings.php',
     CLASSES.'PHPFusion/Installer/Lib/Core.tables.php',
+    CLASSES.'PHPFusion/Installer/Steps/Complete.php',
+    CLASSES.'PHPFusion/Feedback/',
+    CLASSES.'PHPFusion/Geomap/',
+    CLASSES.'PHPFusion/CustomPage.php',
+    CLASSES.'PHPFusion/RemoteFileReader.php',
     DYNAMICS.'assets/colorpick/css/',
     DYNAMICS.'assets/colorpick/js/',
     DYNAMICS.'assets/datepicker/css/',
@@ -114,6 +119,8 @@ $deleted_files = [
     INCLUDES.'dynamics/assets/datepicker/locale/',
     INCLUDES.'dynamics/assets/password/lang/',
     INCLUDES.'dynamics/assets/fileinput/js/locales/',
+    THEMES.'templates/switcher.php',
+    THEMES.'templates/tinymce.css'
 ];
 
 foreach ($deleted_files as $file) {
