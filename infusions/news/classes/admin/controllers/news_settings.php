@@ -18,8 +18,6 @@
 
 namespace PHPFusion\News;
 
-use PHPFusion\BreadCrumbs;
-
 class NewsSettingsAdmin extends NewsAdminModel {
     private static $instance = NULL;
 
@@ -38,7 +36,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $locale = self::get_newsAdminLocale();
         $news_settings = self::get_news_settings();
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
+        add_breadcrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
         if (isset($_POST['savesettings'])) {
             $inputArray = [
                 "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 0, "news_allow_submission"),

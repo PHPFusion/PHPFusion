@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\BreadCrumbs;
-
 class ForumAdminView extends ForumAdminInterface {
 
     /**
@@ -144,9 +142,9 @@ class ForumAdminView extends ForumAdminInterface {
 
         // then we make a infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($this->forum_index, $_GET['parent_id']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_root']]);
+        add_breadcrumb(['link' => FUSION_SELF.$aidlink, 'title' => self::$locale['forum_root']]);
         for ($i = count($crumb['title']) - 1; $i >= 0; $i--) {
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $crumb['title'][$i]]);
+            add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $crumb['title'][$i]]);
         }
 
         return $crumb;
@@ -677,25 +675,25 @@ class ForumAdminView extends ForumAdminInterface {
 
             switch ($_GET['section']) {
                 case 'fr':
-                    BreadCrumbs::getInstance()->addBreadCrumb([
+                    add_breadcrumb([
                         'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fr',
                         'title' => self::$locale['forum_rank_404']
                     ]);
                     break;
                 case 'ft':
-                    BreadCrumbs::getInstance()->addBreadCrumb([
+                    add_breadcrumb([
                         'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=ft',
                         'title' => self::$locale['forum_tag_0100']
                     ]);
                     break;
                 case 'fmd':
-                    BreadCrumbs::getInstance()->addBreadCrumb([
+                    add_breadcrumb([
                         'link'  => INFUSIONS.'forum/admin/forums.php'.$aidlink.'&section=fmd',
                         'title' => self::$locale['forum_admin_004']
                     ]);
                     break;
                 case 'fs':
-                    BreadCrumbs::getInstance()->addBreadCrumb([
+                    add_breadcrumb([
                         'link'  => ADMIN.'settings_forum.php'.$aidlink,
                         'title' => self::$locale['forum_settings']
                     ]);
@@ -791,7 +789,7 @@ class ForumAdminView extends ForumAdminInterface {
         $language_opts = fusion_get_enabled_languages();
         $admin_title = ($this->data['forum_id'] ? self::$locale['forum_002'] : self::$locale['forum_001']);
         add_to_title($admin_title);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $admin_title]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $admin_title]);
 
         if (!isset($_GET['action']) && $_GET['parent_id']) {
             $data['forum_cat'] = $_GET['parent_id'];
@@ -1003,7 +1001,7 @@ class ForumAdminView extends ForumAdminInterface {
         unset($options[0]); //  no public to moderate, unset
         unset($options[-101]); // no member group to moderate, unset.
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_030']]);
         add_to_title(self::$locale['forum_030']);
         echo '<h4>'.self::$locale['forum_030'].'</h4>';
         echo openform('permissionsForm', 'post', FUSION_REQUEST);

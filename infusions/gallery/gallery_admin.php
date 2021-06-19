@@ -23,7 +23,7 @@ $locale = fusion_get_locale('', [GALLERY_ADMIN_LOCALE, LOCALE.LOCALESET."admin/s
 require_once INCLUDES."photo_functions_include.php";
 include INFUSIONS."gallery/functions.php";
 require_once INCLUDES."infusions_include.php";
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
+add_breadcrumb(['link' => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink(), 'title' => $locale['gallery_0001']]);
 add_to_title($locale['gallery_0001']);
 $gll_settings = get_settings("gallery");
 
@@ -63,16 +63,16 @@ $_GET['album'] = 0;
 if (isset($_GET['section'])) {
     switch ($_GET['section']) {
         case "photo_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0002']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0002']]);
             break;
         case "album_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0004']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0004']]);
             break;
         case "settings":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0006']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0006']]);
             break;
         case "submissions":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0007']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['gallery_0007']]);
             break;
         default:
             break;
@@ -108,7 +108,7 @@ $tab['icon'][] = "fa fa-cogs";
 if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
     $sql = "SELECT album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id=:id";
     $param = [':id' => $_GET['album_id']];
-    \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+    add_breadcrumb([
         'link'  => clean_request("album_id=".$_GET['album_id'], ["aid"], FALSE),
         "title" => dbresult(dbquery($sql, $param), 0)
     ]);

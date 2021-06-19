@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Page;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\OpenGraph;
 use PHPFusion\Panels;
 
@@ -156,7 +155,7 @@ class PageController extends PageModel {
 
                 // Construct Meta
                 add_to_title(self::$data['page_title']);
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
+                add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
                 if (!empty(self::$data['page_keywords'])) {
                     set_meta("keywords", self::$data['page_keywords']);
                 }

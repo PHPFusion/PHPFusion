@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums;
 
-use PHPFusion\BreadCrumbs;
-
 class ThreadTags extends ForumServer {
 
     public $tag_info = [];
@@ -40,17 +38,15 @@ class ThreadTags extends ForumServer {
         if ($setTitle == TRUE) {
             set_title($locale['forum_0000']);
             add_to_title($locale['global_201'].$locale['forum_tag_0100']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => FORUM."index.php",
                 'title' => $locale['forum_0000']
             ]);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => FORUM."tags.php",
                 'title' => $locale['forum_tag_0100']
             ]);
         }
-
-        $thread_result = NULL;
 
         if (isset($_GET['tag_id']) && isnum($_GET['tag_id'])) {
 
@@ -62,7 +58,7 @@ class ThreadTags extends ForumServer {
                 $data = dbarray($tag_result);
 
                 add_to_title($locale['global_201'].$data['tag_title']);
-                BreadCrumbs::getInstance()->addBreadCrumb([
+                add_breadcrumb([
                     'link'  => FORUM."tags.php?tag_id=".$data['tag_id'],
                     'title' => $data['tag_title']
                 ]);

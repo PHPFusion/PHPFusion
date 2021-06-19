@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Class Postify_Award
  *
@@ -29,7 +27,7 @@ use PHPFusion\BreadCrumbs;
 class Postify_Award extends Forum_Postify {
 
     public function execute() {
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4107']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4107']]);
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM
         ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
         if (!empty($thread_data)) {

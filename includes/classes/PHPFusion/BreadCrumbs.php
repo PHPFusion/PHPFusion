@@ -20,37 +20,25 @@ namespace PHPFusion;
 
 /**
  * Class BreadCrumbs
- * <p><strong>Get instances by keys:</strong>
- * <code>
- * <?php
+ *
+ * Get instances by keys:
  * $bcDefault = BreadCrumbs::getInstance();
  * $bcCustom = BreadCrumbs::getInstance('custom');
- * </code></p>
- * <p><strong>Hide the home of $bcCustom</strong>
- * <code>
- * <?php
+ *
+ * Hide the home of $bcCustom
  * $bcCustom->hideHome();
- * </code></p>
- * <p><strong>Set the last breadcrumb clickable (it is rendered as a simple text by default)</strong>
- * <code>
- * <?php
+ *
+ * Set the last breadcrumb clickable (it is rendered as a simple text by default)
  * $bcCustom->setLastClicklable();
- * </code></p>
- * <p><strong>You can override the default CSS classes of the wrapper HTML node</strong>
- * <code>
+ * You can override the default CSS classes of the wrapper HTML node
  * $bcCustom->setCssClasses('breadcrumb-custom');
- * </code></p>
- * <p><strong>Be careful! If you want to add a new class, use this method</strong>
- * <code>
- * <?php
+ *
+ * Be careful! If you want to add a new class, use this method
  * $bcCustom->addCssClasses('additional-class1 additional-class2');
- * </code></p>
- * <p><strong>Get the items as associative arrays</strong>
- * <code>
- * <?php
+ *
+ * Get the items as associative arrays
  * $itemsDefault = $bcDefault->toArray();
  * $itemsCustom = $bcCustom->toArray();
- * </code></p>
  *
  * @package PHPFusion
  */

@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Threads;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\Forums\Moderator;
 use PHPFusion\Forums\Post\QuickReply;
@@ -358,9 +357,9 @@ class ForumThreads extends ForumServer {
                 add_to_meta('keywords', $this->thread_data['forum_meta']);
             }
 
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
+            add_breadcrumb(['link' => FORUM.'index.php', 'title' => $locale['forum_0000']]);
             $this->forum_breadcrumbs($forum_index, $this->thread_data['forum_id']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
+            add_breadcrumb(['link' => FORUM.'viewthread.php?forum_id='.$this->thread_data['forum_id'].'&thread_id='.$this->thread_data['thread_id'], 'title' => $this->thread_data['thread_subject']]);
 
             // Override $_GET['forum_id'] against tampering
             $_GET['forum_id'] = intval($this->thread_data['forum_id']);

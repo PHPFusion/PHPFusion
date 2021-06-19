@@ -99,7 +99,7 @@ if (isset($_POST['save_cat'])) {
         redirect(clean_request("", ["action"], FALSE));
     }
 }
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
+add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
 
 echo '<div class="m-t-10">';
 echo '<h2>'.$formTitle.'</h2>';

@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Moderator;
 
 /**
@@ -53,7 +52,7 @@ class Postify_Answer extends Forum_Postify {
             // if this is an author or is a forum moderator
             if (($thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD)) {
                 add_to_title(self::$locale['global_201'].self::$locale['forum_4001']);
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
+                add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
 
                 // Accepting the answer
                 // 3 scenarios

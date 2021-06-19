@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Page;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Page\Composer\PageComposer;
 use PHPFusion\Page\Composer\PageList;
 
@@ -112,7 +111,7 @@ class PageAdmin extends PageModel {
         }
 
         add_to_title(self::$locale['global_201'].self::$locale['page_0100']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$locale['page_0100']]);
+        add_breadcrumb(['link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$locale['page_0100']]);
         $tree = dbquery_tree_full(DB_CUSTOM_PAGES, 'page_id', 'page_cat');
         $tree_index = tree_index($tree);
         make_page_breadcrumbs($tree_index, $tree, 'page_id', 'page_title', 'pref');
@@ -120,7 +119,7 @@ class PageAdmin extends PageModel {
         self::$is_editing = (isset($_GET['action']) && $_GET['action'] == 'edit') ? 1 : 0;
 
         if (self::$current_section == "cp2") {
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200']]);
+            add_breadcrumb(['link' => ADMIN.'custom_pages.php'.fusion_get_aidlink(), 'title' => self::$is_editing ? self::$locale['page_0201'] : self::$locale['page_0200']]);
         } else if (self::$current_section == 'compose_frm') {
             // there are 3 sections
             switch (self::getComposerMode()) {
@@ -134,7 +133,7 @@ class PageAdmin extends PageModel {
                     $title = self::$locale['page_0204'];
             }
 
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $title]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $title]);
         }
         $tab_title['title'][] = self::$current_section == 'compose_frm' ? self::$locale['back'] : self::$locale['page_0205'];
         $tab_title['id'][] = 'cp1';

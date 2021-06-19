@@ -78,11 +78,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
         set_title($locale['gallery_465']);
         add_to_title($locale['global_201'].$data['photo_title']);
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS."gallery/gallery.php",
             'title' => $locale['gallery_465']
         ]);
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'],
             'title' => $data['album_title']
         ]);
@@ -98,7 +98,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             }
         }
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
             'title' => $data['photo_title']
         ]);
@@ -195,12 +195,12 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             set_title($locale['gallery_465']);
             add_to_title($locale['global_201'].$info['album_title']);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php',
                 'title' => \PHPFusion\SiteLinks::getCurrentSiteLinks("infusions/gallery/gallery.php", "link_name")
             ]);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
                 'title' => $info['album_title']
             ]);
@@ -310,7 +310,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         /* Main Index */
         set_title(\PHPFusion\SiteLinks::getCurrentSiteLinks('infusions/gallery/gallery.php', "link_name"));
 
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS.'gallery/gallery.php',
             'title' => \PHPFusion\SiteLinks::getCurrentSiteLinks(INFUSIONS.'gallery/gallery.php', "link_name")
         ]);

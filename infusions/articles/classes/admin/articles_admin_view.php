@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Articles;
 
-use \PHPFusion\BreadCrumbs;
-
 class ArticlesAdminView extends ArticlesAdminModel {
     private $allowed_pages = ["article", "article_category", "article_form", "submissions", "settings"];
     private static $locale = [];
@@ -36,7 +34,7 @@ class ArticlesAdminView extends ArticlesAdminModel {
         add_to_title(self::$locale['article_0000']);
 
         // Handle Breadcrumbs and Titles
-        BreadCrumbs::getInstance()->addBreadCrumb(["link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink(), "title" => self::$locale['article_0000']]);
+        add_breadcrumb(["link" => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink(), "title" => self::$locale['article_0000']]);
 
         $articleTitle = self::$locale['article_0000'];
         $articleCatTitle = self::$locale['article_0004'];

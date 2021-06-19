@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\FAQ;
 
-use PHPFusion\BreadCrumbs;
-
 class FaqAdminView extends FaqAdminModel {
     private $allowed_pages = ['faq', 'faq_cat', 'faq_cat_form', 'faq_form', 'submissions', 'settings'];
 
@@ -37,7 +35,7 @@ class FaqAdminView extends FaqAdminModel {
         // Handle Breadcrumbs and Titles
         $faqTitle = $locale['faq_0000'];
         $faqicon = 'fa fa-question-circle';
-        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+        add_breadcrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
 
         if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'")) {
             addnotice("info", sprintf($locale['faq_0064'], format_word($submissions, $locale['fmt_submission'])));
@@ -46,10 +44,10 @@ class FaqAdminView extends FaqAdminModel {
         if (!empty($sections)) {
             switch ($sections) {
                 case "settings":
-                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['faq_0006']]);
+                    add_breadcrumb(["link" => FUSION_REQUEST, "title" => $locale['faq_0006']]);
                     break;
                 case "submissions":
-                    BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['faq_0005']]);
+                    add_breadcrumb(["link" => FUSION_REQUEST, "title" => $locale['faq_0005']]);
                     break;
                 default:
             }
@@ -60,12 +58,12 @@ class FaqAdminView extends FaqAdminModel {
                         case 'faq_form':
                             $faqTitle = (check_get('faq_id') && get('action') && get('action') == 'edit' ? $locale['faq_0004'] : $locale['faq_0003']);
                             $faqicon = (check_get('faq_id') && get('action') && get('action') == 'edit' ? 'fa fa-pencil m-r-5' : 'fa fa-plus m-r-5');
-                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+                            add_breadcrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
                             break;
                         case 'faq_cat_form':
                             $faqTitle = (check_get('cat_id') && get('action') && get('action') == 'edit' ? $locale['faq_0008'] : $locale['faq_0007']);
                             $faqicon = (check_get('cat_id') && get('action') && get('action') == 'edit' ? 'fa fa-pencil m-r-5' : 'fa fa-plus m-r-5');
-                            BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
+                            add_breadcrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
                             break;
                     }
                 }

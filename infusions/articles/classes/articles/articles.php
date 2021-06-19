@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Articles;
 
-use PHPFusion\BreadCrumbs;
-
 abstract class Articles extends ArticlesServer {
     private static $locale = [];
     public $info = [];
@@ -40,7 +38,7 @@ abstract class Articles extends ArticlesServer {
 
         set_title(self::$locale['article_0000']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'articles/articles.php', 'title' => self::$locale['article_0000']]);
+        add_breadcrumb(['link' => INFUSIONS.'articles/articles.php', 'title' => self::$locale['article_0000']]);
 
         $info = [
             'article_cat_id'          => 0,
@@ -358,7 +356,7 @@ abstract class Articles extends ArticlesServer {
         if (dbrows($result)) {
             $data = dbarray($result);
             set_title(self::$locale['article_0000']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."articles/articles.php",
                 'title' => self::$locale['article_0000']
             ]);
@@ -457,14 +455,14 @@ abstract class Articles extends ArticlesServer {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } else if (isset($crumb['title'])) {
             //add_to_title($locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 
@@ -479,7 +477,7 @@ abstract class Articles extends ArticlesServer {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
         $info = [];
 
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS."articles/articles.php",
             'title' => self::$locale['article_0000']
         ]);
@@ -511,8 +509,7 @@ abstract class Articles extends ArticlesServer {
 
             $this->article_cat_breadcrumbs($article_cat_index);
 
-
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
                 'title' => $data['article_subject']
             ]);

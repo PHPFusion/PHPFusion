@@ -20,7 +20,6 @@ namespace Administration\Members;
 use Administration\Members\Sub_Controllers\Members_Action;
 use Administration\Members\Sub_Controllers\Members_Display;
 use Administration\Members\Sub_Controllers\Members_Profile;
-use PHPFusion\BreadCrumbs;
 
 class Members_Admin {
 
@@ -202,7 +201,7 @@ class Members_Admin {
                         }
 
                         // Put this into view.
-                        BreadCrumbs::getInstance()->addBreadCrumb(['link' => self::$status_uri['inactive'], 'title' => self::$locale['ME_462']]);
+                        add_breadcrumb(['link' => self::$status_uri['inactive'], 'title' => self::$locale['ME_462']]);
                         opentable(self::$locale['ME_462']);
                         if ($inactive > 50) {
                             addnotice('info', sprintf(self::$locale['ME_463'], floor($inactive / 50)));

@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Downloads;
 
-use PHPFusion\BreadCrumbs;
-
 class Functions {
     /**
      * Download Category Hierarchy Full Data
@@ -143,7 +141,7 @@ class Functions {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                     add_to_meta($value);
@@ -152,7 +150,7 @@ class Functions {
         } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
             add_to_meta($crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

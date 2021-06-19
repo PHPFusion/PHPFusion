@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Thread Tracking
  * Class Postify_Track
@@ -34,7 +32,7 @@ class Postify_Track extends Forum_Postify {
      */
     public function execute() {
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => parent::$locale['forum_0552']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => parent::$locale['forum_0552']]);
 
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
 

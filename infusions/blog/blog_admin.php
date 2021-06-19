@@ -29,21 +29,21 @@ require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
 $aidlink = fusion_get_aidlink();
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog_admin.php'.fusion_get_aidlink(), 'title' => $locale['blog_0405']]);
+add_breadcrumb(['link' => INFUSIONS.'blog/blog_admin.php'.fusion_get_aidlink(), 'title' => $locale['blog_0405']]);
 add_to_title($locale['blog_0405']);
 if (!empty($_GET['section'])) {
     switch ($_GET['section']) {
         case "blog_form":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0401']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0401']]);
             break;
         case "blog_category":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0502']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0502']]);
             break;
         case "settings":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0406']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['blog_0406']]);
             break;
         case "submissions":
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
+            add_breadcrumb(["link" => FUSION_REQUEST, "title" => $locale['blog_0600']]);
             break;
         default:
     }

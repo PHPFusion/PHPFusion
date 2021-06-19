@@ -56,7 +56,7 @@ if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_blog.php')) {
 
 set_title($locale['blog_1000']);
 
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
+add_breadcrumb(['link' => INFUSIONS.'blog/blog.php', 'title' => $locale['blog_1000']]);
 $_GET['cat_id'] = isset($_GET['cat_id']) && isnum($_GET['cat_id']) ? $_GET['cat_id'] : NULL;
 $result = NULL;
 
@@ -252,7 +252,7 @@ if (isset($_GET['readmore'])) {
                 $item['blog_extended'] = $item['blog_blog'];
             }
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."blog/blog.php?readmore=".$_GET['readmore'],
                 'title' => $item['blog_subject']
             ]);
@@ -300,13 +300,13 @@ if (isset($_GET['readmore'])) {
             $author_username = $author['user_name'];
             unset($author);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."blog/blog.php?author=".$_GET['author'],
                 'title' => $locale['global_070'].$author_username
             ]);
 
             if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                add_breadcrumb([
                     'link'  => clean_request("", ["author"]),
                     'title' => $info['allowed_filters'][$_GET['type']]
                 ]);
@@ -346,7 +346,7 @@ if (isset($_GET['readmore'])) {
             $res = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." WHERE ".(multilang_table('BL') ? in_group('blog_cat_language', LANGUAGE)." AND " : '')." blog_cat_id=:blog_cat_id", [':blog_cat_id' => intval($_GET['cat_id'])]);
             if (dbrows($res) > 0) {
                 $res = dbarray($res);
-                \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+                add_breadcrumb([
                     'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
                     'title' => $res['blog_cat_name']
                 ]);
@@ -358,7 +358,7 @@ if (isset($_GET['readmore'])) {
         } else {
 
             // Uncategorized blog
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id']),
                 'title' => $locale['global_080']
             ]);
@@ -367,7 +367,7 @@ if (isset($_GET['readmore'])) {
         }
 
         if (isset($_GET['type']) && isset($info['allowed_filters'][$_GET['type']])) {
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."blog/blog.php?cat_id=".intval($_GET['cat_id'])."&amp;type=".$_GET['type'],
                 'title' => $info['allowed_filters'][$_GET['type']]
             ]);
@@ -415,7 +415,7 @@ if (isset($_GET['readmore'])) {
             $end_time = mktime('0', '0', '0', intval($_GET['month']) + 1, 1, intval($_GET['archive'])) - (3600 * 24);
             $archiveSql = "AND blog_datestamp >=".intval($start_time)." AND blog_datestamp <= ".intval($end_time);
 
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => clean_request("", ["archive", "month"]),
                 'title' => showdate($locale['blog_archive'], $start_time),
             ]);
@@ -426,7 +426,7 @@ if (isset($_GET['readmore'])) {
         $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['blog_max_rows']) ? intval($_GET['rowstart']) : 0;
 
         if (isset($_GET['type']) && !empty($archiveSql) && isset($info['allowed_filters'][$_GET['type']])) {
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 "link"  => clean_request("", ["archive", "month"]),
                 "title" => $info['allowed_filters'][$_GET['type']]
             ]);

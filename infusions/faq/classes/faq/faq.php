@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\FAQ;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\SiteLinks;
 
 /**
@@ -41,7 +40,7 @@ abstract class Faq extends FaqServer {
 
         set_title(SiteLinks::getCurrentSiteLinks('infusions/faq/faq.php', 'link_name'));
 
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS.'faq/faq.php',
             'title' => SiteLinks::getCurrentSiteLinks('', 'link_name')
         ]);
@@ -58,7 +57,7 @@ abstract class Faq extends FaqServer {
         if ($this->catid && isset($info['faq_categories'][$this->catid])) {
             set_title(SiteLinks::getCurrentSiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
             add_to_title(self::$locale['global_201'].$info['faq_categories'][$this->catid]['faq_cat_name']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS.'faq/faq.php?cat_id='.$this->catid,
                 'title' => $info['faq_categories'][$this->catid]['faq_cat_name']
             ]);

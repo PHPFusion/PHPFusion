@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Forum Edit Reply
  * Class Postify_Reply
@@ -37,7 +35,7 @@ class Postify_Edit extends Forum_Postify {
 
             // Post deleted
             add_to_title(self::$locale['global_201'].self::$locale['forum_0506']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0506']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0506']]);
             redirect(self::$default_redirect_link, 3);
 
             $title = self::$locale['forum_0506'];
@@ -52,7 +50,7 @@ class Postify_Edit extends Forum_Postify {
 
             // Post Edited
             add_to_title(self::$locale['global_201'].self::$locale['forum_0508']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
             $inf_settings = get_settings('forum');
             $thread_data = \PHPFusion\Forums\Threads\ForumThreads::get_thread($_GET['thread_id']);
 

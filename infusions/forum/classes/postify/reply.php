@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Forum Reply
  * Class Postify_Reply
@@ -35,7 +33,7 @@ class Postify_Reply extends Forum_Postify {
 
         add_to_title(self::$locale['global_201'].self::$locale['forum_0360']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0360']]);
 
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
 

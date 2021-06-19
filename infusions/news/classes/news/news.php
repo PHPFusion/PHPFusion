@@ -18,7 +18,6 @@
 
 namespace PHPFusion\News;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Comments;
 
 abstract class News extends NewsServer {
@@ -45,7 +44,7 @@ abstract class News extends NewsServer {
 
         set_title(self::$locale['news_0004']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS.'news/news.php',
             'title' => self::$locale['news_0004']
         ]);
@@ -519,7 +518,7 @@ abstract class News extends NewsServer {
             $data = dbarray($result);
             set_title(self::$locale['news_0004'].self::$locale['global_201']);
             add_to_title($data['news_cat_name']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS.'news/news.php',
                 'title' => self::$locale['news_0004']
             ]);
@@ -572,7 +571,7 @@ abstract class News extends NewsServer {
                 // apply filter.
                 $result = dbquery(self::get_NewsQuery(['condition' => 'news_cat=0']));
 
-                BreadCrumbs::getInstance()->addBreadCrumb([
+                add_breadcrumb([
                     'link'  => INFUSIONS."news/news.php?cat_id=".$_GET['cat_id'],
                     'title' => self::$locale['news_0006']
                 ]);
@@ -648,13 +647,13 @@ abstract class News extends NewsServer {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } else if (isset($crumb['title'])) {
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 
@@ -671,7 +670,7 @@ abstract class News extends NewsServer {
 
         set_title(self::$locale['news_0004']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS.'news/news.php',
             'title' => self::$locale['news_0004']
         ]);
@@ -709,7 +708,7 @@ abstract class News extends NewsServer {
 
             $this->news_cat_breadcrumbs($news_cat_index);
 
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."news/news.php?readmore=".$data['news_id'],
                 'title' => $data['news_subject']
             ]);

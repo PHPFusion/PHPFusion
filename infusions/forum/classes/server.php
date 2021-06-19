@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Forums;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Post\NewThread;
 use PHPFusion\Forums\Postify\Forum_Postify;
 use PHPFusion\Forums\Threads\Forum_Mood;
@@ -606,14 +605,14 @@ abstract class ForumServer {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $i => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+                add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
                 if ($i == count($crumb['title']) - 1) {
                     add_to_title($locale['global_201'].$value);
                 }
             }
         } else if (isset($crumb['title'])) {
             add_to_title($locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+            add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
         }
     }
 

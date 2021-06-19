@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Forum Edit Reply
  * Class Postify_Reply
@@ -31,7 +29,7 @@ class Postify_Deletepoll extends Forum_Postify {
 
     public function execute() {
         add_to_title(self::$locale['global_201'].(self::$locale['forum_0615']));
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0615']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0615']]);
         redirect(self::$default_redirect_link, 2);
         render_postify([
             'title'       => self::$locale['forum_0615'],

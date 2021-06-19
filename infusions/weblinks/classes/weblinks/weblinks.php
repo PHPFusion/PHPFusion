@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Weblinks;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Class Weblinks
  *
@@ -50,7 +48,7 @@ abstract class Weblinks extends WeblinksServer {
 
         set_title(self::$locale['web_0000']);
 
-        BreadCrumbs::getInstance()->addBreadCrumb([
+        add_breadcrumb([
             'link'  => INFUSIONS."weblinks/weblinks.php",
             'title' => self::$locale['web_0000']
         ]);
@@ -153,7 +151,7 @@ abstract class Weblinks extends WeblinksServer {
             }
 
             set_title(self::$locale['web_0000']);
-            BreadCrumbs::getInstance()->addBreadCrumb([
+            add_breadcrumb([
                 'link'  => INFUSIONS."weblinks/weblinks.php",
                 'title' => self::$locale['web_0000']
             ]);
@@ -224,14 +222,14 @@ abstract class Weblinks extends WeblinksServer {
         }
         if ($title_count) {
             foreach ($crumb['title'] as $wbi => $value) {
-                BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'][$wbi], "title" => $value]);
+                add_breadcrumb(["link" => $crumb['link'][$wbi], "title" => $value]);
                 if ($wbi == count($crumb['title']) - 1) {
                     add_to_title(self::$locale['global_201'].$value);
                 }
             }
         } else if (isset($crumb['title'])) {
             add_to_title(self::$locale['global_201'].$crumb['title']);
-            BreadCrumbs::getInstance()->addBreadCrumb(["link" => $crumb['link'], "title" => $crumb['title']]);
+            add_breadcrumb(["link" => $crumb['link'], "title" => $crumb['title']]);
         }
     }
 

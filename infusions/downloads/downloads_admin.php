@@ -19,8 +19,6 @@ require_once __DIR__.'/../../maincore.php';
 pageaccess('D');
 require_once THEMES.'templates/admin_header.php';
 
-use PHPFusion\BreadCrumbs;
-
 $downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
 $settings_locale = file_exists(LOCALE.LOCALESET."admin/settings.php") ? LOCALE.LOCALESET."admin/settings.php" : LOCALE."English/admin/settings.php";
 $locale = fusion_get_locale('', [$downloads_locale, $settings_locale]);
@@ -29,7 +27,7 @@ $aidlink = fusion_get_aidlink();
 require_once INCLUDES."infusions_include.php";
 
 $dl_settings = get_settings("downloads");
-BreadCrumbs::getInstance()->addBreadCrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
+add_breadcrumb(['link' => DOWNLOADS."downloads_admin.php".$aidlink, 'title' => $locale['download_0001']]);
 add_to_title($locale['download_0001']);
 
 $allowed_section = ["downloads", "download_form", "download_settings", "download_category", "submissions"];
@@ -72,19 +70,19 @@ switch ($_GET['section']) {
             echo "<a href='".INFUSIONS."downloads/downloads_admin.php".$aidlink."&amp;section=download_category'>".$locale['download_0253']."</a>".$locale['download_0254'];
             echo "</div>\n";
         }
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0002']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0002']]);
         break;
     case "download_category":
         include "admin/download_cats.php";
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0022']]);
         break;
     case "download_settings":
         include "admin/download_settings.php";
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['download_0006']]);
         break;
     case "submissions":
         include "admin/download_submissions.php";
-        BreadCrumbs::getInstance()->addBreadCrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
+        add_breadcrumb(["link" => FUSION_REQUEST, "title" => $locale['download_0049']]);
         break;
     default:
         download_listing();

@@ -18,8 +18,6 @@
 
 namespace PHPFusion\News;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Class NewsAdminView
  *
@@ -39,7 +37,7 @@ class NewsAdminView extends NewsAdminModel {
 
         $sections = in_array(get('section'), $this->allowed_pages) ? get('section') : $this->allowed_pages[0];
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
+        add_breadcrumb(['link' => INFUSIONS."news/news_admin.php".fusion_get_aidlink(), 'title' => $locale['news_0001']]);
 
         add_to_title($locale['news_0001']);
 

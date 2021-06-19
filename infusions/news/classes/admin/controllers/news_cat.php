@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\News;
 
-use PHPFusion\BreadCrumbs;
-
 class NewsCategoryAdmin extends NewsAdminModel {
     private static $instance = NULL;
     private static $locale = [];
@@ -150,7 +148,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 redirect(clean_request("", ["action"], FALSE));
             }
         }
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
         echo "<div class='m-t-20 m-b-20'>\n";
         echo openform("addcat", "post", $formAction);
         ?>

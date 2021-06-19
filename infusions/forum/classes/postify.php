@@ -17,7 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 
 /**
@@ -70,7 +69,7 @@ class Forum_Postify extends ForumServer {
         }
 
         set_title(self::$locale['forum_0000']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
+        add_breadcrumb(['link' => FORUM.'index.php', 'title' => self::$locale['forum_0000']]);
     }
 
     /**

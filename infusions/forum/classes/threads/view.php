@@ -18,7 +18,6 @@
 
 namespace PHPFusion\Forums\Threads;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\ForumServer;
 use PHPFusion\httpdownload;
 
@@ -196,7 +195,7 @@ class ViewThread extends ForumServer {
 
             add_to_title($locale['global_201'].$locale['forum_0360']);
 
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             // field data
             $post_data = [
@@ -388,18 +387,18 @@ class ViewThread extends ForumServer {
                 'edit_reason_field' => '',
                 'attachment_field'  => $thread->getThreadPermission("can_upload_attach") ?
                     form_fileinput('file_attachments[]', $locale['forum_0557'], "", [
-                        'input_id'       => 'file_attachments',
-                        'upload_path'    => INFUSIONS.'forum/attachments/',
-                        'type'           => 'object',
-                        'preview_off'    => TRUE,
-                        'multiple'       => TRUE,
-                        'inline'         => FALSE,
-                        'max_count'      => $forum_settings['forum_attachmax_count'],
-                        'valid_ext'      => $forum_settings['forum_attachtypes'],
-                        'class'          => 'm-b-0',
-                        'max_width'      => $forum_settings['forum_attachmax_w'],
-                        'max_height'     => $forum_settings['forum_attachmax_h'],
-                        'max_byte'       => $forum_settings['forum_attachmax']
+                        'input_id'    => 'file_attachments',
+                        'upload_path' => INFUSIONS.'forum/attachments/',
+                        'type'        => 'object',
+                        'preview_off' => TRUE,
+                        'multiple'    => TRUE,
+                        'inline'      => FALSE,
+                        'max_count'   => $forum_settings['forum_attachmax_count'],
+                        'valid_ext'   => $forum_settings['forum_attachtypes'],
+                        'class'       => 'm-b-0',
+                        'max_width'   => $forum_settings['forum_attachmax_w'],
+                        'max_height'  => $forum_settings['forum_attachmax_h'],
+                        'max_byte'    => $forum_settings['forum_attachmax']
                     ])."
                         <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : "",
                 "poll_form"         => '',
@@ -476,7 +475,7 @@ class ViewThread extends ForumServer {
         if (isset($_GET['post_id']) && isnum($_GET['post_id'])) {
 
             add_to_title($locale['global_201'].$locale['forum_0360']);
-            BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
+            add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['forum_0360']]);
 
             $result = dbquery("SELECT tp.*, tt.thread_subject, tt.thread_poll, tt.thread_author, tt.thread_locked, MIN(tp2.post_id) AS first_post
                 FROM ".DB_FORUM_POSTS." tp
