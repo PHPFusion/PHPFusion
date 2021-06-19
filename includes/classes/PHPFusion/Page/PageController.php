@@ -133,22 +133,22 @@ class PageController extends PageModel {
             if (self::$data['page_status'] == 1 || checkrights('CP')) {
 
                 if (empty(self::$data['page_left_panel'])) {
-                    Panels::getInstance()->hide_panel('LEFT');
+                    Panels::getInstance()->hidePanel('LEFT');
                 }
                 if (empty(self::$data['page_right_panel'])) {
-                    Panels::getInstance()->hide_panel('RIGHT');
+                    Panels::getInstance()->hidePanel('RIGHT');
                 }
                 if (empty(self::$data['page_header_panel'])) {
-                    Panels::getInstance()->hide_panel('AU_CENTER');
+                    Panels::getInstance()->hidePanel('AU_CENTER');
                 }
                 if (empty(self::$data['page_footer_panel'])) {
-                    Panels::getInstance()->hide_panel('BL_CENTER');
+                    Panels::getInstance()->hidePanel('BL_CENTER');
                 }
                 if (empty(self::$data['page_top_panel'])) {
-                    Panels::getInstance()->hide_panel('U_CENTER');
+                    Panels::getInstance()->hidePanel('U_CENTER');
                 }
                 if (empty(self::$data['page_bottom_panel'])) {
-                    Panels::getInstance()->hide_panel('L_CENTER');
+                    Panels::getInstance()->hidePanel('L_CENTER');
                 }
 
                 self::loadComposerData();

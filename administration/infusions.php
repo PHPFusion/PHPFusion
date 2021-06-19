@@ -42,7 +42,7 @@ echo "<div class='text-right m-b-20'><a href='https://phpfusion.com/infusions/ma
 $infs = [];
 $temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
 foreach ($temp as $folders) {
-    $inf = Infusions::load_infusion($folders);
+    $inf = Infusions::loadInfusion($folders);
     if (!empty($inf)) {
         $infs[$folders] = $inf;
     }

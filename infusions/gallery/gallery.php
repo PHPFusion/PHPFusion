@@ -197,7 +197,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
                 'link'  => INFUSIONS.'gallery/gallery.php',
-                'title' => \PHPFusion\SiteLinks::get_current_SiteLinks("infusions/gallery/gallery.php", "link_name")
+                'title' => \PHPFusion\SiteLinks::getCurrentSiteLinks("infusions/gallery/gallery.php", "link_name")
             ]);
 
             \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
@@ -308,11 +308,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     } else {
 
         /* Main Index */
-        set_title(\PHPFusion\SiteLinks::get_current_SiteLinks('infusions/gallery/gallery.php', "link_name"));
+        set_title(\PHPFusion\SiteLinks::getCurrentSiteLinks('infusions/gallery/gallery.php', "link_name"));
 
         \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb([
             'link'  => INFUSIONS.'gallery/gallery.php',
-            'title' => \PHPFusion\SiteLinks::get_current_SiteLinks(INFUSIONS.'gallery/gallery.php', "link_name")
+            'title' => \PHPFusion\SiteLinks::getCurrentSiteLinks(INFUSIONS.'gallery/gallery.php', "link_name")
         ]);
 
         $info['max_rows'] = dbcount("(album_id)", DB_PHOTO_ALBUMS, groupaccess('album_access'));

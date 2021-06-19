@@ -91,7 +91,7 @@ class Sessions {
      * If you are storing sessions in the filesystem, these functions open and close files
      * (and you likely need to use a global variable for the file handler, so that the other session functions can use it).
      *
-     * @return bool|\PHPFusion\Database\AbstractDatabaseDriver
+     * @return bool
      */
     public function _open() {
         $_sess_db = $this->connection();
@@ -104,11 +104,9 @@ class Sessions {
     }
 
     /**
-     * @param bool $halt_on_error
-     *
      * @return array
      */
-    private function connection($halt_on_error = FALSE) {
+    private function connection() {
         $connection_success = TRUE;
         $dbselection_success = TRUE;
         try {
@@ -120,9 +118,9 @@ class Sessions {
         } catch (\Exception $e) {
             $connection_success = $e instanceof Database\Exception\SelectionException;
             $dbselection_success = FALSE;
-            if ($halt_on_error and !$connection_success) {
+            if (!$connection_success) {
                 die("<strong>Unable to establish connection to MySQL</strong><br />".$e->getCode()." : ".$e->getMessage());
-            } else if ($halt_on_error) {
+            } else if (FALSE) {
                 die("<strong>Unable to select MySQL database</strong><br />".$e->getCode()." : ".$e->getMessage());
             }
         }
@@ -176,10 +174,10 @@ class Sessions {
      * You don't need to worry with the format of the data - PHP serializes it, so that you can treat it like a string.
      * However, PHP does not modify it beyond this, so you want to properly escape it before using it in a query.
      *
-     * @param $name
-     * @param $data
+     * @param string $name
+     * @param mixed  $data
      *
-     * @return mixed
+     * @return bool
      */
     public function _write($name, $data) {
         $parameters = [
@@ -201,9 +199,9 @@ class Sessions {
      * The _destroy() function is called whenever PHP needs to destroy all session data associated with a specific session identifier.
      * An obvious example is when you call session__destroy().
      *
-     * @param $name
+     * @param string $name
      *
-     * @return mixed
+     * @return bool
      */
     public function _destroy($name) {
         $parameters = [
@@ -215,6 +213,9 @@ class Sessions {
         return TRUE;
     }
 
+    /**
+     * @return bool
+     */
     public function _purge() {
         $query = "DELETE FROM ".DB_SESSIONS;
         dbquery($query);
@@ -233,13 +234,13 @@ class Sessions {
      * Because the _write() function keeps the timestamp of the last access in the access column for each record,
      * this can be used to determine which records to delete. PHP passes the maximum number of seconds allowed before a session is to be considered expired.
      *
-     * @param $max
+     * @param int $max
      * The value that PHP passes to this function comes directly from the session.gc_maxlifetime configuration directive.
      * You can actually ignore this and determine your own maximum lifetime allowed, but it is much better to adhere to the value PHP passes.
      * Doing so better adheres to the idea of transparently changing the storage mechanism.
      * From a developer's perspective, the behavior of sessions should not change.
      *
-     * @return mixed
+     * @return bool
      */
     public function _clean($max) {
         $old = time() - $max;
@@ -253,6 +254,9 @@ class Sessions {
         return TRUE;
     }
 
+    /**
+     * @param string $path
+     */
     public function remote_cache($path) {
         echo "<script>
         function timedRefresh(timeoutPeriod) {

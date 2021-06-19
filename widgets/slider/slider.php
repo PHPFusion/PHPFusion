@@ -25,7 +25,7 @@ class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Pag
     private static $sliderData = [];
     private static $sliderOptions = [];
 
-    public function display_widget($columnData) {
+    public function displayWidget($columnData) {
         if (!empty($columnData['page_content'])) {
 
             self::$sliderData = \Defender::unserialize($columnData['page_content']);

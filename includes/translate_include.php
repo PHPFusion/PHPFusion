@@ -26,7 +26,7 @@
  * @return string
  */
 function format_word($count, $words, $options = []) {
-    return PHPFusion\Locale::format_word($count, $words, $options);
+    return PHPFusion\Locale::formatWord($count, $words, $options);
 }
 
 /**
@@ -37,7 +37,7 @@ function format_word($count, $words, $options = []) {
  * @return array|string
  */
 function translate_lang_names($language) {
-    return PHPFusion\Locale::translate_lang_names($language);
+    return PHPFusion\Locale::translateLangNames($language);
 }
 
 /**
@@ -48,7 +48,7 @@ function translate_lang_names($language) {
  * @return string
  */
 function translate_country_names($country) {
-    return PHPFusion\Locale::translate_country_names($country);
+    return PHPFusion\Locale::translateCountryNames($country);
 }
 
 /**

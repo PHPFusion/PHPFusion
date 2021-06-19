@@ -45,7 +45,7 @@ class Event {
         return NULL;
     }
 
-    public function set_EventName($event_name) {
+    public function setEventName($event_name) {
         $this->event_name = $event_name;
     }
 
@@ -56,7 +56,7 @@ class Event {
      *
      * @return int - unix timestamp
      */
-    public static function get_EventTime($event_name) {
+    public static function getEventTime($event_name) {
         return isset(self::$event_time[$event_name]) ? (int)self::$event_time[$event_name] : 0;
     }
 
@@ -69,23 +69,23 @@ class Event {
         if (self::$event_instance === NULL && iMEMBER) {
             $user_id = fusion_get_userdata('user_id');
             self::$event_instance = new static();
-            self::$event_instance->set_UserID($user_id);
+            self::$event_instance->setUserId($user_id);
             self::$event_instance->cacheNotices();
-            self::$event_instance->handle_global_event();
+            self::$event_instance->handleGlobalEvent();
         }
 
         return self::$event_instance;
     }
 
-    public static function set_UserID($user_id) {
+    public static function setUserId($user_id) {
         self::$user_id = $user_id;
     }
 
-    protected static function get_UserID() {
+    protected static function getUserId() {
         return self::$user_id;
     }
 
-    protected function handle_global_event() {
+    protected function handleGlobalEvent() {
         if (iMEMBER) {
             $event_files = makefilelist(INCLUDES.'event/', '.|..|index.php', TRUE);
             if (!empty($event_files)) {
@@ -96,7 +96,7 @@ class Event {
                     $class = $obj_->newInstance(); // this will run a set event name.
                     $this->event_name = $class->event_name;
                     self::$handler[$this->event_name] = $class; // from here event name is accessible already
-                    if (self::is_event_required() == TRUE) { // we check if we need to fetch or not
+                    if (self::isEventRequired() == TRUE) { // we check if we need to fetch or not
                         if (method_exists($class, 'handle_event')) {
                             $class->handle_event();
                         }
@@ -111,15 +111,15 @@ class Event {
      *
      * @return bool - true will trigger the event.
      */
-    public function is_event_required() {
+    public function isEventRequired() {
         // the first array keys.
-        if (isset(self::$event_required[$this->event_name]) AND self::$event_required[$this->event_name] === TRUE) { // this will be true if my last event already expired. but the last state of the triggered actions already in.
+        if (isset(self::$event_required[$this->event_name]) and self::$event_required[$this->event_name] === TRUE) { // this will be true if my last event already expired. but the last state of the triggered actions already in.
             return TRUE;
             // now i check for the tables and fetch again the unique ones. i need to compare and see if that is already fetched.
         } else if (!dbcount('(notice_id)', DB_USER_NOTIFY, 'notice_event=:event_name AND notice_to=:my_id AND notice_datestamp > :expiry_time',
             [
                 ':expiry_time' => time() - (60 * self::$threshold_minute),
-                ':my_id'       => self::get_UserID(),
+                ':my_id'       => self::getUserId(),
                 ':event_name'  => $this->event_name,
             ])
         ) {
@@ -150,17 +150,17 @@ class Event {
      */
     private function cacheNotices() {
         // the rest you need to fetch manually.
-        if (empty($this->notices[self::get_UserID()])) {
+        if (empty($this->notices[self::getUserId()])) {
             $notice_query = "SELECT * FROM ".DB_USER_NOTIFY." WHERE notice_to=:user_id AND notice_read=:read_status ORDER BY notice_datestamp DESC LIMIT 0,15";
             $notice_param = [
-                ':user_id'     => self::get_UserID(),
+                ':user_id'     => self::getUserId(),
                 ':read_status' => 0,
             ];
             $result = dbquery($notice_query, $notice_param);
             if (dbrows($result)) {
                 while ($data = dbarray($result)) {
                     // the first one
-                    $this->notices[self::get_UserID()][$data['notice_event']][] = $data;
+                    $this->notices[self::getUserId()][$data['notice_event']][] = $data;
 
                     // Cache the latest event timer updated
                     if (!isset(self::$event_time[$data['notice_event']])) {
@@ -172,11 +172,11 @@ class Event {
                     }
                 }
             } else {
-                $this->notices[self::get_UserID()] = [];
+                $this->notices[self::getUserId()] = [];
             }
         }
 
-        return (array)$this->notices[self::get_UserID()];
+        return (array)$this->notices[self::getUserId()];
     }
 
     /*
@@ -184,9 +184,9 @@ class Event {
      */
     public function renderNotice() {
         $sub_html = self::noNoticeTemplate();
-        if (!empty($this->notices[self::get_UserID()])) {
+        if (!empty($this->notices[self::getUserId()])) {
             $sub_html = '';
-            foreach ($this->notices[self::get_UserID()] as $event => $nData) {
+            foreach ($this->notices[self::getUserId()] as $nData) {
                 foreach ($nData as $notice) {
                     $user = fusion_get_user($notice['notice_from']);
                     $sub_html .= strtr(self::childNoticeTemplate($notice), [
@@ -199,15 +199,13 @@ class Event {
             }
         }
 
-        return strtr(self::parentNoticeTemplate($this->notices[self::get_UserID()]), [
+        return strtr(self::parentNoticeTemplate($this->notices[self::getUserId()]), [
             '{%child_items%}' => $sub_html
         ]);
     }
 
     public static function parentNoticeTemplate($info) {
-        return "
-        <ul class='block'>{%child_items%}</ul>
-        ";
+        return "<ul class='block'>{%child_items%}</ul>";
     }
 
     public static function childNoticeTemplate($info) {
@@ -225,7 +223,6 @@ class Event {
     }
 
     public function noNoticeTemplate() {
-        return "<li><div class='text-center'>There are no notice presently</div></li>\n";
+        return "<li><div class='text-center'>There are no notice presently</div></li>";
     }
-
 }

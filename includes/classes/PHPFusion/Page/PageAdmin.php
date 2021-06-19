@@ -27,7 +27,7 @@ use PHPFusion\Page\Composer\PageList;
  * @package PHPFusion\Page
  */
 class PageAdmin extends PageModel {
-    protected static $page_instance = NULL;
+    protected static $pageInstance = NULL;
     protected static $locale = [];
     protected static $textarea_options = [];
     protected static $is_editing = FALSE;
@@ -35,8 +35,8 @@ class PageAdmin extends PageModel {
     private static $current_section = '';
     private static $current_status = '';
     private static $current_action = '';
-    private static $current_pageId = 0;
-    private static $composerMode = '';
+    private static $current_page_id = 0;
+    private static $composer_mode = '';
     private static $allowed_composer_mode = ['pg_content', 'pg_settings', 'pg_composer'];
 
     /**
@@ -54,12 +54,12 @@ class PageAdmin extends PageModel {
      * @return object
      */
     public static function getComposerAdminInstance() {
-        if (empty(self::$page_instance)) {
-            self::$page_instance = new static;
+        if (empty(self::$pageInstance)) {
+            self::$pageInstance = new static;
             self::setPageAdminConfig();
         }
 
-        return (object)self::$page_instance;
+        return (object)self::$pageInstance;
     }
 
     /**
@@ -69,7 +69,7 @@ class PageAdmin extends PageModel {
         self::$current_section = isset($_GET['section']) && in_array($_GET['section'], self::$allowed_admin_pages) ? $_GET['section'] : self::$allowed_admin_pages[0];
         self::$current_status = isset($_GET['status']) && isnum($_GET['status']) ? $_GET['status'] : self::$current_status;
         self::$current_action = isset($_GET['action']) ? $_GET['action'] : self::$current_action;
-        self::$current_pageId = isset($_GET['cpid']) && isnum($_GET['cpid']) ? intval($_GET['cpid']) : self::$current_pageId;
+        self::$current_page_id = isset($_GET['cpid']) && isnum($_GET['cpid']) ? intval($_GET['cpid']) : self::$current_page_id;
         $_POST['page_id'] = isset($_POST['page_id']) && isnum($_POST['page_id']) ? $_POST['page_id'] : 0;
         self::$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/sitelinks.php', LOCALE.LOCALESET.'admin/custom_pages.php']);
         $request = clean_request('', ['aid', 'section', 'action', 'cpid'], TRUE);
@@ -147,8 +147,8 @@ class PageAdmin extends PageModel {
         $tab_active = self::$current_section;
         switch (self::$current_action) {
             case 'edit':
-                if (!empty(self::$current_pageId)) {
-                    self::$data = self::loadCustomPage(self::$current_pageId);
+                if (!empty(self::$current_page_id)) {
+                    self::$data = self::loadCustomPage(self::$current_page_id);
                     if (empty(self::$data)) {
                         redirect(FUSION_SELF.fusion_get_aidlink());
                     }
@@ -159,10 +159,10 @@ class PageAdmin extends PageModel {
                 }
                 break;
             case 'delete':
-                if (!empty(self::$current_pageId)) {
-                    self::deleteCustomPage(self::$current_pageId);
-                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_pageId);
-                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_pageId);
+                if (!empty(self::$current_page_id)) {
+                    self::deleteCustomPage(self::$current_page_id);
+                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=".self::$current_page_id);
+                    dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE page_id=".self::$current_page_id);
                     addnotice('success', self::$locale['page_0400']);
                 }
                 redirect(FUSION_SELF.fusion_get_aidlink());
@@ -186,10 +186,10 @@ class PageAdmin extends PageModel {
      * @return string
      */
     public static function getComposerMode() {
-        if (empty(self::$composerMode)) {
-            self::$composerMode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
+        if (empty(self::$composer_mode)) {
+            self::$composer_mode = isset($_GET['composer_tab']) && in_array($_GET['composer_tab'],
                 self::$allowed_composer_mode) ? $_GET['composer_tab'] : 'pg_content';
         }
-        return (string)self::$composerMode;
+        return (string)self::$composer_mode;
     }
 }

@@ -73,14 +73,14 @@ class InstallCore extends Infusions {
         'db_driver'       => NULL
     ];
 
-    protected static $siteData = [
+    protected static $site_data = [
         'sitename'          => '',
         'siteemail'         => '',
         'enabled_languages' => '',
         'siteusername'      => ''
     ];
 
-    protected static $userData = [
+    protected static $user_data = [
         'user_name'       => '',
         'user_email'      => '',
         'user_timezone'   => '',

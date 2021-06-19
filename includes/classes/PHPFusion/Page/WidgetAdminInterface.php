@@ -30,7 +30,7 @@ interface WidgetAdminInterface {
      *
      * @return array
      */
-    public function exclude_return();
+    public function excludeReturn();
 
     /**
      * Validate all $_POST of your form and returns a page content serialized string from your form inputs
@@ -39,7 +39,7 @@ interface WidgetAdminInterface {
      *
      * @return string - serialized array
      */
-    public function validate_input();
+    public function validateInput();
 
     /**
      * Validate all $_POST of your form and returns a page settings serialized string from your form inputs
@@ -48,7 +48,7 @@ interface WidgetAdminInterface {
      *
      * @return string - serialized array
      */
-    public function validate_settings();
+    public function validateSettings();
 
     /**
      * The execution of codes extra when delete column button is pressed
@@ -56,13 +56,13 @@ interface WidgetAdminInterface {
      *
      * @return mixed
      */
-    public function validate_delete();
+    public function validateDelete();
 
     /**
      * This function displays your widget admin interface
      * Echo your designed HTML of the administration here.
      */
-    public function display_form_input();
+    public function displayFormInput();
 
     /**
      * This function displays your widget save buttons
@@ -77,6 +77,5 @@ interface WidgetAdminInterface {
      *
      * @return mixed
      */
-    public function display_form_button();
-
+    public function displayFormButton();
 }

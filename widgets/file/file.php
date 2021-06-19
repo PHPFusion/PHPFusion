@@ -18,7 +18,7 @@
 
 class fileWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    public function display_widget($columnData) {
+    public function displayWidget($columnData) {
         $fileData = \Defender::unserialize($columnData['page_content']);
 
         $url = str_replace(fusion_get_settings('siteurl'), '', $fileData['file_url']);

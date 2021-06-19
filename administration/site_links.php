@@ -122,9 +122,9 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         switch ($this->action) {
             case "edit":
                 if ($this->link_id) {
-                    $this->title = $this->verify_sitelinks($this->link_id) ? $this->locale['SL_0011'] : $this->locale['SL_0010'];
+                    $this->title = $this->verifySiteLink($this->link_id) ? $this->locale['SL_0011'] : $this->locale['SL_0010'];
                 }
-                $this->data = self::get_sitelinks($this->link_id);
+                $this->data = self::getSiteLinks($this->link_id);
                 if (empty($this->data['link_id'])) {
                     redirect(FUSION_SELF.$this->aidlink);
                 }
@@ -360,7 +360,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
 
         echo form_select('link_position', $this->locale['SL_0024'], $this->data["link_position"],
             [
-                'options'     => self::get_SiteLinksPosition(),
+                'options'     => self::getSiteLinksPosition(),
                 'inline'      => TRUE,
                 "width"       => "300px",
                 "inner_width" => "300px",
@@ -408,7 +408,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
         ]);
 
         echo form_select('link_visibility', $this->locale['SL_0022'], $this->data['link_visibility'], [
-            'options'     => self::get_LinkVisibility(),
+            'options'     => self::getLinkVisibility(),
             'placeholder' => $this->locale['choose'],
             'width'       => '100%',
         ]);
@@ -606,7 +606,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
                         // Perform menu action
                         foreach ($link_array as $link_id) {
                             // check input table
-                            if (self::verify_sitelinks($link_id) && fusion_safe()) {
+                            if (self::verifySiteLink($link_id) && fusion_safe()) {
                                 switch ($action) {
                                     case "publish":
                                         dbquery("UPDATE ".DB_SITE_LINKS." SET link_status='1' WHERE link_id=:id", [":id" => (int)$link_id]);

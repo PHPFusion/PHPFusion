@@ -56,7 +56,7 @@ class Members_Profile extends Members_Admin {
         $userFields->skipCurrentPass = TRUE;
         $userFields->registration = TRUE;
         $userFields->method = 'input';
-        $userFields->display_profile_input();
+        $userFields->displayProfileInput();
     }
 
     /*
@@ -76,7 +76,7 @@ class Members_Profile extends Members_Admin {
         $userFields->registration = FALSE;
         $userFields->userData = self::$user_data;
         $userFields->method = 'display';
-        $userFields->display_profile_output();
+        $userFields->displayProfileOutput();
     }
 
     public static function edit_user_profile() {
@@ -107,7 +107,7 @@ class Members_Profile extends Members_Admin {
         $userFields->userData = self::$user_data;
         $userFields->method = 'input';
         $userFields->admin_mode = TRUE;
-        $userFields->display_profile_input();
+        $userFields->displayProfileInput();
     }
 
     public static function delete_user() {

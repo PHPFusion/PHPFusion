@@ -160,7 +160,7 @@ class DatabaseFactory {
      * @return AbstractDatabaseDriver
      */
     public static function getConnection($id = NULL) {
-        $id = strtolower($id ?: self::getDefaultConnectionID());
+        $id = strtolower($id ?: self::getDefaultConnectionId());
         if (!isset(self::$configurations[$id])) {
             throw new UndefinedConfigurationException("Unknown configuration id: ".$id);
         }
@@ -180,7 +180,7 @@ class DatabaseFactory {
     /**
      * @return string
      */
-    public static function getDefaultConnectionID() {
+    public static function getDefaultConnectionId() {
         return self::$defaultConnectionID;
     }
 
@@ -202,7 +202,7 @@ class DatabaseFactory {
         $options += [
             'charset'      => $configuration->getCharset(),
             'driver'       => $configuration->getDriver(),
-            'connectionid' => self::getDefaultConnectionID(),
+            'connectionid' => self::getDefaultConnectionId(),
             'debug'        => $configuration->isDebug()
         ];
         $id = strtolower($options['connectionid']);

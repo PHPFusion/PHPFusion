@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Atom;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Administration Page for Theme Settings
  * Class Admin
@@ -34,7 +32,7 @@ class Admin {
         self::$locale = fusion_get_locale();
         $_GET['action'] = isset($_GET['action']) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = isset($_GET['status']) && $_GET['status'] ? $_GET['status'] : '';
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => self::$locale['theme_1000']]);
+        add_breadcrumb(['link' => ADMIN."theme.php".$aidlink, 'title' => self::$locale['theme_1000']]);
     }
 
     /**
@@ -44,7 +42,7 @@ class Admin {
      *
      * @return bool
      */
-    static function theme_widget_exists($theme_name) {
+    static function themeWidgetExists($theme_name) {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/widget.php"));
     }
 
@@ -53,16 +51,16 @@ class Admin {
      *
      * @param string $theme_name
      */
-    public static function display_theme_editor($theme_name) {
+    public static function displayThemeEditor($theme_name) {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         // sanitize theme exist
-        $theme_name = self::verify_theme($theme_name) ? $theme_name : "";
+        $theme_name = self::verifyTheme($theme_name) ? $theme_name : "";
         if (!$theme_name) {
             redirect(clean_request("", ["aid"], TRUE));
         }
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
         $tab['title'] = [$locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']];
         $tab['id'] = ["dashboard", "widgets", "css"];
@@ -122,14 +120,14 @@ class Admin {
                     dbquery_insert(DB_THEME, $data, "update");
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
                 }
-                $atom->display_theme_overview();
+                $atom->displayThemeOverview();
                 break;
             case "widgets":
-                $atom->display_theme_widgets();
+                $atom->displayThemeWidgets();
                 break;
             case "css":
                 echo '<div class="alert alert-danger">'.$locale['deprecated_section'].'</div>';
-                $atom->theme_editor();
+                $atom->themeEditor();
                 break;
             case "close":
                 redirect(FUSION_SELF.$aidlink);
@@ -147,20 +145,20 @@ class Admin {
      *
      * @return bool
      */
-    public static function verify_theme($theme_name) {
+    public static function verifyTheme($theme_name) {
         return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name);
     }
 
     /**
      * Display available site themes
      */
-    public static function display_theme_list() {
+    public static function displayThemeList() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
         if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
             $theme_name = form_sanitizer($_GET['theme']);
-            if (self::theme_installable($theme_name)) {
+            if (self::themeInstallable($theme_name)) {
                 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='theme'");
                 if ($result) {
                     redirect(FUSION_SELF.$aidlink.'&section=list');
@@ -267,7 +265,7 @@ class Admin {
      *
      * @return bool
      */
-    static function theme_installable($theme_name, $admin = FALSE) {
+    static function themeInstallable($theme_name, $admin = FALSE) {
         $folder = $admin == TRUE ? ADMIN_THEMES : THEMES;
         $atheme = $admin == TRUE ? 'acp_' : '';
         $atheme_ = $admin == TRUE ? 'admin_theme' : 'theme';
@@ -283,14 +281,14 @@ class Admin {
     /**
      * Display available admin themes
      */
-    public static function admin_themes_list() {
+    public static function adminThemesList() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $settings = fusion_get_settings();
 
         if (isset($_GET['action']) && $_GET['action'] == "set_active" && isset($_GET['theme']) && $_GET['theme'] !== "") {
             $theme_name = form_sanitizer($_GET['theme']);
-            if (self::theme_installable($theme_name, TRUE)) {
+            if (self::themeInstallable($theme_name, TRUE)) {
                 $result = dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$theme_name."' WHERE settings_name='admin_theme'");
                 if ($result) {
                     redirect(FUSION_SELF.$aidlink.'&section=admin_themes');
@@ -332,7 +330,7 @@ class Admin {
     /**
      * Upload site/admin theme
      */
-    public static function theme_uploader() {
+    public static function themeUploader() {
         $defender = \Defender::getInstance();
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();

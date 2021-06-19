@@ -33,13 +33,13 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
         self::$widget_data = [
             'panel_include' => form_sanitizer($_POST['panel_include'], '', 'panel_include')
         ];
@@ -50,10 +50,10 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
-    public function display_form_input() {
+    public function displayFormInput() {
         $lang = file_exists(WIDGETS."panel/locale/".LANGUAGE.".php") ? WIDGETS."panel/locale/".LANGUAGE.".php" : WIDGETS."panel/locale/English.php";
         $widget_locale = fusion_get_locale('', $lang);
 
@@ -68,7 +68,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
             '[LINK]'  => "<a href='".ADMIN."panels.php".fusion_get_aidlink()."' title='".$widget_locale['PW_0100']."'>",
             '[/LINK]' => "</a>"
         ]);
-        $panel_opts = \PHPFusion\Panels::get_available_panels();
+        $panel_opts = \PHPFusion\Panels::getAvailablePanels();
         unset($panel_opts['none']);
         echo form_select('panel_include', $widget_locale['PW_0200'], self::$widget_data['panel_include'],
             [
@@ -80,7 +80,7 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         );
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
         echo form_button('save_widget', $widget_locale['PW_0220'], 'widget', ['class' => 'btn-primary']);
         echo form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', ['class' => 'btn-success']);

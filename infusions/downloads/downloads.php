@@ -51,7 +51,7 @@ $_get_author = get("author", FILTER_VALIDATE_INT);
 
 add_breadcrumb([
     'link'  => INFUSIONS.'downloads/downloads.php',
-    'title' => SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name")
+    'title' => SiteLinks::getCurrentSiteLinks("infusions/downloads/downloads.php", "link_name")
 ]);
 
 if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_downloads.php')) {
@@ -223,7 +223,7 @@ if ($_get_download_id) {
                 'title' => $data['download_title']
             ]);
 
-            $navbar_title = SiteLinks::get_current_SiteLinks("infusions/downloads/downloads.php", "link_name");
+            $navbar_title = SiteLinks::getCurrentSiteLinks("infusions/downloads/downloads.php", "link_name");
             if (!$navbar_title) {
                 $navbar_title = $locale["download_1000"];
             }

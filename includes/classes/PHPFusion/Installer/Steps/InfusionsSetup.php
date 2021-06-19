@@ -88,7 +88,7 @@ class InfusionsSetup extends InstallCore {
                 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 
                 $inf_core = Infusions::getInstance();
-                $inf_core::load_configuration();
+                $inf_core::loadConfiguration();
                 if (($folder = filter_input(INPUT_POST, 'infuse'))) {
                     $inf_core->infuse($folder);
                 } else if ($folder = filter_input(INPUT_POST, 'defuse')) {
@@ -98,7 +98,7 @@ class InfusionsSetup extends InstallCore {
                 $temp = opendir(INFUSIONS);
                 $infs = [];
                 while ($folder = readdir($temp)) {
-                    if (!in_array($folder, ["..", "."]) && ($inf = Infusions::load_infusion($folder))) {
+                    if (!in_array($folder, ["..", "."]) && ($inf = Infusions::loadInfusion($folder))) {
                         $infs[] = $inf;
                     }
                 }

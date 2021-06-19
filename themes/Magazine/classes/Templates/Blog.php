@@ -21,12 +21,12 @@ use \PHPFusion\Panels;
 
 class Blog {
     public static function renderMainBlog($info) {
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         if (isset($_GET['readmore']) && !empty($info['blog_item'])) {
             self::displayBlogItem($info);

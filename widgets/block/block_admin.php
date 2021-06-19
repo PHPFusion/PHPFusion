@@ -32,13 +32,13 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
         self::$widget_data = [
             'block_title'       => form_sanitizer($_POST['block_title'], '', 'block_title'),
             'block_description' => form_sanitizer($_POST['block_description'], '', 'block_description'),
@@ -54,10 +54,10 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
-    public function display_form_input() {
+    public function displayFormInput() {
         $lang = file_exists(WIDGETS."block/locale/".LANGUAGE.".php") ? WIDGETS."block/locale/".LANGUAGE.".php" : WIDGETS."block/locale/English.php";
         $widget_locale = fusion_get_locale('', $lang);
 
@@ -113,7 +113,7 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         <?php
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
         echo form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', ['class' => 'btn-primary']);
         echo form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', ['class' => 'btn-success']);

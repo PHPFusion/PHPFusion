@@ -63,7 +63,7 @@ $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
 $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
 $userFields->setUserNameChange(fusion_get_settings("username_change"));
 $userFields->registration = FALSE;
-$userFields->display_profile_input($info);
+$userFields->displayProfileInput();
 
 if (!defined('EDITPROFILE_JS_CHECK')) {
     define('EDITPROFILE_JS_CHECK', TRUE);

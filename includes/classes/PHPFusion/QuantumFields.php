@@ -79,7 +79,7 @@ class QuantumFields extends SqlHandler {
     protected $module_debug = FALSE;
     // System Internals
     private $input_page = 1;
-    private $locale = [];
+    private $locale;
     private $page_list = [];
     private $page = [];
     private $enabled_fields = [];
@@ -116,14 +116,24 @@ class QuantumFields extends SqlHandler {
     ### Setters ###
     private $field_cat_index = [];
 
-    public static function fusion_getlocale($data, $input_name) {
+    public function __construct() {
+        $this->locale = fusion_get_locale('', LOCALE.LOCALESET."admin/fields.php");
+    }
+
+    /**
+     * @param array  $data
+     * @param string $input_name
+     *
+     * @return array|bool|mixed|string|null
+     */
+    public static function fusionGetLocale($data, $input_name) {
         $language_opts = fusion_get_enabled_languages();
 
         if (isset($_POST[$input_name])) {
-            return self::serialize_fields($input_name);
+            return self::serializeFields($input_name);
         } else {
             if (isset($data[$input_name])) {
-                if (self::is_serialized($data[$input_name])) {
+                if (self::isSerialized($data[$input_name])) {
                     return unserialize(stripslashes($data[$input_name]));
                 } else {
                     $value = [];
@@ -142,11 +152,11 @@ class QuantumFields extends SqlHandler {
     /**
      * Short serialization function.
      *
-     * @param $input_name
+     * @param string $input_name
      *
      * @return bool|string
      */
-    public static function serialize_fields($input_name) {
+    public static function serializeFields($input_name) {
         if (isset($_POST[$input_name])) {
             $field_var = [];
             foreach ($_POST[$input_name] as $language => $value) {
@@ -159,7 +169,13 @@ class QuantumFields extends SqlHandler {
         return FALSE;
     }
 
-    public static function is_serialized($value, &$result = NULL) {
+    /**
+     * @param string    $value
+     * @param bool|null $result
+     *
+     * @return bool
+     */
+    public static function isSerialized($value, &$result = NULL) {
         // Bit of a give away this one
         if (!is_string($value)) {
             return FALSE;
@@ -240,7 +256,7 @@ class QuantumFields extends SqlHandler {
     /**
      * Set Quantum system locale
      *
-     * @param $locale
+     * @param mixed $locale
      */
     public function setLocale($locale) {
         $this->locale = $locale;
@@ -260,7 +276,7 @@ class QuantumFields extends SqlHandler {
      * If modules are used, specify fields module locale libs folder path
      * API follows Version 7.00's User Fields Module.
      *
-     * @param $locale_folder_path
+     * @param string $locale_folder_path
      */
     public function setPluginLocaleFolder($locale_folder_path) {
         $this->plugin_locale_folder = $locale_folder_path;
@@ -330,17 +346,17 @@ class QuantumFields extends SqlHandler {
     /**
      * Get results from running load_structure
      *
-     * @param null $key
+     * @param string $key
      *
      * @return array
      */
     public function getFields($key = NULL) {
-        return (isset($this->fields[$key])) ? (array)$this->fields[$key] : (array)$this->fields;
+        return (isset($this->fields[$key])) ? (array)$this->fields[$key] : $this->fields;
     }
 
-    ### Validators ###
-    /* Move Fields Order - Up and Down */
-
+    /**
+     * UF Admin
+     */
     public function displayQuantumAdmin() {
         pageaccess($this->admin_rights);
         define('IN_QUANTUM', TRUE);
@@ -351,17 +367,20 @@ class QuantumFields extends SqlHandler {
         }
 
         if ($this->method == 'input') {
-            $this->load_fields(); // return fields
-            $this->load_field_cats(); // return cat
-            $this->_move_fields();
-            $this->_delete_category();
-            $this->_delete_fields();
-            $this->get_available_modules();
+            $this->loadFields(); // return fields
+            $this->loadFieldCats(); // return cat
+            $this->moveFields();
+            $this->deleteCategory();
+            $this->deleteFields();
+            $this->getAvailableModules();
         }
         $this->view();
     }
 
-    public function load_fields() {
+    /**
+     * Load fields
+     */
+    public function loadFields() {
         $this->page = dbquery_tree_full(
             $this->category_db,
             "field_cat_id",
@@ -384,12 +403,11 @@ class QuantumFields extends SqlHandler {
             }
         }
     }
-    /* Execution of delete fields */
 
     /**
      * Returns $this->page_list and $this->cat_list
      */
-    public function load_field_cats() {
+    public function loadFieldCats() {
         // Load Field Cats
         if (empty($this->page_list) && empty($this->cat_list)) {
             $result = dbquery("SELECT * FROM ".$this->category_db." ORDER BY field_cat_order");
@@ -398,7 +416,7 @@ class QuantumFields extends SqlHandler {
                     if ($list_data['field_parent'] != '0') {
                         $this->cat_list[$list_data['field_cat_id']] = $list_data['field_cat_name'];
                     } else {
-                        $this->page_list[$list_data['field_cat_id']] = self::parse_label($list_data['field_cat_name']);
+                        $this->page_list[$list_data['field_cat_id']] = self::parseLabel($list_data['field_cat_name']);
                     }
                 }
             }
@@ -411,13 +429,13 @@ class QuantumFields extends SqlHandler {
     /**
      * Parse the correct label language. Requires serialized $value.
      *
-     * @param $value - Serialized
+     * @param string $value Serialized
      *
      * @return string
-     *               NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
+     * NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
      */
-    public static function parse_label($value) {
-        if (self::is_serialized($value)) {
+    public static function parseLabel($value) {
+        if (self::isSerialized($value)) {
             $value = unserialize(stripslashes($value)); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
 
             return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
@@ -426,7 +444,10 @@ class QuantumFields extends SqlHandler {
         }
     }
 
-    private function _move_fields() {
+    /**
+     * Move fields order - up and down
+     */
+    private function moveFields() {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
 
@@ -511,8 +532,10 @@ class QuantumFields extends SqlHandler {
         }
     }
 
-    /* Outputs Quantum Admin Button Sets */
-    private function _delete_category() {
+    /**
+     * Delete category
+     */
+    private function deleteCategory() {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
         $this->debug = FALSE;
@@ -522,7 +545,7 @@ class QuantumFields extends SqlHandler {
             redirect(FUSION_SELF.$aidlink);
         }
 
-        if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && $_GET['cat_id'] != 1 && self::validate_fieldCat($_GET['cat_id'])) {
+        if (isset($_GET['action']) && $_GET['action'] == 'cat_delete' && isset($_GET['cat_id']) && $_GET['cat_id'] != 1 && self::validateFieldCat($_GET['cat_id'])) {
 
             // do action of the interior form
             if (isset($_POST['delete_cat'])) {
@@ -651,7 +674,7 @@ class QuantumFields extends SqlHandler {
                                     print_p("DELETE ".$data['field_id']." FROM ".$this->field_db);
                                 } else {
                                     $field_del_sql = "DELETE FROM ".$this->field_db." WHERE field_id='".$data['field_id']."'";
-                                    $field_count = $this->validate_field($data['field_id']);
+                                    $field_count = $this->validateField($data['field_id']);
                                     if ($field_count) {
                                         dbquery($field_del_sql);
                                     }
@@ -717,7 +740,7 @@ class QuantumFields extends SqlHandler {
                             echo "<div class='alert alert-info m-t-10'>";
                             echo "<ol style='list-style:inherit !important; margin-bottom:0;'>";
                             foreach ($this->page[$_GET['cat_id']] as $field_category) {
-                                echo "<li style='list-style-type:decimal;'>".self::parse_label($field_category['field_cat_name'])."</li>";
+                                echo "<li style='list-style-type:decimal;'>".self::parseLabel($field_category['field_cat_name'])."</li>";
                             }
                             echo "</ol>";
                             echo "</div>";
@@ -774,8 +797,12 @@ class QuantumFields extends SqlHandler {
         }
     }
 
-    ### Formatters ###
-    private function validate_fieldCat($field_cat_id) {
+    /**
+     * @param int $field_cat_id
+     *
+     * @return false|int
+     */
+    private function validateFieldCat($field_cat_id) {
         if (isnum($field_cat_id)) {
             return dbcount("(field_cat_id)", $this->category_db, "field_cat_id='".intval($field_cat_id)."'");
         }
@@ -783,7 +810,12 @@ class QuantumFields extends SqlHandler {
         return FALSE;
     }
 
-    private function validate_field($field_id) {
+    /**
+     * @param int $field_id
+     *
+     * @return false|int
+     */
+    private function validateField($field_id) {
         if (isnum($field_id)) {
             return dbcount("(field_id)", $this->field_db, "field_id='".intval($field_id)."'");
         }
@@ -791,11 +823,13 @@ class QuantumFields extends SqlHandler {
         return FALSE;
     }
 
-    /* The Current Stable PHPFusion Dynamics Module */
-    private function _delete_fields() {
+    /**
+     * Delete fields
+     */
+    private function deleteFields() {
         $aidlink = fusion_get_aidlink();
 
-        if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
+        if (isset($_GET['action']) && $_GET['action'] == 'field_delete' && isset($_GET['field_id']) && self::validateField($_GET['field_id'])) {
             $result = dbquery("SELECT field.field_id, field.field_cat, field.field_order, field.field_name, u.field_cat_id, u.field_parent, root.field_cat_db
             FROM ".$this->field_db." field
             LEFT JOIN ".$this->category_db." u ON (field.field_cat=u.field_cat_id)
@@ -846,7 +880,10 @@ class QuantumFields extends SqlHandler {
         }
     }
 
-    private function get_available_modules() {
+    /**
+     * Get available modules
+     */
+    private function getAvailableModules() {
         $this->locale = fusion_get_locale();
         $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
                     FROM ".$this->field_db." tuf
@@ -874,7 +911,7 @@ class QuantumFields extends SqlHandler {
 
                         if (preg_match("/_var.php/i", $file)) {
 
-                            $field_title = $this->filename_to_title($file);
+                            $field_title = $this->filenameToTitle($file);
 
                             if (!in_array($field_title, $this->enabled_fields)) {
 
@@ -927,7 +964,7 @@ class QuantumFields extends SqlHandler {
 
                                     if (preg_match("/_var.php/i", $file)) {
 
-                                        $field_title = $this->filename_to_title($file);
+                                        $field_title = $this->filenameToTitle($file);
 
                                         if (!in_array($field_title, $this->enabled_fields)) {
 
@@ -973,7 +1010,7 @@ class QuantumFields extends SqlHandler {
 
                         if (preg_match("/_var.php/i", $file)) {
 
-                            $field_title = $this->filename_to_title($file);
+                            $field_title = $this->filenameToTitle($file);
 
                             if (!in_array($field_title, $this->enabled_fields)) {
 
@@ -1015,11 +1052,11 @@ class QuantumFields extends SqlHandler {
     /**
      * Get the field title from filename
      *
-     * @param $filename
+     * @param string $filename
      *
      * @return string
      */
-    private function filename_to_title($filename) {
+    private function filenameToTitle($filename) {
         $field_name = explode("_", $filename);
         $field_title = "";
         for ($i = 0; $i <= count($field_name) - 3; $i++) {
@@ -1027,9 +1064,12 @@ class QuantumFields extends SqlHandler {
             $field_title .= $field_name[$i];
         }
 
-        return (string)$field_title;
+        return $field_title;
     }
 
+    /**
+     * UF admin UI
+     */
     public function view() {
         $aidlink = fusion_get_aidlink();
         $active = '';
@@ -1043,7 +1083,7 @@ class QuantumFields extends SqlHandler {
         if (!empty($this->page[0])) {
             $tab_title = [];
             foreach ($this->page[0] as $page_id => $page_data) {
-                $tab_title['title'][$page_id] = self::parse_label($page_data['field_cat_name']);
+                $tab_title['title'][$page_id] = self::parseLabel($page_data['field_cat_name']);
                 $tab_title['id'][$page_id] = $page_id;
                 $tab_title['icon'][$page_id] = $page_data['field_cat_class'];
                 $active = ((isset($_GET['cat_id']) && $page_id == $_GET['cat_id']) ? $page_id : '');
@@ -1113,7 +1153,7 @@ class QuantumFields extends SqlHandler {
                             print_p($field_cat);
                         }
                         echo "<div class='well clearfix p-t-0 p-b-0'>";
-                        echo "<h4 class='display-inline-block m-r-10'>".self::parse_label($field_cat['field_cat_name'])."</h4>";
+                        echo "<h4 class='display-inline-block m-r-10'>".self::parseLabel($field_cat['field_cat_name'])."</h4>";
                         //echo form_para(self::parse_label($field_cat['field_cat_name']), $cat_id.'-'.self::parse_label($field_cat['field_cat_name']), 'profile_category_name display-inline-block m-r-15 pull-left');
                         echo "<div class='display-inline-block spacer-xs'>";
                         if ($i != 0) {
@@ -1182,7 +1222,7 @@ class QuantumFields extends SqlHandler {
                                         'plugin_locale_folder' => $this->plugin_locale_folder,
                                     ];
                                 }
-                                echo $this->display_fields($field_data, $this->callback_data, $this->method, $options);
+                                echo $this->displayFields($field_data, $this->callback_data, $this->method, $options);
 
                                 echo $end_edit;
 
@@ -1195,7 +1235,7 @@ class QuantumFields extends SqlHandler {
                     echo "</div>";
                 } else {
                     // display no category
-                    echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parse_label($page_details['field_cat_name'])."</div>";
+                    echo "<div class='m-t-20 well text-center'>".$this->locale['fields_0102'].self::parseLabel($page_details['field_cat_name'])."</div>";
                 }
                 echo $tabs->closeTabBody();
             }
@@ -1207,7 +1247,7 @@ class QuantumFields extends SqlHandler {
         echo "</div>";
         echo "<div class='col-xs-12 col-sm-5'>";
         openside('');
-        $this->quantum_admin_buttons();
+        $this->quantumAdminButtons();
         closeside();
         echo "</div></div>";
         closetable();
@@ -1217,44 +1257,13 @@ class QuantumFields extends SqlHandler {
      * Display fields for each fieldDB record entry
      *
      * @param array  $data   The array of the user field.
-     * @param        $callback_data
-     * @param string $method input or display. In case of any other value
-     *                       the method return FALSE. See the description of return for more details.
+     * @param mixed  $callback_data
+     * @param string $method Possible valie: input, display. In case of any other value the method return false.
      * @param array  $options
-     *                       <ul>
-     *                       <li><strong>deactivate</strong> (boolean): FALSE by default.
-     *                       disable fields</li>
-     *                       <li><strong>debug</strong> (bolean): FALSE by default.
-     *                       Show some information to debug.</li>
-     *                       <li><strong>encrypt</strong> (boolean): FALSE by default.
-     *                       encrypt field names</li>
-     *                       <li><strong>error_text</strong> (string): empty string by default.
-     *                       sets the field error text</li>
-     *                       <li><strong>hide_value</strong> (boolean): FALSE by default.
-     *                       input value is not shown on fields render</li>
-     *                       <li><strong>inline</strong> (boolean): FALSE by default.
-     *                       sets the field inline</li>
-     *                       <li><strong>required</strong> (boolean): FALSE by default.
-     *                       input must be filled when validate</li>
-     *                       <li><strong>show_title</strong> (boolean): FALSE by default.
-     *                       display field label</li>
-     *                       <li><strong>placeholder</strong> (string): empty string by default.
-     *                       helper text in field value</li>
-     *                       <li><strong>plugin_folder</strong> (string): INCLUDES.'user_fields/' by default
-     *                       The folder's path where the field's source files are.</li>
-     *                       <li><strong>plugin_locale_folder</strong> (string): LOCALE.LOCALESET.'/user_fields/' by
-     *                       default. The folder's path where the field's locale files are.</li>
-     *                       </ul>
      *
-     * @return array|bool|string
-     *                       <ul>
-     *                       <li>FALSE on failure</li>
-     *                       <li>string if $method 'display'</li>
-     *                       <li>array if $method is 'input'</li>
-     *                       </ul>
+     * @return array|bool|string False on failure, string if $method 'display' or array if $method is 'input'
      */
-    public function display_fields(array $data, $callback_data, $method = 'input', array $options = []) {
-
+    public function displayFields(array $data, $callback_data, $method = 'input', array $options = []) {
         unset($callback_data['user_algo']);
         unset($callback_data['user_salt']);
         unset($callback_data['user_password']);
@@ -1269,17 +1278,17 @@ class QuantumFields extends SqlHandler {
         ];
 
         $default_options = [
-            'hide_value'           => FALSE,
-            'encrypt'              => FALSE,
-            'show_title'           => $method == "input",
-            'deactivate'           => FALSE,
-            'inline'               => FALSE,
-            'error_text'           => $data['field_error'],
-            'required'             => (bool)$data['field_required'],
-            'placeholder'          => $data['field_default'],
-            'plugin_folder'        => $this->plugin_folder,
-            'plugin_locale_folder' => $this->plugin_locale_folder,
-            'debug'                => FALSE
+            'hide_value'           => FALSE, // input value is not shown on fields render
+            'encrypt'              => FALSE, // encrypt field names
+            'show_title'           => $method == "input", // display field label
+            'deactivate'           => FALSE, // disable fields
+            'inline'               => FALSE, // sets the field inline
+            'error_text'           => $data['field_error'], // sets the field error text
+            'required'             => (bool)$data['field_required'], // input must be filled when validate
+            'placeholder'          => $data['field_default'], // helper text in field value
+            'plugin_folder'        => $this->plugin_folder, // The folder's path where the field's source files are
+            'plugin_locale_folder' => $this->plugin_locale_folder, // The folder's path where the field's locale files are
+            'debug'                => FALSE // Show some information to debug
         ];
 
         $options += $default_options;
@@ -1339,7 +1348,7 @@ class QuantumFields extends SqlHandler {
             $field_value = "";
         }
 
-        $field_label = ($options['show_title'] ? self::parse_label($data['field_title']) : "");
+        $field_label = ($options['show_title'] ? self::parseLabel($data['field_title']) : "");
 
         switch ($data['field_type']) {
             case 'file':
@@ -1364,7 +1373,7 @@ class QuantumFields extends SqlHandler {
                     return form_text($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1376,7 +1385,7 @@ class QuantumFields extends SqlHandler {
                     return form_text($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1388,7 +1397,7 @@ class QuantumFields extends SqlHandler {
                     return form_text($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
@@ -1400,7 +1409,7 @@ class QuantumFields extends SqlHandler {
                     return form_text($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
@@ -1409,12 +1418,12 @@ class QuantumFields extends SqlHandler {
                 if ($method == 'input') {
                     $options += ['options' => $option_list];
                     $options['keyflip'] = TRUE;
-                    return form_select($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
+                    return form_select($data['field_name'], self::parseLabel($data['field_title']), $field_value, $options);
 
                 } else if ($method == 'display' && $field_value) {
                     $options_value = explode(",", $data['field_options']);
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => !empty($options_value[$field_value]) ? $options_value[$field_value] : $field_value,
                     ];
                 }
@@ -1424,11 +1433,11 @@ class QuantumFields extends SqlHandler {
                     $options += ['options' => $option_list, 'tags' => TRUE, 'multiple' => TRUE, 'width' => '100%', 'inner_width' => '100%'];
 
                     return form_select($data['field_name'],
-                        $options['show_title'] ? self::parse_label($data['field_title']) : '',
+                        $options['show_title'] ? self::parseLabel($data['field_title']) : '',
                         $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1440,7 +1449,7 @@ class QuantumFields extends SqlHandler {
                     return form_location($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1450,7 +1459,7 @@ class QuantumFields extends SqlHandler {
                     return form_textarea($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
@@ -1460,7 +1469,7 @@ class QuantumFields extends SqlHandler {
                     return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1475,7 +1484,7 @@ class QuantumFields extends SqlHandler {
 
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => showdate('shortdate', $field_value)
                     ];
                 }
@@ -1485,7 +1494,7 @@ class QuantumFields extends SqlHandler {
                     return form_colorpicker($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1495,17 +1504,17 @@ class QuantumFields extends SqlHandler {
                     return form_fileinput($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
                 break;
             case 'hidden':
                 if ($method == 'input') {
-                    return form_hidden($data['field_name'], self::parse_label($data['field_title']), $field_value, $options);
+                    return form_hidden($data['field_name'], self::parseLabel($data['field_title']), $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
@@ -1531,7 +1540,7 @@ class QuantumFields extends SqlHandler {
                     }
 
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value
                     ];
                 }
@@ -1541,7 +1550,7 @@ class QuantumFields extends SqlHandler {
                     return form_contact($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => implode('|', $field_value)
                     ];
                 }
@@ -1553,7 +1562,7 @@ class QuantumFields extends SqlHandler {
                     return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
                     return [
-                        'title' => self::parse_label($data['field_title']),
+                        'title' => self::parseLabel($data['field_title']),
                         'value' => $field_value,
                     ];
                 }
@@ -1563,7 +1572,10 @@ class QuantumFields extends SqlHandler {
         return FALSE;
     }
 
-    public function quantum_admin_buttons() {
+    /**
+     * Outputs Quantum Admin Button Sets
+     */
+    public function quantumAdminButtons() {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
 
@@ -1586,7 +1598,7 @@ class QuantumFields extends SqlHandler {
             $tab_title['icon'][] = '';
             $tab_active = (!empty($this->cat_list)) ? tab_active($tab_title, 2) : tab_active($tab_title, 1);
         } // add field
-        else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type()))) {
+        else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->getDynamicsType()))) {
             $tab_title['title'][] = $this->locale['fields_0306'];
             $tab_title['id'][] = 'add';
             $tab_title['icon'][] = '';
@@ -1630,7 +1642,7 @@ class QuantumFields extends SqlHandler {
 
         if (!empty($this->cat_list)) {
             echo "<div class='row m-t-20'>";
-            $field_type = $this->get_dynamics_type();
+            $field_type = $this->getDynamicsType();
             unset($field_type['file']);
             foreach ($field_type as $type => $name) {
                 echo "<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 p-b-20'>".form_button('add_field', $name, $type, ['input_id' => 'add_field-'.$type, 'class' => 'btn-block btn-sm btn-default'])."</div>";
@@ -1671,26 +1683,30 @@ class QuantumFields extends SqlHandler {
                 echo $tabs->openTabBody($tab_title['id'][1], $tab_active);
             }
             echo "<div class='m-t-20'>";
-            echo $this->quantum_category_form();
+            echo $this->quantumCategoryForm();
             echo "</div>";
             echo $tabs->closeTabBody();
 
-        } else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->get_dynamics_type())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
+        } else if (isset($_POST['add_field']) && in_array($_POST['add_field'], array_flip($this->getDynamicsType())) or (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && isnum($_GET['field_id']))) {
             echo $tabs->openTabBody($tab_title['id'][2], $tab_active);
-            $this->quantum_dynamics_form();
+            $this->quantumDynamicsForm();
             echo $tabs->closeTabBody();
 
         } else if (isset($_POST['add_module']) && in_array($_POST['add_module'], array_flip($this->get_available_modules)) or (isset($_GET['action']) && $_GET['action'] == 'module_edit' && isset($_GET['module_id']) && isnum($_GET['module_id']))) {
             echo $tabs->openTabBody($tab_title['id'][2], $tab_active);
-            $this->display_module_form();
+            $this->displayModuleForm();
             echo $tabs->closeTabBody();
 
         }
         echo $tabs->closeTab();
     }
 
-    public function get_dynamics_type() {
-
+    /**
+     * Array of available field types
+     *
+     * @return array
+     */
+    public function getDynamicsType() {
         return [
             'file'        => $this->locale['fields_0500'],
             'textbox'     => $this->locale['fields_0501'],
@@ -1717,7 +1733,7 @@ class QuantumFields extends SqlHandler {
      *
      * @return string
      */
-    public function quantum_category_form() {
+    public function quantumCategoryForm() {
         $aidlink = fusion_get_aidlink();
         $this->locale = fusion_get_locale();
 
@@ -1729,7 +1745,7 @@ class QuantumFields extends SqlHandler {
         ");
 
         // Edit Callback
-        if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && self::validate_fieldCat($_GET['cat_id'])) {
+        if (isset($_GET['action']) && $_GET['action'] == 'cat_edit' && isset($_GET['cat_id']) && self::validateFieldCat($_GET['cat_id'])) {
             $result = dbquery("SELECT * FROM ".$this->category_db." WHERE field_cat_id='".$_GET['cat_id']."'");
             if (dbrows($result)) {
                 $this->field_cat_data = dbarray($result);
@@ -1777,7 +1793,7 @@ class QuantumFields extends SqlHandler {
             }
 
             // shuffle between save and update
-            if (self::validate_fieldCat($this->field_cat_data['field_cat_id'])) {
+            if (self::validateFieldCat($this->field_cat_data['field_cat_id'])) {
 
                 dbquery_order(
                     $this->category_db, $this->field_cat_data['field_cat_order'],
@@ -1885,7 +1901,7 @@ class QuantumFields extends SqlHandler {
             'class'    => 'm-b-20 btn-primary'
         ]);
 
-        $html .= self::quantum_multilocale_fields('field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], ['required' => 1]);
+        $html .= self::quantumMultilocaleFields('field_cat_name', $this->locale['fields_0430'], $this->field_cat_data['field_cat_name'], ['required' => 1]);
         // cannot move if there are siblings
         $cat_id = (int)(get("cat_id", FILTER_VALIDATE_INT) ?: 0);
 
@@ -1955,18 +1971,18 @@ class QuantumFields extends SqlHandler {
     /**
      * Multiple locale fields input
      *
-     * @param       $input_name
-     * @param       $title
-     * @param       $input_value
-     * @param array $options
+     * @param string $input_name
+     * @param string $title
+     * @param mixed  $input_value
+     * @param array  $options
      *
      * @return string
      */
-    public static function quantum_multilocale_fields($input_name, $title, $input_value, array $options = []) {
+    public static function quantumMultilocaleFields($input_name, $title, $input_value, array $options = []) {
         $locale = fusion_get_locale();
         $html = '';
         $language_opts = fusion_get_enabled_languages();
-        $input_value = self::is_serialized($input_value) ? unserialize(stripslashes($input_value)) : $input_value;
+        $input_value = self::isSerialized($input_value) ? unserialize(stripslashes($input_value)) : $input_value;
         $options += [
             'function'    => !empty($options['textarea']) && $options['textarea'] == 1 ? 'form_textarea' : 'form_text',
             // only 2 fields type need a multiple locale logically
@@ -2045,8 +2061,10 @@ class QuantumFields extends SqlHandler {
         return $html;
     }
 
-    /** The master form for Adding or Editing Dynamic Fields */
-    private function quantum_dynamics_form() {
+    /**
+     * The master form for Adding or Editing Dynamic Fields
+     */
+    private function quantumDynamicsForm() {
         $aidlink = fusion_get_aidlink();
 
         $this->field_data['field_config'] = [
@@ -2069,7 +2087,7 @@ class QuantumFields extends SqlHandler {
         ];
 
         $form_action = FUSION_SELF.$aidlink;
-        if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validate_field($_GET['field_id'])) {
+        if (isset($_GET['action']) && $_GET['action'] == 'field_edit' && isset($_GET['field_id']) && self::validateField($_GET['field_id'])) {
             $form_action .= "&amp;action=".$_GET['action']."&amp;field_id=".$_GET['field_id'];
             $result = dbquery("SELECT * FROM ".$this->field_db." WHERE field_id='".intval($_GET['field_id'])."'");
             if (dbrows($result) > 0) {
@@ -2147,7 +2165,7 @@ class QuantumFields extends SqlHandler {
                 if (!empty($this->field_data['field_config'])) {
                     $this->field_data['field_config'] = fusion_encode($this->field_data['field_config']);
                 }
-                $this->create_fields($this->field_data); // will redirect and refresh config
+                $this->createFields($this->field_data); // will redirect and refresh config
             }
         }
 
@@ -2168,7 +2186,7 @@ class QuantumFields extends SqlHandler {
             'disable_opts' => $disable_opts
         ], $this->category_db, 'field_cat_name', 'field_cat_id', 'field_parent');
 
-        echo self::quantum_multilocale_fields('field_title', $this->locale['fields_0451'], $this->field_data['field_title'], ['required' => 1]);
+        echo self::quantumMultilocaleFields('field_title', $this->locale['fields_0451'], $this->field_data['field_title'], ['required' => 1]);
 
         echo form_text('field_name', $this->locale['fields_0453'], $this->field_data['field_name'],
             [
@@ -2366,16 +2384,16 @@ class QuantumFields extends SqlHandler {
     /**
      * Field creation
      *
-     * @param        $data
+     * @param array  $data
      * @param string $type
      */
-    private function create_fields($data, $type = 'dynamics') {
+    private function createFields($data, $type = 'dynamics') {
         $aidlink = fusion_get_aidlink();
 
         // Build a field Attr
         $field_attr = '';
         if ($type == 'dynamics') {
-            $field_attr = $this->dynamics_fieldinfo($data['field_type'], $data['field_default']);
+            $field_attr = $this->dynamicsFieldInfo($data['field_type'], $data['field_default']);
         } else if ($type == 'module') {
             $field_attr = $this->user_field_dbinfo;
         }
@@ -2385,7 +2403,7 @@ class QuantumFields extends SqlHandler {
             $data['field_order'] = $max_order;
         }
 
-        if (self::validate_field($data['field_id'])) {
+        if (self::validateField($data['field_id'])) {
 
             if ($this->debug) {
                 print_p('Update Mode');
@@ -2583,8 +2601,10 @@ class QuantumFields extends SqlHandler {
         }
     }
 
-    /* Single array output match against $db - use get_structureData before to populate $fields */
-    private function dynamics_fieldinfo($type, $default_value) {
+    /**
+     * Single array output match against $db - use get_structureData before to populate $fields
+     */
+    private function dynamicsFieldInfo($type, $default_value) {
         $info = [
             'textbox'     => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
             'select'      => "VARCHAR(200) NOT NULL DEFAULT '".$default_value."'",
@@ -2607,9 +2627,10 @@ class QuantumFields extends SqlHandler {
         return $info[$type];
     }
 
-    /** Modules Form */
-    private function display_module_form() {
-
+    /**
+     * Modules Form
+     */
+    private function displayModuleForm() {
         $aidlink = fusion_get_aidlink();
 
         $form_action = FUSION_SELF.$aidlink;
@@ -2745,7 +2766,7 @@ class QuantumFields extends SqlHandler {
             if (!$this->field_data['field_order']) {
                 $this->field_data['field_order'] = dbresult(dbquery("SELECT MAX(field_order) FROM ".$this->field_db." WHERE field_cat=:cat_id", [':cat_id' => $this->field_data['field_cat']]), 0) + 1;
             }
-            $this->create_fields($this->field_data, 'module');
+            $this->createFields($this->field_data, 'module');
         }
 
         echo "<div class='m-t-20'>";
@@ -2797,13 +2818,16 @@ class QuantumFields extends SqlHandler {
 
     }
 
-    public function quantum_insert(array $data = []) {
+    /**
+     * @param array $data
+     */
+    public function quantumInsert(array $data = []) {
         $quantum_fields = [];
         $infinity_ref = [];
         // bug fix: to get only the relevant fields on specific page.
         $field_list = flatten_array($this->fields);
         // to generate $infinity_ref and $quantum_fields as reference and validate the $_POST input value.
-        foreach ($field_list as $field_id => $field_data) {
+        foreach ($field_list as $field_data) {
             if ($field_data['field_parent'] == $this->input_page) {
                 $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
                 $target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
@@ -2842,13 +2866,13 @@ class QuantumFields extends SqlHandler {
     /**
      * Return sanitized post values of input fields
      *
-     * @param      $db
-     * @param      $primary_key
-     * @param bool $callback_data
+     * @param string $db
+     * @param string $primary_key
+     * @param bool   $callback_data
      *
      * @return array
      */
-    public function return_fields_input($db, $primary_key, $callback_data = FALSE) {
+    public function returnFieldsInput($db, $primary_key, $callback_data = FALSE) {
         $output_fields = [];
         //print_P($this->field_cat_index);
 
@@ -2916,4 +2940,31 @@ class QuantumFields extends SqlHandler {
         }
     }
 
+    /**
+     * Parse the correct label language. Requires serialized $value.
+     *
+     * @param string $value Serialized
+     *
+     * @return string
+     * @deprecated use parseLabel()
+     */
+    public static function parse_label($value) {
+        return self::parseLabel($value);
+    }
+
+    /**
+     * Multiple locale fields input
+     *
+     * @param string $input_name
+     * @param string $title
+     * @param mixed  $input_value
+     * @param array  $options
+     *
+     * @return string
+     *
+     * @deprecated use quantumMultilocaleFields()
+     */
+    public static function quantum_multilocale_fields($input_name, $title, $input_value, array $options = []) {
+        return self::quantumMultilocaleFields($input_name, $title, $input_value, $options);
+    }
 }

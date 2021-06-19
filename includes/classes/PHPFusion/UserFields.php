@@ -45,27 +45,16 @@ class UserFields extends QuantumFields {
         'user_timezone'       => 'Europe/London'
     ];
 
-    /* Quantum Fields Extensions */
     public $system_title = '';
-
     public $admin_rights = '';
-
     public $locale_file = '';
-
     public $category_db = '';
-
     public $field_db = '';
-
     public $plugin_folder = '';
-
     public $plugin_locale_folder = '';
-
     public $debug = FALSE;
-
     public $method;
-
     public $paginate = TRUE;
-
     public $admin_mode = FALSE;
     public $options = [];
     private $username_change = TRUE;
@@ -83,11 +72,11 @@ class UserFields extends QuantumFields {
     /**
      * Check whether a user field is available/installed
      *
-     * @param $field_name
+     * @param string $field_name
      *
      * @return bool
      */
-    public static function check_user_field($field_name) {
+    public static function checkUserField($field_name) {
         static $list;
         $result = dbquery("SELECT field_name FROM ".DB_USER_FIELDS);
         if (dbrows($result) > 0) {
@@ -99,19 +88,6 @@ class UserFields extends QuantumFields {
         return in_array($field_name, $list);
     }
 
-    protected static function list_func($user_id, $list, $selected_fields) {
-        $html = "<tr>\n
-                <td class='p-10'>\n".$list[$user_id]['checkbox']."</td>\n
-                <td>".$list[$user_id]['user_name']."</td>\n
-                <td class='no-break'>\n".$list[$user_id]['user_level']."</td>\n
-                <td>\n".$list[$user_id]['user_email']."</td>\n";
-        foreach ($selected_fields as $column) {
-            $html .= "<td>".(!empty($list[$user_id][$column]) ? $list[$user_id][$column] : "-")."</td>\n";
-        }
-
-        return $html;
-    }
-
     public function setUserNameChange($value) {
         $this->username_change = $value;
     }
@@ -119,7 +95,7 @@ class UserFields extends QuantumFields {
     /**
      * Display Input Fields
      */
-    public function display_profile_input() {
+    public function displayProfileInput() {
         $this->method = 'input';
 
         $locale = fusion_get_locale();
@@ -385,7 +361,7 @@ class UserFields extends QuantumFields {
             'button'    => $this->renderButton(),
         ];
 
-        $this->info = $this->info + $this->get_user_fields();
+        $this->info = $this->info + $this->getUserFields();
 
         /*
          * Template
@@ -433,6 +409,9 @@ class UserFields extends QuantumFields {
         */
     }
 
+    /**
+     * @return array
+     */
     private function getProfileSections() {
         $result = dbquery("SELECT * FROM ".DB_USER_FIELD_CATS." WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0]);
         $section = [];
@@ -444,7 +423,7 @@ class UserFields extends QuantumFields {
                     "id"     => $data['field_cat_id'],
                     'active' => (isset($_GET['section']) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset($_GET['section']) && $i == 0 ? 1 : 0),
                     'link'   => clean_request($aid.'section='.$data['field_cat_id'].'&lookup='.$this->userData['user_id'], ['section'], FALSE),
-                    'name'   => ucwords(self::parse_label($data['field_cat_name'])),
+                    'name'   => ucwords(self::parseLabel($data['field_cat_name'])),
                     'icon'   => $data['field_cat_class']
                 ];
                 $i++;
@@ -457,7 +436,7 @@ class UserFields extends QuantumFields {
     /**
      * Check for input value of profile form
      *
-     * @param $key
+     * @param string $key
      *
      * @return int|mixed|string|null
      */
@@ -520,7 +499,7 @@ class UserFields extends QuantumFields {
         );
 
         $modal = openmodal('license_agreement', $locale['u192'], ['button_id' => 'license_agreement']);
-        $modal .= parse_text(self::parse_label(fusion_get_settings('license_agreement')));
+        $modal .= parse_text(self::parseLabel(fusion_get_settings('license_agreement')));
         $modal_content = '<p class="pull-left">'.$locale['u193a'].' '.ucfirst(showdate('shortdate', fusion_get_settings('license_lastupdate'))).'</p>';
         $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">'.$locale['u193b'].'</button>';
         $modal .= modalfooter($modal_content, TRUE);
@@ -552,6 +531,9 @@ class UserFields extends QuantumFields {
         return $html;
     }
 
+    /**
+     * @return string
+     */
     private function renderButton() {
         $disabled = $this->displayTerms == 1;
         $this->options += $this->default_options;
@@ -570,7 +552,7 @@ class UserFields extends QuantumFields {
      * Toggle with class string method - input or display
      * output to array
      */
-    private function get_user_fields() {
+    private function getUserFields() {
         $fields = [];
         $category = [];
         $item = [];
@@ -610,7 +592,7 @@ class UserFields extends QuantumFields {
         if ($rows != '0') {
             while ($data = dbarray($result)) {
                 if ($data['field_cat_id']) {
-                    $category[$data['field_parent']][$data['field_cat_id']] = self::parse_label($data['field_cat_name']);
+                    $category[$data['field_parent']][$data['field_cat_id']] = self::parseLabel($data['field_cat_name']);
                 }
                 if ($data['field_cat']) {
                     $item[$data['field_cat']][] = $data;
@@ -633,7 +615,7 @@ class UserFields extends QuantumFields {
                                         'plugin_locale_folder' => $this->plugin_locale_folder
                                     ];
                                 }
-                                $field_output = $this->display_fields($field, $this->callback_data, $this->method, $options);
+                                $field_output = $this->displayFields($field, $this->callback_data, $this->method, $options);
                                 $fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output;
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                             }
@@ -644,7 +626,7 @@ class UserFields extends QuantumFields {
                             $fields['user_field'][$cat_id]['title'] = $cat;
                             foreach ($item[$cat_id] as $field) {
                                 // Outputs array
-                                $field_output = $this->display_fields($field, $this->callback_data, $this->method);
+                                $field_output = $this->displayFields($field, $this->callback_data, $this->method);
                                 //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
                                 if (!empty($field_output)) {
@@ -661,15 +643,11 @@ class UserFields extends QuantumFields {
         return $fields;
     }
 
-    /*
-     * Render Listing Functions
-     */
-
     /***
      * Fetch profile output data
-     * - Display Profile (View)
+     * Display Profile (View)
      */
-    public function display_profile_output() {
+    public function displayProfileOutput() {
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $lookup = get('lookup', FILTER_VALIDATE_INT);
@@ -795,7 +773,7 @@ class UserFields extends QuantumFields {
             $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
         }
 
-        $this->info = $this->info + $this->get_user_fields();
+        $this->info = $this->info + $this->getUserFields();
 
         if (iMEMBER && fusion_get_userdata('user_id') != $this->userData['user_id']) {
 
@@ -848,7 +826,7 @@ class UserFields extends QuantumFields {
     /**
      * Get User Data of the current page.
      *
-     * @param $key
+     * @param string $key
      *
      * @return array|null
      */

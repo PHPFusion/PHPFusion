@@ -25,47 +25,29 @@ use Defender;
  * @package PHPFusion
  */
 class UserFieldsInput {
-
     public $adminActivation = 1;
-
     public $emailVerification = 1;
-
     public $verifyNewEmail = FALSE;
-
     public $userData = ['user_name' => NULL];
-
     public $validation = 0;
-
     public $registration = FALSE;
 
     // On insert or admin edit
     public $skipCurrentPass = FALSE; // FALSE to skip pass. True to validate password. New Register always FALSE.
-
     public $isAdminPanel = FALSE;
-
     private $_completeMessage;
-
     private $_method;
-
     private $_userEmail;
-
-    /**
-     * @var string username
-     */
     private $_userName;
 
     // Passwords
     private $data = [];
-
     private $_isValidCurrentPassword = FALSE;
-
     private $_newUserPassword = FALSE;
-
     private $_newUserPassword2 = FALSE;
 
     private $username_change = TRUE;
 
-    // Flags
     private $_themeChanged = FALSE;
 
     /**
@@ -81,16 +63,16 @@ class UserFieldsInput {
 
         $this->_method = "validate_insert";
 
-        $this->data = $this->_setEmptyFields();
+        $this->data = $this->setEmptyFields();
 
         if ($this->username_change) {
 
-            $this->_setUserName();
+            $this->setUserName();
         }
 
-        $this->_setPassword();
+        $this->setPassword();
 
-        $this->_setUserEmail();
+        $this->setUserEmail();
 
         /**
          * For validation purposes only to show required field errors
@@ -102,11 +84,11 @@ class UserFieldsInput {
         $quantum->setFieldDb(DB_USER_FIELDS);
         $quantum->setPluginFolder(INCLUDES."user_fields/");
         $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-        $quantum->load_fields();
-        $quantum->load_field_cats();
+        $quantum->loadFields();
+        $quantum->loadFieldCats();
         $quantum->setCallbackData($this->data);
 
-        $fields_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+        $fields_input = $quantum->returnFieldsInput(DB_USERS, 'user_id');
 
         if (!empty($fields_input)) {
             foreach ($fields_input as $fields_array) {
@@ -115,14 +97,14 @@ class UserFieldsInput {
         }
 
         if ($this->validation == 1) {
-            $this->_setValidationError();
+            $this->setValidationError();
         }
 
         if (fusion_safe()) {
 
             if ($this->emailVerification) {
 
-                $this->_setEmailVerification();
+                $this->setEmailVerification();
 
             } else {
 
@@ -157,7 +139,7 @@ class UserFieldsInput {
                 }
 
             }
-            $this->data['new_password'] = $this->_getPasswordInput('user_password1');
+            $this->data['new_password'] = $this->getPasswordInput('user_password1');
 
             if ($this->_completeMessage) {
                 addnotice("info", $this->_completeMessage, fusion_get_settings("opening_page"));
@@ -174,7 +156,7 @@ class UserFieldsInput {
      *
      * @return array
      */
-    private function _setEmptyFields() {
+    private function setEmptyFields() {
 
         $userStatus = $this->adminActivation == 1 ? 2 : 0;
 
@@ -215,7 +197,7 @@ class UserFieldsInput {
     /**
      * Handle User Name Input and Validation
      */
-    private function _setUserName() {
+    private function setUserName() {
 
         $locale = fusion_get_locale();
 
@@ -289,15 +271,15 @@ class UserFieldsInput {
     /**
      * Handle User Password Input and Validation
      */
-    private function _setPassword() {
+    private function setPassword() {
 
         $locale = fusion_get_locale();
 
         if ($this->_method == 'validate_insert') {
 
-            $this->_newUserPassword = self::_getPasswordInput('user_password1');
+            $this->_newUserPassword = self::getPasswordInput('user_password1');
 
-            $this->_newUserPassword2 = self::_getPasswordInput('user_password2');
+            $this->_newUserPassword2 = self::getPasswordInput('user_password2');
 
             if (!empty($this->_newUserPassword)) {
 
@@ -364,11 +346,11 @@ class UserFieldsInput {
 
         } else if ($this->_method == 'validate_update') {
 
-            $_userPassword = self::_getPasswordInput('user_password');
+            $_userPassword = self::getPasswordInput('user_password');
 
-            $this->_newUserPassword = self::_getPasswordInput('user_password1');
+            $this->_newUserPassword = self::getPasswordInput('user_password1');
 
-            $this->_newUserPassword2 = self::_getPasswordInput('user_password2');
+            $this->_newUserPassword2 = self::getPasswordInput('user_password2');
 
             if ($this->isAdminPanel or $_userPassword or $this->_newUserPassword or $this->_newUserPassword2) {
 
@@ -455,14 +437,19 @@ class UserFieldsInput {
         }
     }
 
-    private function _getPasswordInput($field) {
+    /**
+     * @param string $field
+     *
+     * @return false|mixed
+     */
+    private function getPasswordInput($field) {
         return isset($_POST[$field]) && $_POST[$field] != "" ? $_POST[$field] : FALSE;
     }
 
     /**
      * Handle User Email Input and Validation
      */
-    private function _setUserEmail() {
+    private function setUserEmail() {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         $is_core_page = (get("section") == 1 || !check_get("section"));
@@ -501,7 +488,7 @@ class UserFieldsInput {
 
                         if ($email_active == 0 && $email_inactive == 0) {
                             if ($this->verifyNewEmail && $settings['email_verification'] == 1 && !iSUPERADMIN) {
-                                $this->_verifyNewEmail();
+                                $this->verifyNewEmail();
                             } else {
                                 $this->data['user_email'] = $this->_userEmail;
                             }
@@ -537,7 +524,7 @@ class UserFieldsInput {
     /**
      * Handle new email verification procedures
      */
-    private function _verifyNewEmail() {
+    private function verifyNewEmail() {
         $settings = fusion_get_settings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
@@ -560,7 +547,10 @@ class UserFieldsInput {
         dbquery("INSERT INTO ".DB_EMAIL_VERIFY." (user_id, user_code, user_email, user_datestamp) VALUES('".$this->userData['user_id']."', '$user_code', '".$this->_userEmail."', '".time()."')");
     }
 
-    private function _setValidationError() {
+    /**
+     * Set validation error
+     */
+    private function setValidationError() {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         $_CAPTCHA_IS_VALID = FALSE;
@@ -571,14 +561,12 @@ class UserFieldsInput {
         }
     }
 
-    // Get New Password Hash and Directly Set New Cookie if Authenticated
-
     /**
      * Handle request for email verification
      * Sends Verification code when you change email
      * Sends Verification code when you register
      */
-    private function _setEmailVerification() {
+    private function setEmailVerification() {
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
         require_once INCLUDES."sendmail_include.php";
@@ -627,21 +615,21 @@ class UserFieldsInput {
         // Non applicable to any other custom UF section
         if ($is_core_page) {
 
-            $this->_setUserName();
+            $this->setUserName();
 
-            $this->_setPassword();
+            $this->setPassword();
 
             if (!defined('ADMIN_PANEL')) {
-                $this->_setAdminPassword();
+                $this->setAdminPassword();
             }
 
-            $this->_setUserEmail();
+            $this->setUserEmail();
 
-            $this->_setUserAvatar();
+            $this->setUserAvatar();
         }
 
         if ($this->validation == 1) {
-            $this->_setValidationError();
+            $this->setValidationError();
         }
 
         $quantum = new QuantumFields();
@@ -649,10 +637,10 @@ class UserFieldsInput {
         $quantum->setFieldDb(DB_USER_FIELDS);
         $quantum->setPluginFolder(INCLUDES."user_fields/");
         $quantum->setPluginLocaleFolder(LOCALE.LOCALESET."user_fields/");
-        $quantum->load_fields();
-        $quantum->load_field_cats();
+        $quantum->loadFields();
+        $quantum->loadFieldCats();
         $quantum->setCallbackData($this->userData);
-        $_input = $quantum->return_fields_input(DB_USERS, 'user_id');
+        $_input = $quantum->returnFieldsInput(DB_USERS, 'user_id');
 
         if (!empty($_input)) {
             foreach ($_input as $input) {
@@ -742,13 +730,16 @@ class UserFieldsInput {
         return FALSE;
     }
 
-    private function _setAdminPassword() {
+    /**
+     * Set admin password
+     */
+    private function setAdminPassword() {
         $locale = fusion_get_locale();
-        if ($this->_getPasswordInput("user_admin_password")) { // if submit current admin password
+        if ($this->getPasswordInput("user_admin_password")) { // if submit current admin password
 
-            $_userAdminPassword = $this->_getPasswordInput("user_admin_password");      // var1
-            $_newUserAdminPassword = $this->_getPasswordInput("user_admin_password1");  // var2
-            $_newUserAdminPassword2 = $this->_getPasswordInput("user_admin_password2"); // var3
+            $_userAdminPassword = $this->getPasswordInput("user_admin_password");      // var1
+            $_newUserAdminPassword = $this->getPasswordInput("user_admin_password1");  // var2
+            $_newUserAdminPassword2 = $this->getPasswordInput("user_admin_password2"); // var3
             $adminpassAuth = new PasswordAuth();
 
             if (!$this->userData['user_admin_password'] && !$this->userData['user_admin_salt']) {
@@ -828,7 +819,10 @@ class UserFieldsInput {
         }
     }
 
-    private function _setUserAvatar() {
+    /**
+     * Set user avatar
+     */
+    private function setUserAvatar() {
         if (isset($_POST['delAvatar'])) {
             if ($this->userData['user_avatar'] != "" && file_exists(IMAGES."avatars/".$this->userData['user_avatar']) && is_file(IMAGES."avatars/".$this->userData['user_avatar'])) {
                 unlink(IMAGES."avatars/".$this->userData['user_avatar']);
@@ -863,10 +857,16 @@ class UserFieldsInput {
         return $this->data;
     }
 
+    /**
+     * @param string $value
+     */
     public function setUserNameChange($value) {
         $this->username_change = $value;
     }
 
+    /**
+     * @param string $value
+     */
     public function verifyCode($value) {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
@@ -895,6 +895,9 @@ class UserFieldsInput {
         }
     }
 
+    /**
+     * @return bool
+     */
     public function themeChanged() {
         return $this->_themeChanged;
     }
@@ -905,7 +908,7 @@ class UserFieldsInput {
      */
     private function verifyEmailPass() {
         // Validation of password change
-        if ($_userPassword = self::_getPasswordInput('user_password')) {
+        if ($_userPassword = self::getPasswordInput('user_password')) {
             /**
              * Validation of Password
              */

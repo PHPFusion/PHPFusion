@@ -31,7 +31,7 @@ class Infusions {
     /**
      * Version 7 compatible infusions load constants.
      */
-    public static function load_configuration() {
+    public static function loadConfiguration() {
         /*
          * Non-core infusions_db.php inclusion.
          * These files are supposed to be infusion_db.php using Infusion SDK
@@ -63,131 +63,13 @@ class Infusions {
     }
 
     /**
-     * Execute Installation according to Infusion Standard Developer Kit
-     *
-     * @param $folder
-     *
-     * @return mixed|null
-     *
-     * @uses adminpanel_infuse
-     * @uses dropcol_infuse
-     * @uses sitelink_infuse
-     * @uses mlt_insertdbrow_infuse
-     * @uses mlt_adminpanel_infuse
-     * @uses mlt_infuse
-     * @uses altertable_infuse
-     * @uses updatedbrow_infuse
-     * @uses newtable_infuse
-     * @uses newcol_infuse
-     * @uses insertdbrow_infuse
-     * @uses deldbrow_infuse
-     */
-    public function infuse($folder) {
-        $error = FALSE;
-        if ((self::$inf = self::load_infusion($folder))) {
-            $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
-            if (dbrows($result)) {
-
-                $data = dbarray($result);
-
-                if (self::$inf['version'] > $data['inf_version']) {
-
-                    $upgrade_folder_path = INFUSIONS.self::$inf['folder']."/upgrade/";
-
-                    if (file_exists($upgrade_folder_path)) {
-                        $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
-                        if (!empty($upgrade_files) && is_array($upgrade_files)) {
-                            foreach ($upgrade_files as $upgrade_file) {
-                                /*
-                                 * This will check file names (File name convention) against current infusion version
-                                 * As we have multiple upgrade files - each will be called. As the query is not done in array
-                                 * excepted for newcol method, please ensure you make checks before attaching the array into
-                                 * the callback.
-                                 *
-                                 * The version of the CMS is irrelevant. Infusion can be upgraded as many times as the authors
-                                 * make it available to be distributed. (i.e. they can say Version 1 is for Version 9 of the CMS)
-                                 * in their own website, Version 2 is for Version 10 of the CMS etc). Apps and CMS are not tied
-                                 * together in terms of version-ing, as PHPFusion does not track it as we do not maintain them.
-                                 *
-                                 * When developing upgrades, people should not just make insertions and declare without checking
-                                 * if the table exist or column exist as renaming a non-existent table could not be performed.
-                                 *
-                                 */
-                                $filename = rtrim($upgrade_file, 'upgrade.inc');
-                                if (version_compare($filename, $data['inf_version'], ">")) {
-                                    unset($upgrades);
-                                    $upgrades = self::load_upgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
-
-                                    foreach ($upgrades as $callback_method => $statement_type) {
-
-                                        $method = $callback_method."_infuse";
-                                        if (method_exists($this, $method)) {
-                                            $error = $this->$method($upgrades);
-                                        }
-                                        if ($error) {
-                                            // Reports visually which method has error.
-                                            fusion_stop($callback_method);
-                                            addnotice('danger', self::$locale['403']);
-
-                                            return $error;
-                                        }
-                                    }
-                                    if ($error === FALSE) {
-                                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", [
-                                            ':version' => self::$inf['version'],
-                                            ':id'      => $data['inf_id'],
-                                        ]);
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-            } else {
-
-                foreach (self::$inf as $callback_method => $statement_type) {
-
-                    $method = $callback_method."_infuse";
-
-                    if (method_exists($this, $method)) {
-
-                        $error = $this->$method(self::$inf);
-                    }
-
-                    if ($error) {
-                        addnotice('danger', self::$locale['403']);
-
-                        return $error;
-                    }
-                }
-
-                if ($error === FALSE) {
-                    if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
-                        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
-                    }
-                    addnotice("success", sprintf(self::$locale['423'], self::$inf['title']));
-                    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
-                }
-            }
-        }
-
-        /*if (fusion_safe()) {
-            //redirect(FUSION_REQUEST);
-        }*/
-
-        return NULL;
-    }
-
-    /**
      * Load Infusion according to Infusion Standard Developer Kit
      *
      * @param string $folder
      *
      * @return array
      */
-    public static function load_infusion($folder) {
+    public static function loadInfusion($folder) {
         $infusion = [];
         $inf_title = "";
         $inf_description = "";
@@ -274,7 +156,7 @@ class Infusions {
      *
      * @return array
      */
-    public static function load_upgrade($folder, $upgrade_file_path) {
+    public static function loadUpgrade($folder, $upgrade_file_path) {
         $infusion = [];
         $inf_title = "";
         $inf_description = "";
@@ -349,6 +231,124 @@ class Infusions {
     }
 
     /**
+     * Execute Installation according to Infusion Standard Developer Kit
+     *
+     * @param $folder
+     *
+     * @return mixed|null
+     *
+     * @uses adminpanel_infuse
+     * @uses dropcol_infuse
+     * @uses sitelink_infuse
+     * @uses mlt_insertdbrow_infuse
+     * @uses mlt_adminpanel_infuse
+     * @uses mlt_infuse
+     * @uses altertable_infuse
+     * @uses updatedbrow_infuse
+     * @uses newtable_infuse
+     * @uses newcol_infuse
+     * @uses insertdbrow_infuse
+     * @uses deldbrow_infuse
+     */
+    public function infuse($folder) {
+        $error = FALSE;
+        if ((self::$inf = self::loadInfusion($folder))) {
+            $result = dbquery("SELECT inf_id, inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
+            if (dbrows($result)) {
+
+                $data = dbarray($result);
+
+                if (self::$inf['version'] > $data['inf_version']) {
+
+                    $upgrade_folder_path = INFUSIONS.self::$inf['folder']."/upgrade/";
+
+                    if (file_exists($upgrade_folder_path)) {
+                        $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
+                        if (!empty($upgrade_files) && is_array($upgrade_files)) {
+                            foreach ($upgrade_files as $upgrade_file) {
+                                /*
+                                 * This will check file names (File name convention) against current infusion version
+                                 * As we have multiple upgrade files - each will be called. As the query is not done in array
+                                 * excepted for newcol method, please ensure you make checks before attaching the array into
+                                 * the callback.
+                                 *
+                                 * The version of the CMS is irrelevant. Infusion can be upgraded as many times as the authors
+                                 * make it available to be distributed. (i.e. they can say Version 1 is for Version 9 of the CMS)
+                                 * in their own website, Version 2 is for Version 10 of the CMS etc). Apps and CMS are not tied
+                                 * together in terms of version-ing, as PHPFusion does not track it as we do not maintain them.
+                                 *
+                                 * When developing upgrades, people should not just make insertions and declare without checking
+                                 * if the table exist or column exist as renaming a non-existent table could not be performed.
+                                 *
+                                 */
+                                $filename = rtrim($upgrade_file, 'upgrade.inc');
+                                if (version_compare($filename, $data['inf_version'], ">")) {
+                                    unset($upgrades);
+                                    $upgrades = self::loadUpgrade(INFUSIONS.$folder, $upgrade_folder_path.$upgrade_file);
+
+                                    foreach ($upgrades as $callback_method => $statement_type) {
+
+                                        $method = $callback_method."_infuse";
+                                        if (method_exists($this, $method)) {
+                                            $error = $this->$method($upgrades);
+                                        }
+                                        if ($error) {
+                                            // Reports visually which method has error.
+                                            fusion_stop($callback_method);
+                                            addnotice('danger', self::$locale['403']);
+
+                                            return $error;
+                                        }
+                                    }
+                                    if ($error === FALSE) {
+                                        dbquery("UPDATE ".DB_INFUSIONS." SET inf_version=:version WHERE inf_id=:id", [
+                                            ':version' => self::$inf['version'],
+                                            ':id'      => $data['inf_id'],
+                                        ]);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            } else {
+
+                foreach (self::$inf as $callback_method => $statement_type) {
+
+                    $method = $callback_method."_infuse";
+
+                    if (method_exists($this, $method)) {
+
+                        $error = $this->$method(self::$inf);
+                    }
+
+                    if ($error) {
+                        addnotice('danger', self::$locale['403']);
+
+                        return $error;
+                    }
+                }
+
+                if ($error === FALSE) {
+                    if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
+                        dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
+                    }
+                    addnotice("success", sprintf(self::$locale['423'], self::$inf['title']));
+                    dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
+                }
+            }
+        }
+
+        /*if (fusion_safe()) {
+            //redirect(FUSION_REQUEST);
+        }*/
+
+        return NULL;
+    }
+
+    /**
      * Defuse
      *
      * @param $folder
@@ -358,7 +358,7 @@ class Infusions {
         $result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [':folder' => $folder]);
         $infData = dbarray($result);
 
-        $inf = self::load_infusion($folder);
+        $inf = self::loadInfusion($folder);
 
         if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
             foreach ($inf['adminpanel'] as $adminpanel) {

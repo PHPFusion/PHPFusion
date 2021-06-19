@@ -148,7 +148,7 @@ class Members_Display extends Members_Admin {
         if (dbrows($result) > 0) {
             $data = dbarray($result);
             $name = $data['field_name'];
-            $title = (QuantumFields::is_serialized($data['field_title']) ? QuantumFields::parse_label($data['field_title']) : $data['field_title']);
+            $title = (QuantumFields::isSerialized($data['field_title']) ? QuantumFields::parseLabel($data['field_title']) : $data['field_title']);
             $tLocale[$name] = $title;
             $extra_checkboxes[$name] = form_checkbox("display[".$name."]", $title, (isset($selected_fields[$name]) ? 1 : 0), ['input_id' => 'custom_'.$data['field_id'], 'reverse_label' => TRUE]);
         }

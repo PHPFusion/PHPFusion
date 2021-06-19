@@ -309,4 +309,4 @@ if (dbrows($result)) {
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-Infusions::load_configuration();
+Infusions::loadConfiguration();

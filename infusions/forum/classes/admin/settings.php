@@ -118,7 +118,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                             <div class='col-xs-12 col-sm-2'>
                                 <h4>
                                     <strong>
-                                        <?php echo QuantumFields::parse_label($data['field_cat_name']) ?>
+                                        <?php echo QuantumFields::parseLabel($data['field_cat_name']) ?>
                                     </strong>
                                 </h4>
                             </div>
@@ -143,7 +143,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                                                 }
                                                 $current_field_title = (!empty($user_field_name) ? $user_field_name : self::$locale['na']);
                                             } else {
-                                                $current_field_title = QuantumFields::parse_label($cdata['field_title']);
+                                                $current_field_title = QuantumFields::parseLabel($cdata['field_title']);
                                             }
                                             $checked = (isset($enabled_uf[$cdata['field_name']]) ? $cdata['field_name'] : '');
                                             echo form_checkbox('uf_field_enabled[]', $current_field_title, $checked, ['input_id' => 'uf_'.$cdata['field_id'], 'reverse_label' => TRUE, 'value' => $cdata['field_name'], 'class' => 'spacer-sm']);

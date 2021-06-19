@@ -28,5 +28,5 @@ interface WidgetInterface {
      *
      * @return string
      */
-    public function display_widget($columnData);
+    public function displayWidget($columnData);
 }

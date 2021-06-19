@@ -105,7 +105,7 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
         $userFields->registration = TRUE;
-        $userFields->display_profile_input();
+        $userFields->displayProfileInput();
 
         if (!defined('REGISTER_JS_CHECK')) {
             define('REGISTER_JS_CHECK', TRUE);

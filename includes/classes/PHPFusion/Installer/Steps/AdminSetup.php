@@ -61,22 +61,22 @@ class AdminSetup extends InstallCore {
 
         if (isset($_POST['transfer'])) {
 
-            self::$userData = $this->validateUserData();
-            self::$userData['user_id'] = 1;
+            self::$user_data = $this->validateUserData();
+            self::$user_data['user_id'] = 1;
 
-            if (self::$userData['password1'] == self::$userData['admin_password1']) {
+            if (self::$user_data['password1'] == self::$user_data['admin_password1']) {
                 addnotice('danger', self::$locale['setup_5016']);
                 fusion_stop();
             }
 
             if (fusion_safe()) {
                 $user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $user_auth->inputNewPassword = self::$userData['password1'];
-                $user_auth->inputNewPassword2 = self::$userData['password2'];
+                $user_auth->inputNewPassword = self::$user_data['password1'];
+                $user_auth->inputNewPassword2 = self::$user_data['password2'];
                 switch ($user_auth->isValidNewPassword()) {
                     default:
-                        self::$userData['user_password'] = $user_auth->getNewHash();
-                        self::$userData['user_salt'] = $user_auth->getNewSalt();
+                        self::$user_data['user_password'] = $user_auth->getNewHash();
+                        self::$user_data['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
                         addnotice('danger', self::$locale['setup_5012']);
@@ -88,12 +88,12 @@ class AdminSetup extends InstallCore {
                         break;
                 }
                 $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
-                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
+                $admin_auth->inputNewPassword = self::$user_data['admin_password1'];
+                $admin_auth->inputNewPassword2 = self::$user_data['admin_password2'];
                 switch ($admin_auth->isValidNewPassword()) {
                     default:
-                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
-                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
+                        self::$user_data['user_admin_password'] = $admin_auth->getNewHash();
+                        self::$user_data['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
                         addnotice('danger', self::$locale['setup_5015']);
@@ -106,12 +106,12 @@ class AdminSetup extends InstallCore {
                 }
 
                 if (fusion_safe()) {
-                    dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                    dbquery_insert(DB_PREFIX."users", self::$user_data, 'update');
                     addnotice('success', self::$locale['setup_1217']);
 
                     require_once(INCLUDES."multisite_include.php");
                     self::installerStep(self::STEP_INTRO);
-                    new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
+                    new \Authenticate(self::$user_data['user_name'], self::$user_data['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
 
                 }
             }
@@ -121,13 +121,13 @@ class AdminSetup extends InstallCore {
 
         if (dbrows($result) > 0) {
 
-            self::$userData = dbarray($result);
+            self::$user_data = dbarray($result);
 
             $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p\n";
             $content .= "<hr/>\n";
             $content .= form_hidden('transfer', '', '1');
-            $content .= form_hidden('user_rights', '', self::$userData['user_rights']);
-            $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
+            $content .= form_hidden('user_rights', '', self::$user_data['user_rights']);
+            $content .= form_text('user_name', self::$locale['setup_1504'], self::$user_data['user_name'],
                 [
                     'required'       => TRUE,
                     'inline'         => TRUE,
@@ -136,7 +136,7 @@ class AdminSetup extends InstallCore {
                     'callback_check' => 'username_check'
                 ]
             );
-            $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'], ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
+            $content .= form_text('user_email', self::$locale['setup_1509'], self::$user_data['user_email'], ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
             $content .= form_text('password1', self::$locale['setup_1505'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
             $content .= form_text('password2', self::$locale['setup_1506'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
             $content .= form_text('admin_password1', self::$locale['setup_1507'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
@@ -196,7 +196,7 @@ class AdminSetup extends InstallCore {
 
     private function setup() {
 
-        self::$siteData = [
+        self::$site_data = [
             'sitename'         => fusion_get_settings('sitename'),
             'siteemail'        => fusion_get_settings('siteemail'),
             'siteusername'     => fusion_get_settings('siteusername'),
@@ -211,13 +211,13 @@ class AdminSetup extends InstallCore {
 
         $content .= rendernotices(getnotices());
 
-        $content .= form_text('sitename', self::$locale['setup_1214'], self::$siteData['sitename'],
+        $content .= form_text('sitename', self::$locale['setup_1214'], self::$site_data['sitename'],
             [
                 'inline' => TRUE, 'required' => TRUE, 'placeholder' => self::$locale['setup_1215'], 'class' => 'form-group-lg'
             ]);
-        $content .= form_text('siteemail', self::$locale['setup_1510'], self::$siteData['siteemail'],
+        $content .= form_text('siteemail', self::$locale['setup_1510'], self::$site_data['siteemail'],
             ['inline' => TRUE, 'required' => TRUE, 'type' => 'email']);
-        $content .= form_text('siteusername', self::$locale['setup_1513'], self::$siteData['siteusername'],
+        $content .= form_text('siteusername', self::$locale['setup_1513'], self::$site_data['siteusername'],
             [
                 'required'   => TRUE,
                 'inline'     => TRUE,
@@ -235,12 +235,12 @@ class AdminSetup extends InstallCore {
             $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
         }
 
-        $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$siteData['default_timezone'], ['options' => $timezone_array, 'required' => TRUE, 'inline' => TRUE]);
+        $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$site_data['default_timezone'], ['options' => $timezone_array, 'required' => TRUE, 'inline' => TRUE]);
 
         $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p>\n";
         $content .= "<hr />\n";
 
-        $content .= form_text('user_name', self::$locale['setup_1504'], self::$userData['user_name'],
+        $content .= form_text('user_name', self::$locale['setup_1504'], self::$user_data['user_name'],
             [
                 'required'       => TRUE,
                 'inline'         => TRUE,
@@ -249,15 +249,15 @@ class AdminSetup extends InstallCore {
                 'callback_check' => 'username_check'
             ]
         );
-        $content .= form_text('password1', self::$locale['setup_1505'], self::$userData['password1'],
+        $content .= form_text('password1', self::$locale['setup_1505'], self::$user_data['password1'],
             ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
-        $content .= form_text('password2', self::$locale['setup_1506'], self::$userData['password2'],
+        $content .= form_text('password2', self::$locale['setup_1506'], self::$user_data['password2'],
             ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
-        $content .= form_text('admin_password1', self::$locale['setup_1507'], self::$userData['admin_password1'],
+        $content .= form_text('admin_password1', self::$locale['setup_1507'], self::$user_data['admin_password1'],
             ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
-        $content .= form_text('admin_password2', self::$locale['setup_1508'], self::$userData['admin_password2'],
+        $content .= form_text('admin_password2', self::$locale['setup_1508'], self::$user_data['admin_password2'],
             ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password', 'error_text' => '']);
-        $content .= form_text('user_email', self::$locale['setup_1509'], self::$userData['user_email'],
+        $content .= form_text('user_email', self::$locale['setup_1509'], self::$user_data['user_email'],
             ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
 
         $content .= "<h4 class='title'>".self::$locale['setup_1512']."</h4><p>".self::$locale['setup_1001']."</p>\n";
@@ -269,7 +269,7 @@ class AdminSetup extends InstallCore {
             $checkbox_options[$languageKey] = "<img src='".$localeFlagPath."' class='m-l-15' alt='$languageName'/> $languageName";
         }
         $content .= form_checkbox('enabled_languages[]', '',
-            !empty(self::$siteData['enabled_languages']) ? self::$siteData['enabled_languages'] : self::$localeset, [
+            !empty(self::$site_data['enabled_languages']) ? self::$site_data['enabled_languages'] : self::$localeset, [
                 'required'       => TRUE,
                 'reverse_label'  => TRUE,
                 'class'          => 'm-0 p-0 input-md',
@@ -301,11 +301,11 @@ class AdminSetup extends InstallCore {
                 return !preg_match("/^[-0-9A-Z_@\s]+$/i", $username);
             }
 
-            self::$siteData = $this->validate_SiteData();
+            self::$site_data = $this->validateSiteData();
 
-            self::$userData = $this->validateUserData();
+            self::$user_data = $this->validateUserData();
 
-            if (self::$userData['password1'] == self::$userData['admin_password1']) {
+            if (self::$user_data['password1'] == self::$user_data['admin_password1']) {
                 fusion_stop();
                 addnotice('danger', self::$locale['setup_5016']);
             }
@@ -314,13 +314,13 @@ class AdminSetup extends InstallCore {
 
                 $user_auth = new PasswordAuth(self::INSTALLER_ALGO);
 
-                $user_auth->inputNewPassword = self::$userData['password1'];
-                $user_auth->inputNewPassword2 = self::$userData['password2'];
+                $user_auth->inputNewPassword = self::$user_data['password1'];
+                $user_auth->inputNewPassword2 = self::$user_data['password2'];
 
                 switch ($user_auth->isValidNewPassword()) {
                     default:
-                        self::$userData['user_password'] = $user_auth->getNewHash();
-                        self::$userData['user_salt'] = $user_auth->getNewSalt();
+                        self::$user_data['user_password'] = $user_auth->getNewHash();
+                        self::$user_data['user_salt'] = $user_auth->getNewSalt();
                         break;
                     case 2:
                         fusion_stop();
@@ -336,12 +336,12 @@ class AdminSetup extends InstallCore {
                 }
 
                 $admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-                $admin_auth->inputNewPassword = self::$userData['admin_password1'];
-                $admin_auth->inputNewPassword2 = self::$userData['admin_password2'];
+                $admin_auth->inputNewPassword = self::$user_data['admin_password1'];
+                $admin_auth->inputNewPassword2 = self::$user_data['admin_password2'];
                 switch ($admin_auth->isValidNewPassword()) {
                     default:
-                        self::$userData['user_admin_password'] = $admin_auth->getNewHash();
-                        self::$userData['user_admin_salt'] = $admin_auth->getNewSalt();
+                        self::$user_data['user_admin_password'] = $admin_auth->getNewHash();
+                        self::$user_data['user_admin_salt'] = $admin_auth->getNewSalt();
                         break;
                     case 2:
                         fusion_stop();
@@ -357,24 +357,24 @@ class AdminSetup extends InstallCore {
 
                 if (fusion_safe()) {
 
-                    self::$userData['user_timezone'] = self::$siteData['default_timezone'];
+                    self::$user_data['user_timezone'] = self::$site_data['default_timezone'];
                     $batch_core = Batch::getInstance();
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
-                        self::$userData['user_id'] = 1;
-                        dbquery_insert(DB_PREFIX."users", self::$userData, 'update');
+                        self::$user_data['user_id'] = 1;
+                        dbquery_insert(DB_PREFIX."users", self::$user_data, 'update');
                     } else {
-                        dbquery_insert(DB_PREFIX."users", self::$userData, 'save');
+                        dbquery_insert(DB_PREFIX."users", self::$user_data, 'save');
                     }
-                    $enabled_lang = implode('.', self::$siteData['enabled_languages']);
+                    $enabled_lang = implode('.', self::$site_data['enabled_languages']);
                     // Update Site Settings
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['sitename']."' WHERE settings_name='sitename'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteemail']."' WHERE settings_name='siteemail'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['sitename']."' WHERE settings_name='sitename'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".$enabled_lang."' WHERE settings_name='enabled_languages'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='default_timezone'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='timeoffset'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['default_timezone']."' WHERE settings_name='serveroffset'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$siteData['siteusername']."' WHERE settings_name='siteusername'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='default_timezone'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='timeoffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='serveroffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['siteusername']."' WHERE settings_name='siteusername'");
 
                     if (strpos($enabled_lang, '.')) {
 
@@ -389,7 +389,7 @@ class AdminSetup extends InstallCore {
                             }
                         }
 
-                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        $langDiff = array_diff(self::$site_data['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
                                 $sql_inserts = $batch_core::batchInsertRows('site_links', $language);
@@ -406,7 +406,7 @@ class AdminSetup extends InstallCore {
                             }
                         }
 
-                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        $langDiff = array_diff(self::$site_data['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
                                 $sql_inserts = $batch_core::batchInsertRows('admin', $language);
@@ -426,7 +426,7 @@ class AdminSetup extends InstallCore {
                             }
                         }
 
-                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        $langDiff = array_diff(self::$site_data['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
 
                             foreach ($langDiff as $language) {
@@ -437,7 +437,7 @@ class AdminSetup extends InstallCore {
                             // Update all UF Cat Fields
                             $ufc_result = dbquery("SELECT field_cat_id, field_cat_name FROM ".DB_PREFIX."user_field_cats");
                             if (dbrows($result) && is_array($langDiff) && count($langDiff)) {
-                                $locale_keys = array_flip(self::$siteData['enabled_languages']);
+                                $locale_keys = array_flip(self::$site_data['enabled_languages']);
                                 while ($ufc_data = dbarray($ufc_result)) {
                                     $category_name[self::$localeset] = $ufc_data['field_cat_name'];
                                     // get current locale key
@@ -472,7 +472,7 @@ class AdminSetup extends InstallCore {
         }
     }
 
-    private function validate_SiteData() {
+    private function validateSiteData() {
         return [
             'sitename'          => stripinput($_POST['sitename']),
             'siteemail'         => stripinput($_POST['siteemail']),

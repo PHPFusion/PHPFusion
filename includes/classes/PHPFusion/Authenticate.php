@@ -41,7 +41,7 @@ define("COOKIE_LASTVISIT", COOKIE_PREFIX."lastvisit");
 class Authenticate {
 
     private static $authenticate_url = "";
-    private $_userData = [
+    private $user_data = [
         "user_level"  => 0,
         "user_rights" => "",
         "user_groups" => "",
@@ -107,7 +107,7 @@ class Authenticate {
                     Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember);
                     Authenticate::_setUserTheme($user);
                     Authenticate::storeUserSession($passAuth, $user["user_id"]);
-                    $this->_userData = $user;
+                    $this->user_data = $user;
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
@@ -591,6 +591,6 @@ class Authenticate {
      * @return array
      */
     public function getUserData() {
-        return $this->_userData;
+        return $this->user_data;
     }
 }

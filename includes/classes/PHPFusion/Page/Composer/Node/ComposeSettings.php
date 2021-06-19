@@ -40,7 +40,7 @@ class ComposeSettings extends PageAdmin {
                     <div class="panel-body">
                         <?php
 
-                        $has_link = (!empty(self::$data['page_link_cat']) && SiteLinks::verify_sitelinks(self::$data['page_link_cat']));
+                        $has_link = (!empty(self::$data['page_link_cat']) && SiteLinks::verifySiteLink(self::$data['page_link_cat']));
 
                         if ($has_link === FALSE and !isset($_GET['add_sl'])) : ?>
                             <div class="well text-center">
@@ -70,7 +70,7 @@ class ComposeSettings extends PageAdmin {
                         ];
 
                         if ($has_link) {
-                            $data = SiteLinks::get_current_SiteLinks("viewpage.php?page_id=".self::$data['page_id']);
+                            $data = SiteLinks::getCurrentSiteLinks("viewpage.php?page_id=".self::$data['page_id']);
                         }
 
 
@@ -157,7 +157,7 @@ class ComposeSettings extends PageAdmin {
                                     ['required' => TRUE, 'inline' => TRUE]).
                                 form_select('link_position', self::$locale['page_0316'], $data['link_position'],
                                     [
-                                        'options' => SiteLinks::get_SiteLinksPosition(),
+                                        'options' => SiteLinks::getSiteLinksPosition(),
                                         'inline'  => TRUE,
                                         'stacked' => form_text('link_position_id', '', '',
                                             //$this->data['link_position_id'],

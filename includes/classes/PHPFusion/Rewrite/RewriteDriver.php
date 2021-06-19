@@ -21,7 +21,7 @@ namespace PHPFusion\Rewrite;
 
 abstract class RewriteDriver {
 
-    protected $dataStatements = [];
+    protected $data_statements = [];
 
     /**
      * Array of Handlers

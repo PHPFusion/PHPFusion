@@ -35,15 +35,7 @@ class Router extends RewriteDriver {
      * @var bool
      */
     public $routing = TRUE;
-    /**
-     * Array of Parameters with their
-     * corresponding Tags.
-     * example: thread_id => %thread_id%
-     *
-     * @data_type Array
-     * @access    private
-     */
-    //private $parameters = [];
+
     /**
      * Name of the php file which will be loaded
      * for the permalink.
@@ -52,7 +44,8 @@ class Router extends RewriteDriver {
      * @data_type String
      * @access    private
      */
-    private $pathtofile = "";
+    private $file_path = "";
+
     /**
      * Array of Parameters with their
      * actual values.
@@ -100,10 +93,10 @@ class Router extends RewriteDriver {
     }
 
     /**
-     * @param mixed $pathtofile
+     * @param mixed $file_path
      */
-    public function setPathtofile($pathtofile) {
-        $this->pathtofile = $pathtofile;
+    public function setPathtofile($file_path) {
+        $this->file_path = $file_path;
     }
 
     /**
@@ -138,7 +131,7 @@ class Router extends RewriteDriver {
             }
         }
         // If path to File is empty, set a warning
-        if ($this->pathtofile == "") {
+        if ($this->file_path == "") {
             $this->setWarning(6);
         }
 
@@ -196,7 +189,7 @@ class Router extends RewriteDriver {
                 $alias_url = $this->getAliasUrl($aliasdata['alias_url'], $aliasdata['alias_php_url'], $aliasdata['alias_type']);
                 $url_info = $this->explodeUrl($alias_url);
                 // File Path (Example: news.php)
-                $this->pathtofile = $url_info[0];
+                $this->file_path = $url_info[0];
                 if (isset($url_info[1])) {
                     foreach ($url_info[1] as $paramkey => $paramval) {
                         $this->get_parameters[$paramkey] = $paramval; // $this->get_parameters['thread_id'] = 1
@@ -308,9 +301,9 @@ class Router extends RewriteDriver {
      * @access private
      */
     public function setServerVars() {
-        if (!empty($this->pathtofile)) {
-            $_SERVER['PHP_SELF'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['PHP_SELF'], 1);
-            $_SERVER['SCRIPT_NAME'] = preg_replace("/index\.php/", $this->pathtofile, $_SERVER['SCRIPT_NAME'], 1);
+        if (!empty($this->file_path)) {
+            $_SERVER['PHP_SELF'] = preg_replace("/index\.php/", $this->file_path, $_SERVER['PHP_SELF'], 1);
+            $_SERVER['SCRIPT_NAME'] = preg_replace("/index\.php/", $this->file_path, $_SERVER['SCRIPT_NAME'], 1);
         }
     }
 
@@ -388,7 +381,7 @@ class Router extends RewriteDriver {
                                 $replace = $this->replaceOtherTags($type, $search_pattern, $replace, $matches, -1);
                                 $url_info = $this->explodeUrl($replace);
                                 // File Path (Example: news.php)
-                                $this->pathtofile = $url_info[0];
+                                $this->file_path = $url_info[0];
                                 if (isset($url_info[1])) {
                                     foreach ($url_info[1] as $paramkey => $paramval) {
                                         $this->get_parameters[$paramkey] = $paramval; // $this->get_parameters['thread_id'] = 1
@@ -474,7 +467,7 @@ class Router extends RewriteDriver {
 
                                     $url_info = $this->explodeUrl($replace_pattern);
 
-                                    $this->pathtofile = str_replace("../", "", $url_info[0]);
+                                    $this->file_path = str_replace("../", "", $url_info[0]);
 
                                     preg_match_all($search, $this->requesturi, $url_matches, PREG_SET_ORDER);
 
@@ -496,7 +489,7 @@ class Router extends RewriteDriver {
                                                 $tag_values[$tagRequests[$tagKey]] = $matches[$tagKey];
                                             }
 
-                                            $this->dataStatements[$type][] = $tag_values;
+                                            $this->data_statements[$type][] = $tag_values;
 
                                             $urlParams = array_combine(array_values($tagData), array_values($tag_values));
                                         }
@@ -577,9 +570,9 @@ class Router extends RewriteDriver {
         }
         </script>");
         echo "<input type='button' class='btn btn-default btn-sm' value='Toggle Rewriting Debug Information' id='rewritestoggledebugdiv' />\n<br />";
-        echo "Path to File: <strong>".$this->pathtofile."</strong><br />";
+        echo "Path to File: <strong>".$this->file_path."</strong><br />";
         echo "Request URI: <strong>".$this->requesturi."</strong><br />";
-        echo "<div id='rewritesdebuginfo' style='display: ".($this->pathtofile != "" ? "none" : "block").";'>\n";
+        echo "<div id='rewritesdebuginfo' style='display: ".($this->file_path != "" ? "none" : "block").";'>\n";
         foreach ($this->warnings as $key => $val) {
             echo (intval($key) + 1).". ".$val."<br />\n";
         }
@@ -662,7 +655,7 @@ class Router extends RewriteDriver {
         echo ");<br />\n";
         echo "<hr style='border-color:#000;' />\n";
         echo "Data Cache = Array (<br />";
-        foreach ($this->dataStatements as $type => $info) {
+        foreach ($this->data_statements as $type => $info) {
             echo "&nbsp;&nbsp;&nbsp;&nbsp;[".$type."] => Array (<br />";
             foreach ($info as $id => $dbinfo) {
                 echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[".$id."] => Array (<br />";
@@ -692,7 +685,7 @@ class Router extends RewriteDriver {
      * @access public
      */
     public function getFilePath() {
-        return $this->pathtofile;
+        return $this->file_path;
     }
 
     /**
@@ -701,6 +694,6 @@ class Router extends RewriteDriver {
      * @return string
      */
     public function getCurrentURL() {
-        return $this->pathtofile.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
+        return $this->file_path.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
     }
 }

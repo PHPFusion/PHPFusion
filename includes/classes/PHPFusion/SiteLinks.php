@@ -21,9 +21,9 @@ use PHPFusion\Rewrite\Router;
 
 /**
  * Class SiteLinks
+ * Navigational Bar
  *
  * @package PHPFusion
- *          Navigational Bar
  */
 class SiteLinks {
 
@@ -42,7 +42,7 @@ class SiteLinks {
      * So in order to add a cart icon, we must declare at theme.
      *
      */
-    const MenuDefaultID = 'DefaultMenu';
+    const MENU_DEFAULT_ID = 'DefaultMenu';
     protected static $position_opts = [];
     private static $id = '';
     private static $instances = [];
@@ -54,7 +54,7 @@ class SiteLinks {
      *
      * @return array
      */
-    public static function get_SiteLinksPosition() {
+    public static function getSiteLinksPosition() {
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/sitelinks.php");
         if (empty(self::$position_opts)) {
             self::$position_opts = [
@@ -71,11 +71,11 @@ class SiteLinks {
     /**
      * Get Sitelinks SQL Row
      *
-     * @param $id
+     * @param int $id
      *
      * @return array
      */
-    public static function get_SiteLinks($id) {
+    public static function getSiteLinks($id) {
         $data = [];
         $link_query = "SELECT * FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='$id'";
         $result = dbquery($link_query);
@@ -89,12 +89,12 @@ class SiteLinks {
     /**
      * Given a matching URL, fetch Sitelinks data
      *
-     * @param string $url - url to match (link_url) column
-     * @param string $key - column data to output, blank for all
+     * @param string $url url to match (link_url) column
+     * @param string $key column data to output, blank for all
      *
      * @return array|bool
      */
-    public static function get_current_SiteLinks($url = "", $key = NULL) {
+    public static function getCurrentSiteLinks($url = "", $key = NULL) {
         $url = stripinput($url);
         static $data = [];
         if (empty($data)) {
@@ -113,11 +113,11 @@ class SiteLinks {
     /**
      * Link ID validation
      *
-     * @param $link_id
+     * @param int $link_id
      *
      * @return int|null
      */
-    public static function verify_sitelinks($link_id) {
+    public static function verifySiteLink($link_id) {
         if (isnum($link_id)) {
             return dbcount("(link_id)", DB_SITE_LINKS, "link_id='".intval($link_id)."'");
         }
@@ -128,11 +128,11 @@ class SiteLinks {
     /**
      * SQL Delete Site Link Action
      *
-     * @param $link_id
+     * @param int $link_id
      *
      * @return bool|mixed|null|resource
      */
-    public static function delete_sitelinks($link_id) {
+    public static function deleteSiteLink($link_id) {
         if (isnum($link_id)) {
             $data = dbarray(dbquery("SELECT link_order FROM ".DB_SITE_LINKS." ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_id='".$_GET['link_id']."'"));
             $result = dbquery("UPDATE ".DB_SITE_LINKS." SET link_order=link_order-1 ".(multilang_table("SL") ? "WHERE link_language='".LANGUAGE."' AND" : "WHERE")." link_order>'".$data['link_order']."'");
@@ -151,7 +151,7 @@ class SiteLinks {
      *
      * @return array
      */
-    public static function get_LinkVisibility() {
+    public static function getLinkVisibility() {
         static $visibility_opts = [];
         $user_groups = getusergroups();
         foreach ($user_groups as $user_group) {
@@ -173,7 +173,7 @@ class SiteLinks {
          * If set an ID, it will re-run the class to create a new object again.
          */
         $default_options = [
-            'id'                   => self::MenuDefaultID,
+            'id'                   => self::MENU_DEFAULT_ID,
             'container'            => FALSE,
             'container_fluid'      => FALSE,
             'responsive'           => TRUE,
@@ -214,7 +214,7 @@ class SiteLinks {
             }
 
             if (!isset($options['callback_data']) && empty($options['callback_data'])) {
-                $options['callback_data'] = self::get_SiteLinksData(['link_position' => $options['link_position']]);
+                $options['callback_data'] = self::getSiteLinksData(['link_position' => $options['link_position']]);
             }
 
             $options['banner'] = fusion_get_settings('sitebanner') && $options['show_banner'] == TRUE ? "<img src='".BASEDIR.fusion_get_settings("sitebanner")."' alt='".fusion_get_settings("sitename")."'/>" : fusion_get_settings("sitename");
@@ -254,7 +254,7 @@ class SiteLinks {
      *
      * @return array
      */
-    public static function get_SiteLinksData(array $options = []) {
+    public static function getSiteLinksData(array $options = []) {
         $default_position = [2, 3];
 
         /*
@@ -294,7 +294,7 @@ class SiteLinks {
      *
      * @return static
      */
-    public static function getInstance($id = self::MenuDefaultID) {
+    public static function getInstance($id = self::MENU_DEFAULT_ID) {
         self::$id = $id;
         if (isset(self::$instances[$id])) {
             return self::$instances[$id];
@@ -361,6 +361,9 @@ class SiteLinks {
         ];
     }
 
+    /**
+     * Init
+     */
     private static function setLinks() {
         $primary_cache = (isset(self::$primary_cache_data[self::$id])) ? self::$primary_cache_data[self::$id] : [];
 
@@ -412,6 +415,11 @@ class SiteLinks {
         }
     }
 
+    /**
+     * @param int $id
+     *
+     * @return string
+     */
     public function showSubLinks($id = 0) {
         $locale = self::getMenuParam('locale');
         $res = '';
@@ -548,6 +556,11 @@ class SiteLinks {
         return $res;
     }
 
+    /**
+     * @param mixed $key
+     *
+     * @return mixed
+     */
     public static function getMenuParam($key = FALSE) {
         if ($key) {
             return isset(self::$instances[self::$id]->menu_options[$key]) ? self::$instances[self::$id]->menu_options[$key] : NULL;
@@ -556,21 +569,35 @@ class SiteLinks {
         return self::$instances[self::$id]->menu_options;
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
     public static function replaceMenuParam($key, $value) {
         self::$instances[self::$id]->menu_options[$key] = $value;
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
     public static function setMenuParam($key, $value) {
         self::$instances[self::$id]->menu_options[$key] = (is_bool($value)) ? $value : self::getMenuParam($key).$value;
     }
 
-    private function get_SubLinks_URL($data, $link_id) {
+    /**
+     * @param array $data
+     * @param int   $link_id
+     *
+     * @return array
+     */
+    private function getSubLinksUrl($data, $link_id) {
         $linkRef = [];
         if (isset($data[$link_id])) {
             foreach ($data[$link_id] as $link) {
                 $linkRef[$link['link_id']] = $link['link_url'];
                 if (isset($data[$link['link_id']])) {
-                    $linkRef = array_merge_recursive($linkRef, $this->get_SubLinks_URL($data, $link['link_id']));
+                    $linkRef = array_merge_recursive($linkRef, $this->getSubLinksUrl($data, $link['link_id']));
                 }
             }
         }
@@ -580,11 +607,14 @@ class SiteLinks {
 
     private static $link_instances = [];
 
+    /**
+     * @return array
+     */
     private function getLinkInstance() {
         if (empty(self::$link_instances)) {
             $linkInstance = BreadCrumbs::getInstance();
             $linkInstance->showHome(FALSE);
-            $linkInstance->setLastClickable(TRUE);
+            $linkInstance->setLastClickable();
             self::$link_instances = $linkInstance->toArray();
         }
 
@@ -671,7 +701,7 @@ class SiteLinks {
                     // not the first link
                     if (self::getMenuParam('start_page') !== $link_data['link_url']) {
                         // All Sublinks will be compared to - stable
-                        $linkRef = $this->get_SubLinks_URL($data, $link_data['link_id']);
+                        $linkRef = $this->getSubLinksUrl($data, $link_data['link_id']);
                         $linkRefURI = [];
                         if (!empty($linkRef)) {
                             $linkRefURI = array_flip($linkRef);
@@ -817,5 +847,16 @@ class SiteLinks {
         return $res;
     }
 
-    // CSS build a vertical menu
+    /**
+     * Given a matching URL, fetch Sitelinks data
+     *
+     * @param string $url url to match (link_url) column
+     * @param string $key column data to output, blank for all
+     *
+     * @return array|bool
+     * @deprecated use getCurrentSiteLinks()
+     */
+    public static function get_current_SiteLinks($url = "", $key = NULL) {
+        return self::getCurrentSiteLinks($url, $key);
+    }
 }

@@ -26,7 +26,7 @@ opentable($locale['theme_1000']);
 switch (get('action')) {
     case "manage":
         if (check_get('theme')) {
-            $theme_admin::display_theme_editor(get('theme'));
+            $theme_admin::displayThemeEditor(get('theme'));
         }
         break;
     default:
@@ -48,13 +48,13 @@ switch (get('action')) {
         echo opentab($tabs, $section, 'theme_tab', TRUE);
         switch ($section) {
             case 'upload':
-                $theme_admin::theme_uploader();
+                $theme_admin::themeUploader();
                 break;
             case 'admin_themes':
-                $theme_admin::admin_themes_list();
+                $theme_admin::adminThemesList();
                 break;
             default:
-                $theme_admin::display_theme_list();
+                $theme_admin::displayThemeList();
                 break;
         }
         echo closetab();

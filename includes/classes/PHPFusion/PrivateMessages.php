@@ -57,7 +57,12 @@ class PrivateMessages {
         return $this->info;
     }
 
-    protected static function validate_pm_user($user_id) {
+    /**
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    protected static function validatePmUser($user_id) {
         if (isnum($user_id) && dbcount("(user_id)", DB_USERS,
                 "user_id=:userid AND user_status =:status", [':userid' => $user_id, ':status' => '0'])
         ) {
@@ -70,12 +75,12 @@ class PrivateMessages {
     /**
      * Get the pm settings for users
      *
-     * @param      $user_id
+     * @param int  $user_id
      * @param null $key
      *
      * @return array|mixed|null
      */
-    public static function get_pm_settings($user_id, $key = NULL) {
+    public static function getPmSettings($user_id, $key = NULL) {
         if (iMEMBER) {
             $userdata = fusion_get_userdata();
             // make sure they have it when registering
@@ -127,15 +132,15 @@ class PrivateMessages {
     /**
      * Public API to send message using the message system
      *
-     * @param        $to
-     * @param        $from
-     * @param        $subject
-     * @param        $message
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $message
      * @param string $smileys
      * @param bool   $to_group
      * @param bool   $save_sent
      */
-    public static function send_pm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
+    public static function sendPm($to, $from, $subject, $message, $smileys = 'y', $to_group = FALSE, $save_sent = TRUE) {
         require_once INCLUDES."sendmail_include.php";
         require_once INCLUDES."flood_include.php";
 
@@ -150,8 +155,8 @@ class PrivateMessages {
         if (!$to_group) {
 
             // send to user
-            $pmStatus = self::get_pm_settings($to);
-            $myStatus = self::get_pm_settings($from);
+            $pmStatus = self::getPmSettings($to);
+            $myStatus = self::getPmSettings($from);
 
             if (!flood_control("message_datestamp", DB_MESSAGES, "message_from='".(int)$from."'")) {
 
@@ -318,7 +323,7 @@ class PrivateMessages {
             if (dbrows($result) > 0) {
 
                 while ($data = dbarray($result)) {
-                    self::send_pm($data['user_id'], $from, $subject, $message, $smileys, FALSE, FALSE);
+                    self::sendPm($data['user_id'], $from, $subject, $message, $smileys, FALSE, FALSE);
                 }
 
             } else {
@@ -346,7 +351,7 @@ class PrivateMessages {
     /**
      * Set Message Listing for inbox, outbox and archive*
      */
-    private function set_list_messages() {
+    private function setListMessages() {
         // list messages
         $query = [
             'inbox'   => [$this->info['inbox_total'], "message_folder='0'"],
@@ -427,9 +432,9 @@ class PrivateMessages {
     }
 
     /**
-     * Set Message Reader
+     * Set message reader
      */
-    private function set_read_messages() {
+    private function setReadMessages() {
 
         // list messages
         $query = [
@@ -483,7 +488,7 @@ class PrivateMessages {
             ];
 
 
-            $this->set_reply_form($data["user_id"]);
+            $this->setReplyForm($data["user_id"]);
 
 
         } else {
@@ -494,7 +499,7 @@ class PrivateMessages {
     /**
      * Set Message Options Viewer
      */
-    private function set_message_options() {
+    private function setMessageOptions() {
         $userdata = fusion_get_userdata();
         if (isset($_POST['save_options'])) {
             $data = [
@@ -524,7 +529,7 @@ class PrivateMessages {
     /**
      * Actions buttons - archive, delete, mark all read, mark all unread, mark as read, mark as unread
      */
-    private function set_action_menu() {
+    private function setActionMenu() {
         if (isset($_GET['msg_read'])) {
             $this->info['actions_form'] = [
                 'openform'  => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', (int)$_GET['msg_read']),
@@ -563,7 +568,7 @@ class PrivateMessages {
      *
      * @return $this
      */
-    public function Server() {
+    public function server() {
         if (!iMEMBER) {
             redirect(BASEDIR.'index.php');
         }
@@ -578,7 +583,7 @@ class PrivateMessages {
             $_GET['folder'] = 'inbox';
         }
 
-        if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && self::validate_pm_user($_POST['msg_send'])) {
+        if (isset($_POST['msg_send']) && isnum($_POST['msg_send']) && self::validatePmUser($_POST['msg_send'])) {
             $_GET['msg_send'] = $_POST['msg_send'];
         }
 
@@ -638,44 +643,44 @@ class PrivateMessages {
     /**
      * Private message main viewer
      */
-    public function View() {
+    public function view() {
 
         if ($_GET['folder'] == "options") {
-            $this->set_message_options();
+            $this->setMessageOptions();
 
         } else {
 
             // Listener for Sending Messages
-            $this->do_send();
+            $this->doSend();
 
             if (isset($_GET['msg_send']) && (isnum($_GET['msg_send']) || $_GET['msg_send'] === 'new')) {
                 // Form 1
-                $this->set_send_form();
+                $this->setSendForm();
 
             } else {
                 if (isset($_GET['msg_read']) && isnum($_GET['msg_read'])) {
                     // Form 2 + Messages
-                    $this->set_read_messages();
+                    $this->setReadMessages();
 
                 } else {
-                    $this->set_list_messages();
+                    $this->setListMessages();
                 }
             }
 
             // Message Actions
             if (!empty($_POST)) {
                 if (isset($_POST['archive_pm'])) {
-                    $this->do_archive();
+                    $this->doArchive();
                 } else if (isset($_POST['unarchive_pm'])) {
-                    $this->do_unarchive();
+                    $this->doUnarchive();
                 } else if (isset($_POST['delete_pm'])) {
-                    $this->do_delete();
+                    $this->doDelete();
                 } else if (isset($_POST['mark'])) {
-                    $this->do_mark();
+                    $this->doMark();
                 }
             }
 
-            $this->set_action_menu();
+            $this->setActionMenu();
         }
 
         display_inbox($this->info);
@@ -683,16 +688,16 @@ class PrivateMessages {
     }
 
     /**
-     * Actions : archive messages
+     * Actions: archive messages
      */
-    private function do_archive() {
+    private function doArchive() {
         $userdata = fusion_get_userdata();
 
         $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => $message_id, ':messageuser' => $userdata['user_id']]);
-                $within_limit = self::get_pm_settings($userdata['user_id'], "user_archive") == "0" || (self::get_pm_settings($userdata['user_id'], "user_archive") > 0 && self::get_pm_settings($userdata['user_id'], "user_archive") - 1 > $this->info['archive_total']);
+                $within_limit = self::getPmSettings($userdata['user_id'], "user_archive") == "0" || (self::getPmSettings($userdata['user_id'], "user_archive") > 0 && self::getPmSettings($userdata['user_id'], "user_archive") - 1 > $this->info['archive_total']);
                 if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
                     $moveData['message_folder'] = 2;
@@ -707,14 +712,14 @@ class PrivateMessages {
     /**
      * Actions: unarchive messages
      */
-    private function do_unarchive() {
+    private function doUnarchive() {
         $userdata = fusion_get_userdata();
 
         $messages = !empty($_POST['selectedPM']) ? explode(",", rtrim(form_sanitizer($_POST['selectedPM'], "", "selectedPM"), ",")) : '';
         if (!empty($messages)) {
             foreach ($messages as $message_id) {
                 $ownership = isnum($message_id) && dbcount("(message_id)", DB_MESSAGES, "message_id=:messageid AND message_user=:messageuser", [':messageid' => (int)$message_id, ':messageuser' => (int)$userdata['user_id']]);
-                $within_limit = self::get_pm_settings($userdata['user_id'], "user_inbox") == "0" || (self::get_pm_settings($userdata['user_id'], "user_inbox") > 0 && self::get_pm_settings($userdata['user_id'], "user_inbox") - 1 > $this->info['inbox_total']);
+                $within_limit = self::getPmSettings($userdata['user_id'], "user_inbox") == "0" || (self::getPmSettings($userdata['user_id'], "user_inbox") > 0 && self::getPmSettings($userdata['user_id'], "user_inbox") - 1 > $this->info['inbox_total']);
                 if ($ownership && $within_limit && isset($this->info['items'][$message_id])) {
                     $moveData = $this->info['items'][$message_id];
                     $moveData['message_folder'] = 0;
@@ -729,7 +734,7 @@ class PrivateMessages {
     /**
      * Actions: delete messages
      */
-    private function do_delete() {
+    private function doDelete() {
         $userdata = fusion_get_userdata();
 
         $messages = (!empty($_POST['selectedPM']) ? explode(",", rtrim(sanitizer("selectedPM", "", "selectedPM"), ",")) : "");
@@ -747,9 +752,9 @@ class PrivateMessages {
     }
 
     /**
-     * Actions : marking messages
+     * Actions: marking messages
      */
-    private function do_mark() {
+    private function doMark() {
         $userdata = fusion_get_userdata();
 
         switch (form_sanitizer($_POST['mark'])) {
@@ -807,7 +812,7 @@ class PrivateMessages {
     /**
      * Actions: send messages
      */
-    private function do_send() {
+    private function doSend() {
 
         if (isset($_POST['send_pm']) || isset($_POST['send_message'])) {
 
@@ -832,9 +837,9 @@ class PrivateMessages {
 
             if (fusion_safe()) {
                 if (iADMIN && isset($_POST['chk_sendtoall']) && $this->data['msg_group_send']) {
-                    self::send_pm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
+                    self::sendPm($this->data['msg_group_send'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys'], TRUE);
                 } else {
-                    self::send_pm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys']);
+                    self::sendPm($this->data['to'], $this->data['from'], $this->data['subject'], $this->data['message'], $this->data['smileys']);
                 }
 
                 if (self::$is_sent == TRUE) {
@@ -853,7 +858,7 @@ class PrivateMessages {
      *
      * @param bool $show_form
      */
-    private function set_reply_form($show_form = TRUE) {
+    private function setReplyForm($show_form = TRUE) {
         $this->info['reply_form'] = openform('inputform', 'post', FUSION_REQUEST)
             .form_hidden('msg_send', '', $this->info['items'][$_GET['msg_read']]['message_from'])
             .form_hidden('subject', '', $this->info['items'][$_GET['msg_read']]['message_subject'])
@@ -877,7 +882,7 @@ class PrivateMessages {
     /**
      * New message form
      */
-    private function set_send_form() {
+    private function setSendForm() {
 
         $this->data['msg_send'] = isset($_GET['msg_send']) ? $_GET['msg_send'] : 0;
 

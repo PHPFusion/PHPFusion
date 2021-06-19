@@ -23,8 +23,7 @@ namespace PHPFusion;
  * @package PHPFusion
  */
 class Template {
-
-    const DefaultID = 'Default';
+    const DEFAULT_ID = 'Default';
 
     private static $instance = NULL;
     private $template = '';
@@ -46,11 +45,11 @@ class Template {
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return static
      */
-    public static function getInstance($key = self::DefaultID) {
+    public static function getInstance($key = self::DEFAULT_ID) {
         if (!isset(self::$instance[$key])) {
             self::$instance[$key] = new static();
         }
@@ -59,6 +58,9 @@ class Template {
         return self::$instance[$key];
     }
 
+    /**
+     * @param string $key
+     */
     public static function set_key($key) {
         self::$key = $key;
     }
@@ -102,6 +104,9 @@ class Template {
 
     private static $registered_templates = [];
 
+    /**
+     * @param string $template_file_path
+     */
     public function register_template($template_file_path) {
         self::$registered_templates[self::$key] = $template_file_path;
     }
@@ -123,7 +128,7 @@ class Template {
     /**
      * Defines the instance to read a specific text
      *
-     * @param $text     string
+     * @param string $text
      */
     public function set_text($text) {
         $this->template = $text;
@@ -159,8 +164,8 @@ class Template {
      *
      * Every time this function is used with a block_id specified, it will traverse to the second count to mimic the set_block.
      *
-     * @param null $block_id
-     * @param null $html_tag
+     * @param int    $block_id
+     * @param string $html_tag
      *
      * @return array|mixed|null
      */
@@ -181,13 +186,12 @@ class Template {
                     if (isset($this->raw_block[$block_id][$block_count][$html_tag])) {
                         return $this->raw_block[$block_id][$block_count][$html_tag];
                     }
-                    return NULL;
                 } else {
                     if (isset($this->raw_block[$block_id][$block_count])) {
                         return $this->raw_block[$block_id][$block_count];
                     }
-                    return NULL;
                 }
+                return NULL;
             }
         } else {
             return $this->raw_block;
@@ -210,7 +214,7 @@ class Template {
     /**
      * Fetches a tag
      *
-     * @param null $html_tag
+     * @param string $html_tag
      *
      * @return array|mixed|null
      */
@@ -223,7 +227,7 @@ class Template {
      * Macro Pattern - {[locale_keys]}
      * Recursively parse array into an array
      *
-     * @param $array
+     * @param array $array
      *
      * @return array
      */
@@ -238,14 +242,14 @@ class Template {
             }
         }
 
-        return (array)self::$locale_list;
+        return self::$locale_list;
     }
 
     /**
      * Renders the output
      * Any unused blocks will not be parsed and deleted. This is useful to remove a div wrapper if condition fails.
      *
-     * @return string   The final HTML markup
+     * @return string The final HTML markup
      */
     public function get_output() {
         $this->template = trim($this->template);
@@ -304,6 +308,6 @@ class Template {
         unset($this->tag);
         unset($this->block);
 
-        return (string)trim($this->template);
+        return trim($this->template);
     }
 }

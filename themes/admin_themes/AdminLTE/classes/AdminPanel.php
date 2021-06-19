@@ -73,8 +73,8 @@ class AdminPanel {
                         $i = 0;
 
                         foreach ($sections as $section_name) {
-                            $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
-                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->get_admin_section_icons($i).'</a></li>';
+                            $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->isActive() === $i);
+                            $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum='.$i.'" data-toggle="tooltip" data-placement="bottom" title="'.$section_name.'">'.Admins::getInstance()->getAdminSectionIcons($i).'</a></li>';
                             $i++;
                         }
                     }
@@ -274,12 +274,12 @@ class AdminPanel {
 
         $html = '<ul id="adl" class="sidebar-menu" data-widget="tree">';
             foreach ($admin_sections as $i => $section_name) {
-                $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->_isActive() === $i);
+                $active = (isset($_GET['pagenum']) && $this->pagenum === $i) || (!$this->pagenum && Admins::getInstance()->isActive() === $i);
 
                 if (!empty($admin_pages[$i])) {
                     $html .= '<li class="treeview'.($active ? ' active' : '').'">';
                         $html .= '<a href="#">';
-                            $html .= Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
+                            $html .= Admins::getInstance()->getAdminSectionIcons($i).' <span>'.$section_name.'</span>';
                             $html .= '<span class="pull-right-container">';
                                 $html .= '<i class="fa fa-angle-left pull-right"></i>';
                             $html .= '</span>';
@@ -287,7 +287,7 @@ class AdminPanel {
                         $html .= '<ul class="treeview-menu">';
                             foreach ($admin_pages[$i] as $data) {
                                 if (checkrights($data['admin_rights'])) {
-                                    $sub_active = $data['admin_link'] == Admins::getInstance()->_currentPage();
+                                    $sub_active = $data['admin_link'] == Admins::getInstance()->currentPage();
 
                                     $icon = '<img class="m-r-5" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'">';
 
@@ -311,7 +311,7 @@ class AdminPanel {
                     $html .= '</li>';
                 } else {
                     $html .= '<li'.($active ? ' class="active"' : '').'><a href="'.ADMIN.'index.php'.$aidlink.'&amp;pagenum=0">';
-                        $html .= Admins::getInstance()->get_admin_section_icons($i).' <span>'.$section_name.'</span>';
+                        $html .= Admins::getInstance()->getAdminSectionIcons($i).' <span>'.$section_name.'</span>';
                     $html .= '</a></li>';
                 }
             }

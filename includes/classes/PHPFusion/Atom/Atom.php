@@ -174,20 +174,11 @@ class Atom {
         'navbar_link_decoration_active' => 0,
     ];
     private $less_var = [];
-    private $theme_data = [];
-
-    public function infuse_theme() {
-        if (!empty($this->theme_data)) {
-            add_to_head("<link href='".THEMES.$this->theme_data['theme_file']."' rel='stylesheet' media='screen' />\n");
-        } else {
-            add_to_head("<link href='".INCLUDES."bootstrap/bootstrap3/css/bootstrap.min.css' rel='stylesheet' media='screen' />\n");
-        }
-    }
 
     /**
      * Theme Overview Page
      */
-    public function display_theme_overview() {
+    public function displayThemeOverview() {
         $locale = fusion_get_locale();
         $data = [
             "theme_name"        => $this->theme_name,
@@ -294,9 +285,9 @@ class Atom {
     /**
      * Theme Widget Page
      */
-    public function display_theme_widgets() {
+    public function displayThemeWidgets() {
         $locale = fusion_get_locale();
-        if (Admin::theme_widget_exists($this->theme_name)) {
+        if (Admin::themeWidgetExists($this->theme_name)) {
             require_once THEMES.$this->theme_name."/theme_db.php";
             /**
              * Infuse Widget Action
@@ -390,7 +381,7 @@ class Atom {
      * Theme Styler Page
      * Edit done, save done. Now load.
      */
-    public function theme_editor() {
+    public function themeEditor() {
         $locale = fusion_get_locale();
         if (isset($_GET['e_action']) && ($_GET['e_action'] == "edit") && isset($_GET['preset']) && isnum($_GET['preset'])) {
             $result = dbquery("SELECT * FROM ".DB_THEME." WHERE theme_name='".$this->theme_name."' AND theme_id='".intval($_GET['preset'])."'");
@@ -401,7 +392,7 @@ class Atom {
                 }
             }
         }
-        self::save_theme();
+        self::saveTheme();
         $this->font_decoration_options = [
             $locale['theme_5000'],
             $locale['theme_5001'],
@@ -455,17 +446,17 @@ class Atom {
         echo opentab($tab_title, $tab_active, 'atom');
         echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $tab_active);
         echo "<div class='m-t-20'>\n";
-        $this->font_admin();
+        $this->fontAdmin();
         echo "</div>\n";
         echo closetabbody();
         echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active);
         echo "<div class='m-t-20'>\n";
-        $this->layout_admin();
+        $this->layoutAdmin();
         echo "</div>\n";
         echo closetabbody();
         echo opentabbody($tab_title['title'][2], $tab_title['id'][2], $tab_active);
         echo "<div class='m-t-20'>\n";
-        $this->nav_admin();
+        $this->navAdmin();
         echo "</div>\n";
         echo closetabbody();
         echo closetab();
@@ -475,7 +466,7 @@ class Atom {
     /**
      * Save theme
      */
-    public function save_theme() {
+    public function saveTheme() {
         $locale = fusion_get_locale();
         $userdata = fusion_get_userdata();
 
@@ -513,7 +504,7 @@ class Atom {
 
             if (fusion_safe()) {
 
-                $data['theme_file'] = $this->build_css();
+                $data['theme_file'] = $this->buildCss();
 
                 if (dbcount("(theme_id)", DB_THEME, "theme_name='".$data['theme_name']."' AND theme_id='".intval($data['theme_id'])."'")) {
                     if (!empty($data['theme_file'])) {
@@ -560,7 +551,7 @@ class Atom {
      *
      * @return string|null
      */
-    protected function build_css() {
+    protected function buildCss() {
         $this->debug = FALSE;
 
         $locale = fusion_get_locale();
@@ -569,7 +560,7 @@ class Atom {
         $outputFile = THEMES.$this->target_folder."/fusion_".$this->target_folder."_".time().".css";
         $returnFile = str_replace(THEMES, '', $outputFile);
         $options = ['output' => $outputFile, 'compress' => $this->compress,];
-        $this->set_less_variables();
+        $this->setLessVariables();
 
         if (!empty($this->less_var) && fusion_safe() && $this->compiler) {
             if ($this->debug) {
@@ -617,86 +608,86 @@ class Atom {
     /**
      * Set LESS vars
      */
-    private function set_less_variables() {
+    private function setLessVariables() {
         $this->less_var = $this->data;
         // css which requires atom's custom parse rules.
         // base foot parsing.
-        $this->less_var['sans_serif_fonts'] = $this->parse_fonts($this->data['sans_serif_fonts']);
-        $this->less_var['serif_fonts'] = $this->parse_fonts($this->data['serif_fonts']);
-        $this->less_var['monospace_fonts'] = $this->parse_fonts($this->data['monospace_fonts']);
-        $this->less_var['base_font'] = $this->parse_font_set($this->data['base_font']);
-        $this->less_var['base_font_size'] = $this->parse_size($this->data['base_font_size']);
-        $this->less_var['base_font_size_l'] = $this->parse_size($this->data['base_font_size_l']);
-        $this->less_var['base_font_size_s'] = $this->parse_size($this->data['base_font_size_s']);
+        $this->less_var['sans_serif_fonts'] = $this->parseFonts($this->data['sans_serif_fonts']);
+        $this->less_var['serif_fonts'] = $this->parseFonts($this->data['serif_fonts']);
+        $this->less_var['monospace_fonts'] = $this->parseFonts($this->data['monospace_fonts']);
+        $this->less_var['base_font'] = $this->parseFontSet($this->data['base_font']);
+        $this->less_var['base_font_size'] = $this->parseSize($this->data['base_font_size']);
+        $this->less_var['base_font_size_l'] = $this->parseSize($this->data['base_font_size_l']);
+        $this->less_var['base_font_size_s'] = $this->parseSize($this->data['base_font_size_s']);
         //h1
-        $this->less_var['font_size_h1'] = $this->parse_size($this->data['font_size_h1']);
-        $this->less_var['font_weight_h1'] = $this->parse_font_weight($this->data['font_decoration_h1']);
-        $this->less_var['font_style_h1'] = $this->parse_font_style($this->data['font_decoration_h1']);
-        $this->less_var['font_decoration_h1'] = $this->parse_font_decoration($this->data['font_decoration_h1']);
+        $this->less_var['font_size_h1'] = $this->parseSize($this->data['font_size_h1']);
+        $this->less_var['font_weight_h1'] = $this->parseFontWeight($this->data['font_decoration_h1']);
+        $this->less_var['font_style_h1'] = $this->parseFontStyle($this->data['font_decoration_h1']);
+        $this->less_var['font_decoration_h1'] = $this->parseFontDecoration($this->data['font_decoration_h1']);
         //h2
-        $this->less_var['font_size_h2'] = $this->parse_size($this->data['font_size_h2']);
-        $this->less_var['font_weight_h2'] = $this->parse_font_weight($this->data['font_decoration_h2']);
-        $this->less_var['font_style_h2'] = $this->parse_font_style($this->data['font_decoration_h2']);
-        $this->less_var['font_decoration_h2'] = $this->parse_font_decoration($this->data['font_decoration_h2']);
+        $this->less_var['font_size_h2'] = $this->parseSize($this->data['font_size_h2']);
+        $this->less_var['font_weight_h2'] = $this->parseFontWeight($this->data['font_decoration_h2']);
+        $this->less_var['font_style_h2'] = $this->parseFontStyle($this->data['font_decoration_h2']);
+        $this->less_var['font_decoration_h2'] = $this->parseFontDecoration($this->data['font_decoration_h2']);
         //h3
-        $this->less_var['font_size_h3'] = $this->parse_size($this->data['font_size_h3']);
-        $this->less_var['font_weight_h3'] = $this->parse_font_weight($this->data['font_decoration_h3']);
-        $this->less_var['font_style_h3'] = $this->parse_font_style($this->data['font_decoration_h3']);
-        $this->less_var['font_decoration_h3'] = $this->parse_font_decoration($this->data['font_decoration_h3']);
+        $this->less_var['font_size_h3'] = $this->parseSize($this->data['font_size_h3']);
+        $this->less_var['font_weight_h3'] = $this->parseFontWeight($this->data['font_decoration_h3']);
+        $this->less_var['font_style_h3'] = $this->parseFontStyle($this->data['font_decoration_h3']);
+        $this->less_var['font_decoration_h3'] = $this->parseFontDecoration($this->data['font_decoration_h3']);
         //h4
-        $this->less_var['font_size_h4'] = $this->parse_size($this->data['font_size_h4']);
-        $this->less_var['font_weight_h4'] = $this->parse_font_weight($this->data['font_decoration_h4']);
-        $this->less_var['font_style_h4'] = $this->parse_font_style($this->data['font_decoration_h4']);
-        $this->less_var['font_decoration_h4'] = $this->parse_font_decoration($this->data['font_decoration_h4']);
+        $this->less_var['font_size_h4'] = $this->parseSize($this->data['font_size_h4']);
+        $this->less_var['font_weight_h4'] = $this->parseFontWeight($this->data['font_decoration_h4']);
+        $this->less_var['font_style_h4'] = $this->parseFontStyle($this->data['font_decoration_h4']);
+        $this->less_var['font_decoration_h4'] = $this->parseFontDecoration($this->data['font_decoration_h4']);
         //h5
-        $this->less_var['font_size_h5'] = $this->parse_size($this->data['font_size_h5']);
-        $this->less_var['font_weight_h5'] = $this->parse_font_weight($this->data['font_decoration_h5']);
-        $this->less_var['font_style_h5'] = $this->parse_font_style($this->data['font_decoration_h5']);
-        $this->less_var['font_decoration_h5'] = $this->parse_font_decoration($this->data['font_decoration_h5']);
+        $this->less_var['font_size_h5'] = $this->parseSize($this->data['font_size_h5']);
+        $this->less_var['font_weight_h5'] = $this->parseFontWeight($this->data['font_decoration_h5']);
+        $this->less_var['font_style_h5'] = $this->parseFontStyle($this->data['font_decoration_h5']);
+        $this->less_var['font_decoration_h5'] = $this->parseFontDecoration($this->data['font_decoration_h5']);
         //h6
-        $this->less_var['font_size_h6'] = $this->parse_size($this->data['font_size_h6']);
-        $this->less_var['font_weight_h6'] = $this->parse_font_weight($this->data['font_decoration_h6']);
-        $this->less_var['font_style_h6'] = $this->parse_font_style($this->data['font_decoration_h6']);
-        $this->less_var['font_decoration_h6'] = $this->parse_font_decoration($this->data['font_decoration_h6']);
+        $this->less_var['font_size_h6'] = $this->parseSize($this->data['font_size_h6']);
+        $this->less_var['font_weight_h6'] = $this->parseFontWeight($this->data['font_decoration_h6']);
+        $this->less_var['font_style_h6'] = $this->parseFontStyle($this->data['font_decoration_h6']);
+        $this->less_var['font_decoration_h6'] = $this->parseFontDecoration($this->data['font_decoration_h6']);
         // link
-        $this->less_var['link_weight'] = $this->parse_font_weight($this->data['link_decoration']);
-        $this->less_var['link_style'] = $this->parse_font_style($this->data['link_decoration']);
-        $this->less_var['link_decoration'] = $this->parse_font_decoration($this->data['link_decoration']);
-        $this->less_var['link_hover_weight'] = $this->parse_font_weight($this->data['link_decoration']);
-        $this->less_var['link_hover_style'] = $this->parse_font_style($this->data['link_decoration']);
-        $this->less_var['link_hover_decoration'] = $this->parse_font_decoration($this->data['link_decoration']);
+        $this->less_var['link_weight'] = $this->parseFontWeight($this->data['link_decoration']);
+        $this->less_var['link_style'] = $this->parseFontStyle($this->data['link_decoration']);
+        $this->less_var['link_decoration'] = $this->parseFontDecoration($this->data['link_decoration']);
+        $this->less_var['link_hover_weight'] = $this->parseFontWeight($this->data['link_decoration']);
+        $this->less_var['link_hover_style'] = $this->parseFontStyle($this->data['link_decoration']);
+        $this->less_var['link_hover_decoration'] = $this->parseFontDecoration($this->data['link_decoration']);
         // code follow back $data.
         //quote decorations
-        $this->less_var['quote_weight'] = $this->parse_font_weight($this->data['quote_decoration']);
-        $this->less_var['quote_style'] = $this->parse_font_style($this->data['quote_decoration']);
-        $this->less_var['quote_decoration'] = $this->parse_font_decoration($this->data['quote_decoration']);
+        $this->less_var['quote_weight'] = $this->parseFontWeight($this->data['quote_decoration']);
+        $this->less_var['quote_style'] = $this->parseFontStyle($this->data['quote_decoration']);
+        $this->less_var['quote_decoration'] = $this->parseFontDecoration($this->data['quote_decoration']);
         // max screen
-        $this->less_var['container_sm'] = $this->parse_size($this->data['container_sm']);
-        $this->less_var['container_md'] = $this->parse_size($this->data['container_md']);
-        $this->less_var['container_lg'] = $this->parse_size($this->data['container_lg']);
-        $this->less_var['btn_border'] = $this->parse_size($this->data['btn_border']);
-        $this->less_var['btn_radius'] = $this->parse_size($this->data['btn_radius']);
+        $this->less_var['container_sm'] = $this->parseSize($this->data['container_sm']);
+        $this->less_var['container_md'] = $this->parseSize($this->data['container_md']);
+        $this->less_var['container_lg'] = $this->parseSize($this->data['container_lg']);
+        $this->less_var['btn_border'] = $this->parseSize($this->data['btn_border']);
+        $this->less_var['btn_radius'] = $this->parseSize($this->data['btn_radius']);
         // global navbars
-        $this->less_var['navbar_height'] = $this->parse_size($this->data['navbar_height']);
-        $this->less_var['navbar_border'] = $this->parse_size($this->data['navbar_border']);
-        $this->less_var['navbar_radius'] = $this->parse_size($this->data['navbar_radius']);
-        $this->less_var['navbar_link_border'] = $this->parse_size($this->data['navbar_link_border']);
-        $this->less_var['navbar_link_radius'] = $this->parse_size($this->data['navbar_link_radius']);
-        $this->less_var['navbar_brand_weight'] = $this->parse_font_weight($this->data['navbar_brand_decoration']);
-        $this->less_var['navbar_brand_style'] = $this->parse_font_style($this->data['navbar_brand_decoration']);
-        $this->less_var['navbar_brand_decoration'] = $this->parse_font_decoration($this->data['navbar_brand_decoration']);
-        $this->less_var['navbar_font_weight'] = $this->parse_font_weight($this->data['navbar_font_decoration']);
-        $this->less_var['navbar_font_style'] = $this->parse_font_style($this->data['navbar_font_decoration']);
-        $this->less_var['navbar_font_decoration'] = $this->parse_font_decoration($this->data['navbar_font_decoration']);
-        $this->less_var['navbar_link_weight'] = $this->parse_font_weight($this->data['navbar_link_decoration']);
-        $this->less_var['navbar_link_style'] = $this->parse_font_style($this->data['navbar_link_decoration']);
-        $this->less_var['navbar_link_decoration'] = $this->parse_font_decoration($this->data['navbar_link_decoration']);
-        $this->less_var['navbar_link_weight_hover'] = $this->parse_font_weight($this->data['navbar_link_decoration_hover']);
-        $this->less_var['navbar_link_style_hover'] = $this->parse_font_style($this->data['navbar_link_decoration_hover']);
-        $this->less_var['navbar_link_decoration_hover'] = $this->parse_font_decoration($this->data['navbar_link_decoration_hover']);
-        $this->less_var['navbar_link_weight_active'] = $this->parse_font_weight($this->data['navbar_link_decoration_active']);
-        $this->less_var['navbar_link_style_active'] = $this->parse_font_style($this->data['navbar_link_decoration_active']);
-        $this->less_var['navbar_link_decoration_active'] = $this->parse_font_decoration($this->data['navbar_link_decoration_active']);
+        $this->less_var['navbar_height'] = $this->parseSize($this->data['navbar_height']);
+        $this->less_var['navbar_border'] = $this->parseSize($this->data['navbar_border']);
+        $this->less_var['navbar_radius'] = $this->parseSize($this->data['navbar_radius']);
+        $this->less_var['navbar_link_border'] = $this->parseSize($this->data['navbar_link_border']);
+        $this->less_var['navbar_link_radius'] = $this->parseSize($this->data['navbar_link_radius']);
+        $this->less_var['navbar_brand_weight'] = $this->parseFontWeight($this->data['navbar_brand_decoration']);
+        $this->less_var['navbar_brand_style'] = $this->parseFontStyle($this->data['navbar_brand_decoration']);
+        $this->less_var['navbar_brand_decoration'] = $this->parseFontDecoration($this->data['navbar_brand_decoration']);
+        $this->less_var['navbar_font_weight'] = $this->parseFontWeight($this->data['navbar_font_decoration']);
+        $this->less_var['navbar_font_style'] = $this->parseFontStyle($this->data['navbar_font_decoration']);
+        $this->less_var['navbar_font_decoration'] = $this->parseFontDecoration($this->data['navbar_font_decoration']);
+        $this->less_var['navbar_link_weight'] = $this->parseFontWeight($this->data['navbar_link_decoration']);
+        $this->less_var['navbar_link_style'] = $this->parseFontStyle($this->data['navbar_link_decoration']);
+        $this->less_var['navbar_link_decoration'] = $this->parseFontDecoration($this->data['navbar_link_decoration']);
+        $this->less_var['navbar_link_weight_hover'] = $this->parseFontWeight($this->data['navbar_link_decoration_hover']);
+        $this->less_var['navbar_link_style_hover'] = $this->parseFontStyle($this->data['navbar_link_decoration_hover']);
+        $this->less_var['navbar_link_decoration_hover'] = $this->parseFontDecoration($this->data['navbar_link_decoration_hover']);
+        $this->less_var['navbar_link_weight_active'] = $this->parseFontWeight($this->data['navbar_link_decoration_active']);
+        $this->less_var['navbar_link_style_active'] = $this->parseFontStyle($this->data['navbar_link_decoration_active']);
+        $this->less_var['navbar_link_decoration_active'] = $this->parseFontDecoration($this->data['navbar_link_decoration_active']);
     }
 
     /**
@@ -706,7 +697,7 @@ class Atom {
      *
      * @return string|null
      */
-    static function parse_fonts($font) {
+    static function parseFonts($font) {
         $_parsedFonts = [];
         if ($font) {
             $font = explode(',', $font);
@@ -731,7 +722,7 @@ class Atom {
      *
      * @return string
      */
-    static function parse_font_set($font) {
+    static function parseFontSet($font) {
         $fonts_family_opts = [
             '0' => '@font-family-sans-serif',
             '1' => '@font-family-monospace',
@@ -748,7 +739,7 @@ class Atom {
      *
      * @return int|string
      */
-    static function parse_size($font) {
+    static function parseSize($font) {
         return $font > 0 ? $font.'px' : 0;
     }
 
@@ -759,7 +750,7 @@ class Atom {
      *
      * @return string
      */
-    private function parse_font_weight($font) {
+    private function parseFontWeight($font) {
         if (!$font) {
             return $this->text_weight[0];
         } else {
@@ -774,7 +765,7 @@ class Atom {
      *
      * @return string
      */
-    private function parse_font_style($font) {
+    private function parseFontStyle($font) {
         if (!$font) {
             return $this->text_style[0];
         } else {
@@ -789,7 +780,7 @@ class Atom {
      *
      * @return string
      */
-    private function parse_font_decoration($font) {
+    private function parseFontDecoration($font) {
         if (!$font) {
             return $this->text_decoration[0];
         } else {
@@ -800,10 +791,10 @@ class Atom {
     /**
      * Fonts admin
      */
-    private function font_admin() {
+    private function fontAdmin() {
         $locale = fusion_get_locale();
-        $base_font = array_values(array_flip($this->base_font()));
-        $web_font = array_values(array_flip($this->google_font()));
+        $base_font = array_values(array_flip($this->baseFonts()));
+        $web_font = array_values(array_flip($this->googleFonts()));
         $font_list = array_merge($base_font, $web_font);
         $color_options = ["placeholder" => $locale['theme_2009'], 'width' => '100%', "format" => "hex"];
         $font_options = [
@@ -979,7 +970,7 @@ class Atom {
      *
      * @return string[]
      */
-    static function base_font() {
+    static function baseFonts() {
         // OS Font Defaults
         return [
             "Arial"               => "Arial",
@@ -1008,7 +999,7 @@ class Atom {
      *
      * @return string[]
      */
-    static function google_font() {
+    static function googleFonts() {
         //api at google : <link href=http://fonts.googleapis.com/css?family=Signika Negative rel=stylesheet type=text/css>
         return [
             "ABeeZee"                  => "ABeeZee",
@@ -1662,7 +1653,7 @@ class Atom {
     /**
      * Administration
      */
-    private function layout_admin() {
+    private function layoutAdmin() {
         $locale = fusion_get_locale();
         $width_options = ["width" => "100%", 'placeholder' => 'px'];
         $color_options = ["placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex"];
@@ -1877,7 +1868,7 @@ class Atom {
     /**
      * Admin navigation
      */
-    private function nav_admin() {
+    private function navAdmin() {
         $locale = fusion_get_locale();
         $width_options = ["width" => "100%", 'placeholder' => 'px'];
         $color_options = ["placeholder" => $locale['theme_2009'], "width" => "100%", "format" => "hex"];

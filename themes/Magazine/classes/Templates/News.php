@@ -25,12 +25,12 @@ class News  {
         $locale = fusion_get_locale('', MG_LOCALE);
         $news_settings = NewsServer::get_news_settings();
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div class="news-header">';
             echo '<h1>'.$locale['news_0004'].'</h1>';
@@ -113,12 +113,12 @@ class News  {
         $locale = fusion_get_locale('', MG_LOCALE);
         $data = $info['news_item'];
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div class="news-header">';
             echo '<h1>'.$data['news_subject'].'</h1>';

@@ -18,10 +18,10 @@
 namespace PHPFusion\Page;
 
 class PageModel {
-    protected static $admin_composer_opts = [];
+    protected static $adminComposerOpts = [];
     protected static $composerData = [];
     protected static $widgets = [];
-    protected static $widget_exclude_list = ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt";
+
     /**
      * @var array - default custom page data
      */
@@ -71,10 +71,10 @@ class PageModel {
         'page_content_order' => 1,
         'page_options'       => ''
     ];
-    private static $page_instance = NULL;
+    private static $pageInstance = NULL;
 
     /**
-     * @var array       the row information
+     * @var array the row information
      */
     protected static $gridData = [];
 
@@ -84,11 +84,11 @@ class PageModel {
      * @return static
      */
     public static function getInstance() {
-        if (empty(self::$page_instance)) {
-            self::$page_instance = new static;
+        if (empty(self::$pageInstance)) {
+            self::$pageInstance = new static;
         }
 
-        return self::$page_instance;
+        return self::$pageInstance;
     }
 
     // need an administration interface - to couple with theme engine
@@ -211,7 +211,7 @@ class PageModel {
     protected static function cacheWidget() {
         if (empty(self::$widgets)) {
             $list = [];
-            $file_list = makefilelist(WIDGETS, self::$widget_exclude_list, TRUE, "folders");
+            $file_list = makefilelist(WIDGETS, ".|..|.htaccess|.DS_Store|config.php|config.temp.php|.gitignore|LICENSE|README.md|robots.txt", TRUE, "folders");
             foreach ($file_list as $folder) {
                 $widget_title = '';
                 $widget_icon = '';

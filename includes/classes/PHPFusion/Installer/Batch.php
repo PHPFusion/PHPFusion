@@ -472,7 +472,7 @@ class Batch extends InstallCore {
                                 /*
                                  * Use Infusions Core to load upgrade statements
                                  */
-                                $upgrades = self::load_upgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
+                                $upgrades = self::loadUpgrade($upgrade_folder_path, $upgrade_folder_path.$upgrade_file);
 
                                 // Remove unnecessary APIs
                                 unset($upgrades['title']);

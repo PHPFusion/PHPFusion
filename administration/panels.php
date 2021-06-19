@@ -695,7 +695,7 @@ class PanelsAdministration {
             unset($current_panels[$this->data['panel_filename']]);
         }
 
-        return \PHPFusion\Panels::get_available_panels($current_panels);
+        return \PHPFusion\Panels::getAvailablePanels($current_panels);
     }
 
     /**

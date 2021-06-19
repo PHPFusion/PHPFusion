@@ -219,7 +219,7 @@ if (!function_exists('send_pm')) {
      * @param bool   $to_group Set to true if sending to the entire user group's members
      */
     function send_pm($to, $from, $subject, $message, $smileys = "y", $to_group = FALSE) {
-        PHPFusion\PrivateMessages::send_pm($to, $from, $subject, $message, $smileys, $to_group);
+        PHPFusion\PrivateMessages::sendPm($to, $from, $subject, $message, $smileys, $to_group);
     }
 }
 

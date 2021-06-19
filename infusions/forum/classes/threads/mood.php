@@ -170,8 +170,8 @@ class Forum_Mood extends ForumServer {
         $cache_result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE ".groupaccess('mood_access')." AND mood_status=1");
         if (dbrows($cache_result) > 0) {
             while ($data = dbarray($cache_result)) {
-                $data['mood_name'] = QuantumFields::parse_label($data['mood_name']);
-                $data['mood_description'] = QuantumFields::parse_label($data['mood_description']);
+                $data['mood_name'] = QuantumFields::parseLabel($data['mood_name']);
+                $data['mood_description'] = QuantumFields::parseLabel($data['mood_description']);
                 $data['mood_icon'] = !empty($data['mood_icon']) ? $data['mood_icon'] : 'fa fa-question';
                 $mood_cache[$data['mood_id']] = $data;
             }
@@ -206,14 +206,14 @@ class Forum_Mood extends ForumServer {
                     $html .=
                         "<button name='post_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
                         (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i> " : "").
-                        QuantumFields::parse_label($mood_data['mood_name']).
+                        QuantumFields::parseLabel($mood_data['mood_name']).
                         "</button>";
                 } else {
                     // Unpost Button
                     $html .=
                         "<button name='unpost_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default active m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".
                         (!empty($mood_data['mood_icon']) ? "<i class='".$mood_data['mood_icon']."'></i> " : "").
-                        QuantumFields::parse_label($mood_data['mood_name']).
+                        QuantumFields::parseLabel($mood_data['mood_name']).
                         "</button>";
                 }
             }

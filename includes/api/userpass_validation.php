@@ -27,16 +27,16 @@ function xuserpass_validation() {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
 
         // Check length
-        $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, FALSE, FALSE, FALSE);
+        $regex = \PHPFusion\PasswordAuth::passwordStrengthOpts(8, FALSE, FALSE, FALSE);
         if (preg_match('/'.$regex.'/', $userpass)) {
             // Check contains number
-            $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, FALSE, FALSE);
+            $regex = \PHPFusion\PasswordAuth::passwordStrengthOpts(8, TRUE, FALSE, FALSE);
             if (preg_match('/'.$regex.'/', $userpass)) {
                 // Check contains at least 1 upper and 1 lowercase
-                $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, FALSE);
+                $regex = \PHPFusion\PasswordAuth::passwordStrengthOpts(8, TRUE, TRUE, FALSE);
                 if (preg_match('/'.$regex.'/', $userpass)) {
                     // Check contains special char
-                    $regex = \PHPFusion\PasswordAuth::_passwordStrengthOpts(8, TRUE, TRUE, TRUE);
+                    $regex = \PHPFusion\PasswordAuth::passwordStrengthOpts(8, TRUE, TRUE, TRUE);
                     if (preg_match('/'.$regex.'/', $userpass)) {
                         $result['result'] = 'valid';
 

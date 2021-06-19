@@ -53,7 +53,7 @@ class Locale {
      *
      * @param string $filename
      */
-    public static function load_locale_file($filename) {
+    public static function loadLocaleFile($filename) {
         $locale = [];
 
         if (file_exists($filename)) {
@@ -64,7 +64,7 @@ class Locale {
         self::$locale_file[$filename] = debug_backtrace();
     }
 
-    public static function get_loaded_files() {
+    public static function getLoadedFiles() {
         return self::$locale_file;
     }
 
@@ -78,11 +78,11 @@ class Locale {
             if (is_array($include_file)) {
                 foreach ($include_file as $file) {
                     if (!isset(self::$locale_file[$file])) {
-                        self::load_locale_file($file);
+                        self::loadLocaleFile($file);
                     }
                 }
             } else if (!isset(self::$locale_file[$include_file])) {
-                self::load_locale_file($include_file);
+                self::loadLocaleFile($include_file);
             }
         }
     }
@@ -106,7 +106,7 @@ class Locale {
      *
      * @return string
      */
-    public static function format_word($count, $words, $options = []) {
+    public static function formatWord($count, $words, $options = []) {
         $default_options = [
             'add_count'     => TRUE, //  true/false (default true) to show integer
             'html'          => FALSE, // whether to output html as return
@@ -189,7 +189,7 @@ class Locale {
      *
      * @return string
      */
-    public static function translate_country_names($country) {
+    public static function translateCountryNames($country) {
         $translated_countries = [
             "China"           => "中国",
             "Czech Republic"  => "Česko",
@@ -228,7 +228,7 @@ class Locale {
      *
      * @return array|string
      */
-    public static function translate_lang_names($key = NULL) {
+    public static function translateLangNames($key = NULL) {
         $translated_langs = [
             "Chinese_Simplified"  => "中文-简体",
             "Chinese_Traditional" => "中文-繁体",
@@ -266,7 +266,7 @@ class Locale {
      *
      * @return array|int|string|null
      */
-    public static function get_iso($key = NULL, $iso_to_lang = TRUE) {
+    public static function getIso($key = NULL, $iso_to_lang = TRUE) {
         /**
          * ISO 639-1 Language Codes
          * References :
@@ -414,9 +414,22 @@ class Locale {
 
         $iso_codes = array_flip($language_codes);
         if ($iso_to_lang) {
-            return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translate_lang_names($language_codes[$key]) : NULL);
+            return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translateLangNames($language_codes[$key]) : NULL);
         }
 
         return $key === NULL ? array_flip($iso_codes) : (isset($iso_codes[$key]) ? $iso_codes[$key] : NULL);
+    }
+
+    /**
+     * @param int    $count
+     * @param string $words 'member|members';
+     * @param array  $options
+     *
+     * @return string
+     *
+     * @deprecated use format_word()
+     */
+    public static function format_word($count, $words, $options = []) {
+        return self::formatWord($count, $words, $options);
     }
 }

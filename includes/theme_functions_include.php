@@ -190,7 +190,7 @@ function showprivacypolicy() {
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
         $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
-        $modal .= parse_text(\PHPFusion\QuantumFields::parse_label(fusion_get_settings('privacy_policy')));
+        $modal .= parse_text(\PHPFusion\QuantumFields::parseLabel(fusion_get_settings('privacy_policy')));
         $modal .= closemodal();
         add_to_footer($modal);
     }
@@ -504,7 +504,7 @@ if (!function_exists('check_panel_status')) {
      * @return bool
      */
     function check_panel_status($side) {
-        return Panels::check_panel_status($side);
+        return Panels::checkPanelStatus($side);
     }
 }
 
@@ -920,7 +920,7 @@ if (!function_exists('timer')) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
-                $string = \PHPFusion\Locale::format_word($answer, $unit, ['add_count' => FALSE]);
+                $string = format_word($answer, $unit, ['add_count' => FALSE]);
                 $text = strtr($locale['timer'], [
                     '[DAYS]'   => $answer." ".$string,
                     '[AGO]'    => $locale['ago'],

@@ -278,7 +278,7 @@ class MemberPoll {
         echo form_hidden('opt_count', '', $opt_count);
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-6 col-md-8 col-lg-9'>\n";
-        echo QuantumFields::quantum_multilocale_fields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
+        echo QuantumFields::quantumMultilocaleFields('poll_title', self::$locale['POLL_045'], $this->data['poll_title'], [
             'required'    => TRUE,
             'inline'      => FALSE,
             'placeholder' => self::$locale['POLL_069']
@@ -289,7 +289,7 @@ class MemberPoll {
         $i = 1;
         foreach ($this->data['poll_opt'] as $im1 => $data1) {
             $nam = "poll_opt_$im1";
-            echo QuantumFields::quantum_multilocale_fields($nam, self::$locale['POLL_046'].' '.$im1, $data1, [
+            echo QuantumFields::quantumMultilocaleFields($nam, self::$locale['POLL_046'].' '.$im1, $data1, [
                 'required'    => TRUE,
                 'inline'      => TRUE,
                 'placeholder' => self::$locale['POLL_070']

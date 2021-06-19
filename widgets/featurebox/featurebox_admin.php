@@ -33,13 +33,13 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
 
         self::$widget_data = [
             'box_title'              => form_sanitizer($_POST['box_title'], '', 'box_title'),
@@ -92,10 +92,10 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
         return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
-    public function display_form_input() {
+    public function displayFormInput() {
         $lang = file_exists(WIDGETS."featurebox/locale/".LANGUAGE.".php") ? WIDGETS."featurebox/locale/".LANGUAGE.".php" : WIDGETS."featurebox/locale/English.php";
         $widget_locale = fusion_get_locale('', $lang);
 
@@ -260,7 +260,7 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
         <?php
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
         echo form_button('save_widget', $widget_locale['FBW_0228'], 'widget', ['class' => 'btn-primary']);
         echo form_button('save_and_close_widget', $widget_locale['FBW_0229'], 'widget', ['class' => 'btn-success']);

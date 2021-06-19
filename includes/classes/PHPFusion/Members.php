@@ -23,15 +23,10 @@ namespace PHPFusion;
  * @package PHPFusion
  */
 class Members {
-
     protected static $filters = [];
-
     private static $instance = NULL;
-
     private static $locale = [];
-
     private static $max_rows = 0;
-
     private $default_info = [
         'search_filter' => '',
         'member'        => [],
@@ -39,7 +34,6 @@ class Members {
         'page_result'   => '',
         'search_table'  => '',
     ];
-
     private $sortby = "all";
     private $orderby = "active";
     private $sort_order = "ASC";
@@ -77,12 +71,17 @@ class Members {
         }
     }
 
+    /**
+     * @param bool $set_info
+     *
+     * @return static|null
+     */
     public static function getInstance($set_info = TRUE) {
         if (self::$instance === NULL) {
             self::$instance = new static();
             if ($set_info) {
                 self::$locale = fusion_get_locale('', LOCALE.LOCALESET."members.php");
-                add_to_title(self::$locale['MEMB_000'].SiteLinks::get_current_SiteLinks("", "link_name"));
+                add_to_title(self::$locale['MEMB_000'].SiteLinks::getCurrentSiteLinks("", "link_name"));
 
                 /** @var
                  * max_rows maximum allowable rows under current filter
@@ -104,9 +103,12 @@ class Members {
         ".$this->getConditions()." GROUP BY ".$this->getGroupBy()."
         ");
 
-        return (int)dbrows($result);
+        return dbrows($result);
     }
 
+    /**
+     * @return string
+     */
     private function getSelectors() {
         if (!empty(self::$filters["select"])) {
             return ", ".self::$filters["select"];
@@ -114,6 +116,9 @@ class Members {
         return "";
     }
 
+    /**
+     * @return mixed|string
+     */
     private function getJoins() {
         if (!empty(self::$filters["join"])) {
             return self::$filters["join"];
@@ -121,6 +126,9 @@ class Members {
         return "";
     }
 
+    /**
+     * @return string
+     */
     private function getConditions() {
         if (!empty(self::$filters["condition"])) {
             return " AND ".self::$filters["condition"];
@@ -140,6 +148,9 @@ class Members {
         return $default_condition;
     }
 
+    /**
+     * @return mixed|string
+     */
     private function getGroupBy() {
         if (!empty(self::$filters["group_by"])) {
             return self::$filters["group_by"];
@@ -254,7 +265,7 @@ class Members {
                             "{%start_row%}" => ($this->rowstart == 0 ? 1 : $this->rowstart),
                             "{%end_row%}"   => $end_rows,
                             "{%max_row%}"   => $info['rows'],
-                            "{%member%}"    => Locale::format_word($info['rows'], self::$locale['fmt_member'],
+                            "{%member%}"    => format_word($info['rows'], self::$locale['fmt_member'],
                                 [
                                     'add_count' => FALSE,
                                 ]
@@ -286,17 +297,21 @@ class Members {
         return NULL;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getMembers() {
-        $query = "
-        SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit ".$this->getSelectors()."
-        FROM ".DB_USERS." u ".$this->getJoins()."
-        WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
-        ".$this->getConditions()." GROUP BY ".$this->getGroupBy()." ORDER BY ".$this->getOrderBy()." LIMIT ".(int)$this->rowstart.",".$this->getLimit()."
-        ";
-
-        return dbquery($query);
+        return dbquery("
+            SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit ".$this->getSelectors()."
+            FROM ".DB_USERS." u ".$this->getJoins()."
+            WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
+            ".$this->getConditions()." GROUP BY ".$this->getGroupBy()." ORDER BY ".$this->getOrderBy()." LIMIT ".$this->rowstart.",".$this->getLimit()."
+        ");
     }
 
+    /**
+     * @return mixed|string
+     */
     private function getOrderBy() {
 
         if (!empty(self::$filters["order"])) {
@@ -322,6 +337,9 @@ class Members {
         return $default_sorting;
     }
 
+    /**
+     * @return int|mixed
+     */
     private function getLimit() {
         if (!empty(self::$filters["limit"])) {
             return self::$filters["limit"];
@@ -333,11 +351,12 @@ class Members {
      * Set custom filters
      *
      * @param array $filters
-     *                  Indexes:    'select' - query selection,
-     *                  'condition', - query condition
-     *                  'order', - order
-     *                  'limit', - limitations
-     *                  'join' - join statements
+     * Indexes:
+     * 'select' - query selection,
+     * 'condition', - query condition
+     * 'order', - order
+     * 'limit', - limitations
+     * 'join' - join statements
      */
     public function setFilters(array $filters = []) {
         self::$filters = $filters;
@@ -345,5 +364,4 @@ class Members {
 
     private function __clone() {
     }
-
 }

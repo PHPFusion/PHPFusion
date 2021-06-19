@@ -144,11 +144,11 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         return self::$widget_instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
         return self::$exclude_return;
     }
 
-    public function validate_input() {
+    public function validateInput() {
 
         $widget_data = [];
 
@@ -218,7 +218,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         return NULL;
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
         $widget_settings = [
             'slider_id'         => form_sanitizer($_POST['slider_id'], '', 'slider_id'),
             'slider_path'       => form_sanitizer($_POST['slider_path'], '', 'slider_path'),
@@ -234,13 +234,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
     /*
      * Slider Interface
      */
-    public function display_form_input() {
+    public function displayFormInput() {
 
         echo opentab(self::$slider_tab, self::$tab_active, 'slider_tabs', TRUE, 'm-t-20 nav-tabs', 'slider', ['widgetAction', 'widgetKey']);
 
@@ -481,7 +481,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         <?php
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
 
         switch (self::$tab_active) {
             case 'slider_settings':

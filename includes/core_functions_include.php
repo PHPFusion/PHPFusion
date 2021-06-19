@@ -619,7 +619,7 @@ function clean_request($request_addition = '', $filter_array = [], $keep_filtere
  * @return array Array of all smileys.
  */
 function cache_smileys() {
-    return ImageRepo::cache_smileys();
+    return ImageRepo::cacheSmileys();
 }
 
 /**
@@ -1768,7 +1768,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
                 $_name = get_parent_array($tree_full, $id);
                 $crumb = [
                     'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"]) : "",
-                    'title' => isset($_name[$title_col]) ? QuantumFields::parse_label($_name[$title_col]) : "",
+                    'title' => isset($_name[$title_col]) ? QuantumFields::parseLabel($_name[$title_col]) : "",
                 ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
@@ -2058,7 +2058,7 @@ function fusion_get_token($form_id, $max_tokens = 5) {
  * @return array|string Associative array of all data or one column by key.
  */
 function user_pm_settings($user_id, $key = NULL) {
-    return PrivateMessages::get_pm_settings($user_id, $key);
+    return PrivateMessages::getPmSettings($user_id, $key);
 }
 
 /**

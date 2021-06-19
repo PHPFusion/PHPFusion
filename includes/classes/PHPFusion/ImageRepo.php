@@ -31,7 +31,7 @@ class ImageRepo {
      *
      * @var string[]
      */
-    private static $imagePaths = [];
+    private static $image_paths = [];
 
     /**
      * The state of the cache
@@ -41,6 +41,13 @@ class ImageRepo {
     private static $cached = FALSE;
 
     /**
+     * Cache installed smiley images from database
+     *
+     * @return array|null
+     */
+    private static $smiley_cache = NULL;
+
+    /**
      * Get all imagepaths
      *
      * @return string[]
@@ -48,7 +55,7 @@ class ImageRepo {
     public static function getImagePaths() {
         self::cache();
 
-        return self::$imagePaths;
+        return self::$image_paths;
     }
 
     /**
@@ -61,7 +68,7 @@ class ImageRepo {
         self::$cached = TRUE;
         //<editor-fold desc="imagePaths">
         // You need to + sign it, so setImage will work.
-        self::$imagePaths += [
+        self::$image_paths += [
             //A
             //B
             //C
@@ -108,8 +115,8 @@ class ImageRepo {
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $image = file_exists(ADMIN."images/".$data['image']) ? ADMIN."images/".$data['image'] : (file_exists(INFUSIONS.$data['image']) ? INFUSIONS.$data['image'] : ADMIN."images/infusion_panel.png");
-                if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
-                    self::$imagePaths[$data['prefix'].$data['name']] = $image;
+                if (empty(self::$image_paths[$data['prefix'].$data['name']])) {
+                    self::$image_paths[$data['prefix'].$data['name']] = $image;
                 }
             }
         }
@@ -117,8 +124,8 @@ class ImageRepo {
         //smiley
         foreach (cache_smileys() as $smiley) {
             // set image
-            if (empty(self::$imagePaths["smiley_".$smiley['smiley_text']])) {
-                self::$imagePaths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
+            if (empty(self::$image_paths["smiley_".$smiley['smiley_text']])) {
+                self::$image_paths["smiley_".$smiley['smiley_text']] = IMAGES."smiley/".$smiley['smiley_image'];
             }
         }
 
@@ -145,8 +152,8 @@ class ImageRepo {
                         break;
                 }
                 // Set image
-                if (empty(self::$imagePaths[$data['prefix'].$data['name']])) {
-                    self::$imagePaths[$data['prefix'].$data['name']] = $image;
+                if (empty(self::$image_paths[$data['prefix'].$data['name']])) {
+                    self::$image_paths[$data['prefix'].$data['name']] = $image;
                 }
             }
         }
@@ -166,7 +173,7 @@ class ImageRepo {
      */
     public static function getImage($image, $alt = "", $style = "", $title = "", $atts = "") {
         self::cache();
-        $url = isset(self::$imagePaths[$image]) ? self::$imagePaths[$image] : IMAGES."imagenotfound.jpg";
+        $url = isset(self::$image_paths[$image]) ? self::$image_paths[$image] : IMAGES."imagenotfound.jpg";
         if ($style) {
             $style = " style='$style'";
         }
@@ -186,7 +193,7 @@ class ImageRepo {
      * @param string $path
      */
     public static function setImage($name, $path) {
-        self::$imagePaths[$name] = $path;
+        self::$image_paths[$name] = $path;
     }
 
     /**
@@ -197,8 +204,8 @@ class ImageRepo {
      */
     public static function replaceInAllPath($source, $target) {
         self::cache();
-        foreach (self::$imagePaths as $name => $path) {
-            self::$imagePaths[$name] = str_replace($source, $target, $path);
+        foreach (self::$image_paths as $name => $path) {
+            self::$image_paths[$name] = str_replace($source, $target, $path);
         }
     }
 
@@ -221,14 +228,7 @@ class ImageRepo {
         return $image_list;
     }
 
-    /**
-     * Cache installed smiley images from database
-     *
-     * @return array|null
-     */
-    private static $smiley_cache = NULL;
-
-    public static function cache_smileys() {
+    public static function cacheSmileys() {
         if (self::$smiley_cache === NULL) {
             self::$smiley_cache = [];
             $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);

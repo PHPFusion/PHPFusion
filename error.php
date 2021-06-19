@@ -80,8 +80,8 @@ if (isset($_GET['code'])) {
 }
 
 $info += $default;
-\PHPFusion\Panels::getInstance()->hide_panel('LEFT');
-\PHPFusion\Panels::getInstance()->hide_panel('RIGHT');
+\PHPFusion\Panels::getInstance()->hidePanel('LEFT');
+\PHPFusion\Panels::getInstance()->hidePanel('RIGHT');
 ob_start();
 display_error_page($info);
 echo strtr(ob_get_clean(), [

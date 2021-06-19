@@ -106,10 +106,10 @@ class ForumAdminMood extends ForumAdminInterface {
         echo openform("mood_form", "POST", $form_action).
             form_hidden('mood_id', '', $this->data['mood_id']).
 
-            QuantumFields::quantum_multilocale_fields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
+            QuantumFields::quantumMultilocaleFields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_096']]).
 
-            QuantumFields::quantum_multilocale_fields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
+            QuantumFields::quantumMultilocaleFields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
 
             form_text('mood_icon', self::$locale['forum_099'], $this->data['mood_icon'],
@@ -215,12 +215,12 @@ class ForumAdminMood extends ForumAdminInterface {
                         <tr>
                             <td>
                                 <a href="<?php echo $edit_link ?>">
-                                    <?php echo QuantumFields::parse_label($data['mood_name']) ?>
+                                    <?php echo QuantumFields::parseLabel($data['mood_name']) ?>
                                 </a>
                             </td>
                             <td><?php echo sprintf(self::$locale['forum_113'],
                                     ucfirst(fusion_get_userdata("user_name")),
-                                    QuantumFields::parse_label($data['mood_description'])) ?>
+                                    QuantumFields::parseLabel($data['mood_description'])) ?>
                             </td>
                             <td>
                                 <?php if (!empty($data['mood_icon'])) : ?>

@@ -31,23 +31,23 @@ class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imp
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
         dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_type='C' AND rating_item_id=".self::$data['page_id']);
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
     }
 
-    public function display_form_input() {
+    public function displayFormInput() {
         $lang = file_exists(WIDGETS."ratings/locale/".LANGUAGE.".php") ? WIDGETS."ratings/locale/".LANGUAGE.".php" : WIDGETS."ratings/locale/English.php";
         $widget_locale = fusion_get_locale('', $lang);
 

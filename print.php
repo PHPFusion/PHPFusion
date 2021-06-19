@@ -259,14 +259,14 @@ if (isset($_GET['type'])) {
             if ($settings['enable_terms'] == 1) {
                 echo "<strong>".$settings['sitename']." ".$locale['600']."</strong><br />\n";
                 echo "<small>".$locale['601']." ".ucfirst(showdate("longdate", $settings['license_lastupdate']))."<small>\n";
-                echo "<hr />".parse_text(\PHPFusion\QuantumFields::parse_label($settings['license_agreement']), ['add_line_breaks' => TRUE])."\n";
+                echo "<hr />".parse_text(\PHPFusion\QuantumFields::parseLabel($settings['license_agreement']), ['add_line_breaks' => TRUE])."\n";
             } else {
                 redirect($settings['opening_page']);
             }
             break;
         case "P":
             echo "<strong>".$settings['sitename']." ".$locale['700']."</strong><br />\n";
-            echo "<hr />".parse_text(\PHPFusion\QuantumFields::parse_label($settings['privacy_policy']), ['add_line_breaks' => TRUE])."\n";
+            echo "<hr />".parse_text(\PHPFusion\QuantumFields::parseLabel($settings['privacy_policy']), ['add_line_breaks' => TRUE])."\n";
             break;
     }
 } else {

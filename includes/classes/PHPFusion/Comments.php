@@ -78,7 +78,7 @@ class Comments {
     private $userdata;
     private $settings;
 
-    private $postLink;
+    private $post_link;
 
     private $c_arr = [
         'c_con'  => [],
@@ -117,8 +117,8 @@ class Comments {
         // Set current userdata
         $this->userdata = fusion_get_userdata();
         // Post link?
-        $this->postLink = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
-        $this->postLink = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->postLink);
+        $this->post_link = FUSION_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "");
+        $this->post_link = preg_replace("^(&amp;|\?)c_action=(edit|delete)&amp;comment_id=\d*^", "", $this->post_link);
         // Comments Per Page
         $this->cpp = fusion_get_settings('comments_per_page');
     }

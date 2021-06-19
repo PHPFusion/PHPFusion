@@ -26,12 +26,12 @@ class Auth {
         $userdata = fusion_get_userdata();
         $settings = fusion_get_settings();
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -90,12 +90,12 @@ class Auth {
     public static function registerForm($info) {
         $locale = fusion_get_locale();
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div class="panel panel-default" style="max-width: 650px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -139,12 +139,12 @@ class Auth {
     public static function lostpassword($content) {
         $locale = fusion_get_locale();
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div class="panel panel-default" style="max-width: 500px; margin: 30px auto;">';
             echo '<div class="panel-heading" style="background: #fff;">';
@@ -160,12 +160,12 @@ class Auth {
     public static function fusionGateway($info) {
         global $locale;
 
-        Panels::getInstance(TRUE)->hide_panel('RIGHT');
-        Panels::getInstance(TRUE)->hide_panel('LEFT');
-        Panels::getInstance(TRUE)->hide_panel('AU_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('U_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('L_CENTER');
-        Panels::getInstance(TRUE)->hide_panel('BL_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('RIGHT');
+        Panels::getInstance(TRUE)->hidePanel('LEFT');
+        Panels::getInstance(TRUE)->hidePanel('AU_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('U_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('L_CENTER');
+        Panels::getInstance(TRUE)->hidePanel('BL_CENTER');
 
         echo '<div style="max-width: 500px; margin: 30px auto;">';
         if ($info['showform'] == TRUE) {

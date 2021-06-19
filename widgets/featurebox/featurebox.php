@@ -18,7 +18,7 @@
 
 class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    public function display_widget($columnData) {
+    public function displayWidget($columnData) {
         $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
         $boxData = \Defender::unserialize($columnData['page_content']);
 

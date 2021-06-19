@@ -47,6 +47,7 @@ class Panels {
     private static $panel_excluded = [];
     private static $panels_cache = [];
     private static $available_panels = [];
+    private static $hide_all = FALSE;
 
     /**
      * @param bool $set_info
@@ -132,11 +133,11 @@ class Panels {
     /**
      * Display a panel given a panel id
      *
-     * @param $panel_id
+     * @param int $panel_id
      *
      * @return string
      */
-    public static function display_panel($panel_id) {
+    public static function displayPanel($panel_id) {
         $locale = fusion_get_locale();
         $html = "";
         if (!empty(self::$panels_cache)) {
@@ -184,7 +185,7 @@ class Panels {
      *
      * @return array
      */
-    public static function get_available_panels($excluded_panels = []) {
+    public static function getAvailablePanels($excluded_panels = []) {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
@@ -211,11 +212,11 @@ class Panels {
     }
 
     /**
-     * Hides panel
+     * Hide panel
      *
      * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
      */
-    public function hide_panel($side) {
+    public function hidePanel($side) {
         foreach (self::$panel_name as $p_key => $p_side) {
             if ($p_side['name'] == $side) {
                 self::$panel_excluded[$p_key + 1] = $side;
@@ -224,9 +225,19 @@ class Panels {
     }
 
     /**
+     * Hide all panels
+     */
+    public function hideAll() {
+        self::$hide_all = TRUE;
+    }
+
+    /**
      * Cache and generate Panel Constants
      */
     public function getSitePanel() {
+        if (self::$hide_all == TRUE) {
+            return NULL;
+        }
 
         if (empty(self::$panels_cache)) {
             self::cachePanels();
@@ -245,7 +256,7 @@ class Panels {
 
                 if (!defined("ADMIN_PANEL")) {
 
-                    if (self::check_panel_status($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
+                    if (self::checkPanelStatus($p_side['side']) && !isset(self::$panel_excluded[$p_key + 1])) {
 
                         foreach (self::$panels_cache[$p_key + 1] as $p_data) {
 
@@ -263,7 +274,7 @@ class Panels {
 
                             foreach ($url_arr as $url_list) {
                                 $url[] = $url_list;
-                                if ($this->wildcard_match($script_url, $url_list)) {
+                                if ($this->wildcardMatch($script_url, $url_list)) {
                                     $url[] = $script_url;
                                 }
                             }
@@ -366,7 +377,7 @@ class Panels {
      *
      * @return bool
      */
-    public static function check_panel_status($side) {
+    public static function checkPanelStatus($side) {
         $settings = fusion_get_settings();
 
         $exclude_list = "";
@@ -437,7 +448,7 @@ class Panels {
             $url = [];
             foreach ($exclude_list as $url_list) {
                 $url[] = $url_list;
-                if (self::getInstance()->wildcard_match($current_url, $url_list)) {
+                if (self::getInstance()->wildcardMatch($current_url, $url_list)) {
                     $url[] = $current_url;
                 }
             }
@@ -455,9 +466,20 @@ class Panels {
      *
      * @return false|int
      */
-    public function wildcard_match($source, $pattern) {
+    private function wildcardMatch($source, $pattern) {
         $pattern = preg_quote($pattern, '/');
         $pattern = str_replace('\*', '.*', $pattern);
         return preg_match('/^'.$pattern.'$/i', $source);
+    }
+
+    /**
+     * Hide panel
+     *
+     * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
+     *
+     * @deprecated use hidePanel()
+     */
+    public function hide_panel($side) {
+        $this->hidePanel($side);
     }
 }
