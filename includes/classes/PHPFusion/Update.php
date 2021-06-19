@@ -146,38 +146,40 @@ class Update extends Installer\Infusions {
      * @return array|bool
      */
     public function checkUpdate($return_version = FALSE) {
-        if (function_exists('curl_version') && $this->isValidUrl($this->getUpdateUrl())) {
-            $update = $this->downloadCurl($this->getUpdateUrl());
-            if ($update === FALSE) {
-                $this->setError(sprintf('Could not download update file %s via curl!', $this->getUpdateUrl()));
-            }
-        } else {
-            $update = @file_get_contents($this->getUpdateUrl(), FALSE);
-            if ($update === FALSE) {
-                $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->getUpdateUrl()));
-            }
-        }
-
-        if ($update === FALSE) {
-            return FALSE; // Could not check for updates
-        }
-
-        $versions = (array)json_decode($update, FALSE);
-
-        if (is_array($versions)) {
-            foreach ($versions as $version => $url) {
-                if (version_compare($version, $this->current_version, '>')) {
-                    $this->latest_version = $version;
-                    $this->update = ['version' => $version, 'url' => $url];
+        if ($this->isValidUrl($this->getUpdateUrl())) {
+            if (function_exists('curl_version')) {
+                $update = $this->downloadCurl($this->getUpdateUrl());
+                if ($update === FALSE) {
+                    $this->setError(sprintf('Could not download update file %s via curl!', $this->getUpdateUrl()));
+                }
+            } else {
+                $update = @file_get_contents($this->getUpdateUrl(), FALSE);
+                if ($update === FALSE) {
+                    $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->getUpdateUrl()));
                 }
             }
-        }
 
-        if ($this->newVersionAvailable()) {
-            if ($return_version == TRUE) {
-                return $this->update['version'];
-            } else {
-                return TRUE;
+            if ($update === FALSE) {
+                return FALSE; // Could not check for updates
+            }
+
+            $versions = (array)json_decode($update, FALSE);
+
+            if (is_array($versions)) {
+                foreach ($versions as $version => $url) {
+                    if (version_compare($version, $this->current_version, '>')) {
+                        $this->latest_version = $version;
+                        $this->update = ['version' => $version, 'url' => $url];
+                    }
+                }
+            }
+
+            if ($this->newVersionAvailable()) {
+                if ($return_version == TRUE) {
+                    return $this->update['version'];
+                } else {
+                    return TRUE;
+                }
             }
         }
 
@@ -201,7 +203,12 @@ class Update extends Installer\Infusions {
      * @return bool
      */
     protected function isValidUrl($url) {
-        return filter_var($url, FILTER_VALIDATE_URL) !== FALSE;
+        if (filter_var($url, FILTER_VALIDATE_URL) !== FALSE) {
+            return TRUE;
+        } else {
+            $this->setError(sprintf('Url %s is not valid.', $url));
+            return FALSE;
+        }
     }
 
     /**
@@ -240,36 +247,39 @@ class Update extends Installer\Infusions {
     protected function downloadZip($update_url, $update_file) {
         $this->setMessage(sprintf($this->locale['U_009'], $update_url));
 
-        if (function_exists('curl_version') && $this->isValidUrl($update_url)) {
-            $update = $this->downloadCurl($update_url);
-            if ($update === FALSE) {
+        if ($this->isValidUrl($update_url)) {
+            if (function_exists('curl_version')) {
+                $update = $this->downloadCurl($update_url);
+                if ($update === FALSE) {
+                    return FALSE;
+                }
+            } else if (ini_get('allow_url_fopen')) {
+                $update = @file_get_contents($update_url, FALSE);
+                if ($update === FALSE) {
+                    $this->setError(sprintf('Could not download update "%s"!', $update_url));
+                }
+            }
+
+            $handle = fopen($update_file, 'wb');
+            if (!$handle) {
+                $this->setError(sprintf('Could not open file handle to save update to "%s"!', $update_file));
                 return FALSE;
             }
-        } else if (ini_get('allow_url_fopen')) {
-            $update = @file_get_contents($update_url, FALSE);
-            if ($update === FALSE) {
-                $this->setError(sprintf('Could not download update "%s"!', $update_url));
+
+            if (!empty($update)) {
+                if (!fwrite($handle, $update)) {
+                    $this->setError(sprintf('Could not write update to file "%s"!', $update_file));
+                    fclose($handle);
+
+                    return FALSE;
+                }
             }
+
+            fclose($handle);
+            return TRUE;
         }
 
-        $handle = fopen($update_file, 'wb');
-        if (!$handle) {
-            $this->setError(sprintf('Could not open file handle to save update to "%s"!', $update_file));
-            return FALSE;
-        }
-
-        if (!empty($update)) {
-            if (!fwrite($handle, $update)) {
-                $this->setError(sprintf('Could not write update to file "%s"!', $update_file));
-                fclose($handle);
-
-                return FALSE;
-            }
-        }
-
-        fclose($handle);
-
-        return TRUE;
+        return NULL;
     }
 
     /**
@@ -384,6 +394,7 @@ class Update extends Installer\Infusions {
                         if (!empty($upgrades)) {
                             $method = $callback_method.'_infuse';
                             if (method_exists($this, $method)) {
+                                $this->setMessage('Running db function'.$method);
                                 $this->doUpgradeBatch($callback_method, [$callback_method => $upgrades]);
                             }
                         }
@@ -501,8 +512,8 @@ class Update extends Installer\Infusions {
                 }
             }
 
-            if (is_file($update_zip_file)) {
-                $this->extractFiles($update_zip_file, $this->temp_dir);
+            if (is_file($update_zip_file) && !$this->extractFiles($update_zip_file, $this->temp_dir)) {
+                return FALSE;
             }
 
             if (is_dir($this->temp_dir.'files/')) {
@@ -527,6 +538,10 @@ class Update extends Installer\Infusions {
             if (is_dir($this->temp_dir)) {
                 rrmdir($this->temp_dir);
             }
+
+            if (file_exists(BASEDIR.'install.php')) {
+                @unlink(BASEDIR.'install.php');
+            }
         }
 
         return TRUE;
@@ -549,23 +564,27 @@ class Update extends Installer\Infusions {
      * @return array|false
      */
     public function getAvailableLanguages() {
-        if (function_exists('curl_version') && $this->isValidUrl($this->available_languages)) {
-            $list = $this->downloadCurl($this->available_languages);
-            if ($list === FALSE) {
-                $this->setError(sprintf('Could not download update file %s via curl!', $this->available_languages));
+        if ($this->isValidUrl($this->available_languages)) {
+            if (function_exists('curl_version')) {
+                $list = $this->downloadCurl($this->available_languages);
+                if ($list === FALSE) {
+                    $this->setError(sprintf('Could not download update file %s via curl!', $this->available_languages));
+                }
+            } else {
+                $list = @file_get_contents($this->available_languages, FALSE);
+                if ($list === FALSE) {
+                    $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->available_languages));
+                }
             }
-        } else {
-            $list = @file_get_contents($this->available_languages, FALSE);
+
             if ($list === FALSE) {
-                $this->setError(sprintf('Could not download update file %s via file_get_contents!', $this->available_languages));
+                return FALSE; // Could not check for available languages
             }
+
+            return (array)json_decode($list, FALSE);
         }
 
-        if ($list === FALSE) {
-            return FALSE; // Could not check for available languages
-        }
-
-        return (array)json_decode($list, FALSE);
+        return NULL;
     }
 
     /**
