@@ -45,7 +45,7 @@ function translate_lang_names($language) {
  *
  * @param $country
  *
- * @return mixed|string
+ * @return string
  */
 function translate_country_names($country) {
     return PHPFusion\Locale::translate_country_names($country);
