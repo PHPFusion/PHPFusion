@@ -18,6 +18,7 @@
 
 namespace PHPFusion\Installer\Steps;
 
+use PHPFusion\Installer\Batch;
 use PHPFusion\Installer\InstallCore;
 use PHPFusion\Installer\Requirements;
 use PHPFusion\PasswordAuth;
@@ -357,7 +358,7 @@ class AdminSetup extends InstallCore {
                 if (fusion_safe()) {
 
                     self::$userData['user_timezone'] = self::$siteData['default_timezone'];
-                    //$batch_core = Batch::getInstance();
+                    $batch_core = Batch::getInstance();
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
                         self::$userData['user_id'] = 1;
@@ -388,15 +389,13 @@ class AdminSetup extends InstallCore {
                             }
                         }
 
-                        /*$langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
-                                $sql_inserts = $batch_core::batch_insert_rows('site_links', $language);
-                                if ($result = dbquery($sql_inserts)) {
-                                    continue;
-                                }
+                                $sql_inserts = $batch_core::batchInsertRows('site_links', $language);
+                                dbquery($sql_inserts);
                             }
-                        }*/
+                        }
                         unset($installed_languages);
 
                         $result = dbquery("SELECT admin_language FROM ".DB_PREFIX."admin GROUP BY admin_language ASC");
@@ -407,15 +406,13 @@ class AdminSetup extends InstallCore {
                             }
                         }
 
-                        /*$langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
+                        $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
                             foreach ($langDiff as $language) {
-                                $sql_inserts = $batch_core::batch_insert_rows('admin', $language);
-                                if ($result = dbquery($sql_inserts)) {
-                                    continue;
-                                }
+                                $sql_inserts = $batch_core::batchInsertRows('admin', $language);
+                                dbquery($sql_inserts);
                             }
-                        }*/
+                        }
                         unset($installed_languages);
 
                         /*
@@ -432,12 +429,10 @@ class AdminSetup extends InstallCore {
                         $langDiff = array_diff(self::$siteData['enabled_languages'], $installed_languages);
                         if (!empty($langDiff)) {
 
-                            /*foreach ($langDiff as $language) {
-                                $sql_inserts = $batch_core::batch_insert_rows('email_templates', $language);
-                                if ($result = dbquery($sql_inserts)) {
-                                    continue;
-                                }
-                            }*/
+                            foreach ($langDiff as $language) {
+                                $sql_inserts = $batch_core::batchInsertRows('email_templates', $language);
+                                dbquery($sql_inserts);
+                            }
 
                             // Update all UF Cat Fields
                             $ufc_result = dbquery("SELECT field_cat_id, field_cat_name FROM ".DB_PREFIX."user_field_cats");
