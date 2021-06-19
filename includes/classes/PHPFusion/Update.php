@@ -18,7 +18,6 @@
 namespace PHPFusion;
 
 use PHPFusion\Installer\Batch;
-use PHPFusion\Installer\Infusions;
 
 class Update extends Installer\Infusions {
     /**
