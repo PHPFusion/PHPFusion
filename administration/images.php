@@ -39,14 +39,10 @@ class ImagesAdministration {
         switch (get('action')) {
             case 'delete':
                 unlink($this->data['afolder'].get('view', FILTER_SANITIZE_STRING));
-                if (self::$settings['tinymce_enabled'] == 1) {
-                    include INCLUDES."buildlist.php";
-                }
                 addnotice('success', self::$locale['401']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
             case 'update':
-                include_once INCLUDES.'buildlist.php';
                 addnotice('success', self::$locale['465']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
@@ -136,19 +132,11 @@ class ImagesAdministration {
         $ifolder = check_get('ifolder') && get('ifolder', FILTER_SANITIZE_STRING) ? get('ifolder') : 'images';
 
         if (check_post('uploadimage')) {
-            $data = [
-                'myfile' => ''
-            ];
-
             if (fusion_safe()) {
                 if (!empty($_FILES['myfile'])) {
                     $upload = form_sanitizer($_FILES['myfile'], '', 'myfile');
 
                     if (!empty($upload) && $upload['error'] == 0) {
-                        $data['myfile'] = $upload['image_name'];
-                        if (self::$settings['tinymce_enabled'] == 1) {
-                            include INCLUDES."buildlist.php";
-                        }
                         if (fusion_safe()) {
                             addnotice('success', self::$locale['420']);
                             redirect(clean_request("", ["section"], FALSE));

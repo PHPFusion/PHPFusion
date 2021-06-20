@@ -121,7 +121,9 @@ $deleted_files = [
     INCLUDES.'dynamics/assets/password/lang/',
     INCLUDES.'dynamics/assets/fileinput/js/locales/',
     THEMES.'templates/switcher.php',
-    THEMES.'templates/tinymce.css'
+    THEMES.'templates/tinymce.css',
+    IMAGES.'imagelist.js',
+    INCLUDES.'buildlist.php'
 ];
 
 foreach ($deleted_files as $file) {

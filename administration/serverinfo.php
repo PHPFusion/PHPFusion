@@ -121,7 +121,6 @@ function folderpermission() {
         // path => have to be writeable or not
         'administration/db_backups/' => TRUE,
         'images/'                    => TRUE,
-        'images/imagelist.js'        => TRUE,
         'images/avatars/'            => TRUE,
         'images/smiley/'             => TRUE,
         'robots.txt'                 => TRUE,

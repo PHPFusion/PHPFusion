@@ -50,10 +50,7 @@ elFinder::$netDrivers['ftp'] = 'FTP';
  * @return bool|null
  **/
 function access($attr, $path, $data, $volume) {
-    return strpos(basename($path), '.') === 0 ||
-    strpos(basename($path), 'index.php') === 0 ||
-    strpos(basename($path), 'imagelist.js') === 0
-        ? !($attr == 'read' || $attr == 'write') : NULL;
+    return strpos(basename($path), '.') === 0 || strpos(basename($path), 'index.php') === 0 ? !($attr == 'read' || $attr == 'write') : NULL;
 }
 
 $site_url = fusion_get_settings('siteurl');

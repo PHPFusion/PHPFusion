@@ -234,7 +234,6 @@ class Requirements extends InstallCore {
             $root                                => TRUE,
             BASEDIR.'administration/db_backups/' => TRUE,
             BASEDIR.'images/'                    => TRUE,
-            BASEDIR.'images/imagelist.js'        => TRUE,
             BASEDIR.'images/avatars/'            => TRUE,
             BASEDIR.'images/smiley/'             => TRUE,
             BASEDIR.'robots.txt'                 => TRUE
