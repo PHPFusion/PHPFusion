@@ -17,25 +17,16 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (isset($_POST['g-recaptcha-response'])) {
+if (check_post('g-recaptcha-response')) {
     $settings = fusion_get_settings();
 
-    $context = stream_context_create([
-        'http' => [
-            'header'   => "Content-type: application/x-www-form-urlencoded\r\n",
-            'method'   => 'POST',
-            'content'  => http_build_query([
-                'secret'   => $settings['recaptcha_private'],
-                'response' => $_POST['g-recaptcha-response']
-            ]),
-            'remoteip' => $_SERVER['REMOTE_ADDR']
-        ]
-    ]);
+    require_once __DIR__.'/lib/autoload.php';
+    $recaptcha = new \ReCaptcha\ReCaptcha($settings['recaptcha_private']);
+    $recaptcha->setScoreThreshold($settings['recaptcha_score']);
+    $resp = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])
+        ->verify(post('g-recaptcha-response'), $_SERVER['REMOTE_ADDR']);
 
-    $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', FALSE, $context);
-    $resp = json_decode($response, TRUE);
-
-    if ($resp['success'] === TRUE && $resp['score'] >= $settings['recaptcha_score']) {
+    if ($resp->isSuccess()) {
         $_CAPTCHA_IS_VALID = TRUE;
     }
 }
