@@ -26,10 +26,21 @@ if (!defined('DB_POLLS')) {
 
 if (!defined("POLLS_LOCALE")) {
     if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php")) {
-    	define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php");
+        define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php");
     } else {
-    	define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/English/polls.php");
+        define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/English/polls.php");
     }
 }
 
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");
+
+if (defined('MEMBER_POLL_PANEL_EXISTS')) {
+    function polls_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", [':user_id' => $data['user_id']]);
+    }
+
+    /**
+     * @uses polls_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'polls_cron_job24h_users_data');
+}

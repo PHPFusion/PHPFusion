@@ -128,5 +128,17 @@ if (defined('ARTICLES_EXISTS')) {
         return $module;
     }
 
+    /**
+     * @uses articles_home_module()
+     */
     fusion_add_hook('home_modules', 'articles_home_module');
+
+    function articles_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name=:user_id", [':user_id' => $data['user_id']]);
+    }
+
+    /**
+     * @uses articles_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'articles_cron_job24h_users_data');
 }

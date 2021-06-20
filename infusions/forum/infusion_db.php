@@ -139,3 +139,25 @@ if (!defined("FORUM_TEMPLATES")) {
         'alias' => 'forum'
     ]
 ]);
+
+if (defined('FORUM_EXISTS')) {
+    function forum_cron_job24h() {
+        dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", [':notify_datestamp' => time() - 1209600]);
+    }
+
+    /**
+     * @uses forum_cron_job24h()
+     */
+    fusion_add_hook('cron_job24h', 'forum_cron_job24h');
+
+    function forum_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", [':user_id' => $data['user_id']]);
+        dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", [':user_id' => $data['user_id']]);
+        dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", [':user_id' => $data['user_id']]);
+    }
+
+    /**
+     * @uses forum_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'forum_cron_job24h_users_data');
+}

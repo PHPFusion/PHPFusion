@@ -172,5 +172,17 @@ if (defined('NEWS_EXISTS')) {
         return $module;
     }
 
+    /**
+     * @uses news_home_module()
+     */
     fusion_add_hook('home_modules', 'news_home_module');
+
+    function news_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_NEWS." WHERE news_name=:user_id", [':user_id' => $data['user_id']]);
+    }
+
+    /**
+     * @uses news_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'news_cron_job24h_users_data');
 }

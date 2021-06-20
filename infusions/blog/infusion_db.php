@@ -161,5 +161,8 @@ if (defined('BLOG_EXISTS')) {
         return $module;
     }
 
+    /**
+     * @uses blog_home_module()
+     */
     fusion_add_hook('home_modules', 'blog_home_module');
 }

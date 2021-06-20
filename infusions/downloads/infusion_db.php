@@ -141,5 +141,8 @@ if (defined('DOWNLOADS_EXISTS')) {
         return $module;
     }
 
+    /**
+     * @uses downloads_home_module()
+     */
     fusion_add_hook('home_modules', 'downloads_home_module');
 }
