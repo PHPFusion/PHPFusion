@@ -192,20 +192,34 @@ function check_panel_status($side) {
     }
 
     if (is_array($exclude_list)) {
-        $script_url = explode("/", $_SERVER['PHP_SELF']);
+        if (fusion_get_settings('site_seo')) {
+            $params = http_build_query(PHPFusion\Rewrite\Router::getRouterInstance()->get_FileParams());
+            $path = PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath();
+            $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
+            $script_url = explode("/", $file_path);
+        } else {
+            $script_url = explode("/", '/'.PERMALINK_CURRENT_PATH);
+        }
+
         $url_count = count($script_url);
-        $base_url_count = substr_count(BASEDIR, "/") + 1;
-        $match_url = "";
+        $base_url_count = substr_count(BASEDIR, "../") + 1;
+        $current_url = "";
         while ($base_url_count != 0) {
             $current = $url_count - $base_url_count;
-            $match_url .= "/".$script_url[$current];
+            $current_url .= "/".(!empty($script_url[$current]) ? $script_url[$current] : '');
             $base_url_count--;
         }
-        if (!in_array($match_url, $exclude_list) && !in_array($match_url.(FUSION_QUERY ? "?".FUSION_QUERY : ""), $exclude_list)) {
-            return TRUE;
-        } else {
-            return FALSE;
+
+        $url = [];
+        foreach ($exclude_list as $url_list) {
+            $url[] = $url_list;
+            if (wildcard_match($current_url, $url_list)) {
+                $url[] = $current_url;
+            }
         }
+
+
+        return !in_array($current_url, $url);
     } else {
         return TRUE;
     }
