@@ -320,7 +320,7 @@ class PageList extends PageAdmin {
 
             while ($pageData = dbarray($page_result)) {
                 $pageLanguage = '';
-                $pageLang = explode(".", $pageData['page_language']);
+                $pageLang = explode(",", $pageData['page_language']);
                 foreach ($pageLang as $languages) {
                     $pageLanguage .= "<span class='badge'>".translate_lang_names($languages)."</span>\n";
                 }

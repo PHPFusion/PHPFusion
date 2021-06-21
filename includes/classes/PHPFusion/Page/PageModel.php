@@ -138,7 +138,7 @@ class PageModel {
 
         $locale = fusion_get_locale("", LOCALE.LOCALESET."custom_pages.php");
 
-        $result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE page_language='".LANGUAGE."'" : "")." ORDER BY page_title");
+        $result = dbquery("SELECT page_id, page_title, page_language FROM ".DB_CUSTOM_PAGES." ".(multilang_table("CP") ? "WHERE ".in_group('page_language', LANGUAGE) : "")." ORDER BY page_title");
 
         echo "<div class='pull-right'>\n";
         echo openform('selectform', 'get', ADMIN.'custom_pages.php'.$aidlink);

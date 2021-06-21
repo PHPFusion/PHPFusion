@@ -56,7 +56,7 @@ class ComposeContent extends PageAdmin {
                         <div class="col-xs-9 col-sm-8">
                             <?php
                             if (multilang_table("CP")) {
-                                $page_lang = !empty(self::$data['page_language']) ? explode('.', self::$data['page_language']) : [];
+                                $page_lang = !empty(self::$data['page_language']) ? explode(',', self::$data['page_language']) : [];
                                 foreach (fusion_get_enabled_languages() as $language => $language_name) {
                                     echo form_checkbox('page_language[]', $language_name,
                                         in_array($language, $page_lang),
@@ -64,7 +64,6 @@ class ComposeContent extends PageAdmin {
                                             'class'         => 'm-b-0',
                                             'value'         => $language,
                                             'input_id'      => 'page_lang-'.$language,
-                                            "delimiter"     => ".",
                                             'reverse_label' => TRUE,
                                             'required'      => TRUE
                                         ]
