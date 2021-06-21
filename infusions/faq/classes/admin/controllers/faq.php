@@ -186,7 +186,7 @@ class FaqAdmin extends FaqAdminModel {
                 'faq_visibility' => sanitizer('faq_visibility', 0, 'faq_visibility'),
                 'faq_status'     => sanitizer('faq_status', 0, 'faq_status'),
                 'faq_breaks'     => "n",
-                'faq_language'   => sanitizer('faq_language', LANGUAGE, 'faq_language'),
+                'faq_language'   => sanitizer(['faq_language'], LANGUAGE, 'faq_language'),
             ];
 
             // Line Breaks
