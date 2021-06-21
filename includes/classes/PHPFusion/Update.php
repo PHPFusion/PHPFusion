@@ -39,8 +39,7 @@ class Update extends Installer\Infusions {
      *
      * @var string
      */
-    // private $update_url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/';
-    private $update_url = 'https://update.php-fusion.eu/'; // tmp url for testing
+    private $update_url = 'https://raw.githubusercontent.com/PHPFusion/Archive/updates/';
 
     /**
      * Version filename on the server
