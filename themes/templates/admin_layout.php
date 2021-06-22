@@ -114,9 +114,9 @@ if (!check_admin_pass('')) {
     add_to_jquery('
         function update_checker(force = false) {
             let force_update = force == true ? "&force=true" : "";
-            
+
             $.ajax({
-                url: "'.ADMIN.'includes/?api=update-checker" + force_update,
+                url: "'.ADMIN.'includes/?api=update-core" + force_update,
                 method: "get",
                 dataType: "json",
                 beforeSend: function () {

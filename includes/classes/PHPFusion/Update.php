@@ -588,6 +588,35 @@ class Update extends Installer\Infusions {
     }
 
     /**
+     * Ajax checker
+     */
+    public function ajaxChecker() {
+        $this->locale += fusion_get_locale('', LOCALE.LOCALESET.'admin/main.php');
+        $settings = fusion_get_settings();
+
+        if (
+            ($settings['update_checker'] == 1 && ($settings['update_last_checked'] < (time() - 21600))) || // check every 6 hours
+            (check_get('force') && get('force') == 'true')
+        ) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:time WHERE settings_name=:name", [':time' => time(), ':name' => 'update_last_checked']);
+
+            $version = $this->checkUpdate(TRUE);
+
+            if (!empty($version) && version_compare($version, $settings['version'], '>')) {
+                $text = sprintf($this->locale['new_update_avalaible'], $version);
+                $text .= ' <a class="btn btn-primary btn-sm m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">'.$this->locale['update_now'].'</a>';
+
+                $result = ['result' => $text];
+            } else {
+                $result = ['result' => $this->locale['U_006']];
+            }
+
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        }
+    }
+
+    /**
      * Set message
      *
      * @param $message

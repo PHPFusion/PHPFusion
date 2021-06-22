@@ -21,7 +21,7 @@ if (iADMIN) {
     $endpoints = [
         'sitelinks-list'     => 'sitelinks/sitelinks-list.php',
         'sitelinks-order'    => 'sitelinks/sitelinks-order.php',
-        'update-checker'     => 'update/update_checker.php',
+        'update-core'        => 'update_core.php',
         'cache-update'       => 'cache_update.php',
         'error-logs-updater' => 'error_logs_updater.php',
     ];
