@@ -149,7 +149,7 @@ if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOO
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap.min.js"></script>';
     }
 }
-
+echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
 // Output lines added with add_to_footer()
 global $fusion_page_footer_tags;
 echo $fusion_page_footer_tags;

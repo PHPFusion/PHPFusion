@@ -387,6 +387,116 @@ function run_admin(action, table_action, reset_table) {
     $(reset_table).submit();
 }
 
+/**
+ * NotificationAPI
+ * @param type
+ * @param title
+ * @param description
+ * @param icon
+ * @param url
+ * @param options
+ */
+let add_notice = function (type, title, description = "", icon = "", url = "#", options = {}) {
+
+    let default_options = {
+        // settings
+        element: 'body',
+        position: null,
+        type: type,
+        allow_dismiss: true,
+        newest_on_top: true,
+        showProgressbar: false,
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        offset: 100,
+        spacing: 10,
+        z_index: 99999,
+        delay: 2000,
+        timer: 1300,
+        url_target: '_blank',
+        mouse_over: null,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        onShow: null,
+        onShown: null,
+        onClose: null,
+        onClosed: null,
+        icon_type: 'class',
+        template: '<div data-notify="container" class="site-notification col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+            '<span data-notify="icon"></span> ' +
+            '<span data-notify="title">{1}</span> ' +
+            '<span data-notify="message">{2}</span>' +
+            '<div class="progress" data-notify="progressbar">' +
+            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+            '</div>' +
+            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '</div>'
+    };
+
+    options = $.extend({}, default_options, options);
+
+    $.notify({
+        // options
+        icon: icon,
+        title: title,
+        message: description,
+        url: url,
+        target: '_blank'
+    }, options);
+}
+
+/**
+ * Run this function to add showhide toggle plugin
+ *Usage: showhide();
+ */
+let showhide = function () {
+// Toggle Show
+    let showhideToggle = $("a[data-toggle='show-hide']");
+    if (showhideToggle.length) {
+        $.each(showhideToggle, function (key, value) {
+            let target = $(this).data("target"),
+                targetContainer = $(this).find(target);
+
+            $(this).append("<i class='far fa-angle-down m-l-10'></i>");
+
+            if (targetContainer.length) {
+                if (targetContainer.is('hidden')) {
+                    targetContainer.show();
+                } else {
+                    targetContainer.hide();
+                }
+            }
+
+        });
+    }
+    $(document).on("click", "a[data-toggle='show-hide']", function (ev) {
+        ev.preventDefault();
+        let target = $(this).data("target"),
+            icon = $(this).find('i'),
+            targetContainer = $(this).closest('.show-hide-wrapper').find(target);
+
+        if (icon.hasClass('fa-angle-down')) {
+            icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+        } else {
+            icon.removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+
+        if (targetContainer.length) {
+            if (targetContainer.is(':hidden')) {
+                targetContainer.show();
+            } else {
+                targetContainer.hide();
+            }
+        }
+    });
+}
+
+
 let BASEDIR = document.location.origin + site_path;
 let INFUSIONS = document.location.origin + "/infusions/";
 let INCLUDES = document.location.origin + "/includes/";
