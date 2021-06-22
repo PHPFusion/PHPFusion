@@ -17,23 +17,28 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-const ADMIN = BASEDIR."administration/";
-const CLASSES = BASEDIR."includes/classes/";
-const DYNAMICS = BASEDIR."includes/dynamics/";
-const INFUSIONS = BASEDIR."infusions/";
-const IMAGES = BASEDIR."images/";
-const INCLUDES = BASEDIR."includes/";
-const LOCALE = BASEDIR."locale/";
-const THEMES = BASEDIR."themes/";
-const ADMIN_THEMES = BASEDIR."themes/admin_themes/";
-const DB_HANDLERS = BASEDIR."includes/db_handlers/";
-const WIDGETS = BASEDIR."widgets/";
-define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
-define("USER_IP", $_SERVER['REMOTE_ADDR']);
+const ADMIN = BASEDIR.'administration/';
+const CLASSES = BASEDIR.'includes/classes/';
+const DYNAMICS = BASEDIR.'includes/dynamics/';
+const INFUSIONS = BASEDIR.'infusions/';
+const IMAGES = BASEDIR.'images/';
+const INCLUDES = BASEDIR.'includes/';
+const LOCALE = BASEDIR.'locale/';
+const THEMES = BASEDIR.'themes/';
+const TEMPLATES = BASEDIR.'themes/templates/';
+const FUSION_FOOTER = TEMPLATES.'footer.php';
+const FUSION_HEADER = TEMPLATES.'header.php';
+const FUSION_ADMIN_HEADER = TEMPLATES.'admin_header.php';
+const ADMIN_THEMES = BASEDIR.'themes/admin_themes/';
+const DB_HANDLERS = BASEDIR.'includes/db_handlers/';
+const WIDGETS = BASEDIR.'widgets/';
 
-// Define script start time
-define("START_TIME", microtime(TRUE));
-define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
+define('FUSION_IP', $_SERVER['REMOTE_ADDR']);
+define('QUOTES_GPC', (bool)ini_get('magic_quotes_gpc'));
+define('USER_IP', $_SERVER['REMOTE_ADDR']);
+define('START_TIME', microtime(TRUE));
+define('FUSION_ROOT_DIR', dirname(__DIR__).'/');
+define('TIME', time());
 
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
