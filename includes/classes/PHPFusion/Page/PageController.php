@@ -52,8 +52,8 @@ class PageController extends PageModel {
             // throw new \Exception('The form sanitizer could not handle the request! (input: '.$input_name.')');
             try {
                 $current_widget = self::$widgets[$colData['page_widget']]['display_instance'];
-                if (method_exists($current_widget, 'display_widget')) {
-                    return $current_widget->display_widget($colData);
+                if (method_exists($current_widget, 'displayWidget')) {
+                    return $current_widget->displayWidget($colData);
                 } else {
                     return $locale['page_405'];
                 }

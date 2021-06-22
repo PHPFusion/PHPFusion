@@ -72,8 +72,8 @@ interface WidgetAdminInterface {
      * We strongly recommend that you make both available to your user
      *
      * There are 2 acceptable button values - widget and settings
-     * 'widget' will pair with validate_input() function to return against 'page_content' column
-     * 'settings' will pair with validate_settings() function to return against 'page_options' column
+     * 'widget' will pair with validateInput() function to return against 'page_content' column
+     * 'settings' will pair with validateSettings() function to return against 'page_options' column
      *
      * @return mixed
      */

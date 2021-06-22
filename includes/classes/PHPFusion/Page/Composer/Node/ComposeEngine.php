@@ -86,8 +86,8 @@ class ComposeEngine extends PageAdmin {
                             // execute the widget delete
                             $currentWidget = self::$widgets[self::$colData['page_widget']];
                             $object = $currentWidget['admin_instance'];
-                            if (method_exists($object, 'validate_delete')) {
-                                $object->validate_delete();
+                            if (method_exists($object, 'validateDelete')) {
+                                $object->validateDelete();
                             }
 
                             dbquery("DELETE FROM ".DB_CUSTOM_PAGES_CONTENT." WHERE $delCondition");
@@ -437,15 +437,15 @@ class ComposeEngine extends PageAdmin {
 
                 // Override the content or the options - depending on the button pushed. Default is previous data.
                 if ($button_val == 'widget') {
-                    if (method_exists($object, 'validate_input')) {
-                        $input = $object->validate_input(); // will yield error
+                    if (method_exists($object, 'validateInput')) {
+                        $input = $object->validateInput(); // will yield error
                         if ($input && \Defender::unserialize($input)) {
                             self::$colData['page_content'] = $input;
                         }
                     }
                 } else if ($button_val == 'settings') {
-                    if (method_exists($object, 'validate_settings')) {
-                        $input = $object->validate_settings();
+                    if (method_exists($object, 'validateSettings')) {
+                        $input = $object->validateSettings();
                         if ($input && \Defender::unserialize($input)) {
                             self::$colData['page_options'] = $input;
                         }
@@ -474,9 +474,9 @@ class ComposeEngine extends PageAdmin {
                         addnotice('success', self::$locale['page_0409']);
                     }
 
-                    if (method_exists($object, 'exclude_return')) {
-                        if ($object->exclude_return()) {
-                            self::$composer_exclude = array_merge(self::$composer_exclude, $object->exclude_return());
+                    if (method_exists($object, 'excludeReturn')) {
+                        if ($object->excludeReturn()) {
+                            self::$composer_exclude = array_merge(self::$composer_exclude, $object->excludeReturn());
                         }
                     }
 
@@ -493,9 +493,9 @@ class ComposeEngine extends PageAdmin {
             }
 
             $object_button = form_button('save_widget', self::$locale['page_0355'], 'save_widget', ['class' => 'btn btn-primary']);
-            if (method_exists($object, 'display_form_button')) {
+            if (method_exists($object, 'displayFormButton')) {
                 ob_start();
-                $object->display_form_button();
+                $object->displayFormButton();
                 $object_button = ob_get_contents();
                 ob_end_clean();
             }
@@ -506,8 +506,8 @@ class ComposeEngine extends PageAdmin {
             <?php echo openform('widgetFrm', 'POST', FUSION_REQUEST, ["enctype" => TRUE]); ?>
             <div class="p-b-20 m-0 clearfix">
                 <?php
-                if (method_exists($object, 'display_form_input')) {
-                    $object->display_form_input();
+                if (method_exists($object, 'displayFormInput')) {
+                    $object->displayFormInput();
                 }
                 ?>
             </div>
