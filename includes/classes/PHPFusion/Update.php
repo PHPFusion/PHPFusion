@@ -225,7 +225,7 @@ class Update extends Installer\Infusions {
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 15);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         $update = curl_exec($curl);
 
         $success = TRUE;
