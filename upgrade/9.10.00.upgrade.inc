@@ -123,7 +123,9 @@ $deleted_files = [
     THEMES.'templates/switcher.php',
     THEMES.'templates/tinymce.css',
     IMAGES.'imagelist.js',
-    INCLUDES.'buildlist.php'
+    INCLUDES.'buildlist.php',
+    INCLUDES.'geomap/callingcodes.inc.php',
+    INCLUDES.'geomap/form_geomap.json.php',
 ];
 
 foreach ($deleted_files as $file) {
