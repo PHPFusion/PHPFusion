@@ -33,8 +33,15 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     $input_value = clean_input_value($input_value);
 
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $countries = [];
-    require(INCLUDES.'geomap/geomap.inc.php');
+    $states = [];
+
+    include INCLUDES.'geomap/geo.countries.php';
+    include INCLUDES.'geomap/geo.states.php';
+
+    $states[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
+    $states_array = json_encode($states);
 
     $id = trim($input_name, "[]");
 
@@ -132,10 +139,10 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     $html .= "<select name='".$input_name."[]' id='$input_id-country' style='width:100%;'>";
 
     $html .= "<option value=''></option>";
-    foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
-        $country_key = str_replace(" ", "-", $countryname);
-        $select = ($input_value[2] == $country_key) ? "selected" : '';
-        $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
+
+    foreach ($countries as $arv => $country) { // outputs: key, value, class - in order
+        $select = ($input_value[2] == $arv) ? "selected" : '';
+        $html .= "<option value='$arv' ".$select.">".translate_country_names($country['name'])."</option>";
     }
 
     $html .= "</select>";
@@ -209,8 +216,6 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
         ";
     }
 
-    $states_array[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
-    $states_array = json_encode($states_array);
 
     add_to_jquery("
     ".$flag_function."
@@ -228,7 +233,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     $('#".$input_id."-country').bind('change', function(){
         var ce_id = $(this).val();
         $.ajax({
-        url: '".fusion_get_settings('site_path')."includes/geomap/form_geomap.json.php',
+        url: '".fusion_get_settings('site_path')."includes/api/?api=geomap-states',
         type: 'GET',
         data: { id : ce_id },
         dataType: 'json',
@@ -308,7 +313,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
     $countries = [];
     if ($options['multiple'] == FALSE) {
-        require(INCLUDES.'geomap/geomap.inc.php');
+        require INCLUDES.'geomap/geo.countries.php';
     }
 
     // always trim id
@@ -373,10 +378,9 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
         $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".($options['width'] ? $options['width'] : $default_options['width'])."' />";
         $html .= "<option value=''></option>";
-        foreach ($countries as $arv => $countryname) { // outputs: key, value, class - in order
-            $country_key = str_replace(" ", "-", $countryname);
+        foreach ($countries as $country_key => $country) { // outputs: key, value, class - in order
             $select = ($input_value == $country_key) ? "selected" : '';
-            $html .= "<option value='$country_key' ".$select.">".translate_country_names($countryname)."</option>";
+            $html .= "<option value='$country_key' ".$select.">".translate_country_names($country['name'])."</option>";
         }
         $html .= "</select>";
 

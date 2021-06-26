@@ -39,6 +39,8 @@ function get_extended_endpoints() {
 $endpoints = [
         "username-check" => "username_validation.php",
         "userpass-check" => "userpass_validation.php",
+        'calling-codes'  => 'calling_codes.php', //get
+        'geomap-states'  => 'states.php' //get
     ]
     + get_extended_endpoints();
 
