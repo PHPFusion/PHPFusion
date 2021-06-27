@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: ajax_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 header("Cache-control: max-age=290304000, public");
-$tsstring = gmdate('D, d M Y H:i:s ', TIME).'GMT';
-$etag = LANGUAGE.TIME;
+$tsstring = gmdate('D, d M Y H:i:s ', time()).'GMT';
+$etag = LANGUAGE.time();
 $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : FALSE;
 $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : FALSE;
 if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
@@ -27,7 +26,7 @@ if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
     exit();
 } else {
     header("Last-Modified: $tsstring");
-    header("ETag: \"{$etag}\"");
+    header("ETag: \"$etag\"");
 }
 
 (fusion_safe() || exit);
@@ -35,7 +34,7 @@ if ((($if_none_match && $if_none_match == $etag) || (!$if_none_match)) &&
 /**
  * Sets a header type
  *
- * @param $value
+ * @param string $value
  */
 function header_content_type($value) {
     $output_type = [
