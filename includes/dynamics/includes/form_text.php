@@ -106,12 +106,14 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'append_html'        => '',
         'censor_words'       => TRUE,
         'password_toggle'    => FALSE,
-        'descript'           => TRUE
+        'descript'           => TRUE,
+        'mask'               => '', // http://igorescobar.github.io/jQuery-Mask-Plugin/docs.html#basic-usage
+        'mask_options'       => []
     ];
 
     $options += $default_options;
 
-    $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'];
+    $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week', 'ip'];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
@@ -176,8 +178,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             break;
         case 'price':
             $input_type = "text";
-            fusion_load_script(INCLUDES.'jquery/jquery-mask.js');
-            add_to_jquery("$('#".$options['input_id']."').mask('0,000,000,000,000.00', {reverse:true});");
+            $options['mask'] = '0,000,000,000,000.00';
+            $options['mask_options']['reverse'] = 'true';
+            break;
+        case 'ip':
+            $input_type = 'text';
+            $options['mask'] = '0ZZ.0ZZ.0ZZ.0ZZ';
+            $options['mask_options']['translation'] = '{\'Z\': {pattern: /[0-9]/, optional: true}}';
             break;
         case "password":
             $input_type = "password";
@@ -203,6 +210,25 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             break;
         default:
             $input_type = "text";
+    }
+
+    if (!empty($options['mask'])) {
+        if (!defined('JQ_MASK')) {
+            define('JQ_MASK', TRUE);
+            fusion_load_script(INCLUDES.'jquery/jquery-mask.min.js');
+        }
+
+        $mask_opts = [];
+        $opts = '';
+
+        if (!empty($options['mask_options'])) {
+            foreach ($options['mask_options'] as $name => $value) {
+                $mask_opts[] = $name.':'.$value;
+            }
+            $opts = ', {'.implode(',', $mask_opts).(!empty($mask_opts) ? ',' : '').'}';
+        }
+
+        add_to_jquery("$('#".$options['input_id']."').mask('".$options['mask']."' ".$opts.");");
     }
 
     // Fixes HTML DOM type number that does not respect max_length prop.
