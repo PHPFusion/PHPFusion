@@ -67,4 +67,7 @@ function xuserpass_validation() {
     die();
 }
 
+/**
+ * @uses xuserpass_validation()
+ */
 fusion_add_hook('fusion_filters', 'xuserpass_validation');

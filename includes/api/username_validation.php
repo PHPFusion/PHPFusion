@@ -49,4 +49,7 @@ function xusername_validation() {
     die();
 }
 
+/**
+ * @uses xusername_validation()
+ */
 fusion_add_hook('fusion_filters', 'xusername_validation');

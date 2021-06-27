@@ -997,24 +997,22 @@ function flatten_array(array $array) {
 /**
  * Short hand to build/combines an array
  *
- * @param array $array Initial array to create with keys named in a non multidimensional single array.
- *                     This will create a multidimensional blank array.
- *                     Example:
- *                     ['column', 'coumn2', 'column3']
-
+ * @param array $array  Initial array to create with keys named in a non multidimensional single array.
+ *                      This will create a multidimensional blank array.
+ *                      Example:
+ *                      ['column', 'coumn2', 'column3']
  * @param array $array2 Override. An array default value that consist of keys and defined values.
  *                      ['column' => 'default']
  *
  * @return array|false
  */
-function new_array(array $array, array $array2 = array()) {
+function new_array(array $array, array $array2 = []) {
     $new_arr = array_combine(array_keys(array_flip($array)), array_fill(0, count($array), ''));
     if (!empty($array2)) {
         $new_arr = array_merge($new_arr, $array2);
     }
     return $new_arr;
 }
-
 
 /**
  * Single column search.

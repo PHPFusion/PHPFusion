@@ -176,7 +176,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             break;
         case 'price':
             $input_type = "text";
-            fusion_load_script(INCLUDES.'jquery/jquery-mask.js');
+            fusion_load_script(INCLUDES.'jquery/jquery-mask.min.js');
             add_to_jquery("$('#".$options['input_id']."').mask('0,000,000,000,000.00', {reverse:true});");
             break;
         case "password":
