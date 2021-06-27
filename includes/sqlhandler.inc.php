@@ -995,6 +995,18 @@ function flatten_array(array $array) {
 }
 
 /**
+ * Short hand to build/combines an array
+ *
+ * @param array $keys
+ * @param array $values
+ *
+ * @return array
+ */
+function new_array(array $keys, array $values = array()) {
+    return flatten_array(array_map(function ($key, $value) { return [$key => $value]; }, $keys, $values));
+}
+
+/**
  * Single column search.
  * used to make searches on field
  * echo search_field(['admin_title', 'admin_link'], 'ac c d ghi');
