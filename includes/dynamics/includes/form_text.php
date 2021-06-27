@@ -105,15 +105,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-        'password_toggle'    => TRUE,
+        'password_toggle'    => FALSE,
         'descript'           => TRUE
     ];
 
     $options += $default_options;
 
-    $valid_types = [
-        'text', 'number', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'
-    ];
+    $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
@@ -131,6 +129,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     // Error messages based on settings
+    $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
+
     if ($options['type'] == 'password') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
     } else if ($options['type'] == 'email') {
@@ -174,9 +174,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         case "text":
             $input_type = "text";
             break;
+        case 'price':
+            $input_type = "text";
+            fusion_load_script(INCLUDES.'jquery/jquery-mask.js');
+            add_to_jquery("$('#".$options['input_id']."').mask('0,000,000,000,000.00', {reverse:true});");
+            break;
         case "password":
             $input_type = "password";
-
             if ($options['password_toggle'] == TRUE) {
                 if (!defined('PWTOGGLE')) {
                     define('PWTOGGLE', TRUE);
