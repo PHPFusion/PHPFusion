@@ -113,7 +113,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
     $options += $default_options;
 
-    $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week'];
+    $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week', 'ip'];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
 
@@ -181,6 +181,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $options['mask'] = '0,000,000,000,000.00';
             $options['mask_options']['reverse'] = 'true';
             break;
+        case 'ip':
+            $input_type = 'text';
+            $options['mask'] = '0ZZ.0ZZ.0ZZ.0ZZ';
+            $options['mask_options']['translation'] = '{\'Z\': {pattern: /[0-9]/, optional: true}}';
+            break;
         case "password":
             $input_type = "password";
             if ($options['password_toggle'] == TRUE) {
@@ -214,11 +219,15 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         }
 
         $mask_opts = [];
-        foreach ($options['mask_options'] as $name => $value) {
-            $mask_opts[] = $name.':'.$value;
+        $opts = '';
+
+        if (!empty($options['mask_options'])) {
+            foreach ($options['mask_options'] as $name => $value) {
+                $mask_opts[] = $name.':'.$value;
+            }
+            $opts = ', {'.implode(',', $mask_opts).(!empty($mask_opts) ? ',' : '').'}';
         }
 
-        $opts = ', {'.implode(',', $mask_opts).(!empty($mask_opts) ? ',' : '').'}';
         add_to_jquery("$('#".$options['input_id']."').mask('".$options['mask']."' ".$opts.");");
     }
 
