@@ -26,14 +26,12 @@ add_breadcrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title
 
 if (check_post('savesettings')) {
     $inputData = [
-        'shortdate'        => sanitizer('shortdate', '', 'shortdate'),
-        'longdate'         => sanitizer('longdate', '', 'longdate'),
-        'forumdate'        => sanitizer('forumdate', '', 'forumdate'),
-        'newsdate'         => sanitizer('newsdate', '', 'newsdate'),
-        'timeoffset'       => sanitizer('timeoffset', '', 'timeoffset'),
-        'serveroffset'     => sanitizer('serveroffset', '', 'serveroffset'),
-        'default_timezone' => sanitizer('default_timezone', '', 'default_timezone'),
-        'week_start'       => sanitizer('week_start', 0, 'week_start')
+        'shortdate'  => sanitizer('shortdate', '', 'shortdate'),
+        'longdate'   => sanitizer('longdate', '', 'longdate'),
+        'forumdate'  => sanitizer('forumdate', '', 'forumdate'),
+        'newsdate'   => sanitizer('newsdate', '', 'newsdate'),
+        'timeoffset' => sanitizer('timeoffset', '', 'timeoffset'),
+        'week_start' => sanitizer('week_start', 0, 'week_start')
     ];
 
     if (fusion_safe()) {
@@ -74,31 +72,12 @@ echo "<div class='row'>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo '<div>';
-echo '<span class="strong">'.$locale['458'].' ('.$locale['459'].')</span>';
-echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['serveroffset']]).'</span>';
-echo '</div>';
-echo '<hr class="m-t-5 m-b-5">';
-echo '<div>';
-echo '<span class="strong">'.$locale['458'].' ('.$locale['460'].')</span>';
-echo '<span class="pull-right">'.(column_exists('users', 'user_timezone') ? showdate($settings['longdate'], time(), ['tz_override' => fusion_get_userdata('user_timezone')]) : $locale['na']).'</span>';
-echo '</div>';
-echo '<hr class="m-t-5 m-b-5">';
-echo '<div>';
-echo '<span class="strong">'.$locale['458'].' ('.$locale['461'].')</span>';
+echo '<span class="strong">'.$locale['458'].' ('.$locale['464'].')</span>';
 echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['timeoffset']]).'</span>';
-echo '</div>';
-echo '<hr class="m-t-5 m-b-5">';
-echo '<div>';
-echo '<span class="strong">'.$locale['458'].' ('.$locale['466'].')</span>';
-echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['default_timezone']]).'</span>';
-echo '</div>';
 closeside();
 
 openside('');
-echo form_select('serveroffset', $locale['463'], $settings['serveroffset'], ['options' => $timezone_array]);
-echo form_select('timeoffset', $locale['456'], $settings['timeoffset'], ['options' => $timezone_array]);
-echo form_select('default_timezone', $locale['464'], $settings['default_timezone'], ['options' => $timezone_array]);
+echo form_select('timeoffset', $locale['464'], $settings['timeoffset'], ['options' => $timezone_array]);
 closeside();
 
 openside('');

@@ -92,7 +92,6 @@ if (db_exists(DB_SETTINGS)) {
         'theme'              => 'Magazine',
         'rendertime_enabled' => '0',
         'timeoffset'         => 'Europe/London',
-        'serveroffset'       => 'Europe/London',
         'opening_page'       => 'home.php',
         'captcha'            => 'securimage3',
         'admin_theme'        => 'AdminLTE',

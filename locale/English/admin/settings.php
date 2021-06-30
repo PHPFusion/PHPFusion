@@ -68,17 +68,12 @@ $locale['452'] = "Long date format:";
 $locale['453'] = "Forum date format:";
 
 $locale['455'] = "-- Select a Format --";
-$locale['456'] = "Guests offset";
+
 $locale['457'] = "News &amp; Articles date format:";
 $locale['458'] = "Time";
-$locale['459'] = "Server";
-$locale['460'] = "You";
-$locale['461'] = "Guests";
-$locale['462'] = "Server offset";
-$locale['463'] = "Set this so server time is GMT 0";
+
 $locale['464'] = "Default timezone";
 $locale['465'] = "First day of week";
-$locale['466'] = "Default for New Users";
 
 // Registration Settings
 $locale['550'] = "Registration";

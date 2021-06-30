@@ -65,7 +65,6 @@ $_check_post_remember = check_post("remember_me");
 
 // Settings dependent functions
 date_default_timezone_set('UTC');
-//date_default_timezone_set($settings['default_timezone']);
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.

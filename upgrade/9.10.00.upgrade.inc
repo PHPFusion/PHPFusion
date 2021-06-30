@@ -48,7 +48,9 @@ $delete_settings_tbl = [
     'subheaderdate',
     'bootstrap',
     'entypo',
-    'fontawesome'
+    'fontawesome',
+    'serveroffset',
+    'default_timezone',
 ];
 
 foreach ($delete_settings_tbl as $value) {

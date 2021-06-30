@@ -188,10 +188,6 @@ class CoreSettings {
                     'settings_value' => 'Europe/London'
                 ],
                 [
-                    'settings_name'  => 'serveroffset',
-                    'settings_value' => 'Europe/London',
-                ],
-                [
                     'settings_name'  => 'week_start',
                     'settings_value' => 0
                 ],
@@ -394,10 +390,6 @@ class CoreSettings {
                 [
                     'settings_name'  => 'password_algorithm',
                     'settings_value' => 'sha256'
-                ],
-                [
-                    'settings_name'  => 'default_timezone',
-                    'settings_value' => 'Europe/London'
                 ],
                 [
                     'settings_name'  => 'username_change',

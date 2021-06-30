@@ -197,10 +197,10 @@ class AdminSetup extends InstallCore {
     private function setup() {
 
         self::$site_data = [
-            'sitename'         => fusion_get_settings('sitename'),
-            'siteemail'        => fusion_get_settings('siteemail'),
-            'siteusername'     => fusion_get_settings('siteusername'),
-            'default_timezone' => fusion_get_settings('default_timezone'),
+            'sitename'     => fusion_get_settings('sitename'),
+            'siteemail'    => fusion_get_settings('siteemail'),
+            'siteusername' => fusion_get_settings('siteusername'),
+            'timeoffset'   => fusion_get_settings('timeoffset'),
         ];
 
         $this->update();
@@ -235,7 +235,7 @@ class AdminSetup extends InstallCore {
             $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
         }
 
-        $content .= form_select('default_timezone', self::$locale['setup_1511'], self::$site_data['default_timezone'], ['options' => $timezone_array, 'required' => TRUE, 'inline' => TRUE]);
+        $content .= form_select('timeoffset', self::$locale['setup_1511'], self::$site_data['timeoffset'], ['options' => $timezone_array, 'required' => TRUE, 'inline' => TRUE]);
 
         $content .= "<h4 class='title'>".self::$locale['setup_1500']."</h4><p>".self::$locale['setup_1501']."</p>\n";
         $content .= "<hr />\n";
@@ -357,7 +357,7 @@ class AdminSetup extends InstallCore {
 
                 if (fusion_safe()) {
 
-                    self::$user_data['user_timezone'] = self::$site_data['default_timezone'];
+                    self::$user_data['user_timezone'] = self::$site_data['timeoffset'];
                     $batch_core = Batch::getInstance();
                     // Create Super Admin
                     if (dbcount("(user_id)", DB_PREFIX."users", "user_id='1'")) {
@@ -371,9 +371,7 @@ class AdminSetup extends InstallCore {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['sitename']."' WHERE settings_name='sitename'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['siteemail']."' WHERE settings_name='siteemail'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".$enabled_lang."' WHERE settings_name='enabled_languages'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='default_timezone'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='timeoffset'");
-                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['default_timezone']."' WHERE settings_name='serveroffset'");
+                    dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['timeoffset']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['siteusername']."' WHERE settings_name='siteusername'");
 
                     if (strpos($enabled_lang, '.')) {
@@ -478,7 +476,7 @@ class AdminSetup extends InstallCore {
             'siteemail'         => stripinput($_POST['siteemail']),
             'enabled_languages' => stripinput((isset($_POST['enabled_languages']) ? $_POST['enabled_languages'] : '')),
             'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername')),
-            'default_timezone'  => stripinput(filter_input(INPUT_POST, 'default_timezone'))
+            'timeoffset'        => stripinput(filter_input(INPUT_POST, 'timeoffset'))
         ];
     }
 }
