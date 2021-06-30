@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: update_core.php
+| Filename: update_checker.php
 | Author: RobiNN
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,14 +18,14 @@
 defined('IN_FUSION') || exit;
 
 /**
- * Ajax core updates
+ * Ajax update checker
  */
-function ajax_update_core() {
+function ajax_update_checker() {
     $update = new PHPFusion\Update();
     $update->ajaxChecker();
 }
 
 /**
- * @uses ajax_update_core()
+ * @uses ajax_update_checker()
  */
-fusion_add_hook('fusion_admin_hooks', 'ajax_update_core');
+fusion_add_hook('fusion_admin_hooks', 'ajax_update_checker');

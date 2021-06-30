@@ -37,10 +37,15 @@ add_to_jquery('
         e.preventDefault();
         update_checker(true);
     });
+    
+    $("#updatelocales").on("click", function (e) {
+        e.preventDefault();
+        update_locales();
+    });
 ');
 
 if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
-    echo '<a class="btn btn-primary m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&updatelocales=true">'.$locale['U_016'].'</a>';
+    echo '<a class="btn btn-primary m-l-10" href="#" id="updatelocales"><i class="fa fa-sync fa-spin" style="display:none;"></i> '.$locale['U_016'].'</a>';
 }
 
 echo '</div>';
@@ -64,23 +69,7 @@ if ($update->newVersionAvailable()) {
     echo '<p class="m-t-10">'.$locale['U_008'].'</p>';
 }
 
-if (is_array($update->getEnabledLanguages())) {
-    echo '<div class="m-t-20 m-b-10">';
-    if (check_get('updatelocales')) {
-        if ($update->updateLocales() == TRUE) {
-            echo $locale['U_017'];
-        }
-    }
-    echo '</div>';
-}
-
-if (!empty($update->getMessages())) {
-    echo '<div>';
-    foreach ($update->getMessages() as $message) {
-        echo $message.'<br>';
-    }
-    echo '</div>';
-}
+echo '<div class="m-t-20" id="update-results"></div>';
 
 closetable();
 require_once THEMES.'templates/footer.php';

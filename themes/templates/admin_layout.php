@@ -111,26 +111,8 @@ if (!check_admin_pass('')) {
         render_admin_login();
     }
 } else {
-    add_to_jquery('
-        function update_checker(force = false) {
-            let force_update = force == true ? "&force=true" : "";
+    echo '<script src="'.ADMIN.'includes/update/update.js?v='.filemtime(ADMIN.'includes/update/update.js').'"></script>';
 
-            $.ajax({
-                url: "'.ADMIN.'includes/?api=update-core" + force_update,
-                method: "get",
-                dataType: "json",
-                beforeSend: function () {
-                    $("#forceupdate > i").show();
-                },
-                success: function (e) {
-                    $("#updatechecker_result").html(e.result).show();
-                },
-                complete: function () {
-                    $("#forceupdate > i").hide();
-                }
-            });
-        }
-    ');
     if ($settings['update_checker'] == 1) {
         add_to_jquery('
             update_checker();

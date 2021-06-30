@@ -589,6 +589,34 @@ class Update extends Installer\Infusions {
     }
 
     /**
+     * Download core
+     *
+     * @return bool
+     */
+    public function downloadCore() {
+        if (empty($this->temp_dir) || !is_dir($this->temp_dir) || !is_writable($this->temp_dir)) {
+            $this->setError(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->temp_dir));
+            return FALSE;
+        }
+
+        if (empty($this->install_dir) || !is_dir($this->install_dir) || !is_writable($this->install_dir)) {
+            $this->setError(sprintf('Install directory "%s" does not exist or is not writeable!', $this->install_dir));
+            return FALSE;
+        }
+
+        $update_zip_file = $this->temp_dir.$this->update['version'].'.zip';
+
+        if (!is_file($update_zip_file)) {
+            if (!$this->downloadZip($this->update['url'], $update_zip_file)) {
+                $this->setError(sprintf('Failed to download update from %s to %s!', $this->update['url'], $update_zip_file));
+                return FALSE;
+            }
+        }
+
+        return TRUE;
+    }
+
+    /**
      * Ajax checker
      */
     public function ajaxChecker() {
@@ -614,6 +642,17 @@ class Update extends Installer\Infusions {
 
             header('Content-Type: application/json');
             echo json_encode($result);
+        }
+    }
+
+    /**
+     * Update languages
+     */
+    public function updateLangs() {
+        if (is_array($this->getEnabledLanguages())) {
+            if ($this->updateLocales() == TRUE) {
+                $this->setMessage($this->locale['U_017']);
+            }
         }
     }
 
