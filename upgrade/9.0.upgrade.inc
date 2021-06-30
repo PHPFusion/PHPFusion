@@ -429,6 +429,12 @@ if (db_exists(DB_USER_FIELDS)) {
         }
     }
 
+    if (column_exists('users', 'user_timezone')) {
+        if (!isset($previous_install['user_timezone'])) {
+            $uf_to_install[] = "('".$locale['uf_timezone']."', 'user_timezone', '4', 'file', '', '', '6', '', '')";
+        }
+    }
+
     if (column_exists('users', 'user_theme')) {
         $inf_updatedbrow[] = DB_USERS." SET user_theme='Default'";
         if (!isset($previous_install['user_theme'])) {
