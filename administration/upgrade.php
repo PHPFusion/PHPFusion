@@ -22,6 +22,9 @@ pageaccess('U');
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
 $settings = fusion_get_settings();
 
+add_to_jquery('$("#updatechecker_result").hide();');
+add_to_footer('<script>let locale = '.json_encode($locale).'</script>');
+
 add_breadcrumb(['link' => ADMIN.'upgrade.php'.fusion_get_aidlink(), 'title' => $locale['U_000']]);
 
 opentable($locale['U_000']);
@@ -30,43 +33,28 @@ $update = new PHPFusion\Update();
 
 echo '<div class="m-b-20">';
 echo sprintf($locale['U_002'], showdate('longdate', $settings['update_last_checked']));
-echo '<a href="#" id="forceupdate" class="m-l-10 btn btn-default"><i class="fa fa-sync fa-spin" style="display:none;"></i> '.$locale['U_003'].'</a>';
-
-add_to_jquery('
-    $("#forceupdate").on("click", function (e) {
-        e.preventDefault();
-        update_checker(true);
-    });
-    
-    $("#updatelocales").on("click", function (e) {
-        e.preventDefault();
-        update_locales();
-    });
-');
+echo '<a href="#" id="forceupdate" class="m-l-10 btn btn-default"><i class="fas fa-sync fa-spin" style="display:none;"></i> '.$locale['U_003'].'</a>';
 
 if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
-    echo '<a class="btn btn-primary m-l-10" href="#" id="updatelocales"><i class="fa fa-sync fa-spin" style="display:none;"></i> '.$locale['U_016'].'</a>';
+    echo '<a class="btn btn-primary m-l-10" href="#" id="updatelocales"><i class="fas fa-sync fa-spin" style="display:none;"></i> '.$locale['U_016'].'</a>';
 }
-
 echo '</div>';
 
 $update_result = $update->checkUpdate();
 
 if ($update_result === FALSE) {
     echo '<h5 class="strong m-t-20">'.$locale['U_005'].'</h5>';
-}
-
-if ($update->newVersionAvailable()) {
-    if (check_get('proceed')) {
-        $update->upgradeCms();
-    } else {
+} else {
+    if ($update->newVersionAvailable()) {
+        echo '<div id="new_update_box">';
         echo alert($locale['U_001'], ['class' => 'alert-info']);
         echo '<h4 class="strong m-t-20">'.$locale['U_004'].'</h4>';
         echo '<p>'.sprintf($locale['U_007'], $update->getLatestVersion()).'</p>';
-        echo '<a class="btn btn-primary" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'&proceed=true">'.$locale['update_now'].'</a>';
+        echo '<a class="btn btn-primary" href="#" id="updatecore">'.$locale['update_now'].'</a>';
+        echo '</div>';
+    } else {
+        echo '<p class="m-t-10">'.$locale['U_008'].'</p>';
     }
-} else {
-    echo '<p class="m-t-10">'.$locale['U_008'].'</p>';
 }
 
 echo '<div class="m-t-20" id="update-results"></div>';

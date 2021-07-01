@@ -425,21 +425,21 @@ class Update extends Installer\Infusions {
     }
 
     /**
-     * Update locales
+     * Update languages
      *
      * @return bool
      */
-    public function updateLocales() {
+    public function updateLanguages() {
         $enabled_languages = $this->getEnabledLanguages();
 
         if (is_array($enabled_languages)) {
-            $this->setMessage($this->locale['U_013']);
-
             foreach ($enabled_languages as $language) {
                 if ($language !== 'English') {
                     $this->downloadLanguage($language);
                 }
             }
+
+            $this->setMessage($this->locale['U_017']);
 
             return TRUE;
         }
@@ -526,7 +526,7 @@ class Update extends Installer\Infusions {
             }
 
             if (is_array($this->getEnabledLanguages())) {
-                if (!$this->updateLocales()) {
+                if (!$this->updateLanguages()) {
                     $this->setError('An error occurred while updating the translations. After the update, you can update the translations separately.');
                 }
             }
@@ -543,18 +543,22 @@ class Update extends Installer\Infusions {
             if (file_exists(BASEDIR.'install.php')) {
                 @unlink(BASEDIR.'install.php');
             }
+
+            return TRUE;
         }
 
-        return TRUE;
+        return NULL;
     }
 
     /**
      * Run upgrade
      */
     public function upgradeCms() {
-        if ($this->updateCoreFiles() == TRUE) {
+        $result = $this->updateCoreFiles();
+
+        if ($result == TRUE) {
             $this->setMessage($this->locale['U_014']);
-        } else {
+        } else if ($result == FALSE) {
             $this->setMessage($this->locale['U_015']);
         }
     }
@@ -589,34 +593,6 @@ class Update extends Installer\Infusions {
     }
 
     /**
-     * Download core
-     *
-     * @return bool
-     */
-    public function downloadCore() {
-        if (empty($this->temp_dir) || !is_dir($this->temp_dir) || !is_writable($this->temp_dir)) {
-            $this->setError(sprintf('Temporary directory "%s" does not exist or is not writeable!', $this->temp_dir));
-            return FALSE;
-        }
-
-        if (empty($this->install_dir) || !is_dir($this->install_dir) || !is_writable($this->install_dir)) {
-            $this->setError(sprintf('Install directory "%s" does not exist or is not writeable!', $this->install_dir));
-            return FALSE;
-        }
-
-        $update_zip_file = $this->temp_dir.$this->update['version'].'.zip';
-
-        if (!is_file($update_zip_file)) {
-            if (!$this->downloadZip($this->update['url'], $update_zip_file)) {
-                $this->setError(sprintf('Failed to download update from %s to %s!', $this->update['url'], $update_zip_file));
-                return FALSE;
-            }
-        }
-
-        return TRUE;
-    }
-
-    /**
      * Ajax checker
      */
     public function ajaxChecker() {
@@ -642,17 +618,6 @@ class Update extends Installer\Infusions {
 
             header('Content-Type: application/json');
             echo json_encode($result);
-        }
-    }
-
-    /**
-     * Update languages
-     */
-    public function updateLangs() {
-        if (is_array($this->getEnabledLanguages())) {
-            if ($this->updateLocales() == TRUE) {
-                $this->setMessage($this->locale['U_017']);
-            }
         }
     }
 

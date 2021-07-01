@@ -26,10 +26,14 @@ function ajax_update_core() {
 
     if (get('step')) {
         switch (get('step')) {
-            case 'download_core':
-                break;
             case 'update_langs':
-                $update->updateLangs();
+                $update->updateLanguages();
+                break;
+            case 'update_core':
+                $update->checkUpdate();
+                $update->upgradeCms();
+                break;
+            default:
                 break;
         }
     }
