@@ -105,7 +105,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'data'               => [],
         'append_html'        => '',
         'censor_words'       => TRUE,
-        'password_toggle'    => FALSE,
+        'password_toggle'    => TRUE,
         'descript'           => TRUE,
         'mask'               => '', // http://igorescobar.github.io/jQuery-Mask-Plugin/docs.html#basic-usage
         'mask_options'       => []
