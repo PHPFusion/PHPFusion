@@ -696,4 +696,12 @@ class Router extends RewriteDriver {
     public function getCurrentURL() {
         return $this->file_path.(!empty($this->get_parameters) ? '?'.http_build_query($this->get_parameters, '', '&amp;') : '');
     }
+
+    /**
+     * @return array
+     * @deprecated use getFileParams()
+     */
+    public function get_FileParams() {
+        return $this->get_parameters;
+    }
 }
