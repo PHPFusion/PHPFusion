@@ -59,7 +59,8 @@ class RedisCache implements ICache {
 
             try {
                 $this->redis->connect($host, $port);
-            } catch (\Exception $exception) {
+            } catch (\Exception $e) {
+                set_error(E_CORE_WARNING, $e->getMessage(), $e->getFile(), $e->getLine());
                 $this->connection = FALSE;
             }
 
