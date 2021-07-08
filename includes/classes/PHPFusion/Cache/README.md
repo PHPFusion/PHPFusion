@@ -3,31 +3,23 @@
 __Usage__
 
 ```php
-use PHPFusion\Cache\Cache;
+$cache = new PHPFusion\Cache\Cache();
 
-$cache = new Cache();
 print_p($cache->getStorageType()); // Return current storage type
 
-$key = 'item';
+if ($cache->isConnected()) {
+    $key = 'item';
 
-// Cache::getInstance()->set($key, 'testvalue');
+    if (!empty($cache->get($key))) {
+        print_p($cache->get($key));
+    } else {
+        $data = 'itemvalue';
+        $cache->set($key, $data);
+        
+        print_p($data);
+    }
 
-$cache->set($key, 'itemvalue');
-
-print_p($cache->get($key));
-
-$cache->delete($key); // Delete by key
-$cache->flush(); // Purge whole cache
-```
-
-Add this to the includes/config.inc.php
-```php
-$config_inc = [
-    'cache' => [
-        'storage'        => 'file', // file|redis|memcache
-        'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']
-        'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']
-        'path'           => BASEDIR.'cache/' // for FileCache
-    ]
-];
+    $cache->delete($key); // Delete by key
+    $cache->flush(); // Purge whole cache
+}
 ```

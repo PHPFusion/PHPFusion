@@ -32,6 +32,11 @@ class RedisCache implements ICache {
     private $redis;
 
     /**
+     * @var bool
+     */
+    private $connection = TRUE;
+
+    /**
      * RedisCache constructor.
      *
      * @param array $config
@@ -52,8 +57,10 @@ class RedisCache implements ICache {
             $port = ($port !== NULL) ? $port : 6379;
             $database = ($database !== NULL) ? $database : 0;
 
-            if ($this->redis->connect($host, $port) === FALSE) {
-                throw new CacheException('Could not connect to Redis server. Please check host and port.');
+            try {
+                $this->redis->connect($host, $port);
+            } catch (\Exception $exception) {
+                $this->connection = FALSE;
             }
 
             if ($password != NULL && $this->redis->auth($password) === FALSE) {
@@ -64,6 +71,15 @@ class RedisCache implements ICache {
                 throw new CacheException('Could not select Redis database. Please check database setting.');
             }
         }
+    }
+
+    /**
+     * Check connection
+     *
+     * @return bool
+     */
+    public function isConnected() {
+        return $this->connection;
     }
 
     /**

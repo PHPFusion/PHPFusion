@@ -136,6 +136,15 @@ class Cache {
     }
 
     /**
+     * Check connection
+     *
+     * @return mixed
+     */
+    public function isConnected() {
+        return $this->cache->isConnected();
+    }
+
+    /**
      * Save data in cache
      *
      * @param string $key cache key

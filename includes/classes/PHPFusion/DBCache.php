@@ -100,28 +100,40 @@ class DBCache {
 
         self::$array_counter = 0;
 
-        if (!empty(Cache::getInstance()->get($key))) {
-            return Cache::getInstance()->get($key);
-        }
+        if (Cache::getInstance()->isConnected()) {
+            if (!empty(Cache::getInstance()->get($key))) {
+                return Cache::getInstance()->get($key);
+            }
 
-        try {
+            try {
+                $dbfactory = DatabaseFactory::getConnection(self::$connect_id);
+
+                $query = $dbfactory->query($query, $parameters);
+
+                $cache = [
+                    "rows"     => $dbfactory->countRows($query),
+                    "array"    => $dbfactory->fetchAllAssoc($query),
+                    "arraynum" => $dbfactory->fetchRow($query)
+                ];
+
+                Cache::getInstance()->set($key, $cache, $this->seconds);
+
+                return $cache;
+            } catch (\Exception $e) {
+                set_error(E_CORE_WARNING, $e->getMessage(), $e->getFile(), $e->getLine());
+
+                return NULL;
+            }
+        } else {
             $dbfactory = DatabaseFactory::getConnection(self::$connect_id);
 
             $query = $dbfactory->query($query, $parameters);
 
-            $cache = [
+            return [
                 "rows"     => $dbfactory->countRows($query),
                 "array"    => $dbfactory->fetchAllAssoc($query),
                 "arraynum" => $dbfactory->fetchRow($query)
             ];
-
-            Cache::getInstance()->set($key, $cache, $this->seconds);
-
-            return $cache;
-        } catch (\Exception $e) {
-            set_error(E_CORE_WARNING, $e->getMessage(), $e->getFile(), $e->getLine());
-
-            return NULL;
         }
     }
 

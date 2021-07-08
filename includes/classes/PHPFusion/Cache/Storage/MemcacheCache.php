@@ -34,6 +34,11 @@ class MemcacheCache implements ICache {
     /**
      * @var bool
      */
+    private $connection = TRUE;
+
+    /**
+     * @var bool
+     */
     private $is_memcached = FALSE;
 
     /**
@@ -53,8 +58,6 @@ class MemcacheCache implements ICache {
             throw new CacheException('Failed to load Memcached or Memcache Class.');
         }
 
-        $available = 0;
-
         foreach ($config['memcache_hosts'] as $host) {
             if (substr($host, 0, 7) != 'unix://') {
                 list($host, $port) = explode(':', $host);
@@ -65,18 +68,20 @@ class MemcacheCache implements ICache {
                 $port = 0;
             }
 
-            $available += (int)$this->memcache->addServer($host, $port);
-        }
+            $this->memcache->addServer($host, $port);
 
-        $this->memcache->increment('connection', 1);
-
-        if (!$available) {
-            $this->memcache = FALSE;
+            $stats = $this->memcache->getStats();
+            $this->connection = isset($stats) && $stats['pid'] > 0;
         }
+    }
 
-        if (!$this->memcache) {
-            throw new CacheException('Failed to connect to Memcache server. Please check host and port.');
-        }
+    /**
+     * Check connection
+     *
+     * @return bool
+     */
+    public function isConnected() {
+        return $this->connection;
     }
 
     /**

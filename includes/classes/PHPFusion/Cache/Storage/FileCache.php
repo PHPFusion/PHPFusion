@@ -44,6 +44,15 @@ class FileCache implements ICache {
     }
 
     /**
+     * Check connection
+     *
+     * @return bool
+     */
+    public function isConnected() {
+        return is_writable($this->path);
+    }
+
+    /**
      * Save data in cache
      *
      * @param string $key cache key

@@ -19,6 +19,13 @@ namespace PHPFusion\Cache;
 
 interface ICache {
     /**
+     * Check connection
+     *
+     * @return mixed|bool
+     */
+    public function isConnected();
+
+    /**
      * Save data in cache
      *
      * @param string $key cache key
