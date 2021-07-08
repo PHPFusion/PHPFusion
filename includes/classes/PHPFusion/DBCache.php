@@ -70,14 +70,18 @@ class DBCache {
      * Clears out all cached results
      */
     public function flush() {
-        Cache::getInstance()->flush();
+        if (Cache::getInstance()->isConnected()) {
+            Cache::getInstance()->flush();
+        }
     }
 
     /**
      * @param string $key
      */
     public function delete($key) {
-        Cache::getInstance()->delete($key);
+        if (Cache::getInstance()->isConnected()) {
+            Cache::getInstance()->delete($key);
+        }
     }
 
     /**
