@@ -149,7 +149,9 @@ class Panels {
                         if (is_file(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
                             include INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php";
                         } else {
-                            addnotice("error", sprintf($locale["global_130"], $panelData["panel_name"]));
+                            if (iADMIN) {
+                                addnotice('warning', sprintf($locale["global_130"], $panelData["panel_name"]));
+                            }
                         }
                     } else {
                         if (fusion_get_settings("allow_php_exe")) {
@@ -316,7 +318,9 @@ class Panels {
                                     if (is_file($file_path)) {
                                         include $file_path;
                                     } else {
-                                        addnotice('warning', sprintf($locale['global_130'], $p_data['panel_name']));
+                                        if (iADMIN) {
+                                            addnotice('warning', sprintf($locale['global_130'], $p_data['panel_name']));
+                                        }
                                     }
                                 } else {
                                     if (fusion_get_settings("allow_php_exe")) {
