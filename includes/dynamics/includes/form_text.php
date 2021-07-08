@@ -47,15 +47,15 @@
  */
 
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
-    
+
     $locale = fusion_get_locale();
-    
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    
+
     $input_id = trim(str_replace("[", "-", $input_name), "]");
-    
+
     $input_value = clean_input_value($input_value);
-    
+
     $default_options = [
         'type'               => 'text',
         'required'           => FALSE,
@@ -109,29 +109,29 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'mask'               => '', // http://igorescobar.github.io/jQuery-Mask-Plugin/docs.html#basic-usage
         'mask_options'       => []
     ];
-    
+
     $options += $default_options;
 
     $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week', 'ip'];
 
     $options['type'] = in_array($options['type'], $valid_types) ? $options['type'] : 'text';
-    
+
     $options += [
         'append_button_name'  => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'prepend_button_name' => !empty($options['append_button_name']) ? $options['append_button_name'] : "p-submit-".$options['input_id'],
         'append_button_id'    => !empty($options['append_button_id']) ? $options['append_button_id'] : $options['input_id'].'-append-btn',
         'prepend_button_id'   => !empty($options['prepend_button_id']) ? $options['prepend_button_id'] : $options['input_id'].'-prepend-btn',
     ];
-    
+
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
             $options_data[] = "data-$b='$a'";
         }, $options_data);
     }
-    
+
     // Error messages based on settings
     $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
-    
+
     if ($options['type'] == 'password') {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_password'] : $options['error_text'];
     } else if ($options['type'] == 'email') {
@@ -147,7 +147,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     } else {
         $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
     }
-    
+
     $error_class = "";
     if (\Defender::inputHasError($input_name)) {
         $error_class = " has-error";
@@ -156,11 +156,11 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            
+
             addnotice("danger", $options['error_text']);
         }
     }
-    
+
     $min = '';
     $max = '';
     $step = '';
@@ -192,7 +192,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
                     define('PWTOGGLE', TRUE);
                     add_to_footer("<script>function togglePasswordInput(button_id, field_id) {var button=$('#'+button_id);var input=$('#'+field_id);if(input.attr('type')=='password'){input.attr('type','text');button.text('".$locale['hide']."');}else{input.attr('type','password');button.text('".$locale['show']."');}}</script>");
                 }
-                
+
                 $options['append_button'] = TRUE;
                 $options['append_type'] = "button";
                 $options['append_form_value'] = 'show';
@@ -212,11 +212,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     }
 
     if (!empty($options['mask'])) {
-        //if (!defined('JQ_MASK')) {
-        //    define('JQ_MASK', TRUE);
         fusion_load_script(INCLUDES.'jquery/jquery-mask.min.js');
-        //}
-
         $mask_opts = [];
         $opts = '';
 
@@ -238,24 +234,20 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             $max_length .= ' oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"';
         }
     }
-    
+
     if ($options['password_strength'] === TRUE) {
-        
+
         // locale file
         if (file_exists(LOCALE.LOCALESET."includes/dynamics/assets/password/lang/".$locale['password_strength'].".js")) {
             $path = LOCALE.LOCALESET."includes/dynamics/assets/password/lang/".$locale['password_strength'].".js";
         } else {
             $path = LOCALE.LOCALESET."includes/dynamics/assets/password/lang/en.js";
         }
-        
+
         fusion_load_script($path);
         fusion_load_script(DYNAMICS.'assets/password/i18next.js');
         fusion_load_script(DYNAMICS.'assets/password/pwstrength-bootstrap.min.js');
-        //add_to_footer("<script type='text/javascript' src='$path'></script>");
-        //add_to_footer("<script src='".'></script>");
-        //add_to_footer("<script src='".'></script>");
-        
-        
+
         add_to_jquery("
             i18next.init({
                 lng: '".$locale['password_strength']."',resources: {".$locale['password_strength'].": {translation: pwstrength_locale}}
@@ -274,7 +266,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
             });
         ");
     }
-    
+
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "";
