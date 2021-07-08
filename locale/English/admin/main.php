@@ -130,3 +130,4 @@ $locale['search_msg_104'] = 'There are no results found';
 $locale['deprecated_section'] = 'This section is deprecated. We no longer recommend it and plan to remove it soon.';
 $locale['new_update_avalaible'] = "A new PHPFusion v%s update is available!";
 $locale['update_now'] = "Update now";
+$locale['unactivated_users'] = "There are several unactivated users in the database. [LINK]Click here[/LINK] to view them and activate.";
