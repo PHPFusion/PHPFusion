@@ -702,7 +702,7 @@ function cache_bbcode() {
     static $bbcode_cache = [];
     if (empty($bbcode_cache)) {
         $bbcode_cache = [];
-        $result = cdquery('bbcodes', "SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order");
+        $result = cdquery('bbcodes_cache', "SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order");
         while ($data = cdarray($result)) {
             $bbcode_cache[] = $data['bbcode_name'];
         }

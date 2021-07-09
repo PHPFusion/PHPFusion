@@ -102,7 +102,7 @@ function bbcode_list() {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => get('order', FILTER_SANITIZE_NUMBER_INT)]));
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcode", [':bbcode' => get('bbcode_id')]);
-        cdreset('bbcodes');
+        cdreset('bbcodes_cache');
 
         addnotice('info', $locale['BBCA_430']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
@@ -111,7 +111,7 @@ function bbcode_list() {
         $data = dbarray(dbquery("SELECT bbcode_id FROM ".DB_BBCODES." WHERE bbcode_order=:bbcodeorder", [':bbcodeorder' => get('order', FILTER_SANITIZE_NUMBER_INT)]));
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order-1 WHERE bbcode_id=:bbcodeid", [':bbcodeid' => $data['bbcode_id']]);
         dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1 WHERE bbcode_id=:bbcode", [':bbcode' => get('bbcode_id')]);
-        cdreset('bbcodes');
+        cdreset('bbcodes_cache');
         addnotice('info', $locale['BBCA_431']);
         redirect(clean_request('', ['section', 'action', 'bbcode_id', 'order'], FALSE));
 
@@ -122,14 +122,14 @@ function bbcode_list() {
             $data2 = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
             $order = ($data2['xorder'] == 0 ? 1 : ($data2['xorder'] + 1));
             dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".get('enable')."', '".$order."')");
-            cdreset('bbcodes');
+            cdreset('bbcodes_cache');
         } else {
             $result2 = dbcount("(bbcode_id)", DB_BBCODES);
             if (!empty($result2)) {
                 dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1");
             }
             dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".get('enable')."', '1')");
-            cdreset('bbcodes');
+            cdreset('bbcodes_cache');
         }
         addnotice('info', $locale['BBCA_432']);
         redirect(clean_request('', ['section', 'enable'], FALSE));
@@ -142,7 +142,7 @@ function bbcode_list() {
             dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=:norder WHERE bbcode_order=:bbcodeorder", [':norder' => $order, ':bbcodeorder' => $data['bbcode_order']]);
             $order++;
         }
-        cdreset('bbcodes');
+        cdreset('bbcodes_cache');
         addnotice('success', $locale['BBCA_433']);
         redirect(clean_request('', ['section', 'disable'], FALSE));
     }
