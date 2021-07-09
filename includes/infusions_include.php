@@ -194,8 +194,8 @@ if (!function_exists('get_settings')) {
     function get_settings($settings_inf, $key = NULL) {
         static $settings_arr = [];
         if (empty($settings_arr) && defined('DB_SETTINGS_INF') && dbconnection() && db_exists('settings_inf')) {
-            $result = dbquery("SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
-            while ($data = dbarray($result)) {
+            $result = cdquery('infsettings', "SELECT settings_name, settings_value, settings_inf FROM ".DB_SETTINGS_INF." ORDER BY settings_inf");
+            while ($data = cdarray($result)) {
                 $settings_arr[$data['settings_inf']][$data['settings_name']] = $data['settings_value'];
             }
         }
