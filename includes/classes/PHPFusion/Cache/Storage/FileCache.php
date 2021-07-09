@@ -41,6 +41,10 @@ class FileCache implements ICache {
         if (!is_dir($this->path)) {
             mkdir($this->path, 0777, TRUE);
         }
+
+        if (!defined('SECRET_KEY')) {
+            define('SECRET_KEY', md5('temp_cache_key'));
+        }
     }
 
     /**
@@ -60,7 +64,7 @@ class FileCache implements ICache {
      * @param int    $seconds
      */
     public function set($key, $data, $seconds = NULL) {
-        $key = md5($key);
+        $key = md5($key.SECRET_KEY);
 
         $cache_data = [
             'expire' => $seconds,
@@ -82,7 +86,7 @@ class FileCache implements ICache {
      * @return mixed
      */
     public function get($key) {
-        $key = md5($key);
+        $key = md5($key.SECRET_KEY);
         $file = $this->path.$key.'.cache';
 
         if (is_file($file)) {
@@ -117,7 +121,7 @@ class FileCache implements ICache {
      * @param string $key
      */
     public function delete($key) {
-        $key = md5($key);
+        $key = md5($key.SECRET_KEY);
         $file = $this->path.$key.'.cache';
         if (file_exists($file)) {
             @unlink($file);
