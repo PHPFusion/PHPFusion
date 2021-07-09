@@ -294,9 +294,9 @@ if ($_session_theme == fusion_get_settings('theme')) {
 $theme = $theme_session !== FALSE ? $theme_session : (empty($userdata['user_theme']) ? fusion_get_settings('theme') : $userdata['user_theme']);
 set_theme($theme);
 
-$result = dbquery("SELECT inf_folder FROM ".DB_INFUSIONS);
-if (dbrows($result)) {
-    while ($data = dbarray($result)) {
+$result = cdquery('installed_infusions', "SELECT inf_folder FROM ".DB_INFUSIONS);
+if (cdrows($result)) {
+    while ($data = cdarray($result)) {
         if (file_exists(INFUSIONS.$data['inf_folder'])) {
             define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
             define(strtoupper($data['inf_folder']).'_EXIST', TRUE); // just in case

@@ -30,9 +30,11 @@ add_breadcrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' =>
 add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
 if ($folder = post("infuse")) {
     Infusions::getInstance()->infuse($folder);
+    cdreset('installed_infusions');
     redirect(FUSION_REQUEST);
 } else if ($folder = post("defuse")) {
     Infusions::getInstance()->defuse($folder);
+    cdreset('installed_infusions');
     redirect(FUSION_REQUEST);
 }
 
