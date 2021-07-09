@@ -55,6 +55,7 @@ function smiley_listing() {
     if (check_get('action') && get('action') == 'delete' && check_get('smiley_id') && get('smiley_id', FILTER_SANITIZE_NUMBER_INT)) {
         $data = dbarray(dbquery("SELECT * FROM ".DB_SMILEYS." WHERE smiley_id=:smileyid", [':smileyid' => get('smiley_id')]));
         dbquery("DELETE FROM ".DB_SMILEYS." WHERE smiley_id=:smileyid", [':smileyid' => get('smiley_id')]);
+        cdreset('smileys_cache');
         if (check_get('disable')) {
             if (!empty($data['smiley_image']) && file_exists(IMAGES."smiley/".$data['smiley_image'])) {
                 unlink(IMAGES."smiley/".$data['smiley_image']);
@@ -160,6 +161,7 @@ function add_smiley_form() {
         if (fusion_safe()) {
             if ($error == "") {
                 dbquery_insert(DB_SMILEYS, $data, empty($data['smiley_id']) ? 'save' : 'update');
+                cdreset('smileys_cache');
                 addnotice('success', empty($data['smiley_id']) ? $locale['SMLY_410'] : $locale['SMLY_411']);
                 redirect(clean_request('', ['section=smiley_list', 'aid']));
             } else {

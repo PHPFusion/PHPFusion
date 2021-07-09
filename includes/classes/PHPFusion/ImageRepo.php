@@ -231,8 +231,8 @@ class ImageRepo {
     public static function cacheSmileys() {
         if (self::$smiley_cache === NULL) {
             self::$smiley_cache = [];
-            $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
-            while ($data = dbarray($result)) {
+            $result = cdquery('smileys_cache',"SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
+            while ($data = cdarray($result)) {
                 self::$smiley_cache[] = [
                     'smiley_code'  => $data['smiley_code'],
                     'smiley_image' => $data['smiley_image'],
