@@ -31,10 +31,12 @@ add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale[
 if ($folder = post("infuse")) {
     Infusions::getInstance()->infuse($folder);
     cdreset('installed_infusions');
+    cdreset('adminpages');
     redirect(FUSION_REQUEST);
 } else if ($folder = post("defuse")) {
     Infusions::getInstance()->defuse($folder);
     cdreset('installed_infusions');
+    cdreset('adminpages');
     redirect(FUSION_REQUEST);
 }
 

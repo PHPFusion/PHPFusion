@@ -185,6 +185,7 @@ if (check_post('savesettings')) {
                         dbquery("INSERT INTO ".DB_ADMIN." (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('".$link['admin_rights']."', '".$link['admin_image']."', '".$link['admin_title']."', '".$link['admin_link']."', '".$link['admin_page']."', '".$link['admin_language']."')");
                     }
 
+                    cdreset('adminpages');
                 }
             }
 

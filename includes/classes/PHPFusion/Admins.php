@@ -251,9 +251,9 @@ class Admins {
 
         self::$admin_pages = array_filter(self::$admin_pages);
         if (empty(self::$admin_pages)) {
-            $result = dbquery("SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
-            if (dbrows($result)) {
-                while ($data = dbarray($result)) {
+            $result = cdquery('adminpages', "SELECT * FROM ".DB_ADMIN." WHERE admin_language='".LANGUAGE."' ORDER BY admin_page DESC, admin_id ASC, admin_title ASC");
+            if (cdrows($result)) {
+                while ($data = cdarray($result)) {
                     if (file_exists(ADMIN.$data['admin_link']) || file_exists(INFUSIONS.$data['admin_link'])) {
                         if (checkrights($data['admin_rights']) && $data['admin_link'] != "reserved") {
                             $data['admin_title'] = isset($locale[$data['admin_rights']]) ? $locale[$data['admin_rights']] : $data['admin_title'];
