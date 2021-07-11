@@ -2550,3 +2550,46 @@ function whitespace($value) {
     }
     return "";
 }
+
+/**
+ * Send a cookie.
+ *
+ * @param string      $name     The name of the cookie.
+ * @param string      $value    The value of the cookie.
+ * @param int         $expires  The time the cookie expires.
+ * @param string      $path     The path on the server in which the cookie will be available on.
+ * @param string      $domain   The (sub)domain that the cookie is available to.
+ * @param bool        $secure   Whether the client should send back the cookie only over HTTPS or null to auto-enable this when the request is already using HTTPS.
+ * @param bool        $httponly Whether the cookie will be made accessible only through the HTTP protocol.
+ * @param string|null $samesite Whether the cookie will be available for cross-site requests. Possible value: none | lax | strict
+ */
+function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FALSE, $httponly = FALSE, $samesite = NULL) {
+    $samesite = in_array($samesite, ['lax', 'none', 'strict', NULL]) ? $samesite : NULL;
+
+    if (PHP_VERSION_ID < 70300) {
+        if (!headers_sent()) {
+            if ($value !== '') {
+                $expires = $expires !== 0 ? ' expires='.$expires.';' : '';
+                $domain = $domain ? 'domain='.$domain.';' : '';
+                $secure = $secure ? 'secure;' : '';
+                $httponly = $httponly ? 'httponly;' : '';
+                $samesite = $samesite !== NULL ? 'samesite='.$samesite : '';
+
+                header("Set-Cookie: $name=$value; $expires path=$path; $domain $secure $httponly $samesite");
+            } else {
+                setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+            }
+        } else {
+            setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+        }
+    } else {
+        setcookie($name, $value, [
+            'expires'  => $expires,
+            'path'     => $path,
+            'domain'   => $domain,
+            'secure'   => $secure,
+            'httponly' => $httponly,
+            'samesite' => $samesite
+        ]);
+    }
+}

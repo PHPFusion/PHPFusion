@@ -161,28 +161,11 @@ class Authenticate {
         $key = hash_hmac($algo, $userID.$cookieExpiration, $salt);
         $hash = hash_hmac($algo, $userID.$cookieExpiration, $key);
         $cookieContent = $userID.".".$cookieExpiration.".".$hash;
-        //header("P3P: CP='NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM'");
-        Authenticate::_setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, FALSE, TRUE);
+
+        fusion_set_cookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, COOKIE_DOMAIN, FALSE, TRUE, 'lax');
         // Unable to set cookies properly
         if (!isset($_COOKIE[COOKIE_VISITED])) {
             redirect(Authenticate::getRedirectUrl(3));
-        }
-    }
-
-    /**
-     * @param string $cookieName
-     * @param string $cookieContent
-     * @param int    $cookieExpiration
-     * @param string $cookiePath
-     * @param string $cookieDomain
-     * @param bool   $secure
-     * @param bool   $httpOnly
-     */
-    public static function _setCookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure = FALSE, $httpOnly = FALSE) {
-        if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
-            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure, $httpOnly);
-        } else {
-            setcookie($cookieName, $cookieContent, $cookieExpiration, $cookiePath, $cookieDomain, $secure);
         }
     }
 
@@ -290,7 +273,7 @@ class Authenticate {
      * Expire admin cookie
      */
     public static function expireAdminCookie() {
-        Authenticate::_setCookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        fusion_set_cookie(COOKIE_ADMIN, '', time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax');
     }
 
     /**
@@ -508,8 +491,8 @@ class Authenticate {
 
         dbquery("DELETE FROM ".DB_ONLINE." WHERE online_ip='".USER_IP."'");
         // Expires cookie
-        Authenticate::_setCookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
-        Authenticate::_setCookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+        fusion_set_cookie(COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax');
+        fusion_set_cookie(COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax');
 
         if (session_id()) {
             session_destroy();
@@ -571,7 +554,7 @@ class Authenticate {
             }
         }
         if ($set_cookie) {
-            Authenticate::_setCookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE);
+            fusion_set_cookie(COOKIE_LASTVISIT, $lastvisit, time() + 3600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax');
         }
 
         return $lastvisit;
@@ -583,7 +566,7 @@ class Authenticate {
     public static function setVisitorCounter() {
         if (!isset($_COOKIE[COOKIE_PREFIX.'visited'])) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
-            setcookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", "0");
+            fusion_set_cookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", FALSE, FALSE, 'lax');
         }
     }
 
