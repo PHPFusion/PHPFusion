@@ -265,8 +265,8 @@ if (check_get('pagenum') && get('pagenum', FILTER_SANITIZE_NUMBER_INT)) {
     ];
 }
 
-if ($settings['admin_activation'] == 1) {
-    if (dbcount('(user_id)', DB_USERS, "user_status=2") > 0) {
+if (checkrights('M')) {
+    if ($settings['admin_activation'] == 1 && dbcount('(user_id)', DB_USERS, "user_status=2") > 0) {
         addnotice('info', str_replace(['[LINK]', '[/LINK]'], ['<a href="'.ADMIN.'members.php'.$aidlink.'&status=2">', '</a>'], $locale['unactivated_users']));
     }
 }
