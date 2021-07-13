@@ -69,7 +69,7 @@ if (iMEMBER) {
     $submissions_link = '';
     if (!empty($modules)) {
         foreach ($modules as $stype => $title) {
-            $submissions_link_arr[] = [
+            $submissions_link_arr[$stype] = [
                 'link'  => BASEDIR.$title['submit_link'],
                 'title' => sprintf($title['title'], str_replace('...', '', $locale['UM089'])),
             ];
