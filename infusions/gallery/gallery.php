@@ -35,9 +35,8 @@ $gallery_settings['gallery_pagination'] = !empty($gallery_settings['gallery_pagi
 
 /* View Photo */
 if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
-    include INCLUDES."comments_include.php";
-    include INCLUDES."ratings_include.php";
-    add_to_jquery("$('a.photogallery_photo_link').colorbox({width:'80%', height:'80%', photo:true});");
+    include_once INCLUDES."comments_include.php";
+    include_once INCLUDES."ratings_include.php";
 
     $pattern = "SELECT %s(pr.rating_vote) FROM ".DB_RATINGS." AS pr WHERE pr.rating_item_id = p.photo_id AND pr.rating_type = 'P'";
     $sql_count = sprintf($pattern, 'COUNT');
@@ -73,9 +72,6 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             $last = dbarray($lres);
         }
 
-        add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/colorbox/colorbox.css' media='screen' />");
-        add_to_head("<script type='text/javascript' src='".INCLUDES."jquery/colorbox/jquery.colorbox.js'></script>");
-
         set_title($locale['gallery_465']);
         add_to_title($locale['global_201'].$data['photo_title']);
         add_breadcrumb([
@@ -98,6 +94,18 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
             }
         }
 
+        if (iADMIN && checkrights("PH")) {
+            global $aidlink;
+            $data['photo_edit'] = [
+                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=photo_form&action=edit&photo_id=".$data['photo_id'],
+                'name' => $locale['edit']
+            ];
+            $data['photo_delete'] = [
+                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=actions&action=delete&photo_id=".$data['photo_id'],
+                'name' => $locale['delete']
+            ];
+        }
+
         add_breadcrumb([
             'link'  => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
             'title' => $data['photo_title']
@@ -114,7 +122,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     if ($data['photo_thumb1']) {
                         $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
                     }
-                    $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+                    $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&full";
                 } else {
                     if ($data['photo_thumb1']) {
                         $info['photo_thumb1'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1;
@@ -125,7 +133,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 if ($data['photo_thumb1']) {
                     $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
                 }
-                $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&amp;full";
+                $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&full";
             }
             $info['photo_size'] = @getimagesize($photo_path['photo_filename']);
         } else {
@@ -213,6 +221,19 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
                 'name' => $info['album_title']
             ];
+
+            if (iADMIN && checkrights("PH")) {
+                global $aidlink;
+                $info['album_edit'] = [
+                    'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=album_form&action=edit&cat_id=".$info['album_id'],
+                    'name' => $locale['edit']
+                ];
+                $info['album_delete'] = [
+                    'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=actions&action=delete&cat_id=".$info['album_id'],
+                    'name' => $locale['delete']
+                ];
+            }
+
             $info['album_description'] = parse_text($info['album_description'], [
                 'parse_smileys' => FALSE,
                 'decode'        => FALSE
@@ -245,7 +266,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $info['page_nav'] = $info['max_rows'] > $gallery_settings['gallery_pagination'] ? makepagenav($_GET['rowstart'],
                     $gallery_settings['gallery_pagination'],
                     $info['max_rows'], 3,
-                    INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&amp;") : '';
+                    INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&") : '';
                 if ($info['photo_rows'] > 0) {
                     // this is photo
                     while ($data = dbarray($result)) {
@@ -267,11 +288,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                         if (iADMIN && checkrights("PH")) {
                             global $aidlink;
                             $data['photo_edit'] = [
-                                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=photo_form&amp;action=edit&amp;photo_id=".$data['photo_id'],
+                                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=photo_form&action=edit&photo_id=".$data['photo_id'],
                                 'name' => $locale['edit']
                             ];
                             $data['photo_delete'] = [
-                                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=actions&amp;action=delete&amp;photo_id=".$data['photo_id'],
+                                'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=actions&action=delete&photo_id=".$data['photo_id'],
                                 'name' => $locale['delete']
                             ];
                         }
@@ -334,11 +355,11 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 if (iADMIN && checkrights("PH")) {
                     global $aidlink;
                     $data['album_edit'] = [
-                        'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=album_form&amp;action=edit&amp;cat_id=".$data['album_id'],
+                        'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=album_form&action=edit&cat_id=".$data['album_id'],
                         'name' => $locale['edit']
                     ];
                     $data['album_delete'] = [
-                        'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&amp;section=actions&amp;action=delete&amp;cat_id=".$data['album_id'],
+                        'link' => INFUSIONS."gallery/gallery_admin.php".$aidlink."&section=actions&action=delete&cat_id=".$data['album_id'],
                         'name' => $locale['delete']
                     ];
                 }
