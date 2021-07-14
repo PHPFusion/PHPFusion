@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @param        $input_name
- * @param string $label
- * @param string $input_value
- * @param array  $options
- *
- * @return string
- */
+
 function form_range($input_name, $label = "", $input_value = "", array $options = []) {
     
     $locale = fusion_get_locale();
@@ -20,32 +13,29 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
     
     $default_options = [
         'type'            => 'text',
-        'required'        => FALSE,
-        'label_icon'      => '',
-        'safemode'        => FALSE,
-        'callback_check'  => FALSE,
-        'input_id'        => $input_id,
-        'placeholder'     => '',
-        'deactivate'      => FALSE,
-        'width'           => '',
-        'inner_width'     => '',
-        'class'           => '',
-        'inner_class'     => '',
-        'inline'          => FALSE,
-        'min'             => 1,
-        'max'             => 2,
-        'step'            => 1,
-        'icon'            => '',
-        'tip'             => '',
-        'ext_tip'         => '',
-        'error_text'      => '',
-        'delimiter'       => ',',
-        'stacked'         => '',
-        'data'            => [],
-        'descript'        => TRUE,
-        'append_html'     => '',
-        'display_percent' => FALSE,
-        'range_buttons'   => FALSE,
+        'required'        => FALSE, // whether required or not
+        'label_icon'      => '', // icon for the label
+        'safemode'        => FALSE, // whether strict sanitization mode or not
+        'callback_check'  => FALSE, // check values based on your own function
+        'input_id'        => $input_id, // input id
+        'placeholder'     => '', // placeholder for the input field
+        'deactivate'      => FALSE, // readonly or not
+        'width'           => '', // outer container width
+        'inner_width'     => '', // inner element width
+        'class'           => '', // outer container class
+        'inner_class'     => '', // inner element class
+        'inline'          => FALSE, // whether element is inline or not
+        'min'             => 1, // minimum slider value
+        'max'             => 2, // maximum slider value
+        'step'            => 1, // per slider step, set to 0 for fluid
+        'tip'             => '', // the tip on label
+        'ext_tip'         => '', // the tip on below field
+        'error_text'      => '', // text to show during error
+        'stacked'         => '', // adds html into the dom element
+        'data'            => [], // adds data attributes to the element
+        'append_html'     => '', // adds html
+        'display_percent' => FALSE, // element is displayed as % or unit value
+        'range_buttons'   => FALSE, // display 4 quick buttons to set the slider value
     ];
     
     $options += $default_options;
@@ -80,7 +70,7 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
     
     $step = $options['step'] ? "step='".$options['step']."' " : '';
     
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ?? '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ?? '').($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
     
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer far fa-question-circle' data-toggle='tooltip' title='".$options['tip']."'></i>" : '')."</label>" : '';
     
@@ -88,7 +78,12 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
     
     $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
     
-    $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>0%</div></div>";
+    $text = $options['min'];
+    if ($options['display_percent']) {
+        $text = floor(($options['min'] / $options['max']) * 100).'%';
+    }
+    
+    $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>$text</div></div>";
     
     if ($options['max'] - $options['min'] && $options['range_buttons']) {
         
@@ -109,14 +104,7 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         add_to_jquery("
         let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
         pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
-        
-        
-        slider_".$options['input_id'].".oninput = () => {
-            let val = slider_".$options['input_id'].".value,
-            percent = Math.round(val / ".$options['max']." * 100) +'%';
-            pct_".$options['input_id'].".textContent = ".($options['display_percent'] ? 'percent' : 'val').";
-        };
-        
+
         $('.btn-range').on('click', function(e) {
             let percent = $(this).data('value');
             slider_".$options['input_id'].".value = percent;
@@ -126,8 +114,16 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         
     }
     
-    
-    add_to_jquery("");
+    add_to_jquery("
+    let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
+    pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
+    slider_".$options['input_id'].".oninput = () => {
+        let val = slider_".$options['input_id'].".value,
+        percent = Math.round( val / ".$options['max']." * 100),
+        text_content = ".($options['display_percent'] ? 'percent +"%"' : 'val')."
+        pct_".$options['input_id'].".textContent = text_content;
+    };
+    ");
     
     
     $html .= $options['stacked'];
@@ -152,33 +148,8 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'safemode'       => $options['safemode'],
         'regex'          => $options['regex'],
         'callback_check' => $options['callback_check'],
-        'delimiter'      => $options['delimiter'],
-        'descript'       => $options['descript']
+        'descript'       => TRUE,
     ]);
     
-    // Live Regex Error Check
-    //if ($options['regex'] && $options['regex_error_text']) {
-    //
-    //    add_to_jquery("
-    //    $('#".$options['input_id']."').blur(function(ev) {
-    //        var Inner_Object = $(this).parent('div').find('.label-danger');
-    //        var Outer_Object = $(this).parent('div').find('.input-error');
-    //        if (!$(this).val().match(/".$options['regex']."/g) && $(this).val()) {
-    //            var ErrorText = '".$options['regex_error_text']."';
-    //            var ErrorDOM = '<div class=\'input-error spacer-xs\'><div class=\'label label-danger p-5\'>'+ ErrorText +'</div></div>';
-    //            if (Inner_Object.length > 0) {
-    //                object.html(ErrorText);
-    //            } else {
-    //                $(this).after(function() {
-    //                    return ErrorDOM;
-    //                });
-    //            }
-    //        } else {
-    //           Outer_Object.remove();
-    //        }
-    //    });
-    //    ");
-    //}
-    //
     return $html;
 }
