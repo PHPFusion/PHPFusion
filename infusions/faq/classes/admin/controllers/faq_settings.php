@@ -72,9 +72,11 @@ class FaqSettingsAdmin extends FaqAdminModel {
     private function FaqAdminForm() {
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']).
             "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n".
-            form_checkbox('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
-                'inline' => TRUE,
-                'toggle' => TRUE
+            form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
+                'inline'  => TRUE,
+                'options' => [
+                    $this->locale['disable'], $this->locale['enable']
+                ]
             ]).
             form_select('faq_submission_access[]', $this->locale['submit_access'], self::$faq_settings['faq_submission_access'], [
                 'inline'   => TRUE,

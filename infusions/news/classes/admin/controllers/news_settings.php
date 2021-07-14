@@ -114,8 +114,11 @@ class NewsSettingsAdmin extends NewsAdminModel {
             'multiple' => TRUE,
         ]);
 
-        echo form_checkbox('news_extended_required', $locale['news_0402'], $news_settings['news_extended_required'], [
-            'inline' => TRUE
+        echo form_select('news_extended_required', $locale['news_0402'], $news_settings['news_extended_required'], [
+            'inline'  => TRUE,
+            'options' => [
+                $locale['no'], $locale['yes']
+            ]
         ]);
         echo "</div>\n</div>\n";
         echo "</div>\n";

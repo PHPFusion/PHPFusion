@@ -205,7 +205,12 @@ echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gal
     'type'        => 'number',
     'inner_width' => '150px'
 ]);
-echo form_checkbox("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], ['inline' => TRUE]);
+echo form_select("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], [
+    'inline'  => TRUE,
+    'options' => [
+        $locale['disable'], $locale['enable']
+    ]
+]);
 
 echo form_select('gallery_submission_access[]', $locale['submit_access'], $gll_settings['gallery_submission_access'], [
     'inline'   => TRUE,
@@ -213,7 +218,12 @@ echo form_select('gallery_submission_access[]', $locale['submit_access'], $gll_s
     'multiple' => TRUE,
 ]);
 
-echo form_checkbox("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], ['inline' => TRUE]);
+echo form_select("gallery_extended_required", $locale['gallery_0201'], $gll_settings['gallery_extended_required'], [
+    'inline'  => TRUE,
+    'options' => [
+        $locale['no'], $locale['yes']
+    ]
+]);
 
 echo "</div>\n</div>\n";
 echo "</div>\n";
@@ -221,13 +231,9 @@ echo "</div>\n";
 echo "</div>\n<div class='col-xs-9 col-xs-offset-3 col-sm-9 col-sm-offset-3 col-md-4 col-md-offset-0 col-lg-4'>\n";
 
 openside("");
-echo form_select('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], [
-    'options'     => ['0' => $locale['disable'], '1' => $locale['enable']],
-    'width'       => '100%',
-    'inner_width' => '100%'
-]);
-echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text']);
-echo form_checkbox('photo_watermark_save', $locale['gallery_0215'], $gll_settings['photo_watermark_save']);
+echo form_checkbox('photo_watermark', $locale['gallery_0214'], $gll_settings['photo_watermark'], ['toggle' => TRUE]);
+echo form_checkbox('photo_watermark_text', $locale['gallery_0213'], $gll_settings['photo_watermark_text'], ['toggle' => TRUE]);
+echo form_checkbox('photo_watermark_save', $locale['gallery_0215'], $gll_settings['photo_watermark_save'], ['toggle' => TRUE]);
 echo form_text('photo_watermark_image', $locale['gallery_0212'], $gll_settings['photo_watermark_image'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
 ]);

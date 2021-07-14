@@ -175,14 +175,24 @@ echo form_select('download_submission_access[]', $locale['submit_access'], $dl_s
     'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
     'multiple' => TRUE,
 ]);
-echo form_checkbox('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], ['inline' => TRUE]);
-echo form_checkbox('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], ['inline' => TRUE]);
+echo form_select('download_screenshot_required', $locale['download_0047'], $dl_settings['download_screenshot_required'], [
+    'inline'  => TRUE,
+    'options' => [
+        $locale['no'], $locale['yes']
+    ]
+]);
+echo form_select('download_extended_required', $locale['download_0048'], $dl_settings['download_extended_required'], [
+    'inline'  => TRUE,
+    'options' => [
+        $locale['no'], $locale['yes']
+    ]
+]);
 closeside();
 
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('download_screenshot', $locale['download_938'], $dl_settings['download_screenshot'], ['options' => $choice_opts]);
-echo form_select('download_stats', $locale['download_940'], $dl_settings['download_stats'], ['options' => $choice_opts]);
+echo form_checkbox('download_screenshot', $locale['download_938'], $dl_settings['download_screenshot'], ['toggle' => TRUE]);
+echo form_checkbox('download_stats', $locale['download_940'], $dl_settings['download_stats'], ['toggle' => TRUE]);
 closeside();
 openside('');
 echo form_select('download_types[]', $locale['download_932'], $dl_settings['download_types'], [

@@ -137,7 +137,9 @@ echo form_select('blog_submission_access[]', $locale['submit_access'], $blog_set
     'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
     'multiple' => TRUE,
 ]);
-echo form_checkbox('blog_extended_required', $locale['blog_0602'], $blog_settings['blog_extended_required'], ['inline' => TRUE]);
+echo form_select('blog_extended_required', $locale['blog_0602'], $blog_settings['blog_extended_required'], [
+    "inline" => TRUE, "options" => [$locale['no'], $locale['yes']]
+]);
 closeside();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";

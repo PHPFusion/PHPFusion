@@ -63,31 +63,29 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         echo openform('settingsform', 'post', FUSION_REQUEST);
         echo "<div class='well spacer-xs'>".$locale['WLS_0400']."</div>\n";
 
-        echo "<div class='row'>\n";
-        echo "<div class='col-xs-12 col-sm-3'>\n";
-        echo "<h4 class='m-0'>".$locale['WLS_0400']."</h4>";
-        echo "</div>\n<div class='col-xs-12 col-sm-9'>\n";
         echo form_text('links_per_page', $locale['WLS_0132'], $weblink_settings['links_per_page'], [
             'max_length'  => 4,
             'inner_width' => '250px',
             'type'        => 'number',
             'inline'      => TRUE
         ]);
-        echo form_checkbox('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
-            'inline' => TRUE,
-            'toggle' => TRUE
+        echo form_select('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
+            'inline'  => TRUE,
+            'options' => [
+                $locale['disable'], $locale['enable']
+            ]
         ]);
         echo form_select('links_submission_access[]', $locale['submit_access'], $weblink_settings['links_submission_access'], [
             'inline'   => TRUE,
             'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
             'multiple' => TRUE
         ]);
-        echo form_checkbox('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], [
-            'inline' => TRUE,
-            'toggle' => TRUE
+        echo form_select('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], [
+            'inline'  => TRUE,
+            'options' => [
+                $locale['no'], $locale['yes']
+            ]
         ]);
-
-        echo "</div>\n</div>\n";
 
         echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();

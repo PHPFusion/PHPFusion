@@ -79,7 +79,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
         ]);
         echo form_select('article_extended_required', $locale['article_0403'], $article_settings['article_extended_required'], [
             'inline'  => TRUE,
-            'options' => [$locale['disable'], $locale['enable']]
+            'options' => [$locale['no'], $locale['yes']]
         ]);
         echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
