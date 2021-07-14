@@ -18,11 +18,12 @@
 +--------------------------------------------------------*/
 
 /**
- * @param            $input_name
- * @param string     $label
- * @param bool|FALSE $input_value
- * @param array      $options
- * if media is true, defender will check if any file uploaded. If no, select from media selection
+ * Generates a file upload input.
+ *
+ * @param string $input_name  Name of the input, by default it's also used as the ID for the input.
+ * @param string $label       Input label.
+ * @param bool   $input_value The value to be displayed.
+ * @param array  $options
  *
  * @return string
  */
@@ -39,49 +40,49 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
     $default_options = [
         'input_id'          => $input_name,
-        'upload_path'       => IMAGES,
-        'required'          => FALSE,
-        'safemode'          => FALSE,
-        'deactivate'        => FALSE,
+        'upload_path'       => IMAGES, // The upload path for the file(s).
+        'required'          => FALSE, // Whether this field is required during form submission.
+        'safemode'          => FALSE, // Extra security settings such as strict type GD2 checks, and other validation during upload.
+        'deactivate'        => FALSE, // Disable the input and set it as readonly.
         'preview_off'       => FALSE,
-        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object', 'file']
-        'width'             => '',
+        'type'              => 'image', // Possible value: image, html, text, video, audio, flash, object, file
+        'width'             => '', // Accepts px or % values.
         'label'             => $locale['browse'],
         'inline'            => TRUE,
-        'class'             => "",
-        'tip'               => "",
-        'ext_tip'           => "",
+        'class'             => "", // The input container wrapper class.
+        'tip'               => "", // Displays a tip by the label.
+        'ext_tip'           => "", // Displays a tip at the bottom of the input.
         'error_text'        => $locale['error_input_file'],
         'btn_class'         => 'btn-default',
         'icon'              => 'fa fa-upload',
         'jsonurl'           => FALSE,
         'dropzone'          => FALSE,
         'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
-        'thumbnail'         => FALSE,
-        'thumbnail_w'       => 300,
-        'thumbnail_h'       => 300,
-        'thumbnail_folder'  => "",
-        'thumbnail_ratio'   => 0,
-        'thumbnail_suffix'  => '_t1',
-        'thumbnail2'        => FALSE,
-        'thumbnail2_w'      => 600,
-        'thumbnail2_h'      => 400,
-        'thumbnail2_suffix' => '_t2',
-        'thumbnail2_ratio'  => 0,
-        'delete_original'   => FALSE,
-        'max_width'         => 1800,
-        'max_height'        => 1600,
-        'max_byte'          => 15728640,
-        'max_count'         => 1,
-        'multiple'          => FALSE,
-        'template'          => 'classic',
-        'media'             => FALSE,
-        'placeholder'       => '',
-        'form_id'           => '',
-        'hide_upload'       => TRUE,
-        'hide_remove'       => FALSE,
-        'krajee_disabled'   => FALSE,
-        'replace_upload'    => FALSE, // makes upload unique (i.e. overwrite instead of creating new)
+        'thumbnail'         => FALSE, // Set to true to create primary thumbnail.
+        'thumbnail_w'       => 300, // The width of the primary thumbnail.
+        'thumbnail_h'       => 300, // The height of the primary thumbnail.
+        'thumbnail_folder'  => "", // The path to the primary thumnail storage.
+        'thumbnail_ratio'   => 0, // Keep original ratio or forced square dimension (0 - original, 1 - square). Possible value: 0, 1
+        'thumbnail_suffix'  => '_t1', // Adds a suffix to primary thumbnail filename.
+        'thumbnail2'        => FALSE, // Set to true to create secondary thumbnail.
+        'thumbnail2_w'      => 600, // The width of the secondary thumbnail.
+        'thumbnail2_h'      => 400, // The height of the secondary thumbnail.
+        'thumbnail2_suffix' => '_t2', // Adds a suffix to secondary thumbnail filename.
+        'thumbnail2_ratio'  => 0, // Keep original ratio or forced square dimension (0 - original, 1 - square). Possible value: 0, 1
+        'delete_original'   => FALSE, // This is used to delete the uploaded file. It can be used along with thumbnail creation where you can set this parameter to true to keep only the thumbnail.
+        'max_width'         => 1800, // Defines a maximum alloweable image width. Only takes effect if type is set to image.
+        'max_height'        => 1600, // Defines a maximum alloweable image height. Only takes effect if type is set to image.
+        'max_byte'          => 15728640, // Defines a maximum alloweable image size. Only takes effect if type is set to image.
+        'max_count'         => 1, // Sets a minimum alloweable file selection count per instance. Declare a new max_count to 10 to allow user to select 10 files.
+        'multiple'          => FALSE, // Whether the current fileinput allows multiple files selection per instance.
+        'template'          => 'classic', // Customize HTML output of the widget. Possible value: classic, modern, thumbnail
+        'media'             => FALSE, // Displays a file media browser selector to allow user to select files within the upload_path to pick on. If is true, defender will check if any file uploaded. If no, select from media selection.
+        'placeholder'       => '', // A placeholder for the field.
+        'form_id'           => '', // The current <form> element id that this widget is placed in.
+        'hide_upload'       => TRUE, // Show or hide an upload file button when file has been selected.
+        'hide_remove'       => FALSE, // Show or hide an remove file button when file has been selected.
+        'krajee_disabled'   => FALSE, // Disables Kartik Bootstrap Jquery plugin and shows a normal browser fileinput instead.
+        'replace_upload'    => FALSE, // Change the upload name to a new unique name upon successful upload.
     ];
 
     $options += $default_options;
@@ -352,6 +353,8 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         }
 
         if (!defined('FORM_FILEINPUT')) {
+            define('FORM_FILEINPUT', TRUE);
+
             add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
             if ($locale['text-direction'] == 'rtl') {
                 add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />");
@@ -360,12 +363,9 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
             if (file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
                 add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
-                //$lang = 'language: "'.$locale['short_lang_name'].'",';
             }
-            define('FORM_FILEINPUT', TRUE);
         }
-
     }
 
-    return (string)$html;
+    return $html;
 }
