@@ -18,34 +18,15 @@
 +--------------------------------------------------------*/
 
 /**
- * Generates a text input
+ * Generates a text input.
  *
- * Generates the HTML for a textbox or password input
- *
- * @param string $input_name  Name of the input, by
- *                            default it's also used as the ID for the input
- * @param string $label       The label
- * @param string $input_value The value to be displayed
- *                            in the input, usually a value from DB prev. saved
- * @param array  $options     Various options
+ * @param string $input_name  Name of the input, by default it's also used as the ID for the input.
+ * @param string $label       Input label.
+ * @param bool   $input_value The value to be displayed.
+ * @param array  $options
  *
  * @return string
- *
- * To add an inline button (set prepend or append - respectively)
- * register these options accordingly into the function
- * $options['append_button'] = true
- * $options['append_type'] = button or submit
- * $options['append_form_value'] = the value of the button
- * $options['append_class'] = your pick of .btn classes (bootstrap .btn-success, .btn-info, etc)
- * $options['append_value'] = the label
- * $options['append_button_name'] = your button name , default: p-submit-".$options['input_id']."
- * $options['append_button_id'] = your button name , default: ".$input_name."-append-btn
- *
- * To add a decorative labels (set prepend or append - respectively)
- * $options['append_value'] = "your-value" - You can also insert HTML <i class='fa fa-something'></i> for glyphs
- *
  */
-
 function form_text($input_name, $label = "", $input_value = "", array $options = []) {
 
     $locale = fusion_get_locale();
@@ -57,21 +38,21 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     $input_value = clean_input_value($input_value);
 
     $default_options = [
-        'type'               => 'text',
-        'required'           => FALSE,
+        'type'               => 'text', // Possible value: text, number, price, password, email, url, color, date, datetime, datetime-local, month, range, search, tel, time, week, ip.
+        'required'           => FALSE, // Whether this field is required during form submission.
         'label_icon'         => '',
         'feedback_icon'      => '',
-        'safemode'           => FALSE,
+        'safemode'           => FALSE, // Extra security settings such as strict type GD2 checks, and other validation during upload.
         'regex'              => '',
         'regex_error_text'   => '',
         'callback_check'     => FALSE,
         'input_id'           => $input_id,
-        'placeholder'        => '',
-        'deactivate'         => FALSE,
-        'width'              => '',
-        'inner_width'        => '',
-        'class'              => '',
-        'inner_class'        => '',
+        'placeholder'        => '', // A placeholder for the field.
+        'deactivate'         => FALSE, // Disable the input and set it as readonly.
+        'width'              => '', // Accepts px or % values.
+        'inner_width'        => '', // Accepts px or % values.
+        'class'              => '', // The input container wrapper class.
+        'inner_class'        => '', // The input class.
         'inline'             => FALSE,
         'min_length'         => 1,
         'max_length'         => 200,
@@ -80,8 +61,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'number_step'        => 1,
         'icon'               => '',
         'autocomplete_off'   => FALSE,
-        'tip'                => '',
-        'ext_tip'            => '',
+        'tip'                => '', // Displays a tip by the label.
+        'ext_tip'            => '', // Displays a tip at the bottom of the input.
         'append_button'      => '',
         'append_value'       => '',
         'append_form_value'  => '',
@@ -99,7 +80,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'error_text'         => '',
         'delimiter'          => ',',
         'stacked'            => '',
-        'group_size'         => '', // http://getbootstrap.com/components/#input-groups-sizing - sm, md, lg
+        'group_size'         => '', // Possible value: sm, md, lg
         'password_strength'  => FALSE,
         'data'               => [],
         'append_html'        => '',
@@ -267,7 +248,7 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         ");
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>" : '';
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "";
 

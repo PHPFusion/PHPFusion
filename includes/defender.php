@@ -1043,7 +1043,9 @@ function fusion_safe() {
 }
 
 /**
- * @param string $error_message
+ * Declares FUSION_NULL constants to safeguard sensitive code execution.
+ *
+ * @param string $error_message The notification text. If present, will show a notice on page load.
  *
  * @return null
  */

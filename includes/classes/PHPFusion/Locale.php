@@ -93,25 +93,24 @@ class Locale {
      * @return array|mixed|string
      */
     public function getLocale($key = NULL) {
-        //self::$use_count++;
-        //print_p(microtime(TRUE)-START_TIME);
-        //print_p(self::$use_count);
         return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : '');
     }
 
     /**
-     * @param int    $count
-     * @param string $words 'member|members';
+     * Returns a grammatical number word.
+     *
+     * @param int    $count Number of items.
+     * @param string $words A string consisting of singular and plural delimited by a | symbol.
      * @param array  $options
      *
      * @return string
      */
     public static function formatWord($count, $words, $options = []) {
         $default_options = [
-            'add_count'     => TRUE, //  true/false (default true) to show integer
-            'html'          => FALSE, // whether to output html as return
-            'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>", //
-            'language'      => LANGUAGE, // language at use
+            'add_count'     => TRUE, // Show number.
+            'html'          => FALSE, // Encase result with html_template, {%count%} {%result%} tags are used for placeholders for result replacements.
+            'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>", // HTML template to be used for output.
+            'language'      => LANGUAGE, // Current language.
         ];
 
         $options += $default_options;

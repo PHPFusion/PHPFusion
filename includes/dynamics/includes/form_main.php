@@ -15,15 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
- * @param string $form_name
- * @param string $method     - 'post' or 'get'
- * @param string $action_url - form current uri (defaults: FORM_REQUEST)
- * @param array  $options    :
- *                           form_id = default as form_name
- *                           class = default empty
- *                           enctype = true or false , set true to allow file upload
- *                           max_tokens = store into session number of tokens , default as 1.
+ * The function should be able used to replace conventional <form> tags to provide an enhanced feature to your application.
+ *
+ * @param string $form_name  Form ID.
+ * @param string $method     Possible value: post, get.
+ * @param string $action_url Form current uri.
+ * @param array  $options
  *
  * @return string
  */
@@ -33,12 +32,12 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
 
     $default_options = [
         'form_id'    => $form_name,
-        'class'      => '',
-        'enctype'    => FALSE,
+        'class'      => '', // CSS class properties.
+        'enctype'    => FALSE, // Set true for allowing multipart.
         'max_tokens' => fusion_get_settings('form_tokens'),
-        'inline'     => FALSE,
-        'on_submit'  => '',
-        'honeypot'   => TRUE,
+        'inline'     => FALSE, // Set true for making form inline.
+        'on_submit'  => '', // Adds javascript function on form submit.
+        'honeypot'   => TRUE, // Enables honeypots to counter botting.
     ];
 
     $options += $default_options;
@@ -53,7 +52,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         $class .= " warning";
     }
 
-    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').($options['on_submit'] ? " onSubmit='".$options['on_submit']."'" : '').">\n";
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').(!empty($class) ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').($options['on_submit'] ? " onSubmit='".$options['on_submit']."'" : '').">\n";
 
     if ($method == 'post') {
         $token = fusion_get_token($options['form_id'], $options['max_tokens']);
@@ -71,21 +70,31 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         }
     }
 
-    return (string)$html;
+    return $html;
 }
 
 /**
  * @return string
  */
 function closeform() {
-    return (string)"</form>\n";
+    return "</form>\n";
 }
 
+/**
+ * @param mixed $value
+ *
+ * @return array|string
+ */
 function clean_input_name($value) {
     $re = '/\[(.*?)\]/m';
     return preg_replace($re, '', $value);
 }
 
+/**
+ * @param $value
+ *
+ * @return array|string
+ */
 function clean_input_value($value) {
     if (!is_float($value)) {
         if (is_string($value)) {
@@ -99,6 +108,9 @@ function clean_input_value($value) {
     return $value;
 }
 
+/**
+ * Load Select2
+ */
 function load_select2_script() {
     static $loaded = FALSE;
     if ($loaded === FALSE) {
@@ -118,7 +130,7 @@ function load_select2_script() {
         }
 
         /**
-         * @uses  select2csspath()
+         * @uses select2csspath()
          */
         fusion_add_hook("fusion_core_styles", "select2csspath");
 
