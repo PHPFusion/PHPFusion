@@ -364,8 +364,7 @@ function setChecked(frmName, chkName, val) {
  * Run time execution
  */
 function onload_events() {
-    resize_forum_imgs();
-    clipboard();
+    resize_forum_imgs()
 }
 
 window.onload = onload_events;
@@ -459,12 +458,20 @@ let showhide = function () {
 // Toggle Show
     let showhideToggle = $("a[data-toggle='show-hide']");
     if (showhideToggle.length) {
-
         $.each(showhideToggle, function (key, value) {
             let target = $(this).data("target"),
-                targetContainer = $(this).closest('.show-hide-wrapper').find(target);
+                targetContainer = $(this).find(target);
+
             $(this).append("<i class='far fa-angle-down m-l-10'></i>");
-            targetContainer.hide();
+
+            if (targetContainer.length) {
+                if (targetContainer.is('hidden')) {
+                    targetContainer.show();
+                } else {
+                    targetContainer.hide();
+                }
+            }
+
         });
     }
     $(document).on("click", "a[data-toggle='show-hide']", function (ev) {
@@ -489,17 +496,6 @@ let showhide = function () {
     });
 }
 
-let clipboard = function () {
-    new ClipboardJS('.btn');
-    let object = document.getElementsByClassName('btn');
-    for (let i = 0; i < object.length; i++) {
-        if (object[i].hasAttribute("data-clipboard-target")) {
-            object[i].addEventListener("click", function () {
-                object[i].innerHTML = 'Copied!';
-            }, false);
-        }
-    }
-}
 
 let BASEDIR = document.location.origin + site_path;
 let INFUSIONS = document.location.origin + "/infusions/";
