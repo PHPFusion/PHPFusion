@@ -98,11 +98,11 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
     
     $html .= ($options['inline'] && $label ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "");
     
-    $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." ".($options['deactivate'] ? 'readonly' : '').">";
     
-    $text = $options['min'];
+    $text = $input_value ?? $options['min'];
     if ($options['display_percent']) {
-        $text = floor(($options['min'] / $options['max']) * 100).'%';
+        $text = floor(($input_value ?? $options['min'] / $options['max']) * 100).'%';
     }
     
     $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>$text</div></div>";
@@ -168,7 +168,6 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'type'           => 'number',
         'required'       => $options['required'],
         'safemode'       => $options['safemode'],
-        'regex'          => $options['regex'],
         'callback_check' => $options['callback_check'],
         'descript'       => TRUE,
     ]);
