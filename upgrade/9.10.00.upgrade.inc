@@ -127,6 +127,8 @@ $deleted_files = [
     INCLUDES.'buildlist.php',
     INCLUDES.'geomap/callingcodes.inc.php',
     INCLUDES.'geomap/form_geomap.json.php',
+    THEMES.'Magazine/classes/',
+    THEMES.'Magazine/theme_autoloader.php',
 ];
 
 foreach ($deleted_files as $file) {
