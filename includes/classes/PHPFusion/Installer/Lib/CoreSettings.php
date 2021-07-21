@@ -522,7 +522,11 @@ class CoreSettings {
                 [
                     'settings_name'  => 'error_logging_method',
                     'settings_value' => 'database'
-                ]
+                ],
+                [
+                    'settings_name'  => 'license',
+                    'settings_value' => 'agpl'
+                ],
             ]
         ];
         $table_settings['mlt_tables'] = [

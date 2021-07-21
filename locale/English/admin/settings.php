@@ -97,6 +97,7 @@ $locale['609'] = "Development Mode";
 $locale['610'] = "Update checker";
 $locale['611'] = "Number Delimiter";
 $locale['612'] = "Thousands separator";
+$locale['613'] = "License";
 
 $locale['649'] = "Prohibited user names:";
 $locale['650'] = "Miscellaneous";

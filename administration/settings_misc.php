@@ -45,6 +45,7 @@ if (check_post('savesettings')) {
         'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator'),
         'error_logging_enabled'  => post('error_logging_enabled') ? 1 : 0,
         'error_logging_method'   => sanitizer('error_logging_method', '', 'error_logging_method'),
+        'license'                => sanitizer('license', '', 'license'),
     ];
 
     if (fusion_safe()) {
@@ -109,6 +110,16 @@ echo form_select('number_delimiter', $locale['611'], $settings['number_delimiter
 ]);
 echo form_select('thousands_separator', $locale['612'], $settings['thousands_separator'], [
     'options' => $options,
+    'width'   => '100%'
+]);
+closeside();
+
+openside('');
+echo form_select('license', $locale['613'], $settings['license'], [
+    'options' => [
+        'agpl' =>  'AGPL',
+        'epal' =>  'EPAL'
+    ],
     'width'   => '100%'
 ]);
 closeside();

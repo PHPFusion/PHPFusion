@@ -31,7 +31,8 @@ foreach ($update_settings_tbl as $key => $value) {
 
 $insert_settings_tbl = [
     'recaptcha_score'     => '0.5',
-    'update_last_checked' => time()
+    'update_last_checked' => time(),
+    'license'             => 'agpl'
 ];
 
 foreach ($insert_settings_tbl as $key => $value) {
