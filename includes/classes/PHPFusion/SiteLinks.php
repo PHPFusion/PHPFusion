@@ -805,7 +805,7 @@ class SiteLinks {
                         $link_class = " class='".$link_data['link_class']." dropdown-toggle'";
                         $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
                         $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
-                        $l_2 = (empty($id) ? "<span class='".self::getMenuParam('caret_icon')."'></i>" : "");
+                        $l_2 = (empty($id) ? "<i class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                     } else {
                         $link_class = (!empty($link_data['link_class']) ? " class='".$link_data['link_class']."'" : '');
