@@ -217,9 +217,9 @@ class ThreadTags extends ForumServer {
                         if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] ||
                                 preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))
                         ) {
-                            $icon = "<i class='".get_forumIcons('thread')."' title='".$locale['forum_0261']."'></i>";
+                            $icon = "<i class='".get_forum_icons('thread')."' title='".$locale['forum_0261']."'></i>";
                         } else {
-                            $icon = "<i class='".get_forumIcons('new')."' title='".$locale['forum_0260']."'></i>";
+                            $icon = "<i class='".get_forum_icons('new')."' title='".$locale['forum_0260']."'></i>";
                         }
                     }
 

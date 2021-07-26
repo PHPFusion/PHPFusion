@@ -17,8 +17,24 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+/**
+ * Appends increment integer on multiple files on same post
+ *
+ * @param $file
+ *
+ * @return string
+ */
 function attach_exists($file) {
-    return \PHPFusion\Forums\Functions::attach_exists($file);
+    $dir = INFUSIONS."forum/attachments/";
+    $i = 1;
+    $file_name = substr($file, 0, strrpos($file, "."));
+    $file_ext = strrchr($file, ".");
+    while (file_exists($dir.$file)) {
+        $file = $file_name."_".$i.$file_ext;
+        $i++;
+    }
+
+    return $file;
 }
 
 function forum_rank_cache() {
@@ -29,12 +45,73 @@ function show_forum_rank($posts, $level, $groups) {
     return PHPFusion\Forums\ForumServer::show_forum_rank($posts, $level, $groups);
 }
 
+/**
+ * Display an image
+ *
+ * @param $file
+ *
+ * @return string
+ */
 function display_image($file) {
-    PHPFusion\Forums\Functions::display_image($file);
+    $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
+    if ($size[0] > 300 || $size[1] > 200) {
+        if ($size[0] <= $size[1]) {
+            $img_w = round(($size[0] * 200) / $size[1]);
+            $img_h = 200;
+        } else if ($size[0] > $size[1]) {
+            $img_w = 300;
+            $img_h = round(($size[1] * 300) / $size[0]);
+        } else {
+            $img_w = 300;
+            $img_h = 200;
+        }
+    } else {
+        $img_w = $size[0];
+        $img_h = $size[1];
+    }
+    if ($size[0] != $img_w || $size[1] != $img_h) {
+        $res = "<a href='".INFUSIONS."forum/attachments/".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' /></a>";
+    } else {
+        $res = "<img src='".INFUSIONS."forum/attachments/".$file."' width='".$img_w."' height='".$img_h."' style='border:0;' alt='".$file."' />";
+    }
+
+    return $res;
 }
 
+/**
+ * Display attached image with a certain given width and height.
+ *
+ * @param        $file
+ * @param int    $width
+ * @param int    $height
+ * @param string $rel
+ *
+ * @return string
+ */
 function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
-    return PHPFusion\Forums\Functions::display_image_attach($file, $width, $height, $rel);
+    if (file_exists(INFUSIONS."forum/attachments/".$file)) {
+        $size = @getimagesize(INFUSIONS."forum/attachments/".$file);
+        if ($size [0] > $height || $size [1] > $width) {
+            if ($size [0] < $size [1]) {
+                $img_w = round(($size [0] * $width) / $size [1]);
+                $img_h = $width;
+            } else if ($size [0] > $size [1]) {
+                $img_w = $height;
+                $img_h = round(($size [1] * $height) / $size [0]);
+            } else {
+                $img_w = $height;
+                $img_h = $width;
+            }
+        } else {
+            $img_w = $size [0];
+            $img_h = $size [1];
+        }
+        $res = "<a target='_blank' href='".INFUSIONS."forum/attachments/".$file."' rel='attach_".$rel."' title='".$file."'><img src='".INFUSIONS."forum/attachments/".$file."' alt='".$file."' style='border:none; width:".$img_w."px; height:".$img_h."px;' /></a>\n";
+    } else {
+        $res = fusion_get_locale('forum_0188');
+    }
+
+    return $res;
 }
 
 function define_forum_mods($info) {
@@ -57,61 +134,15 @@ function get_thread($thread_id) {
     return \PHPFusion\Forums\Threads\ForumThreads::get_thread($thread_id);
 }
 
-/**
- * Cast Question Votes
- *
- * @param     $info
- * @param int $points
- *
- * @todo: move and improvise the voting system
- */
-
-function set_forumVotes($info, $points = 0) {
-    $userdata = fusion_get_userdata();
-    // @todo: extend on user's rank threshold before can vote. - Reputation threshold- Roadmap 9.1
-    // @todo: allow multiple votes / drop $res - Roadmap 9.1
-    if (checkgroup($info['forum_vote']) && dbcount("('thread_id')", DB_FORUM_THREADS, "thread_locked='0'")) {
-        $data = [
-            'forum_id'       => $_GET['forum_id'],
-            'thread_id'      => $_GET['thread_id'],
-            'post_id'        => $_GET['post_id'],
-            'vote_points'    => $points,
-            'vote_user'      => $userdata['user_id'],
-            'vote_datestamp' => time(),
-        ];
-        $hasVoted = dbcount("('vote_user')", DB_FORUM_VOTES,
-            "vote_user='".intval($userdata['user_id'])."' AND thread_id='".intval($_GET['thread_id'])."'");
-        if (!$hasVoted) {
-            $isSelfPost = dbcount("('post_id')", DB_FORUM_POSTS,
-                "post_id='".intval($_GET['post_id'])."' AND post_user='".intval($userdata['user_id'])."");
-            if (!$isSelfPost) {
-                $result = dbquery_insert(DB_FORUM_VOTES, $data, 'save', ['noredirect' => 1, 'no_unique' => 1]);
-                if ($result && $info['forum_answer_threshold'] > 0) {
-                    $vote_result = dbquery("SELECT SUM('vote_points'), thread_id FROM ".DB_FORUM_VOTES." WHERE post_id='".$data['post_id']."'");
-                    $v_data = dbarray($vote_result);
-                    if ($info['forum_answer_threshold'] != 0 && $v_data['vote_points'] >= $info['forum_answer_threshold']) {
-                        dbquery("UPDATE ".DB_FORUM_THREADS." SET 'thread_locked'='1' WHERE thread_id='".$v_data['thread_id']."'");
-                    }
-                }
-                redirect(FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id']);
-            } else {
-                redirect(FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id'].'&error=vote_self');
-            }
-        } else {
-            redirect(FORUM."viewthread.php?thread_id=".$_GET['thread_id']."&amp;post_id=".$_GET['post_id'].'&error=vote');
-        }
-    }
-}
-
-function parse_forumMods($forum_mods) {
+function parse_forum_mods($forum_mods) {
     return PHPFusion\Forums\Moderator::parse_forum_mods($forum_mods);
 }
 
-function get_recentTopics($forum_id = 0) {
+function get_recent_topics($forum_id = 0) {
     return PHPFusion\Forums\ForumServer::get_recentTopics($forum_id);
 }
 
-function set_forumIcons(array $icons = []) {
+function set_forum_icons(array $icons = []) {
     PHPFusion\Forums\ForumServer::set_forumIcons($icons);
 }
 
@@ -119,6 +150,6 @@ function get_forum($forum_id = 0, $forum_branch = 0) {
     return PHPFusion\Forums\Forum::get_forum($forum_id, $forum_branch);
 }
 
-function get_forumIcons($type = '') {
+function get_forum_icons($type = '') {
     return \PHPFusion\Forums\ForumServer::get_ForumIcons($type);
 }

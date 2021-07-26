@@ -26,7 +26,6 @@ spl_autoload_register(function ($className) {
         "PHPFusion\\Forums\\Threads\\Forum_Mood"        => FORUM_CLASS."threads/mood.php",
         "PHPFusion\\Forums\\ForumServer"                => FORUM_CLASS."server.php",
         "PHPFusion\\Forums\\ThreadTags"                 => FORUM_CLASS."forum/tags.php",
-        "PHPFusion\\Forums\\Functions"                  => FORUM_CLASS."Functions.php",
         "PHPFusion\\Forums\\Moderator"                  => FORUM_CLASS."mods.php",
         "PHPFusion\\Forums\\Post\\NewThread"            => FORUM_CLASS."post/new_thread.php",
         "PHPFusion\\Forums\\Post\\QuickReply"           => FORUM_CLASS."post/quick_reply.php",

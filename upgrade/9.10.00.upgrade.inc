@@ -130,6 +130,8 @@ $deleted_files = [
     INCLUDES.'geomap/form_geomap.json.php',
     THEMES.'Magazine/classes/',
     THEMES.'Magazine/theme_autoloader.php',
+    INFUSIONS.'forum/classes/Functions.php',
+    INFUSIONS.'forum/classes/Admin.php',
 ];
 
 foreach ($deleted_files as $file) {

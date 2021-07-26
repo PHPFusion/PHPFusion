@@ -977,11 +977,11 @@ if (!function_exists('render_thread')) {
 
         echo '<h2>';
             if ($data['thread_sticky'] == TRUE) {
-                echo '<i title="'.$locale['forum_0103'].'" class="'.get_forumIcons('sticky').'"></i>';
+                echo '<i title="'.$locale['forum_0103'].'" class="'.get_forum_icons('sticky').'"></i>';
             }
 
             if ($data['thread_locked'] == TRUE) {
-                echo '<i title="'.$locale['forum_0102'].'" class="'.get_forumIcons('lock').'"></i>';
+                echo '<i title="'.$locale['forum_0102'].'" class="'.get_forum_icons('lock').'"></i>';
             }
 
             echo $data['thread_subject'];

@@ -867,7 +867,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'multiple' => TRUE
             ]).
             form_text('forum_order', self::$locale['forum_043'], $this->data['forum_order'], ['number' => 1]).
-            form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], ['class' => 'btn btn-sm btn-success']);
+            form_button('save_forum', $this->data['forum_id'] ? self::$locale['forum_000a'] : self::$locale['forum_000'], self::$locale['forum_000'], ['class' => 'btn btn-sm btn-success', 'input_id' => 'save_forum2']);
         echo "</div>\n";
         echo "</div>\n</div>\n";
 
