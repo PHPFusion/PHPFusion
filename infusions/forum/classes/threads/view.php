@@ -159,7 +159,7 @@ class ViewThread extends ForumServer {
                     }
                 }
 
-                redirect(FORUM."postify.php?post=edit&amp;thread_id=$thread_id&forum_id=$forum_id&post_count=$posts");
+                redirect(FORUM."postify.php?post=edit&thread_id=$thread_id&forum_id=$forum_id&post_count=$posts");
             }
         }
     }
@@ -333,7 +333,7 @@ class ViewThread extends ForumServer {
                         }
 
                         if (fusion_safe()) {
-                            redirect(FORUM."postify.php?post=reply&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                            redirect(FORUM."postify.php?post=reply&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
                         }
 
                     }
@@ -341,9 +341,9 @@ class ViewThread extends ForumServer {
             }
 
             // template data
-            $form_action = FORUM."viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id'];
+            $form_action = FORUM."viewthread.php?action=reply&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id'];
             if (isset($_GET['post_id'])) {
-                $form_action = FORUM."viewthread.php?action=reply&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".intval($_GET['post_id']);
+                $form_action = FORUM."viewthread.php?action=reply&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".intval($_GET['post_id']);
             }
 
             // Quote Get
@@ -357,7 +357,7 @@ class ViewThread extends ForumServer {
                     require_once INCLUDES.'bbcode_include.php';
                     $quote_data = dbarray($quote_result);
                     $post_data['post_message'] = "[quote name=".$quote_data['user_name']." post=".$_GET['quote']."]@".$quote_data['user_name']." - ".\strip_bbcodes($quote_data['post_message'])."[/quote]".$post_data['post_message'];
-                    $form_action .= "&amp;post_id=".$_GET['post_id']."&amp;quote=".$_GET['quote'];
+                    $form_action .= "&post_id=".$_GET['post_id']."&quote=".$_GET['quote'];
                 } else {
                     redirect(INFUSIONS."forum/index.php");
                 }
@@ -607,14 +607,14 @@ class ViewThread extends ForumServer {
                                 }
 
                                 if (fusion_safe()) {
-                                    redirect(FORUM."postify.php?post=edit&error=0&amp;forum_id=".intval($post_data['forum_id'])."&amp;thread_id=".intval($post_data['thread_id'])."&amp;post_id=".intval($post_data['post_id']));
+                                    redirect(FORUM."postify.php?post=edit&error=0&forum_id=".intval($post_data['forum_id'])."&thread_id=".intval($post_data['thread_id'])."&post_id=".intval($post_data['post_id']));
                                 }
                             }
                         }
                     }
 
                     // template data
-                    $form_action = FORUM."viewthread.php?action=edit&amp;forum_id=".$thread_data['forum_id']."&amp;thread_id=".$thread_data['thread_id']."&amp;post_id=".$_GET['post_id'];
+                    $form_action = FORUM."viewthread.php?action=edit&forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&post_id=".$_GET['post_id'];
 
                     // get attachment.
                     $attachments = [];

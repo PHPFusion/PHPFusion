@@ -111,6 +111,7 @@ $inf_newtable[] = DB_FORUMS." (
     forum_allow_poll TINYINT(1) NOT NULL DEFAULT '0',
     forum_poll VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_vote VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
+    forum_icon VARCHAR(50) NOT NULL DEFAULT '',
     forum_image VARCHAR(100) NOT NULL DEFAULT '',
     forum_post_ratings VARCHAR(50) NOT NULL DEFAULT ".USER_LEVEL_MEMBER.",
     forum_users TINYINT(1) NOT NULL DEFAULT '0',
@@ -274,6 +275,7 @@ $forum_settings = [
     'forum_show_reputation'      => 1,
     'bounty_points'              => 50,
     'min_rep_points'             => 50,
+    'picture_style'              => 'image',
 ];
 
 foreach ($forum_settings as $name => $value) {

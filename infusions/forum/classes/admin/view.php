@@ -43,6 +43,7 @@ class ForumAdminView extends ForumAdminInterface {
         'forum_allow_poll'         => 0,
         'forum_poll'               => USER_LEVEL_MEMBER,
         'forum_vote'               => USER_LEVEL_MEMBER,
+        'forum_icon'               => '',
         'forum_image'              => '',
         'forum_allow_post_ratings' => 0,
         'forum_post_ratings'       => USER_LEVEL_MEMBER,
@@ -69,8 +70,8 @@ class ForumAdminView extends ForumAdminInterface {
         $_GET['parent_id'] = (isset($_GET['parent_id']) && isnum($_GET['parent_id'])) ? $_GET['parent_id'] : 0;
         $_GET['action'] = (isset($_GET['action'])) && $_GET['action'] ? $_GET['action'] : '';
         $_GET['status'] = (isset($_GET['status'])) && $_GET['status'] ? $_GET['status'] : '';
-        $this->ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&amp;parent_id=".$_GET['parent_id'] : '';
-        $this->ext .= isset($_GET['branch']) && isnum($_GET['branch']) ? "&amp;branch=".$_GET['branch'] : '';
+        $this->ext = isset($_GET['parent_id']) && isnum($_GET['parent_id']) ? "&parent_id=".$_GET['parent_id'] : '';
+        $this->ext .= isset($_GET['branch']) && isnum($_GET['branch']) ? "&branch=".$_GET['branch'] : '';
 
         // indexing hierarchy data
         $this->forum_index = self::get_forum_index();
@@ -125,7 +126,7 @@ class ForumAdminView extends ForumAdminInterface {
             if (isset($index[get_parent($index, $id)])) {
                 $_name = dbarray(dbquery("SELECT forum_id, forum_name FROM ".DB_FORUMS." WHERE forum_id='".intval($id)."'"));
                 $crumb = [
-                    'link'  => [FUSION_SELF.$aidlink."&amp;parent_id=".$_name['forum_id']],
+                    'link'  => [FUSION_SELF.$aidlink."&parent_id=".$_name['forum_id']],
                     'title' => [$_name['forum_name']]
                 ];
                 if (isset($index[get_parent($index, $id)])) {
@@ -157,7 +158,7 @@ class ForumAdminView extends ForumAdminInterface {
         global $aidlink;
         if (isset($_POST['jp_forum'])) {
             $data['forum_id'] = form_sanitizer($_POST['forum_id'], 0, 'forum_id');
-            redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']);
+            redirect(FUSION_SELF.$aidlink."&action=p_edit&forum_id=".$data['forum_id']."&parent_id=".$_GET['parent_id']);
         }
     }
 
@@ -220,6 +221,7 @@ class ForumAdminView extends ForumAdminInterface {
                 'forum_permissions'  => isset($_POST['forum_permissions']) ? form_sanitizer($_POST['forum_permissions'], 0, 'forum_permissions') : 0,
                 'forum_order'        => isset($_POST['forum_order']) ? form_sanitizer($_POST['forum_order']) : '',
                 'forum_branch'       => get_hkey(DB_FORUMS, 'forum_id', 'forum_cat', $this->data['forum_cat']),
+                'forum_icon'        => form_sanitizer($_POST['forum_icon'], '', 'forum_icon'),
                 'forum_image'        => '',
                 'forum_mods'         => "",
             ];
@@ -321,7 +323,7 @@ class ForumAdminView extends ForumAdminInterface {
 
                     if ($this->data['forum_cat'] == 0) {
 
-                        redirect(FUSION_SELF.$aidlink."&amp;action=p_edit&amp;forum_id=".$new_forum_id."&amp;parent_id=0");
+                        redirect(FUSION_SELF.$aidlink."&action=p_edit&forum_id=".$new_forum_id."&parent_id=0");
 
                     } else {
 
@@ -549,7 +551,7 @@ class ForumAdminView extends ForumAdminInterface {
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 opentable(self::$locale['600'].": ".$data['forum_name']);
-                echo "<form name='prune_form' method='post' action='".FUSION_SELF.$aidlink."&amp;action=prune&amp;forum_id=".$_GET['forum_id']."'>\n";
+                echo "<form name='prune_form' method='post' action='".FUSION_SELF.$aidlink."&action=prune&forum_id=".$_GET['forum_id']."'>\n";
                 echo "<div style='text-align:center'>\n";
                 echo self::$locale['601']."<br />\n".self::$locale['602']."<br /><br />\n";
                 echo self::$locale['603']."<select name='prune_time' class='textbox'>\n";
@@ -877,6 +879,9 @@ class ForumAdminView extends ForumAdminInterface {
             'type'      => 'bbcode',
             'form_name' => 'inputform'
         ]);
+
+        echo form_text('forum_icon', self::$locale['forum_011a'], $this->data['forum_icon'], ['placeholder' => 'fa fa-folder']);
+
         if ($this->data['forum_image'] && file_exists(FORUM."images/".$this->data['forum_image'])) {
 
             openside('');
@@ -1099,7 +1104,7 @@ class ForumAdminView extends ForumAdminInterface {
 
         echo '<div class="m-t-25">';
 
-        $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
+        $result = dbquery("SELECT forum_id, forum_cat, forum_branch, forum_name, forum_description, forum_icon, forum_image, forum_alias, forum_type, forum_threadcount, forum_postcount, forum_order FROM
             ".DB_FORUMS." ".(multilang_table("FO") ? "WHERE ".in_group('forum_language', LANGUAGE)." AND" : "WHERE")." forum_cat='".intval($_GET['parent_id'])."'
              ORDER BY forum_order ASC LIMIT ".$_GET['rowstart'].", $threads_per_page
              ");
@@ -1138,27 +1143,29 @@ class ForumAdminView extends ForumAdminInterface {
                 echo "<div class='panel-body'>\n";
                 echo "<div class='pull-left m-r-10'>\n";
 
-                if ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image'])) {
+                if ($forum_settings['picture_style'] == 'image' && ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image']))) {
                     echo thumbnail(INFUSIONS."forum/images/".$data['forum_image'], '50px');
+                } else if ($forum_settings['picture_style'] == 'icon' && !empty($data['forum_icon'])) {
+                    echo "<i style='font-size: 50px' class='display-inline-block ".$data['forum_icon']."'></i>\n";
                 } else {
-                    echo "<i class='display-inline-block text-lighter ".$type_icon[$data['forum_type']]."'></i>\n";
+                    echo "<i style='font-size: 50px' class='display-inline-block ".$type_icon[$data['forum_type']]."'></i>\n";
                 }
 
                 echo "</div>\n";
                 echo "<div class='overflow-hide'>\n";
                 echo "<div class='row'>\n";
                 echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
-                echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&amp;parent_id=".$data['forum_id']."&amp;branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description']));
+                echo "<span class='strong text-bigger'><a href='".FUSION_SELF.$aidlink."&parent_id=".$data['forum_id']."&branch=".$data['forum_branch']."'>".$data['forum_name']."</a></span><br/>".nl2br(parseubb($data['forum_description']));
                 echo "</div>\n<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>\n";
                 echo "<div class='pull-right'>\n";
-                $upLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=mu&amp;order=$up&amp;forum_id=".$data['forum_id'];
-                $downLink = FUSION_SELF.$aidlink.$this->ext."&amp;action=md&amp;order=$down&amp;forum_id=".$data['forum_id'];
+                $upLink = FUSION_SELF.$aidlink.$this->ext."&action=mu&order=$up&forum_id=".$data['forum_id'];
+                $downLink = FUSION_SELF.$aidlink.$this->ext."&action=md&order=$down&forum_id=".$data['forum_id'];
 
                 echo ($i == 1) ? '' : "<a class='m-r-10' title='".self::$locale['forum_046']."' href='".$upLink."'>".$ui_label['move_up']."</a>";
                 echo ($i == $rows) ? '' : "<a class='m-r-10' title='".self::$locale['forum_045']."' href='".$downLink."'>".$ui_label['move_down']."</a>";
-                echo "<a class='m-r-10' title='".self::$locale['forum_029']."' href='".FUSION_SELF.$aidlink."&amp;action=p_edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
-                echo "<a class='m-r-10' title='".self::$locale['forum_002']."' href='".FUSION_SELF.$aidlink."&amp;action=edit&forum_id=".$data['forum_id']."&amp;parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
-                echo "<a title='".self::$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&amp;action=delete&amp;forum_id=".$data['forum_id']."&amp;forum_cat=".$data['forum_cat']."&amp;forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".self::$locale['delete_notice']."');\">".$ui_label['delete']."</a>"; // delete
+                echo "<a class='m-r-10' title='".self::$locale['forum_029']."' href='".FUSION_SELF.$aidlink."&action=p_edit&forum_id=".$data['forum_id']."&parent_id=".$_GET['parent_id']."'>".$ui_label['edit_permission']."</a>"; // edit
+                echo "<a class='m-r-10' title='".self::$locale['forum_002']."' href='".FUSION_SELF.$aidlink."&action=edit&forum_id=".$data['forum_id']."&parent_id=".$_GET['parent_id']."'>".$ui_label['edit']."</a>"; // edit
+                echo "<a title='".self::$locale['forum_049']."' href='".FUSION_SELF.$aidlink."&action=delete&forum_id=".$data['forum_id']."&forum_cat=".$data['forum_cat']."&forum_branch=".$data['forum_branch'].$this->ext."' onclick=\"return confirm('".self::$locale['delete_notice']."');\">".$ui_label['delete']."</a>"; // delete
                 echo "</div>\n";
                 echo "<span class='text-dark text-smaller strong'>".self::$locale['forum_057']." ".number_format($data['forum_threadcount'])." / ".self::$locale['forum_059']." ".number_format($data['forum_postcount'])." </span>\n<br/>";
 
@@ -1170,7 +1177,7 @@ class ForumAdminView extends ForumAdminInterface {
                 $i++;
             }
             if ($max_rows > $threads_per_page) {
-                $ext = (isset($_GET['parent_id'])) ? "&amp;parent_id=".$_GET['parent_id']."&amp;" : '';
+                $ext = (isset($_GET['parent_id'])) ? "&parent_id=".$_GET['parent_id']."&" : '';
                 echo makepagenav($_GET['rowstart'], $threads_per_page, $max_rows, 3, FUSION_SELF.$aidlink.$ext);
             }
         } else {

@@ -185,7 +185,7 @@ class Forum extends ForumServer {
                      */
                     //$this->forum_info['forum_max_rows'] = dbcount("('forum_id')", DB_FORUMS, (multilang_table("FO") ? in_group('forum_language', LANGUAGE)." AND" : '')." forum_cat='".$this->forum_info['parent_id']."' AND ".groupaccess('forum_access')."");
                     //$_GET['rowstart'] = (isset($_GET['rowstart']) && $_GET['rowstart'] <= $this->forum_info['forum_max_rows']) ? $_GET['rowstart'] : 0;
-                    //$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&amp;parent_id=".$this->forum_info['parent_id'] : '';
+                    //$this->ext = isset($this->forum_info['parent_id']) && isnum($this->forum_info['parent_id']) ? "&parent_id=".$this->forum_info['parent_id'] : '';
                     /*
                      * End Inspection
                      */
@@ -204,23 +204,23 @@ class Forum extends ForumServer {
                      * Forum Page Link
                      */
                     $this->forum_info['forum_page_link']['content'] = [
-                        'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'],
+                        'link'  => FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id'],
                         'title' => $locale['forum_0015']
                     ];
                     $this->forum_info['forum_page_link']['activity'] = [
-                        'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id']."&amp;view=activity",
+                        'link'  => FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id']."&view=activity",
                         'title' => $locale['forum_0016']
                     ];
                     if ($this->forum_info['forum_users']) {
                         $this->forum_info['forum_page_link']['people'] = [
-                            'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id']."&amp;view=people",
+                            'link'  => FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id']."&view=people",
                             'title' => $locale['forum_0017']
                         ];
                     }
                     $this->forum_info['subforum_count'] = dbcount("(forum_id)", DB_FORUMS, 'forum_cat=:forum_id', [':forum_id' => $this->forum_info['forum_id']]);
                     if ($this->forum_info['subforum_count']) {
                         $this->forum_info['forum_page_link']['subforums'] = [
-                            'link'  => FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=subforums',
+                            'link'  => FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id'].'&view=subforums',
                             'title' => $locale['forum_0351'],
                         ];
                     }
@@ -262,11 +262,11 @@ class Forum extends ForumServer {
                                     $rows = dbrows($result);
                                     if ($rows) {
                                         if ($this->forum_info['max_user_count'] > $limit) {
-                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $limit, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=people&amp;');
+                                            $this->forum_info['pagenav'] = makepagenav($_GET['rowstart'], $limit, $this->forum_info['max_user_count'], 3, FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id'].'&view=people&');
                                         }
                                         while ($data = dbarray($result)) {
                                             $data['thread_link'] = [
-                                                'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'],
+                                                'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&pid='.$data['post_id'].'#post_'.$data['post_id'],
                                                 'title' => $data['thread_subject']
                                             ];
                                             $this->forum_info['item'][$data['user_id']] = $data;
@@ -292,7 +292,7 @@ class Forum extends ForumServer {
                                     $rows = dbrows($result);
                                     if ($rows) {
                                         if ($this->forum_info['max_post_count'] > $this->forum_info['posts_per_page']) {
-                                            $this->forum_info['pagenav'] = makepagenav($rowstart, $this->forum_info['posts_per_page'], $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&amp;forum_id='.$this->forum_info['forum_id'].'&amp;view=activity&amp;');
+                                            $this->forum_info['pagenav'] = makepagenav($rowstart, $this->forum_info['posts_per_page'], $this->forum_info['max_post_count'], 3, FORUM.'index.php?viewforum&forum_id='.$this->forum_info['forum_id'].'&view=activity&');
                                         }
                                         $i = 0;
                                         while ($data = dbarray($result)) {
@@ -305,7 +305,7 @@ class Forum extends ForumServer {
                                                     'user_avatar' => $user['user_avatar']
                                                 ];
                                                 $data['thread_link'] = [
-                                                    'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&amp;pid='.$data['post_id'].'#post_'.$data['post_id'],
+                                                    'link'  => FORUM.'viewthread.php?thread_id='.$data['thread_id'].'&pid='.$data['post_id'].'#post_'.$data['post_id'],
                                                     'title' => $data['thread_subject']
                                                 ];
                                                 if (!$i) {
@@ -338,14 +338,14 @@ class Forum extends ForumServer {
                             // must be questions, so need 2 filters - 0596 is question.
                             $filter = [
                                 'solved'   => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=solved",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=solved",
                                     'title'  => $locale['forum_0378'],
                                     'icon'   => "<i class='fa fa-question-circle-o text-success m-r-5'></i>",
                                     'active' => FALSE,
                                     'count'  => dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id and thread_answered=:answer AND thread_hidden=:status", [':forum_id' => $this->forum_info['forum_id'], ':answer' => 1, ':status' => 0]) ?: 0,
                                 ],
                                 'unsolved' => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=unsolved",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=unsolved",
                                     'title'  => $locale['forum_0379'],
                                     'icon'   => "<i class='fa fa-question-circle text-warning m-r-5'></i>",
                                     'active' => FALSE,
@@ -356,7 +356,7 @@ class Forum extends ForumServer {
                             // must be discussions
                             $filter = [
                                 'discussions' => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=discussions",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=discussions",
                                     'title'  => $locale['forum_0222'],
                                     'icon'   => "<i class='fa fa-comment text-primary m-r-5'></i>",
                                     'active' => FALSE,
@@ -374,21 +374,21 @@ class Forum extends ForumServer {
 
                         $this->forum_info['filters']['type'] = [
                                 'all'         => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=all",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=all",
                                     'title'  => $locale['forum_0374'],
                                     'icon'   => '',
                                     'active' => FALSE,
                                     'count'  => $this->forum_info['thread_count']
                                 ],
                                 'attachments' => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=attachments",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=attachments",
                                     'title'  => $locale['forum_0223'],
                                     'icon'   => "<i class='fa fa-file-text-o text-info m-r-5'></i>",
                                     'active' => FALSE,
                                     'count'  => $attach_count ?: 0,
                                 ],
                                 'poll'        => [
-                                    'link'   => FORUM."index.php?viewforum&amp;forum_id=".$this->forum_info['forum_id']."&amp;type=poll",
+                                    'link'   => FORUM."index.php?viewforum&forum_id=".$this->forum_info['forum_id']."&type=poll",
                                     'title'  => $locale['forum_0314'],
                                     'icon'   => "<i class='fa fa-bar-chart text-success m-r-5'></i>",
                                     'active' => FALSE,
@@ -487,8 +487,6 @@ class Forum extends ForumServer {
         $row = [
             'forum_new_status'       => '',
             'last_post'              => '',
-            'forum_icon'             => '',
-            'forum_icon_lg'          => '',
             'forum_moderators'       => '',
             'forum_link'             => [
                 'link'  => '',
@@ -509,7 +507,7 @@ class Forum extends ForumServer {
         }
 
         $query = dbquery("
-            SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastpostid, f.forum_language,
+            SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_icon, f.forum_image, f.forum_lastpost, f.forum_lastpostid, f.forum_language,
             t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
             FROM ".DB_FORUMS." f
             LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
@@ -554,7 +552,7 @@ class Forum extends ForumServer {
                     'time'         => timer($data['thread_lastpost']),
                     'date'         => showdate("forumdate", $data['thread_lastpost']),
                     'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id'],
-                    'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&amp;pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
+                    'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$data['thread_id']."&pid=".$data['thread_lastpostid']."#post_".$data['thread_lastpostid'],
                     'link_title'   => $data['forum_name']
                 ];
 
@@ -569,41 +567,25 @@ class Forum extends ForumServer {
             }
 
             // Icons
-            switch ($data['forum_type']) {
-                case '1':
-                    $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
-                    break;
-                case '2':
-                    $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
-                    break;
-                case '3':
-                    $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
-                    break;
-                case '4':
-                    $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
-                    $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
-                    break;
-                default:
-                    $forum_icon = "";
-                    $forum_icon_lg = "";
-            }
+            $type_icon = [
+                '1' => self::get_forumIcons('forum'),
+                '2' => self::get_forumIcons('thread'),
+                '3' => self::get_forumIcons('link'),
+                '4' => self::get_forumIcons('question')
+            ];
 
             $row = array_merge($row, $data, [
                 "forum_moderators"       => Moderator::parse_forum_mods($data['forum_mods']),
                 "forum_new_status"       => $newStatus,
                 "forum_link"             => [
-                    "link"  => INFUSIONS."forum/index.php?viewforum&amp;forum_id=".$data['forum_id'],
+                    "link"  => INFUSIONS."forum/index.php?viewforum&forum_id=".$data['forum_id'],
                     "title" => $data['forum_name']
                 ],
                 "forum_description"      => nl2br(parseubb($data['forum_description'])),
                 "forum_postcount_word"   => format_word($data['forum_postcount'], $locale['fmt_post']),
                 "forum_threadcount_word" => format_word($data['forum_threadcount'], $locale['fmt_thread']),
                 "last_post"              => $lastPostInfo,
-                "forum_icon"             => $forum_icon,
-                "forum_icon_lg"          => $forum_icon_lg,
+                "forum_icon_alt"         => $type_icon[$data['forum_type']],
             ]);
 
             $row["forum_image"] = ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '';
@@ -627,7 +609,7 @@ class Forum extends ForumServer {
 
         if ($this->forum_info['subforum_count']) {
 
-            $subforum_result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_image, f.forum_lastpost, f.forum_lastuser, f.forum_lastpostid, f.forum_language,
+            $subforum_result = dbquery("SELECT f.forum_id, f.forum_cat, f.forum_name, f.forum_description, f.forum_branch, f.forum_access, f.forum_lock, f.forum_type, f.forum_mods, f.forum_postcount, f.forum_threadcount, f.forum_icon, f.forum_image, f.forum_lastpost, f.forum_lastuser, f.forum_lastpostid, f.forum_language,
                 t.thread_id, t.thread_lastpost, t.thread_lastpostid, t.thread_lastuser, t.thread_subject
                 FROM ".DB_FORUMS." f
                 LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_lastpostid = t.thread_lastpostid
@@ -646,8 +628,6 @@ class Forum extends ForumServer {
             $row_array = [
                 'forum_new_status'       => '',
                 'last_post'              => '',
-                'forum_icon'             => '',
-                'forum_icon_lg'          => '',
                 'forum_moderators'       => '',
                 'forum_link'             => [
                     'link'  => '',
@@ -671,30 +651,13 @@ class Forum extends ForumServer {
                         }
                     }
 
-                    /**
-                     * Default system icons - why do i need this? Why not let themers decide?
-                     */
-                    switch ($row['forum_type']) {
-                        case '1':
-                            $forum_icon = "<i class='".self::get_forumIcons('forum')." fa-fw m-r-10'></i>";
-                            $forum_icon_lg = "<i class='".self::get_forumIcons('forum')." fa-3x fa-fw m-r-10'></i>";
-                            break;
-                        case '2':
-                            $forum_icon = "<i class='".self::get_forumIcons('thread')." fa-fw m-r-10'></i>";
-                            $forum_icon_lg = "<i class='".self::get_forumIcons('thread')." fa-3x fa-fw m-r-10'></i>";
-                            break;
-                        case '3':
-                            $forum_icon = "<i class='".self::get_forumIcons('link')." fa-fw m-r-10'></i>";
-                            $forum_icon_lg = "<i class='".self::get_forumIcons('link')." fa-3x fa-fw m-r-10'></i>";
-                            break;
-                        case '4':
-                            $forum_icon = "<i class='".self::get_forumIcons('question')." fa-fw m-r-10'></i>";
-                            $forum_icon_lg = "<i class='".self::get_forumIcons('question')." fa-3x fa-fw m-r-10'></i>";
-                            break;
-                        default:
-                            $forum_icon = "";
-                            $forum_icon_lg = "";
-                    }
+                    // Icons
+                    $type_icon = [
+                        '1' => self::get_forumIcons('forum'),
+                        '2' => self::get_forumIcons('thread'),
+                        '3' => self::get_forumIcons('link'),
+                        '4' => self::get_forumIcons('question')
+                    ];
 
                     // Calculate lastpost information
                     $lastPostInfo = [
@@ -744,7 +707,7 @@ class Forum extends ForumServer {
                                     'time'         => timer($row['forum_lastpost']),
                                     'date'         => showdate("forumdate", $row['forum_lastpost']),
                                     'thread_link'  => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id'],
-                                    'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id']."&amp;pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
+                                    'post_link'    => INFUSIONS."forum/viewthread.php?thread_id=".$row['thread_id']."&pid=".$row['thread_lastpostid']."#post_".$row['thread_lastpostid'],
                                 ];
                                 if ($forum_settings['forum_last_post_avatar']) {
                                     $last_post['avatar'] = display_avatar($last_user, '30px', '', '', 'img-rounded');
@@ -763,7 +726,7 @@ class Forum extends ForumServer {
                         "forum_moderators"       => Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
                         "forum_new_status"       => $newStatus,
                         "forum_link"             => [
-                            "link"  => FORUM."index.php?viewforum&amp;forum_id=".$row['forum_id'],
+                            "link"  => FORUM."index.php?viewforum&forum_id=".$row['forum_id'],
                             "title" => $row['forum_name']
                         ],
                         "forum_description"      => nl2br(parseubb($row['forum_description'])), // current forum description
@@ -772,8 +735,7 @@ class Forum extends ForumServer {
                         // @this need a count
                         "forum_threadcount_word" => format_word($row['forum_threadcount'], $locale['fmt_thread']), // thread in the current forum
                         "last_post"              => $lastPostInfo, // last post information
-                        "forum_icon"             => $forum_icon, // normal icon
-                        "forum_icon_lg"          => $forum_icon_lg, // big icon.
+                        "forum_icon_alt"         => $type_icon[$row['forum_type']],
                         "forum_image"            => ($row['forum_image'] && file_exists(FORUM."images/".$row['forum_image'])) ? $row['forum_image'] : '',
                     ]);
 

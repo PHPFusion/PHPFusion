@@ -190,6 +190,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                 'forum_show_reputation'     => form_sanitizer($_POST['forum_show_reputation'], 0, 'forum_show_reputation'),
                 'bounty_points'             => form_sanitizer($_POST['bounty_points'], 50, 'bounty_points'),
                 'min_rep_points'            => form_sanitizer($_POST['min_rep_points'], 50, 'min_rep_points'),
+                'picture_style'             => form_sanitizer($_POST['picture_style'], 'image', 'picture_style'),
             ];
             if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
@@ -284,6 +285,15 @@ class ForumAdminSettings extends ForumAdminInterface {
 
                 echo form_select('forum_show_reputation', self::$locale['513'], $forum_settings['forum_show_reputation'], [
                     'options'    => $yes_no_array,
+                    'error_text' => self::$locale['error_value'],
+                    'inline'     => TRUE
+                ]);
+
+                echo form_select('picture_style', self::$locale['514'], $forum_settings['picture_style'], [
+                    'options'    => [
+                        'icon'  => self::$locale['515'],
+                        'image' => self::$locale['forum_062']
+                    ],
                     'error_text' => self::$locale['error_value'],
                     'inline'     => TRUE
                 ]);

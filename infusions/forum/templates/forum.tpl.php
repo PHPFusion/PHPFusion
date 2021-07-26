@@ -171,13 +171,16 @@ if (!function_exists('render_forum_main')) {
 if (!function_exists('render_forum_item')) {
     function render_forum_item($data) {
         $locale = fusion_get_locale();
+        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
 
         echo '<div id="forum_'.$data['forum_id'].'">';
         echo '<div class="pull-left forum_icon">';
-        if ($data['forum_image'] && file_exists(FORUM.'images/'.$data['forum_image'])) {
+        if ($forum_settings['picture_style'] == 'image' && ($data['forum_image'] && file_exists(INFUSIONS."forum/images/".$data['forum_image']))) {
             echo '<img class="img-responsive" style="width:30px;" src="'.FORUM.'images/'.$data['forum_image'].'">';
+        } else if ($forum_settings['picture_style'] == 'icon' && !empty($data['forum_icon'])) {
+            echo '<div class="forum-icon"><i class="'.$data['forum_icon'].'"></i></div>';
         } else {
-            echo '<div class="forum-icon">'.$data['forum_icon_lg'].'</div>';
+            echo '<div class="forum-icon"><i class="'.$data['forum_icon_alt'].'"></i></div>';
         }
         echo '</div>';
 
@@ -204,7 +207,7 @@ if (!function_exists('render_forum_item')) {
             echo '<div class="clearfix sub-forum">';
             echo '<div class="overflow-hide">';
             foreach ($data['child'] as $cdata) {
-                echo isset($cdata['forum_type']) ? $data['forum_icon'] : '';
+                echo isset($cdata['forum_type']) ? '<i class="'.$cdata['forum_icon'].'"></i> ' : '';
                 echo '<a href="'.INFUSIONS.'forum/index.php?viewforum&forum_id='.$cdata['forum_id'].'" class="forum-subforum display-inline-block">'.$cdata['forum_name'].'</a><br/>';
             }
             echo '</div>';
@@ -402,7 +405,7 @@ if (!function_exists('forum_viewforum')) {
                 echo '</div>';
             } else {
                 if ($info['forum_type'] == 1) {
-                    echo '<div class=" text-center">'.$locale['forum_0327'].'</div>';
+                    echo '<div class="text-center">'.$locale['forum_0327'].'</div>';
                 }
             }
 

@@ -20,6 +20,7 @@ $inf_version = '2.2.0';
 $new_settings = [
     'bounty_points'  => 50,
     'min_rep_points' => 50,
+    'picture_style'  => 'image',
 ];
 
 $settings = get_settings('forum');
@@ -59,7 +60,8 @@ $change_forums = [
     'forum_vote'            => " CHANGE forum_vote forum_vote VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_attach'          => " CHANGE forum_attach forum_attach VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) NOT NULL DEFAULT ''"
+    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) NOT NULL DEFAULT ''",
+    'forum_icon'            => " ADD forum_icon VARCHAR(50) NOT NULL DEFAULT '' AFTER forum_vote"
 ];
 
 foreach ($change_forums as $key => $value) {
