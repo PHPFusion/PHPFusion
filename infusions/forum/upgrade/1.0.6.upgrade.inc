@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: 1.0.6.upgrade.inc
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Introduction to Support Forum Type User Reputation Points
 +--------------------------------------------------------+
 | This program is released as free software under the

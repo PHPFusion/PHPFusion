@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: members_view.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -54,7 +54,7 @@ class Members_View {
             {%list_footer%}
             </tfoot>
         </table></div>
-        
+
         <div class='clearfix'><div class='pull-right'>{%page_nav%}</div></div>
         ";
     }

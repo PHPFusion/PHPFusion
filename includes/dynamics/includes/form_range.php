@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_range.php
-| Author: PHPFusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -24,15 +24,15 @@
  * @return string
  */
 function form_range($input_name, $label = "", $input_value = "", array $options = []) {
-    
+
     $locale = fusion_get_locale();
-    
+
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-    
+
     $input_id = trim(str_replace("[", "-", $input_name), "]");
-    
+
     $input_value = clean_input_value($input_value);
-    
+
     $default_options = [
         'type'            => 'text',
         'required'        => FALSE, // whether required or not
@@ -59,20 +59,20 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'display_percent' => FALSE, // element is displayed as % or unit value
         'range_buttons'   => FALSE, // display 4 quick buttons to set the slider value
     ];
-    
+
     $options += $default_options;
-    
+
     $options['type'] = 'number';
-    
+
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
             $options_data[] = "data-$b='$a'";
         }, $options_data);
     }
-    
+
     // Error messages based on settings
     $options['error_text'] = empty($options['error_text']) ? $locale['error_input_default'] : $options['error_text'];
-    
+
     $error_class = "";
     if (\Defender::inputHasError($input_name)) {
         $error_class = " has-error";
@@ -81,48 +81,48 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            
+
             addnotice("danger", $options['error_text']);
         }
     }
-    
+
     $min = ((!empty($options['min']) || $options['min'] === "0") && isnum($options['min']) ? "min='".$options['min']."' " : '');
-    
+
     $max = ((!empty($options['max']) || $options['max'] === "0") && isnum($options['max']) ? "max='".$options['max']."' " : '');
-    
+
     $step = $options['step'] ? "step='".$options['step']."' " : '';
-    
+
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ?? '').($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
-    
+
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer far fa-question-circle' data-toggle='tooltip' title='".$options['tip']."'></i>" : '')."</label>" : '';
-    
+
     $html .= ($options['inline'] && $label ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "");
-    
+
     $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." ".($options['deactivate'] ? 'readonly' : '').">";
-    
+
     $text = $input_value ?? $options['min'];
     if ($options['display_percent']) {
         $text = floor(($input_value ?? $options['min'] / $options['max']) * 100).'%';
     }
-    
+
     $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>$text</div></div>";
-    
+
     if ($options['max'] - $options['min'] && $options['range_buttons']) {
-        
+
         $range = [
             ($options['max'] * 25 / 100),
             ($options['max'] * 50 / 100),
             ($options['max'] * 70 / 100),
             ($options['max'] * 100 / 100),
         ];
-        
+
         $html .= '<div class="flex flex-row">
         <button type="button" data-value="'.$range[0].'" class="btn btn-xs btn-range btn-default">25%</button>
         <button type="button" data-value="'.$range[1].'" class="btn btn-xs btn-range btn-default">50%</button>
         <button type="button" data-value="'.$range[2].'" class="btn btn-xs btn-range btn-default">75%</button>
         <button type="button" data-value="'.$range[3].'" class="btn btn-xs btn-range btn-default">Max</button>
         </div>';
-        
+
         add_to_jquery("
         let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
         pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
@@ -133,9 +133,9 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
             pct_".$options['input_id'].".textContent = percent;
         });
         ");
-        
+
     }
-    
+
     add_to_jquery("
     let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
     pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
@@ -146,20 +146,20 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         pct_".$options['input_id'].".textContent = text_content;
     };
     ");
-    
-    
+
+
     $html .= $options['stacked'];
-    
+
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-    
+
     $html .= (\Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "");
-    
+
     $html .= $options['append_html'];
-    
+
     $html .= (($options['inline'] && $label) ? "</div>" : '');
-    
+
     $html .= "</div>";
-    
+
     // Add input settings in the SESSION
     \Defender::add_field_session([
         'input_name'     => clean_input_name($input_name),
@@ -171,6 +171,6 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'callback_check' => $options['callback_check'],
         'descript'       => TRUE,
     ]);
-    
+
     return $html;
 }
