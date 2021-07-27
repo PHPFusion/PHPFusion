@@ -15,29 +15,22 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Default Error Template
- * Provides override methods for Theme Developers
  */
 if (!function_exists("display_error_page")) {
     function display_error_page(array $info = []) {
-        opentable('<i class=\'fa fa-warning fa-fw m-r-5 text-warning\'></i>{%title%}');
-        ?>
-        <div class='row spacer-sm'>
-            <div class='col-xs-12 col-sm-3 text-center'>
-                <img class='img-responsive' src='{%image_src%}' alt='{%title%}'>
-            </div>
-            <div class='col-xs-12 col-sm-9'>
-                <span class='va' style='height:160px'></span>
-                <div class='va'>
-                    <h4>{%error_code%}</h4>
-                </div>
-                <div>{%message%}</div>
-                <div class='spacer-sm'><a class='button' href='{%back_link%}'>{%back_title%}</a></div>
+        $locale = fusion_get_locale();
 
-            </div>
-        </div>
-        <?php
+        PHPFusion\Panels::getInstance()->hideAll();
+
+        echo '<div class="text-center">';
+        opentable('<i class="fa fa-warning fa-fw m-r-5 text-warning"></i> '.$info['title']);
+        echo '<h1 style="font-size:20rem;">'.$info['status'].'</h1>';
+        echo '<h3>'.$locale['errmsg'].'</h3>';
+        echo '<a href="'.$info['back']['url'].'">'.$info['back']['title'].'</a>';
         closetable();
+        echo '</div>';
     }
 }

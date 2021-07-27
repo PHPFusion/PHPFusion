@@ -132,6 +132,7 @@ $deleted_files = [
     THEMES.'Magazine/theme_autoloader.php',
     INFUSIONS.'forum/classes/Functions.php',
     INFUSIONS.'forum/classes/Admin.php',
+    IMAGES.'error/',
 ];
 
 foreach ($deleted_files as $file) {

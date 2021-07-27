@@ -71,11 +71,9 @@ function write_htaccess() {
     $htc .= "</ifModule>".PHP_EOL.PHP_EOL;
 
     // Error pages
-    $htc .= "ErrorDocument 400 ".$site_path."error.php?code=400".PHP_EOL;
     $htc .= "ErrorDocument 401 ".$site_path."error.php?code=401".PHP_EOL;
     $htc .= "ErrorDocument 403 ".$site_path."error.php?code=403".PHP_EOL;
     $htc .= "ErrorDocument 404 ".$site_path."error.php?code=404".PHP_EOL;
-    $htc .= "ErrorDocument 500 ".$site_path."error.php?code=500".PHP_EOL;
 
     if ($settings_seo == 1) {
         // Rewrite settings
