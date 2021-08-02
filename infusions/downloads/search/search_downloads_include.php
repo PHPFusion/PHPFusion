@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -92,42 +91,36 @@ if (defined('DOWNLOADS_EXISTS')) {
                     $new = "";
                 }
                 $data['download_description'] = strip_tags(htmlspecialchars_decode($data['download_description']));
-                $text_all = $data['download_description'];
-                $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
-                $text_frag = Search_Engine::search_textfrag($text_all);
-                // $subj_c = Search_Engine::search_stringscount($data['download_title']);
-                // $text_c = Search_Engine::search_stringscount($data['download_description']);
 
-                $context = '';
-                if ($text_frag != "") {
-                    $context .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
+                $meta = '';
+                if (!empty($data['download_license'])) {
+                    $meta = "<span class='small'><span class='alt'>".$locale['d404']."</span> ".$data['download_license']." |\n";
                 }
-
-                $meta = "<span class='small'><span class='alt'>".$locale['d404']."</span> ".$data['download_license']." |\n";
-                $meta .= "<span class='alt'>".$locale['d405']."</span> ".$data['download_os']." |\n";
-                $meta .= "<span class='alt'>".$locale['d406']."</span> ".$data['download_version']."<br />\n";
+                if (!empty($data['download_os'])) {
+                    $meta .= "<span class='alt'>".$locale['d405']."</span> ".$data['download_os']." |\n";
+                }
+                if (!empty($data['download_version'])) {
+                    $meta .= "<span class='alt'>".$locale['d406']."</span> ".$data['download_version']."<br />\n";
+                }
                 $meta .= "<span class='small2'>".$locale['global_070'].profile_link($data['user_id'], $data['user_name'], $data['user_status'])."\n";
                 $meta .= "<span class='alt'>".$locale['d407']."</span> ".showdate("%d.%m.%y", $data['download_datestamp'])." |\n";
                 $meta .= "<span class='alt'>".$locale['d408']."</span> ".$data['download_count']."</span>";
 
-                $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'             => DOWNLOADS."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'],
-                        '{%item_image%}'           => "<i class='fa fa-download fa-lg'></i>",
-                        '{%item_title%}'           => $data['download_title'].' - '.$data['download_filesize'].' '.$new,
-                        '{%item_description%}'     => $meta,
-                        '{%item_search_criteria%}' => '',
-                        '{%item_search_context%}'  => $context
-                    ]
-                );
+                $search_result .= render_search_item([
+                    'item_url'         => DOWNLOADS."downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id'],
+                    'item_image'       => "<i class='fa fa-download fa-lg'></i>",
+                    'item_title'       => $data['download_title'].' '.(!empty($data['download_filesize']) ? ' - '.$data['download_filesize'] : '').' '.$new,
+                    'item_description' => $meta
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_D')."' alt='".$locale['d400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-cloud-download fa-lg fa-fw",
-                '{%search_title%}'   => $locale['d400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_D')."' alt='".$locale['d400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-cloud-download fa-lg fa-fw",
+                'search_title'   => $locale['d400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -98,26 +97,23 @@ if (defined('BLOG_EXISTS')) {
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b405'].", ";
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['b403']." ".$locale['b406']."</span>";
 
-                $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
-                        '{%item_target%}'          => 'self',
-                        '{%item_image%}'           => '',
-                        '{%item_title%}'           => $data['blog_subject'],
-                        '{%item_description%}'     => $meta,
-                        '{%item_search_criteria%}' => $criteria,
-                        '{%item_search_context%}'  => $context
-                    ]
-                );
-
+                $search_result .= render_search_item_list([
+                    'item_url'             => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+                    'item_image'           => '',
+                    'item_title'           => $data['blog_subject'],
+                    'item_description'     => $meta,
+                    'item_search_criteria' => $criteria,
+                    'item_search_context'  => $context
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['b400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-pencil-square fa-lg fa-fw",
-                '{%search_title%}'   => $locale['b400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_BLOG')."' alt='".$locale['b400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-pencil-square fa-lg fa-fw",
+                'search_title'   => $locale['b400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

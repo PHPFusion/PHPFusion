@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -31,7 +30,7 @@ if (defined('GALLERY_EXISTS')) {
         $item_count = "0 ".$locale['p402']." ".$locale['522']."<br />\n";
 
         if (!defined("SAFEMODE")) {
-            define("SAFEMODE", @ini_get("safe_mode") ? TRUE : FALSE);
+            define("SAFEMODE", (bool)(@ini_get("safe_mode")));
         }
         $sort_by = [
             'datestamp' => "photo_datestamp",
@@ -92,8 +91,6 @@ if (defined('GALLERY_EXISTS')) {
                 $text_all = $data['photo_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
-                // $subj_c = Search_Engine::search_stringscount($data['photo_title']) + Search_Engine::search_stringscount($data['album_title']);
-                // $text_c = Search_Engine::search_stringscount($data['photo_description']) + Search_Engine::search_stringscount($data['album_description']);
 
                 $image_link = INFUSIONS.'gallery/gallery.php?photo_id='.$data['photo_id'];
 
@@ -114,26 +111,21 @@ if (defined('GALLERY_EXISTS')) {
                 }
                 $desc .= "<span class='small'><span class='alt'>".$locale['p405']."</span> ".showdate("%d.%m.%y", $data['photo_datestamp'])." | <span class='alt'>".$locale['p406']."</span> ".$data['photo_views']."</span>";
 
-                $search_result .= strtr(Search::render_search_item_image(), [
-                        '{%item_url%}'             => $image_link,
-                        '{%item_target%}'          => '',
-                        '{%item_image%}'           => "<img src='".$img_path."' class='icon-xl' alt='".$data['photo_title']."'>",
-                        '{%item_title%}'           => $data['photo_title'].'<br>'.$locale['p404']." <a href='".INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a>",
-                        '{%item_description%}'     => $desc,
-                        '{%item_search_criteria%}' => '',
-                        '{%item_search_context%}'  => ''
-                    ]
-                );
-
+                $search_result .= render_search_item_image([
+                    'item_url'         => $image_link,
+                    'item_image'       => "<img src='".$img_path."' class='icon-xl' alt='".$data['photo_title']."'>",
+                    'item_title'       => $data['photo_title'].'<br>'.$locale['p404']." <a href='".INFUSIONS."gallery/gallery.php?album_id=".$data['album_id']."'>".$data['album_title']."</a>",
+                    'item_description' => $desc
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_PH')."' alt='".$locale['p400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-retro-camera fa-lg fa-fw",
-                '{%search_title%}'   => $locale['p400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_PH')."' alt='".$locale['p400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-retro-camera fa-lg fa-fw",
+                'search_title'   => $locale['p400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

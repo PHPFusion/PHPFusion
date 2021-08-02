@@ -18,9 +18,8 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
-(defined('IN_FUSION') || exit);
+defined('IN_FUSION') || exit;
 
 if (defined('FORUM_EXISTS')) {
 
@@ -143,24 +142,23 @@ if (defined('FORUM_EXISTS')) {
                     }
                 }
 
-                $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id'],
-                        '{%item_image%}'           => display_avatar($data, '70px', '', '', FALSE),
-                        '{%item_title%}'           => ($data['thread_sticky'] == 1 ? '['.$locale['f404'].']' : '').$data['thread_subject'],
-                        '{%item_description%}'     => $meta,
-                        '{%item_search_context%}'  => $context,
-                        '{%item_search_criteria%}' => $criteria,
-                    ]
-                );
+                $search_result .= render_search_item_list([
+                    'item_url'             => FORUM."viewthread.php?thread_id=".$data['thread_id'].$thread_rowstart."&amp;highlight=".Search_Engine::get_param('stext')."&amp;pid=".$data['post_id']."#post_".$data['post_id'],
+                    'item_image'           => display_avatar($data, '70px', '', '', FALSE),
+                    'item_title'           => ($data['thread_sticky'] == 1 ? '['.$locale['f404'].']' : '').$data['thread_subject'],
+                    'item_description'     => $meta,
+                    'item_search_context'  => $context,
+                    'item_search_criteria' => $criteria
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_F')."' alt='".$locale['f400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-comments-o fa-lg fa-fw",
-                '{%search_title%}'   => $locale['f400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_F')."' alt='".$locale['f400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-comments-o fa-lg fa-fw",
+                'search_title'   => $locale['f400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

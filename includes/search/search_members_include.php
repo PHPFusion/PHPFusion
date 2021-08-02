@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -62,21 +61,20 @@ if (Search_Engine::get_param('stype') == "members" || Search_Engine::get_param('
              */
             $search_result = '';
             while ($data = dbarray($result)) {
-                $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'         => BASEDIR."profile.php?lookup=".$data['user_id'],
-                        '{%item_image%}'       => display_avatar($data, '70px', '', FALSE, ''),
-                        '{%item_title%}'       => $data['user_name'],
-                        '{%item_description%}' => getuserlevel($data['user_level']),
-                    ]
-                );
+                $search_result .= render_search_item([
+                    'item_url'         => BASEDIR."profile.php?lookup=".$data['user_id'],
+                    'item_image'       => display_avatar($data, '70px', '', FALSE),
+                    'item_title'       => $data['user_name'],
+                    'item_description' => getuserlevel($data['user_level'])
+                ]);
             }
 
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_M')."' alt='".$locale['user1']."' style='width:32px;'/>",
-                '{%icon_class%}'     => 'fa fa-user-circle fa-lg fa-fw',
-                '{%search_title%}'   => $locale['user1'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_M')."' alt='".$locale['user1']."' style='width:32px;'/>",
+                'icon_class'     => 'fa fa-user-circle fa-lg fa-fw',
+                'search_title'   => $locale['user1'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
     }

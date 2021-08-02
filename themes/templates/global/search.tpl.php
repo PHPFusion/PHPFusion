@@ -109,7 +109,7 @@ if (!function_exists('render_search_count')) {
     function render_search_count($info) {
         $html = '';
         if (!empty($info['disqualified_stexts'])) {
-            $html .= "<div class='well m-t-10 text-center strong'>".$info['disqualified_stexts']."</div><br />";
+            $html .= "<div class='well m-t-10 text-center strong'>".$info['disqualified_stexts']."</div><br>";
         }
 
         if (!empty($info['navigation'])) {
@@ -122,5 +122,84 @@ if (!function_exists('render_search_count')) {
         $html .= $info['navigation_result'];
 
         return $html;
+    }
+}
+
+if (!function_exists('render_search_item')) {
+    /*
+     * Template for search Simple Items
+     */
+    function render_search_item($info) {
+        return "
+        <li>
+            <div class='clearfix'>
+                <div class='pull-left m-r-10'>".$info['item_image']."</div>
+                <div class='overflow-hide'>
+                    <a ".(!empty($info['new_window']) && $info['new_window'] == 1 ? "target='_blank' " : ' ')." href='".$info['item_url']."'>".$info['item_title']."</a>
+                    <br>".$info['item_description']."
+                </div>
+            </div>
+        </li>
+        ";
+    }
+}
+
+if (!function_exists('render_search_item_list')) {
+    /*
+     * Template for search Full Listing Item Type
+     */
+    function render_search_item_list($info) {
+        return "
+        <li class='spacer-xs'>
+            <div class='clearfix'>
+                <div class='pull-left m-r-10'>".$info['item_image']."</div>
+                <div class='overflow-hide'><a href='".$info['item_url']."'><strong>".$info['item_title']."</strong></a><br/>
+                ".$info['item_description']."
+                ".$info['item_search_context']."
+                ".$info['item_search_criteria']."
+                </div>
+            </div>
+        </li>
+        ";
+    }
+}
+
+if (!function_exists('render_search_item_image')) {
+    /**
+     * Template for search Image Listing Item Type
+     *
+     * @return string
+     */
+    function render_search_item_image($info) {
+        return "<li>
+            <a href='".$info['item_url']."' class='display-inline-block m-2'>".$info['item_image']."</a>
+            <div class='display-inline-block'>
+            ".$info['item_title']."
+            <br>
+            ".$info['item_description']."
+            </div>
+        </li>";
+    }
+}
+
+if (!function_exists('render_search_item_wrapper')) {
+    /**
+     * Template for each search module results
+     * .results class is required for words highlighting
+     *
+     * @return string
+     */
+    function render_search_item_wrapper($info) {
+        return "
+        <div class='panel panel-default'>
+            <div class='panel-body p-b-10'>
+                <h4>".$info['image']." ".$info['search_title']."</h4>
+                ".$info['search_result']."
+            </div>
+            <div class='panel-body results'>
+                <ul class='block spacer-xs'>".$info['search_content']."</ul>
+            </div>
+        </div>
+        ";
     }
 }

@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -37,18 +36,15 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
     $sortby = !empty(Search_Engine::get_param('order')) ? " ORDER BY link_name".$order_by[Search_Engine::get_param('order')] : '';
     $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
 
+    Search_Engine::search_column('link_name', 'sitelinks');
     switch (Search_Engine::get_param('fields')) {
         case 2:
-            Search_Engine::search_column('link_name', 'sitelinks');
             Search_Engine::search_column('link_url', 'sitelinks');
             Search_Engine::search_column('link_id', 'sitelinks');
             break;
         case 1:
-            Search_Engine::search_column('link_name', 'sitelinks');
             Search_Engine::search_column('link_id', 'sitelinks');
             break;
-        default:
-            Search_Engine::search_column('link_name', 'sitelinks');
     }
 
     if (!empty(Search_Engine::get_param('search_param'))) {
@@ -104,29 +100,25 @@ if (Search_Engine::get_param('stype') == 'sitelinks' || Search_Engine::get_param
                     }
                 }
 
-
-                $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                 $link_icon = (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']."'></i>\n" : "<img style='width: 30px; margin-left: 5px;' src='".IMAGES."icons/loupe.svg' title='".$link_data['link_name']."'/>");
 
-                $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'         => $itemlink,
-                        '{%item_target%}'      => $link_target,
-                        '{%item_image%}'       => $link_icon,
-                        '{%item_title%}'       => $link_data['link_name'],
-                        '{%item_description%}' => '',
-                    ]
-                );
+                $search_result .= render_search_item([
+                    'item_url'         => $itemlink,
+                    'new_window'       => $link_data['link_window'] == "1",
+                    'item_image'       => $link_icon,
+                    'item_title'       => $link_data['link_name'],
+                    'item_description' => ''
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_SL')."' alt='".$locale['s400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-sitemap fa-lg fa-fw",
-                '{%search_title%}'   => $locale['s400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_SL')."' alt='".$locale['s400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-sitemap fa-lg fa-fw",
+                'search_title'   => $locale['s400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
-
         }
 
         Search_Engine::search_navigation($rows);

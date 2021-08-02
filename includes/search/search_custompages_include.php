@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -89,28 +88,24 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
                 $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c404'].", ";
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['c403']." ".$locale['c405']."</span>\n";
 
-                $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => BASEDIR."viewpage.php?page_id=".$data['page_id'],
-                        '{%item_image%}'           => "<i class='fa fa-file-o fa-lg'></i>",
-                        '{%item_title%}'           => $data['page_title'],
-                        '{%item_description%}'     => $desc,
-                        '{%item_search_criteria%}' => '',
-                        '{%item_search_context%}'  => $criteria
-
-                    ]
-                );
-
+                $search_result .= render_search_item_list([
+                    'item_url'             => BASEDIR."viewpage.php?page_id=".$data['page_id'],
+                    'item_image'           => "<i class='fa fa-file-o fa-lg'></i>",
+                    'item_title'           => $data['page_title'],
+                    'item_description'     => $desc,
+                    'item_search_criteria' => '',
+                    'item_search_context'  => $criteria
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_CP')."' alt='".$locale['c400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-sticky-note-o fa-lg fa-fw",
-                '{%search_title%}'   => $locale['c400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_CP')."' alt='".$locale['c400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-sticky-note-o fa-lg fa-fw",
+                'search_title'   => $locale['c400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
-
         }
 
         Search_Engine::search_navigation($rows);

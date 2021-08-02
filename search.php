@@ -18,5 +18,5 @@
 require_once __DIR__.'/maincore.php';
 require_once THEMES.'templates/header.php';
 require_once THEMES."templates/global/search.tpl.php";
-\PHPFusion\Search::getInstance()->display_search();
+\PHPFusion\Search\Search_Engine::getInstance()->display_search();
 require_once THEMES.'templates/footer.php';

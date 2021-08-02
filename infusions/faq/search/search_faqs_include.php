@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -65,35 +64,22 @@ if (defined('FAQ_EXISTS')) {
 
             while ($data = dbarray($result)) {
                 $data['faq_answer'] = strip_tags(htmlspecialchars_decode($data['faq_answer']));
-                $text_all = $data['faq_answer'];
-                $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
-                $text_frag = Search_Engine::search_textfrag($text_all);
-                $subj_c = Search_Engine::search_stringscount($data['faq_question']);
-                $text_c = Search_Engine::search_stringscount($data['faq_answer']);
 
-                $context = "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
-                $criteria = "<span class='small'>".$subj_c." ".($subj_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq404'].", ";
-                $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['fq403']." ".$locale['fq405']."</span>";
-
-                $search_result .= strtr(Search::render_search_item(), [
-                        '{%item_url%}'             => INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id'],
-                        '{%item_target%}'          => '',
-                        '{%item_image%}'           => '',
-                        '{%item_title%}'           => $data['faq_question'],
-                        '{%item_description%}'     => html_entity_decode($data['faq_answer']),
-                        '{%item_search_criteria%}' => $criteria,
-                        '{%item_search_context%}'  => $context,
-                    ]
-                );
+                $search_result .= render_search_item([
+                    'item_url'         => INFUSIONS."faq/faq.php?cat_id=".$data['faq_cat_id'],
+                    'item_title'       => $data['faq_question'],
+                    'item_image'       => "<i class='fa fa-question-circle fa-lg'></i>",
+                    'item_description' => html_entity_decode($data['faq_answer'])
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_FQ')."' alt='".$locale['fq400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-question-circle fa-lg fa-fw",
-                '{%search_title%}'   => $locale['fq400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_FQ')."' alt='".$locale['fq400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-question-circle fa-lg fa-fw",
+                'search_title'   => $locale['fq400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
         Search_Engine::search_navigation($rows);

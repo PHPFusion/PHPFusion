@@ -19,7 +19,6 @@ namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
 use PHPFusion\News\News;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -100,25 +99,23 @@ if (defined('NEWS_EXISTS')) {
                 $criteria .= $text_c." ".($text_c == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n405'].", ";
                 $criteria .= $text_c2." ".($text_c2 == 1 ? $locale['520'] : $locale['521'])." ".$locale['n403']." ".$locale['n406']."</span>";
 
-                $search_result .= strtr(Search::render_search_item_list(), [
-                        '{%item_url%}'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
-                        '{%item_target%}'          => '',
-                        '{%item_image%}'           => News::get_NewsImage($data, TRUE, FALSE, '100'),
-                        '{%item_title%}'           => $data['news_subject'],
-                        '{%item_description%}'     => $meta,
-                        '{%item_search_criteria%}' => $criteria,
-                        '{%item_search_context%}'  => $context,
-                    ]
-                );
+                $search_result .= render_search_item_list([
+                    'item_url'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
+                    'item_image'           => News::get_NewsImage($data, TRUE, FALSE, '100'),
+                    'item_title'           => $data['news_subject'],
+                    'item_description'     => $meta,
+                    'item_search_criteria' => $criteria,
+                    'item_search_context'  => $context
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_N')."' alt='".$locale['n400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-newspaper-o fa-lg fa-fw",
-                '{%search_title%}'   => $locale['n400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_N')."' alt='".$locale['n400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-newspaper-o fa-lg fa-fw",
+                'search_title'   => $locale['n400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

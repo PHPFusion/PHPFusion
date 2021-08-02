@@ -18,7 +18,6 @@
 namespace PHPFusion\Search;
 
 use PHPFusion\ImageRepo;
-use PHPFusion\Search;
 
 defined('IN_FUSION') || exit;
 
@@ -91,30 +90,29 @@ if (defined('WEBLINKS_EXISTS')) {
                 $text_all = $data['weblink_description'];
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
-                // $subj_c = Search_Engine::search_stringscount($data['weblink_name']) + Search_Engine::search_stringscount($data['weblink_url']);
-                // $text_c = Search_Engine::search_stringscount($data['weblink_description']);
+
                 $desc = '';
                 if ($text_frag != "") {
                     $desc .= "<div class='quote' style='width:auto;height:auto;overflow:auto'>".$text_frag."</div><br />";
                 }
                 $desc .= "<span class='small'>".$locale['w404']." ".showdate("%d.%m.%y", $data['weblink_datestamp'])." | <span class='alt'>".$locale['w405']."</span> ".$data['weblink_count']."</span></li>\n";
-                $tr = Search::render_search_item(TRUE);
-                $search_result .= strtr($tr, [
-                        '{%item_url%}'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
-                        '{%item_image%}'       => '',
-                        '{%item_title%}'       => $data['weblink_name'].' '.$new,
-                        '{%item_description%}' => strip_tags($desc),
-                    ]
-                );
+
+                $search_result .= render_search_item([
+                    'item_url'         => INFUSIONS."weblinks/weblinks.php?cat_id=".$data['weblink_cat']."&amp;weblink_id=".$data['weblink_id'],
+                    'item_image'       => '',
+                    'item_title'       => $data['weblink_name'].' '.$new,
+                    'item_description' => strip_tags($desc),
+                    'new_window'       => TRUE
+                ]);
             }
 
             // Pass strings for theme developers
-            $formatted_result = strtr(Search::render_search_item_wrapper(), [
-                '{%image%}'          => "<img src='".ImageRepo::getimage('ac_W')."' alt='".$locale['w400']."' style='width:32px;'/>",
-                '{%icon_class%}'     => "fa fa-link fa-lg fa-fw",
-                '{%search_title%}'   => $locale['w400'],
-                '{%search_result%}'  => $item_count,
-                '{%search_content%}' => $search_result
+            $formatted_result = render_search_item_wrapper([
+                'image'          => "<img src='".ImageRepo::getimage('ac_W')."' alt='".$locale['w400']."' style='width:32px;'/>",
+                'icon_class'     => "fa fa-link fa-lg fa-fw",
+                'search_title'   => $locale['w400'],
+                'search_result'  => $item_count,
+                'search_content' => $search_result
             ]);
         }
 

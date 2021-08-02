@@ -74,6 +74,10 @@ abstract class SearchModel {
     }
 
     public static function search_textfrag($text) {
+        if (empty($text)) {
+            return NULL;
+        }
+
         if (Search_Engine::get_param('chars') != 0) {
             if (function_exists('mb_substr')) {
                 $text = nl2br(stripslashes(mb_substr($text, 0, Search_Engine::get_param('chars'), 'UTF-8')."..."));

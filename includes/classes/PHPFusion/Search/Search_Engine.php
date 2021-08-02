@@ -30,10 +30,6 @@ class Search_Engine extends SearchModel {
      * In order to access the variables, extend your class to Search_Engine!
      */
     protected static $search_instance = NULL;
-    protected static $search_item_wrapper = '';
-    protected static $search_item = '';
-    protected static $search_item_list = '';
-    protected static $search_item_image = '';
 
     protected function __construct() {
         parent::__construct();
@@ -323,7 +319,7 @@ class Search_Engine extends SearchModel {
         }
 
         add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/jquery.highlight.js'></script>");
-        add_to_jquery("$('.search_result').highlight([".$highlighted_text."],{wordsOnly:true}); $('.highlight').css({backgroundColor:'#FFFF88'});");
+        add_to_jquery("$('.search_result .results').highlight([".$highlighted_text."],{wordsOnly:true}); $('.highlight').css({backgroundColor:'#FFFF88'});");
 
         /*
          * Run the drivers via include. but this method need to change to simplify the kiss concept.

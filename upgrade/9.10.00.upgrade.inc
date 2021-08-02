@@ -114,6 +114,7 @@ $deleted_files = [
     CLASSES.'PHPFusion/CustomPage.php',
     CLASSES.'PHPFusion/RemoteFileReader.php',
     CLASSES.'PHPFusion/Search/Search_Model.php',
+    CLASSES.'PHPFusion/Search.php',
     DYNAMICS.'assets/colorpick/css/',
     DYNAMICS.'assets/colorpick/js/',
     DYNAMICS.'assets/datepicker/css/',
