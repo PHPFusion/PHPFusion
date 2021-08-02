@@ -28,7 +28,7 @@ if (!function_exists('display_comments_ui')) {
 }
 
 if (!function_exists('display_comments_section')) {
-    function display_comments_section($info, $c_data, $c_info, array $options = []) {
+    function display_comments_section($info) {
         return "
         <div class='comments-panel'>
             ".$info['comment_ratings']."
@@ -64,7 +64,9 @@ if (!function_exists('display_comments_list')) {
 
         $html .= "<div class='overflow-hide'><div class='comment_name display-inline-block m-r-10'>".$info['user_name']."</div>";
 
-        $html .= $info['comment_ratings'];
+        if (!empty($info['comment_ratings'])) {
+            $html .= '<div class="ratings">'.$info['comment_ratings'].'</div>';
+        }
 
         if ($info['comment_subject']) {
             $html .= "<div class='comment_title'>".$info['comment_subject']."</div>";
@@ -117,7 +119,7 @@ if (!function_exists('display_comments_reply_form')) {
 }
 
 if (!function_exists('display_comments_form')) {
-    function display_comments_form($info, $comment_type, $clink, $comment_item_id, $_CAPTCHA_HIDE_INPUT, array $options = []) {
+    function display_comments_form($info) {
         $html = "
         <div class='comments-form-panel'>
             <div class='comments-form-header'><h4>".$info['comment_form_title']."</h4></div>
@@ -159,7 +161,7 @@ if (!function_exists('display_comments_form')) {
 
 if (!function_exists('display_comments_ratings')) {
     function display_comments_ratings($info) {
-        return '
+        $html = '
         <div class="ratings overflow-hide m-b-10">
             <div class="well">
                 <div class="row">
@@ -168,10 +170,21 @@ if (!function_exists('display_comments_ratings')) {
                         <span class="text-lighter m-l-5">'.$info['reviews'].'</span>
                     </div>
 
-                    <div class="col-xs-12 col-xs-6">'.$info['ratings'].'</div>
+                    <div class="col-xs-12 col-xs-6">';
+
+        foreach ($info['ratings'] as $rating) {
+            $html .= '<div>';
+            $html .= '<span class="m-r-5">'.$rating['stars'].' ('.$rating['stars_count'].')</span>';
+            $html .= '<div class="display-inline-block m-l-5" style="width:50%;">'.$rating['progressbar'].'</div>';
+            $html .= '</div>';
+        }
+
+        $html .= '</div>
                 </div>
             </div>
             '.$info['ratings_remove_button'].'
         </div>';
+
+        return $html;
     }
 }
