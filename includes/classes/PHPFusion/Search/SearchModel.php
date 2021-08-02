@@ -21,8 +21,7 @@ namespace PHPFusion\Search;
  *
  * @package PHPFusion\Search
  */
-abstract class Search_Model {
-
+abstract class SearchModel {
     public static $locale = [];
     protected static $available_modules = [];
     protected static $form_config = [];
@@ -115,7 +114,7 @@ abstract class Search_Model {
     }
 
     public static function search_conditions($field_module) {
-        // the conditions is imposition and must reset.
+        // the conditions are imposition and must reset.
         if (!empty(self::$conditions[$field_module])) {
             return "(".implode(' || ', array_map(function ($field_var) {
                     return implode('', $field_var);
@@ -127,9 +126,7 @@ abstract class Search_Model {
 
     public static function search_navigation($rows) {
         self::$site_search_count += $rows;
-        $navigation_result = "<div class='center m-t-10 m-b-10'>\n";
-        $navigation_result .= makePageNav(Search_Engine::get_param('rowstart'), 10, (self::$site_search_count > 100 || self::search_globalarray("") ? 100 : self::$site_search_count), 3, BASEDIR."search.php?stype=".Search_Engine::get_param('stype')."&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars'));
-        $navigation_result .= "\n</div>\n";
+        $navigation_result = makepagenav(Search_Engine::get_param('rowstart'), 10, (self::$site_search_count > 100 || self::search_globalarray("") ? 100 : self::$site_search_count), 3, BASEDIR."search.php?stype=".Search_Engine::get_param('stype')."&amp;stext=".Search_Engine::get_param('stext')."&amp;".Search_Engine::get_param('composevars'));
         self::$navigation_result = $navigation_result;
     }
 

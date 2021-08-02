@@ -113,6 +113,7 @@ $deleted_files = [
     CLASSES.'PHPFusion/Geomap/',
     CLASSES.'PHPFusion/CustomPage.php',
     CLASSES.'PHPFusion/RemoteFileReader.php',
+    CLASSES.'PHPFusion/Search/Search_Model.php',
     DYNAMICS.'assets/colorpick/css/',
     DYNAMICS.'assets/colorpick/js/',
     DYNAMICS.'assets/datepicker/css/',
