@@ -20,7 +20,6 @@ defined('IN_FUSION') || exit;
 if (!function_exists('display_register_form')) {
     /**
      * Registration Form Template
-     * The tags {%xyz%} are default replacement that the core will perform
      * echo output design in compatible with Version 7.xx theme set.
      *
      * @param $info - the array output that is accessible for your custom requirements
@@ -53,7 +52,6 @@ if (!function_exists('display_register_form')) {
 if (!function_exists('display_profile_form')) {
     /**
      * Edit Profile Form Template
-     * The tags {%xyz%} are default replacement that the core will perform
      * echo output design in compatible with Version 7.xx theme set.
      *
      * @param $info - the array output that is accessible for your custom requirements
