@@ -116,50 +116,46 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
     add_to_title($locale['news_0400']);
 
     if (isset($_GET['submitted']) && $_GET['submitted'] == "n") {
-        echo strtr(display_news_confirm_submissions(), [
-            '{%title%}'       => $locale['news_0400'],
-            '{%message%}'     => $locale['news_0701'],
-            '{%submit_link%}' => "<a href='".BASEDIR."submit.php?stype=n'>".$locale['news_0702']."</a>",
-            '{%index_link%}'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['news_0704'])."</a>",
+        echo display_news_confirm_submissions([
+            'title'       => $locale['news_0400'],
+            'message'     => $locale['news_0701'],
+            'submit_link' => "<a href='".BASEDIR."submit.php?stype=n'>".$locale['news_0702']."</a>",
+            'index_link'  => "<a href='".BASEDIR."index.php'>".str_replace("[SITENAME]", fusion_get_settings("sitename"), $locale['news_0704'])."</a>",
         ]);
     } else {
         $info = [
+            'title'                  => $locale['news_0400'],
             'guidelines'             => str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['news_0703']),
-            'news_subject_field'     => form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'],
-                [
-                    'required' => TRUE,
-                    'inline'   => TRUE
-                ]),
-            'news_language_field'    => (multilang_table('NS') ? form_select('news_language[]', $locale['global_ML100'], $criteriaArray['news_language'],
-                [
-                    'options'     => fusion_get_enabled_languages(),
-                    'placeholder' => $locale['choose'],
-                    'width'       => '250px',
-                    'inline'      => TRUE,
-                    'multiple'    => TRUE
-                ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
-            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'],
-                [
-                    'max_length'  => 320,
-                    'inline'      => TRUE,
-                    'placeholder' => $locale['news_0205a'],
-                    'width'       => '100%',
-                    'inner_width' => '100%',
-                    'error_text'  => $locale['news_0255'],
-                    'tags'        => TRUE,
-                    'multiple'    => TRUE
-                ]),
-            'news_cat_field'         => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'],
-                [
-                    'width'        => '250px',
-                    'inline'       => TRUE,
-                    'parent_value' => $locale['news_0202'],
-                    "query"        => (multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : "")
-                ],
+            'news_subject_field'     => form_text('news_subject', $locale['news_0200'], $criteriaArray['news_subject'], [
+                'required' => TRUE,
+                'inline'   => TRUE
+            ]),
+            'news_language_field'    => (multilang_table('NS') ? form_select('news_language[]', $locale['global_ML100'], $criteriaArray['news_language'], [
+                'options'     => fusion_get_enabled_languages(),
+                'placeholder' => $locale['choose'],
+                'width'       => '250px',
+                'inline'      => TRUE,
+                'multiple'    => TRUE
+            ]) : form_hidden('news_language', '', $criteriaArray['news_language'])),
+            'news_keywords_field'    => form_select('news_keywords', $locale['news_0205'], $criteriaArray['news_keywords'], [
+                'max_length'  => 320,
+                'inline'      => TRUE,
+                'placeholder' => $locale['news_0205a'],
+                'width'       => '100%',
+                'inner_width' => '100%',
+                'error_text'  => $locale['news_0255'],
+                'tags'        => TRUE,
+                'multiple'    => TRUE
+            ]),
+            'news_cat_field'         => form_select_tree('news_cat', $locale['news_0201'], $criteriaArray['news_cat'], [
+                'width'        => '250px',
+                'inline'       => TRUE,
+                'parent_value' => $locale['news_0202'],
+                "query"        => (multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE) : "")
+            ],
                 DB_NEWS_CATS, "news_cat_name", "news_cat_id", "news_cat_parent"
             ),
-            'news_image_field'       => ($news_settings['news_allow_submission_files'] ? form_fileinput('news_image', $locale['news_0009'], '',
-                [
+            'news_image_field'       => ($news_settings['news_allow_submission_files'] ? form_fileinput('news_image', $locale['news_0009'], '', [
                     'upload_path'      => IMAGES_N,
                     'max_width'        => $news_settings['news_photo_max_w'],
                     'max_height'       => $news_settings['news_photo_max_h'],
@@ -179,8 +175,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
                     'ext_tip'          => sprintf($locale['news_0217'], parsebytesize($news_settings['news_photo_max_b'])),
                 ]
             ) : ''),
-            'news_image_align_field' => ($news_settings['news_allow_submission_files'] ? form_select('news_image_align', $locale['news_0218'], $criteriaArray['news_image_align'],
-                [
+            'news_image_align_field' => ($news_settings['news_allow_submission_files'] ? form_select('news_image_align', $locale['news_0218'], $criteriaArray['news_image_align'], [
                     'options' => [
                         'pull-left'       => $locale['left'],
                         'news-img-center' => $locale['center'],
@@ -189,8 +184,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
                     'inline'  => TRUE
                 ]
             ) : ''),
-            'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'],
-                [
+            'news_news_field'        => form_textarea('news_news', $locale['news_0203'], $criteriaArray['news_news'], [
                     'required'      => TRUE,
                     'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                     'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
@@ -200,8 +194,7 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
                     'path'          => IMAGES_N
                 ]
             ),
-            'news_body_field'        => form_textarea('news_extended', $locale['news_0005'], $criteriaArray['news_extended'],
-                [
+            'news_body_field'        => form_textarea('news_extended', $locale['news_0005'], $criteriaArray['news_extended'], [
                     'required'      => $news_settings['news_extended_required'],
                     'type'          => fusion_get_settings('tinymce_enabled') ? 'tinymce' : 'html',
                     'tinymce'       => fusion_get_settings('tinymce_enabled') && iADMIN ? 'advanced' : 'simple',
@@ -218,26 +211,12 @@ if (iMEMBER && $news_settings['news_allow_submission'] && checkgroup($news_setti
 
         echo openform('submit_form', 'post', BASEDIR."submit.php?stype=n", ["enctype" => $news_settings['news_allow_submission_files']]);
 
-        echo strtr(display_news_submissions_form($info), [
-            '{%title%}'                  => $locale['news_0400'],
-            '{%guidelines%}'             => $info['guidelines'],
-            '{%news_subject_field%}'     => $info['news_subject_field'],
-            '{%news_language_field%}'    => $info['news_language_field'],
-            '{%news_keywords_field%}'    => $info['news_keywords_field'],
-            '{%news_cat_field%}'         => $info['news_cat_field'],
-            '{%news_image_field%}'       => $info['news_image_field'],
-            '{%news_image_align_field%}' => $info['news_image_align_field'],
-            '{%news_news_field%}'        => $info['news_news_field'],
-            '{%news_body_field%}'        => $info['news_body_field'],
-            '{%news_submit%}'            => $info['news_submit'],
-            '{%preview_news%}'           => $info['preview_news'],
-
-        ]);
+        echo display_news_submissions_form($info);
         echo closeform();
     }
 } else {
-    echo strtr(display_news_no_submissions(), [
-        '{%title%' => $locale['news_0400'],
-        '{%text%}' => $locale['news_0138']
+    echo display_news_no_submissions([
+        'title' => $locale['news_0400'],
+        'text'  => $locale['news_0138']
     ]);
 }
