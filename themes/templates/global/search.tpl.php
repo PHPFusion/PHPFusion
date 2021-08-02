@@ -124,8 +124,3 @@ if (!function_exists('render_search_count')) {
         return $html;
     }
 }
-
-if (!function_exists('render_sesult')) {
-    function render_search_no_reggsult($info) {
-    }
-}
