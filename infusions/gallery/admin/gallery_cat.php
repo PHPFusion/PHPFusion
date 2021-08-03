@@ -31,7 +31,7 @@ $data = [
     'album_image'       => '',
     'album_thumb1'      => '',
     'album_thumb2'      => '',
-    'album_order'       => dbcount("(album_id)", DB_PHOTO_ALBUMS, multilang_table("PG") ? in_group('album_language', LANGUAGE) : "") + 1
+    'album_order'       => 0
 ];
 if (isset($_POST['save_album'])) {
     $data = [
