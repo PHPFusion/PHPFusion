@@ -626,8 +626,10 @@ abstract class RewriteDriver {
         $string = str_replace($search, "", $string);
         $string = str_replace("&amp;", "&", $string); // Must Support &
         $string = str_replace(" - ", "-", $string);
+        $string = str_replace(".", "", $string);
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = trim($string, "-");
+        $string = strtolower($string);
 
         return (string)$string;
     }
