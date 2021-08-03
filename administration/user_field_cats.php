@@ -132,7 +132,7 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
     echo "<td class='tbl' width='1%' style='white-space:nowrap'><label for='cat_index'>".$locale['428'].":</label></td>\n";
     echo "<td class='tbl'>\n";
     echo "<input type='text' name='cat_index'  value='".$cat_index."' maxlength='100' class='textbox' style='width:240px;' />\n";
-    echo "</tr>\n<tr>\n";
+    echo "</tr>\n<tr style='display:none;'>\n";
     echo "<td class='tbl' width='1%' style='white-space:nowrap'><label for='cat_class'>".$locale['425'].":</label></td>\n";
     echo "<td class='tbl'>\n";
     echo "<input type='text' name='cat_class'  value='".$cat_class."' maxlength='100' class='textbox' style='width:240px;' />\n";
