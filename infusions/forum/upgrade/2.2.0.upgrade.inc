@@ -51,6 +51,16 @@ foreach ($check_tags_array as $key => $value) {
     }
 }
 
+$check_forum_array = [
+    'forum_icon' => " ADD forum_icon VARCHAR(50) NOT NULL DEFAULT '' AFTER forum_vote"
+];
+
+foreach ($check_forum_array as $key => $value) {
+    if (!column_exists(DB_FORUMS, $key, FALSE)) {
+        $inf_altertable[] = DB_FORUMS.$value;
+    }
+}
+
 $change_forums = [
     'forum_access'          => " CHANGE forum_access forum_access VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_post'            => " CHANGE forum_post forum_post VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
@@ -60,8 +70,7 @@ $change_forums = [
     'forum_vote'            => " CHANGE forum_vote forum_vote VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_attach'          => " CHANGE forum_attach forum_attach VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
     'forum_attach_download' => " CHANGE forum_attach_download forum_attach_download VARCHAR(50) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'",
-    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) NOT NULL DEFAULT ''",
-    'forum_icon'            => " ADD forum_icon VARCHAR(50) NOT NULL DEFAULT '' AFTER forum_vote"
+    'forum_mods'            => " CHANGE forum_mods forum_mods VARCHAR(50) NOT NULL DEFAULT ''"
 ];
 
 foreach ($change_forums as $key => $value) {
