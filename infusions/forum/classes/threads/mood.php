@@ -60,11 +60,8 @@ class Forum_Mood extends ForumServer {
             ];
 
             if (fusion_safe()) {
-
-                $mood_exists = dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") ? TRUE : FALSE;
-
-                $has_reacted = $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
-                    $notify_data['post_id']) ? TRUE : FALSE;
+                $mood_exists = (bool)dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'");
+                $has_reacted = (bool)$this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id']);
 
                 if ($mood_exists === TRUE && $has_reacted === FALSE) {
                     dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
@@ -98,7 +95,7 @@ class Forum_Mood extends ForumServer {
             }
         }
 
-        return (boolean)$response;
+        return $response;
     }
 
     public static function mood_exists($sender_id, $mood_id, $post_id) {
@@ -109,14 +106,11 @@ class Forum_Mood extends ForumServer {
     }
 
     public function get_mood_message() {
-
-        // whether any user has reacted to this post
-        $locale = fusion_get_locale("", [FORUM_ADMIN_LOCALE, FORUM_LOCALE]);
-
         $mood_users = [];
+        $mood_users_count = [];
         $moods = [];
 
-        $mood_cache = $this->cache_mood();
+        $mood_cache = $this->cache_mood(FALSE);
 
         // Get the types of buttons
         $response_query = "SELECT pn.* FROM ".DB_POST_NOTIFY." pn WHERE post_id='".$this->post_id."' ORDER BY pn.notify_mood_id ASC, pn.post_id ASC";
@@ -129,6 +123,7 @@ class Forum_Mood extends ForumServer {
                 }
 
                 $mood_users[] = $m_data;
+                $mood_users_count[$user['user_id']] = $m_data;
             }
 
             foreach ($mood_cache as $id => $data) {
@@ -143,31 +138,16 @@ class Forum_Mood extends ForumServer {
                 $moods[$id]['users'] = $mood;
             }
 
-            $users = '';
-            foreach ($moods as $id => $data) {
-                if (!empty($data['users'])) {
-                    $users .= '<div class="mood_users" title="'.$data['mood_name'].'">';
-                        $users .= '<i class="'.$data['mood_icon'].' fa-fw"></i> ';
-                        $users .= implode(', ', array_map(function ($user) { return $user['profile_link']; }, $data['users']));
-                    $users .= '</div>';
-                }
-            }
-
-            $count = format_word(count($mood_users), $locale['fmt_user']);
-            $output_message = '<div class="forum-mood">';
-            $output_message .= '<a data-toggle="collapse" aria-expanded="false" aria-controls="#moods'.$this->post_id.'" href="#moods'.$this->post_id.'">'.$count.' '.$locale['forum_0528'].' <span class="caret"></span></a>';
-            $output_message .= '<div id="moods'.$this->post_id.'" class="moods collapse">'.$users.'</div>';
-            $output_message .= '</div>';
-
-            return (string)$output_message;
+            $moods['users_count'] = count($mood_users_count);
+            return $moods;
         }
 
         return NULL;
     }
 
-    public function cache_mood() {
+    public function cache_mood($access = TRUE) {
         $mood_cache = [];
-        $cache_result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE ".groupaccess('mood_access')." AND mood_status=1");
+        $cache_result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE ".($access ? groupaccess('mood_access').' AND' : '')." mood_status=1");
         if (dbrows($cache_result) > 0) {
             while ($data = dbarray($cache_result)) {
                 $data['mood_name'] = QuantumFields::parseLabel($data['mood_name']);
@@ -220,7 +200,6 @@ class Forum_Mood extends ForumServer {
             $html .= closeform();
         }
 
-        return (string)$html;
+        return $html;
     }
-
 }

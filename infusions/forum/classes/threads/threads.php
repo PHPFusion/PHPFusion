@@ -1099,8 +1099,8 @@ class ForumThreads extends ForumServer {
                  * Displays mood buttons
                  * This will drag the forum down with +1 query per post.
                  */
-                $pdata['post_mood'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
-                $pdata['post_mood_message'] = ($pdata['post_mood']) ? $this->mood()->get_mood_message() : '';
+                $pdata['post_mood_buttons'] = $this->mood()->set_PostData($pdata)->display_mood_buttons();
+                $pdata['post_moods'] = $this->mood()->get_mood_message();
                 /*
                  * Bounty payment
                  */

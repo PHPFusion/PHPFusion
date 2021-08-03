@@ -482,10 +482,7 @@ if (!function_exists('render_thread_item')) {
     function render_thread_item($info) {
         $locale = fusion_get_locale();
 
-        $thead_icons = '';
-        foreach ($info['thread_icons'] as $icon) {
-            $thead_icons .= $icon;
-        }
+        $thead_icons = implode('', $info['thread_icons']);
 
         echo '<div id="thread_'.$info['thread_id'].'" class="row">';
         echo '<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">';
@@ -1215,8 +1212,26 @@ if (!function_exists('render_post_item')) {
 
                 echo !empty($data['user_sig']) ? '<div>'.$data['user_sig'].'</div>' : '';
                 echo $data['post_edit_reason'];
-                echo !empty($data['post_mood_message']) ? '<div>'.$data['post_mood_message'].'</div>' : '';
-                echo !empty($data['post_mood']) ? $data['post_mood'] : '';
+
+                if (!empty($data['post_moods'])) {
+                    $users = '';
+                    foreach ($data['post_moods'] as $mdata) {
+                        if (!empty($mdata['users'])) {
+                            $users .= '<div class="mood_users" title="'.$mdata['mood_name'].'">';
+                            $users .= '<i class="'.$mdata['mood_icon'].' fa-fw"></i> ';
+                            $users .= implode(', ', array_map(function ($user) { return $user['profile_link']; }, $mdata['users']));
+                            $users .= '</div>';
+                        }
+                    }
+
+                    $count = format_word($data['post_moods']['users_count'], $locale['fmt_user']);
+                    echo '<div class="forum-mood">';
+                    echo '<a data-toggle="collapse" aria-expanded="false" aria-controls="#moods'.$data['post_id'].'" href="#moods'.$data['post_id'].'">'.$count.' '.$locale['forum_0528'].' <span class="caret"></span></a>';
+                    echo '<div id="moods'.$data['post_id'].'" class="moods collapse">'.$users.'</div>';
+                    echo '</div>';
+                }
+
+                echo !empty($data['post_mood_buttons']) ? $data['post_mood_buttons'] : '';
 
                 if (!empty($data['post_bounty'])) {
                     echo '<a href="'.$data['post_bounty']['link'].'">'.$data['post_bounty']['title'].'</a>';
