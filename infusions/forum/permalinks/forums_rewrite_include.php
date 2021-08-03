@@ -128,6 +128,7 @@ $pattern = [
     "forum/thread/view/%thread_id%/%thread_name%"                                                       => "infusions/forum/viewthread.php?thread_id=%thread_id%",
     "forum/thread/view/%thread_id%/%thread_name%/sort-by/%sort_action%"                                 => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;sort_post=%sort_action%",
     "forum/thread/view/%thread_id%/%thread_name%/rows-%rowstart%"                                       => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%",
+    "forum/thread/view/%thread_id%/%thread_name%/rows-%rowstart%"                                       => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;rowstart=%rowstart%&amp;pid=%pid%",
     "forum/thread/%thread_id%/%thread_name%/view-%pid%"                                                 => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%",
     "forum/thread/%thread_id%/%thread_name%/view-%pid%#post_%post_id%"                                  => "infusions/forum/viewthread.php?thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
     "forum/thread/view/%forum_id%/%thread_id%/%thread_name%/view-%pid%#post_%post_id%"                  => "infusions/forum/viewthread.php?forum_id=%forum_id%&amp;thread_id=%thread_id%&amp;pid=%pid%#post_%post_id%",
