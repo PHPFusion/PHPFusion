@@ -92,7 +92,7 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
 
     $step = $options['step'] ? "step='".$options['step']."' " : '';
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ?? '').($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
 
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer far fa-question-circle' data-toggle='tooltip' title='".$options['tip']."'></i>" : '')."</label>" : '';
 
@@ -100,9 +100,9 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
 
     $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
-    $text = $input_value ?? $options['min'];
+    $text = isset($input_value) ? $input_value : $options['min'];
     if ($options['display_percent']) {
-        $text = floor(($input_value ?? $options['min'] / $options['max']) * 100).'%';
+        $text = floor((isset($input_value) ? $input_value : $options['min'] / $options['max']) * 100).'%';
     }
 
     $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>$text</div></div>";
