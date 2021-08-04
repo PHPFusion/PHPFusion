@@ -133,7 +133,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         }
 
     } else {
-        $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : 'text-center')." m-r-10'>";
+        $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : '')." m-r-10'>";
         $checkbox .= "<input id='".$options['input_id']."' style='margin:0;vertical-align:middle;' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').">";
         $checkbox .= "</div>";
     }
