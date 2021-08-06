@@ -28,7 +28,8 @@ class PanelsAdministration {
         'panel_filename'    => '',
         'panel_content'     => '',
         'panel_type'        => 'php',
-        'panel_side'        => TRUE,
+        'panel_php_exe'     => 0,
+        'panel_side'        => 1,
         'panel_order'       => 0,
         'panel_access'      => 0,
         'panel_display'     => 0,
@@ -154,6 +155,7 @@ class PanelsAdministration {
             $this->data['panel_filename'] = sanitizer('panel_filename', '', 'panel_filename');
             // panel content formatting
             if ($this->data['panel_filename'] == 'none') {
+                $this->data['panel_php_exe'] = sanitizer('panel_php_exe', 0, 'panel_php_exe');
                 $this->data['panel_type'] = "php";
                 $this->data['panel_content'] = addslashes(post('panel_content'));
                 if (!$this->data['panel_content']) {
@@ -515,10 +517,7 @@ class PanelsAdministration {
      * The Panel Editor Form
      */
     public function addPanelForm() {
-
         fusion_confirm_exit();
-
-        $settings = fusion_get_settings();
 
         if (check_post('cancel')) {
             redirect(clean_request('section=listpanel', ['action', 'panel_id', 'section'], FALSE));
@@ -526,14 +525,14 @@ class PanelsAdministration {
 
         self::setPanelDb();
 
-        if (check_post('panel_preview') && $settings['allow_php_exe']) {
+        if (check_post('panel_preview')) {
             $panel_title = sanitizer('panel_name', "", "panel_name");
             if (fusion_safe()) {
                 ob_start();
                 echo openmodal('cp_preview', $panel_title);
-                if ($settings['allow_php_exe']) {
+                if (post('panel_php_exe')) {
                     ob_start();
-                    eval("?>".stripslashes(post('panel_content'))."<?php ");
+                    eval(stripslashes(post('panel_content')));
                     $eval = ob_get_contents();
                     ob_end_clean();
                     echo $eval;
@@ -549,6 +548,7 @@ class PanelsAdministration {
                 "panel_name"        => sanitizer('panel_name', "", "panel_name"),
                 "panel_filename"    => sanitizer('panel_filename', "", "panel_filename"),
                 "panel_side"        => sanitizer('panel_side', "", "panel_side"),
+                "panel_php_exe"     => sanitizer('panel_php_exe', "", "panel_php_exe"),
                 "panel_content"     => sanitizer('panel_content', "", "panel_content"),
                 "panel_restriction" => sanitizer('panel_restriction', "", "panel_restriction"),
                 "panel_url_list"    => sanitizer('panel_url_list', "", "panel_url_list"),
@@ -562,10 +562,8 @@ class PanelsAdministration {
 
         echo "<div class='m-b-10'>\n";
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10', 'input_id' => 'btn1']);
-        if ($settings['allow_php_exe']) {
-            echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-l-10 btn-default', 'input_id' => 'btn2']);
-        }
         echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'btn-success', 'input_id' => 'btn3']);
+        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10 btn-default', 'input_id' => 'btn2']);
         echo "</div>\n";
 
 
@@ -629,11 +627,11 @@ class PanelsAdministration {
 
         echo "<div id='pgrp'>\n";
         echo form_textarea('panel_content', self::$locale['455'], $this->data['panel_content'], [
-            'html'      => !$settings['allow_php_exe'],
+            'html'      => TRUE,
             'form_name' => 'panel_form',
             'autosize'  => TRUE,
-            'preview'   => !$settings['allow_php_exe'],
-            'descript'  => !$settings['allow_php_exe']
+            'preview'   => !$this->data['panel_php_exe'],
+            'descript'  => !$this->data['panel_php_exe']
         ]);
         echo "</div>\n";
 
@@ -666,13 +664,16 @@ class PanelsAdministration {
             ]);
         }
         closeside();
+        openside('');
+        echo alert(fusion_get_locale('695', LOCALE.LOCALESET.'admin/settings.php'));
+        echo form_checkbox('panel_php_exe', fusion_get_locale('694', LOCALE.LOCALESET.'admin/settings.php'), $this->data['panel_php_exe'], ['toggle' => TRUE]);
+
+        closeside();
         echo "</div>\n";
         echo "</div>\n";
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10']);
-        if ($settings['allow_php_exe']) {
-            echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-l-10 btn-default']);
-        }
         echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'btn-success']);
+        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10 btn-default']);
         echo closeform();
 
     }

@@ -82,6 +82,8 @@ while ($data = dbarray($result)) {
 $inf_updatedbrow[] = DB_SITE_LINKS." SET link_url='index.php' WHERE link_url='home.php'";
 $inf_updatedbrow[] = DB_PANELS." SET panel_url_list='index.php' WHERE panel_url_list='home.php'";
 
+$inf_altertable[] = DB_PANELS." ADD panel_php_exe TINYINT(0) UNSIGNED NOT NULL DEFAULT '0' AFTER panel_side";
+
 $inf_altertable[] = DB_CUSTOM_PAGES." CHANGE page_access page_access VARCHAR(50) NOT NULL DEFAULT '0'";
 
 $inf_updatedbrow[] = DB_ADMIN." SET admin_link='upgrade.php' WHERE admin_rights='U'";

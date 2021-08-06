@@ -837,6 +837,12 @@ class CoreTables {
                 'length'  => 20,
                 'default' => ''
             ],
+            'panel_php_exe'     => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => 0
+            ],
             'panel_access'      => [
                 'type'    => 'TINYINT',
                 'length'  => 4,

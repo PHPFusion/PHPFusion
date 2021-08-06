@@ -154,7 +154,7 @@ class Panels {
                             }
                         }
                     } else {
-                        if (fusion_get_settings("allow_php_exe")) {
+                        if ($panelData['panel_php_exe']) {
                             eval(stripslashes($panelData['panel_content']));
                         } else {
                             echo parse_text($panelData['panel_content']);
@@ -323,7 +323,7 @@ class Panels {
                                         }
                                     }
                                 } else {
-                                    if (fusion_get_settings("allow_php_exe")) {
+                                    if ($p_data['panel_php_exe']) {
                                         // This is slowest of em all.
                                         $panelStart = '';
                                         $panelEnd = '';
