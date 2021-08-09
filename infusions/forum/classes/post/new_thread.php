@@ -172,7 +172,7 @@ class NewThread extends ForumServer {
                         'thread_postcount'          => 1, // already insert 1 postcount.
                         'thread_poll'               => 0,
                         'thread_sticky'             => isset($_POST['thread_sticky']) ? 1 : 0,
-                        'thread_locked'             => isset($_POST['thread_sticky']) ? 1 : 0,
+                        'thread_locked'             => isset($_POST['thread_locked']) ? 1 : 0,
                         'thread_hidden'             => 0,
                         'thread_bounty'             => 0,
                         'thread_bounty_description' => ''
@@ -430,7 +430,7 @@ class NewThread extends ForumServer {
                     'thread_postcount'  => 1, // already insert 1 postcount.
                     'thread_poll'       => 0,
                     'thread_sticky'     => isset($_POST['thread_sticky']),
-                    'thread_locked'     => isset($_POST['thread_sticky']),
+                    'thread_locked'     => isset($_POST['thread_locked']),
                     'thread_hidden'     => 0,
                 ];
 
