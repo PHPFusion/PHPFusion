@@ -59,6 +59,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'article_article'        => '',
             'article_datestamp'      => time(),
             'article_keywords'       => '',
+            'article_thumbnail'      => '',
             'article_breaks'         => 'n',
             'article_allow_comments' => 1,
             'article_allow_ratings'  => 1,
@@ -113,7 +114,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     private function execute_ArticlesUpdate() {
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
 
-            // Check posted Informations
+            // Check posted information
             $article_snippet = "";
             if ($_POST['article_snippet']) {
                 $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_snippet']);
@@ -131,6 +132,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'article_snippet'        => form_sanitizer($article_snippet, '', 'article_snippet'),
                 'article_article'        => form_sanitizer($article_article, '', 'article_article'),
                 'article_keywords'       => form_sanitizer($_POST['article_keywords'], '', 'article_keywords'),
+                'article_thumbnail'      => '',
                 'article_datestamp'      => form_sanitizer($_POST['article_datestamp'], '', 'article_datestamp'),
                 'article_visibility'     => form_sanitizer($_POST['article_visibility'], 0, 'article_visibility'),
                 'article_draft'          => isset($_POST['article_draft']) ? $_POST['article_draft'] : '0',
@@ -144,6 +146,23 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 $this->article_data['article_breaks'] = isset($_POST['article_breaks']) ? "y" : "n";
             } else {
                 $this->article_data['article_breaks'] = "n";
+            }
+
+            if (isset($_FILES['article_thumbnail'])) {
+                $upload = form_sanitizer($_FILES['article_thumbnail'], '', 'article_thumbnail');
+                if (!empty($upload) && !$upload['error']) {
+                    $this->article_data['article_thumbnail'] = $upload['image_name'];
+                }
+            } else {
+                $this->article_data['article_thumbnail'] = post('article_thumbnail');
+            }
+
+            if (isset($_POST['delete_image'])) {
+                if (!empty($this->article_data['article_thumbnail']) && file_exists(IMAGES_A.'thumbs/'.$this->article_data['article_thumbnail'])) {
+                    unlink(IMAGES_A.'thumbs/'.$this->article_data['article_thumbnail']);
+                }
+
+                $this->article_data['article_thumbnail'] = '';
             }
 
             // Handle
@@ -189,7 +208,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'autosize'    => TRUE
             ];
             $articleExtendedSettings = [
-                'required'    => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'required'    => (bool)$this->articleSettings['article_extended_required'],
                 'preview'     => TRUE,
                 'html'        => TRUE,
                 'placeholder' => $this->locale['article_0253'],
@@ -211,7 +230,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'form_name'  => 'articleform'
             ];
             $articleExtendedSettings = [
-                'required'   => ($this->articleSettings['article_extended_required'] ? TRUE : FALSE),
+                'required'   => (bool)$this->articleSettings['article_extended_required'],
                 'type'       => 'tinymce',
                 'tinymce'    => 'advanced',
                 'error_text' => $this->locale['article_0272'],
@@ -330,6 +349,23 @@ class ArticlesAdmin extends ArticlesAdminModel {
             'tags'        => TRUE,
             'multiple'    => TRUE
         ]);
+        closeside();
+
+        openside('');
+        if ($this->article_data['article_thumbnail'] != "") {
+            echo "<label>".thumbnail(IMAGES_A.'thumbs/'.$this->article_data['article_thumbnail'], '100px');
+            echo "<input type='checkbox' name='delete_image' value='y'> ".$this->locale['delete']."</label>";
+            echo "<input type='hidden' name='article_thumbnail' value='".$this->article_data['article_thumbnail']."'>";
+        } else {
+            echo form_fileinput('article_thumbnail', $this->locale['thumbnail'], '', [
+                'upload_path' => IMAGES_A.'thumbs/',
+                'max_width'   => 1200,
+                'max_height'  => 627,
+                'max_byte'    => 5242880, // 5 MB is max for Open Graph
+                'type'        => 'image',
+                'template'    => 'modern'
+            ]);
+        }
         closeside();
 
         echo '</div>';

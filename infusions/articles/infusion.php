@@ -37,6 +37,7 @@ $inf_newtable[] = DB_ARTICLES." (
     article_snippet TEXT NOT NULL,
     article_article TEXT NOT NULL,
     article_keywords VARCHAR(250) NOT NULL DEFAULT '',
+    article_thumbnail VARCHAR(100) NOT NULL DEFAULT '',
     article_breaks CHAR(1) NOT NULL DEFAULT '',
     article_name MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '1',
     article_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
@@ -141,3 +142,4 @@ $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=a'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='a'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='AR'";
 $inf_delfiles[] = IMAGES_A;
+$inf_delfiles[] = IMAGES_A.'thumbs/';

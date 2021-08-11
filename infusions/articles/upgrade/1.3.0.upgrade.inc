@@ -17,6 +17,16 @@
 +--------------------------------------------------------*/
 $inf_version = '1.3.0';
 
+$add_column = [
+    'article_thumbnail' => " ADD article_thumbnail VARCHAR(100) NOT NULL DEFAULT '' AFTER article_keywords",
+];
+
+foreach ($add_column as $key => $value) {
+    if (!column_exists(DB_ARTICLES, $key, FALSE)) {
+        $inf_altertable[] = DB_ARTICLES.$value;
+    }
+}
+
 $change_articles = [
     'article_visibility' => " CHANGE article_visibility article_visibility VARCHAR(50) NOT NULL DEFAULT '0'",
 ];

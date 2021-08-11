@@ -22,12 +22,12 @@ class OpenGraphArticles extends OpenGraph {
         $settings = fusion_get_settings();
         $info = [];
 
-        $result = dbquery("SELECT article_subject, article_snippet, article_keywords FROM ".DB_ARTICLES." WHERE article_id = :article", [':article' => $article_id]);
+        $result = dbquery("SELECT article_subject, article_snippet, article_keywords, article_thumbnail FROM ".DB_ARTICLES." WHERE article_id = :article", [':article' => $article_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/articles/articles.php?readmore='.$article_id;
-            $info['keywords'] = $data['article_keywords'] ? $data['article_keywords'] : $settings['keywords'];
-            $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
+            $info['keywords'] = !empty($data['article_keywords']) ? $data['article_keywords'] : $settings['keywords'];
+            $info['image'] = file_exists(IMAGES_A.'thumbs/'.$data['article_thumbnail']) ? $settings['siteurl'].'infusions/articles/images/thumbs/'.$data['article_thumbnail'] : (defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png');
             $info['title'] = $data['article_subject'].' - '.$settings['sitename'];
             $info['description'] = $data['article_snippet'] ? fusion_first_words(strip_tags(html_entity_decode($data['article_snippet'])), 50) : $settings['description'];
             $info['type'] = 'article';
