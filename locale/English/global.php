@@ -108,7 +108,7 @@ $locale['global_031'] = "No Articles available";
 // Downloads Side panel
 $locale['global_032'] = "Latest Downloads";
 $locale['global_033'] = "No Downloads available";
-// Welcome panel
+// Welcome_panel
 $locale['global_035'] = "Welcome";
 // Latest Active Forum Threads panel
 $locale['global_040'] = "Latest Active Forum Threads";
@@ -251,7 +251,6 @@ $locale['global_182'] = "Admin Password not entered or incorrect.";
 $locale['global_183'] = "Your login session has expired. Please login again.";
 $locale['global_184'] = "You are now logged in as %s";
 $locale['global_185'] = "You are now switched back to your own account.";
-
 // Miscellaneous
 $locale['global_190'] = "Maintenance Mode Activated";
 $locale['global_191'] = "Your IP address is currently blacklisted.";
@@ -263,13 +262,13 @@ $locale['global_196'] = "Invalid username or password.";
 $locale['global_197'] = "Please wait while we transfer you...<br/>[ [LINK]Or click here if you do not wish to wait[/LINK] ]";
 $locale['global_198'] = "WARNING: INSTALLER DETECTED, PLEASE DELETE THE INSTALL.PHP FILE IMMEDIATELY.";
 $locale['global_199'] = "WARNING: admin password not set, click [LINK]Edit Profile[/LINK] to set it.";
-//Titles
+// Titles
 $locale['global_200'] = " - ";
 $locale['global_201'] = ": ";
 $locale['global_202'] = "Search";
 $locale['global_203'] = "FAQ";
 $locale['global_204'] = "Forum";
-//Themes
+// Themes
 $locale['global_210'] = "Skip to content";
 $locale['global_300'] = "no theme found";
 $locale['global_301'] = "We are really sorry but this page cannot be displayed. Due to some circumstances no site theme can be found.
@@ -463,6 +462,7 @@ $locale['submit'] = "Submit";
 $locale['submissions'] = "Submissions";
 $locale['submit_access'] = "Access to Submit page";
 $locale['categories'] = "Categories";
+$locale['thumbnail'] = "Thumbnail";
 // Alignment
 $locale['left'] = "Left";
 $locale['center'] = "Center";
