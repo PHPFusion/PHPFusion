@@ -366,6 +366,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'template'    => 'modern'
             ]);
         }
+        echo '<div class="small m-t-20">'.sprintf($this->locale['max_fs_allowed_ft'], parsebytesize(5242880), 'jpeg, png').'</div>';
         closeside();
 
         echo '</div>';
