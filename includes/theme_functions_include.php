@@ -710,14 +710,14 @@ if (!function_exists('display_avatar')) {
             if (!empty($custom_avatar) && file_exists($custom_avatar)) {
                 $img = sprintf($imgTpl, $custom_avatar);
             } else {
-                $color = string_to_color_code($userdata['user_name']);
+                $color = string_to_color_code($name);
                 $font_color = get_color_brightness($color) > 130 ? '000' : 'fff';
 
                 if (function_exists('mb_substr') && function_exists('mb_strtoupper')) {
-                    $first_char = mb_substr($userdata['user_name'], 0, 1, 'UTF-8');
+                    $first_char = mb_substr($name, 0, 1, 'UTF-8');
                     $first_char = mb_strtoupper($first_char, 'UTF-8');
                 } else {
-                    $first_char = substr($userdata['user_name'], 0, 1);
+                    $first_char = substr($name, 0, 1);
                     $first_char = strtoupper($first_char);
                 }
 
