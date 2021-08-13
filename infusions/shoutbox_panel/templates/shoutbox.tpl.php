@@ -21,7 +21,7 @@ if (!function_exists('render_shoutbox')) {
     function render_shoutbox($info) {
         $locale = fusion_get_locale();
 
-        openside($locale['SB_title']);
+        openside($info['title']);
             echo $info['form'];
 
             if (!empty($info['items'])) {
@@ -29,7 +29,7 @@ if (!function_exists('render_shoutbox')) {
                 foreach ($info['items'] as $item) {
                     echo '<div class="shoutbox-item clearfix m-b-10">';
                         echo '<div class="shoutboxavatar pull-left m-r-5 m-t-5">';
-                            echo display_avatar($item, '30px', '', TRUE, 'img-rounded');
+                            echo display_avatar($item, '30px', '', !empty($item['user_id']), 'img-rounded');
                         echo '</div>';
 
                         if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
@@ -42,7 +42,7 @@ if (!function_exists('render_shoutbox')) {
                         $online = !empty($item['user_lastvisit']) ? '<span style="color: #5CB85C; font-size: 10px;"><i class="m-l-5 m-r-5 fa fa-'.($item['user_lastvisit'] >= time() - 300 ? 'circle' : 'circle-thin').'"></i></span>' : '';
 
                         echo '<div class="clearfix">';
-                            echo '<strong class="display-block">'.(!empty($item['user_name']) ? $item['profile_link'].$online : '<span class="m-r-5">'.$item['shout_name'].'</span>').'</strong>';
+                            echo '<strong class="display-block">'.(!empty($item['user_id']) ? $item['profile_link'].$online : '<span class="m-r-5">'.$item['shout_name'].'</span>').'</strong>';
                             echo timer($item['shout_datestamp']);
                         echo '</div>';
 
@@ -54,7 +54,9 @@ if (!function_exists('render_shoutbox')) {
                 echo '<div class="text-center m-t-10">'.$locale['SB_no_msgs'].'</div>';
             }
 
-            if (!empty($info['archive'])) {
+            echo !empty($info['pagenav']) ? '<div class="text-center m-t-10">'.$info['pagenav'].'</div>' : '';
+
+            if (empty($info['is_archive']) && !empty($info['archive'])) {
                 echo '<div class="text-center m-t-20"><a class="btn btn-default btn-xs" href="'.$info['archive']['link'].'">'.$info['archive']['title'].'</a></div>';
             }
         closeside();

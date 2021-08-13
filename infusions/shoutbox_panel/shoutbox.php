@@ -16,17 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-class ShoutBox {
+class Shoutbox {
     protected static $sb_settings = [];
     private static $instance = NULL;
     private static $locale = [];
     private static $limit = 4;
     private static $arch_limit = 20;
-    private static $default_params = [
-        'sbform_name' => 'sbform',
-        'sb_db'       => '',
-        'sb_limit'    => ''
-    ];
     private $postLink;
     private $token_limit = 3600;
     private $data = [
@@ -64,8 +59,8 @@ class ShoutBox {
 
         switch (get("s_action")) {
             case 'delete':
-                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutID(get("shout_id"));
-                self::delete_select($id);
+                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutId(get("shout_id"));
+                self::deleteShout($id);
                 break;
             case 'delete_select':
                 if (empty($_POST['shoutid'])) {
@@ -74,30 +69,49 @@ class ShoutBox {
                 }
 
                 if (isset($_POST['shoutid'])) {
-                    self::delete_select($_POST['shoutid']);
+                    self::deleteShout($_POST['shoutid']);
                 }
                 break;
             case 'edit':
-                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutID(get("shout_id"));
-                $this->data = self::_selectedSB($id);
+                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutId(get("shout_id"));
+
+                if (self::verifyShout($id)) {
+                    $result = dbquery("SELECT shout_id, shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden, shout_language
+                        FROM ".DB_SHOUTBOX."
+                        WHERE shout_id=".intval($id).(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : "")
+                    );
+
+                    if (dbrows($result) > 0) {
+                        $this->data = dbarray($result);
+                    }
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private function delete_select($id) {
+    public static function getInstance() {
+        if (self::$instance === NULL) {
+            self::$instance = new static();
+            self::$instance->setShoutboxDb();
+        }
+
+        return self::$instance;
+    }
+
+    private function deleteShout($id) {
         if (!empty($id)) {
             $i = 0;
             if (is_array($id)) {
                 foreach ($id as $key => $right) {
-                    if (self::verify_sbdb($key)) {
+                    if (self::verifyShout($key)) {
                         dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id='".intval($key)."'");
                         $i++;
                     }
                 }
             } else {
-                if (self::verify_sbdb($id)) {
+                if (self::verifyShout($id)) {
                     dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id='".intval($id)."'");
                 }
             }
@@ -110,7 +124,7 @@ class ShoutBox {
             redirect($this->postLink);
     }
 
-    static function verify_sbdb($id) {
+    static function verifyShout($id) {
         if (isnum($id)) {
             if ((iADMIN && checkrights("S")) ||
                 (iMEMBER && dbcount("(shout_id)", DB_SHOUTBOX, "shout_id='".$id."' AND shout_name='".fusion_get_userdata("user_id")."'".(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : "").""))
@@ -124,12 +138,7 @@ class ShoutBox {
         return FALSE;
     }
 
-    /**
-     * @param $shout_hash - shoutout id hash
-     *
-     * @return int
-     */
-    private function getSecureShoutID($shout_hash) {
+    private function getSecureShoutId($shout_hash) {
         $userdata = fusion_get_userdata();
         $hash = session_get("shout_token_hash");
         $decrypted_hash = fusion_decrypt($shout_hash, $hash);
@@ -145,33 +154,7 @@ class ShoutBox {
         return 0;
     }
 
-    public function _selectedSB($ids) {
-        if (self::verify_sbdb($ids)) {
-            $result = dbquery("SELECT shout_id, shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden, shout_language
-                FROM ".DB_SHOUTBOX."
-                WHERE shout_id=".intval($ids).(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : "")
-            );
-
-            if (dbrows($result) > 0) {
-                return $this->data = dbarray($result);
-            } else {
-                return NULL;
-            }
-        } else {
-            return NULL;
-        }
-    }
-
-    public static function getInstance() {
-        if (self::$instance === NULL) {
-            self::$instance = new static();
-            self::$instance->set_shoutboxdb();
-        }
-
-        return self::$instance;
-    }
-
-    private function set_shoutboxdb() {
+    private function setShoutboxDb() {
         $shout_group = 0;
         $shout_group_n = "";
         foreach (fusion_get_groups() as $key => $grups) {
@@ -256,7 +239,7 @@ class ShoutBox {
         }
     }
 
-    public function DisplayAdmin() {
+    public function displayAdmin() {
         $allowed_section = ["shoutbox", "shoutbox_form", "shoutbox_settings"];
         $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $allowed_section) ? $_GET['section'] : 'shoutbox';
         $edit = (isset($_GET['s_action']) && $_GET['s_action'] == 'edit') && isset($_GET['shout_id']);
@@ -279,18 +262,17 @@ class ShoutBox {
         switch ($_GET['section']) {
             case "shoutbox_form":
                 add_to_title($edit ? self::$locale['edit'] : self::$locale['SB_add']);
-                self::$default_params['sbform_name'] = 'sbform';
                 echo $this->sbForm();
                 add_breadcrumb(['link' => FUSION_REQUEST, "title" => $edit ? self::$locale['edit'] : self::$locale['SB_add']]);
                 break;
             case "shoutbox_settings":
                 add_to_title(self::$locale['SB_settings']);
-                $this->settings_Form();
+                $this->settingsForm();
                 add_breadcrumb(['link' => FUSION_REQUEST, "title" => self::$locale['SB_settings']]);
                 break;
             default:
                 add_to_title(self::$locale['SB_title']);
-                $this->ShoutsAdminListing();
+                $this->shoutsAdminListing();
                 add_breadcrumb(['link' => INFUSIONS.'shoutbox_panel/shoutbox_admin.php'.fusion_get_aidlink(), "title" => self::$locale['SB_title']]);
                 break;
         }
@@ -298,7 +280,7 @@ class ShoutBox {
         closetable();
     }
 
-    public function sbForm() {
+    public function sbForm($form_name = 'sbform') {
         if (defined('ADMIN_PANEL')) {
             fusion_confirm_exit();
         }
@@ -308,13 +290,13 @@ class ShoutBox {
         if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             $html .= "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
-            $html .= openform(self::$default_params['sbform_name'], 'post', $this->postLink);
+            $html .= openform($form_name, 'post', $this->postLink);
             $html .= form_hidden('shout_id', '', $this->data['shout_id']);
             $html .= form_hidden('shout_hidden', '', $this->data['shout_hidden']);
             $html .= form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], [
                 'required'     => TRUE,
                 'autosize'     => TRUE,
-                'form_name'    => self::$default_params['sbform_name'],
+                'form_name'    => $form_name,
                 'wordcount'    => TRUE,
                 'maxlength'    => '200',
                 'type'         => 'bbcode',
@@ -376,7 +358,7 @@ class ShoutBox {
         return $html;
     }
 
-    public function settings_Form() {
+    public function settingsForm() {
 
         add_to_jquery("$('#sb_delete_old').bind('click', function() { return confirm('".self::$locale['SB_warning_shouts']."'); });");
         echo openform('shoutbox', 'post', $this->postLink);
@@ -410,19 +392,19 @@ class ShoutBox {
         echo '</div>';
     }
 
-    private function ShoutsAdminListing() {
+    private function shoutsAdminListing() {
         $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
         $rowstart = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && ($_GET['rowstart'] <= $total_rows) ? $_GET['rowstart'] : 0;
-        $result = $this->_selectDB($rowstart, self::$limit);
+        $result = $this->selectDb($rowstart, self::$limit);
         $rows = dbrows($result);
 
         echo '<div class="m-t-10 m-b-10">';
         echo "<div class='display-inline'><span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span></div>\n";
-        echo ($total_rows > $rows) ? '<div>'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&amp;").'</div>' : "";
+        echo ($total_rows > $rows) ? '<div>'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&").'</div>' : "";
         echo '</div>';
 
         if ($rows > 0) {
-            echo openform('sb_form', 'post', $this->postLink."&amp;section=shoutbox&amp;s_action=delete_select");
+            echo openform('sb_form', 'post', $this->postLink."&section=shoutbox&s_action=delete_select");
             echo "<div class='list-group'>\n";
 
             if (!defined("SHOUTBOXJS")) {
@@ -433,13 +415,14 @@ class ShoutBox {
             }
 
             while ($data = dbarray($result)) {
+                $data['user_name'] = !empty($data['user_id']) ? $data['user_name'] : $data['shout_name'];
                 $online = !empty($data['user_lastvisit']) ? "<span style='color:#5CB85C'> <i class='".($data['user_lastvisit'] >= time() - 300 ? "fa fa-circle" : "fa fa-circle-thin")."'></i></span>" : '';
                 echo "<div class='list-group-item clearfix'>\n";
                 echo '<div class="row">';
                 echo '<div class="col-sm-3">';
-                echo display_avatar($data, '30px', '', TRUE, 'img-rounded pull-left m-r-10');
+                echo display_avatar($data, '30px', '', !empty($item['user_id']), 'img-rounded pull-left m-r-10');
                 echo "<div class='overflow-hide m-r-20'>";
-                echo $data['user_name'] ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $data['shout_name'];
+                echo !empty($data['user_id']) ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $data['shout_name'];
                 echo $online;
                 echo '<br/>'.self::$locale['SB_userip'].' '.$data['shout_ip'].'<br/>';
                 echo "<small>".showdate("longdate", $data['shout_datestamp'])."</small><br/>";
@@ -456,10 +439,10 @@ class ShoutBox {
                 echo '</div>';
                 echo '<div class="col-sm-3">';
                 echo '<div class="btn-group btn-group-sm pull-left m-r-20">';
-                echo "<a class='btn btn-default' href='".$this->postLink."&amp;section=shoutbox_form&amp;s_action=edit&amp;shout_id=".$data['shout_id']."'>";
+                echo "<a class='btn btn-default' href='".$this->postLink."&section=shoutbox_form&s_action=edit&shout_id=".$data['shout_id']."'>";
                 echo "<i class='fa fa-edit fa-fw'></i> ".self::$locale['edit'];
                 echo "</a>";
-                echo "<a class='btn btn-danger shoutbox-delete-btn' href='".$this->postLink."&amp;section=shoutbox&amp;s_action=delete&amp;shout_id=".$data['shout_id']."'>";
+                echo "<a class='btn btn-danger shoutbox-delete-btn' href='".$this->postLink."&section=shoutbox&s_action=delete&shout_id=".$data['shout_id']."'>";
                 echo "<i class='fa fa-trash fa-fw'></i> ".self::$locale['delete'];
                 echo "</a>";
                 echo '</div>';
@@ -472,13 +455,13 @@ class ShoutBox {
             echo form_button('sb_admins', self::$locale['SB_selected_shout'], self::$locale['SB_selected_shout'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
             echo closeform();
 
-            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&amp;").'</div>' : "";
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&").'</div>' : "";
         } else {
             echo "<div class='text-center m-t-10'>".self::$locale['SB_no_msgs']."</div>\n";
         }
     }
 
-    public function _selectDB($rows, $min) {
+    public function selectDb($rows, $min) {
         return dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
             u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." s
@@ -490,41 +473,52 @@ class ShoutBox {
         );
     }
 
-    public function DisplayShouts() {
-        $sdata = $this->getShoutboxData();
+    public function displayShouts($archive = FALSE) {
+        $sdata = $this->getShoutboxData($archive);
 
         $info = [
-            'form'    => self::sbForm(),
-            'items'   => $sdata['items'],
-            'archive' => $sdata['archive'],
+            'form'       => self::sbForm($archive ? 'sbarchive' : 'sbform'),
+            'items'      => $sdata['items'],
+            'archive'    => $sdata['archive'],
+            'title'      => $archive ? self::$locale['SB_archive'] : self::$locale['SB_title'],
+            'is_archive' => $archive,
+            'pagenav'    => $sdata['pagenav']
         ];
+
+        if ($archive) {
+            add_to_title(self::$locale['SB_archive']);
+        }
 
         if (!defined("SHOUTBOXJS")) {
             add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {
                 return confirm('".self::$locale['SB_warning_shout']."');
-                });");
+            });");
             define("SHOUTBOXJS", TRUE);
         }
 
         render_shoutbox($info);
     }
 
-    public function getShoutboxData() {
+    public function getShoutboxData($archive = FALSE) {
+        $limit = $archive ? self::$arch_limit : self::$limit;
+
         $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
         $_GET['rows'] = isset($_GET['rows']) && $_GET['rows'] <= $total_rows ? $_GET['rows'] : 0;
         $rows = $_GET['rows'];
-        $result = $this->_selectDB($rows, self::$limit);
+        $result = $this->selectDb($archive ? $rows : 0, $limit);
         $rows = dbrows($result);
 
         $sdata = [
             'items'   => [],
-            'archive' => []
+            'archive' => [],
+            'pagenav' => ''
         ];
 
         if ($rows > 0) {
             while ($data = dbarray($result)) {
+                $data['user_name'] = !empty($data['user_id']) ? $data['user_name'] : $data['shout_name'];
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
-                    $shout_id = $this->doSecureShoutID($data['shout_id']);
+                    $shout_id = $this->doSecureShoutId($data['shout_id']);
                     $data['edit_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id='.$shout_id;
                     $data['edit_title'] = self::$locale['edit'];
                     $data['delete_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id='.$shout_id;
@@ -542,6 +536,10 @@ class ShoutBox {
             }
         }
 
+        if ($archive == TRUE) {
+            $sdata['pagenav'] = $total_rows > $rows ? makepagenav($_GET['rows'], self::$arch_limit, $total_rows, self::$arch_limit, FUSION_SELF.'?rows', FALSE) : '';
+        }
+
         if ($total_rows > self::$sb_settings['visible_shouts']) {
             $sdata['archive'] = [
                 'link'  => INFUSIONS.'shoutbox_panel/shoutbox_archive.php',
@@ -552,87 +550,11 @@ class ShoutBox {
         return $sdata;
     }
 
-    public function ShoutsListing($info) {
-        echo self::sbForm();
-
-        $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
-        $_GET['rows'] = isset($_GET['rows']) && $_GET['rows'] <= $total_rows ? $_GET['rows'] : 0;
-        $rows = $_GET['rows'];
-        $result = $this->_selectDB($rows, $info['sb_limit']);
-        $rows = dbrows($result);
-
-        if ($rows > 0) {
-            if (!defined("SHOUTBOXJS")) {
-                add_to_jquery("$('.shoutbox-delete-btn').on('click', function(evt) {
-                return confirm('".self::$locale['SB_warning_shout']."');
-                });");
-                define("SHOUTBOXJS", TRUE);
-            }
-
-            while ($data = dbarray($result)) {
-                echo "<div class='display-block shoutboxwrapper clearfix'>\n";
-                echo "<div class='shoutboxavatar pull-left m-r-10 m-t-5'>\n";
-                echo display_avatar($data, '25px', '', TRUE, 'img-rounded');
-                echo "</div>\n";
-
-                if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
-                    $shout_id = $this->doSecureShoutID($data["shout_id"]);
-                    echo "<div class='pull-right btn-group'>\n";
-                    echo "<a class='btn btn-default btn-xs side' title='".self::$locale['edit']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id=$shout_id'><i class='fa fa-edit'></i></a>\n";
-                    echo "<a class='btn btn-default btn-xs side shoutbox-delete-btn' title='".self::$locale['delete']."' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id=$shout_id'><i class='fa fa-trash'></i></a>\n";
-                    echo "</div>\n";
-                }
-
-                $online = !empty($data['user_lastvisit']) ? "<span style='color: #5CB85C; font-size: 10px;'><i class='m-l-5 m-r-5 fa fa-".($data['user_lastvisit'] >= time() - 300 ? "circle" : "circle-thin")."'></i></span>" : '';
-
-                echo "<div class='clearfix'>";
-                echo '<b>'.($data['user_name'] ? profile_link($data['shout_name'], $data['user_name'], $data['user_status']).$online : '<span class="m-r-5">'.$data['shout_name'].'</span>').'</b>';
-                echo timer($data['shout_datestamp']);
-                echo "</div>\n";
-
-                $shout_message = parse_text($data['shout_message'], [
-                    'decode'               => FALSE,
-                    'default_image_folder' => NULL,
-                    'add_line_breaks'      => TRUE
-                ]);
-                echo "<div class='shoutbox overflow-hide'>".$shout_message."</div>\n";
-                echo "</div>\n";
-            }
-
-            if ($info['sbform_name'] == 'sarchive') {
-                echo $total_rows > $rows ? '<div class="text-center m-t-10">'.makepagenav($_GET['rows'], $info['sb_limit'], $total_rows, $info['sb_limit'], FUSION_SELF.$info['sb_db'], FALSE).'</div>' : '';
-            } else {
-                echo $total_rows > self::$sb_settings['visible_shouts'] ? "<div class='text-center m-t-20'><a class='btn btn-default btn-xs side' href='".INFUSIONS."shoutbox_panel/shoutbox_archive.php'>".self::$locale['SB_archive']."</a>\n</div>\n" : "";
-            }
-        } else {
-            echo "<div class='text-center m-t-10'>".self::$locale['SB_no_msgs']."</div>\n";
-        }
-    }
-
-    /**
-     * @param $shout_id - int
-     *
-     * @return string
-     */
-    private function doSecureShoutID($shout_id) {
+    private function doSecureShoutId($shout_id) {
         $userdata = fusion_get_userdata();
         $value = $shout_id.".".$userdata["user_id"].".".time();
         $hash = session_get("shout_token_hash");
 
         return urlencode(fusion_encrypt($value, $hash));
-    }
-
-    public function ArchiveListing() {
-        self::$default_params = [
-            'sbform_name' => 'sarchive',
-            'sb_db'       => '?rows',
-            'sb_limit'    => self::$arch_limit
-        ];
-
-        add_to_title(self::$locale['SB_archive']);
-
-        openside(self::$locale['SB_archive']);
-        self::ShoutsListing(self::$default_params);
-        closeside();
     }
 }

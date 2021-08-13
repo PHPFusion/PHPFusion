@@ -21,6 +21,6 @@ require_once THEMES.'templates/admin_header.php';
 require_once INFUSIONS.'shoutbox_panel/shoutbox.php';
 pageaccess('S');
 
-ShoutBox::getInstance()->DisplayAdmin();
+Shoutbox::getInstance()->displayAdmin();
 
 require_once THEMES.'templates/footer.php';
