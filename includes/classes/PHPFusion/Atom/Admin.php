@@ -85,7 +85,7 @@ class Admin {
                 /**
                  * Delete preset
                  */
-                if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
+                /*if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
                     if (empty($_GET['theme'])) {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -99,11 +99,11 @@ class Admin {
                     dbquery("DELETE FROM ".DB_THEME." WHERE theme_id='".intval($_GET['delete_preset'])."'");
                     addnotice('success', $locale['theme_success_002']);
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
-                }
+                }*/
                 /**
                  * Set active presets
                  */
-                if (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
+                /*if (isset($_POST['load_preset']) && isnum($_POST['load_preset'])) {
                     $result = dbquery("select theme_id FROM ".DB_THEME." WHERE theme_active='1'");
                     if (dbrows($result) > 0) {
                         $data = dbarray($result);
@@ -119,7 +119,7 @@ class Admin {
                     ];
                     dbquery_insert(DB_THEME, $data, "update");
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
-                }
+                }*/
                 $atom->displayThemeOverview();
                 break;
             case "widgets":

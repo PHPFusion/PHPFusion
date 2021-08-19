@@ -237,7 +237,7 @@ class Atom {
         echo "</div>\n";
 
 
-        if (dbrows($result) > 0) {
+        /*if (dbrows($result) > 0) {
             echo "<div class='m-b-20 p-b-20 m-t-20'>\n";
             echo openform('preset-form', 'post', FUSION_REQUEST, ['notice' => 0, 'max_tokens' => 1]);
             while ($preset = dbarray($result)) {
@@ -278,7 +278,7 @@ class Atom {
             echo "</div>\n";
         } else {
             echo "<div class='m-t-20 well text-center'>".$locale['theme_1030']."</div>\n";
-        }
+        }*/
 
     }
 
