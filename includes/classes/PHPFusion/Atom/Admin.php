@@ -62,9 +62,9 @@ class Admin {
 
         add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
-        $tab['title'] = [$locale['theme_1022'], $locale['theme_1023'], $locale['theme_1024']];
-        $tab['id'] = ["dashboard", "widgets", "css"];
-        $tab['icon'] = ["fa fa-edit fa-fw", "fa fa-cube fa-fw", "fa fa-css3 fa-fw"];
+        $tab['title'] = [$locale['theme_1022'], $locale['theme_1023'], /*$locale['theme_1024']*/];
+        $tab['id'] = ["dashboard", "widgets", /*"css"*/];
+        $tab['icon'] = ["fa fa-edit fa-fw", "fa fa-cube fa-fw", /*"fa fa-css3 fa-fw"*/];
         if (isset($_GET['action'])) {
             $tab['title'][] = $locale['theme_1029'];
             $tab['id'][] = "close";
@@ -125,10 +125,10 @@ class Admin {
             case "widgets":
                 $atom->displayThemeWidgets();
                 break;
-            case "css":
+            /*case "css":
                 echo '<div class="alert alert-danger">'.$locale['deprecated_section'].'</div>';
                 $atom->themeEditor();
-                break;
+                break;*/
             case "close":
                 redirect(FUSION_SELF.$aidlink);
                 break;

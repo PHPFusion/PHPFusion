@@ -107,14 +107,14 @@ if (is_array($core_css_files)) {
 // Theme CSS loading
 echo fusion_load_script(THEME."styles.css", "css", TRUE);
 
-if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
+/*if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
     if (!empty($theme_data)) {
         echo fusion_load_script(THEMES.$theme_data["theme_file"], "css", TRUE);
     }
-}
+}*/
 
 $theme_css_files = fusion_filter_hook("fusion_css_styles");
 if (is_array($theme_css_files)) {
