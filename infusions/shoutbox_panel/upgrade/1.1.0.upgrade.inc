@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 1.1.upgrade.inc
+| Filename: 1.1.0.upgrade.inc
 | Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.1';
+$inf_version = '1.1.0';
 
 if (column_exists(DB_SHOUTBOX, 'shout_hidden', FALSE)) {
     $column_add = DB_SHOUTBOX." CHANGE shout_hidden shout_hidden TINYINT(4) UNSIGNED NOT NULL DEFAULT '0'";
@@ -26,5 +26,14 @@ if (!column_exists(DB_SHOUTBOX, 'shout_language')) {
     dbquery("ALTER TABLE ".$column_add);
 }
 
-$inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES('hidden_shouts', '0', 'shoutbox_panel')";
+$settings = get_settings('shoutbox_panel');
+$check_array = [
+    'hidden_shouts' => 0
+];
+foreach ($check_array as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'shoutbox_panel')";
+    }
+}
+
 $inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/shoutbox_panel/shouts.svg', admin_page='5' WHERE admin_link='../infusions/shoutbox_panel/shoutbox_admin.php'";
