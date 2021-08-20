@@ -2593,3 +2593,30 @@ function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FA
         ]);
     }
 }
+
+/**
+ * Turn on/off maintenance mode
+ *
+ * @param bool $maintenance Turn On/Off
+ *
+ * @return bool
+ */
+function maintenance_mode($maintenance = TRUE) {
+    $file = BASEDIR.'.maintenance';
+
+    if ($maintenance) {
+        if (!($fp = @fopen($file, 'w'))) {
+            return FALSE;
+        }
+
+        @fwrite($fp, '<?php $mt_mode_start = '.time().'; ?>');
+        @fclose($fp);
+        @chmod($file, 0644);
+        return is_readable($file);
+    } else {
+        if (file_exists($file)) {
+            return @unlink($file);
+        }
+        return NULL;
+    }
+}

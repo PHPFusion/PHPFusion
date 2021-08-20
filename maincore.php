@@ -30,9 +30,26 @@ if (!defined('IN_FUSION')) {
     define('IN_FUSION', TRUE);
 }
 
-if (is_file(__DIR__.'/.maintenance')) {
+/**
+ * Check maintenance mode.
+ */
+function check_maintenance_mode() {
+    $file = __DIR__.'/.maintenance';
+    if (!file_exists($file)) {
+        return;
+    }
+
+    global $mt_mode_start;
+    include_once $file;
+
+    if ((time() - $mt_mode_start) >= 600) {
+        return;
+    }
+
     die('Shortly unavailable for scheduled maintenance. Please check again in a few minutes.');
 }
+
+check_maintenance_mode();
 
 require_once __DIR__.'/includes/core_resources_include.php';
 

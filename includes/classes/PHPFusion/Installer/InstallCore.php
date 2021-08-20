@@ -93,7 +93,7 @@ class InstallCore extends Infusions {
     /*
      * Verify the requirements that allows you to run the installer before boot up.
      * Due to the support for PHPFusion 9 in many uses of empty() as a condition
-     * and being counter productive in fixing low end php version deprecated codes /e,
+     * and being counterproductive in fixing low end php version deprecated codes /e,
      * no oPCache, and other problems, using PHPFusion 9 is not going to be allowed
      * entirely.
      */
@@ -128,7 +128,7 @@ class InstallCore extends Infusions {
             if (file_exists(BASEDIR.'config.php')) {
                 @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
                 @chmod(BASEDIR.'config_temp.php', 0755);
-                file_put_contents(BASEDIR.'.maintenance', '');
+                maintenance_mode();
             }
 
             session_start();
@@ -371,7 +371,7 @@ class InstallCore extends Infusions {
                 });
             });
         ");
-        // Instead of using INSTALLATION STEP, we let the each file control
+        // Instead of using INSTALLATION STEP, we let each file control
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
             default:
@@ -396,8 +396,8 @@ class InstallCore extends Infusions {
                 if (file_exists(BASEDIR.'config_temp.php')) {
                     @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
                     @chmod(BASEDIR.'config.php', 0644);
-                    @unlink(BASEDIR.'.maintenance');
                 }
+                maintenance_mode(FALSE);
                 unset($_SESSION['step']);
                 redirect(BASEDIR.'index.php');
                 return NULL;
@@ -406,8 +406,8 @@ class InstallCore extends Infusions {
                 if (file_exists(BASEDIR.'config_temp.php')) {
                     @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
                     @chmod(BASEDIR.'config.php', 0644);
-                    @unlink(BASEDIR.'.maintenance');
                 }
+                maintenance_mode(FALSE);
                 unset($_SESSION['step']);
                 redirect(BASEDIR.'index.php');
                 break;
