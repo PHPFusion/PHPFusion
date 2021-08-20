@@ -547,7 +547,6 @@ function fusion_table($table_id, array $options = []) {
     $default_options = [
         'remote_file'       => '', // "remote_file" => INFUSIONS."file-path.php", // iMEMBER will work with these, but https:// those will have no maincore parsing and no access to globals.
         'boilerplate'       => "bootstrap3", // @todo: implement boilerplate switch functions
-        'cdnurl'            => fusion_get_settings("siteurl"),
         'page_length'       => 0,
         'debug'             => FALSE,
         'reponse_debug'     => FALSE,
@@ -659,18 +658,18 @@ function fusion_table($table_id, array $options = []) {
 
     if (!defined('FUSION_DATATABLES')) {
         define('FUSION_DATATABLES', TRUE);
-        add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.js'></script>");
+        add_to_footer("<script src='".INCLUDES."jquery/datatables/datatables.min.js'></script>");
 
         if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
             if (defined('BOOTSTRAP4')) {
-                add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.css'>");
-                add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs4/datatables.bootstrap4.min.js'></script>");
+                add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/bs4/datatables.bootstrap4.min.css'>");
+                add_to_footer("<script src='".INCLUDES."jquery/datatables/bs4/datatables.bootstrap4.min.js'></script>");
             } else {
-                add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs3/datatables.bootstrap.min.css'>");
-                add_to_footer("<script src='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/bs3/datatables.bootstrap.min.js'></script>");
+                add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/bs3/datatables.bootstrap.min.css'>");
+                add_to_footer("<script src='".INCLUDES."jquery/datatables/bs3/datatables.bootstrap.min.js'></script>");
             }
         } else {
-            add_to_head("<link rel='stylesheet' href='".rtrim($options['cdnurl'], '/')."/includes/jquery/datatables/datatables.min.css'>");
+            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/datatables.min.css'>");
         }
     }
 
