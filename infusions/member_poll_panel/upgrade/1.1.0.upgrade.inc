@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 1.1.upgrade.inc
+| Filename: 1.1.0.upgrade.inc
 | Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.1';
+$inf_version = '1.1.0';
 
 if (column_exists(DB_POLLS, 'poll_opt_0') && column_exists(DB_POLLS, 'poll_opt')) {
     $result = dbquery("SELECT * FROM ".DB_POLLS);
