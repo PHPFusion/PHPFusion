@@ -29,7 +29,7 @@ class AdminSetup extends InstallCore {
      * @return string|null
      */
     public function view() {
-        if (file_exists(BASEDIR.'config_temp.php') && !is_writable(BASEDIR.'config_temp.php')) {
+        if (!is_writable(BASEDIR.'config_temp.php')) {
             unset($_SESSION['step']);
             die('Unable to create config_temp.php. Please check CHMOD for root directory and try again.');
         }
