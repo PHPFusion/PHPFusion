@@ -393,15 +393,6 @@ class InstallCore extends Infusions {
                 return InfusionsSetup::servePage()->view();
                 break;
             case self::STEP_SETUP_COMPLETE:
-                if (file_exists(BASEDIR.'config_temp.php')) {
-                    @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
-                    @chmod(BASEDIR.'config.php', 0644);
-                }
-                maintenance_mode(FALSE);
-                unset($_SESSION['step']);
-                redirect(BASEDIR.'index.php');
-                return NULL;
-                break;
             case self::STEP_EXIT:
                 if (file_exists(BASEDIR.'config_temp.php')) {
                     @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');

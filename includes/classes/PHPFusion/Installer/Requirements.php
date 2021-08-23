@@ -121,7 +121,7 @@ class Requirements extends InstallCore {
             $requirements['php']['severability'] = -10;
         }
 
-        // Suggest to update to at least 5.6.39 or 7 for disabling multiple statements.
+        // Suggest updating to at least 7 for disabling multiple statements.
         // $requirements['php_extensions'] output
         $missing_extensions = [];
         $required_extensions = [
@@ -226,12 +226,10 @@ class Requirements extends InstallCore {
             }
         }
 
-        $root = $_SERVER['DOCUMENT_ROOT'].substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_NAME'])));
-
         // Check system core files and folders
         // $requirements['files_check']
         $check_arr = [
-            $root                                => TRUE,
+            $_SERVER['DOCUMENT_ROOT']            => TRUE,
             BASEDIR.'administration/db_backups/' => TRUE,
             BASEDIR.'images/'                    => TRUE,
             BASEDIR.'images/avatars/'            => TRUE,

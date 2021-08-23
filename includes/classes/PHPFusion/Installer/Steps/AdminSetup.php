@@ -30,8 +30,8 @@ class AdminSetup extends InstallCore {
      */
     public function view() {
         if (!is_writable(BASEDIR.'config_temp.php')) {
-            unset($_SESSION['step']);
-            die('Unable to create config_temp.php. Please check CHMOD for root directory and try again.');
+            $_SESSION['step'] = self::STEP_PERMISSIONS;
+            die('Unable to create config_temp.php. Please check CHMOD for root directory ('.$_SERVER['DOCUMENT_ROOT'].') and try again.');
         }
 
         self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php');
