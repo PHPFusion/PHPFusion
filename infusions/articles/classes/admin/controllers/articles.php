@@ -359,8 +359,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
         } else {
             echo form_fileinput('article_thumbnail', $this->locale['thumbnail'], '', [
                 'upload_path' => IMAGES_A.'thumbs/',
-                'max_width'   => 1200,
-                'max_height'  => 627,
+                'max_width'   => 1024,
+                'max_height'  => 768,
                 'max_byte'    => 5242880, // 5 MB is max for Open Graph
                 'type'        => 'image',
                 'template'    => 'modern'
