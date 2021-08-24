@@ -366,7 +366,8 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 'max_height'  => 768,
                 'max_byte'    => 5242880, // 5 MB is max for Open Graph
                 'type'        => 'image',
-                'template'    => 'modern'
+                'template'    => 'modern',
+                'inline'      => FALSE
             ]);
         }
         echo '<div class="small m-t-20">'.sprintf($this->locale['max_fs_allowed_ft'], parsebytesize(5242880), 'jpeg, png').'</div>';

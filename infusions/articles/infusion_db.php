@@ -97,6 +97,7 @@ if (defined('ARTICLES_EXISTS')) {
             ar.article_datestamp AS datestamp,
             ac.article_cat_id AS cat_id,
             ac.article_cat_name AS cat_name,
+            ar.article_thumbnail AS image_main,
             ".(!empty($comments_query) ? $comments_query : '')."
             ".(!empty($ratings_query) ? $ratings_query : '')."
             u.user_id, u.user_name, u.user_status
@@ -118,6 +119,10 @@ if (defined('ARTICLES_EXISTS')) {
                 $data['url'] = INFUSIONS.'articles/articles.php?article_id='.$data['id'];
                 $data['category_link'] = INFUSIONS.'articles/articles.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
+
+                if ($data['image_main'] && file_exists(INFUSIONS.'articles/images/thumbs/'.$data['image_main'])) {
+                    $data['image'] = INFUSIONS.'articles/images/thumbs/'.$data['image_main'];
+                }
 
                 $module[DB_ARTICLES]['data'][] = $data;
             }
