@@ -24,7 +24,7 @@ if (isset($_POST['savesettings'])) {
     $inputArray = [
         "blog_allow_submission"       => form_sanitizer($_POST['blog_allow_submission'], 0, "blog_allow_submission"),
         "blog_allow_submission_files" => form_sanitizer($_POST['blog_allow_submission_files'], 0, "blog_allow_submission_files"),
-        "blog_extended_required"      => isset($_POST['blog_extended_required']) ? 1 : 0,
+        "blog_extended_required"      => form_sanitizer($_POST['blog_extended_required'], 0, "blog_extended_required"),
         "blog_pagination"             => form_sanitizer($_POST['blog_pagination'], 0, "blog_pagination"),
         "blog_image_link"             => form_sanitizer($_POST['blog_image_link'], 0, 'blog_image_link'),
         "blog_thumb_ratio"            => form_sanitizer($_POST['blog_thumb_ratio'], 0, 'blog_thumb_ratio'),
