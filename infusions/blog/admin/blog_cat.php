@@ -27,7 +27,6 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $result = dbcount("(blog_cat)", DB_BLOG, "blog_cat='".$_GET['cat_id']."'") || dbcount("(blog_cat_id)", DB_BLOG_CATS, "blog_cat_parent='".$_GET['cat_id']."'");
     if (!empty($result)) {
         addnotice("danger", $locale['blog_0522']." - <span class='small'>".$locale['blog_0523']."</span>");
-        redirect(FUSION_SELF.$aidlink);
     } else {
         $result = dbquery("SELECT blog_cat_image FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
         if (dbrows($result) > 0) {
@@ -37,10 +36,10 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             }
         }
 
-         dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
+        dbquery("DELETE FROM ".DB_BLOG_CATS." WHERE blog_cat_id='".intval($_GET['cat_id'])."'");
         addnotice("success", $locale['blog_0524b']);
-        redirect(FUSION_SELF.$aidlink);
     }
+    redirect(FUSION_SELF.$aidlink);
     redirect(clean_request("", ["action", "ref", "cat_id"], FALSE));
 }
 $data = [
@@ -101,8 +100,7 @@ if (isset($_POST['save_cat'])) {
 }
 add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
 
-echo '<div class="m-t-10">';
-echo '<h2>'.$formTitle.'</h2>';
+echo '<h3 class="m-t-0">'.$formTitle.'</h3>';
 
 echo openform("addcat", "post", $formAction);
 openside("");
@@ -130,13 +128,14 @@ if (multilang_table("BL")) {
 }
 echo form_select("blog_cat_image", $locale['blog_0531'], $data['blog_cat_image'], [
     "inline"  => TRUE,
-    "options" => blogCatImageOpts(),
+    "options" => blog_cat_image_opts(),
 ]);
 echo form_button("save_cat", $locale['blog_0532'], $locale['blog_0532'], ["class" => "btn-success", "icon" => "fa fa-hdd-o"]);
 closeside();
-echo "<hr/>\n";
+echo closeform();
+
 echo "<div class='overflow-hide'>";
-echo "<div class='pull-right'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&amp;ifolder=imagesbc'>".$locale['blog_0536']."</a><br /><br />\n</div>\n";
+echo "<div class='pull-right'><a class='btn btn-primary' href='".ADMIN."images.php".$aidlink."&ifolder=imagesbc&section=upload'>".$locale['blog_0536']."</a><br /><br />\n</div>\n";
 echo "<h4>".$locale['blog_0407']."</h4>\n";
 echo "</div>";
 $result = dbquery("SELECT blog_cat_id, blog_cat_name FROM ".DB_BLOG_CATS." ".(multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : "")." ORDER BY blog_cat_name");
@@ -149,9 +148,9 @@ if ($rows != 0) {
         echo "<div class='pull-left' style='width:70px;'>\n";
         echo thumbnail(get_image("bl_".$data['blog_cat_name']), '50px');
         echo "</div>\n";
-        echo "<div class='overflow-hide'><h4 class='m-b-5 m-t-5'>".getblogCatPath($data['blog_cat_id'])."</h4>";
-        echo "<span><a href='".clean_request("action=edit&cat_id=".$data['blog_cat_id'], ['aid', 'section'], TRUE)."'>".$locale['edit']."</a> &middot; ";
-        echo "<a href='".clean_request("action=delete&cat_id=".$data['blog_cat_id'], ['aid', 'section'], TRUE)."' onclick=\"return confirm('".$locale['blog_0550']."');\">".$locale['delete']."</a></span>\n";
+        echo "<div class='overflow-hide'><h4 class='m-b-5 m-t-5'>".get_blog_cat_path($data['blog_cat_id'])."</h4>";
+        echo "<span><a href='".clean_request("action=edit&cat_id=".$data['blog_cat_id'], ['aid', 'section'])."'>".$locale['edit']."</a> &middot; ";
+        echo "<a href='".clean_request("action=delete&cat_id=".$data['blog_cat_id'], ['aid', 'section'])."' onclick=\"return confirm('".$locale['blog_0550']."');\">".$locale['delete']."</a></span>\n";
         echo "</div>\n</div>\n";
         echo "</div>";
     }
@@ -162,7 +161,7 @@ if ($rows != 0) {
 
 echo '</div>';
 
-function getblogCatPath($item_id) {
+function get_blog_cat_path($item_id) {
     $full_path = "";
     while ($item_id > 0) {
         $result = dbquery("SELECT blog_cat_id, blog_cat_name, blog_cat_parent FROM ".DB_BLOG_CATS." WHERE blog_cat_id='$item_id'".(multilang_table("BL") ? " AND ".in_group('blog_cat_language', LANGUAGE) : ""));
@@ -179,8 +178,8 @@ function getblogCatPath($item_id) {
     return $full_path;
 }
 
-function blogCatImageOpts() {
-    $image_files = makefilelist(IMAGES_BC, ".|..|index.php", TRUE);
+function blog_cat_image_opts() {
+    $image_files = makefilelist(IMAGES_BC, ".|..|index.php");
     $image_list = [];
     foreach ($image_files as $image) {
         $image_list[$image] = $image;

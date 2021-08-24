@@ -24,7 +24,6 @@ $locale = fusion_get_locale('', [
     INFUSIONS."blog/locale/".LOCALESET."blog_admin.php"
 ]);
 
-require_once INFUSIONS."blog/classes/Functions.php";
 require_once INCLUDES."infusions_include.php";
 $blog_settings = get_settings("blog");
 $aidlink = fusion_get_aidlink();
@@ -160,7 +159,7 @@ function blog_listing() {
     ");
 
     $rows = dbrows($result);
-    echo "<div class='clearfix m-t-10'>\n";
+    echo "<div class='clearfix'>\n";
     echo "<span class='pull-right m-t-10 hidden-xs'>".sprintf($locale['blog_0408'], $rows, $total_rows)."</span>\n";
 
     if (!empty($catOpts) > 0 && $total_rows > 0) {
@@ -245,15 +244,49 @@ function blog_listing() {
 }
 
 /**
- * Function to progressively return closest full image_path
+ * Get the best available paths for image and thumbnail
  *
- * @param      $blog_image
- * @param      $blog_image_t1
- * @param      $blog_image_t2
- * @param bool $hiRes
+ * @param string $blog_image
+ * @param string $blog_image_t1
+ * @param string $blog_image_t2
+ * @param bool   $hiRes true for image, false for thumb
  *
- * @return string
+ * @return bool|string
  */
 function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {
-    return PHPFusion\Blog\Functions::get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes);
+    if (!$hiRes) {
+        if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) {
+            return IMAGES_B_T.$blog_image_t1;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) {
+            return IMAGES_B.$blog_image_t1;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) {
+            return IMAGES_B_T.$blog_image_t2;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) {
+            return IMAGES_B.$blog_image_t2;
+        }
+        if ($blog_image && file_exists(IMAGES_B.$blog_image)) {
+            return IMAGES_B.$blog_image;
+        }
+    } else {
+        if ($blog_image && file_exists(IMAGES_B.$blog_image)) {
+            return IMAGES_B.$blog_image;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) {
+            return IMAGES_B.$blog_image_t2;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) {
+            return IMAGES_B_T.$blog_image_t2;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) {
+            return IMAGES_B.$blog_image_t1;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) {
+            return IMAGES_B_T.$blog_image_t1;
+        }
+    }
+
+    return FALSE;
 }

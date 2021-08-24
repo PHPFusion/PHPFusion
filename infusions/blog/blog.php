@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once __DIR__.'/../../maincore.php';
 
 if (!defined('BLOG_EXISTS')) {
@@ -27,7 +28,6 @@ $settings = fusion_get_settings();
 
 require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."blog/classes/Functions.php";
 require_once INFUSIONS."blog/classes/OpenGraphBlogs.php";
 require_once INFUSIONS."blog/templates/blog.tpl.php";
 require_once INCLUDES."infusions_include.php";
@@ -65,8 +65,8 @@ $info = [
     'blog_updated'          => '',
     'blog_image'            => '',
     'blog_language'         => LANGUAGE,
-    'blog_categories'       => get_blogCatsData(),
-    'blog_categories_index' => get_blogCatsIndex(),
+    'blog_categories'       => get_blog_cats_data(),
+    'blog_categories_index' => dbquery_tree(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent'),
     'blog_last_updated'     => 0,
     'blog_max_rows'         => 0,
     'blog_rows'             => 0,
@@ -267,8 +267,8 @@ if (isset($_GET['readmore'])) {
             $info['blog_title'] = $item['blog_subject'];
             $info['blog_updated'] = $locale['global_049']." ".timer($item['blog_datestamp']);
 
-            $item['blog_show_comments'] = \PHPFusion\Blog\Functions::get_blog_comments($item);
-            $item['blog_show_ratings'] = \PHPFusion\Blog\Functions::get_blog_ratings($item);
+            $item['blog_show_comments'] = get_blog_comments($item);
+            $item['blog_show_ratings'] = get_blog_ratings($item);
 
             $info['blog_item'] = $item;
 
@@ -338,7 +338,7 @@ if (isset($_GET['readmore'])) {
             $info['blog_rows'] = dbrows($result);
         }
     } // Category
-    else if ($_GET['cat_id'] !== NULL && validate_blogCats($_GET['cat_id'])) {
+    else if ($_GET['cat_id'] !== NULL && validate_blog_cat($_GET['cat_id'])) {
 
         $catFilter = "and blog_cat =''";
         if (!empty($_GET['cat_id'])) {
@@ -590,17 +590,16 @@ require_once THEMES.'templates/footer.php';
  *
  * @return array
  */
-function get_blogCatsData() {
-    return \PHPFusion\Blog\Functions::get_blogCatsData();
-}
+function get_blog_cats_data() {
+    $data = dbquery_tree_full(DB_BLOG_CATS, 'blog_cat_id', 'blog_cat_parent',
+        (multilang_table("BL") ? "WHERE ".in_group('blog_cat_language', LANGUAGE) : ''));
+    foreach ($data as $index => $cat_data) {
+        foreach ($cat_data as $blog_cat_id => $cat) {
+            $data[$index][$blog_cat_id]['blog_cat_link'] = "<a href='".INFUSIONS."blog/blog.php?cat_id=".$cat['blog_cat_id']."'>".$cat['blog_cat_name']."</a>";
+        }
+    }
 
-/**
- * Get Blog Hierarchy Index
- *
- * @return array
- */
-function get_blogCatsIndex() {
-    return PHPFusion\Blog\Functions::get_blogCatsIndex();
+    return $data;
 }
 
 /**
@@ -611,7 +610,11 @@ function get_blogCatsIndex() {
  * @return int
  */
 function validate_blog($blog_id) {
-    return PHPFusion\Blog\Functions::validate_blog($blog_id);
+    if (isset($blog_id) && isnum($blog_id)) {
+        return dbcount("('blog_id')", DB_BLOG, "blog_id='".intval($blog_id)."'");
+    }
+
+    return NULL;
 }
 
 /**
@@ -621,20 +624,95 @@ function validate_blog($blog_id) {
  *
  * @return int
  */
-function validate_blogCats($blog_cat_id) {
-    return PHPFusion\Blog\Functions::validate_blogCat($blog_cat_id);
+function validate_blog_cat($blog_cat_id) {
+    if (isnum($blog_cat_id)) {
+        if ($blog_cat_id < 1) {
+            return 1;
+        } else {
+            return dbcount("('blog_cat_id')", DB_BLOG_CATS, "blog_cat_id='".intval($blog_cat_id)."'");
+        }
+    }
+
+    return FALSE;
 }
 
 /**
- * Get the closest image available
+ * Get the best available paths for image and thumbnail
  *
- * @param      $image
- * @param      $thumb1
- * @param      $thumb2
- * @param bool $hires - true for image, false for thumbnail
+ * @param string $blog_image
+ * @param string $blog_image_t1
+ * @param string $blog_image_t2
+ * @param bool   $hiRes true for image, false for thumb
  *
  * @return bool|string
  */
-function get_blog_image_path($image, $thumb1, $thumb2, $hires = FALSE) {
-    return \PHPFusion\Blog\Functions::get_blog_image_path($image, $thumb1, $thumb2, $hires);
+function get_blog_image_path($blog_image, $blog_image_t1, $blog_image_t2, $hiRes = FALSE) {
+    if (!$hiRes) {
+        if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) {
+            return IMAGES_B_T.$blog_image_t1;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) {
+            return IMAGES_B.$blog_image_t1;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) {
+            return IMAGES_B_T.$blog_image_t2;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) {
+            return IMAGES_B.$blog_image_t2;
+        }
+        if ($blog_image && file_exists(IMAGES_B.$blog_image)) {
+            return IMAGES_B.$blog_image;
+        }
+    } else {
+        if ($blog_image && file_exists(IMAGES_B.$blog_image)) {
+            return IMAGES_B.$blog_image;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B.$blog_image_t2)) {
+            return IMAGES_B.$blog_image_t2;
+        }
+        if ($blog_image_t2 && file_exists(IMAGES_B_T.$blog_image_t2)) {
+            return IMAGES_B_T.$blog_image_t2;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B.$blog_image_t1)) {
+            return IMAGES_B.$blog_image_t1;
+        }
+        if ($blog_image_t1 && file_exists(IMAGES_B_T.$blog_image_t1)) {
+            return IMAGES_B_T.$blog_image_t1;
+        }
+    }
+
+    return FALSE;
+}
+
+function get_blog_comments($data) {
+    $html = "";
+    if (fusion_get_settings('comments_enabled') && $data['blog_allow_comments']) {
+        $html = PHPFusion\Comments::getInstance([
+            'comment_item_type'     => 'B',
+            'comment_db'            => DB_BLOG,
+            'comment_col'           => 'blog_id',
+            'comment_item_id'       => $data['blog_id'],
+            'clink'                 => INFUSIONS."blog/blog.php?readmore=".$data['blog_id'],
+            'comment_count'         => TRUE,
+            'comment_allow_subject' => FALSE,
+            'comment_allow_reply'   => TRUE,
+            'comment_allow_post'    => TRUE,
+            'comment_once'          => FALSE,
+            'comment_allow_ratings' => FALSE,
+        ], 'blog_comments')->showComments();
+    }
+
+    return $html;
+}
+
+function get_blog_ratings($data) {
+    $html = "";
+    if (fusion_get_settings('ratings_enabled') && $data['blog_allow_ratings']) {
+        ob_start();
+        showratings("B", $data['blog_id'], BASEDIR."infusions/blog/blog.php?readmore=".$data['blog_id']);
+        $html = ob_get_contents();
+        ob_end_clean();
+    }
+
+    return (string)$html;
 }

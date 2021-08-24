@@ -43,7 +43,7 @@ if (column_exists(DB_BLOG, 'blog_cat')) {
 }
 
 if (is_dir(IMAGES."blog/thumbs/")) {
-    $files = makefilelist(IMAGES."blog/thumbs/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."blog/thumbs/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."blog/thumbs/".$file, INFUSIONS."blog/thumbs/".$file);
     }
@@ -52,7 +52,7 @@ if (is_dir(IMAGES."blog/thumbs/")) {
 }
 
 if (is_dir(IMAGES."blog/")) {
-    $files = makefilelist(IMAGES."blog/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."blog/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."blog/".$file, INFUSIONS."blog/images/".$file);
     }
@@ -61,7 +61,7 @@ if (is_dir(IMAGES."blog/")) {
 }
 
 if (is_dir(IMAGES."blog_cats/")) {
-    $files = makefilelist(IMAGES."blog_cats/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."blog_cats/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."blog_cats/".$file, INFUSIONS."blog/blog_cats/".$file);
     }

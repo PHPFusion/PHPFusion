@@ -41,7 +41,7 @@ if (!function_exists('render_main_blog')) {
             }
             $pages .= "</ul>\n";
             $pages .= fusion_get_function('closeside');
-            \PHPFusion\Panels::addPanel('blog_menu_panel', $pages, \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
+            \PHPFusion\Panels::addPanel('blog_menu_panel', $pages, \PHPFusion\Panels::PANEL_RIGHT, iGUEST);
         }
 
         \PHPFusion\Panels::addPanel('blog_menu_panel', display_blog_menu($info), \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 9);
@@ -241,7 +241,7 @@ if (!function_exists('display_blog_menu')) {
                     $collaped = isset($_GET['archive']) && $_GET['archive'] == $year ? 'in' : '';
                     echo "<ul id='blog-".$year."' class='collapse m-l-15 ".$collaped."'>";
                         if (!empty($archive_data)) {
-                            foreach ($archive_data as $month => $a_data) {
+                            foreach ($archive_data as $a_data) {
                                 echo "<li ".($a_data['active'] ? "class='active strong'" : '')."><a href='".$a_data['link']."'>".$a_data['title']."</a> <span class='badge m-l-10'>".$a_data['count']."</span></li>\n";
                             }
                         }
@@ -256,7 +256,7 @@ if (!function_exists('display_blog_menu')) {
         openside('<i class="fa fa-users"></i> '.$locale['blog_1005']);
         echo "<ul class='block'>\n";
         if (!empty($info['blog_author'])) {
-            foreach ($info['blog_author'] as $author_id => $author_info) {
+            foreach ($info['blog_author'] as $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
                     <a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
                     </li>\n";

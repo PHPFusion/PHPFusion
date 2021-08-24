@@ -26,7 +26,7 @@ class OpenGraphBlogs extends OpenGraph {
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$blog_id;
-            $info['keywords'] = $data['blog_keywords'] ? $data['blog_keywords'] : $settings['keywords'];
+            $info['keywords'] = !empty($data['blog_keywords']) ? $data['blog_keywords'] : $settings['keywords'];
             $info['title'] = $data['blog_subject'].' - '.$settings['sitename'];
             $info['description'] = $data['blog_blog'] ? fusion_first_words(strip_tags(html_entity_decode($data['blog_blog'])), 50) : $settings['description'];
             $info['type'] = 'article';

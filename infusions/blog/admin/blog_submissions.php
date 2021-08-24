@@ -18,9 +18,6 @@
 $locale = fusion_get_locale();
 $blog_settings = get_settings("blog");
 
-echo '<div class="m-t-10">';
-echo '<h2>'.$locale['blog_0131'].'</h2>';
-
 if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     if (isset($_POST['publish']) && (isset($_GET['submit_id']) && isnum($_GET['submit_id']))) {
         $result = dbquery("SELECT ts.*, tu.user_id, tu.user_name FROM ".DB_SUBMISSIONS." ts
@@ -42,8 +39,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 'blog_visibility'     => form_sanitizer($_POST['blog_visibility'], 0, 'blog_visibility'),
                 'blog_draft'          => isset($_POST['blog_draft']) ? "1" : "0",
                 'blog_sticky'         => isset($_POST['blog_sticky']) ? "1" : "0",
-                'blog_allow_comments' => 0,
-                'blog_allow_ratings'  => 0,
+                'blog_allow_comments' => isset($_POST['blog_allow_comments']) ? "1" : "0",
+                'blog_allow_ratings'  => isset($_POST['blog_allow_ratings']) ? "1" : "0",
                 'blog_language'       => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language')
             ];
             if (isset($_FILES['blog_image'])) { // when files is uploaded.
@@ -52,15 +49,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     $data['blog_image'] = $upload['image_name'];
                     $data['blog_image_t1'] = $upload['thumb1_name'];
                     $data['blog_image_t2'] = $upload['thumb2_name'];
-                    $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left",
-                        "blog_ialign") : "pull-left");
+                    $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
                 }
-            } else { // when files not uploaded. but there should be exist check.
+            } else { // when files not uploaded but there should be existed check.
                 $data['blog_image'] = (isset($_POST['blog_image']) ? $_POST['blog_image'] : "");
                 $data['blog_image_t1'] = (isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "");
                 $data['blog_image_t2'] = (isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "");
-                $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left",
-                    "blog_ialign") : "pull-left");
+                $data['blog_ialign'] = (isset($_POST['blog_ialign']) ? form_sanitizer($_POST['blog_ialign'], "pull-left", "blog_ialign") : "pull-left");
             }
             if (fusion_get_settings('tinymce_enabled') != 1) {
                 $data['blog_breaks'] = isset($_POST['line_breaks']) ? "y" : "n";
@@ -131,23 +126,25 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             $data = dbarray($result);
             $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
             $callback_data = [
-                "blog_start"      => $data['submit_datestamp'],
-                "blog_datestamp"  => $data['submit_datestamp'],
-                "blog_keywords"   => $submit_criteria['blog_keywords'],
-                "blog_visibility" => 0,
-                "blog_image"      => $submit_criteria['blog_image'],
-                "blog_image_t1"   => $submit_criteria['blog_image_t1'],
-                "blog_image_t2"   => $submit_criteria['blog_image_t2'],
-                "blog_ialign"     => $submit_criteria['blog_ialign'],
-                "blog_end"        => "",
-                "blog_draft"      => 0,
-                "blog_sticky"     => 0,
-                "blog_language"   => $submit_criteria['blog_language'],
-                "blog_subject"    => $submit_criteria['blog_subject'],
-                "blog_cat"        => $submit_criteria['blog_cat'],
-                "blog_blog"       => phpentities(stripslashes(descript($submit_criteria['blog_blog']))),
-                "blog_extended"   => phpentities(stripslashes(descript($submit_criteria['blog_body']))),
-                "blog_breaks"     => fusion_get_settings("tinyce_enabled"),
+                "blog_start"          => $data['submit_datestamp'],
+                "blog_datestamp"      => $data['submit_datestamp'],
+                "blog_keywords"       => $submit_criteria['blog_keywords'],
+                "blog_visibility"     => 0,
+                "blog_image"          => $submit_criteria['blog_image'],
+                "blog_image_t1"       => $submit_criteria['blog_image_t1'],
+                "blog_image_t2"       => $submit_criteria['blog_image_t2'],
+                "blog_ialign"         => $submit_criteria['blog_ialign'],
+                "blog_end"            => "",
+                "blog_draft"          => 0,
+                "blog_sticky"         => 0,
+                "blog_language"       => $submit_criteria['blog_language'],
+                "blog_subject"        => $submit_criteria['blog_subject'],
+                "blog_cat"            => $submit_criteria['blog_cat'],
+                "blog_blog"           => phpentities(stripslashes(descript($submit_criteria['blog_blog']))),
+                "blog_extended"       => phpentities(stripslashes(descript($submit_criteria['blog_body']))),
+                "blog_breaks"         => fusion_get_settings("tinyce_enabled"),
+                'blog_allow_comments' => 1,
+                'blog_allow_ratings'  => 1
             ];
 
             if (isset($_POST['preview'])) {
@@ -204,7 +201,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     echo closemodal();
                 }
             }
-            echo openform("publish_blog", "post", FUSION_REQUEST);
+
+            echo '<h3 class="m-t-0">'.$locale['blog_0131'].'</h3>';
+
             echo "<div class='well clearfix'>\n";
             echo "<div class='pull-left'>\n";
             echo display_avatar($data, "30px", "", TRUE, "img-rounded m-t-5 m-r-5");
@@ -214,26 +213,48 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo $locale['blog_0148'].timer($data['submit_datestamp'])." - ".showdate("shortdate", $data['submit_datestamp']);
             echo "</div>\n";
             echo "</div>\n";
-            echo "<div class='row'>\n";
-            echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+
+            echo openform("publish_blog", "post", FUSION_REQUEST);
+
             echo form_text("blog_subject", $locale['blog_0422'], $callback_data['blog_subject'], [
                 "required" => TRUE,
                 "inline"   => FALSE
             ]);
-            echo form_select('blog_keywords', $locale['blog_0443'], $callback_data['blog_keywords'], [
-                "max_length"  => 320,
-                "placeholder" => $locale['blog_0444'],
-                "width"       => "100%",
-                "error_text"  => $locale['blog_0457'],
-                "tags"        => TRUE,
-                "multiple"    => TRUE
-            ]);
-            echo "<div class='row m-0'>\n";
-            echo "<div class='pull-left m-r-10 display-inline-block'>\n";
-            echo form_datepicker('blog_start', $locale['blog_0427'], $callback_data['blog_start'], ['placeholder' => $locale['blog_0429'], 'width' => '250px']);
-            echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
-            echo form_datepicker('blog_end', $locale['blog_0428'], $callback_data['blog_end'], ['placeholder' => $locale['blog_0429'], 'width' => '250px']);
-            echo "</div>\n</div>\n";
+
+            $snippetSettings = [
+                'required'    => TRUE,
+                'preview'     => TRUE,
+                'html'        => TRUE,
+                'autosize'    => TRUE,
+                'placeholder' => $locale['blog_0425a'],
+                'form_name'   => 'inputform',
+                'path'        => IMAGES_B
+            ];
+            if (fusion_get_settings('tinymce_enabled')) {
+                $snippetSettings = ['required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced'];
+            }
+
+            echo form_textarea('blog_blog', $locale['blog_0425'], $callback_data['blog_blog'], $snippetSettings);
+
+
+            $extendedSettings = [];
+            if (!fusion_get_settings('tinymce_enabled')) {
+                $extendedSettings = [
+                    'preview'     => TRUE,
+                    'html'        => TRUE,
+                    'autosize'    => TRUE,
+                    'placeholder' => $locale['blog_0426b'],
+                    'form_name'   => 'inputform',
+                    'path'        => IMAGES_B
+                ];
+            } else {
+                $extendedSettings = ['type' => 'tinymce', 'tinymce' => 'advanced', 'path' => IMAGES_B];
+            }
+
+            echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
+
+            echo "<div class='row'>\n";
+            echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
             openside('');
             if ($callback_data['blog_image'] != "" && $callback_data['blog_image_t1'] != "") {
                 echo "<div class='row'>\n";
@@ -283,6 +304,25 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo form_select('blog_ialign', $locale['blog_0442'], $callback_data['blog_ialign'], ["options" => $alignOptions]);
             }
             closeside();
+
+            openside('');
+            echo form_select('blog_keywords', $locale['blog_0443'], $callback_data['blog_keywords'], [
+                "max_length"  => 320,
+                "placeholder" => $locale['blog_0444'],
+                "width"       => "100%",
+                "error_text"  => $locale['blog_0457'],
+                "tags"        => TRUE,
+                "multiple"    => TRUE
+            ]);
+
+            echo "<div class='row m-0'>\n";
+            echo "<div class='pull-left m-r-10 display-inline-block'>\n";
+            echo form_datepicker('blog_start', $locale['blog_0427'], $callback_data['blog_start'], ['placeholder' => $locale['blog_0429'], 'width' => '250px']);
+            echo "</div>\n<div class='pull-left m-r-10 display-inline-block'>\n";
+            echo form_datepicker('blog_end', $locale['blog_0428'], $callback_data['blog_end'], ['placeholder' => $locale['blog_0429'], 'width' => '250px']);
+            echo "</div>\n</div>\n";
+            closeside();
+
             echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
             openside("");
             echo form_select_tree("blog_cat", $locale['blog_0423'], $callback_data['blog_cat'], [
@@ -305,50 +345,36 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             } else {
                 echo form_hidden('blog_language', '', $callback_data['blog_language']);
             }
-            echo form_hidden('blog_datestamp', '', $callback_data['blog_datestamp']);
-            echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['class' => 'btn-default btn-sm m-r-10', 'icon' => 'fa fa-eye']);
-            echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['class' => 'btn-success btn-sm', 'icon' => 'fa fa-hdd-o']);
-            closeside();
-            openside("");
-            echo "<label><input type='checkbox' name='blog_draft' value='1' ".($callback_data['blog_draft'] ? "checked='checked'" : "")."/> ".$locale['blog_0431']."</label><br />\n";
-            echo "<label><input type='checkbox' name='blog_sticky' value='1' ".($callback_data['blog_sticky'] ? "checked='checked'" : "")."/> ".$locale['blog_0432']."</label><br />\n";
+
+            echo form_checkbox("blog_draft", $locale['blog_0431'], $callback_data['blog_draft'], [
+                'class'         => 'm-b-0',
+                'reverse_label' => TRUE
+            ]);
+
+            echo form_checkbox("blog_sticky", $locale['blog_0432'], $callback_data['blog_sticky'], [
+                'class'         => 'm-b-0',
+                'reverse_label' => TRUE
+            ]);
+
             if (fusion_get_settings("tinymce_enabled") != 1) {
-                echo "<label><input type='checkbox' name='blog_breaks' value='1' ".($callback_data['blog_breaks'] ? "checked='checked'" : "")."/> ".$locale['blog_0433']."</label><br />\n";
+                echo form_checkbox("blog_breaks", $locale['blog_0433'], $callback_data['blog_breaks'], [
+                    'class'         => 'm-b-0',
+                    'reverse_label' => TRUE
+                ]);
             }
+
+            echo form_checkbox("blog_allow_comments", $locale['blog_0434'], $callback_data['blog_allow_comments'], [
+                'class'         => 'm-b-0',
+                'reverse_label' => TRUE
+            ]);
+
+            echo form_checkbox("blog_allow_ratings", $locale['blog_0435'], $callback_data['blog_allow_ratings'], [
+                'class'         => 'm-b-0',
+                'reverse_label' => TRUE
+            ]);
             closeside();
             echo "</div></div>\n";
 
-            $snippetSettings = [
-                'required'    => TRUE,
-                'preview'     => TRUE,
-                'html'        => TRUE,
-                'autosize'    => TRUE,
-                'placeholder' => $locale['blog_0425a'],
-                'form_name'   => 'inputform',
-                'path'        => IMAGES_B
-            ];
-            if (fusion_get_settings('tinymce_enabled')) {
-                $snippetSettings = ['required' => TRUE, 'type' => 'tinymce', 'tinymce' => 'advanced'];
-            }
-
-            echo form_textarea('blog_blog', $locale['blog_0425'], $callback_data['blog_blog'], $snippetSettings);
-
-
-            $extendedSettings = [];
-            if (!fusion_get_settings('tinymce_enabled')) {
-                $extendedSettings = [
-                    'preview'     => TRUE,
-                    'html'        => TRUE,
-                    'autosize'    => TRUE,
-                    'placeholder' => $locale['blog_0426b'],
-                    'form_name'   => 'inputform',
-                    'path'        => IMAGES_B
-                ];
-            } else {
-                $extendedSettings = ['type' => 'tinymce', 'tinymce' => 'advanced', 'path' => IMAGES_B];
-            }
-
-            echo form_textarea('blog_extended', $locale['blog_0426'], $callback_data['blog_extended'], $extendedSettings);
             echo form_button('preview', $locale['blog_0141'], $locale['blog_0141'], ['input_id' => 'preview-btn', 'class' => 'btn-default m-r-5', 'icon' => 'fa fa-eye']);
             echo form_button('publish', $locale['blog_0134'], $locale['blog_0134'], ['input_id' => 'publish-btn', 'class' => 'btn-success m-r-5', 'icon' => 'fa fa-hdd-o']);
             echo form_button('delete', $locale['blog_0135'], $locale['blog_0135'], ['input_id' => 'delete-btn', 'class' => 'btn-danger', 'icon' => 'fa fa-trash']);
@@ -393,5 +419,3 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "<div class='well text-center m-t-20'>".$locale['blog_0130']."</div>\n";
     }
 }
-
-echo '</div>';
