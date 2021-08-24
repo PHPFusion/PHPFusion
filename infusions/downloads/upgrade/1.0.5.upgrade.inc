@@ -122,7 +122,7 @@ if (dbrows($result)) {
 }
 
 if (is_dir(BASEDIR.'downloads/')) {
-    $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php", TRUE);
+    $files = makefilelist(BASEDIR.'downloads/', ".|..|index.php");
     if (!empty($files)) {
         foreach ($files as $filename) {
             fusion_rename(BASEDIR.'downloads/'.$filename, INFUSIONS.'downloads/files/'.$filename);
@@ -131,7 +131,7 @@ if (is_dir(BASEDIR.'downloads/')) {
 
     if (is_dir(BASEDIR.'downloads/images/')) {
         // Images folder
-        $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php", TRUE);
+        $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php");
         if (!empty($files)) {
             foreach ($files as $filename) {
                 fusion_rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
@@ -142,7 +142,7 @@ if (is_dir(BASEDIR.'downloads/')) {
 
     if (is_dir(BASEDIR.'downloads/submissions/')) {
         // Images folder
-        $files = makefilelist(BASEDIR.'downloads/submissions/', ".|..|index.php", TRUE);
+        $files = makefilelist(BASEDIR.'downloads/submissions/', ".|..|index.php");
         if (!empty($files)) {
             foreach ($files as $filename) {
                 fusion_rename(BASEDIR.'downloads/submissions/'.$filename, INFUSIONS.'downloads/submissions/'.$filename);
@@ -151,7 +151,7 @@ if (is_dir(BASEDIR.'downloads/')) {
         }
         if (is_dir(BASEDIR.'downloads/submissions/images/')) {
             // Images folder
-            $files = makefilelist(BASEDIR.'downloads/submissions/images/', ".|..|index.php", TRUE);
+            $files = makefilelist(BASEDIR.'downloads/submissions/images/', ".|..|index.php");
             if (!empty($files)) {
                 foreach ($files as $filename) {
                     fusion_rename(BASEDIR.'downloads/submissions/images/'.$filename, INFUSIONS.'downloads/submissions/images/'.$filename);

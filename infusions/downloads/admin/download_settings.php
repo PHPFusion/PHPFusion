@@ -34,8 +34,8 @@ if (isset($_POST['savesettings'])) {
         "download_stats"               => form_sanitizer($_POST['download_stats'], 0, 'download_stats'),
         "download_pagination"          => form_sanitizer($_POST['download_pagination'], 15, 'download_pagination'),
         "download_allow_submission"    => form_sanitizer($_POST['download_allow_submission'], 0, "download_allow_submission"),
-        "download_screenshot_required" => isset($_POST['download_screenshot_required']) ? 1 : 0,
-        "download_extended_required"   => isset($_POST['download_extended_required']) ? 1 : 0,
+        "download_screenshot_required" => form_sanitizer($_POST['download_screenshot_required'], 0, "download_screenshot_required"),
+        "download_extended_required"   => form_sanitizer($_POST['download_extended_required'], 0, "download_extended_required"),
         'download_submission_access'   => form_sanitizer($_POST['download_submission_access'], USER_LEVEL_MEMBER, 'download_submission_access')
     ];
     if (fusion_safe()) {
@@ -68,7 +68,7 @@ foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;
 }
-echo "<div class='well m-t-10'>".$locale['download_description']."</div>";
+echo "<div class='well'>".$locale['download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");

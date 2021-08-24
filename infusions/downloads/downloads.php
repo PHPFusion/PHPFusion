@@ -16,7 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\Downloads\Functions;
 use PHPFusion\httpdownload;
 use PHPFusion\OpenGraphDownloads;
 use PHPFusion\SiteLinks;
@@ -34,7 +33,6 @@ $locale = fusion_get_locale("", DOWNLOAD_LOCALE);
 $aidlink = fusion_get_aidlink();
 
 include INFUSIONS."downloads/templates/downloads.tpl.php";
-require_once INFUSIONS."downloads/classes/Functions.php";
 require_once INFUSIONS."downloads/classes/OpenGraphDownloads.php";
 
 $dl_settings = get_settings("downloads");
@@ -135,13 +133,9 @@ switch ($_get_type) {
         break;
     case 'comments':
         $filter_condition = 'comments_count DESC';
-        //$filter_count = 'COUNT(td.comment_item_id) AS comments_count,';
-        //$filter_join = "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = d.download_id AND td.comment_type='D'";
         break;
     case 'ratings':
         $filter_condition = 'sum_rating DESC';
-        //$filter_count = 'IF(SUM(tr.rating_vote)>0, SUM(tr.rating_vote), 0) AS sum_rating, COUNT(tr.rating_item_id) AS count_votes,';
-        //$filter_join = "LEFT JOIN ".DB_RATINGS." tr ON tr.rating_item_id = d.download_id AND tr.rating_type='D'";
         break;
     case 'download':
         $filter_condition = 'd.download_count DESC';
@@ -236,8 +230,8 @@ if ($_get_download_id) {
             }
             $data['download_link'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&download_id=".$data['download_id']."'>".$data['download_title']."</a>";
 
-            $data['download_show_comments'] = Functions::get_download_comments($data);
-            $data['download_show_ratings'] = Functions::get_download_ratings($data);
+            $data['download_show_comments'] = get_download_comments($data);
+            $data['download_show_ratings'] = get_download_ratings($data);
 
             $info['download_item'] = $data;
 
@@ -267,7 +261,8 @@ if ($_get_download_id) {
             redirect(clean_request('', ["cat_id"], FALSE));
         }
 
-        downloadCats_breadcrumbs(get_downloadCatsIndex());
+        downloadCats_breadcrumbs(dbquery_tree(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent',
+            (multilang_table("DL") ? "WHERE ".in_group('download_cat_language', LANGUAGE) : '')));
 
         $info['download_title'] = $info['download_cat_name'];
         $info['download_max_rows'] = dbcount("('download_id')", DB_DOWNLOADS, "download_cat=$_get_cat_id AND ".groupaccess('download_visibility'));
@@ -401,16 +396,14 @@ require_once THEMES.'templates/footer.php';
  * @return array
  */
 function get_downloadCat() {
-    return Functions::get_downloadCatsData();
-}
+    $data = dbquery_tree_full(DB_DOWNLOAD_CATS, 'download_cat_id', 'download_cat_parent', (multilang_table('DL') ? "WHERE ".in_group('download_cat_language', LANGUAGE) : ''));
+    foreach ($data as $index => $cat_data) {
+        foreach ($cat_data as $download_cat_id => $cat) {
+            $data[$index][$download_cat_id]['download_cat_link'] = "<a href='".DOWNLOADS."downloads.php?cat_id=".$cat['download_cat_id']."'>".$cat['download_cat_name']."</a>";
+        }
+    }
 
-/**
- * Get Downloads Hierarchy Index
- *
- * @return array
- */
-function get_downloadCatsIndex() {
-    return PHPFusion\Downloads\Functions::get_downloadCatsIndex();
+    return $data;
 }
 
 /**
@@ -421,35 +414,100 @@ function get_downloadCatsIndex() {
  * @return int
  */
 function validate_download($download_id) {
-    return PHPFusion\Downloads\Functions::validate_download($download_id);
+    if (isnum($download_id)) {
+        return dbcount("('download_id')", DB_DOWNLOADS, "download_id=:downloadid", [':downloadid' => intval($download_id)]);
+    }
+
+    return NULL;
 }
 
 /**
- * Validate Downloads Cat Id
+ * Validate Downloads Cat id
  *
  * @param $download_cat_id
  *
  * @return int
  */
 function validate_downloadCats($download_cat_id) {
-    return PHPFusion\Downloads\Functions::validate_downloadCat($download_cat_id);
+    if (is_numeric($download_cat_id)) {
+        if ($download_cat_id < 1) {
+            return 1;
+        } else {
+            return dbcount("('download_cat_id')", DB_DOWNLOAD_CATS, "download_cat_id=:catid", [':catid' => intval($download_cat_id)]);
+        }
+    }
+
+    return FALSE;
 }
 
 /**
- * Get the closest image available
+ * Get the best available paths for image and thumbnail
  *
- * @param      $image
- * @param      $thumb1
- * @param bool $hires - true for image, false for thumbnail
+ * @param string $download_image
+ * @param string $download_image_thumb
  *
- * @return bool|string
+ * @return string
  */
-function get_download_image_path($image, $thumb1, $hires = FALSE) {
-    return Functions::get_download_image_path($image, $thumb1, $hires);
+function get_download_image_path($download_image, $download_image_thumb) {
+    if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
+        return DOWNLOADS.'images/'.$download_image;
+    }
+    if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
+        return DOWNLOADS.'images/'.$download_image_thumb;
+    }
+
+    return NULL;
 }
 
-function downloadCats_breadcrumbs($hierarchy_index) {
-    Functions::downloadCats_breadcrumbs($hierarchy_index);
+function dl_breadcrumb_arrays($index, $id) {
+    $crumb = [];
+    if (isset($index[get_parent($index, $id)])) {
+        $_name = dbarray(dbquery("SELECT download_cat_id, download_cat_name, download_cat_parent FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")." download_cat_id='".intval($id)."'"));
+        $crumb = [
+            'link'  => INFUSIONS."downloads/downloads.php?cat_id=".$_name['download_cat_id'],
+            'title' => $_name['download_cat_name']
+        ];
+        if (isset($index[get_parent($index, $id)])) {
+            if (get_parent($index, $id) == 0) {
+                return $crumb;
+            }
+            $crumb_1 = dl_breadcrumb_arrays($index, get_parent($index, $id));
+            $crumb = array_merge_recursive($crumb, $crumb_1); // convert so can comply to Fusion Tab API.
+        }
+    }
+
+    return $crumb;
+}
+
+/**
+ * Download Category Breadcrumbs Generator
+ *
+ * @param $index
+ */
+function downloadCats_breadcrumbs($index) {
+    $locale = fusion_get_locale();
+
+    // then we make an infinity recursive function to loop/break it out.
+    $crumb = dl_breadcrumb_arrays($index, $_GET['cat_id']);
+    $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
+    // then we sort in reverse.
+    if ($title_count) {
+        krsort($crumb['title']);
+        krsort($crumb['link']);
+    }
+    if ($title_count) {
+        foreach ($crumb['title'] as $i => $value) {
+            add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+            if ($i == count($crumb['title']) - 1) {
+                add_to_title($locale['global_201'].$value);
+                add_to_meta($value);
+            }
+        }
+    } else if (isset($crumb['title'])) {
+        add_to_title($locale['global_201'].$crumb['title']);
+        add_to_meta($crumb['title']);
+        add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+    }
 }
 
 /**
@@ -487,4 +545,28 @@ function parseInfo($data) {
         'download_post_time2'        => $locale['global_049']." ".timer($data['download_datestamp']),
         'download_file_link'         => file_exists(DOWNLOADS.'files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
     ];
+}
+
+function get_download_comments($data) {
+    $html = "";
+    if (fusion_get_settings('comments_enabled') && $data['download_allow_comments']) {
+        ob_start();
+        showcomments("D", DB_DOWNLOADS, "download_id", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
+        $html = ob_get_contents();
+        ob_end_clean();
+    }
+
+    return (string)$html;
+}
+
+function get_download_ratings($data) {
+    $html = "";
+    if (fusion_get_settings('ratings_enabled') && $data['download_allow_ratings']) {
+        ob_start();
+        showratings("D", $data['download_id'], INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."&amp;download_id=".$data['download_id']);
+        $html = ob_get_contents();
+        ob_end_clean();
+    }
+
+    return (string)$html;
 }

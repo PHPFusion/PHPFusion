@@ -22,12 +22,11 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
         || dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, "download_cat_parent='".intval($_GET['cat_id'])."'")
     ) {
         addnotice("danger", $locale['download_0152']." - ".$locale['download_0153']);
-        redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
     } else {
         addnotice("success", $locale['download_0154']);
         $result = dbquery("DELETE FROM ".DB_DOWNLOAD_CATS." WHERE download_cat_id='".intval($_GET['cat_id'])."'");
-        redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
     }
+    redirect(clean_request("cat_view=1", ["section", "aid"]));
 } else {
     $data = [
         "download_cat_id"          => 0,
@@ -73,7 +72,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
                 if (!dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, $categoryNameCheck['when_updating'])) {
                     dbquery_insert(DB_DOWNLOAD_CATS, $data, "update");
                     addnotice("success", $locale['download_0151']);
-                    redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
+                    redirect(clean_request("cat_view=1", ["section", "aid"]));
                 } else {
                     fusion_stop();
                     addnotice("danger", $locale['download_0352']);
@@ -82,7 +81,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
                 if (!dbcount("(download_cat_id)", DB_DOWNLOAD_CATS, $categoryNameCheck['when_saving'])) {
                     dbquery_insert(DB_DOWNLOAD_CATS, $data, "save");
                     addnotice("success", $locale['download_0150']);
-                    redirect(clean_request("cat_view=1", ["section", "aid"], TRUE));
+                    redirect(clean_request("cat_view=1", ["section", "aid"]));
                 } else {
                     fusion_stop();
                     addnotice("danger", $locale['download_0352']);
@@ -106,7 +105,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
             }
             $data['download_cat_sort_order'] = $cat_sorting[1];
         } else {
-            redirect(clean_request("", ["section", "aid"], TRUE));
+            redirect(clean_request("", ["section", "aid"]));
         }
     }
     $tab_cats['title'][] = $locale['download_0023'];
@@ -217,19 +216,13 @@ function showcatlist($parent = 0, $level = 0) {
             echo "<div class='col-xs-12 col-sm-6'>";
             echo "<div class='well clearfix'>\n";
             echo "<div class='btn-group pull-right m-t-5'>\n";
-            echo "<a class='btn btn-sm btn-default' href='".clean_request("action=edit&cat_id=".$data['download_cat_id'], [
-                    "section",
-                    "aid"
-                ], TRUE)."'>".$locale['edit']."</a>";
-            echo "<a class='btn btn-sm btn-danger ".($data['download_count'] || $data['child_categories'] ? "disabled" : "")."' href='".clean_request("action=delete&cat_id=".$data['download_cat_id'],
-                    ["section", "aid"],
-                    TRUE)."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
+            echo "<a class='btn btn-sm btn-default' href='".clean_request("action=edit&cat_id=".$data['download_cat_id'], ["section", "aid"])."'>".$locale['edit']."</a>";
+            echo "<a class='btn btn-sm btn-danger ".($data['download_count'] || $data['child_categories'] ? "disabled" : "")."' href='".clean_request("action=delete&cat_id=".$data['download_cat_id'], ["section", "aid"])."' onclick=\"return confirm('".$locale['download_0350']."');\"><i class='fa fa-trash fa-fw'></i> ".$locale['delete']."</a>\n";
             echo "</div>\n";
             echo "<div class='overflow-hide p-r-10'>\n";
             echo "<span class='display-inline-block m-r-10 strong text-bigger'>".str_repeat("&mdash;", $level).$data['download_cat_name']."</span>";
             if ($data['download_cat_description']) {
-                echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".fusion_first_words($data['download_cat_description'],
-                        50)."</span>";
+                echo "<br />".str_repeat("&mdash;", $level)."<span class='small'>".fusion_first_words($data['download_cat_description'], 50)."</span>";
             }
             echo "</div>\n";
             echo "</div>\n";

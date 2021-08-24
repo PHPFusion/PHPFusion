@@ -65,7 +65,6 @@ if (iMEMBER && $dl_settings['download_allow_submission'] && checkgroup($dl_setti
             $criteriaArray['download_filesize'] = parsebytesize($_FILES['download_file']['size']);
 
             if (empty($upload['error']) && !empty($_FILES['download_file']['size'])) {
-                // might be image, might be file
                 if (!empty($upload['image_name'])) {
                     $criteriaArray['download_file'] = $upload['image_name'];
                 } else if (!empty($upload['target_file'])) {

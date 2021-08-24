@@ -144,7 +144,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ];
 
             echo openform("publish_download", "post", FUSION_REQUEST);
-            echo "<div class='well clearfix m-t-15'>\n";
+            echo "<div class='well clearfix'>\n";
             echo "<div class='pull-left'>\n";
             echo display_avatar($data, "30px", "", FALSE, "img-rounded m-t-5 m-r-5");
             echo "</div>\n";
@@ -176,7 +176,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "inline"     => TRUE,
                 'error_text' => $locale['download_0112'],
                 'maxlength'  => '255',
-                'autosize'   => fusion_get_settings("tinymce_enabled") ? FALSE : TRUE,
+                'autosize'   => !fusion_get_settings("tinymce_enabled"),
                 'type'       => 'bbcode',
                 "form_name"  => "publish_download"
             ]);
@@ -185,13 +185,13 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo $locale['download_0204'];
             echo "</div>\n";
             echo form_textarea('download_description', $locale['download_0202a'], $callback_data['download_description'], [
-                "type"       => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
-                "tinymce"    => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
+                "type"          => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
+                "tinymce"       => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
                 'tinymce_image' => FALSE,
-                "autosize"   => TRUE,
-                "error_text" => $locale['download_0112'],
-                "form_name"  => "publish_download",
-                'path'       => IMAGES_D
+                "autosize"      => TRUE,
+                "error_text"    => $locale['download_0112'],
+                "form_name"     => "publish_download",
+                'path'          => IMAGES_D
             ]);
             echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
             // start package
@@ -209,11 +209,11 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
             ".$locale['download_0226']."</a>\n";
                 echo form_hidden('download_file', '', $callback_data['download_file']);
-                echo form_hidden("download_url", "", "");
+                echo form_hidden("download_url");
             } else {
                 echo "<p><strong>".$locale['download_0215']."</strong></p>\n";
                 echo form_text('download_url', '', $callback_data['download_url']);
-                echo form_hidden("download_file", "", "");
+                echo form_hidden("download_file");
             }
 
             closeside();
@@ -276,7 +276,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
     ");
     $rows = dbrows($result);
     if ($rows > 0) {
-        echo "<div class='well m-t-15'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
+        echo "<div class='well'>".sprintf($locale['download_0051'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
         echo "<thead><tr>\n";
         echo "<th>".$locale['download_0055']."</th>\n";
@@ -291,10 +291,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo "<td>".$callback_data['submit_id']."</td>\n";
             echo "<td>".display_avatar($callback_data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($callback_data['user_id'], $callback_data['user_name'], $callback_data['user_status'])."</td>\n";
             echo "<td>".timer($callback_data['submit_datestamp'])."</td>\n";
-            echo "<td><a href='".clean_request("submit_id=".$callback_data['submit_id'], [
-                    "section",
-                    "aid"
-                ], TRUE)."'>".$submit_criteria['download_title']."</a></td>\n";
+            echo "<td><a href='".clean_request("submit_id=".$callback_data['submit_id'], ["section", "aid"])."'>".(!empty($submit_criteria['download_title']) ? $submit_criteria['download_title'] : 'n/a')."</a></td>\n";
             echo "</tr>\n";
         }
         echo "</tbody>\n";

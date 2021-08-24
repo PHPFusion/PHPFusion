@@ -39,8 +39,8 @@ $data = [
     'download_version'           => '',
     'download_filesize'          => '',
     'download_visibility'        => 0,
-    'download_allow_comments'    => 0,
-    'download_allow_ratings'     => 0,
+    'download_allow_comments'    => 1,
+    'download_allow_ratings'     => 1,
     'download_datestamp'         => ''
 ];
 
@@ -170,7 +170,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_GET['downl
 }
 
 echo openform('inputform', 'post', FUSION_REQUEST, ['enctype' => 1]);
-echo "<div class='row m-t-10'>\n";
+echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
 echo form_hidden('download_id', '', $data['download_id']);

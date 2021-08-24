@@ -133,7 +133,7 @@ if (!function_exists('render_downloads')) {
             echo "<!--pre_download_cat-->\n";
             echo "<div class='list-group downloads-index'>\n";
             if (!empty($info['download_item'])) {
-                foreach ($info['download_item'] as $download_id => $data) {
+                foreach ($info['download_item'] as $data) {
                     $download_title = $data['download_title'];
                     echo "<div class='list-group-item clearfix download-index-item'>\n";
                     echo "<div class='pull-right'>\n";
@@ -183,13 +183,13 @@ if (!function_exists('render_downloads')) {
 
         closetable();
 
-        Panels::addPanel('download_menu_panel', display_download_menu($info), Panels::PANEL_RIGHT, iGUEST, 0);
+        Panels::addPanel('download_menu_panel', display_download_menu($info), Panels::PANEL_RIGHT, iGUEST);
     }
 }
 
 if (!function_exists('display_download_menu')) {
     /**
-     * Download side bar
+     * Download sidebar
      *
      * @param $info
      *
@@ -240,7 +240,7 @@ if (!function_exists('display_download_menu')) {
         openside($locale['download_1004']);
         echo "<ul class='block'>\n";
         if (!empty($info['download_author'])) {
-            foreach ($info['download_author'] as $author_id => $author_info) {
+            foreach ($info['download_author'] as $author_info) {
                 echo "<li ".($author_info['active'] ? "class='active strong'" : '').">
                     <a href='".$author_info['link']."'>".$author_info['title']."</a> <span class='badge m-l-10'>".$author_info['count']."</span>
                     </li>\n";
