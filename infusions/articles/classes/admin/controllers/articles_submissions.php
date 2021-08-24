@@ -203,7 +203,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         echo openform('submissionform', 'post', FUSION_REQUEST);
         echo form_hidden('article_name', '', $this->inputArray['article_name']);
         ?>
-        <div class="well clearfix m-t-15">
+        <div class="well clearfix">
             <div class="pull-left">
                 <?php echo display_avatar($this->dataUser, '30px', '', FALSE, 'img-rounded m-t-5 m-r-5'); ?>
             </div>
@@ -226,7 +226,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         <div class="row m-t-5">
 
             <!-- Display Left Column -->
-            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-8">
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-9">
                 <?php
                 echo form_text('article_subject', $this->locale['article_0100'], $this->inputArray['article_subject'], [
                     'required'   => TRUE,
@@ -250,7 +250,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
             </div>
 
             <!-- Display Right Column -->
-            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+            <div class="col-xs-12 col-sm-12 col-md-5 col-lg-3">
                 <?php
 
                 openside($this->locale['article_0261']);
