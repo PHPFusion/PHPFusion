@@ -481,6 +481,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         } else {
             $html .= "</div>\n";
+            $html .= "</div>\n";
             $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
         }
