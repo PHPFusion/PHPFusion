@@ -18,7 +18,7 @@
 defined('IN_FUSION') || exit;
 
 /**
- * Prevent users from flooding the system, typical spam bots and others.
+ * Prevent users from flooding the system, typical spambots and others.
  * This function should be used whenever users have the ability to post to the database.
  *
  * @param string $field The field in the table which holds the Unix timestamp.

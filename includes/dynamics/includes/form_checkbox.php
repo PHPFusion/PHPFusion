@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 
 /**
- * @param        $input_name
+ * @param string $input_name
  * @param string $label
  * @param string $input_value
  * @param array  $options
@@ -138,7 +138,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         $checkbox .= "</div>";
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='".($options['toggle'] ? 'checkbox-switch ' : '')."form-group check-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>";
+    $html = "<div id='".$options['input_id']."-field' class='".($options['toggle'] ? 'checkbox-switch ' : '')."form-group check-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '')."'>";
 
     $html .= (!empty($label)) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' data-checked='".(!empty($input_value) ? "1" : "0")."' for='".$options['input_id']."'".($options['inner_width'] ? " style='width: ".$options['inner_width']."'" : '').">" : "";
 
@@ -169,5 +169,5 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'delimiter'  => $options['delimiter'],
     ]);
 
-    return (string)$html;
+    return $html;
 }

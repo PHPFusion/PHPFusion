@@ -62,9 +62,9 @@ class Admin {
 
         add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $locale['theme_1018']]);
         // go with tabs
-        $tab['title'] = [$locale['theme_1022'], $locale['theme_1023'], /*$locale['theme_1024']*/];
-        $tab['id'] = ["dashboard", "widgets", /*"css"*/];
-        $tab['icon'] = ["fa fa-edit fa-fw", "fa fa-cube fa-fw", /*"fa fa-css3 fa-fw"*/];
+        $tab['title'] = [/*$locale['theme_1022'],*/ $locale['theme_1023'], /*$locale['theme_1024']*/];
+        $tab['id'] = [/*"dashboard",*/ "widgets", /*"css"*/];
+        $tab['icon'] = [/*"fa fa-edit fa-fw",*/ "fa fa-cube fa-fw", /*"fa fa-css3 fa-fw"*/];
         if (isset($_GET['action'])) {
             $tab['title'][] = $locale['theme_1029'];
             $tab['id'][] = "close";
@@ -73,7 +73,8 @@ class Admin {
         if (isset($_POST['close_theme'])) {
             redirect(FUSION_SELF.$aidlink);
         }
-        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "dashboard";
+        //$_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "dashboard";
+        $_GET['section'] = isset($_GET['section']) && in_array($_GET['section'], $tab['id']) ? $_GET['section'] : "widgets";
         $tab_active = $_GET['section'];
         $atom = new Atom();
         $atom->target_folder = $theme_name;
@@ -81,11 +82,8 @@ class Admin {
         echo opentab($tab, $tab_active, "theme_admin", TRUE, 'nav-tabs');
         // now include the thing as necessary
         switch ($_GET['section']) {
-            case "dashboard":
-                /**
-                 * Delete preset
-                 */
-                /*if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
+            /*case "dashboard":
+                if (isset($_GET['delete_preset']) && isnum($_GET['delete_preset'])) {
                     if (empty($_GET['theme'])) {
                         redirect(FUSION_SELF.$aidlink);
                     }
@@ -119,9 +117,9 @@ class Admin {
                     ];
                     dbquery_insert(DB_THEME, $data, "update");
                     redirect(clean_request("", ["section", "aid", "action", "theme"], TRUE));
-                }*/
+                }
                 $atom->displayThemeOverview();
-                break;
+                break;*/
             case "widgets":
                 $atom->displayThemeWidgets();
                 break;
@@ -235,7 +233,7 @@ class Admin {
                 if ($status == TRUE) {
                     echo "<strong>".$locale['theme_1006']."</strong><br/>";
                 }
-                if (!empty($theme_data['widgets']) == TRUE) {
+                if (!empty($theme_data['widgets'])) {
                     echo "<small>".$locale['theme_1027'].$locale['yes']."</small>";
                 }
                 echo "</div>";
@@ -243,7 +241,9 @@ class Admin {
 
                 echo '<div class="col-xs-12 col-sm-3">';
                 if ($status == TRUE) {
-                    echo "<a class='pull-right-lg btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>";
+                    if (!empty($theme_data['widgets'])) {
+                        echo "<a class='pull-right-lg btn btn-primary btn-sm' href='".FUSION_SELF.$aidlink."&action=manage&section=widgets&theme=".$theme_name."'><i class='fa fa-cog fa-fw'></i> ".$locale['theme_1005']."</a>";
+                    }
                 } else {
                     echo "<a class='pull-right-lg btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=list&action=set_active&theme=".$theme_name."'><i class='fa fa-diamond fa-fw'></i> ".$locale['theme_1012']."</a>";
                 }

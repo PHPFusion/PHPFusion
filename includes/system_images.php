@@ -28,7 +28,7 @@ use PHPFusion\ImageRepo;
  * @param string $title The title attribute of the image.
  * @param string $atts  Custom attributes of the image.
  *
- * @return string The path of the image if the first argument is given, but others not. Otherwise <img> tag.
+ * @return string The path of the image if the first argument is given, but others not. Otherwise, <img> tag.
  */
 function get_image($image, $alt = "", $style = "", $title = "", $atts = "") {
     return ImageRepo::getImage($image, $alt, $style, $title, $atts);

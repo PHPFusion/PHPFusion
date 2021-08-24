@@ -36,7 +36,7 @@ function getcolorname($id) {
  * @param string $formname The name of the form you are using the HTML buttons for.
  * @param string $textarea The name of the textarea which html will be inserted to.
  * @param bool   $html     Setting this to true will display the HTML buttons.
- * @param bool   $colors   Setting this to true will display the HTML colors,.
+ * @param bool   $colors   Setting this to true will display the HTML colors.
  * @param bool   $images   Setting this to true will display the select field with images.
  * @param string $folder   If you have $images set to true, use this to define what image folder you want to get images from.
  *

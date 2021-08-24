@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use FilesystemIterator;
 use PHPFusion\Installer\Batch;
 
 class Update extends Installer\Infusions {
@@ -333,7 +334,7 @@ class Update extends Installer\Infusions {
     private function copyFiles($source, $target) {
         $this->setMessage($this->locale['U_011']);
 
-        $directoryIterator = new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $directoryIterator = new \RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS);
         $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
             if ($item->isDir()) {

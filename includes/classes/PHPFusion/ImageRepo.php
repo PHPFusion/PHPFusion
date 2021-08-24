@@ -169,7 +169,7 @@ class ImageRepo {
      * @param string $atts  Custom attributes of the image
      *
      * @return string The path of the image if the first argument is given,
-     * but others not. Otherwise the html "img" tag
+     * but others not. Otherwise, the html "img" tag
      */
     public static function getImage($image, $alt = "", $style = "", $title = "", $atts = "") {
         self::cache();

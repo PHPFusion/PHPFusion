@@ -19,7 +19,7 @@
 +--------------------------------------------------------*/
 
 /**
- * @param        $input_name
+ * @param string $input_name
  * @param string $label
  * @param string $input_value
  * @param array  $options
@@ -343,12 +343,12 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
     if ($options['multiple'] == TRUE) {
 
-        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width: ".($options['width'] ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? 'disabled' : '')." />";
+        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width: ".(!empty($options['width']) ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? 'disabled' : '')." />";
 
-        $path = $options['file'] ? $options['file'] : DYNAMICS."assets/location/location.json.php";
+        $path = !empty($options['file']) ? $options['file'] : DYNAMICS."assets/location/location.json.php";
         if (!empty($input_value)) {
             // json mode.
-            $encoded = $options['file'] ? $options['file'] : location_search($input_value);
+            $encoded = !empty($options['file']) ? $options['file'] : location_search($input_value);
         } else {
             $encoded = json_encode([]);
         }
@@ -376,7 +376,7 @@ function form_location($input_name, $label = '', $input_value = FALSE, array $op
 
     } else {
 
-        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".($options['width'] ? $options['width'] : $default_options['width'])."' />";
+        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".(!empty($options['width']) ? $options['width'] : $default_options['width'])."' />";
         $html .= "<option value=''></option>";
         foreach ($countries as $country_key => $country) { // outputs: key, value, class - in order
             $select = ($input_value == $country_key) ? "selected" : '';

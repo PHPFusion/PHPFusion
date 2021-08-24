@@ -39,7 +39,7 @@ if (!empty($locale['setup_3211'])) {
 $inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
 if (dbrows($inf_result) > 0) {
     while ($cdata = dbarray($inf_result)) {
-        include INFUSIONS.$cdata['inf_folder']."/infusion.php"; // there is a system language inside. // cant read into system language.
+        include INFUSIONS.$cdata['inf_folder']."/infusion.php"; // there is a system language inside. // can't read into system language.
         if (isset($inf_mlt) && is_array($inf_mlt)) {
             $inf_mlt = flatten_array($inf_mlt);
             if (!empty($inf_mlt['title']) && !empty($inf_mlt['rights'])) {

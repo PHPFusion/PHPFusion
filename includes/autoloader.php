@@ -65,9 +65,6 @@ spl_autoload_register(function ($className) {
 /**
  * Infusions Autoloading
  * All class files must be lowercase and end with .class.php in infusions global namespace
- *
- * Class_Name        class_name.class.php, Class_Name.php
- * ClassName         classname.class.php, className.php
  */
 spl_autoload_register(function ($className) {
     if (stristr($className, 'PHPFusion\\Infusions')) {

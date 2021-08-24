@@ -140,7 +140,7 @@ class Sessions {
     /**
      * Read and fetches the data from a session
      * The _read() function is called whenever PHP needs to read the session data.
-     * This takes place immediately after _open(), and both are a direct result of your use of session_start().
+     * These takes place immediately after _open(), and both are a direct result of your use of session_start().
      *
      * PHP expects the session data in return, and you don't have to worry about the format, because
      * PHP provides the data to the _write() function (covered in the next section) in the same format that it expects it.
@@ -168,7 +168,7 @@ class Sessions {
     /**
      * Write a session
      *
-     * The _write() function is called whenever PHP needs to write the session data. This takes place at the very end of the script.
+     * The _write() function is called whenever PHP needs to write the session data. These takes place at the very end of the script.
      * PHP passes this function the session identifier and the session data.
      *
      * You don't need to worry with the format of the data - PHP serializes it, so that you can treat it like a string.

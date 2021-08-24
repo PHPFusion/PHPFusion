@@ -195,7 +195,7 @@ class UserFieldsInput {
     }
 
     /**
-     * Handle User Name Input and Validation
+     * Handle Username Input and Validation
      */
     private function setUserName() {
 
@@ -612,7 +612,7 @@ class UserFieldsInput {
 
         $is_core_page = (post("user_name") || post("user_password") || post('user_password1') || post('user_password2') || post("user_admin_password") || post("user_email"));
 
-        // Non applicable to any other custom UF section
+        // Non-applicable to any other custom UF section
         if ($is_core_page) {
 
             $this->setUserName();

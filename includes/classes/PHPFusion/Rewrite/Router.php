@@ -267,7 +267,7 @@ class Router extends RewriteDriver {
             $params = explode($param_delimiter, $pathinfo[1]); // 0=>thread_id=1, 1=>pid=25
             // Now again explode it with '='
             foreach ($params as $paramval) { // 0=>thread_id=1, 1=>pid=25
-                // bug fix. sometimes is just ?create.
+                // bug fix. Sometimes just ?create.
                 if (strpos($paramval, '=')) {
                     $get_params = explode("=", $paramval); // thread_id => 1, pid => 25
                     $url_info[1][$get_params[0]] = $get_params[1];
@@ -432,7 +432,7 @@ class Router extends RewriteDriver {
     /**
      * Builds the Regular Expressions Patterns
      * This function will create the Regex patterns and will put the built patterns
-     * in $patterns_regex array. This array will then used in preg_match function
+     * in $patterns_regex array. This array will then be used in preg_match function
      * to match against current request.
      * Note: Using ^ and $ made us to match exact string so that it doesn't match sub-patterns
      *

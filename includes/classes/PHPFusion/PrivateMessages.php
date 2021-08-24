@@ -99,7 +99,7 @@ class PrivateMessages {
                 );
                 if (dbrows($result)) {
                     $data = dbarray($result);
-                    // What this does is that if any of the params is 0, we use default system values.
+                    // What it does is that if any of the parameters is 0, we use the default system values.
                     $settings = [
                         'user_inbox'           => (!empty($data['user_inbox']) ? (int)$data['user_inbox'] : (int)$settings['user_inbox']),
                         'user_outbox'          => (!empty($data['user_outbox']) ? (int)$data['user_outbox'] : (int)$settings['user_outbox']),
@@ -248,7 +248,7 @@ class PrivateMessages {
                                         $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM
                                         ".DB_MESSAGES." WHERE message_to=:mto AND message_user=:muser AND message_folder=:mfolder GROUP BY message_to",
                                             [':mto' => $userdata['user_id'], ':muser' => $userdata['user_id'], ':mfolder' => 1]));
-                                        // check my outbox limit and if surpass, remove oldest message
+                                        // check my outbox limit and if surpassed, remove the oldest message
                                         if ($myStatus['user_outbox'] != 0 && (!empty($cdata['outbox_count']) && $cdata['outbox_count'] + 1) > $myStatus['user_outbox']) {
                                             dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id=:mid AND message_to=:mto", [':mid' => $cdata['last_message'], ':mto' => $userdata['user_id']]);
                                         }

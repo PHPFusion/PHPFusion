@@ -241,7 +241,7 @@ function tree_index(array $data) {
 }
 
 /**
- * Reduce the results of a hierarchy tree array to a non multidimensional
+ * Reduce the results of a hierarchy tree array to a non-multidimensional
  * single output value while preserving keys.
  *
  * @param array  $result Results from dbquery_tree_full() or dbquery_tree().
@@ -691,14 +691,14 @@ function fieldgenerator($db) {
  * @param array  $options
  *
  * @return int|false If an error happens, it returns false.
- *                   Otherwise, if $mode is save and the primary key column is
+ *                   Otherwise, if $mode is 'save' and the primary key column is
  *                   incremented automatically, this function returns the last inserted id.
  *                   In other cases it always returns 0.
  */
 function dbquery_insert($table, array $inputdata, $mode, $options = []) {
     $options += [
         'debug'        => FALSE, // If true, do nothing, just show the SQL.
-        'primary_key'  => '', // Name of primary key column. If it is empty, column will detected automatically.
+        'primary_key'  => '', // Name of primary key column. If it is empty, column will detect automatically.
         'no_unique'    => FALSE, // If true, primary key column will be not removed from $inputdata.
         'keep_session' => FALSE // If true, defender will not unset field sessions.
     ];
@@ -859,7 +859,7 @@ function multilang_column($column) {
 /**
  * Check if a table exists.
  *
- * However you can pass the table name with or without prefix
+ * However, you can pass the table name with or without prefix
  *
  * @param string $table      The name of the table with or without prefix
  * @param bool   $add_prefix Add table prefix.
@@ -995,14 +995,12 @@ function flatten_array(array $array) {
 }
 
 /**
- * Short hand to build/combines an array
+ * Shorthand to build/combines an array
  *
- * @param array $array  Initial array to create with keys named in a non multidimensional single array.
+ * @param array $array  Initial array to create with keys named in a non-multidimensional single array.
  *                      This will create a multidimensional blank array.
- *                      Example:
- *                      ['column', 'coumn2', 'column3']
- * @param array $array2 Override. An array default value that consist of keys and defined values.
- *                      ['column' => 'default']
+ *                      Example: ['column', 'coumn2', 'column3']
+ * @param array $array2 Override. An array default value that consist of keys and defined values. ['column' => 'default']
  *
  * @return array|false
  */

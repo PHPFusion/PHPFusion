@@ -35,6 +35,8 @@ class User extends \Defender\Validation {
         if (fusion_safe()) {
             return Text::verify_text();
         }
+
+        return NULL;
     }
 
     public static function verify_address() {

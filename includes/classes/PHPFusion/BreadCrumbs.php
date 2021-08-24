@@ -25,8 +25,7 @@ namespace PHPFusion;
  * $bcDefault = BreadCrumbs::getInstance();
  * $bcCustom = BreadCrumbs::getInstance('custom');
  *
- * Hide the home of $bcCustom
- * $bcCustom->hideHome();
+ * Hide the home of $bcCustom->hideHome();
  *
  * Set the last breadcrumb clickable (it is rendered as a simple text by default)
  * $bcCustom->setLastClicklable();

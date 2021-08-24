@@ -39,7 +39,7 @@ class Contact extends Validation {
 
         $prefix = sanitizer(self::$inputName."_prefix");
 
-        if ($calling_codes = calling_codes($prefix)) {
+        if (calling_codes($prefix)) {
 
             if (self::$inputValue && isnum(self::$inputValue)) {
 
@@ -57,8 +57,6 @@ class Contact extends Validation {
                 return FALSE;
             }
 
-            return "";
-
         } else {
 
             if (self::$inputConfig["required"] && (empty($prefix))) {
@@ -70,8 +68,8 @@ class Contact extends Validation {
                 return FALSE;
             }
             // if not required
-            return "";
         }
+        return "";
 
     }
 }

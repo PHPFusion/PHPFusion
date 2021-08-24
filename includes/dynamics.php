@@ -38,7 +38,7 @@ class Dynamics {
     }
 
     private function __load_dynamic_components() {
-        $dynamic_folder = makefilelist(DYNAMICS.'includes/', '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'files');
+        $dynamic_folder = makefilelist(DYNAMICS.'includes/', '.|..|.htaccess|index.php|._DS_Store|.tmp');
 
         if (!empty($dynamic_folder)) {
             foreach ($dynamic_folder as $folder) {

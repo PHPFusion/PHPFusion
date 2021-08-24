@@ -652,7 +652,7 @@ if (!function_exists('profile_link')) {
      * @param string $class        CSS class for the profile link.
      * @param bool   $display_link Allow clicking on the name, otherwise display only the name.
      *
-     * @return string Link to the user's account along with the user name correctly depending on the user's status.
+     * @return string Link to the user's account along with the username correctly depending on the user's status.
      */
     function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
         $locale = fusion_get_locale();
@@ -1589,7 +1589,7 @@ if (!function_exists('social_media_links')) {
 }
 
 /**
- * Load any function and return it's value.
+ * Load any function and return its value.
  *
  * @param string $function Function name.
  * @params miexd  ...$args Zero or more parameters to be passed, depending on function.

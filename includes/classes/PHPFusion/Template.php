@@ -148,7 +148,7 @@ class Template {
      * This function adds a subitem for every set_block used
      *
      * @param string $block_id The name of the unique block id
-     * @param array  $value    The replacements sets
+     * @param array  $value    The replacements set
      */
     public function set_block($block_id, array $value = []) {
         $filtered_value = [];
@@ -224,7 +224,7 @@ class Template {
 
     /**
      * Locale Replacement with Template Macro
-     * Macro Pattern - {[locale_keys]}
+     * Pattern - {[locale_keys]}
      * Recursively parse array into an array
      *
      * @param array $array

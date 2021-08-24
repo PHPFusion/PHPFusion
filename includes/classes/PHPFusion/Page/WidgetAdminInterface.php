@@ -67,7 +67,7 @@ interface WidgetAdminInterface {
     /**
      * This function displays your widget save buttons
      * There are 2 acceptable button name - save_widget and save_and_close_widget
-     * 'save_widget' will retains the same window after save/update execution
+     * 'save_widget' will retain the same window after save/update execution
      * 'save_and_close_widget' will close the window after save/update execution
      * We strongly recommend that you make both available to your user
      *

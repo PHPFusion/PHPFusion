@@ -102,7 +102,7 @@ class Uri extends \Defender\Validation {
     /**
      * Verify Paths within CMS
      *
-     * @return bool|string
+     * @return string|null
      */
     public function verify_path() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
@@ -113,6 +113,6 @@ class Uri extends \Defender\Validation {
             return self::$inputValue;
         }
 
-        return FALSE;
+        return NULL;
     }
 }

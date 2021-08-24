@@ -371,7 +371,7 @@ class SiteLinks {
         if (!empty(self::getMenuParam('callback_data')) && is_array(self::getMenuParam('callback_data'))) {
             if (isset($primary_cache)) {
 
-                self::replaceMenuParam('callback_data', array_replace_recursive(self::getMenuParam('callback_data'), $primary_cache));
+                self::replaceMenuParam('callback_data', array_replace_recursive((array)self::getMenuParam('callback_data'), $primary_cache));
             }
         } else {
             self::replaceMenuParam('callback_data', $primary_cache);
@@ -379,7 +379,7 @@ class SiteLinks {
 
         if (!empty(self::getMenuParam('additional_data') && is_array(self::getMenuParam('additional_data')))) {
             if (isset($secondary_cache)) {
-                self::replaceMenuParam('additional_data', array_replace_recursive(self::getMenuParam('additional_data'), $secondary_cache));
+                self::replaceMenuParam('additional_data', array_replace_recursive((array)self::getMenuParam('additional_data'), $secondary_cache));
             }
         } else {
             self::replaceMenuParam('additional_data', $secondary_cache);
@@ -387,7 +387,7 @@ class SiteLinks {
 
         // Change hierarchy data when grouping is activated
         if (self::getMenuParam('grouping')) {
-            $callback_data = self::getMenuParam('callback_data');
+            $callback_data = (array)self::getMenuParam('callback_data');
             if (isset($callback_data[0])) {
                 if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
                     $more_index = 9 * 10000000;
@@ -421,7 +421,7 @@ class SiteLinks {
      * @return string
      */
     public function showSubLinks($id = 0) {
-        $locale = self::getMenuParam('locale');
+        $locale = (array)self::getMenuParam('locale');
         $res = '';
 
         if (empty($id)) {
@@ -559,11 +559,11 @@ class SiteLinks {
     /**
      * @param mixed $key
      *
-     * @return mixed
+     * @return string
      */
     public static function getMenuParam($key = FALSE) {
         if ($key) {
-            return isset(self::$instances[self::$id]->menu_options[$key]) ? self::$instances[self::$id]->menu_options[$key] : NULL;
+            return !empty(self::$instances[self::$id]->menu_options[$key]) ? self::$instances[self::$id]->menu_options[$key] : '';
         }
 
         return self::$instances[self::$id]->menu_options;
@@ -707,7 +707,7 @@ class SiteLinks {
                             $linkRefURI = array_flip($linkRef);
                         }
 
-                        // The breadcrumbs series of arrays - stable
+                        // The breadcrumb series of arrays - stable
                         $reference = $this->getLinkInstance();
                         if (!empty($reference)) {
 

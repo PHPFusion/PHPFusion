@@ -17,74 +17,76 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Input to save date using datepicker
- * Datetimepicker documentation - http://eonasdan.github.io/bootstrap-datetimepicker/Options/
+ * Datetimepicker documentation - https://getdatepicker.com/4/Options/
  *
- * @param        $input_name
- * @param string $label
- * @param string $input_value
- * @param array  $options
- *                <ul>
- *                <li><strong>class</strong> (string): Empty string by default.
- *                The value of attribute class of the input.</li>
- *                <li><strong>date_format</strong> (string): dd-mm-yyyy by default.
- *                Date format for datepicker plugin.</li>
- *                <li><strong>deactivate</strong> (boolean): FALSE by default.
- *                You can pass TRUE and turn off the javascript datepicker plugin</li>
- *                <li><strong>error_text</strong> (string): empty string by default.
- *                An error message</li>
- *                <li><strong>fieldicon_off</strong> (boolean): FALSE by default.
- *                If TRUE, the calendar icon will be not displayed in the input.</li>
- *                <li><strong>inline</strong> (boolean): FALSE by default.
- *                TRUE if the input should be an inline element.</li>
- *                <li><strong>input_id</strong> (string): $input name by default.
- *                The value of attribute id of input.</li>
- *                <li><strong>required</strong> (boolean): FALSE by default</li>
- *                <li><strong>type</strong> (string): timestamp by default.
- *                Valid types:
- *                <ul>
- *                <li>date: The date will be saved as mysql date.</li>
- *                <li>timestamp: A timestamp will be saved as an integer</li>
- *                </ul>
- *                </li>
- *                <li><strong>week_start</strong> (int): 0 by default.
- *                An integer between 0 and 6. It is the same as
- *                the attribute weekStart of datepicker.</li>
- *                <li><strong>width</strong> (string): 250px by default.
- *                A valid value for CSS width</li>
- *                </ul>
- *
- * Callback Usages !important
+ * Callback Usages
  * ==========================
  * Configuration when type is 'timestamp'
  * Token used for $options['date_format_php'] is the <a href="http://php.net/manual/en/function.date.php">PHP token equivalent.</a>
  * Token used for $options['date_format_js'] must be formatted with <a href="http://momentjs.com/docs/#/displaying/">moment.js.</a>
  * Both token must match each other to parse the callback properly.
  * Example 1:
- *  "date_format_php" => "d-m-Y",
+ * "date_format_php" => "d-m-Y",
  * "date_format_js"  => "DD-MM-YYYY",
  *
  * Example 2:
- *  'date_format_js'  => 'YYYY-M-DD',
+ * 'date_format_js'  => 'YYYY-M-DD',
  * 'date_format_php' => 'Y-m-d',
- *
- * Currently, only user birthdate in `entire project` uses date format.
  *
  * Joining 2 datepickers (Start and End)
  * =======================================
  * In Start Datepicker, add $options['join_to_id'] with End Datepicker's input_id
  * In End Datepicker, add $options['join_from_id'] with Start Datepicker's input_id
  *
+ * @param string $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
  * @return string
  */
-
-
 function form_datepicker($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale();
 
     $input_value = clean_input_value($input_value);
+
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
+    $input_name = stripinput($input_name);
+
+    $default_options = [
+        'input_id'               => $input_name, // The value of attribute id of input.
+        'required'               => FALSE,
+        'placeholder'            => '',
+        'deactivate'             => FALSE, // You can pass true and turn off the javascript datepicker plugin
+        'width'                  => '', // A valid value for CSS width
+        'inner_width'            => '', // in px i.e. 250px
+        'class'                  => '', // The value of attribute class of the input.
+        'inline'                 => FALSE, // True if the input should be an inline element
+        'error_text'             => $locale['error_input_default'], // An error message
+        'date_format_js'         => 'M-DD-YYYY H:mm:ss', // Date format for datepicker plugin.
+        'date_format_php'        => 'm-d-Y H:i:s', // Date format for datepicker plugin.
+        'delimiter'              => '-',
+        'fieldicon_off'          => FALSE, // If TRUE, the calendar icon will be not displayed in the input.
+        'filtered_dates'         => [], // must be an array
+        'include_filtered_dates' => FALSE, // if true, then only days filtered are selectable
+        'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
+        'disable_weekend'        => FALSE, // if true, all weekend will be non-selectable
+        'type'                   => 'timestamp', // timestamp|date, The date will be saved as mysql date or timestamp. A timestamp will be saved as an integer.
+        'tip'                    => '',
+        'showTime'               => FALSE,
+        'week_start'             => fusion_get_settings('week_start'), // An integer between 0 and 6. It is the same as the attribute weekStart of datepicker.
+        'join_to_id'             => '',
+        'join_from_id'           => '',
+        'debug'                  => '',
+        'stacked'                => '',
+    ];
+
+    $options += $default_options;
 
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
@@ -110,40 +112,6 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         }
         add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/".$locale['datepicker'].".js'></script>");
     }
-
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
-    $input_name = stripinput($input_name);
-
-    $default_options = [
-        'input_id'               => $input_name,
-        'required'               => FALSE,
-        'placeholder'            => '',
-        'deactivate'             => FALSE,
-        'width'                  => '',
-        'inner_width'            => '', // in px i.e. 250px
-        'class'                  => '',
-        'inline'                 => FALSE,
-        'error_text'             => $locale['error_input_default'],
-        'date_format_js'         => 'M-DD-YYYY H:mm:ss',
-        'date_format_php'        => 'm-d-Y H:i:s',
-        'delimiter'              => '-',
-        'fieldicon_off'          => FALSE,
-        'filtered_dates'         => [], // must be an array
-        'include_filtered_dates' => FALSE, // if TRUE, then only days filtered are selectable
-        'weekend'                => [], // 0 for Sunday, 1 for Monday, 6 for Saturday
-        'disable_weekend'        => FALSE, // if true, all weekend will be non-selectable
-        'type'                   => 'timestamp',
-        'tip'                    => '',
-        'showTime'               => FALSE,
-        'week_start'             => fusion_get_settings('week_start'),
-        'join_to_id'             => '',
-        'join_from_id'           => '',
-        'debug'                  => '',
-        'stacked'                => '',
-    ];
-
-    $options += $default_options;
 
     if (!empty($input_value)) {
         if ($options['type'] == "timestamp") {

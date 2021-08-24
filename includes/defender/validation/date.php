@@ -39,15 +39,14 @@ class Date extends \Defender\Validation {
                 $timestamp = $date_format->getTimestamp();
             }
 
-            $dateParams = getdate((int)$timestamp);
+            $dateParams = getdate($timestamp);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
                 switch (self::$inputConfig['type']) {
                     case "timestamp":
                         return $timestamp;
                         break;
                     case "date":
-                        $date = (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
-                        return $date;
+                        return $dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
                         break;
                 }
             } else {
@@ -57,7 +56,7 @@ class Date extends \Defender\Validation {
             }
         }
 
-        return (string)self::$inputDefault;
+        return self::$inputDefault;
     }
 
 }

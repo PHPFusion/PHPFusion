@@ -489,7 +489,7 @@ class Defender {
                     return serialize($val_);
                 }
             } else {
-                // Make sure that the input was actually defined in code.. AND there must be a value to worth the processing power expense!
+                // Make sure that the input was actually defined in code. AND there must be a value to worth the processing power expense!
                 if ($this->field_config = $this->get_current_field_session($input_name)) {
 
                     $this->field_config = $_SESSION['form_fields'][$page_hash][$input_name];
@@ -501,14 +501,14 @@ class Defender {
                      * NOTE: Please don't pass 'stripinput' as callback, before we reach a callback
                      * everything is checked and sanitized already. The callback should only check
                      * if certain conditions are met then return TRUE|FALSE and not do any alterations
-                     * the the value itself
+                     * the value itself
                      */
                     $callback = isset($this->field_config['callback_check']) ? $this->field_config['callback_check'] : FALSE;
                     $regex = isset($this->field_config['regex']) ? $this->field_config['regex'] : FALSE;
                     $secured = $this->validate();
 
                     // If truly FALSE the check failed
-                    if ($secured === FALSE || ($this->field_config['required'] == 1 && ($secured === FALSE || $secured == '')) ||
+                    if ($secured === FALSE || ($this->field_config['required'] == 1 && $secured == '') ||
                         ($secured != '' && $regex && !preg_match('@^'.$regex.'$@i', $secured)) || // regex will fail for an imploded array, maybe move this check
                         (is_callable($callback) && !$callback($secured))
                     ) {
@@ -582,14 +582,14 @@ class Defender {
         // Don't bother processing and validating empty inputs
         //if ($this->field_value == '') return $this->field_value;
         /**
-         * Keep this include in the constructor
+         * Keep this included in the constructor
          * This solution was needed to load the defender.php.php before
          * defining LOCALESET
          */
         // declare the validation rules and assign them
         // type of fields vs type of validator
 
-        // execute sanitisation rules at point blank precision using switch
+        // execute sanitisation rules at point-blank precision using switch
         try {
             if (!empty($this->field_config['type'])) {
 
@@ -911,7 +911,7 @@ function environment($key, $type = FILTER_DEFAULT) {
  * @param string $key
  * @param int    $type
  *
- * @return mixed|string|string[]
+ * @return string|string[]
  */
 function cookie($key, $type = FILTER_DEFAULT) {
     if (filter_has_var(INPUT_COOKIE, $key)) {

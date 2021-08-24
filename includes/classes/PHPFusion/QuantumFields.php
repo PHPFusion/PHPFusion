@@ -52,7 +52,7 @@ class QuantumFields extends SqlHandler {
      * Set system API folder paths
      * Refer to v7.x User Fields API
      *
-     * @var string - plugin_locale_folder (LOCALE.LOCALESET."user_fields/")
+     * @var string - plugin_locale_folder (LOCALE.LOCALESET."user_fields/)
      * @var string - plugin_folder (INCLUDES."user_fields/")
      */
     protected $plugin_folder = NULL;
@@ -176,12 +176,12 @@ class QuantumFields extends SqlHandler {
      * @return bool
      */
     public static function isSerialized($value, &$result = NULL) {
-        // Bit of a give away this one
+        // A bit of a give away this one
         if (!is_string($value)) {
             return FALSE;
         }
         // Serialized FALSE, return TRUE. unserialize() returns FALSE on an
-        // invalid string or it could return FALSE if the string is serialized
+        // invalid string, or it could return FALSE if the string is serialized
         // FALSE, eliminate that possibility.
         if ('b:0;' === $value) {
             $result = FALSE;
@@ -200,7 +200,7 @@ class QuantumFields extends SqlHandler {
                 case 'b':
                 case 'i':
                 case 'd':
-                    // This looks odd but it is quicker than isset()ing
+                    // This looks odd, but it is quicker than isset()ing
                     $end .= ';';
                 case 'a':
                 case 'O':
@@ -427,7 +427,7 @@ class QuantumFields extends SqlHandler {
     }
 
     /**
-     * Parse the correct label language. Requires serialized $value.
+     * Parse the correct label language. Requires to be serialized $value.
      *
      * @param string $value Serialized
      *
@@ -436,7 +436,7 @@ class QuantumFields extends SqlHandler {
      */
     public static function parseLabel($value) {
         if (self::isSerialized($value)) {
-            $value = unserialize(stripslashes($value)); // if anyone can give me a @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
+            $value = unserialize(stripslashes($value)); // if anyone can give me an @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
 
             return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
         } else {
@@ -564,14 +564,11 @@ class QuantumFields extends SqlHandler {
                                   WHERE field_cat_id='".intval($_GET['cat_id'])."'
                                   ");
                     } else {
-
-                        // is is not a root.
                         $result = dbquery("
                         SELECT uf.field_cat_id, root.field_cat_db FROM ".$this->category_db." uf
                         LEFT JOIN ".$this->category_db." root ON uf.field_parent = root.field_cat_id
                         WHERE uf.field_cat_id='".intval($_GET['cat_id'])."'
                         ");
-
                     }
 
                     if ($result == NULL) {
@@ -1809,9 +1806,9 @@ class QuantumFields extends SqlHandler {
                             if (!empty($old_data['field_cat_db']) && !empty($old_data['field_cat_index'])) {
                                 // CONDITION: HAVE A PREVIOUS TABLE SET
                                 if (!empty($this->field_cat_data['field_cat_db'])) {
-                                    // new demands a table insertion, checks if same or not.. if different.
+                                    // new demands a table insertion, checks if same or not. if different.
                                     if ($this->field_cat_data['field_cat_db'] !== $old_data['field_cat_db']) {
-                                        // But the current table is different than the previous one
+                                        // But the current table is different from the previous one
                                         // - build the new one, move the column, drop the old one.
                                         self::build_table($this->field_cat_data['field_cat_db'], $this->field_cat_data['field_cat_index']);
                                         self::transfer_table($old_data['field_cat_db'], $this->field_cat_data['field_cat_db']);
@@ -2830,7 +2827,7 @@ class QuantumFields extends SqlHandler {
         foreach ($field_list as $field_data) {
             if ($field_data['field_parent'] == $this->input_page) {
                 $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : DB_USERS;
-                $target_index = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : 'user_id';
+                $target_index = !empty($field_data['field_cat_index']) ? $field_data['field_cat_index'] : 'user_id';
                 $index_value = isset($_POST[$target_index]) ? form_sanitizer($_POST[$target_index],
                     0) : $data[$target_index];
                 // create reference array
@@ -2896,9 +2893,9 @@ class QuantumFields extends SqlHandler {
             $output_fields[$db] = $this->callback_data;
         }
 
-        foreach ($field as $arr => $field_data) {
+        foreach ($field as $field_data) {
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX.$field_data['field_cat_db'] : $db;
-            $col_name = $field_data['field_cat_index'] ? $field_data['field_cat_index'] : $primary_key;
+            $col_name = !empty($field_data['field_cat_index']) ? $field_data['field_cat_index'] : $primary_key;
             // Find index primary key value
             $primaryKeyVal = isset($_POST[$col_name]) ? form_sanitizer($_POST[$col_name], $field_data['field_default'], $col_name) : '';
             if (!isset($output_fields[$target_database][$col_name])) {
@@ -2941,7 +2938,7 @@ class QuantumFields extends SqlHandler {
     }
 
     /**
-     * Parse the correct label language. Requires serialized $value.
+     * Parse the correct label language. Requires to be serialized $value.
      *
      * @param string $value Serialized
      *

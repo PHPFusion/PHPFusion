@@ -50,7 +50,7 @@ class Event {
     }
 
     /**
-     * Returns latest time you ever cached into your event records of a specific event handler type.
+     * Returns the latest time you ever cached into your event records of a specific event handler type.
      *
      * @param $event_name
      *
@@ -115,7 +115,7 @@ class Event {
         // the first array keys.
         if (isset(self::$event_required[$this->event_name]) and self::$event_required[$this->event_name] === TRUE) { // this will be true if my last event already expired. but the last state of the triggered actions already in.
             return TRUE;
-            // now i check for the tables and fetch again the unique ones. i need to compare and see if that is already fetched.
+            // now I check for the tables and fetch again the unique ones. I need to compare and see if that is already fetched.
         } else if (!dbcount('(notice_id)', DB_USER_NOTIFY, 'notice_event=:event_name AND notice_to=:my_id AND notice_datestamp > :expiry_time',
             [
                 ':expiry_time' => time() - (60 * self::$threshold_minute),

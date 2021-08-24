@@ -127,6 +127,7 @@ class Panels {
             'panel_restriction' => 3,
             'panel_languages'   => implode('.', fusion_get_enabled_languages()),
             'panel_order'       => $panel_order,
+            'panel_php_exe'     => 0
         ];
     }
 

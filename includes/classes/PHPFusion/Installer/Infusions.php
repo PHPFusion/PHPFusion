@@ -274,7 +274,7 @@ class Infusions {
                                  *
                                  * The version of the CMS is irrelevant. Infusion can be upgraded as many times as the authors
                                  * make it available to be distributed. (i.e. they can say Version 1 is for Version 9 of the CMS)
-                                 * in their own website, Version 2 is for Version 10 of the CMS etc). Apps and CMS are not tied
+                                 * in their own website, Version 2 is for Version 10 of the CMS etc.). Apps and CMS are not tied
                                  * together in terms of version-ing, as PHPFusion does not track it as we do not maintain them.
                                  *
                                  * When developing upgrades, people should not just make insertions and declare without checking

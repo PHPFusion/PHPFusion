@@ -403,7 +403,7 @@ function trimlink($text, $length) {
 /**
  * Trim a text to a number of words.
  *
- * @param string $text   ) String to trim.
+ * @param string $text   String to trim.
  * @param int    $limit  The number of words.
  * @param string $suffix If $text is longer than $limit, $suffix will be appended.
  *
@@ -848,7 +848,7 @@ function parseubb($text, $selected = "", $descript = TRUE) {
  * @param string $subject A subject for a mail message if someone opens a link, and it opens in the mail client.
  *
  * @return string If browser has JavaScript enabled, email will be displayed correctly,
- *                otherwise it will be hidden and difficult for a robot to decrypt.
+ *                otherwise, it will be hidden and difficult for a robot to decrypt.
  */
 function hide_email($email, $title = "", $subject = "") {
     if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
@@ -1177,7 +1177,7 @@ function censorwords($text) {
  *
  * @param int $userlevel Level code.
  *
- * @return string The name of the given user level, null if does not exist.
+ * @return string The name of the given user level, null if it does not exist.
  */
 function getuserlevel($userlevel) {
     $locale = fusion_get_locale();
@@ -1195,7 +1195,7 @@ function getuserlevel($userlevel) {
  *
  * @param int $userstatus Status code 0 - 8.
  *
- * @return string|null The name of the given user status, null if does not exist.
+ * @return string|null The name of the given user status, null if it does not exist.
  */
 function getuserstatus($userstatus) {
     $locale = fusion_get_locale();
@@ -1384,7 +1384,7 @@ function getusergroups() {
  * @param bool $return_desc If true, description will be returned instead of name.
  * @param bool $return_icon If true, icon will be returned next to name.
  *
- * @return string The name or icon or description of the given group, null if does not exist.
+ * @return string The name or icon or description of the given group, null if it does not exist.
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
     foreach (getusergroups() as $group) {
@@ -1421,7 +1421,7 @@ function fusion_get_groups($remove = []) {
  * @return bool True if the user has access.
  */
 function users_groupaccess($group_id) {
-    if (preg_match("(^\.{$group_id}$|\.$group_id\.|\.{$group_id}$)", fusion_get_userdata('user_groups'))) {
+    if (preg_match("(^\.$group_id$|\.$group_id\.|\.$group_id$)", fusion_get_userdata('user_groups'))) {
         return TRUE;
     }
 
@@ -1431,7 +1431,7 @@ function users_groupaccess($group_id) {
 /**
  * Getting the access levels used when asking the database for data.
  *
- * @param string $field MySQL field from which you want to check access.
+ * @param string $field MySQL's field from which you want to check access.
  * @param string $delim Delimiter.
  *
  * @return string The part of WHERE clause, always returns a condition.
@@ -1785,7 +1785,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
         }
     }
 
-    // then we make a infinity recursive function to loop/break it out.
+    // then we make an infinity recursive function to loop/break it out.
     $crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
     // then we sort in reverse.
     $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
@@ -1966,7 +1966,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 }
 
 /**
- * Fetch user name by ID.
+ * Fetch username by ID.
  *
  * @param int $user_id User ID.
  *
@@ -1979,7 +1979,7 @@ function fusion_get_username($user_id) {
 }
 
 /**
- * Fetch user data of the currently logged in user from database.
+ * Fetch user data of the currently logged-in user from database.
  *
  * @param string $key The key of one column.
  *
@@ -2143,7 +2143,7 @@ function fusion_get_language_switch() {
 /**
  * Language switcher function.
  *
- * @param bool $icon Set to false to hide the icon.
+ * @param bool $icon Set false to hide the icon.
  */
 function lang_switcher($icon = TRUE) {
     $locale = fusion_get_locale();

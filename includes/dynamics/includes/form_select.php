@@ -123,7 +123,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
     if ($options['db'] && $options['id_col'] && $options['title_col']) {
 
         // Cache result
-        $cache = ($options['custom_query'] ? FALSE : TRUE);
+        $cache = !$options['custom_query'];
 
         if (empty($select_db[$options['db']]) || (!$cache or $options['db_cache'] === FALSE)) {
             if (!empty($options['cat_col'])) {
@@ -217,7 +217,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
                 }
             }
             /**
-             * Build Chainable Reference Array
+             * Build Chainable Reference
              * array key    current id
              *      value   parent id
              */
@@ -231,7 +231,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
                         }
                     }
 
-                    return (array)$list;
+                    return $list;
                 }
             }
         }
@@ -299,7 +299,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
                     } else {
                         if ($input_value !== '') {
-                            $input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
+                            $input_value = stripinput($input_value); // not sure if it can turn false to zero not null.
                             $select = (isset($input_value) && $input_value == $arr) ? ' selected' : '';
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts);
@@ -319,7 +319,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
             }
 
-            return (string)$html;
+            return $html;
         }
     }
 
@@ -362,7 +362,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
     } else {
         // normal mode
 
-        $html .= "<select ".($options['select2_disabled'] == TRUE ? " class='form-control' " : "")." name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
+        $html .= "<select ".($options['select2_disabled'] == TRUE ? " class='form-control' " : "")." name='$input_name' id='".$options['input_id']."' style='width: ".(!empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['onchange'] ? ' onchange="'.$options['onchange'].'"' : '').($options['multiple'] ? " multiple" : "").">\n";
         $html .= ($options['allowclear']) ? "<option value=''></option>\n" : '';
         // add parent value
         if ($options['no_root'] == FALSE && !empty($options['cat_col']) || $options['add_parent_opts'] === TRUE) { // api options to remove root from selector. used in items creation.
@@ -386,7 +386,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
         if (is_array($options['options'])) {
             // Test if this is an optgroup
             $test_array = $options['options'];
-            foreach ($test_array as $id => $v) {
+            foreach ($test_array as $v) {
                 if (isset($v['text'])) {
                     $options['optgroup'] = TRUE;
                     break;
@@ -398,7 +398,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
                 foreach ($options['options'] as $arr => $v) { // outputs: key, value, class - in order
                     $select = '';
                     $chain = '';
-                    // Chain method always bind to options's array key
+                    // Chain method always bind to option's array key
                     if (isset($options['chain_index'][$arr])) {
                         $chain = " class='".$options['chain_index'][$arr]."' ";
                     }
@@ -514,7 +514,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
     load_select2_script();
 
-    return (string)$html;
+    return $html;
 }
 
 /**
@@ -601,7 +601,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     $root_img = fusion_get_settings("site_seo") == 1 && !defined('ADMIN_PANEL') ? fusion_get_settings('siteurl') : '';
 
-    $path = $options['file'] ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
+    $path = !empty($options['file']) ? $options['file'] : $root_prefix."dynamics/assets/users/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
 
     if (!empty($input_value)) {
         // json mode.
@@ -664,7 +664,7 @@ function user_search($user_id) {
         if (dbrows($result) > 0) {
             while ($udata = dbarray($result)) {
                 $user_id = $udata['user_id'];
-                $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "no-avatar.jpg";
+                $user_avatar = !empty($udata['user_avatar']) ? $udata['user_avatar'] : "no-avatar.jpg";
                 $user_name = $udata['user_name'];
                 $user_level = getuserlevel($udata['user_level']);
                 $user_opts[] = [
@@ -798,7 +798,7 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
             }
             add_to_jquery("$('#".$options['input_id']."').select2('val', [$vals]);");
         }
-        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".($options['inner_width'] ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
+        $html .= "<select name='$input_name' id='".$options['input_id']."' style='width: ".(!empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width'])."'".($options['deactivate'] ? " disabled" : "").($options['multiple'] ? " multiple" : "").">";
         $html .= $options['allowclear'] ? "<option value=''></option>\n" : '';
         if ($options['no_root'] == FALSE) { // api options to remove root from selector. used in items creation.
             $this_select = '';
@@ -821,7 +821,7 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
     }
 
     if (isset($index[$id]) && !empty($data)) {
-        foreach ($index[$id] as $key => $value) {
+        foreach ($index[$id] as $value) {
             // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
             $name = $data[$value][$name_col];

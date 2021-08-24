@@ -16,6 +16,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/**
+ * @param string $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
 function form_colorpicker($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale();

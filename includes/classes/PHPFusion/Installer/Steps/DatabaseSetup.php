@@ -70,9 +70,9 @@ class DatabaseSetup extends InstallCore {
                     self::$connection[$key] = str_replace('-', '_', $value);
                 }
             }
-            // Force underscore for these two values
-            self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
 
+            // Force underscores for these two values
+            self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
             self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
 
             if (!defined('DB_PREFIX'))
@@ -227,12 +227,12 @@ class DatabaseSetup extends InstallCore {
                                 //Batch_Core::getInstance()->Progress($current_count, $total_tests, $microtime, "Building version upgrades ".$filename.'...', (!$error ? 1 : 0));
                             }
 
-                            if (!$error) {
+                            /*if (!$error) {
                                 dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:version_value WHERE settings_name=:version_col", [
                                     ':version_value' => $filename,
                                     ':version_col'   => 'version'
                                 ]);
-                            }
+                            }*/
                         }
                     }
                 }
@@ -369,7 +369,7 @@ class DatabaseSetup extends InstallCore {
                                 $sql .= $sql_code;
                             }
                         } else {
-                            // new install requires this
+                            // new installation requires this
                             $sql .= $syntax.PHP_EOL.PHP_EOL;
                         }
 

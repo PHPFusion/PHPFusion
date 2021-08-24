@@ -93,7 +93,7 @@ class Geomap {
 
     /**
      * Returns a locale from a country code that is provided.
-     * I have not think of an implementation benefits out of this yet.
+     * I have not thought of an implementation benefits out of this yet.
      *
      * @param string $country_code  ISO 3166-2-alpha 2 country code
      * @param string $language_code ISO 639-1-alpha 2 language code

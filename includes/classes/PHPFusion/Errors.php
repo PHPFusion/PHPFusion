@@ -490,7 +490,7 @@ class Errors {
      */
     private function errorJs() {
         if (checkrights("ERRO") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] == iAUTH) {
-            // Show the "Apply"-button only when javascript is disabled"
+            // Show the "Apply"-button only when javascript is disabled
             add_to_jquery("
             $('a#footer_debug').bind('click', function(e) {
                 e.preventDefault();

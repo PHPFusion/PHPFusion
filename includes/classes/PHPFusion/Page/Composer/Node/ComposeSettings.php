@@ -53,7 +53,7 @@ class ComposeSettings extends PageAdmin {
                         <?php endif; ?>
 
                         <?php
-                        // Whether has link data or not
+                        // Whether it has link data or not
                         $data = [
                             'link_id'          => self::$data['page_link_cat'],
                             'link_name'        => self::$data['page_title'],

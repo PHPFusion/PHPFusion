@@ -33,9 +33,6 @@ require_once __DIR__.'/multisite_include.php';
  * $log = PHPFusion\Database\Driver\PDOMySQL::getGlobalQueryLog();
  *
  * @todo: missing doc - usage to set true false otherwise.. ?
- * @todo: add a form_select("debug_sql", "Debug SQL?", fusion_get_settings("debug_sql"), array(
- *      "options" => array($locale['disable'], $locale['enable']),
- *        "inline"=>true)); into administration/security_settings.php
  */
 
 $driver = !empty($db_driver) && $db_driver === 'pdo' && extension_loaded('pdo_mysql') ? DatabaseFactory::DRIVER_PDO_MYSQL : DatabaseFactory::DRIVER_MYSQLi;
@@ -44,7 +41,7 @@ if (!empty($db_host) && !empty($db_user) && !empty($db_name)) {
     DatabaseFactory::registerConfiguration(DatabaseFactory::getDefaultConnectionId(), [
         'host'     => $db_host,
         'user'     => $db_user,
-        'password' => $db_pass,
+        'password' => !empty($db_pass) ? $db_pass : '',
         'database' => $db_name,
         'charset'  => 'utf8mb4',
         'debug'    => DatabaseFactory::isDebug(DatabaseFactory::getDefaultConnectionId())

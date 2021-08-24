@@ -181,7 +181,7 @@ class UserGroups {
                     $group_id = get('group_id');
                     $result = dbquery("SELECT user_id, user_name, user_groups
                         FROM ".DB_USERS."
-                        WHERE user_groups REGEXP('^\\\.{$group_id}$|\\\.$group_id\\\.|\\\.{$group_id}$')
+                        WHERE user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
                     ");
                     $i = 0;
                     if (dbrows($result)) {
@@ -200,12 +200,12 @@ class UserGroups {
     }
 
     static function addUserGroup($group_id, $groups) {
-        return preg_replace(["(^\.{$group_id}$)", "(\.$group_id\.)", "(\.{$group_id}$)"], ["", ".", ""], $groups);
+        return preg_replace(["(^\.$group_id$)", "(\.$group_id\.)", "(\.$group_id$)"], ["", ".", ""], $groups);
     }
 
     static function countUserGroup($id) {
         if (isnum($id)) {
-            return dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.$id\\\.|\\\.{$id}$')");
+            return dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.$id$|\\\.$id\\\.|\\\.$id$')");
         }
 
         return FALSE;
@@ -213,7 +213,7 @@ class UserGroups {
 
     static function verifyGroup($id) {
         if (isnum($id)) {
-            if (!dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.{$id}$|\\\.$id\\\.|\\\.{$id}$')")
+            if (!dbcount("(user_id)", DB_USERS, "user_groups REGEXP('^\\\.$id$|\\\.$id\\\.|\\\.$id$')")
                 && dbcount("(group_id)", DB_USER_GROUPS, "group_id='".intval($id)."'")
             ) {
                 return TRUE;
@@ -350,7 +350,7 @@ class UserGroups {
         $group = get('group_id', FILTER_SANITIZE_NUMBER_INT);
         $result = dbquery("SELECT user_id, user_name, user_level, user_avatar, user_status
             FROM ".DB_USERS."
-            WHERE user_groups REGEXP('^\\\.{$group}$|\\\.$group\\\.|\\\.{$group}$')
+            WHERE user_groups REGEXP('^\\\.$group$|\\\.$group\\\.|\\\.$group$')
             ORDER BY user_level DESC, user_name
             LIMIT ".intval($rowstart).", ".self::$limit
         );

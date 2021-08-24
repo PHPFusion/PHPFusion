@@ -96,8 +96,7 @@ abstract class RewriteDriver {
     protected $pattern_search = [];
 
     /**
-     * Target URLs to which permalink request
-     * will be rewrited.
+     * Target URLs to which permalink request will be rewriten.
      *
      * @data_type Array
      * @access    protected
@@ -118,7 +117,7 @@ abstract class RewriteDriver {
     /**
      * Statements are calculation results of Rewrite scan
      * We will have various types of regex statements
-     * This is the results data of the entire permalink success/fails
+     * This is the result data of the entire permalink success/fails
      *
      * @var array
      */
@@ -352,7 +351,7 @@ abstract class RewriteDriver {
      * Builds the Regular Expressions Patterns for Permalink Translations
      * This function reads HTML output buffer
      * This function will create the Regex patterns and will put the built patterns
-     * in $patterns_regex array. This array will then used in preg_match function
+     * in $patterns_regex array. This array will then be used in preg_match function
      * to match against current request.
      *
      * @access protected
@@ -816,8 +815,8 @@ abstract class RewriteDriver {
     /**
      * Replace Other Tags in Pattern
      * This function will replace all the Tags in the Pattern with their suitable found
-     * matches. All the Information is passed to the function and it will replace the
-     * Tags with their respective matches.
+     * matches. All the Information is passed to the function, and it will replace the
+     * tags with their respective matches.
      *
      * @param string $type     Type of Pattern
      * @param string $search   specific Search Pattern

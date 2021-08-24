@@ -97,7 +97,7 @@ if (!function_exists('filename_exists')) {
             $parent_dir .= $_dir.'/';
         }
         if (!$file) {
-            // if exist, return directory, if not those directoy have been created.
+            // if exists, return directory, if not those directoy have been created.
             return $directory;
         } else {
             $prefix = $parts['filename'].$hash;
@@ -311,7 +311,7 @@ if (!function_exists('upload_image')) {
      * @param int    $target_width       Maximum allowed width of image in pixels.
      * @param int    $target_height      Maximum allowed height of image in pixels.
      * @param int    $max_size           Max size of image in bytes.
-     * @param false  $delete_original    Set this to true if you wish the original image to be delete after upload.
+     * @param false  $delete_original    Set this to true if you wish the original image to be deleted after upload.
      * @param bool   $thumb1             Set this to true if you wish to generate a thumbnail number 1.
      * @param bool   $thumb2             Set this to true if you wish to generate a thumbnail number 2.
      * @param int    $thumb1_ratio       Image ratio for the first thumbnail. 0 means original image ratio, 1 means square image ratio.

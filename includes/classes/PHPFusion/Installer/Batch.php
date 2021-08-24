@@ -25,7 +25,7 @@ namespace PHPFusion\Installer;
  * according to identified requirements of a non-destructive approach.
  *
  * - Should the table is missing, the batch process will auto create the table.
- * - Should the table is found, and the batch process will check against table columns and create new column..
+ * - Should the table is found, and the batch process will check against table columns and create new column.
  * - Should the table is of the wrong type, to alter the type.
  *
  * The batch will also generate differences in a log in the end of the batch run.
@@ -41,10 +41,10 @@ class Batch extends InstallCore {
     const TABLE_ATTR_STATEMENT = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
 
     // Adding missing column - we do not need to check column order
-    const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%} AFTER {%column_before%}"; // we do not need drop column.
+    const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%} AFTER {%column_before%}"; // we do not need to drop column.
 
     // Modification of column data-types
-    const ALTER_COLUMN_STATEMENT = "ALTER TABLE {%table%} MODIFY COLUMN {%table_attr%}"; // we do not need drop column.
+    const ALTER_COLUMN_STATEMENT = "ALTER TABLE {%table%} MODIFY COLUMN {%table_attr%}"; // we do not need to drop column.
 
     const INSERT_STATEMENT = "INSERT INTO {%table%} {%key%} VALUES {%values%}";
 
@@ -57,7 +57,7 @@ class Batch extends InstallCore {
      * http://dev.mysql.com/doc/refman/5.7/en/show-columns.html
      * http://dev.mysql.com/doc/refman/5.5/en/data-types.html
      * http://dev.mysql.com/doc/refman/5.5/en/create-table.html
-     * - Latest build is 0902
+     * - The Latest build is 0902
      *
      * Array key as table name
      * Array values as field_name and field types
@@ -68,7 +68,7 @@ class Batch extends InstallCore {
      * - default: default values if defined
      * - null: TRUE if is null (default not null)
      * - auto_increment - 1
-     * - key - 1 for Unique Primary Key (Non Clustered Index), 2 for Key (Clustered Index)
+     * - key - 1 for Unique Primary Key (Non-Clustered Index), 2 for Key (Clustered Index)
      * - index - TRUE if index (primary key do not need to be indexed)
      * - unsigned - TRUE if column is unsigned (default no unsigned)
      */

@@ -174,7 +174,7 @@ echo form_select('captcha', $locale['693'], $settings['captcha'], [
     'options' => $available_captchas,
     'class'   => 'm-b-0'
 ]);
-echo "<div id='extDiv' ".($settings['captcha'] !== 'grecaptcha' || $settings['captcha'] !== 'grecaptcha3' ? "style='display:none;'" : '').">\n";
+echo "<div id='extDiv' ".($settings['captcha'] != 'grecaptcha' || $settings['captcha'] != 'grecaptcha3' ? "style='display:none;'" : '').">\n";
 if (!$settings['recaptcha_public']) {
     $link = [
         'start' => '[RECAPTCHA_LINK]',

@@ -76,7 +76,7 @@ class Introduction extends InstallCore {
         /*
          * Here we already have a working database, but config is not done so there will be errors.
          * Now I've already cured the config_temp.php to PF9 standard config_temp.php
-         * All we need to do left is check on the system, so we'll send to start with STEP2
+         * All we need to do left is checking on the system, so we'll send to start with STEP2
          */
         $_GET['upgrade'] = TRUE;
         $_POST['license'] = TRUE;

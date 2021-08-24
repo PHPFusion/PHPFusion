@@ -48,31 +48,31 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     $method = fusion_get_settings('gateway_method'); // 0 words, 1 numbers, 2 both
 
     if ($method == 0) {
-        $antibot = intval($a + $b);
+        $antibot = $a + $b;
         $multiplier = "+";
         $reply_method = $locale['gateway_062'];
         $a = convertNumberToWord($a);
         $antibot = convertNumberToWord($antibot);
         $_SESSION["antibot"] = strtolower($antibot);
     } else if ($method == 1) {
-        $antibot = intval($a - $b);
+        $antibot = $a - $b;
         $multiplier = "-";
         $reply_method = $locale['gateway_063'];
-        $_SESSION["antibot"] = intval($antibot);
+        $_SESSION["antibot"] = $antibot;
         $b = convertNumberToWord($b);
     } else {
         if ($a > 15) {
-            $antibot = intval($a + $b);
+            $antibot = $a + $b;
             $multiplier = "+";
             $reply_method = $locale['gateway_062'];
             $a = convertNumberToWord($a);
             $antibot = convertNumberToWord($antibot);
             $_SESSION["antibot"] = strtolower($antibot);
         } else {
-            $antibot = intval($a - $b);
+            $antibot = $a - $b;
             $multiplier = "-";
             $reply_method = $locale['gateway_063'];
-            $_SESSION["antibot"] = intval($antibot);
+            $_SESSION["antibot"] = $antibot;
             $b = convertNumberToWord($b);
         }
     }
@@ -87,7 +87,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
     shuffle($honeypot_array);
     $_SESSION["honeypot"] = $honeypot_array[3];
 
-    // Try this and we see, Rot47 Encryption etc..
+    // Try this, and we see, Rot47 Encryption etc.
     add_to_footer('<script type="text/javascript">
         function decode(x) {
             let s = "";
@@ -112,7 +112,7 @@ if (!isset($_POST['gateway_submit']) && !isset($_POST['register'])) {
         'gateway_question' => '<span id="gateway_question"></span>',
         'openform'         => openform('Fusion_Gateway', 'post', 'register.php', ['class' => 'm-t-20']),
         'closeform'        => closeform(),
-        'hiddeninput'      => form_hidden($honeypot_array[3], "", ""),
+        'hiddeninput'      => form_hidden($honeypot_array[3]),
         'textinput'        => form_text('gateway_answer', "", "", ['error_text' => $locale['gateway_064'], 'required' => 1]),
         'button'           => form_button('gateway_submit', $locale['gateway_065'], $locale['gateway_065'], ['class' => 'btn-primary m-t-10']),
     ];

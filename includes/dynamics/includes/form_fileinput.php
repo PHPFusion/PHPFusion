@@ -80,7 +80,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         'placeholder'       => '', // A placeholder for the field.
         'form_id'           => '', // The current <form> element id that this widget is placed in.
         'hide_upload'       => TRUE, // Show or hide an upload file button when file has been selected.
-        'hide_remove'       => FALSE, // Show or hide an remove file button when file has been selected.
+        'hide_remove'       => FALSE, // Show or hide a remove file button when file has been selected.
         'krajee_disabled'   => FALSE, // Disables Kartik Bootstrap Jquery plugin and shows a normal browser fileinput instead.
         'replace_upload'    => FALSE, // Change the upload name to a new unique name upon successful upload.
     ];

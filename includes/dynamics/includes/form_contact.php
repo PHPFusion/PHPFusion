@@ -17,8 +17,8 @@
 +--------------------------------------------------------*/
 
 /**
- * @param        $input_name
- * @param        $label
+ * @param string $input_name
+ * @param string $label
  * @param string $input_value
  * @param array  $options
  *
@@ -121,7 +121,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     // Formats a prefix number
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').($error_class ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
 
     $html .= ($label ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>" : "");
 

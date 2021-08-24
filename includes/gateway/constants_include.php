@@ -17,20 +17,20 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-define("SCRIPT_ROOT", __DIR__);
+const SCRIPT_ROOT = __DIR__;
 
 // number of allowed page requests for the user
-define("CONTROL_MAX_REQUESTS", 2);
+const CONTROL_MAX_REQUESTS = 2;
 
 // time interval to start counting page requests (seconds)
-define("CONTROL_REQ_TIMEOUT", 1);
+const CONTROL_REQ_TIMEOUT = 1;
 
 // seconds to punish the user who has exceeded in doing requests
-define("CONTROL_BAN_TIME", 120 * 120);
+const CONTROL_BAN_TIME = 120 * 120;
 
 // writable directory to keep script data
-define("SCRIPT_TMP_DIR", SCRIPT_ROOT."/flood");
+const SCRIPT_TMP_DIR = SCRIPT_ROOT."/flood";
 
-define("CONTROL_DB", SCRIPT_TMP_DIR."/ctrl");
-define("CONTROL_LOCK_DIR", SCRIPT_TMP_DIR."/lock");
+const CONTROL_DB = SCRIPT_TMP_DIR."/ctrl";
+const CONTROL_LOCK_DIR = SCRIPT_TMP_DIR."/lock";
 define("CONTROL_LOCK_FILE", CONTROL_LOCK_DIR."/".md5(USER_IP));

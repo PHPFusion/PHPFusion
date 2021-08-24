@@ -29,8 +29,7 @@ function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
         $htmlcode = (array_key_exists('htmlcode', $array)) ? $array['htmlcode'] : "";
         $hide_footer = (array_key_exists('hide_footer', $array)) ? $array['hide_footer'] : "";
     }
-    $html = "";
-    $html .= "<a href='#".$modal_input."-modal' role='button' class='btn $button_class' data-toggle='modal'><i class='$button_img'></i> $button_text</a>";
+    $html = "<a href='#".$modal_input."-modal' role='button' class='btn $button_class' data-toggle='modal'><i class='$button_img'></i> $button_text</a>";
     $html .= "<div id='".$modal_input."-modal' class='modal fade'>";
     $html .= "<div class='modal-dialog'>";
     $html .= "<div class='modal-content'>";

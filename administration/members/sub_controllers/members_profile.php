@@ -230,10 +230,8 @@ class Members_Profile extends Members_Admin {
                         }
                     }
                 }
-                redirect(FUSION_SELF.fusion_get_aidlink());
-            } else {
-                redirect(FUSION_SELF.fusion_get_aidlink());
             }
+            redirect(FUSION_SELF.fusion_get_aidlink());
         }
         echo "<div class='well'>\n";
         echo "<h4>".self::$locale['ME_454']."</h4>";

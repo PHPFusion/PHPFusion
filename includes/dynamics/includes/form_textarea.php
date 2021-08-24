@@ -15,6 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+/**
+ * @param string $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
 function form_textarea($input_name, $label = '', $input_value = '', array $options = []) {
 
     $locale = fusion_get_locale('', [
@@ -25,7 +34,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     require_once INCLUDES."bbcode_include.php";
     require_once INCLUDES."html_buttons_include.php";
 
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $label = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
@@ -104,7 +113,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 }
             }
             foreach ($image_list as $key => $images) {
-                foreach ($images as $keys => $image_name) {
+                foreach ($images as $image_name) {
                     $image_1 = explode('.', $image_name);
                     $last_str = count($image_1) - 1;
                     if (in_array(".".$image_1[$last_str], $options['file_filter'])) {
@@ -472,7 +481,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         } else {
             $html .= "</div>\n";
-            $html .= "</div>\n";
             $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
         }
@@ -497,7 +505,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 }
 
 function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-    $link_mode = $link ? $link : 0;
+    $link_mode = !empty($link) ? $link : 0;
     $html = "<div class='nav-wrapper $class'>\n";
     $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >\n";
     if (!empty($tab_title['title'])) {

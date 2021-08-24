@@ -64,14 +64,14 @@ class UserGroups {
             set_title($data['group_name']);
 
             $rows = dbcount("(user_id)", DB_USERS,
-                (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.{$group_id}$|\\\.$group_id\\\.|\\\.{$group_id}$')");
+                (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')");
 
             $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rows ? $_GET['rowstart'] : 0);
 
             $members_query = "
               SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
               FROM ".DB_USERS." WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")."
-              AND user_groups REGEXP('^\\\.{$group_id}$|\\\.$group_id\\\.|\\\.{$group_id}$')
+              AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
               ORDER BY user_level DESC, user_name ASC LIMIT ".intval($_GET['rowstart']).", $members_per_page
              ";
 

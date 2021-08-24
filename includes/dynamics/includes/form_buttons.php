@@ -17,6 +17,14 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+/**
+ * @param string $input_name
+ * @param string $title
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
 function form_button($input_name, $title, $input_value, array $options = []) {
     $html = "";
 

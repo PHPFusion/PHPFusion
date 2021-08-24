@@ -122,15 +122,14 @@ function bbcode_list() {
             $data2 = dbarray(dbquery("SELECT MAX(bbcode_order) AS xorder FROM ".DB_BBCODES));
             $order = ($data2['xorder'] == 0 ? 1 : ($data2['xorder'] + 1));
             dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".get('enable')."', '".$order."')");
-            cdreset('bbcodes_cache');
         } else {
             $result2 = dbcount("(bbcode_id)", DB_BBCODES);
             if (!empty($result2)) {
                 dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=bbcode_order+1");
             }
             dbquery("INSERT INTO ".DB_BBCODES." (bbcode_name, bbcode_order) VALUES ('".get('enable')."', '1')");
-            cdreset('bbcodes_cache');
         }
+        cdreset('bbcodes_cache');
         addnotice('info', $locale['BBCA_432']);
         redirect(clean_request('', ['section', 'enable'], FALSE));
 

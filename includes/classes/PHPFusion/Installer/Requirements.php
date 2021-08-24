@@ -430,7 +430,7 @@ function check_table($db_prefix) {
  * @return bool
  */
 function write_config(array $system = []) {
-    // Force underscore between prefix and cookie name
+    // Force underscores between prefix and cookie name
     if (!empty($system['cookie_prefix'])) {
         $cookie_prefix_last = $system['cookie_prefix'][strlen($system['cookie_prefix']) - 1];
         if ($cookie_prefix_last != "_") {

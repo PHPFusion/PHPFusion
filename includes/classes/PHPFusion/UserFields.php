@@ -373,9 +373,7 @@ class UserFields extends QuantumFields {
                     $user_fields .= form_para($fieldData['title'], 'fieldcat'.$catID);
                 }
                 if (!empty($fieldData['fields'])) {
-                    foreach ($fieldData['fields'] as $_fields) {
-                        $user_fields .= $_fields;
-                    }
+                    $user_fields = implode('', $fieldData['fields']);
                 }
             }
         }
@@ -657,7 +655,7 @@ class UserFields extends QuantumFields {
 
             if (check_post('add_to_group') && $user_group = post('user_group', FILTER_VALIDATE_INT)) {
 
-                if (!preg_match("(^\.{$user_group}$|\.$user_group\.|\.{$user_group}$)", $this->userData['user_groups'])) {
+                if (!preg_match("(^\.$user_group$|\.$user_group\.|\.$user_group$)", $this->userData['user_groups'])) {
                     $userdata = [
                         'user_groups' => $this->userData['user_groups'].".".$user_group,
                         'user_id'     => $lookup
@@ -697,7 +695,7 @@ class UserFields extends QuantumFields {
             'status' => $this->userData['user_status']
         ];
 
-        // user name
+        // username
         $this->info['core_field']['profile_user_name'] = [
             'title' => $locale['u068'],
             'value' => $this->userData['user_name']
@@ -770,7 +768,7 @@ class UserFields extends QuantumFields {
                     ];
                 }
             }
-            $this->info['core_field']['profile_user_group']['value'] = $group_info; // is array
+            $this->info['core_field']['profile_user_group']['value'] = $group_info;
         }
 
         $this->info = $this->info + $this->getUserFields();

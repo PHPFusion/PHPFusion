@@ -32,18 +32,14 @@ class Token extends \Defender {
      * @var string
      */
     public static $remote_file = '';
+
     /**
      * Allow using back a valid token by not consuming any tokens at all
      *
      * @var bool
      */
     public static $allow_repost = FALSE;
-    /**
-     * System to check whether post token is valid
-     *
-     * @var bool
-     */
-    private static $tokenIsValid = FALSE;
+
     /**
      * Set debug mode
      *
@@ -65,7 +61,7 @@ class Token extends \Defender {
         if (!empty($_POST)) {
 
             if ($form_id = post('form_id')) {
-                $honeypot = (array) \Defender::getInstance()->getHoneypot($form_id.'_honeypot');
+                $honeypot = (array)\Defender::getInstance()->getHoneypot($form_id.'_honeypot');
                 if (!empty($honeypot['type']) && $honeypot['type'] == 'honeypot') {
                     if (post($honeypot['input_name'])) {
                         \Authenticate::logOut();
@@ -140,7 +136,6 @@ class Token extends \Defender {
         }
 
         if ($this->error) {
-            self::$tokenIsValid = FALSE;
             self::stop();
             $token_notice = FALSE;
             if ($token_notice === TRUE) {
@@ -228,15 +223,11 @@ class Token extends \Defender {
         $page_file = self::pageHash();
 
         if (fusion_safe()) {
-
             // Store into session
             $_SESSION['csrf_tokens'][$page_file][$form_id][] = $token;
 
-            // Round robin consume token
             if (count($_SESSION['csrf_tokens'][$page_file][$form_id]) > $max_tokens) {
-
                 array_shift($_SESSION['csrf_tokens'][$page_file][$form_id]);
-
             }
 
         } else {
@@ -245,7 +236,7 @@ class Token extends \Defender {
 
                 $token_ring = $_SESSION['csrf_tokens'][$page_file][$form_id];
 
-                $ring = array_rand($token_ring, 1);
+                $ring = array_rand($token_ring);
 
                 $token = $token_ring[$ring];
 

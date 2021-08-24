@@ -105,7 +105,7 @@ if (!function_exists('sendemail_template')) {
      * @param string $template_key Template key.
      * @param string $subject      Email subject.
      * @param string $message      Email message.
-     * @param string $user         User name.
+     * @param string $user         Username.
      * @param string $receiver     The name of the receiver.
      * @param string $thread_url   Forum thread url.
      * @param string $toemail      The mail of the receiver.

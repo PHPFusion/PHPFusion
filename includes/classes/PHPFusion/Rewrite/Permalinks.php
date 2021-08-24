@@ -68,11 +68,11 @@ class Permalinks extends RewriteDriver {
         $this->handlePermalinkRequests();
         // Output and Redirect 301 if NON-SEO url found
         $this->replaceOutput();
-        // Prepend all the File/Images/CSS/JS etc Links with ROOT path
+        // Prepend all the File/Images/CSS/JS etc. Links with ROOT path
         /*
          * This does not apply to page that is not SEO enabled driver.
          * i.e. IN_PERMALINK is only defined when Browser URL is pretty url
-         * The exception found is at Error.php because there is a error path handler that must work
+         * The exception found is at Error.php because there is an error path handler that must work
          * for both SEO page and NON SEO page
          */
         if (defined('IN_PERMALINK')) {

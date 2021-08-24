@@ -84,10 +84,10 @@ abstract class Validation {
             if (class_exists(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]))) {
                 try {
                     $class = new ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                    self::$validate_instance[self::$inputName] = $class->newInstance();
                 } catch (ReflectionException $e) {
                     set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
                 }
-                self::$validate_instance[self::$inputName] = $class->newInstance();
             }
         }
 

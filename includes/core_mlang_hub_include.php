@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 /**
  * Multi-language Hub
- * This file is 1st approach to deliver all language content despite of user language preference.
+ * This file is 1st approach to deliver all language content despite user language preference.
  * It's primary role is to declare LANGUAGE and site LOCALESET so all URL will work.
  */
 
