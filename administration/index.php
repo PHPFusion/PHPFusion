@@ -271,5 +271,30 @@ if (checkrights('M')) {
     }
 }
 
+if (checkrights('I')) {
+    $infs = [];
+    $temp = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
+    foreach ($temp as $folders) {
+        $inf = PHPFusion\Installer\Infusions::loadInfusion($folders);
+        if (!empty($inf)) {
+            $infs[$folders] = $inf;
+        }
+    }
+
+    $count = [];
+
+    if ($infs) {
+        foreach ($infs as $inf) {
+            if ($inf['status'] > 1) {
+                $count[] = $inf;
+            }
+        }
+
+        if (count($count) > 0) {
+            addnotice('info', $locale['infusions_updates_avalaible'].' <a class="btn btn-primary btn-sm m-l-10" href="'.ADMIN.'infusions.php'.fusion_get_aidlink().'">'.$locale['update_now'].'</a>');
+        }
+    }
+}
+
 render_admin_dashboard();
 require_once THEMES.'templates/footer.php';
