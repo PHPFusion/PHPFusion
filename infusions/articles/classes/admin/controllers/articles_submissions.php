@@ -143,8 +143,8 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
                 'article_draft'          => 0,
                 'article_breaks'         => (bool)fusion_get_settings('tinyce_enabled'),
                 'article_name'           => $data['submit_user'],
-                'article_allow_comments' => 0,
-                'article_allow_ratings'  => 0
+                'article_allow_comments' => 1,
+                'article_allow_ratings'  => 1
             ];
         } else {
             redirect(clean_request('', [], FALSE));
