@@ -173,7 +173,7 @@ class Admins {
         $html = "";
         if (!empty($_SESSION['form_cache'][$form_id][$form_type][$item_id])) {
 
-            $html .= "<label class='list-group-item text-normal spacer-xs p-15 m-b-10'>".self::$locale['290']." <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>".self::$locale['291']."</a></label>";
+            $html .= "<div class='list-group text-normal m-t-10 m-b-10'><div class='list-group-item'>".self::$locale['290']." <a href='".clean_request('autosave=view', ['autosave'], FALSE)."'>".self::$locale['291']."</a></div></div>";
 
             if (isset($_GET['autosave']) && $_GET['autosave'] == 'view') {
 
