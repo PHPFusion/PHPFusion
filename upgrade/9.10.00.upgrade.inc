@@ -137,6 +137,7 @@ $deleted_files = [
     INFUSIONS.'forum/classes/Functions.php',
     INFUSIONS.'forum/classes/Admin.php',
     IMAGES.'error/',
+    INCLUDES.'multi_attachment.js',
 ];
 
 foreach ($deleted_files as $file) {
