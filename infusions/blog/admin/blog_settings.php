@@ -58,9 +58,6 @@ $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
 
-echo '<div class="m-t-10">';
-echo '<h2>'.$locale['blog_settings'].'</h2>';
-
 echo "<div class='well'>".$locale['blog_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
@@ -167,5 +164,3 @@ closeside();
 echo "</div></div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();
-
-echo '</div>';
