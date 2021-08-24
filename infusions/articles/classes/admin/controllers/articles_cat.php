@@ -21,7 +21,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     private static $instance = NULL;
     private $locale = [];
 
-    public static function getInstance() {
+    public static function articles() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
@@ -30,22 +30,22 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
 
     public function displayArticlesAdmin() {
         pageaccess("A");
-        $this->locale = self::get_articleAdminLocale();
+        $this->locale = self::getArticleAdminLocales();
         // Cancel Form
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=article_category");
         }
         if (isset($_GET['ref']) && $_GET['ref'] == "article_cat_form") {
-            $this->display_article_cat_form();
+            $this->displayArticleCatForm();
         } else {
-            $this->display_article_cat_listing();
+            $this->displayArticleCatListing();
         }
     }
 
     /**
      * Displays Articles Category Form
      */
-    private function display_article_cat_form() {
+    private function displayArticleCatForm() {
 
         // Empty
         $data = [
@@ -140,7 +140,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         }
 
         // Form ?>
-        <div class="m-t-20 m-b-20">
+        <div class="m-b-20">
             <?php echo openform('catform', 'post', $formAction); ?>
             <div class="row">
 
@@ -219,7 +219,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     /**
      * Displays Articles Category Listing
      */
-    private function display_article_cat_listing() {
+    private function displayArticleCatListing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete']);
 
@@ -335,70 +335,68 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
         ?>
 
         <!-- Display Search, Filters and Actions -->
-        <div class="m-t-15">
-            <?php echo openform('article_filter', 'post', FUSION_REQUEST); ?>
-            <div class="clearfix">
+        <?php echo openform('article_filter', 'post', FUSION_REQUEST); ?>
+        <div class="clearfix">
 
-                <!-- Actions -->
-                <div class="pull-right">
-                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?>
-                    </a>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#article_table');">
-                        <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#article_table');">
-                        <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#article_table');">
-                        <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
-                </div>
-
-                <!-- Search -->
-                <div class="display-inline-block pull-left m-r-10">
-                    <?php echo form_text('article_cat_name', '', $filter_values['article_cat_name'], [
-                        'placeholder'       => $this->locale['article_0150'],
-                        'append_button'     => TRUE,
-                        'append_value'      => "<i class='fa fa-fw fa-search'></i>",
-                        'append_form_value' => 'search_article',
-                        'width'             => '160px',
-                        'group_size'        => 'sm'
-                    ]); ?>
-                </div>
-
-                <div class="display-inline-block hidden-xs">
-                    <a class="btn btn-sm m-r-5 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
-                        <?php echo $this->locale['article_0121']; ?>
-                        <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
-                    </a>
-                    <?php echo form_button('article_clear', $this->locale['article_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
-                </div>
+            <!-- Actions -->
+            <div class="pull-right">
+                <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=article_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['article_0005']; ?>
+                </a>
+                <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#article_table');">
+                    <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#article_table');">
+                    <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#article_table');">
+                    <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
             </div>
 
-            <!-- Display Filters -->
-            <div id="article_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
-                <div class="display-inline-block">
-                    <?php echo form_select('article_cat_status', '', $filter_values['article_cat_status'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '- '.$this->locale['article_0123'].' -',
-                        'options'     => [
-                            0 => $this->locale['article_0124'],
-                            2 => $this->locale['unpublished'],
-                            1 => $this->locale['published']
-                        ]
-                    ]); ?>
-                </div>
-                <div class="display-inline-block">
-                    <?php echo form_select('article_cat_visibility', '', $filter_values['article_cat_visibility'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '-  '.$this->locale['article_0125'].' -',
-                        'options'     => fusion_get_groups()
-                    ]); ?>
-                </div>
+            <!-- Search -->
+            <div class="display-inline-block pull-left m-r-10">
+                <?php echo form_text('article_cat_name', '', $filter_values['article_cat_name'], [
+                    'placeholder'       => $this->locale['article_0150'],
+                    'append_button'     => TRUE,
+                    'append_value'      => "<i class='fa fa-fw fa-search'></i>",
+                    'append_form_value' => 'search_article',
+                    'width'             => '160px',
+                    'group_size'        => 'sm'
+                ]); ?>
             </div>
-            <?php echo closeform(); ?>
+
+            <div class="display-inline-block hidden-xs">
+                <a class="btn btn-sm m-r-5 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
+                    <?php echo $this->locale['article_0121']; ?>
+                    <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
+                </a>
+                <?php echo form_button('article_clear', $this->locale['article_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
+            </div>
         </div>
 
+        <!-- Display Filters -->
+        <div id="article_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
+            <div class="display-inline-block">
+                <?php echo form_select('article_cat_status', '', $filter_values['article_cat_status'], [
+                    'allowclear'  => TRUE,
+                    'placeholder' => '- '.$this->locale['article_0123'].' -',
+                    'options'     => [
+                        0 => $this->locale['article_0124'],
+                        2 => $this->locale['unpublished'],
+                        1 => $this->locale['published']
+                    ]
+                ]); ?>
+            </div>
+            <div class="display-inline-block">
+                <?php echo form_select('article_cat_visibility', '', $filter_values['article_cat_visibility'], [
+                    'allowclear'  => TRUE,
+                    'placeholder' => '-  '.$this->locale['article_0125'].' -',
+                    'options'     => fusion_get_groups()
+                ]); ?>
+            </div>
+        </div>
+        <?php echo closeform(); ?>
+
         <?php echo openform('article_table', 'post', FUSION_REQUEST);
-        echo form_hidden('table_action', '', '');
-        $this->display_article_category($result);
+        echo form_hidden('table_action');
+        $this->displayArticleCategory($result);
         echo closeform();
 
         // Toogle Options
@@ -428,11 +426,11 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
     /**
      * Recursive function to display administration table
      *
-     * @param     $data
-     * @param int $id
-     * @param int $level
+     * @param array $data
+     * @param int   $id
+     * @param int   $level
      */
-    private function display_article_category($data, $id = 0, $level = 0) {
+    private function displayArticleCategory($data, $id = 0, $level = 0) {
 
         if (!$id) :
             ?>
@@ -482,7 +480,7 @@ class ArticlesCategoryAdmin extends ArticlesAdminModel {
                 </tr>
                 <?php
                 if (isset($data[$cdata['article_cat_id']])) {
-                    $this->display_article_category($data, $cdata['article_cat_id'], $level + 1);
+                    $this->displayArticleCategory($data, $cdata['article_cat_id'], $level + 1);
                 }
                 ?>
             <?php endforeach; ?>

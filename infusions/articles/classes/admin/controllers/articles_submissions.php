@@ -24,7 +24,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     private $articleSettings;
     private $dataUser = [];
 
-    public static function getInstance() {
+    public static function articles() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
@@ -32,12 +32,12 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     }
 
     /**
-     * Handle Preview and Publish of a Article Submission
+     * Handle Preview and Publish of an Article Submission
      */
     private function handlePostSubmission() {
         if (isset($_POST['publish_submission']) || isset($_POST['preview_submission'])) {
 
-            // Check posted Informations
+            // Check posted information
             $article_snippet = "";
             if ($_POST['article_snippet']) {
                 $article_snippet = str_replace("src='".str_replace("../", "", IMAGES_A), "src='".IMAGES_A, $_POST['article_snippet']);
@@ -327,7 +327,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     /**
      * Display Buttons for Form
      *
-     * @param      $unique_id
+     * @param string|int $unique_id
      */
     private function displayFormButtons($unique_id) {
         echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], [
@@ -417,8 +417,8 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
     public function displayArticlesAdmin() {
         pageaccess("A");
 
-        $this->locale = self::get_articleAdminLocale();
-        $this->articleSettings = self::get_article_settings();
+        $this->locale = self::getArticleAdminLocales();
+        $this->articleSettings = self::getArticleSettings();
 
         // Handle a Submission
         if (isset($_GET['submit_id']) && isNum($_GET['submit_id']) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=".(int)$_GET['submit_id']." AND submit_type='a'")) {

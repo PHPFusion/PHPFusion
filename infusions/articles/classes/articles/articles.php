@@ -29,7 +29,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    public function set_ArticlesInfo() {
+    public function setArticlesInfo() {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_articles.php')) {
@@ -50,9 +50,9 @@ abstract class Articles extends ArticlesServer {
             'article_last_updated'    => 0,
             'article_items'           => []
         ];
-        $info = array_merge($info, self::get_ArticleFilters());
-        $info = array_merge($info, self::get_ArticleCategories());
-        $info = array_merge($info, self::get_ArticleItems());
+        $info = array_merge($info, self::getArticleFilters());
+        $info = array_merge($info, self::getArticleCategories());
+        $info = array_merge($info, self::getArticleItems());
         $this->info = $info;
 
         return $info;
@@ -64,7 +64,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    private function get_ArticleFilters() {
+    private function getArticleFilters() {
         $array['allowed_filters'] = [
             'recent' => self::$locale['article_0030'],
             'read'   => self::$locale['article_0063']
@@ -92,7 +92,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    protected function get_ArticleCategories() {
+    protected function getArticleCategories() {
         $info['article_categories'] = [];
         $result = dbquery("SELECT article_cat_id, article_cat_name
             FROM ".DB_ARTICLE_CATS."
@@ -119,13 +119,13 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    public function get_ArticleItems($filter = []) {
+    public function getArticleItems($filter = []) {
         $info['article_total_rows'] = dbcount("(article_id)", DB_ARTICLES, groupaccess("article_visibility")." AND article_draft='0'");
 
         if ($info['article_total_rows']) {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['article_total_rows'] ? intval($_GET['rowstart']) : 0;
 
-            $result = dbquery($this->get_ArticlesQuery($filter));
+            $result = dbquery($this->getArticlesQuery($filter));
 
             $info['article_item_rows'] = dbrows($result);
             if ($info['article_item_rows'] > 0) {
@@ -138,7 +138,7 @@ abstract class Articles extends ArticlesServer {
                         $info['article_last_updated'] = $data['article_datestamp'];
                     }
 
-                    $articleData = self::get_ArticlesData($data);
+                    $articleData = self::getArticlesData($data);
                     $article_info[$article_count] = $articleData;
 
                 }
@@ -154,8 +154,8 @@ abstract class Articles extends ArticlesServer {
      *
      * @return string
      */
-    protected static function get_ArticlesQuery(array $filters = []) {
-        $article_settings = self::get_article_settings();
+    protected static function getArticlesQuery(array $filters = []) {
+        $article_settings = self::getArticleSettings();
         $pattern = "SELECT %s(ar.rating_vote) FROM ".DB_RATINGS." ar WHERE ar.rating_item_id = a.article_id AND ar.rating_type = 'A'";
         $sql_count = sprintf($pattern, 'COUNT');
         $sql_sum = sprintf($pattern, 'SUM');
@@ -171,7 +171,7 @@ abstract class Articles extends ArticlesServer {
             a.article_draft='0' AND ".groupaccess("a.article_visibility")." AND ac.article_cat_status='1' AND ".groupaccess("ac.article_cat_visibility")."
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY a.article_id
-            ORDER BY ".self::check_ArticlesFilter()."
+            ORDER BY ".self::checkArticlesFilter()."
             LIMIT ".(!empty($filters['limit']) ? $filters['limit'] : "".$_GET['rowstart'].",".(!empty($article_settings['article_pagination']) ? $article_settings['article_pagination'] : 15)."")."
         ";
     }
@@ -182,7 +182,7 @@ abstract class Articles extends ArticlesServer {
      * most recent article
      * most rated
      */
-    private static function check_ArticlesFilter() {
+    private static function checkArticlesFilter() {
         /* Filter Construct */
         $filter = ['recent', 'read', 'comment', 'rating'];
 
@@ -213,11 +213,11 @@ abstract class Articles extends ArticlesServer {
     /**
      * Parse MVC Data output
      *
-     * @param array $data - dbarray of articleQuery()
+     * @param array $data dbarray of articleQuery()
      *
      * @return array
      */
-    private static function get_ArticlesData(array $data) {
+    private static function getArticlesData(array $data) {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         if (!empty($data)) {
@@ -328,7 +328,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    public function set_ArticlesCatInfo($article_cat_id) {
+    public function setArticlesCatInfo($article_cat_id) {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         $info = [
@@ -341,8 +341,8 @@ abstract class Articles extends ArticlesServer {
             'article_last_updated'    => 0,
             'article_items'           => []
         ];
-        $info = array_merge($info, self::get_ArticleFilters());
-        $info = array_merge($info, self::get_ArticleCategories());
+        $info = array_merge($info, self::getArticleFilters());
+        $info = array_merge($info, self::getArticleCategories());
 
         $max_article_rows = '';
 
@@ -376,10 +376,10 @@ abstract class Articles extends ArticlesServer {
             $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_article_rows ? intval($_GET['rowstart']) : 0;
 
             if ($max_article_rows) {
-                $result = dbquery($this->get_ArticlesQuery(['condition' => "a.article_cat='".$data['article_cat_id']."'"]));
+                $result = dbquery($this->getArticlesQuery(['condition' => "a.article_cat='".$data['article_cat_id']."'"]));
                 $info['article_item_rows'] = dbrows($result);
                 $info['article_total_rows'] = $max_article_rows;
-                $this->article_cat_breadcrumbs($article_cat_index);
+                $this->articleCatBreadcrumbs($article_cat_index);
             }
 
         } else {
@@ -397,7 +397,7 @@ abstract class Articles extends ArticlesServer {
                 if ($article_count == 1) {
                     $info['article_last_updated'] = $data['article_datestamp'];
                 }
-                $article_info[$article_count] = self::get_ArticlesData($data);
+                $article_info[$article_count] = self::getArticlesData($data);
             }
             $info['article_items'] = $article_info;
         }
@@ -412,7 +412,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @param $article_cat_index - hierarchy array
      */
-    private function article_cat_breadcrumbs($article_cat_index) {
+    private function articleCatBreadcrumbs($article_cat_index) {
         $locale = fusion_get_locale("", ARTICLE_LOCALE);
 
         /* Make an infinity traverse */
@@ -445,7 +445,7 @@ abstract class Articles extends ArticlesServer {
             return $crumb;
         }
 
-        // then we make a infinity recursive function to loop/break it out.
+        // then we make an infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($article_cat_index, $_GET['cat_id']);
         $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
@@ -473,7 +473,7 @@ abstract class Articles extends ArticlesServer {
      *
      * @return array
      */
-    public function set_ArticlesItemInfo($article_id) {
+    public function setArticlesItemInfo($article_id) {
         self::$locale = fusion_get_locale("", ARTICLE_LOCALE);
         $info = [];
 
@@ -484,7 +484,7 @@ abstract class Articles extends ArticlesServer {
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
 
-        $result = dbquery(self::get_ArticlesQuery(['condition' => "a.article_id='".intval($article_id)."'", 'limit' => "0,1"]));
+        $result = dbquery(self::getArticlesQuery(['condition' => "a.article_id='".intval($article_id)."'", 'limit' => "0,1"]));
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
@@ -507,7 +507,7 @@ abstract class Articles extends ArticlesServer {
             set_title(self::$locale['article_0000'].self::$locale['global_201']);
             add_to_title($article_subject);
 
-            $this->article_cat_breadcrumbs($article_cat_index);
+            $this->articleCatBreadcrumbs($article_cat_index);
 
             add_breadcrumb([
                 'link'  => INFUSIONS."articles/articles.php?article_id=".$data['article_id'],
@@ -519,12 +519,12 @@ abstract class Articles extends ArticlesServer {
                 'article_filter'   => [],
                 'article_category' => []
             ];
-            $info = array_merge($default_info, self::get_ArticleFilters());
-            $info = array_merge($info, self::get_ArticleCategories());
+            $info = array_merge($default_info, self::getArticleFilters());
+            $info = array_merge($info, self::getArticleCategories());
 
-            $articleData = self::get_ArticlesData($data);
-            $articleData['article_show_ratings'] = self::get_ArticlesRatings($data);
-            $articleData['article_show_comments'] = self::get_ArticlesComments($data);
+            $articleData = self::getArticlesData($data);
+            $articleData['article_show_ratings'] = self::getArticlesRatings($data);
+            $articleData['article_show_comments'] = self::getArticlesComments($data);
             $info['article_item'] = $articleData;
         } else {
             redirect(INFUSIONS."articles/articles.php");
@@ -535,13 +535,13 @@ abstract class Articles extends ArticlesServer {
     }
 
     /**
-     * Display Ratings on a Article
+     * Display Ratings on an Article
      *
      * @param $data
      *
      * @return string
      */
-    private static function get_ArticlesRatings($data) {
+    private static function getArticlesRatings($data) {
         $html = '';
         if (fusion_get_settings('ratings_enabled') && $data['article_allow_ratings'] == TRUE) {
             ob_start();
@@ -554,13 +554,13 @@ abstract class Articles extends ArticlesServer {
     }
 
     /**
-     * Display Comments on a Article
+     * Display Comments on an Article
      *
      * @param $data
      *
      * @return string
      */
-    private static function get_ArticlesComments($data) {
+    private static function getArticlesComments($data) {
         $html = "";
         if (fusion_get_settings('comments_enabled') && $data['article_allow_comments'] == TRUE) {
             ob_start();

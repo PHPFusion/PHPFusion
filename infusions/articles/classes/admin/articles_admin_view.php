@@ -22,7 +22,7 @@ class ArticlesAdminView extends ArticlesAdminModel {
     private static $locale = [];
 
     public function display_admin() {
-        self::$locale = self::get_articleAdminLocale();
+        self::$locale = self::getArticleAdminLocales();
 
         // Back and Check Section
         if (check_get('section') && get('section') == "back") {
@@ -64,16 +64,16 @@ class ArticlesAdminView extends ArticlesAdminModel {
         echo opentab($tab, $sections, "articles_admin", TRUE, "", "section", ['ref', 'action', 'article_display', 'rowstart', 'cat_id', 'submit_id', 'article_id']);
         switch ($sections) {
             case "article_category":
-                ArticlesCategoryAdmin::getInstance()->displayArticlesAdmin();
+                ArticlesCategoryAdmin::articles()->displayArticlesAdmin();
                 break;
             case "submissions":
-                ArticlesSubmissionsAdmin::getInstance()->displayArticlesAdmin();
+                ArticlesSubmissionsAdmin::articles()->displayArticlesAdmin();
                 break;
             case "settings":
-                ArticlesSettingsAdmin::getInstance()->displayArticlesAdmin();
+                ArticlesSettingsAdmin::articles()->displayArticlesAdmin();
                 break;
             default:
-                ArticlesAdmin::getInstance()->displayArticlesAdmin();
+                ArticlesAdmin::articles()->displayArticlesAdmin();
         }
         echo closetab();
         closetable();

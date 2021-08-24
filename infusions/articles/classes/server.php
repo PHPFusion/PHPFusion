@@ -22,7 +22,7 @@ class ArticlesServer {
     private static $article_instance = NULL;
     private static $article_admin_instance = NULL;
 
-    public static function Articles() {
+    public static function articles() {
         if (self::$article_instance === NULL) {
             self::$article_instance = new ArticlesView();
         }
@@ -30,7 +30,7 @@ class ArticlesServer {
         return self::$article_instance;
     }
 
-    public static function ArticlesAdmin() {
+    public static function articlesAdmin() {
         if (self::$article_admin_instance === NULL) {
             self::$article_admin_instance = new ArticlesAdminView();
         }
@@ -38,7 +38,7 @@ class ArticlesServer {
         return self::$article_admin_instance;
     }
 
-    public static function get_article_settings() {
+    public static function getArticleSettings() {
         if (empty(self::$article_settings)) {
             self::$article_settings = get_settings("articles");
         }

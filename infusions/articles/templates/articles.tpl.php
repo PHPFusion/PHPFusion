@@ -24,7 +24,7 @@ if (!function_exists("display_main_articles")) {
      * @param $info
      */
     function display_main_articles($info) {
-        $articles_settings = \PHPFusion\Articles\ArticlesServer::get_article_settings();
+        $articles_settings = \PHPFusion\Articles\ArticlesServer::getArticleSettings();
         $locale = fusion_get_locale();
 
         opentable($locale['article_0000']);

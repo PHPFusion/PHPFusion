@@ -106,7 +106,7 @@ foreach ($check_array as $key => $value) {
 }
 
 if (is_dir(IMAGES."articles/")) {
-    $files = makefilelist(IMAGES."articles/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."articles/", ".|..|index.php");
     if (!empty($files)) {
         foreach ($files as $file) {
             fusion_rename(IMAGES."articles/".$file, INFUSIONS."articles/images/".$file);

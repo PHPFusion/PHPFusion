@@ -24,7 +24,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     private $articleSettings = [];
     private $article_data = [];
 
-    public static function getInstance() {
+    public static function articles() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
@@ -38,20 +38,20 @@ class ArticlesAdmin extends ArticlesAdminModel {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
 
-        $this->locale = self::get_articleAdminLocale();
-        $this->articleSettings = self::get_article_settings();
+        $this->locale = self::getArticleAdminLocales();
+        $this->articleSettings = self::getArticleSettings();
 
         if (isset($_GET['ref']) && $_GET['ref'] == "article_form") {
-            $this->display_article_form();
+            $this->displayArticleForm();
         } else {
-            $this->display_article_listing();
+            $this->displayArticleListing();
         }
     }
 
     /**
      * Displays Articles Form
      */
-    private function display_article_form() {
+    private function displayArticleForm() {
         $default_article_data = [
             'article_id'             => 0,
             'article_draft'          => 0,
@@ -70,10 +70,10 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ];
 
         // Delete Article
-        self::execute_ArticlesDelete();
+        self::executeArticlesDelete();
 
         // Update Article
-        self::execute_ArticlesUpdate();
+        self::executeArticlesUpdate();
 
         /**
          * Global vars
@@ -90,10 +90,13 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Data
         $this->article_data += $default_article_data;
 
-        self::articleContent_form();
+        self::articleContentForm();
     }
 
-    private function execute_ArticlesDelete() {
+    /**
+     * Articles Delete Function
+     */
+    private function executeArticlesDelete() {
         if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['article_id']) && isnum($_GET['article_id'])) {
             $article_id = intval($_GET['article_id']);
 
@@ -111,7 +114,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     /**
      * Create or Update a Article
      */
-    private function execute_ArticlesUpdate() {
+    private function executeArticlesUpdate() {
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close']))) {
 
             // Check posted information
@@ -192,7 +195,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
     /**
      * Display Form for Article
      */
-    private function articleContent_form() {
+    private function articleContentForm() {
         // Textarea Settings
         if (!fusion_get_settings('tinymce_enabled')) {
             $articleSnippetSettings = [
@@ -250,7 +253,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         // Start Form
         echo openform('articleform', 'post', $this->form_action, ['enctype' => TRUE]);
         echo "<div class='spacer-sm'>\n";
-        self::display_articleButtons('formstart');
+        self::displayArticleButtons('formstart');
         echo "</div>\n";
         echo "<hr/>\n";
         echo form_hidden('article_id', '', $this->article_data['article_id']);
@@ -372,16 +375,16 @@ class ArticlesAdmin extends ArticlesAdminModel {
         echo '</div>';
         echo '</div>';
 
-        self::display_articleButtons("formend");
+        self::displayArticleButtons("formend");
         echo closeform();
     }
 
     /**
      * Generate sets of push buttons for article Content form
      *
-     * @param      $unique_id
+     * @param string|int $unique_id
      */
-    private function display_articleButtons($unique_id) {
+    private function displayArticleButtons($unique_id) {
         echo form_button('cancel', $this->locale['cancel'], $this->locale['cancel'], [
             'class'    => 'btn-sm btn-default',
             'icon'     => 'fa fa-times',
@@ -399,12 +402,10 @@ class ArticlesAdmin extends ArticlesAdminModel {
         ]);
     }
 
-    // Articles Delete Function
-
     /**
      * Displays Articles Listing
      */
-    private function display_article_listing() {
+    private function displayArticleListing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete', 'article_display']);
 
@@ -537,7 +538,7 @@ class ArticlesAdmin extends ArticlesAdminModel {
         }
 
         ?>
-        <div class="m-t-20 m-b-5">
+        <div class="m-b-5">
             <?php echo openform("article_filter", "post", FUSION_REQUEST); ?>
 
             <!-- Display Buttons and Search -->

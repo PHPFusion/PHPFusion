@@ -20,7 +20,7 @@ namespace PHPFusion\Articles;
 class ArticlesAdminModel extends ArticlesServer {
     private static $admin_locale = [];
 
-    public static function get_articleAdminLocale() {
+    public static function getArticleAdminLocales() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE."English/admin/settings.php";
             if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {

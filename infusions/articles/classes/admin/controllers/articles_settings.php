@@ -20,7 +20,7 @@ namespace PHPFusion\Articles;
 class ArticlesSettingsAdmin extends ArticlesAdminModel {
     private static $instance = NULL;
 
-    public static function getInstance() {
+    public static function articles() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
@@ -30,8 +30,8 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
 
     public function displayArticlesAdmin() {
         pageaccess("A");
-        $locale = self::get_articleAdminLocale();
-        $article_settings = self::get_article_settings();
+        $locale = self::getArticleAdminLocales();
+        $article_settings = self::getArticleSettings();
 
         // Save
         if (isset($_POST['savesettings'])) {
@@ -58,7 +58,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             }
         }
 
-        echo "<div class='well m-t-10'>".$locale['article_0400']."</div>";
+        echo "<div class='well'>".$locale['article_0400']."</div>";
 
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo form_text('article_pagination', $locale['article_0401'], $article_settings['article_pagination'], [

@@ -25,5 +25,5 @@ require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
 require_once ARTICLE_CLASS."autoloader.php";
 require_once INFUSIONS."articles/templates/articles.tpl.php";
-\PHPFusion\Articles\ArticlesServer::Articles()->display_articles();
+\PHPFusion\Articles\ArticlesServer::articles()->display_articles();
 require_once THEMES.'templates/footer.php';
