@@ -278,7 +278,7 @@ class Dashboard {
                                             $html .= '<span class="badge bg-blue m-b-10 m-r-5">'.$inf_data['inf_title'].'</span>';
                                         }
                                     }
-                                    $content = checkrights('I') ? '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>' : '';
+                                    $content = '<div class="text-right text-uppercase"><a class="text-smaller" href="'.ADMIN.'infusions.php'.$aidlink.'">'.$locale['285'].' <i class="fa fa-arrow-circle-right"></i></a></div>';
                                 } else {
                                     $html .= '<div class="text-center">'.$locale['284'].'</div>';
                                 }

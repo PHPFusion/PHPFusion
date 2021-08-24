@@ -74,7 +74,7 @@ function closetable($bg = TRUE) {
     AdminLTE\AdminPanel::closeTable($bg);
 }
 
-\PHPFusion\OutputHandler::addHandler(function ($output = '') {
+add_handler(function ($output = '') {
     $color = !check_admin_pass('') ? 'd2d6de' : '3c8dbc';
 
     return preg_replace("/<meta name='theme-color' content='#ffffff'>/i", '<meta name="theme-color" content="#'.$color.'"/>', $output);

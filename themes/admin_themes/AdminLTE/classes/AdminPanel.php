@@ -27,7 +27,7 @@ class AdminPanel {
 
     public function __construct() {
         add_to_head('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">');
-        add_to_footer('<script type="text/javascript" src="'.ADMINLTE.'js/adminlte.min.js"></script>');
+        add_to_footer('<script type="text/javascript" src="'.ADMINLTE.'js/adminlte.min.js?v=2.4.18"></script>');
 
         $this->pagenum = (int)filter_input(INPUT_GET, 'pagenum');
 
@@ -292,16 +292,14 @@ class AdminPanel {
                                     $icon = '<img class="m-r-5" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'">';
 
                                     if (!empty($admin_pages[$data['admin_rights']])) {
-                                        if (checkrights($data['admin_rights'])) {
-                                            $html .= '<li class="treeview'.($sub_active ? ' menu-open' : '').'">';
-                                                $html .= '<a href="#">'.$icon.' '.$data['admin_title'].'<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
-                                                $html .= '<ul class="treeview-menu"'.($sub_active ? ' style="display: block;"' : '').'>';
-                                                    foreach ($admin_pages[$data['admin_rights']] as $sub_page) {
-                                                        $html .= '<li><a href="'.$sub_page['admin_link'].'">'.$sub_page['admin_title'].'</a></li>';
-                                                    }
-                                                $html .= '</ul>';
-                                            $html .= '</li>';
-                                        }
+                                        $html .= '<li class="treeview'.($sub_active ? ' menu-open' : '').'">';
+                                            $html .= '<a href="#">'.$icon.' '.$data['admin_title'].'<span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>';
+                                            $html .= '<ul class="treeview-menu"'.($sub_active ? ' style="display: block;"' : '').'>';
+                                                foreach ($admin_pages[$data['admin_rights']] as $sub_page) {
+                                                    $html .= '<li><a href="'.$sub_page['admin_link'].'">'.$sub_page['admin_title'].'</a></li>';
+                                                }
+                                            $html .= '</ul>';
+                                        $html .= '</li>';
                                     } else {
                                         $html .= '<li'.($sub_active ? ' class="active"' : '').'><a href="'.ADMIN.$data['admin_link'].$aidlink.'">'.$icon.' '.$data['admin_title'].'</a></li>';
                                     }
