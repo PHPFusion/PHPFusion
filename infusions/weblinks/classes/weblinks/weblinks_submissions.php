@@ -20,12 +20,12 @@ namespace PHPFusion\Weblinks;
 class WeblinksSubmissions extends WeblinksServer {
     private static $instance = NULL;
     private static $weblink_settings = [];
-    private $locale = [];
+    private $locale;
     public $info = [];
 
     protected function __construct() {
         $this->locale = fusion_get_locale("", WEBLINK_ADMIN_LOCALE);
-        self::$weblink_settings = self::get_weblink_settings();
+        self::$weblink_settings = self::getWeblinkSettings();
     }
 
     public static function getInstance() {
@@ -37,13 +37,12 @@ class WeblinksSubmissions extends WeblinksServer {
     }
 
     public function displayWeblinks() {
-
         add_to_title($this->locale['WLS_0900']);
 
         $this->info['weblink_tablename'] = $this->locale['WLS_0900'];
 
         if (iMEMBER && self::$weblink_settings['links_allow_submission'] && checkgroup(self::$weblink_settings['links_submission_access'])) {
-            display_weblink_submissions($this->display_submission_form());
+            display_weblink_submissions($this->displaySubmissionForm());
         } else {
             $info['no_submissions'] = $this->locale['WLS_0922'];
             $info += $this->info;
@@ -51,9 +50,9 @@ class WeblinksSubmissions extends WeblinksServer {
         }
     }
 
-    private function display_submission_form() {
-
+    private function displaySubmissionForm() {
         $settings = fusion_get_settings();
+
         $criteriaArray = [
             'weblink_name'        => '',
             'weblink_cat'         => 0,
@@ -95,12 +94,10 @@ class WeblinksSubmissions extends WeblinksServer {
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=l'>".$this->locale['WLS_0912']."</a>",
                     'index_link'  => "<a href='".BASEDIR.$settings['opening_page']."'>".str_replace("[SITENAME]", $settings['sitename'], $this->locale['WLS_0913'])."</a>"
                 ];
-                $info += $this->info;
-                return (array)$info;
             } else {
                 $info['item'] = [
                     'guidelines'          => str_replace("[SITENAME]", $settings['sitename'], $this->locale['WLS_0920']),
-                    'openform'            => openform('submit_form', 'post', BASEDIR."submit.php?stype=l", ['enctype' => self::$weblink_settings['links_allow_submission'] ? TRUE : FALSE]),
+                    'openform'            => openform('submit_form', 'post', BASEDIR."submit.php?stype=l", ['enctype' => (bool)self::$weblink_settings['links_allow_submission']]),
                     'weblink_cat'         => form_select_tree('weblink_cat', $this->locale['WLS_0101'], $criteriaArray['weblink_cat'],
                         [
                             'no_root'     => TRUE,
@@ -132,7 +129,7 @@ class WeblinksSubmissions extends WeblinksServer {
                         ]) : form_hidden('weblink_language', '', $criteriaArray['weblink_language'])),
                     'weblink_description' => form_textarea('weblink_description', $this->locale['WLS_0254'], $criteriaArray['weblink_description'],
                         [
-                            'required'      => self::$weblink_settings['links_extended_required'] ? TRUE : FALSE,
+                            'required'      => (bool)self::$weblink_settings['links_extended_required'],
                             'type'          => $settings['tinymce_enabled'] ? 'tinymce' : 'html',
                             'tinymce'       => $settings['tinymce_enabled'] && iADMIN ? 'advanced' : 'simple',
                             'tinymce_image' => FALSE,
@@ -143,13 +140,13 @@ class WeblinksSubmissions extends WeblinksServer {
 
                 ];
 
-                $info += $this->info;
-                return (array)$info;
             }
+            $info += $this->info;
+            return $info;
 
         }
         $info['no_submissions'] = $this->locale['WLS_0923'];
         $info += $this->info;
-        return (array)$info;
+        return $info;
     }
 }

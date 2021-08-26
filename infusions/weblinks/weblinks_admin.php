@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-require_once WEBLINKS_CLASS."autoloader.php";
-PHPFusion\Weblinks\WeblinksServer::WeblinksAdmin()->display_admin();
+require_once WEBLINKS_CLASSES."autoloader.php";
+PHPFusion\Weblinks\WeblinksServer::weblinksAdmin()->displayAdmin();
 require_once THEMES.'templates/footer.php';

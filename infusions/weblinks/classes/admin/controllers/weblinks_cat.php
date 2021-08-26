@@ -31,7 +31,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
 
     public function displayWeblinksAdmin() {
         pageaccess("W");
-        $this->locale = self::get_WeblinkAdminLocale();
+        $this->locale = self::getWeblinkAdminLocale();
 
         // Cancel Form
         if (check_get('cancel')) {
@@ -39,16 +39,16 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         }
 
         if (check_get('ref') && get('ref') == "weblink_cat_form") {
-            $this->display_weblinks_cat_form();
+            $this->displayWeblinksCatForm();
         } else {
-            $this->display_weblinks_cat_listing();
+            $this->displayWeblinksCatListing();
         }
     }
 
     /**
-     * Displays weblink Category Form
+     * Displays weblinks Category Form
      */
-    private function display_weblinks_cat_form() {
+    private function displayWeblinksCatForm() {
         // Empty
         $data = [
             'weblink_cat_id'          => 0,
@@ -133,7 +133,6 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
             redirect(clean_request('', ['ref', 'action', 'cat_id'], FALSE));
         }
 
-        echo "<div class='m-t-20 m-b-20'>";
         echo openform("catform", "post", FUSION_REQUEST);
         echo "<div class='row'>";
         echo "<div class='col-xs-12 col-sm-8'>";
@@ -186,13 +185,12 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
         echo form_button('save_cat', $this->locale['save'], $this->locale['save'], ['class' => 'btn-success m-l-10', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo form_button('save_cat_and_close', $this->locale['save_and_close'], $this->locale['save_and_close'], ['class' => 'btn-primary m-l-10', 'icon' => 'fa fa-fw fa-floppy-o']);
         echo closeform();
-        echo "</div>";
     }
 
     /**
-     * Displays Articles Category Listing
+     * Displays weblinks Category Listing
      */
-    private function display_weblinks_cat_listing() {
+    private function displayWeblinksCatListing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete']);
         $table_action = post('table_action');
@@ -230,11 +228,10 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                         }
                     }
                 }
-                redirect(FUSION_REQUEST);
             } else {
                 addnotice('warning', $this->locale['WLS_0048']);
-                redirect(FUSION_REQUEST);
             }
+            redirect(FUSION_REQUEST);
         }
 
         // Clear
@@ -295,76 +292,70 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 $filter_empty = FALSE;
             }
         }
-
-        // Languages
-        $language_opts = [0 => $this->locale['WLS_0129']];
-        $language_opts += fusion_get_enabled_languages();
         ?>
 
         <!-- Display Search, Filters and Actions -->
-        <div class="m-t-15">
-            <?php echo openform("weblink_filter", "post", FUSION_REQUEST); ?>
-            <div class="clearfix">
+        <?php echo openform("weblink_filter", "post", FUSION_REQUEST); ?>
+        <div class="clearfix">
 
-                <!-- Actions -->
-                <div class="pull-right">
-                    <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblink_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0005']; ?>
-                    </a>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#weblink_table');">
-                        <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#weblink_table');">
-                        <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
-                    <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#weblink_table');">
-                        <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
-                </div>
-
-                <!-- Search -->
-                <div class="display-inline-block pull-left m-r-10">
-                    <?php echo form_text('weblink_cat_name', '', $filter_values['weblink_cat_name'], [
-                        'placeholder'       => $this->locale['WLS_0100'],
-                        'append_button'     => TRUE,
-                        'append_value'      => "<i class='fa fa-fw fa-search'></i>",
-                        'append_form_value' => 'search_weblink',
-                        'width'             => '200px',
-                        'group_size'        => 'sm'
-                    ]); ?>
-                </div>
-                <div class="display-inline-block hidden-xs">
-                    <a class="btn btn-sm m-r-10 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
-                        <?php echo $this->locale['WLS_0121']; ?>
-                        <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
-                    </a>
-                    <?php echo form_button('weblink_clear', $this->locale['WLS_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
-                </div>
+            <!-- Actions -->
+            <div class="pull-right">
+                <a class="btn btn-success btn-sm" href="<?php echo clean_request("ref=weblink_cat_form", ["ref"], FALSE); ?>"><i class="fa fa-fw fa-plus"></i> <?php echo $this->locale['WLS_0005']; ?>
+                </a>
+                <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('publish', '#table_action', '#weblink_table');">
+                    <i class="fa fa-fw fa-check"></i> <?php echo $this->locale['publish']; ?></button>
+                <button type="button" class="hidden-xs btn btn-default btn-sm m-l-5" onclick="run_admin('unpublish', '#table_action', '#weblink_table');">
+                    <i class="fa fa-fw fa-ban"></i> <?php echo $this->locale['unpublish']; ?></button>
+                <button type="button" class="hidden-xs btn btn-danger btn-sm m-l-5" onclick="run_admin('delete', '#table_action', '#weblink_table');">
+                    <i class="fa fa-fw fa-trash-o"></i> <?php echo $this->locale['delete']; ?></button>
             </div>
 
-            <!-- Display Filters -->
-            <div id="weblink_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
-                <div class="display-inline-block">
-                    <?php echo form_select('weblink_cat_status', '', $filter_values['weblink_cat_status'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '- '.$this->locale['WLS_0123'].' -',
-                        'options'     => [
-                            '0' => $this->locale['WLS_0124'],
-                            '2' => $this->locale['publish'],
-                            '1' => $this->locale['unpublish']
-                        ]
-                    ]); ?>
-                </div>
-                <div class="display-inline-block">
-                    <?php echo form_select('weblink_cat_visibility', '', $filter_values['weblink_cat_visibility'], [
-                        'allowclear'  => TRUE,
-                        'placeholder' => '-  '.$this->locale['WLS_0125'].' -',
-                        'options'     => fusion_get_groups()
-                    ]); ?>
-                </div>
+            <!-- Search -->
+            <div class="display-inline-block pull-left m-r-10">
+                <?php echo form_text('weblink_cat_name', '', $filter_values['weblink_cat_name'], [
+                    'placeholder'       => $this->locale['WLS_0100'],
+                    'append_button'     => TRUE,
+                    'append_value'      => "<i class='fa fa-fw fa-search'></i>",
+                    'append_form_value' => 'search_weblink',
+                    'width'             => '200px',
+                    'group_size'        => 'sm'
+                ]); ?>
             </div>
-            <?php echo closeform(); ?>
+            <div class="display-inline-block hidden-xs">
+                <a class="btn btn-sm m-r-10 <?php echo(!$filter_empty ? "btn-info" : "btn-default"); ?>" id="toggle_options" href="#">
+                    <?php echo $this->locale['WLS_0121']; ?>
+                    <span id="filter_caret" class="fa <?php echo(!$filter_empty ? "fa-caret-up" : "fa-caret-down"); ?>"></span>
+                </a>
+                <?php echo form_button('weblink_clear', $this->locale['WLS_0122'], 'clear', ['class' => 'btn-default btn-sm']); ?>
+            </div>
         </div>
 
-        <?php echo openform('weblink_table', 'post', FUSION_REQUEST);
-        echo form_hidden('table_action', '', '');
-        $this->display_weblink_category($result);
+        <!-- Display Filters -->
+        <div id="weblink_filter_options"<?php echo($filter_empty ? " style='display: none;'" : ""); ?>>
+            <div class="display-inline-block">
+                <?php echo form_select('weblink_cat_status', '', $filter_values['weblink_cat_status'], [
+                    'allowclear'  => TRUE,
+                    'placeholder' => '- '.$this->locale['WLS_0123'].' -',
+                    'options'     => [
+                        '0' => $this->locale['WLS_0124'],
+                        '2' => $this->locale['publish'],
+                        '1' => $this->locale['unpublish']
+                    ]
+                ]); ?>
+            </div>
+            <div class="display-inline-block">
+                <?php echo form_select('weblink_cat_visibility', '', $filter_values['weblink_cat_visibility'], [
+                    'allowclear'  => TRUE,
+                    'placeholder' => '-  '.$this->locale['WLS_0125'].' -',
+                    'options'     => fusion_get_groups()
+                ]); ?>
+            </div>
+        </div>
+        <?php echo closeform();
+
+        echo openform('weblink_table', 'post', FUSION_REQUEST);
+        echo form_hidden('table_action');
+        $this->displayWeblinkCategory($result);
         echo closeform();
 
         // Toogle Options
@@ -398,7 +389,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
      * @param int $id
      * @param int $level
      */
-    private function display_weblink_category($data, $id = 0, $level = 0) {
+    private function displayWeblinkCategory($data, $id = 0, $level = 0) {
 
         if (!$id) :
             ?>
@@ -446,7 +437,7 @@ class WeblinksCategoryAdmin extends WeblinksAdminModel {
                 </tr>
                 <?php
                 if (isset($data[$cdata['weblink_cat_id']])) {
-                    $this->display_weblink_category($data, $cdata['weblink_cat_id'], $level + 1);
+                    $this->displayWeblinkCategory($data, $cdata['weblink_cat_id'], $level + 1);
                 }
                 ?>
             <?php endforeach; ?>

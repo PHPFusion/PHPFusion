@@ -31,8 +31,8 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
     public function displayWeblinksAdmin() {
 
         pageaccess("W");
-        $locale = self::get_WeblinkAdminLocale();
-        $weblink_settings = self::get_weblink_settings();
+        $locale = self::getWeblinkAdminLocale();
+        $weblink_settings = self::getWeblinkSettings();
 
         // Save
         if (check_post('savesettings')) {
@@ -61,7 +61,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
         }
 
         echo openform('settingsform', 'post', FUSION_REQUEST);
-        echo "<div class='well spacer-xs'>".$locale['WLS_0400']."</div>\n";
+        echo "<div class='well'>".$locale['WLS_0400']."</div>\n";
 
         echo form_text('links_per_page', $locale['WLS_0132'], $weblink_settings['links_per_page'], [
             'max_length'  => 4,

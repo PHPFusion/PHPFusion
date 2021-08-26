@@ -34,11 +34,11 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     /**
      * Handle Preview and Publish of a Weblink Submission
      */
-    private function PostSubmission() {
+    private function postSubmission() {
 
         if (check_post('publish_submission')) {
 
-            // Check posted Informations
+            // Check posted information
             $this->inputArray = [
                 'weblink_name'        => sanitizer('weblink_name', '', 'weblink_name'),
                 'weblink_description' => sanitizer('weblink_description', "", "weblink_description"),
@@ -54,7 +54,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             // Handle
             if (fusion_safe()) {
                 // Publish Submission
-                dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => (int)$this->submit_id, ':submittype' => 'l']);
+                dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id=:submitid AND submit_type=:submittype", [':submitid' => $this->submit_id, ':submittype' => 'l']);
                 dbquery_insert(DB_WEBLINKS, $this->inputArray, 'save');
                 addnotice('success', $this->locale['WLS_0060']);
                 redirect(clean_request('', ['submit_id'], FALSE));
@@ -65,7 +65,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
     /**
      * Delete a Weblink Submission
      */
-    private function DeleteSubmission() {
+    private function deleteSubmission() {
         if (check_post('delete_submission')) {
             $submit_id = get('submit_id', FILTER_VALIDATE_INT);
             dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id = :submitid AND submit_type = :submittype", [':submitid' => (int)$submit_id, ':submittype' => 'l']);
@@ -110,7 +110,6 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
      * Display Form
      */
     private function displayForm() {
-
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $weblinkSnippetSettings = [
@@ -135,7 +134,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         echo form_hidden('weblink_status', '', 1);
         echo form_hidden('weblink_user_name', '', $this->inputArray['weblink_user_name']);
         ?>
-        <div class="well clearfix m-t-15">
+        <div class="well clearfix">
             <div class="pull-left">
                 <?php echo display_avatar($this->dataUser, "30px", "", FALSE, "img-rounded m-t-5 m-r-5"); ?>
             </div>
@@ -216,39 +215,23 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             </div>
         </div>
         <?php
-        self::displayFormButtons("formend", FALSE);
-        echo closeform();
-    }
-
-    /**
-     * Display Buttons for Form
-     *
-     * @param      $unique_id
-     * @param bool $breaker
-     */
-    private function displayFormButtons($unique_id, $breaker = TRUE) {
         echo "<div class='m-t-20'>";
         echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], [
-            'class'    => "btn-success m-r-10",
-            'icon'     => "fa fa-fw fa-hdd-o",
-            'input_id' => "publish_submission-".$unique_id
+            'class' => "btn-success m-r-10",
+            'icon'  => "fa fa-fw fa-hdd-o"
         ]);
         echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], [
-            'class'    => "btn-danger m-r-10",
-            'icon'     => "fa fa-fw fa-trash",
-            'input_id' => "delete_submission-".$unique_id
+            'class' => "btn-danger m-r-10",
+            'icon'  => "fa fa-fw fa-trash"
         ]);
         echo "</div>";
-        if ($breaker) {
-            echo "<hr/>";
-        }
+        echo closeform();
     }
 
     /**
      * Display List with Submissions
      */
     private function displaySubmissionList() {
-
         $result = dbquery("
             SELECT s.submit_id, s.submit_criteria, s.submit_datestamp, u.user_id, u.user_name, u.user_status, u.user_avatar
             FROM ".DB_SUBMISSIONS." AS s
@@ -259,7 +242,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         ?>
 
         <!-- Display Table -->
-        <div class="table-responsive m-t-10">
+        <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -308,14 +291,13 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
         <?php
     }
 
-
     /**
      * Display Admin Area
      */
     public function displayWeblinksAdmin() {
         pageaccess("W");
 
-        $this->locale = self::get_WeblinkAdminLocale();
+        $this->locale = self::getWeblinkAdminLocale();
 
         // Handle a Submission
         $this->submit_id = get('submit_id', FILTER_VALIDATE_INT);
@@ -332,8 +314,8 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
             }
 
             // Delete, Publish, Preview
-            self::DeleteSubmission();
-            self::PostSubmission();
+            self::deleteSubmission();
+            self::postSubmission();
 
             // Display Form with Buttons
             self::displayForm();

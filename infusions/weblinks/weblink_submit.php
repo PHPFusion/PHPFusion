@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/header.php';
-require_once WEBLINKS_CLASS."autoloader.php";
+require_once WEBLINKS_CLASSES."autoloader.php";
 require_once INFUSIONS."weblinks/templates/weblinks.tpl.php";
-PHPFusion\Weblinks\WeblinksServer::WeblinksSubmit()->displayWeblinks();
+PHPFusion\Weblinks\WeblinksServer::weblinksSubmit()->displayWeblinks();
 require_once THEMES.'templates/footer.php';

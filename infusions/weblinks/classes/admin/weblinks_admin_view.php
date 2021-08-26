@@ -20,9 +20,8 @@ namespace PHPFusion\Weblinks;
 class WeblinksAdminView extends WeblinksAdminModel {
     private $allowed_pages = ['weblinks', 'weblinks_category', 'weblinks_form', 'submissions', 'settings'];
 
-    public function display_admin() {
-
-        $locale = self::get_WeblinkAdminLocale();
+    public function displayAdmin() {
+        $locale = self::getWeblinkAdminLocale();
 
         // Back and Check Section
         if (check_get('section') && get('section') == "back") {
@@ -33,10 +32,6 @@ class WeblinksAdminView extends WeblinksAdminModel {
         // Sitetitle
         add_to_title($locale['WLS_0001']);
         add_breadcrumb(['link' => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink(), 'title' => $locale['WLS_0001']]);
-
-        if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='l'")) {
-            addnotice("info", sprintf($locale['WLS_0063'], format_word($submissions, $locale['fmt_submission'])));
-        }
 
         // Handle Tabs
         if (check_get('ref') || get('submit_id', FILTER_VALIDATE_INT)) {
@@ -50,7 +45,7 @@ class WeblinksAdminView extends WeblinksAdminModel {
         $master_title['title'][] = $locale['WLS_0004'];
         $master_title['id'][] = "weblinks_category";
         $master_title['icon'][] = "fa fa-fw fa-folder";
-        $master_title['title'][] = $locale['WLS_0007'];
+        $master_title['title'][] = $locale['WLS_0007'].' <span class="badge">'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='l'").'</span>';
         $master_title['id'][] = "submissions";
         $master_title['icon'][] = "fa fa-fw fa-inbox";
         $master_title['title'][] = $locale['WLS_0008'];

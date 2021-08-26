@@ -32,7 +32,7 @@ abstract class Weblinks extends WeblinksServer {
 
     protected function __construct() {
         self::$locale = fusion_get_locale("", WEBLINK_LOCALE);
-        $this->weblink_settings = self::get_weblink_settings();
+        $this->weblink_settings = self::getWeblinkSettings();
         $this->type = get('type', FILTER_DEFAULT);
         $this->rowstart = get('rowstart', FILTER_VALIDATE_INT);
         $this->cat_id = get('cat_id', FILTER_VALIDATE_INT);
@@ -44,8 +44,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @return array
      */
-    public function set_WeblinksInfo() {
-
+    public function setWeblinksInfo() {
         set_title(self::$locale['web_0000']);
 
         add_breadcrumb([
@@ -55,8 +54,8 @@ abstract class Weblinks extends WeblinksServer {
 
 
         $this->def_cat['weblink_tablename'] = self::$locale['web_0000'];
-        $this->def_cat['weblink_filter'] += self::get_WeblinkFilters();
-        $this->def_cat['weblink_categories'] += self::get_WeblinkCategories();
+        $this->def_cat['weblink_filter'] += self::getWeblinkFilters();
+        $this->def_cat['weblink_categories'] += self::getWeblinkCategories();
 
         return $this->def_cat;
 
@@ -67,7 +66,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @return array
      */
-    private function get_WeblinkFilters() {
+    private function getWeblinkFilters() {
         $info = [];
 
         $filters = [self::$locale['web_0030'], self::$locale['web_0032'], self::$locale['web_0031']];
@@ -93,7 +92,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @return array
      */
-    protected function get_WeblinkCategories() {
+    protected function getWeblinkCategories() {
         $info = [];
         $result = dbquery("
             SELECT wc.weblink_cat_id, wc.weblink_cat_name, wc.weblink_cat_parent, wc.weblink_cat_description, w.weblink_status, count(w.weblink_id) 'weblink_count'
@@ -126,12 +125,12 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @return array
      */
-    public function set_WeblinkCatInfo($weblink_cat_id) {
+    public function setWeblinkCatInfo($weblink_cat_id) {
         $linktype = (!empty($this->type) ? "&amp;type=".$this->type : '');
 
         $this->def_data['weblink_tablename'] = self::$locale['web_0000'];
-        $this->def_data['weblink_filter'] += self::get_WeblinkFilters();
-        $this->def_data['weblink_categories'] += self::get_WeblinkCategories();
+        $this->def_data['weblink_filter'] += self::getWeblinkFilters();
+        $this->def_data['weblink_categories'] += self::getWeblinkCategories();
 
         // Filtered by Category ID.
         $result = dbquery("SELECT *
@@ -165,14 +164,14 @@ abstract class Weblinks extends WeblinksServer {
 
             $this->def_data['pagenav'] = makepagenav($this->rowstart, $this->weblink_settings['links_per_page'], $max_weblink_rows, 3, INFUSIONS."weblinks/weblinks.php?cat_id=".$weblink_cat_id.$linktype."&amp;");
 
-            $this->weblink_cat_breadcrumbs($weblink_cat_index);
+            $this->weblinkCatBreadcrumbs($weblink_cat_index);
 
             // build categorial data.
             $this->def_data += $data;
             if ($max_weblink_rows) {
-                $result = dbquery($this->get_WeblinkQuery(['condition' => "w.weblink_cat='".$data['weblink_cat_id']."'"]));
+                $result = dbquery($this->getWeblinkQuery(['condition' => "w.weblink_cat='".$data['weblink_cat_id']."'"]));
                 while ($wdata = dbarray($result)) {
-                    $this->def_data['weblink_items'][$wdata['weblink_id']] = self::get_WeblinksData($wdata);
+                    $this->def_data['weblink_items'][$wdata['weblink_id']] = self::getWeblinksData($wdata);
                 }
             }
 
@@ -189,8 +188,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @param $weblink_cat_index
      */
-    private function weblink_cat_breadcrumbs($weblink_cat_index) {
-
+    private function weblinkCatBreadcrumbs($weblink_cat_index) {
         /* Make an infinity traverse */
         function breadcrumb_arrays($index, $webid) {
             $crumb = [];
@@ -212,7 +210,7 @@ abstract class Weblinks extends WeblinksServer {
             return $crumb;
         }
 
-        // then we make a infinity recursive function to loop/break it out.
+        // then we make an infinity recursive function to loop/break it out.
         $crumb = breadcrumb_arrays($weblink_cat_index, $this->cat_id);
         $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.
@@ -233,8 +231,7 @@ abstract class Weblinks extends WeblinksServer {
         }
     }
 
-    protected function get_WeblinkQuery(array $filters = []) {
-
+    protected function getWeblinkQuery(array $filters = []) {
         return "SELECT w.*, wc.*
             FROM ".DB_WEBLINKS." AS w
             LEFT JOIN ".DB_WEBLINK_CATS." AS wc ON wc.weblink_cat_id = w.weblink_cat
@@ -242,7 +239,7 @@ abstract class Weblinks extends WeblinksServer {
             ".(multilang_table("WL") ? " AND ".in_group('w.weblink_language', LANGUAGE)." AND ".in_group('wc.weblink_cat_language', LANGUAGE) : "")."
             ".(!empty($filters['condition']) ? " AND ".$filters['condition'] : "")."
             GROUP BY w.weblink_id
-            ORDER BY ".$this->check_WeblinksFilter()."
+            ORDER BY ".$this->checkWeblinksFilter()."
             LIMIT ".($this->rowstart.",".(!empty($this->weblink_settings['links_per_page']) ? $this->weblink_settings['links_per_page'] : 15))."
         ";
     }
@@ -252,8 +249,7 @@ abstract class Weblinks extends WeblinksServer {
      * latest
      * most open
      */
-    private function check_WeblinksFilter() {
-
+    private function checkWeblinksFilter() {
         /* Filter Construct */
         $catfilter = "w.weblink_datestamp DESC";
 
@@ -282,8 +278,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @return array
      */
-    private static function get_WeblinksData(array $data) {
-
+    private static function getWeblinksData(array $data) {
         if (!empty($data)) {
             // Admin Informations
             $adminActions = [];
@@ -326,8 +321,7 @@ abstract class Weblinks extends WeblinksServer {
      *
      * @param $weblink_id
      */
-    public function set_WeblinkCount($weblink_id) {
-
+    public function setWeblinkCount($weblink_id) {
         $data = dbarray(dbquery("SELECT weblink_url, weblink_visibility FROM ".DB_WEBLINKS." WHERE weblink_id=:weblinkId", [':weblinkId' => $weblink_id]));
         if (checkgroup($data['weblink_visibility'])) {
             dbquery("UPDATE ".DB_WEBLINKS." SET weblink_count=weblink_count+1 WHERE weblink_id=:weblinkId", [':weblinkId' => $weblink_id]);

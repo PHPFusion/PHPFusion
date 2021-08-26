@@ -18,46 +18,30 @@
 defined('IN_FUSION') || exit;
 
 // Locales
-if (!defined("WEBLINK_LOCALE")) {
-    if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php")) {
-        define("WEBLINK_LOCALE", INFUSIONS."weblinks/locale/".LOCALESET."weblinks.php");
-    } else {
-        define("WEBLINK_LOCALE", INFUSIONS."weblinks/locale/English/weblinks.php");
-    }
-}
-
-if (!defined("WEBLINK_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php")) {
-        define("WEBLINK_ADMIN_LOCALE", INFUSIONS."weblinks/locale/".LOCALESET."weblinks_admin.php");
-    } else {
-        define("WEBLINK_ADMIN_LOCALE", INFUSIONS."weblinks/locale/English/weblinks_admin.php");
-    }
-}
+define('WEBLINK_LOCALE', fusion_get_inf_locale_path('weblinks.php', INFUSIONS.'weblinks/locale/'));
+define('WEBLINK_ADMIN_LOCALE', fusion_get_inf_locale_path('weblinks_admin.php', INFUSIONS.'weblinks/locale/'));
 
 // Paths
-if (!defined("WEBLINKS_CLASS")) {
-    define("WEBLINKS_CLASS", INFUSIONS."weblinks/classes/");
-}
+const WEBLINKS_CLASSES = INFUSIONS."weblinks/classes/";
 
 // Database
-if (!defined("DB_WEBLINK_CATS")) {
-    define("DB_WEBLINK_CATS", DB_PREFIX."weblink_cats");
-}
-if (!defined("DB_WEBLINKS")) {
-    define("DB_WEBLINKS", DB_PREFIX."weblinks");
-}
+const DB_WEBLINKS = DB_PREFIX."weblinks";
+const DB_WEBLINK_CATS = DB_PREFIX."weblink_cats";
 
 // Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("W", "<i class='admin-ico fa fa-fw fa-link'></i>");
 
 $inf_settings = get_settings('weblinks');
-if ((!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) && (!empty($inf_settings['links_submission_access']) && checkgroup($inf_settings['links_submission_access']))) {
+if (
+    (!empty($inf_settings['links_allow_submission']) && $inf_settings['links_allow_submission']) &&
+    (!empty($inf_settings['links_submission_access']) && checkgroup($inf_settings['links_submission_access']))
+) {
     \PHPFusion\Admins::getInstance()->setSubmitData('l', [
         'infusion_name' => 'weblinks',
         'link'          => INFUSIONS."weblinks/weblink_submit.php",
         'submit_link'   => "submit.php?stype=l",
         'submit_locale' => fusion_get_locale('271', LOCALE.LOCALESET."admin/main.php"),
         'title'         => fusion_get_locale('weblink_submit', WEBLINK_ADMIN_LOCALE),
-        'admin_link'    => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+        'admin_link'    => INFUSIONS."weblinks/weblinks_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
     ]);
 }

@@ -20,7 +20,7 @@ if (!defined('WEBLINKS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES.'templates/header.php';
-require_once WEBLINKS_CLASS."autoloader.php";
+require_once WEBLINKS_CLASSES."autoloader.php";
 require_once INFUSIONS."weblinks/templates/weblinks.tpl.php";
-PHPFusion\Weblinks\WeblinksServer::Weblinks()->display_weblink();
+PHPFusion\Weblinks\WeblinksServer::weblinks()->display_weblink();
 require_once THEMES.'templates/footer.php';

@@ -21,7 +21,7 @@ class WeblinksAdminModel extends WeblinksServer {
 
     private static $admin_locale = [];
 
-    public static function get_WeblinkAdminLocale() {
+    public static function getWeblinkAdminLocale() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE."English/admin/settings.php";
             if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {

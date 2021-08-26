@@ -39,7 +39,7 @@ class WeblinksServer {
         'weblink_items'      => []
     ];
 
-    public static function Weblinks() {
+    public static function weblinks() {
         if (self::$weblink_instance === NULL) {
             self::$weblink_instance = new WeblinksView();
         }
@@ -47,7 +47,7 @@ class WeblinksServer {
         return self::$weblink_instance;
     }
 
-    public static function WeblinksSubmit() {
+    public static function weblinksSubmit() {
         if (self::$weblink_submit_instance === NULL) {
             self::$weblink_submit_instance = new WeblinksSubmissions();
         }
@@ -55,7 +55,7 @@ class WeblinksServer {
         return self::$weblink_submit_instance;
     }
 
-    public static function WeblinksAdmin() {
+    public static function weblinksAdmin() {
         if (self::$weblink_admin_instance === NULL) {
             self::$weblink_admin_instance = new WeblinksAdminView();
         }
@@ -63,7 +63,7 @@ class WeblinksServer {
         return self::$weblink_admin_instance;
     }
 
-    public static function get_weblink_settings($key = NULL) {
+    public static function getWeblinkSettings($key = NULL) {
         if (empty(self::$weblink_settings)) {
             self::$weblink_settings = get_settings("weblinks");
         }
