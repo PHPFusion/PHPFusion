@@ -297,6 +297,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         echo "</tbody>\n";
         echo "</table>\n</div>";
     } else {
-        echo "<div class='well text-center m-t-20'>".$locale['download_0050']."</div>\n";
+        echo "<div class='well text-center'>".$locale['download_0050']."</div>\n";
     }
 }
