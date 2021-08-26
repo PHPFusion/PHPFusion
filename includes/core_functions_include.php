@@ -1966,6 +1966,19 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 }
 
 /**
+ * Get the locale file name for infusions
+ * @param        $locale_file
+ * @param        $locale_folder
+ * @param bool   $localeset_folder
+ * @param string $default_lang
+ *
+ * @return string
+ */
+function fusion_get_inf_locale_path($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English') {
+    return \PHPFusion\Locale::getInstance()->getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder, $default_lang);
+}
+
+/**
  * Fetch username by ID.
  *
  * @param int $user_id User ID.
