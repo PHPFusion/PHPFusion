@@ -23,6 +23,6 @@ if (!defined('MEMBER_POLL_PANEL_EXISTS')) {
 require_once THEMES.'templates/header.php';
 require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 
-MemberPoll::getInstance()->PollArchive();
+MemberPoll::getInstance()->pollsArchive();
 
 require_once THEMES.'templates/footer.php';

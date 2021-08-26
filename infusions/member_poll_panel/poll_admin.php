@@ -21,6 +21,6 @@ pageaccess('PO');
 require_once THEMES.'templates/admin_header.php';
 require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 
-MemberPoll::getInstance()->display_admin();
+MemberPoll::getInstance()->displayAdmin();
 
 require_once THEMES.'templates/footer.php';

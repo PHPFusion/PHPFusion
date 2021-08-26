@@ -42,25 +42,25 @@ class MemberPoll {
 
         switch ($action) {
             case 'delete':
-                self::delete_poll(get('poll_id'));
+                self::deletePoll(get('poll_id'));
                 break;
             case 'poll_add':
-                self::start_poll(get('poll_id'));
+                self::startPoll(get('poll_id'));
                 break;
             case 'poll_lock':
-                self::poll_lock(get('poll_id'));
+                self::pollLock(get('poll_id'));
                 break;
             case 'poll_unlock':
-                self::poll_unlock(get('poll_id'));
+                self::pollUnlock(get('poll_id'));
                 break;
             default:
                 break;
         }
 
-        self::set_polldb();
+        self::setPollDb();
         if (defined('ADMIN_PANEL')) {
             add_to_title(self::$locale['POLL_001']);
-            self::set_admin_polldb();
+            self::setAdminPollDb();
         }
     }
 
@@ -72,15 +72,15 @@ class MemberPoll {
         return self::$instance;
     }
 
-    private static function delete_poll($id) {
-        if (self::verify_poll($id)) {
+    private static function deletePoll($id) {
+        if (self::verifyPoll($id)) {
             dbquery("DELETE FROM ".DB_POLLS." WHERE poll_id='".(int)$id."'");
             addnotice('success', self::$locale['POLL_007']);
-            redirect(clean_request("", ["section=poll", "aid"], TRUE));
+            redirect(clean_request("", ["section=poll", "aid"]));
         }
     }
 
-    static function verify_poll($id) {
+    static function verifyPoll($id) {
         if (isnum($id)) {
             return dbcount("(poll_id)", DB_POLLS, "poll_id='".(int)$id."'");
         }
@@ -88,34 +88,33 @@ class MemberPoll {
         return FALSE;
     }
 
-    private static function start_poll($id) {
-        if (self::verify_poll($id)) {
+    private static function startPoll($id) {
+        if (self::verifyPoll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_started='".time()."' WHERE poll_id='".(int)$id."'");
             addnotice('success', self::$locale['POLL_008']);
-            redirect(clean_request("", ["section=poll", "aid"], TRUE));
+            redirect(clean_request("", ["section=poll", "aid"]));
         }
     }
 
-    private static function poll_lock($id) {
-        if (self::verify_poll($id)) {
+    private static function pollLock($id) {
+        if (self::verifyPoll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='".time()."' WHERE poll_id='".(int)$id."'");
 
             addnotice('success', self::$locale['POLL_009']);
-            redirect(clean_request("", ["section=poll", "aid"], TRUE));
+            redirect(clean_request("", ["section=poll", "aid"]));
         }
     }
 
-    private static function poll_unlock($id) {
-        if (self::verify_poll($id)) {
+    private static function pollUnlock($id) {
+        if (self::verifyPoll($id)) {
             dbquery("UPDATE ".DB_POLLS." SET poll_ended='0' WHERE poll_id='".(int)$id."'");
 
             addnotice('success', self::$locale['POLL_010']);
-            redirect(clean_request("", ["section=poll", "aid"], TRUE));
+            redirect(clean_request("", ["section=poll", "aid"]));
         }
     }
 
-    private function set_polldb() {
-
+    private function setPollDb() {
         $_poll_id = post("poll_id", FILTER_VALIDATE_INT);
 
         if (check_post("cast_vote") && check_post("check") && $_poll_id) {
@@ -157,7 +156,7 @@ class MemberPoll {
         }
     }
 
-    private function set_admin_polldb() {
+    private function setAdminPollDb() {
         if (check_post("save")) {
 
             $poll_opt = [];
@@ -185,18 +184,18 @@ class MemberPoll {
 
                 addnotice("success", $this->data['poll_id'] == 0 ? self::$locale['POLL_005'] : self::$locale['POLL_006']);
                 dbquery_insert(DB_POLLS, $this->data, ($this->data['poll_id'] == 0 ? "save" : "update"));
-                redirect(clean_request("", ["section=poll", "aid"], TRUE));
+                redirect(clean_request("", ["section=poll", "aid"]));
             }
 
             $this->data["poll_opt"] = $poll_option;
         }
     }
 
-    public function display_admin() {
+    public function displayAdmin() {
         add_breadcrumb(['link' => INFUSIONS.'member_poll_panel/poll_admin.php'.fusion_get_aidlink(), 'title' => self::$locale['POLL_001']]);
 
         if (check_post("cancel")) {
-            redirect(clean_request('section=poll', ['aid'], TRUE));
+            redirect(clean_request('section=poll', ['aid']));
         }
 
         $sections = in_array(get('section'), $this->allowed_section) ? get('section') : $this->allowed_section[0];
@@ -216,25 +215,31 @@ class MemberPoll {
         echo opentab($master_tab_title, $sections, "poll", TRUE, "nav-tabs", "section", ['rowstart', 'action', 'poll_id']);
         switch ($sections) {
             case "poll_vote":
-                $this->poll_form();
+                $this->pollForm();
                 break;
             default:
-                $this->poll_listing();
+                $this->pollListing();
                 break;
         }
         echo closetab();
         closetable();
     }
 
-    public function poll_form() {
+    public function pollForm() {
         fusion_confirm_exit();
 
         $this->data['poll_started'] = time();
 
         $_poll_id = get("poll_id", FILTER_VALIDATE_INT);
         if (get("action") === "edit" && $_poll_id) {
-            if (self::verify_poll($_poll_id)) {
-                $this->data = $this->_selectFormPoll($_poll_id);
+            if (self::verifyPoll($_poll_id)) {
+                $result = dbquery("SELECT poll_id, poll_title, poll_opt, poll_started, poll_ended, poll_visibility
+                    FROM ".DB_POLLS."
+                    WHERE poll_id='".(int)$_poll_id."'
+                ");
+                if (dbrows($result) > 0) {
+                    $this->data = dbarray($result);
+                }
 
                 $this->data['poll_title'] = unserialize(stripslashes($this->data['poll_title']));
                 $this->data['poll_opt'] = unserialize(stripslashes($this->data['poll_opt']));
@@ -256,8 +261,8 @@ class MemberPoll {
         }
 
         $opt_count = count($this->data['poll_opt']);
-        echo openform('addcat', 'post', FORM_REQUEST, ['class' => 'spacer-sm']);
-        echo "<div class='clearfix spacer-sm'>\n";
+        echo openform('addcat', 'post');
+        echo "<div class='clearfix m-b-20'>\n";
         echo form_button('addoption', self::$locale['POLL_050'], self::$locale['POLL_050'], [
             'class'    => 'btn-primary m-r-10',
             'inline'   => TRUE,
@@ -327,31 +332,18 @@ class MemberPoll {
         echo closeform();
     }
 
-    public function _selectFormPoll($id) {
-        $result = dbquery("SELECT poll_id, poll_title, poll_opt, poll_started, poll_ended, poll_visibility
-            FROM ".DB_POLLS."
-            WHERE poll_id='".(int)$id."'
-        ");
-        $list = [];
-        if (dbrows($result) > 0) {
-            $list = dbarray($result);
-        }
-
-        return $list;
-    }
-
-    public function poll_listing() {
+    public function pollListing() {
         $aidlink = fusion_get_aidlink();
         $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
         $rowstart = get_rowstart("rowstart", $total_rows);
-        $result = $this->_selectDB($rowstart);
+        $result = $this->selectDB($rowstart);
         $rows = dbrows($result);
 
         echo "<div class='clearfix'>\n";
-        echo "<span class='pull-right m-t-10'>".sprintf(self::$locale['POLL_011'], $rows, $total_rows)."</span>\n";
+        echo "<span class='pull-right'>".sprintf(self::$locale['POLL_011'], $rows, $total_rows)."</span>\n";
         echo "</div>\n";
 
-        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"], TRUE)."&amp;") : "";
+        echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&amp;") : "";
 
         if ($rows > 0) {
             echo "<div class='row m-t-20'>\n";
@@ -380,7 +372,7 @@ class MemberPoll {
                         $text .= "<p>".(!empty($inf) ? translate_lang_names($key).": ".$inf : $inf)."</p>\n";
                     }
                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
-                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
+                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100) : number_format(0 * 100));
                     echo progress_bar($opt_votes, $text);
                     echo "<p><strong>".$opt_votes."% [".(format_word($num_votes, self::$locale['POLL_040']))."]</strong></p>\n";
                 }
@@ -416,7 +408,7 @@ class MemberPoll {
         }
     }
 
-    public function _selectDB($rows) {
+    public function selectDB($rows) {
         return dbquery("SELECT poll_id, poll_title, poll_opt, poll_started, poll_ended, poll_visibility
             FROM ".DB_POLLS."
             WHERE ".groupaccess('poll_visibility')."
@@ -425,9 +417,9 @@ class MemberPoll {
         );
     }
 
-    public function DisplayPoll() {
+    public function displayPoll() {
 
-        $res = $this->_selectPoll();
+        $res = $this->selectPoll();
         if (!$res) {
             return;
         }
@@ -449,10 +441,10 @@ class MemberPoll {
         $render = [];
 
         if (!empty($data)) {
-            $data_user = checkgroup($data['poll_visibility']) && !empty($data['poll_title']) && ($data['poll_ended'] == 0 || $data['poll_ended'] > time()) ? $this->_selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $data['poll_id']) : TRUE;
+            $data_user = !(checkgroup($data['poll_visibility']) && !empty($data['poll_title']) && ($data['poll_ended'] == 0 || $data['poll_ended'] > time())) || $this->selectVote(fusion_get_userdata((iMEMBER ? 'user_id' : 'user_ip')), $data['poll_id']);
 
             if ($data_user == FALSE) {
-                $render['poll_table'][0]['max_vote'] = $this->_countVote("poll_id='".$data['poll_id']."'");
+                $render['poll_table'][0]['max_vote'] = $this->countVote("poll_id='".$data['poll_id']."'");
                 $render['poll_table'][0]['poll_title'] = $data['poll_title'];
 
                 foreach ($data['poll_option'] as $im1 => $data1) {
@@ -465,12 +457,12 @@ class MemberPoll {
 
             } else {
                 if (!empty($data['poll_title']) && $data['poll_started'] < time()) {
-                    $render['poll_table'][0]['max_vote'] = $this->_countVote("poll_id='".$data['poll_id']."'");
+                    $render['poll_table'][0]['max_vote'] = $this->countVote("poll_id='".$data['poll_id']."'");
                     $render['poll_table'][0]['poll_title'] = $data['poll_title'];
 
                     foreach ($data['poll_option'] as $im1 => $data1) {
-                        $num_votes = $this->_countVote("vote_opt='".$im1."' AND poll_id='".$data['poll_id']."'");
-                        $opt_votes = ($num_votes ? number_format(($num_votes / $render['poll_table'][0]['max_vote']) * 100, 0) : number_format(0 * 100, 0));
+                        $num_votes = $this->countVote("vote_opt='".$im1."' AND poll_id='".$data['poll_id']."'");
+                        $opt_votes = ($num_votes ? number_format(($num_votes / $render['poll_table'][0]['max_vote']) * 100) : number_format(0 * 100));
                         $render['poll_table'][0]['poll_option'][] = progress_bar($opt_votes, $data1);
                         $render['poll_table'][0]['poll_option'][] = $opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]";
                     }
@@ -494,7 +486,7 @@ class MemberPoll {
         }
     }
 
-    public function _selectPoll() {
+    public function selectPoll() {
         $result = dbquery("SELECT poll_id, poll_title, poll_opt, poll_started, poll_ended, poll_visibility
             FROM ".DB_POLLS."
             WHERE poll_id=COALESCE(
@@ -522,7 +514,7 @@ class MemberPoll {
         }
     }
 
-    public function _selectVote($user, $pollid) {
+    public function selectVote($user, $pollid) {
         $whr = iMEMBER ? "vote_user='".$user."'" : "vote_user_ip='".USER_IP."'";
         $result = dbquery("SELECT vote_id, vote_user, vote_opt, vote_user_ip, poll_id
             FROM ".DB_POLL_VOTES."
@@ -536,17 +528,17 @@ class MemberPoll {
         }
     }
 
-    public function _countVote($opt) {
+    public function countVote($opt) {
         return dbcount("(vote_id)", DB_POLL_VOTES, $opt);
     }
 
-    public function PollArchive() {
+    public function pollsArchive() {
         opentable(self::$locale['POLL_002']);
         add_to_title(self::$locale['POLL_002']);
 
         $total_rows = dbcount("(poll_id)", DB_POLLS, groupaccess('poll_visibility'));
         $rowstart = get_rowstart("rowstart", $total_rows);
-        $result = $this->_selectDB($rowstart);
+        $result = $this->selectDB($rowstart);
         $rows = dbrows($result);
 
         if ($rows > 0) {
@@ -567,7 +559,7 @@ class MemberPoll {
                 foreach ($poll_opt as $keys => $data1) {
                     $text = !empty($data1[LANGUAGE]) ? $data1[LANGUAGE] : "";
                     $num_votes = dbcount("(vote_opt)", DB_POLL_VOTES, "vote_opt='".$keys."' AND poll_id='".$data['poll_id']."'");
-                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100, 0) : number_format(0 * 100, 0));
+                    $opt_votes = ($num_votes ? number_format(($num_votes / $db_info) * 100) : number_format(0 * 100));
                     echo progress_bar($opt_votes, $text);
                     echo "<p><strong>".$opt_votes."% [".format_word($num_votes, self::$locale['POLL_040'])."]</strong></p>\n";
                 }

@@ -17,21 +17,14 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (!defined('DB_POLL_VOTES')) {
-    define("DB_POLL_VOTES", DB_PREFIX."poll_votes");
-}
-if (!defined('DB_POLLS')) {
-    define("DB_POLLS", DB_PREFIX."polls");
-}
+// Locales
+define('POLLS_LOCALE', fusion_get_inf_locale_path('polls.php', INFUSIONS.'member_poll_panel/locale/'));
 
-if (!defined("POLLS_LOCALE")) {
-    if (file_exists(INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php")) {
-        define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/".LOCALESET."polls.php");
-    } else {
-        define("POLLS_LOCALE", INFUSIONS."member_poll_panel/locale/English/polls.php");
-    }
-}
+// Database
+const DB_POLL_VOTES = DB_PREFIX."poll_votes";
+const DB_POLLS = DB_PREFIX."polls";
 
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");
 
 if (defined('MEMBER_POLL_PANEL_EXISTS')) {
