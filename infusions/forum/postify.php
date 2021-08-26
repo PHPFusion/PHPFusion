@@ -19,10 +19,10 @@ require_once __DIR__.'/../../maincore.php';
 if (!defined('FORUM_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once FORUM_CLASS."autoloader.php";
+require_once FORUM_CLASSES."autoloader.php";
 require_once THEMES.'templates/header.php';
 require_once INFUSIONS."forum/classes/mods.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates/forum.tpl.php";
-\PHPFusion\Forums\ForumServer::postify()->do_postify();
+\PHPFusion\Forums\ForumServer::postify()->doPostify();
 require_once THEMES.'templates/footer.php';

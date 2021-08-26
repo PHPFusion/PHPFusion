@@ -20,12 +20,6 @@ namespace PHPFusion\Forums\Post;
 use PHPFusion\Forums\ForumServer;
 
 class NewThread extends ForumServer {
-
-    /**
-     * Set user permission based on current forum configuration
-     *
-     * @param $forum_data
-     */
     private static $permissions = [];
     private static $locale = [];
     public $info = [];
@@ -37,16 +31,15 @@ class NewThread extends ForumServer {
     /**
      * New thread
      */
-    public function set_newThreadInfo() {
-
+    public function setNewThreadInfo() {
         $userdata = fusion_get_userdata();
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         // @todo: Reduce lines and optimize further
         if (iMEMBER) {
             add_breadcrumb(["link" => FORUM."index.php", "title" => self::$locale['forum_0000']]);
             // New thread directly to a specified forum
-            if (!empty($_GET['forum_id']) && isnum($_GET['forum_id']) && ForumServer::verify_forum($_GET['forum_id'])) {
+            if (!empty($_GET['forum_id']) && isnum($_GET['forum_id']) && ForumServer::verifyForum($_GET['forum_id'])) {
                 add_to_title(self::$locale['forum_0000'].self::$locale['global_201'].self::$locale['forum_0057']);
                 add_to_meta("description", self::$locale['forum_0000']);
 
@@ -336,7 +329,7 @@ class NewThread extends ForumServer {
                             ]),
                         'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                             [
-                                'options'     => parent::tag()->get_TagOpts(TRUE),
+                                'options'     => parent::tag()->getTagOpts(TRUE),
                                 'inner_width' => '100%',
                                 'multiple'    => TRUE,
                                 'delimiter'   => '.',
@@ -402,7 +395,7 @@ class NewThread extends ForumServer {
             } else {
                 /*
                  * Quick New Forum Posting.
-                 * Does not require to run permissions.
+                 * Does not require running permissions.
                  * Does not contain forum poll.
                  * Does not contain attachment
                  */
@@ -441,7 +434,7 @@ class NewThread extends ForumServer {
                     'post_id'         => 0, // auto insertion
                     'post_message'    => isset($_POST['post_message']) ? form_sanitizer($_POST['post_message'], '', 'post_message') : '',
                     'post_showsig'    => isset($_POST['post_showsig']),
-                    'post_smileys'    => !isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message']) ? FALSE : TRUE,
+                    'post_smileys'    => !(!isset($_POST['post_smileys']) || isset($_POST['post_message']) && preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $_POST['post_message'])),
                     'post_author'     => $userdata['user_id'],
                     'post_datestamp'  => time(),
                     'post_ip'         => USER_IP,
@@ -460,7 +453,7 @@ class NewThread extends ForumServer {
 
                     if (!flood_control('post_datestamp', DB_FORUM_POSTS, "post_author='".$userdata['user_id']."'")) {
 
-                        if (ForumServer::verify_forum($thread_data['forum_id'])) {
+                        if (ForumServer::verifyForum($thread_data['forum_id'])) {
 
                             $forum_data = dbarray(dbquery("SELECT f.*, f2.forum_name AS forum_cat_name
                             FROM ".DB_FORUMS." f
@@ -642,7 +635,7 @@ class NewThread extends ForumServer {
                     ]),
                     'tags_field'        => form_select('thread_tags[]', self::$locale['forum_tag_0100'], $thread_data['thread_tags'],
                         [
-                            'options'     => parent::tag()->get_TagOpts(TRUE),
+                            'options'     => parent::tag()->getTagOpts(TRUE),
                             'inner_width' => '100%',
                             'multiple'    => TRUE,
                             'delimiter'   => '.',
@@ -678,16 +671,21 @@ class NewThread extends ForumServer {
         }
     }
 
+    /**
+     * Set user permission based on current forum configuration
+     *
+     * @param array $forum_data
+     */
     private function setPermission($forum_data) {
         // Generate iMOD Constant
         $mods = $this->moderator();
-        $mods::define_forum_mods($forum_data);
+        $mods::defineForumMods($forum_data);
         unset($mods);
         // Access the forum
         self::$permissions['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access']));
         // Create new thread -- whether user has permission to create a thread
         self::$permissions['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE));
-        // Poll creation -- thread has not exist, therefore cannot be locked.
+        // Poll creation -- thread has not exists, therefore cannot be locked.
         self::$permissions['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE));
         self::$permissions['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach']));
         self::$permissions['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download']));
@@ -705,10 +703,7 @@ class NewThread extends ForumServer {
         return NULL;
     }
 
-    /**
-     * @return array
-     */
-    public function get_newThreadInfo() {
+    public function getNewThreadInfo() {
         return $this->info;
     }
 }

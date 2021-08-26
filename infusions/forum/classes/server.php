@@ -99,10 +99,12 @@ abstract class ForumServer {
      */
     private static $forum_rank_cache = NULL;
 
+    private $forum_access = FALSE;
+
     /**
      * @param string $type
      */
-    public static function get_ForumIcons($type = '') {
+    public static function getForumIcons($type = '') {
         if (isset(self::$forum_icons[$type])) {
             return self::$forum_icons[$type];
         }
@@ -115,7 +117,7 @@ abstract class ForumServer {
      *
      * @param array $icons
      */
-    public static function set_forumIcons(array $icons = []) {
+    public static function setForumIcons(array $icons = []) {
         self::$forum_icons = [
             'forum'    => !empty($icons['main']) ? $icons['main'] : 'fa fa-folder fa-fw',
             'thread'   => !empty($icons['thread']) ? $icons['thread'] : 'fa fa-chat-o fa-fw',
@@ -135,10 +137,8 @@ abstract class ForumServer {
 
     /**
      * Verify Forum ID
-     *
-     * @param $forum_id
      */
-    public static function verify_forum($forum_id) {
+    public static function verifyForum($forum_id) {
         if (isnum($forum_id)) {
             return dbcount("('forum_id')", DB_FORUMS, "forum_id='".$forum_id."' AND ".groupaccess('forum_access')." ");
         }
@@ -146,24 +146,22 @@ abstract class ForumServer {
         return FALSE;
     }
 
-    private $forum_access = FALSE;
-
     /**
      * Check all forum access
      *
-     * @param     $forum_index
-     * @param int $forum_id
-     * @param int $thread_id
-     * @param int $user_id - if provided with user_id, to check against that user
+     * @param mixed $forum_index
+     * @param int   $forum_id
+     * @param int   $thread_id
+     * @param int   $user_id if provided with user_id, to check against that user
      *
      * Breaks the check and returns true for Super Administrator
      * You need to define either forum id or thread id when accessing this function
-     * This function is non-dependent on GET against tampering (bot access)
+     * is non-dependent on GET against tampering (bot access)
      *
      * @return bool
      * @throws \Exception
      */
-    protected function check_forum_access($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
+    protected function checkForumAccess($forum_index, $forum_id = 0, $thread_id = 0, $user_id = 0) {
         if (iSUPERADMIN) {
             $this->forum_access = TRUE;
 
@@ -212,9 +210,9 @@ abstract class ForumServer {
      *
      * @return string HTML source of forum rank images
      */
-    public static function show_forum_rank($posts, $level, $groups) {
+    public static function showForumRank($posts, $level, $groups) {
 
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         $ranks = [];
 
@@ -224,7 +222,7 @@ abstract class ForumServer {
 
         $image = ($forum_settings['forum_rank_style'] == 1);
 
-        $forum_rank_cache = self::forum_rank_cache();
+        $forum_rank_cache = self::forumRankCache();
 
         $forum_rank_css_class = [
             USER_LEVEL_MEMBER      => 'label-member',
@@ -320,7 +318,7 @@ abstract class ForumServer {
      *
      * @return array|bool|mixed|null
      */
-    public static function get_forum_settings($key = NULL) {
+    public static function getForumSettings($key = NULL) {
         if (empty(self::$forum_settings)) {
             self::$forum_settings = get_settings('forum');
         }
@@ -333,9 +331,9 @@ abstract class ForumServer {
      *
      * @return array
      */
-    public static function forum_rank_cache() {
+    public static function forumRankCache() {
 
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         $known_types = [
             0 => 'post',
@@ -372,11 +370,11 @@ abstract class ForumServer {
      *
      * @param $thread_id
      *
-     * @return bool|string
+     * @return bool|int
      */
-    public static function verify_thread($thread_id) {
+    public static function verifyThread($thread_id) {
         if (isnum($thread_id)) {
-            return (bool)dbcount("('forum_id')", DB_FORUM_THREADS, "thread_id='".$thread_id."'");
+            return dbcount("('forum_id')", DB_FORUM_THREADS, "thread_id='".$thread_id."'");
         }
 
         return FALSE;
@@ -387,11 +385,11 @@ abstract class ForumServer {
      *
      * @param $post_id
      *
-     * @return bool|string
+     * @return bool|int
      */
-    public static function verify_post($post_id) {
+    public static function verifyPost($post_id) {
         if (isnum($post_id)) {
-            return (bool)dbcount("('post_id')", DB_FORUM_POSTS, "post_id='".$post_id."'");
+            return dbcount("('post_id')", DB_FORUM_POSTS, "post_id='".$post_id."'");
         }
 
         return FALSE;
@@ -402,10 +400,10 @@ abstract class ForumServer {
      *
      * @param int $forum_id - all if 0.
      *
-     * @return mixed
+     * @return array
      */
-    public static function get_recentTopics($forum_id = 0) {
-        $forum_settings = self::get_forum_settings();
+    public static function getRecentTopics($forum_id = 0) {
+        $forum_settings = self::getForumSettings();
         $result = dbquery("SELECT tt.*, tf.*, tp.post_id, tp.post_datestamp,
             u.user_id, u.user_name as last_user_name, u.user_status as last_user_status, u.user_avatar as last_user_avatar,
             uc.user_id AS s_user_id, uc.user_name AS author_name, uc.user_status AS author_status, uc.user_avatar AS author_avatar,
@@ -424,7 +422,7 @@ abstract class ForumServer {
         if ($info['rows'] > 0) {
             // need to throw moderator as an object
             while ($data = dbarray($result)) {
-                $data['moderators'] = Moderator::parse_forum_mods($data['forum_mods']);
+                $data['moderators'] = Moderator::parseForumMods($data['forum_mods']);
                 $info['item'][$data['thread_id']] = $data;
             }
         }
@@ -474,7 +472,7 @@ abstract class ForumServer {
         if (self::$forum_instance === NULL) {
             self::$forum_instance = new Forum();
             if ($set_info == TRUE) {
-                self::$forum_instance->set_ForumInfo();
+                self::$forum_instance->setForumInfo();
             }
         }
 
@@ -494,7 +492,7 @@ abstract class ForumServer {
             self::$tag_instance = new ThreadTags();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
-                self::$tag_instance->set_TagInfo($set_title);
+                self::$tag_instance->setTagInfo($set_title);
             }
         }
 
@@ -513,7 +511,7 @@ abstract class ForumServer {
             self::$thread_instance = new Threads\ForumThreads();
             if ($set_info == TRUE) {
                 require_once INCLUDES."mimetypes_include.php";
-                self::$thread_instance->set_threadInfo();
+                self::$thread_instance->setThreadInfo();
             }
         }
 
@@ -527,11 +525,11 @@ abstract class ForumServer {
      *
      * @return null|NewThread
      */
-    public static function new_thread($set_info = TRUE) {
+    public static function newThread($set_info = TRUE) {
         if (self::$new_thread_instance === NULL) {
             self::$new_thread_instance = new NewThread();
             if ($set_info == TRUE) {
-                self::$new_thread_instance->set_newThreadInfo();
+                self::$new_thread_instance->setNewThreadInfo();
             }
         }
 
@@ -565,7 +563,7 @@ abstract class ForumServer {
      * @param array $forum_index - requires a dbquery_tree() output
      * @param int   $forum_id
      */
-    function forum_breadcrumbs(array $forum_index, $forum_id = 0) {
+    function forumBreadcrumbs(array $forum_index, $forum_id = 0) {
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
         if (empty($forum_id)) {
@@ -595,7 +593,7 @@ abstract class ForumServer {
             return $crumb;
         }
 
-        // then we make a infinity recursive function to loop/break it out.
+        // then we make an infinity recursive function to loop/break it out.
         $crumb = forum_breadcrumb_arrays($forum_index, $forum_id);
         $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
         // then we sort in reverse.

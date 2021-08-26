@@ -20,12 +20,12 @@ if (!defined('FORUM_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 require_once THEMES.'templates/header.php';
-require_once FORUM_CLASS."autoloader.php";
+require_once FORUM_CLASSES."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 require_once INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/templates/forum.tpl.php";
 
-$info = \PHPFusion\Forums\ForumServer::Tag(TRUE, TRUE)->get_TagInfo();
+$info = \PHPFusion\Forums\ForumServer::Tag(TRUE, TRUE)->getTagInfo();
 display_forum_tags($info);
 
 require_once THEMES.'templates/footer.php';

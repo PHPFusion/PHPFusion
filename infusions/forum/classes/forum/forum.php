@@ -37,9 +37,8 @@ class Forum extends ForumServer {
     /**
      * Executes forum
      */
-    public function set_ForumInfo() {
-
-        $forum_settings = self::get_forum_settings();
+    public function setForumInfo() {
+        $forum_settings = self::getForumSettings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
 
@@ -149,15 +148,15 @@ class Forum extends ForumServer {
 
                     // @todo: turn this into ajax filtration to cut down SEO design pattern
                     // This is the thread filtration pattern, and therefore should go to the thread class , not the forum class.
-                    $this->forum_info['filter'] = self::filter()->get_FilterInfo();
+                    $this->forum_info['filter'] = self::filter()->getFilterInfo();
 
                     // this is the current forum data
                     $this->forum_info = array_merge($this->forum_info, dbarray($result));
 
                     //if ($this->forum_info['forum_type'] == 1) redirect(FORUM.'index.php');
 
-                    $this->forum_info['forum_moderators'] = Moderator::parse_forum_mods($this->forum_info['forum_mods']);
-                    Moderator::define_forum_mods($this->forum_info);
+                    $this->forum_info['forum_moderators'] = Moderator::parseForumMods($this->forum_info['forum_mods']);
+                    Moderator::defineForumMods($this->forum_info);
                     $this->setForumPermission($this->forum_info);
 
                     $this->forum_info['thread_count'] = dbcount("(thread_id)", DB_FORUM_THREADS, "forum_id=:forum_id", [':forum_id' => $this->forum_info['forum_id']]);
@@ -191,7 +190,7 @@ class Forum extends ForumServer {
                      */
 
                     // Generate forum breadcrumbs
-                    $this->forum_breadcrumbs($this->forum_info['forum_index'], $this->forum_info['forum_id']);
+                    $this->forumBreadcrumbs($this->forum_info['forum_index'], $this->forum_info['forum_id']);
 
                     // Generate New thread link
                     if ($this->getForumPermission("can_post") && $this->forum_info['forum_type'] > 1) {
@@ -275,7 +274,7 @@ class Forum extends ForumServer {
                                 }
                                 break;
                             case 'activity':
-                                // Fetch latest activity in this forum sort by the latest posts.
+                                // Fetch the latest activity in this forum sort by the latest posts.
                                 $this->forum_info['item'] = [];
                                 $this->forum_info['pagenav'] = '';
                                 if ($this->forum_info['thread_count']) {
@@ -409,8 +408,8 @@ class Forum extends ForumServer {
                          *
                          * @todo: Make a new template, use Jquery to cut out loading time.
                          */
-                        $filter_sql = $this->filter()->get_filterSQL();
-                        $thread_info = $this->thread(FALSE)->get_forum_thread($this->forum_info['forum_id'],
+                        $filter_sql = $this->filter()->getFilterSql();
+                        $thread_info = $this->thread(FALSE)->getForumThread($this->forum_info['forum_id'],
                             [
                                 'condition' => $filter_sql['condition'],
                                 'order'     => $filter_sql['order'],
@@ -427,7 +426,7 @@ class Forum extends ForumServer {
                     redirect(FORUM.'index.php');
                 }
             } else {
-                $this->forum_info['forums'] = self::get_forum(); //Index view
+                $this->forum_info['forums'] = self::getForum(); //Index view
             }
         }
 
@@ -436,14 +435,14 @@ class Forum extends ForumServer {
     /**
      * Set user permission based on current forum configuration
      *
-     * @param $forum_data
+     * @param array $forum_data
      */
     public function setForumPermission($forum_data) {
         // Access the forum
         $this->forum_info['permissions']['can_access'] = (iMOD || checkgroup($forum_data['forum_access']));
         // Create new thread -- whether user has permission to create a thread
         $this->forum_info['permissions']['can_post'] = (iMOD || (checkgroup($forum_data['forum_post']) && $forum_data['forum_lock'] == FALSE));
-        // Poll creation -- thread has not exist, therefore cannot be locked.
+        // Poll creation -- thread has not exists, therefore cannot be locked.
         $this->forum_info['permissions']['can_create_poll'] = $forum_data['forum_allow_poll'] == TRUE && (iMOD || (checkgroup($forum_data['forum_poll']) && $forum_data['forum_lock'] == FALSE));
         $this->forum_info['permissions']['can_upload_attach'] = $forum_data['forum_allow_attach'] == TRUE && (iMOD || checkgroup($forum_data['forum_attach']));
         $this->forum_info['permissions']['can_download_attach'] = iMOD || ($forum_data['forum_allow_attach'] == TRUE && checkgroup($forum_data['forum_attach_download']));
@@ -476,9 +475,9 @@ class Forum extends ForumServer {
      *
      * @return array
      */
-    public static function get_forum($forum_id = FALSE, $branch_id = FALSE) {
+    public static function getForum($forum_id = FALSE, $branch_id = FALSE) {
 
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
         $index = [];
@@ -560,22 +559,22 @@ class Forum extends ForumServer {
                 $forum_match = "\\|".$data['thread_lastpost']."\\|".$data['forum_id'];
                 $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
                 if ($data['thread_lastpost'] > $last_visited) {
-                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\\.|{$forum_match}$)", $userdata['user_threads']))) {
-                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+                    if (iMEMBER && ($data['thread_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\\.|$forum_match$)", $userdata['user_threads']))) {
+                        $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
                     }
                 }
             }
 
             // Icons
             $type_icon = [
-                '1' => self::get_forumIcons('forum'),
-                '2' => self::get_forumIcons('thread'),
-                '3' => self::get_forumIcons('link'),
-                '4' => self::get_forumIcons('question')
+                '1' => self::getForumIcons('forum'),
+                '2' => self::getForumIcons('thread'),
+                '3' => self::getForumIcons('link'),
+                '4' => self::getForumIcons('question')
             ];
 
             $row = array_merge($row, $data, [
-                "forum_moderators"       => Moderator::parse_forum_mods($data['forum_mods']),
+                "forum_moderators"       => Moderator::parseForumMods($data['forum_mods']),
                 "forum_new_status"       => $newStatus,
                 "forum_link"             => [
                     "link"  => INFUSIONS."forum/index.php?viewforum&forum_id=".$data['forum_id'],
@@ -603,7 +602,7 @@ class Forum extends ForumServer {
     }
 
     public function getSubForums($forum_id) {
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
         $userdata = fusion_get_userdata();
         $locale = fusion_get_locale();
 
@@ -646,17 +645,17 @@ class Forum extends ForumServer {
                     $forum_match = "\|".$row['forum_lastpost']."\|".$row['forum_id'];
                     $last_visited = (isset($userdata['user_lastvisit']) && isnum($userdata['user_lastvisit'])) ? $userdata['user_lastvisit'] : time();
                     if ($row['forum_lastpost'] > $last_visited) {
-                        if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\.|{$forum_match}$)", $userdata['user_threads']))) {
-                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::get_forumIcons('new')."'></i></span>";
+                        if (iMEMBER && ($row['forum_lastuser'] !== $userdata['user_id'] || !preg_match("($forum_match\.|$forum_match$)", $userdata['user_threads']))) {
+                            $newStatus = "<span class='forum-new-icon'><i title='".$locale['forum_0260']."' class='".self::getForumIcons('new')."'></i></span>";
                         }
                     }
 
                     // Icons
                     $type_icon = [
-                        '1' => self::get_forumIcons('forum'),
-                        '2' => self::get_forumIcons('thread'),
-                        '3' => self::get_forumIcons('link'),
-                        '4' => self::get_forumIcons('question')
+                        '1' => self::getForumIcons('forum'),
+                        '2' => self::getForumIcons('thread'),
+                        '3' => self::getForumIcons('link'),
+                        '4' => self::getForumIcons('question')
                     ];
 
                     // Calculate lastpost information
@@ -723,7 +722,7 @@ class Forum extends ForumServer {
 
                     $_row = array_merge($row_array, $row, [
                         "forum_type"             => $row['forum_type'],
-                        "forum_moderators"       => Moderator::parse_forum_mods($row['forum_mods']), //// display forum moderators per forum.
+                        "forum_moderators"       => Moderator::parseForumMods($row['forum_mods']), //// display forum moderators per forum.
                         "forum_new_status"       => $newStatus,
                         "forum_link"             => [
                             "link"  => FORUM."index.php?viewforum&forum_id=".$row['forum_id'],

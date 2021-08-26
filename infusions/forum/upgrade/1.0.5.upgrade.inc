@@ -426,7 +426,7 @@ if (db_exists(DB_FORUM_POSTS)) {
 
 // Move all forum attachments
 if (is_dir(BASEDIR."forum/attachments/")) {
-    $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php", TRUE);
+    $attachment_files = makefilelist(BASEDIR."forum/attachments/", ".|..|index.php");
     foreach ($attachment_files as $file) {
         fusion_rename(BASEDIR."forum/attachments/".$file, INFUSIONS."forum/attachments/".$file);
     }
@@ -436,7 +436,7 @@ if (is_dir(BASEDIR."forum/attachments/")) {
 }
 
 if (is_dir(IMAGES."ranks/")) {
-    $files = makefilelist(IMAGES."ranks/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."ranks/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."ranks/".$file, INFUSIONS."forum/ranks/".$file);
     }

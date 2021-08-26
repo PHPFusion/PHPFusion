@@ -34,7 +34,7 @@ class Postify_Vote extends Forum_Postify {
         $thread_id = get('thread_id', FILTER_VALIDATE_INT);
         $post_id = get('post_id', FILTER_VALIDATE_INT);
 
-        // I'm voting. so i need the vote id.
+        // I'm voting. so I need the vote id.
         $thread_data = dbarray(dbquery("SELECT
               p.post_id, p.post_author,
               t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, t.thread_locked,
@@ -50,12 +50,12 @@ class Postify_Vote extends Forum_Postify {
         ));
 
         if (!empty($thread_data)) {
-            Moderator::define_forum_mods($thread_data);
-            // i can upvote as many post but each post only once.
+            Moderator::defineForumMods($thread_data);
+            // I can upvote as many post but each post only once.
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
 
-            if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
+            if ($this->checkForumAccess($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
                 $d = [
                     'forum_id'       => $thread_data['forum_id'],
                     'thread_id'      => $thread_data['thread_id'],

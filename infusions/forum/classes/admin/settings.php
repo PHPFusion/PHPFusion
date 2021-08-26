@@ -43,23 +43,23 @@ class ForumAdminSettings extends ForumAdminInterface {
         $tab['title']['general'] = self::$locale['forum_137'];
         $tab['id']['general'] = 'general';
         /**
-         * @uses ForumAdminSettings::display_general_settings();
+         * @uses ForumAdminSettings::displayGneralSettings();
          */
-        $tab['callback']['general'] = 'display_general_settings';
+        $tab['callback']['general'] = 'displayGneralSettings';
 
         $tab['title']['post'] = self::$locale['forum_138'];
         $tab['id']['post'] = 'post';
         /**
-         * @uses ForumAdminSettings::display_post_settings();
+         * @uses ForumAdminSettings::displayPostSettings();
          */
-        $tab['callback']['post'] = 'display_post_settings';
+        $tab['callback']['post'] = 'displayPostSettings';
 
         $tab['title']['ufields'] = self::$locale['forum_139'];
         $tab['id']['ufields'] = 'ufields';
         /**
-         * @uses ForumAdminSettings::display_uf_settings();
+         * @uses ForumAdminSettings::displayUfSettings();
          */
-        $tab['callback']['ufields'] = 'display_uf_settings';
+        $tab['callback']['ufields'] = 'displayUfSettings';
 
         $_GET['ref'] = (isset($_GET['ref']) && method_exists($this, $tab['callback'][$_GET['ref']]) ? $_GET['ref'] : 'general');
 
@@ -69,9 +69,9 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo closetab();
     }
 
-    private function display_uf_settings() {
+    private function displayUfSettings() {
 
-        $_enabled = self::get_forum_settings('forum_enabled_userfields');
+        $_enabled = self::getForumSettings('forum_enabled_userfields');
 
         if (isset($_POST['save_forum_uf'])) {
             $current_uf = !empty($_POST['uf_field_enabled']) ? form_sanitizer($_POST['uf_field_enabled'], '', 'uf_field_enabled') : '';
@@ -92,7 +92,7 @@ class ForumAdminSettings extends ForumAdminInterface {
             $enabled_uf = array_flip($enabled_uf);
         }
         ?>
-        <div class='well spacer-sm'>
+        <div class='well'>
             <?php echo str_replace(['[LINK]', '[/LINK]'],
                 ["<a href='".ADMIN."user_fields.php".fusion_get_aidlink()."'>", "</a>"], self::$locale['forum_150']);
             ?>
@@ -138,7 +138,6 @@ class ForumAdminSettings extends ForumAdminInterface {
                                                 $var_file = INCLUDES.'user_fields/'.$cdata['field_name'].'_include_var.php';
                                                 if (file_exists($locale_file) && file_exists($var_file)) {
                                                     $user_field_name = '';
-                                                    // after that i need to include the file.
                                                     include $var_file;
                                                 }
                                                 $current_field_title = (!empty($user_field_name) ? $user_field_name : self::$locale['na']);
@@ -166,10 +165,11 @@ class ForumAdminSettings extends ForumAdminInterface {
             </div>
             <?php
         }
+        echo form_button('save_forum_uf', self::$locale['save_changes'], 'save_forum_uf', ['class' => 'btn-success m-r-5', 'input_id' => 'btn_bottom']);
         echo closeform();
     }
 
-    private function display_general_settings() {
+    private function displayGneralSettings() {
 
         if (isset($_POST['save_forum_settings'])) {
             $inputArray = [
@@ -207,11 +207,11 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         }
 
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
         $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
-        <div class='well spacer-sm'>
+        <div class='well'>
             <strong><?php echo self::$locale['forum_description'] ?></strong>
         </div>
         <?php
@@ -219,9 +219,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         echo openform('forum_uf_settings_frm', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         ?>
         <div class='clearfix'>
-            <?php echo form_button('save_forum_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']);
-            echo form_button('recount_user_post', self::$locale['523'], '1');
-            ?>
+            <?php echo form_button('save_forum_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5']); ?>
         </div>
         <hr/>
         <div class='row'>
@@ -340,10 +338,12 @@ class ForumAdminSettings extends ForumAdminInterface {
             </div>
         </div>
         <?php
+
+        echo form_button('save_forum_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5', 'input_id' => 'btn_bottom']);
         echo closeform();
     }
 
-    private function display_post_settings() {
+    private function displayPostSettings() {
 
         if (isset($_POST['save_forum_post_settings'])) {
             $inputArray = [
@@ -373,12 +373,12 @@ class ForumAdminSettings extends ForumAdminInterface {
 
         }
 
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         $yes_no_array = ['1' => self::$locale['yes'], '0' => self::$locale['no']];
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
-        <div class='well spacer-sm'>
+        <div class='well'>
             <strong><?php echo self::$locale['forum_description'] ?></strong>
         </div>
         <?php
@@ -519,6 +519,7 @@ class ForumAdminSettings extends ForumAdminInterface {
             </div>
         </div>
         <?php
+        echo form_button('save_forum_post_settings', self::$locale['save_changes'], 'save_forum_settings', ['class' => 'btn-success m-r-5', 'input_id' => 'btn_bottom']);
         echo closeform();
     }
 }

@@ -24,7 +24,6 @@ namespace PHPFusion\Forums\Threads;
  * @package PHPFusion\Forums\Threads
  */
 class Poll {
-
     /**
      * Permissions for Forum Poll
      *
@@ -39,23 +38,13 @@ class Poll {
      */
     private static $data = [];
 
-    /**
-     * @var array
-     * openform         the oepn form tag and request url action link
-     * closeform        the closing form tag
-     * edit_button      ['title'] title of the button ['link'] edit url of the button
-     * delete_button    same as above but for delete action
-     * post_button      the post button
-     * content          ['value'] - the option choice count, ['title'] - the title of the poll option, ['output'] - the
-     * field/value
-     */
     private static $poll_info = [
-        'openform'      => '',
-        'closeform'     => '',
-        'edit_button'   => '',
-        'delete_button' => '',
-        'post_button'   => '',
-        'content'       => [],
+        'openform'      => '', // the oepn form tag and request url action link
+        'closeform'     => '', // the closing form tag
+        'edit_button'   => '', // ['title'] title of the button ['link'] edit url of the button
+        'delete_button' => '', // same as above but for delete action
+        'post_button'   => '', // the post button
+        'content'       => [], // ['value'] - the option choice count, ['title'] - the title of the poll option, ['output'] - the
     ];
 
     /**
@@ -72,8 +61,8 @@ class Poll {
      */
     public function __construct(array $thread_info) {
         self::$locale = fusion_get_locale('', FORUM_LOCALE);
-        self::set_poll_permissions($thread_info['permissions']);
-        self::set_thread_data($thread_info['thread']);
+        self::setPollPermissions($thread_info['permissions']);
+        self::setThreadData($thread_info['thread']);
     }
 
     /**
@@ -81,14 +70,14 @@ class Poll {
      *
      * @param array $thread_info
      */
-    private static function set_poll_permissions(array $thread_info) {
+    private static function setPollPermissions(array $thread_info) {
         self::$permissions = $thread_info;
     }
 
     /**
      * @param array $thread_data
      */
-    private static function set_thread_data(array $thread_data) {
+    private static function setThreadData(array $thread_data) {
         self::$data = $thread_data;
     }
 
@@ -100,13 +89,12 @@ class Poll {
      * @template display_forum_pollform
      * @throws \Exception
      */
-    public static function render_poll_form($edit = FALSE) {
-
-        $access_admin = $edit ? self::get_poll_permissions("can_edit_poll") : self::get_poll_permissions(
+    public static function renderPollForm($edit = FALSE) {
+        $access_admin = $edit ? self::getPollPermissions("can_edit_poll") : self::getPollPermissions(
             "can_create_poll"
         );
 
-        if ($access_admin === TRUE) { // if permitted to create new poll.
+        if ($access_admin === TRUE) { // if permitted creating new poll.
 
             $locale = self::$locale;
 
@@ -343,11 +331,11 @@ class Poll {
     /**
      * Fetches Permissions Settings
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    private static function get_poll_permissions($key) {
+    private static function getPollPermissions($key) {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 
@@ -356,8 +344,8 @@ class Poll {
      *
      * @return array
      */
-    public static function get_poll_info() {
-        return (array)self::$poll_info;
+    public static function getPollInfo() {
+        return self::$poll_info;
     }
 
     /**
@@ -367,13 +355,12 @@ class Poll {
      *
      * @return string
      */
-    public function generate_poll(array $thread_data) {
-
+    public function generatePoll(array $thread_data) {
         $locale = self::$locale;
 
         $html = '';
 
-        if (self::get_poll_permissions("can_access") && $thread_data['thread_poll'] == TRUE) {
+        if (self::getPollPermissions("can_access") && $thread_data['thread_poll'] == TRUE) {
 
             $poll_query = "
             SELECT poll_opts.*, poll.forum_poll_title, poll.forum_poll_votes
@@ -400,9 +387,9 @@ class Poll {
 
                 if (!empty($poll)) {
 
-                    $can_vote_poll = self::get_poll_permissions('can_vote_poll');
+                    $can_vote_poll = self::getPollPermissions('can_vote_poll');
                     //var_dump($can_vote_poll);
-                    $can_edit_poll = self::get_poll_permissions('can_edit_poll');
+                    $can_edit_poll = self::getPollPermissions('can_edit_poll');
                     //var_dump($can_edit_poll);
 
                     self::$poll_info['poll_title'] = $poll['forum_poll_title'];
@@ -496,7 +483,7 @@ class Poll {
                         self::$poll_info['poll_options'] = $poll['forum_poll_options'];
 
                         foreach ($poll['forum_poll_options'] as $poll_option) {
-                            if (self::get_poll_permissions("can_vote_poll") == TRUE) {
+                            if (self::getPollPermissions("can_vote_poll") == TRUE) {
                                 self::$poll_info['content'][$i] = [
                                     'value'  => $i,
                                     'title'  => $poll_option['forum_poll_option_text'],
@@ -528,14 +515,14 @@ class Poll {
             }
         }
 
-        return (string)$html;
+        return $html;
     }
 
     /**
      * Executes poll deletion
      */
-    public function delete_poll() {
-        if (!empty(self::$data['thread_poll']) && $this->get_poll_permissions("can_edit_poll")) {
+    public function deletePoll() {
+        if (!empty(self::$data['thread_poll']) && $this->getPollPermissions("can_edit_poll")) {
             if (fusion_safe()) {
                 dbquery("DELETE FROM ".DB_FORUM_POLLS." WHERE thread_id='".self::$data['thread_id']."'");
                 dbquery("DELETE FROM ".DB_FORUM_POLL_OPTIONS." WHERE thread_id='".self::$data['thread_id']."'");
@@ -552,5 +539,4 @@ class Poll {
             INFUSIONS."forum/viewthread.php?forum_id=".self::$data['forum_id']."&amp;thread_id=".self::$data['thread_id']
         );
     }
-
 }

@@ -51,7 +51,7 @@ if (!function_exists('render_forum')) {
             forum_newtopic();
         }
 
-        $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->get_TagInfo();
+        $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->getTagInfo();
 
         if (!empty($thread_tags['tags'])) {
             echo '<h4>'.$locale['forum_0272'].'</h4>';
@@ -171,7 +171,7 @@ if (!function_exists('render_forum_main')) {
 if (!function_exists('render_forum_item')) {
     function render_forum_item($data) {
         $locale = fusion_get_locale();
-        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
+        $forum_settings = \PHPFusion\Forums\ForumServer::getForumSettings();
 
         echo '<div id="forum_'.$data['forum_id'].'">';
         echo '<div class="pull-left forum_icon">';
@@ -1128,7 +1128,7 @@ if (!function_exists('render_thread')) {
 if (!function_exists('render_post_item')) {
     function render_post_item($data, $i = 0) {
         $locale = fusion_get_locale();
-        $forum_settings = \PHPFusion\Forums\ForumServer::get_forum_settings();
+        $forum_settings = \PHPFusion\Forums\ForumServer::getForumSettings();
 
         echo '<!-- forum-thread-prepost-'.$data['marker']['id'].' -->';
         echo '<div class="post-item m-t-20" id="'.$data['marker']['id'].'">';

@@ -40,7 +40,7 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', FUSIO
         'stacked' => form_button('go', $locale['go'], $locale['go'], ['class' => 'btn-default']),
     ]).closeform();
 
-$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
+$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->getForumThread(0,
     [
         "count_query" => "
         SELECT t.thread_id

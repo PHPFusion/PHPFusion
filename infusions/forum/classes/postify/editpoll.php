@@ -31,9 +31,9 @@ class Postify_Editpoll extends Forum_Postify {
         add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0612']]);
         render_postify([
             'title'       => self::$locale['forum_0612'],
-            'error'       => $this->get_postify_error_message(),
+            'error'       => $this->getPostifyErrorMessage(),
             'description' => self::$locale['forum_0547'],
-            'link'        => $this->get_postify_uri()
+            'link'        => $this->getPostifyUri()
         ]);
     }
 }

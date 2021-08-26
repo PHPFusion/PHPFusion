@@ -36,7 +36,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         pageaccess('F');
 
-        echo "<div class='well m-t-15'>".self::$locale['forum_tag_0101']."</div>\n";
+        echo "<div class='well'>".self::$locale['forum_tag_0101']."</div>\n";
         $tag_pages = ["tag_list", "tag_form"];
 
         if (isset($_GET['ref']) && $_GET['ref'] == "back") {
@@ -81,7 +81,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         $language_opts = fusion_get_enabled_languages();
 
-        $this->post_tags();
+        $this->postTags();
 
         $form_action = clean_request("section=ft&ref=tag_form", ["tag_id", "ref"], FALSE);
 
@@ -156,7 +156,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
     }
 
-    protected function post_tags() {
+    protected function postTags() {
 
         if (isset($_POST['save_tag'])) {
 

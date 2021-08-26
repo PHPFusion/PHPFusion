@@ -41,8 +41,8 @@ $this->forum_info['threads_time_filter'] = openform('filter_form', 'post', FUSIO
         'stacked' => form_button('go', $locale['go'], $locale['go'], ['class' => 'btn-default']),
     ]).closeform();
 
-// Select the latest threads - LATEST THREADS, meaning you need a thread that is the latest.
-$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
+// Select the latest threads, meaning you need a thread that is the latest.
+$threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->getForumThread(0,
     [
         "count_query" => "SELECT t.thread_id
         FROM ".DB_FORUM_THREADS." t
@@ -59,4 +59,3 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->get_forum_thread(0,
     ]
 );
 $this->forum_info = array_merge_recursive($this->forum_info, $threads);
-//showBenchmark(TRUE);

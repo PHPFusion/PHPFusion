@@ -33,14 +33,29 @@ class Forum_Bounty extends ForumServer {
      */
     private static $permissions = [];
     private static $data = [];
+    private static $bounty_end = '';
+    private static $locale = [];
+    private static $post_data = [];
 
-    public function render_bounty_form($edit = FALSE) {
+    /**
+     * Object
+     *
+     * @param array $thread_info
+     */
+    public function __construct(array $thread_info) {
+        self::setBountyPermissions($thread_info['permissions']);
+        self::setThreadData($thread_info['thread']);
+        self::setThreadPostData($thread_info);
+        self::$locale = fusion_get_locale('', FORUM_LOCALE);
+    }
+
+    public function renderBountyForm($edit = FALSE) {
         $bounty_description = '';
-        $bounty_points = self::get_forum_settings('bounty_points');
+        $bounty_points = self::getForumSettings('bounty_points');
         $points = [];
         $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
-        if ($edit ? self::get_bounty_permissions('can_edit_bounty') : self::get_bounty_permissions('can_start_bounty')) {
+        if ($edit ? self::getBountyPermissions('can_edit_bounty') : self::getBountyPermissions('can_start_bounty')) {
             for ($i = 1; $i <= 10; $i++) {
                 $points[$i * $bounty_points] = format_word($i * $bounty_points, $locale['forum_2015']);
             }
@@ -95,9 +110,9 @@ class Forum_Bounty extends ForumServer {
         }
     }
 
-    public function award_bounty() {
+    public function awardBounty() {
         // via postify
-        if (self::get_bounty_permissions('can_award_bounty')) {
+        if (self::getBountyPermissions('can_award_bounty')) {
             if (isset(self::$post_data['post_items'][$_GET['post_id']])) {
 
                 $post_data = self::$post_data['post_items'][$_GET['post_id']];
@@ -138,13 +153,12 @@ class Forum_Bounty extends ForumServer {
         }
     }
 
-    // What happens when bounty ends?
-    public function display_bounty() {
+    public function displayBounty() {
         $html = '';
         if (self::$data['thread_bounty']) {
             $user = fusion_get_user(self::$data['thread_bounty_user']);
             $html = "<div class='list-group-item-info p-15'>\n";
-            $html .= (self::get_bounty_permissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
+            $html .= (self::getBountyPermissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
             $html .= "<h4>".strtr(self::$locale['forum_4101'], [
                     '{%points%}'       => "<span class='label label-primary'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",
                     '{%profile_link%}' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
@@ -158,27 +172,11 @@ class Forum_Bounty extends ForumServer {
         return $html;
     }
 
-    private static $bounty_end = '';
-    private static $locale = [];
-    private static $post_data = [];
-
-    /**
-     * Object
-     *
-     * @param array $thread_info
-     */
-    public function __construct(array $thread_info) {
-        self::set_bounty_permissions($thread_info['permissions']);
-        self::set_thread_data($thread_info['thread']);
-        self::set_thread_post_data($thread_info);
-        self::$locale = fusion_get_locale('', FORUM_LOCALE);
-    }
-
-    private static function set_thread_post_data(array $post_data) {
+    private static function setThreadPostData(array $post_data) {
         self::$post_data = $post_data;
     }
 
-    private static function set_thread_data(array $thread_data) {
+    private static function setThreadData(array $thread_data) {
         self::$data = $thread_data;
 
         // Cronjob on this thread
@@ -224,18 +222,18 @@ class Forum_Bounty extends ForumServer {
      *
      * @param array $thread_info
      */
-    private static function set_bounty_permissions(array $thread_info) {
+    private static function setBountyPermissions(array $thread_info) {
         self::$permissions = $thread_info;
     }
 
     /**
      * Fetches Permissions Settings
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    private static function get_bounty_permissions($key) {
+    private static function getBountyPermissions($key) {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 }

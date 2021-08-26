@@ -23,11 +23,11 @@ use PHPFusion\httpdownload;
 
 class ViewThread extends ForumServer {
 
-    public function display_thread() {
+    public function displayThread() {
 
-        $info = self::thread()->get_threadInfo();
+        $info = self::thread()->getThreadInfo();
 
-        $this->set_ThreadJs();
+        $this->setThreadJs();
 
         if (isset($_GET['action'])) {
 
@@ -35,54 +35,54 @@ class ViewThread extends ForumServer {
                 case 'editpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll::render_poll_form(TRUE);
+                    $poll::renderPollForm(TRUE);
                     break;
                 case 'deletepoll':
                     // Action
                     $poll = new Poll($info);
-                    $poll->delete_poll();
+                    $poll->deletePoll();
                     break;
                 case 'newpoll':
                     // Template
                     $poll = new Poll($info);
-                    $poll::render_poll_form();
+                    $poll::renderPollForm();
                     break;
                 case 'edit':
                     // Template
-                    $this->render_edit_form();
+                    $this->renderEditForm();
                     break;
                 case 'reply':
                     // Template
-                    $this->render_reply_form();
+                    $this->renderReplyForm();
                     break;
                 case 'award':
                     $bounty = new Forum_Bounty($info);
-                    $bounty->award_bounty();
+                    $bounty->awardBounty();
                     break;
                 case 'newbounty':
                     // Template
                     $bounty = new Forum_Bounty($info);
-                    $bounty->render_bounty_form();
+                    $bounty->renderBountyForm();
                     break;
                 case 'editbounty':
                     // Template
                     $bounty = new Forum_Bounty($info);
-                    $bounty->render_bounty_form(TRUE);
+                    $bounty->renderBountyForm(TRUE);
                     break;
                 default:
                     redirect(clean_request('', ['action'], FALSE));
             }
 
         } else {
-            self::check_download_request();
+            self::checkDownloadRequest();
             // +1 threadviews
-            self::increment_thread_views($info['thread']['thread_id']);
+            self::incrementThreadViews($info['thread']['thread_id']);
 
             // +1 see who is viewing thread
-            self::thread()->set_thread_visitor();
+            self::thread()->setThreadVisitor();
 
             if ($info['thread']['forum_users'] == TRUE) {
-                $info['thread_users'] = $this->get_participated_users($info);
+                $info['thread_users'] = $this->getParticipatedUsers($info);
             }
 
             render_thread($info);
@@ -92,12 +92,11 @@ class ViewThread extends ForumServer {
     /**
      * Delete a post
      *
-     * @param $post_id
-     * @param $thread_id
-     * @param $forum_id
+     * @param int $post_id
+     * @param int $thread_id
+     * @param int $forum_id
      */
-    private function delete_post($post_id, $thread_id, $forum_id) {
-
+    private function deletePost($post_id, $thread_id, $forum_id) {
         if (isset($_POST['delete']) && isnum($post_id) && isnum($thread_id) && isnum($forum_id)) {
 
             $result = dbquery("SELECT post_author FROM ".DB_FORUM_POSTS." WHERE post_id='$post_id' AND thread_id='$thread_id'");
@@ -168,15 +167,11 @@ class ViewThread extends ForumServer {
      * Displays Reply To A Thread Form
      * Template: function display_form_postform
      */
-    public function render_reply_form() {
-
+    public function renderReplyForm() {
         $thread = self::thread();
-
-        $thread_info = $thread->get_threadInfo();
-
+        $thread_info = $thread->getThreadInfo();
         $thread_data = $thread_info['thread'];
-
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         $locale = fusion_get_locale('', FORUM_LOCALE);
 
@@ -455,15 +450,11 @@ class ViewThread extends ForumServer {
      * Displays Edit a Thread Post Form
      * Template: function display_forum_postform
      */
-    public function render_edit_form() {
-
+    public function renderEditForm() {
         $thread = self::thread();
-
-        $thread_info = $thread->get_threadInfo();
-
+        $thread_info = $thread->getThreadInfo();
         $thread_data = $thread_info['thread'];
-
-        $forum_settings = self::get_forum_settings();
+        $forum_settings = self::getForumSettings();
 
         $locale = fusion_get_locale("", [FORUM_LOCALE, FORUM_TAGS_LOCALE]);
 
@@ -558,7 +549,7 @@ class ViewThread extends ForumServer {
                             if (fusion_safe()) {
 
                                 // If post delete checkbox
-                                $this->delete_post($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id']);
+                                $this->deletePost($post_data['post_id'], $post_data['thread_id'], $post_data['forum_id']);
 
                                 // Update thread subject
                                 if ($is_first_post) {
@@ -571,10 +562,8 @@ class ViewThread extends ForumServer {
                                     $last_message = dbarray(dbquery("SELECT post_id, post_message FROM ".DB_FORUM_POSTS." WHERE thread_id='".$thread_data['thread_id']."' ORDER BY post_id DESC"));
                                     $post_data['post_id'] = $last_message['post_id'];
                                     $post_data['post_message'] = $last_message['post_message']."\n\n".$locale['forum_0640']." ".showdate("longdate", time()).":\n".$post_data['post_message'];
-                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
-                                } else {
-                                    dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
                                 }
+                                dbquery_insert(DB_FORUM_POSTS, $post_data, 'update', ['primary_key' => 'post_id', 'keep_session' => TRUE]);
 
                                 // Delete attachments if there is any
                                 foreach ($_POST as $key => $value) {
@@ -632,13 +621,13 @@ class ViewThread extends ForumServer {
                     $info = [
                         'title'             => $locale['forum_0507'],
                         'description'       => $locale['forum_2000'].$thread_data['thread_subject'],
-                        'openform'          => openform('input_form', 'post', $form_action, ['enctype' => $thread->getThreadPermission("can_upload_attach") ? TRUE : FALSE]),
+                        'openform'          => openform('input_form', 'post', $form_action, ['enctype' => (bool)$thread->getThreadPermission("can_upload_attach")]),
                         'closeform'         => closeform(),
                         'forum_id_field'    => form_hidden('forum_id', '', $post_data['forum_id']),
                         'thread_id_field'   => form_hidden('thread_id', '', $post_data['thread_id']),
                         'tags_field'        => $is_first_post ? form_select('thread_tags[]', $locale['forum_tag_0100'], $thread_data['thread_tags'],
                             [
-                                'options'     => $this->tag()->get_TagOpts(),
+                                'options'     => $this->tag()->getTagOpts(),
                                 'inner_width' => '100%',
                                 'multiple'    => TRUE,
                                 'delimiter'   => '.',
@@ -677,7 +666,7 @@ class ViewThread extends ForumServer {
                             ])."
                                <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n"
                             : "",
-                        // only happens during edit on first post or new thread AND has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
+                        // only happens during edit on first post or new thread and has poll -- info['forum_poll'] && checkgroup($info['forum_poll']) && ($data['edit'] or $data['new']
                         "poll_form"         => '',
                         'smileys_field'     => form_checkbox('post_smileys', $locale['forum_0622'], $post_data['post_smileys'], ['class' => 'm-b-0', 'reverse_label' => TRUE]),
                         'signature_field'   => (array_key_exists("user_sig", $userdata) && $userdata['user_sig']) ? form_checkbox('post_showsig', $locale['forum_0170'], $post_data['post_showsig'], ['class' => 'm-b-0', 'reverse_label' => TRUE]) : '',
@@ -730,7 +719,7 @@ class ViewThread extends ForumServer {
     /**
      * Attachment download request
      */
-    public static function check_download_request() {
+    public static function checkDownloadRequest() {
         $locale = fusion_get_locale("", FORUM_LOCALE);
         if (isset($_GET['getfiles']) && isnum($_GET['getfiles'])) {
             $result = dbquery("SELECT attach_id, attach_name FROM ".DB_FORUM_ATTACHMENTS." WHERE attach_id='".$_GET['getfiles']."'");
@@ -755,9 +744,9 @@ class ViewThread extends ForumServer {
      * Validate whether a specific user has visited the thread.
      * Duration : 7 days
      *
-     * @param $thread_id
+     * @param int $thread_id
      */
-    private static function increment_thread_views($thread_id) {
+    private static function incrementThreadViews($thread_id) {
         $days_to_keep_session = 7;
         if (!isset($_SESSION['thread'][$thread_id])) {
             $_SESSION['thread'][$thread_id] = time();
@@ -777,7 +766,7 @@ class ViewThread extends ForumServer {
      *
      * @return array
      */
-    public function get_participated_users($info) {
+    public function getParticipatedUsers($info) {
         $user = [];
         $result = dbquery("SELECT u.user_id, u.user_name, u.user_status, u.user_avatar, count(p.post_id) 'post_count'
                 FROM ".DB_FORUM_POSTS." p
@@ -792,7 +781,7 @@ class ViewThread extends ForumServer {
         return $user;
     }
 
-    private function set_ThreadJs() {
+    private function setThreadJs() {
         $viewthread_js = '';
         //javascript to footer
         $highlight_js = "";

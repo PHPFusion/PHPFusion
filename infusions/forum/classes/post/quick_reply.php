@@ -20,15 +20,14 @@ namespace PHPFusion\Forums\Post;
 use PHPFusion\Forums\ForumServer;
 
 class QuickReply extends ForumServer {
-
-    public static function display_quickReply($info) {
+    public static function displayQuickReply($info) {
         $locale = fusion_get_locale();
         $user_sig = fusion_get_userdata('user_sig');
-        $notify_options = ForumServer::get_forum_settings('thread_notify');
+        $notify_options = ForumServer::getForumSettings('thread_notify');
         require_once FORUM."templates/forum.tpl.php";
 
         $thread = self::thread();
-        $forum_settings = ForumServer::get_forum_settings();
+        $forum_settings = ForumServer::getForumSettings();
 
         $options_field = form_checkbox('post_smileys', $locale['forum_0169'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE]);
         if ($user_sig) {
@@ -52,18 +51,18 @@ class QuickReply extends ForumServer {
                 ]),
                 'attachment' => $thread->getThreadPermission("can_upload_attach") ?
                     form_fileinput('file_attachments[]', $locale['forum_0557'], "", [
-                        'input_id'       => 'file_attachments',
-                        'upload_path'    => INFUSIONS.'forum/attachments/',
-                        'type'           => 'object',
-                        'preview_off'    => TRUE,
-                        'multiple'       => TRUE,
-                        'inline'         => FALSE,
-                        'max_count'      => $forum_settings['forum_attachmax_count'],
-                        'valid_ext'      => $forum_settings['forum_attachtypes'],
-                        'class'          => 'm-b-0',
-                        'max_width'      => $forum_settings['forum_attachmax_w'],
-                        'max_height'     => $forum_settings['forum_attachmax_h'],
-                        'max_byte'       => $forum_settings['forum_attachmax']
+                        'input_id'    => 'file_attachments',
+                        'upload_path' => INFUSIONS.'forum/attachments/',
+                        'type'        => 'object',
+                        'preview_off' => TRUE,
+                        'multiple'    => TRUE,
+                        'inline'      => FALSE,
+                        'max_count'   => $forum_settings['forum_attachmax_count'],
+                        'valid_ext'   => $forum_settings['forum_attachtypes'],
+                        'class'       => 'm-b-0',
+                        'max_width'   => $forum_settings['forum_attachmax_w'],
+                        'max_height'  => $forum_settings['forum_attachmax_h'],
+                        'max_byte'    => $forum_settings['forum_attachmax']
                     ])."
                     <div class='m-b-20'>\n<small>".sprintf($locale['forum_0559'], parsebytesize($forum_settings['forum_attachmax']), str_replace('|', ', ', $forum_settings['forum_attachtypes']), $forum_settings['forum_attachmax_count'])."</small>\n</div>\n" : "",
                 'button'     => form_button('post_quick_reply', $locale['forum_0172'], $locale['forum_0172'], ['class' => 'btn-primary']),
@@ -80,5 +79,4 @@ class QuickReply extends ForumServer {
 
         return $html;
     }
-
 }

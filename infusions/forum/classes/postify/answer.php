@@ -43,7 +43,7 @@ class Postify_Answer extends Forum_Postify {
             )
         );
         if (!empty($thread_data)) {
-            Moderator::define_forum_mods($thread_data);
+            Moderator::defineForumMods($thread_data);
 
             $title = '';
             $description = '';
@@ -146,7 +146,7 @@ class Postify_Answer extends Forum_Postify {
                                 ]
                             );
 
-                            // Give points to the current user if its not self.
+                            // Give points to the current user if it's not self.
                             if ($thread_data['post_author'] !== fusion_get_userdata('user_id')) {
                                 dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id", [
                                     ':points'  => self::$forum_settings['answering_points'],
@@ -229,8 +229,8 @@ class Postify_Answer extends Forum_Postify {
                 [
                     'title'       => $title,
                     'description' => $description,
-                    'error'       => $this->get_postify_error_message(),
-                    'link'        => $this->get_postify_uri()
+                    'error'       => $this->getPostifyErrorMessage(),
+                    'link'        => $this->getPostifyUri()
                 ]
             );
         } else {

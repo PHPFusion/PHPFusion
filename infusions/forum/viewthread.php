@@ -21,10 +21,10 @@ if (!defined('FORUM_EXISTS')) {
 }
 require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
-require_once FORUM_CLASS."autoloader.php";
+require_once FORUM_CLASSES."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
 // Load Template
 include INFUSIONS."forum/templates/forum.tpl.php";
 $thread = new \PHPFusion\Forums\Threads\ViewThread();
-$thread->display_thread();
+$thread->displayThread();
 require_once THEMES.'templates/footer.php';

@@ -38,7 +38,7 @@ class ForumAdminMood extends ForumAdminInterface {
     public function viewMoodAdmin() {
         pageaccess('F');
 
-        echo "<div class='well m-t-15'>".self::$locale['forum_090']."</div>\n";
+        echo "<div class='well'>".self::$locale['forum_090']."</div>\n";
         $mood_pages = ["mood_list", "mood_form"];
 
         if (isset($_GET['ref']) && $_GET['ref'] == "back") {
@@ -84,7 +84,7 @@ class ForumAdminMood extends ForumAdminInterface {
             redirect(clean_request('', ['mood_id', 'ref'], FALSE));
         }
 
-        $this->post_Mood();
+        $this->postMood();
 
         $groups = fusion_get_groups();
         unset($groups[0]);
@@ -138,7 +138,7 @@ class ForumAdminMood extends ForumAdminInterface {
     /**
      * Post execution of forum mood
      */
-    protected function post_Mood() {
+    protected function postMood() {
 
         if (isset($_POST['save_mood'])) {
             $this->data = [
@@ -174,8 +174,7 @@ class ForumAdminMood extends ForumAdminInterface {
      * Displays forum mood listing
      */
     private function displayMoodList() {
-
-        $mood_max_count = dbcount("(mood_id)", DB_FORUM_MOODS, "");
+        $mood_max_count = dbcount("(mood_id)", DB_FORUM_MOODS);
 
         $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $mood_max_count ? intval($_GET['rowstart']) : 0;
 

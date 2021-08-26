@@ -52,7 +52,7 @@ class Postify_Edit extends Forum_Postify {
             add_to_title(self::$locale['global_201'].self::$locale['forum_0508']);
             add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0508']]);
             $inf_settings = get_settings('forum');
-            $thread_data = \PHPFusion\Forums\Threads\ForumThreads::get_thread($_GET['thread_id']);
+            $thread_data = \PHPFusion\Forums\Threads\ForumThreads::getThread($_GET['thread_id']);
 
             $thread_rowstart = '';
             if (!empty($inf_settings['posts_per_page']) && $thread_data['thread_postcount'] > $inf_settings['posts_per_page']) {
@@ -80,7 +80,7 @@ class Postify_Edit extends Forum_Postify {
             }
 
             $title = self::$locale['forum_0508'];
-            $description = $this->get_postify_error_message() ?: self::$locale['forum_0547'];
+            $description = $this->getPostifyErrorMessage() ?: self::$locale['forum_0547'];
 
             if (isset($_GET['post_id'])) {
                 $link[] = ['url' => $settings['siteurl'].'infusions/forum/viewthread.php?thread_id='.$_GET['thread_id'].$thread_rowstart.'&amp;pid='.$_GET['post_id'].'#post_'.$_GET['post_id'], 'title' => self::$locale['forum_0548']];
@@ -94,7 +94,7 @@ class Postify_Edit extends Forum_Postify {
 
         render_postify([
             'title'       => $title,
-            'error'       => $this->get_postify_error_message(),
+            'error'       => $this->getPostifyErrorMessage(),
             'description' => $description,
             'link'        => $link
         ]);

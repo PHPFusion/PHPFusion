@@ -33,17 +33,17 @@ class Forum_Mood extends ForumServer {
     /**
      * Used as post
      *
-     * @param $post_data
+     * @param array $post_data
      *
      * @return $this
      */
-    public function set_PostData($post_data) {
+    public function setPostData($post_data) {
         $this->post_id = $post_data['post_id'];
         $this->post_author = $post_data['post_author'];
         return $this;
     }
 
-    public function post_mood() {
+    public function postMood() {
         $response = FALSE;
 
         // this is general single static output
@@ -61,7 +61,7 @@ class Forum_Mood extends ForumServer {
 
             if (fusion_safe()) {
                 $mood_exists = (bool)dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'");
-                $has_reacted = (bool)$this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id']);
+                $has_reacted = (bool)$this->moodExists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id']);
 
                 if ($mood_exists === TRUE && $has_reacted === FALSE) {
                     dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
@@ -84,7 +84,7 @@ class Forum_Mood extends ForumServer {
                 // Mood exist check
                 dbcount('(mood_id)', DB_FORUM_MOODS, "mood_id='".$notify_data['notify_mood_id']."'") &&
                 // Exists record check
-                $this->mood_exists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
+                $this->moodExists($notify_data['notify_sender'], $notify_data['notify_mood_id'],
                     $notify_data['post_id'])
             ) {
                 dbquery("DELETE FROM ".DB_POST_NOTIFY." WHERE post_id=".$notify_data['post_id']."
@@ -98,19 +98,19 @@ class Forum_Mood extends ForumServer {
         return $response;
     }
 
-    public static function mood_exists($sender_id, $mood_id, $post_id) {
+    public static function moodExists($sender_id, $mood_id, $post_id) {
         return dbcount('(notify_user)', DB_POST_NOTIFY,
             "notify_sender='".$sender_id."'
                          AND notify_mood_id='".$mood_id."'
                          AND post_id='$post_id'");
     }
 
-    public function get_mood_message() {
+    public function getMoodMessage() {
         $mood_users = [];
         $mood_users_count = [];
         $moods = [];
 
-        $mood_cache = $this->cache_mood(FALSE);
+        $mood_cache = $this->cacheMood(FALSE);
 
         // Get the types of buttons
         $response_query = "SELECT pn.* FROM ".DB_POST_NOTIFY." pn WHERE post_id='".$this->post_id."' ORDER BY pn.notify_mood_id ASC, pn.post_id ASC";
@@ -145,7 +145,7 @@ class Forum_Mood extends ForumServer {
         return NULL;
     }
 
-    public function cache_mood($access = TRUE) {
+    public function cacheMood($access = TRUE) {
         $mood_cache = [];
         $cache_result = dbquery("SELECT * FROM ".DB_FORUM_MOODS." WHERE ".($access ? groupaccess('mood_access').' AND' : '')." mood_status=1");
         if (dbrows($cache_result) > 0) {
@@ -167,9 +167,8 @@ class Forum_Mood extends ForumServer {
      *
      * @return string
      */
-
-    public function display_mood_buttons() {
-        $mood_cache = $this->cache_mood();
+    public function displayMoodButtons() {
+        $mood_cache = $this->cacheMood();
         $html = '';
         $my_id = fusion_get_userdata('user_id');
         if (!empty($mood_cache)) {
@@ -181,7 +180,7 @@ class Forum_Mood extends ForumServer {
                 $html .= form_hidden('post_author', '', $this->post_author, ['input_id' => 'post_author'.$mood_id.$this->post_id]);
                 $html .= form_hidden('post_id', '', $this->post_id, ['input_id' => 'post_id'.$mood_id.$this->post_id]);
 
-                if (!$this->mood_exists($my_id, $mood_id, $this->post_id)) {
+                if (!$this->moodExists($my_id, $mood_id, $this->post_id)) {
                     // Post Button
                     $html .=
                         "<button name='post_mood' id='".$this->post_id."-$mood_id' class='btn btn-sm btn-default m-r-5' data-mood='$mood_id' data-post='$this->post_id' value='".$mood_id."'>".

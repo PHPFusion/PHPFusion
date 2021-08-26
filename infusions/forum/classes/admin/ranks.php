@@ -35,12 +35,11 @@ class ForumAdminRanks extends ForumAdminInterface {
     ];
 
     public function viewRanksAdmin() {
-
         pageaccess('F');
 
-        $forum_settings = $this->get_forum_settings();
+        $forum_settings = $this->getForumSettings();
 
-        echo "<div class='well m-t-15'>".self::$locale['forum_rank_0100']."</div>\n";
+        echo "<div class='well'>".self::$locale['forum_rank_0100']."</div>\n";
 
         if ($forum_settings['forum_ranks']) {
             $tab_pages = ["rank_list", "rank_form"];
@@ -112,7 +111,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         $language_opts = fusion_get_enabled_languages();
 
-        $this->post_forum_ranks();
+        $this->postForumRanks();
 
         $form_action = clean_request("section=fr&ref=rank_form", ["rank_id", "ref"], FALSE);
 
@@ -142,12 +141,12 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             form_select('rank_image', self::$locale['forum_rank_421'], $this->data['rank_image'], [
                 'inline'      => TRUE,
-                'options'     => $this->get_rank_images(),
+                'options'     => $this->getRankImages(),
                 'placeholder' => self::$locale['choose']
             ]).
 
             form_colorpicker('rank_color', self::$locale['forum_rank_421a'], $this->data['rank_color'], [
-                'inline'   => TRUE
+                'inline' => TRUE
             ]).
 
             form_text('rank_icon', self::$locale['forum_rank_421b'], $this->data['rank_icon'], [
@@ -212,7 +211,7 @@ class ForumAdminRanks extends ForumAdminInterface {
         return $html;
     }
 
-    protected function post_forum_ranks() {
+    protected function postForumRanks() {
 
         if (isset($_POST['save_rank'])) {
 
@@ -234,7 +233,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
             if (fusion_safe()) {
 
-                if (!empty($this->data['rank_id']) && !$this->check_duplicate_ranks()) {
+                if (!empty($this->data['rank_id']) && !$this->checkDuplicateRanks()) {
                     /**
                      * Update
                      */
@@ -242,7 +241,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                     addnotice('info', self::$locale['forum_rank_411']);
                     redirect(clean_request("section", ["rank_id", "ref"], FALSE));
 
-                } else if (!$this->check_duplicate_ranks()) {
+                } else if (!$this->checkDuplicateRanks()) {
                     /**
                      * Save New
                      */
@@ -261,7 +260,7 @@ class ForumAdminRanks extends ForumAdminInterface {
         }
     }
 
-    protected function check_duplicate_ranks() {
+    protected function checkDuplicateRanks() {
         $comparing_data = dbarray(
             dbquery(
                 "SELECT rank_apply FROM ".DB_FORUM_RANKS." WHERE rank_id='".$this->data['rank_id']."'"
@@ -312,7 +311,7 @@ class ForumAdminRanks extends ForumAdminInterface {
                 $html .= "<tr>\n".
                     "<td '>".$data['rank_title']."</td>\n".
                     "<td>".($data['rank_apply'] == -104 ? self::$locale['forum_rank_425'] : getgroupname($data['rank_apply']))."</td>\n".
-                    "<td class='col-xs-2'>".ForumServer::show_forum_rank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
+                    "<td class='col-xs-2'>".ForumServer::showForumRank($data['rank_posts'], $data['rank_apply'], $data['rank_apply'])."</td>\n".
                     "<td>";
 
                 if ($data['rank_type'] == 0) {

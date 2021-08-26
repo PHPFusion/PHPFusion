@@ -38,11 +38,11 @@ function attach_exists($file) {
 }
 
 function forum_rank_cache() {
-    return \PHPFusion\Forums\ForumServer::forum_rank_cache();
+    return \PHPFusion\Forums\ForumServer::forumRankCache();
 }
 
 function show_forum_rank($posts, $level, $groups) {
-    return PHPFusion\Forums\ForumServer::show_forum_rank($posts, $level, $groups);
+    return PHPFusion\Forums\ForumServer::showForumRank($posts, $level, $groups);
 }
 
 /**
@@ -115,41 +115,41 @@ function display_image_attach($file, $width = 50, $height = 50, $rel = "") {
 }
 
 function define_forum_mods($info) {
-    PHPFusion\Forums\Moderator::define_forum_mods($info);
+    PHPFusion\Forums\Moderator::defineForumMods($info);
 }
 
 function verify_forum($forum_id) {
-    return PHPFusion\Forums\ForumServer::verify_forum($forum_id);
+    return PHPFusion\Forums\ForumServer::verifyForum($forum_id);
 }
 
 function verify_post($post_id) {
-    return PHPFusion\Forums\ForumServer::verify_post($post_id);
+    return PHPFusion\Forums\ForumServer::verifyPost($post_id);
 }
 
 function verify_thread($thread_id) {
-    return PHPFusion\Forums\ForumServer::verify_thread($thread_id);
+    return PHPFusion\Forums\ForumServer::verifyThread($thread_id);
 }
 
 function get_thread($thread_id) {
-    return \PHPFusion\Forums\Threads\ForumThreads::get_thread($thread_id);
+    return \PHPFusion\Forums\Threads\ForumThreads::getThread($thread_id);
 }
 
 function parse_forum_mods($forum_mods) {
-    return PHPFusion\Forums\Moderator::parse_forum_mods($forum_mods);
+    return PHPFusion\Forums\Moderator::parseForumMods($forum_mods);
 }
 
 function get_recent_topics($forum_id = 0) {
-    return PHPFusion\Forums\ForumServer::get_recentTopics($forum_id);
+    return PHPFusion\Forums\ForumServer::getRecentTopics($forum_id);
 }
 
 function set_forum_icons(array $icons = []) {
-    PHPFusion\Forums\ForumServer::set_forumIcons($icons);
+    PHPFusion\Forums\ForumServer::setForumIcons($icons);
 }
 
 function get_forum($forum_id = 0, $forum_branch = 0) {
-    return PHPFusion\Forums\Forum::get_forum($forum_id, $forum_branch);
+    return PHPFusion\Forums\Forum::getForum($forum_id, $forum_branch);
 }
 
 function get_forum_icons($type = '') {
-    return \PHPFusion\Forums\ForumServer::get_ForumIcons($type);
+    return \PHPFusion\Forums\ForumServer::getForumIcons($type);
 }

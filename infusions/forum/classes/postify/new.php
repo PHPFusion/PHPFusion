@@ -30,9 +30,9 @@ class Postify_New extends Forum_Postify {
         add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0501']]);
         render_postify([
             'title'   => self::$locale['forum_0501'],
-            'message' => $this->get_postify_error_message() ?: self::$locale['forum_0543'],
-            'error'   => $this->get_postify_error_message(),
-            'link'    => $this->get_postify_uri()
+            'message' => $this->getPostifyErrorMessage() ?: self::$locale['forum_0543'],
+            'error'   => $this->getPostifyErrorMessage(),
+            'link'    => $this->getPostifyUri()
         ]);
     }
 }

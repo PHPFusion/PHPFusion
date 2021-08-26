@@ -155,12 +155,11 @@ class ThreadFilter {
 
     }
 
-    public function get_filterInfo() {
-        return (array)$this->filter_info;
+    public function getFilterInfo() {
+        return $this->filter_info;
     }
 
-    public function get_filterSQL() {
+    public function getFilterSql() {
         return (array)$this->filter_sql;
     }
-
 }

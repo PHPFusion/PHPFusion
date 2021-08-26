@@ -136,9 +136,10 @@ $deleted_files = [
     THEMES.'Magazine/theme_autoloader.php',
     INFUSIONS.'forum/classes/Functions.php',
     INFUSIONS.'forum/classes/Admin.php',
+    INFUSIONS.'forum/classes/post/ranks.php',
     IMAGES.'error/',
     INCLUDES.'multi_attachment.js',
-    INFUSIONS.'blog/classes/Functions.php'
+    INFUSIONS.'blog/classes/Functions.php',
     INFUSIONS.'downloads/classes/Functions.php'
 ];
 

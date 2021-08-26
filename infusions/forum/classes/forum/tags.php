@@ -21,16 +21,16 @@ class ThreadTags extends ForumServer {
 
     public $tag_info = [];
 
-    public function get_TagInfo() {
-        return (array)$this->tag_info;
+    public function getTagInfo() {
+        return $this->tag_info;
     }
 
     /**
      * Fetches all Forum Tag Table records
      *
-     * @param bool|TRUE $setTitle
+     * @param bool $setTitle
      */
-    public function set_TagInfo($setTitle = TRUE) {
+    public function setTagInfo($setTitle = TRUE) {
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
         $locale += fusion_get_locale("", FORUM_TAGS_LOCALE);
@@ -77,11 +77,11 @@ class ThreadTags extends ForumServer {
                     'tag_color'  => ''
                 ];
 
-                $this->tag_info['filter'] = $this->filter()->get_FilterInfo();
-                $filter_sql = $this->filter()->get_filterSQL();
+                $this->tag_info['filter'] = $this->filter()->getFilterInfo();
+                $filter_sql = $this->filter()->getFilterSql();
 
                 // get forum threads.
-                $this->tag_info = array_merge_recursive($this->tag_info, self::get_tag_thread($_GET['tag_id'], [
+                $this->tag_info = array_merge_recursive($this->tag_info, self::getTagThread($_GET['tag_id'], [
                     "condition" => $filter_sql['condition'],
                     "order"     => $filter_sql['order']
                 ]));
@@ -91,28 +91,27 @@ class ThreadTags extends ForumServer {
             }
 
         } else {
-            $this->cache_tags();
+            $this->cacheTags();
         }
     }
 
     /**
      * Get thread structure when given specific tag id
      *
-     * @param string     $tag_id
-     * @param bool|FALSE $filter
+     * @param int  $tag_id
+     * @param bool $filter
      *
      * @return array
      */
-    public static function get_tag_thread($tag_id = '0', $filter = FALSE) {
-
+    public static function getTagThread($tag_id = 0, $filter = FALSE) {
         $info = [];
 
         $locale = fusion_get_locale("", FORUM_LOCALE);
 
-        $forum_settings = ForumServer::get_forum_settings();
+        $forum_settings = ForumServer::getForumSettings();
 
         $userdata = fusion_get_userdata();
-        $userdata['user_id'] = !empty($userdata['user_id']) ? (int)intval($userdata['user_id']) : 0;
+        $userdata['user_id'] = !empty($userdata['user_id']) ? intval($userdata['user_id']) : 0;
 
         $lastVisited = defined('LASTVISITED') ? LASTVISITED : time();
         /**
@@ -215,7 +214,7 @@ class ThreadTags extends ForumServer {
                     $match_regex = $threads['thread_id']."\|".$threads['thread_lastpost']."\|".$threads['forum_id'];
                     if ($threads['thread_lastpost'] > $lastVisited) {
                         if (iMEMBER && ($threads['thread_lastuser'] == $userdata['user_id'] ||
-                                preg_match("(^\.{$match_regex}$|\.{$match_regex}\.|\.{$match_regex}$)", $userdata['user_threads']))
+                                preg_match("(^\.$match_regex$|\.$match_regex\.|\.$match_regex$)", $userdata['user_threads']))
                         ) {
                             $icon = "<i class='".get_forum_icons('thread')."' title='".$locale['forum_0261']."'></i>";
                         } else {
@@ -245,24 +244,24 @@ class ThreadTags extends ForumServer {
                         "forum_type"     => $threads['forum_type'],
                         "thread_pages"   => makepagenav(0, $forum_settings['posts_per_page'], $threads['thread_postcount'], 3, FORUM."viewthread.php?thread_id=".$threads['thread_id']."&amp;"),
                         "thread_icons"   => [
-                            'lock'   => $threads['thread_locked'] ? "<i class='".self::get_forumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
-                            'sticky' => $threads['thread_sticky'] ? "<i class='".self::get_forumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
-                            'poll'   => $threads['thread_poll'] ? "<i class='".self::get_forumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
-                            'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::get_forumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::get_forumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
-                            'image'  => $threads['attach_image'] > 0 ? "<i class='".self::get_forumIcons('image')."' title='".$locale['forum_0313']."'></i>" : '',
-                            'file'   => $threads['attach_files'] > 0 ? "<i class='".self::get_forumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
+                            'lock'   => $threads['thread_locked'] ? "<i class='".self::getForumIcons('lock')."' title='".$locale['forum_0263']."'></i>" : '',
+                            'sticky' => $threads['thread_sticky'] ? "<i class='".self::getForumIcons('sticky')."' title='".$locale['forum_0103']."'></i>" : '',
+                            'poll'   => $threads['thread_poll'] ? "<i class='".self::getForumIcons('poll')."' title='".$locale['forum_0314']."'></i>" : '',
+                            'hot'    => $threads['thread_postcount'] >= 20 ? "<i class='".self::getForumIcons('hot')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'reads'  => $threads['thread_views'] >= 20 ? "<i class='".self::getForumIcons('reads')."' title='".$locale['forum_0311']."'></i>" : '',
+                            'image'  => $threads['attach_image'] > 0 ? "<i class='".self::getForumIcons('image')."' title='".$locale['forum_0313']."'></i>" : '',
+                            'file'   => $threads['attach_files'] > 0 ? "<i class='".self::getForumIcons('file')."' title='".$locale['forum_0312']."'></i>" : '',
                             'icon'   => $icon,
                         ],
                         "thread_starter" => $locale['forum_0006'].' '.timer($threads['first_post_datestamp'])." ".$locale['by']." ".profile_link($author['user_id'], $author['user_name'], $author['user_status'])."</span>",
                         "thread_author"  => $author,
                         "thread_last"    => [
                             'user'         => $lastuser,
-                            'avatar'       => display_avatar($lastuser, '30px', '', '', ''),
+                            'avatar'       => display_avatar($lastuser, '30px'),
                             'profile_link' => profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status']),
                             'time'         => $threads['post_datestamp'],
                             'post_message' => parseubb(parsesmileys($threads['post_message'])),
-                            "formatted"    => "<div class='pull-left'>".display_avatar($lastuser, '30px', '', '', '')."</div>
+                            "formatted"    => "<div class='pull-left'>".display_avatar($lastuser, '30px')."</div>
                                                                                 <div class='overflow-hide'>".$locale['forum_0373']." <span class='forum_profile_link'>".profile_link($lastuser['user_id'], $lastuser['user_name'], $lastuser['user_status'])."</span><br/>
                                                                                 ".timer($threads['post_datestamp'])."
                                                                                 </div>"
@@ -299,10 +298,10 @@ class ThreadTags extends ForumServer {
             }
         }
 
-        return (array)$info;
+        return $info;
     }
 
-    public function cache_tags($order = 'tag_title ASC') {
+    public function cacheTags($order = 'tag_title ASC') {
 
         $tag_query = "SELECT * FROM ".DB_FORUM_TAGS." WHERE tag_status=:tag_status ".(multilang_table("FO") ? "AND ".in_group('tag_language', LANGUAGE) : "")." ORDER BY ".$order;
         $tag_param = [':tag_status' => 1];
@@ -340,11 +339,11 @@ class ThreadTags extends ForumServer {
     /**
      *  Get Tag Options for Dropdown Selector
      *
-     * @param bool|FALSE $is_dropdown - is used in dropdown?
+     * @param bool $is_dropdown - is used in dropdown?
      *
      * @return array
      */
-    public function get_tagOpts($is_dropdown = FALSE) {
+    public function getTagOpts($is_dropdown = FALSE) {
         $tag_opts = [];
         if (!empty($this->tag_info['tags'])) {
             $tag_info = $this->tag_info['tags'];
@@ -356,19 +355,19 @@ class ThreadTags extends ForumServer {
             }
         }
 
-        return (array)$tag_opts;
+        return $tag_opts;
     }
 
     /**
      * Displays current thread tags
      *
-     * @param $thread_tags - tagID (SQL data in DB_FORUM_THREADS `thread_tags`)
+     * @param string $thread_tags tagID (SQL data in DB_FORUM_THREADS `thread_tags`)
      *
      * @return string
      */
-    public function display_thread_tags($thread_tags) {
+    public function displayThreadTags($thread_tags) {
         $html = "";
-        $this->cache_tags();
+        $this->cacheTags();
         if (!empty($this->tag_info['tags']) && !empty($thread_tags)) {
             $tags = explode(".", $thread_tags);
             foreach ($tags as $tag_id) {
@@ -384,6 +383,6 @@ class ThreadTags extends ForumServer {
             }
         }
 
-        return (string)$html;
+        return $html;
     }
 }
