@@ -47,7 +47,7 @@ if (
         'submit_link'   => "submit.php?stype=a",
         'submit_locale' => fusion_get_locale('A', LOCALE.LOCALESET."admin/main.php"),
         'title'         => fusion_get_locale('article_submit', LOCALE.LOCALESET."submissions.php"),
-        'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+        'admin_link'    => INFUSIONS."articles/articles_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
     ]);
 }
 
