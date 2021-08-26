@@ -20,7 +20,7 @@ if (!defined('FAQ_EXISTS')) {
     redirect(BASEDIR.'error.php?code=404');
 }
 require_once THEMES.'templates/header.php';
-require_once FAQ_CLASS.'autoloader.php';
+require_once FAQ_CLASSES.'autoloader.php';
 require_once INFUSIONS.'faq/templates/faq.tpl.php';
-\PHPFusion\FAQ\FaqServer::Faq()->display_faq();
+\PHPFusion\FAQ\FaqServer::faq()->displayFaq();
 require_once THEMES.'templates/footer.php';

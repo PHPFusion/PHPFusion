@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-require_once FAQ_CLASS.'autoloader.php';
-PHPFusion\FAQ\FaqServer::FaqAdmin()->display_admin();
+require_once FAQ_CLASSES.'autoloader.php';
+PHPFusion\FAQ\FaqServer::faqAdmin()->displayAdmin();
 require_once THEMES.'templates/footer.php';

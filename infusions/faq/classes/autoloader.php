@@ -19,15 +19,15 @@ require_once INCLUDES."infusions_include.php";
 
 spl_autoload_register(function ($className) {
     $autoload_register_paths = [
-        "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASS."server.php",
-        "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASS."admin/faq_admin_model.php",
-        "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASS."admin/faq_admin_view.php",
-        "PHPFusion\\FAQ\\FaqSettingsAdmin"    => FAQ_CLASS."admin/controllers/faq_settings.php",
-        "PHPFusion\\FAQ\\FaqSubmissionsAdmin" => FAQ_CLASS."admin/controllers/faq_submissions.php",
-        "PHPFusion\\FAQ\\FaqSubmissions"      => FAQ_CLASS."faq/faq_submissions.php",
-        "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASS."admin/controllers/faq.php",
-        "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASS."faq/faq_view.php",
-        "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASS."faq/faq.php"
+        "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASSES."server.php",
+        "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASSES."admin/faq_admin_model.php",
+        "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASSES."admin/faq_admin_view.php",
+        "PHPFusion\\FAQ\\FaqSettingsAdmin"    => FAQ_CLASSES."admin/controllers/faq_settings.php",
+        "PHPFusion\\FAQ\\FaqSubmissionsAdmin" => FAQ_CLASSES."admin/controllers/faq_submissions.php",
+        "PHPFusion\\FAQ\\FaqSubmissions"      => FAQ_CLASSES."faq/faq_submissions.php",
+        "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASSES."admin/controllers/faq.php",
+        "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASSES."faq/faq_view.php",
+        "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASSES."faq/faq.php"
     ];
 
     if (isset($autoload_register_paths[$className])) {

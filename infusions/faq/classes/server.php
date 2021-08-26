@@ -30,16 +30,12 @@ class FaqServer {
 
     public function __construct() {
         self::$faq_settings = get_settings("faq");
-        self::globinf();
-    }
-
-    public function globinf() {
-
         $this->save = post('savesettings');
         $this->catid = check_get('cat_id') ? get('cat_id', FILTER_VALIDATE_INT) : 0;
+
     }
 
-    public static function Faq() {
+    public static function faq() {
         if (self::$faq_instance === NULL) {
             self::$faq_instance = new FaqView();
         }
@@ -47,7 +43,7 @@ class FaqServer {
         return self::$faq_instance;
     }
 
-    public static function FaqSubmit() {
+    public static function faqSubmit() {
         if (self::$faq_submit_instance === NULL) {
             self::$faq_submit_instance = new FaqSubmissions();
         }
@@ -55,7 +51,7 @@ class FaqServer {
         return self::$faq_submit_instance;
     }
 
-    public static function FaqAdmin() {
+    public static function faqAdmin() {
         if (self::$faq_admin_instance === NULL) {
             self::$faq_admin_instance = new FaqAdminView();
         }

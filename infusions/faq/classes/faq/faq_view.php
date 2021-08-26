@@ -28,16 +28,16 @@ class FaqView extends Faq {
     /**
      * Displays FAQ
      */
-    public function display_faq() {
+    public function displayFaq() {
         if (isset($_GET['cat_id'])) {
             if (isnum($_GET['cat_id'])) {
-                $info = $this->set_FaqInfo($_GET['cat_id']);
+                $info = $this->setFaqInfo($_GET['cat_id']);
                 render_faq_item($info);
             } else {
                 redirect(INFUSIONS."faq/faq.php");
             }
         } else {
-            display_main_faq($this->set_FaqInfo());
+            display_main_faq($this->setFaqInfo());
         }
     }
 }

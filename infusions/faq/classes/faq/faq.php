@@ -35,7 +35,7 @@ abstract class Faq extends FaqServer {
      *
      * @return array
      */
-    public function set_FaqInfo($category = 0) {
+    public function setFaqInfo($category = 0) {
         self::$locale = fusion_get_locale("", FAQ_LOCALE);
 
         set_title(SiteLinks::getCurrentSiteLinks('infusions/faq/faq.php', 'link_name'));
@@ -52,7 +52,7 @@ abstract class Faq extends FaqServer {
             'faq_get'        => 0
         ];
 
-        $info = array_merge($info, self::get_FaqData($category));
+        $info = array_merge($info, self::getFaqData($category));
 
         if ($this->catid && isset($info['faq_categories'][$this->catid])) {
             set_title(SiteLinks::getCurrentSiteLinks(INFUSIONS.'faq/faq.php', 'link_name'));
@@ -75,7 +75,7 @@ abstract class Faq extends FaqServer {
      *
      * @return array
      */
-    protected static function get_FaqData($cat = 0) {
+    protected static function getFaqData($cat = 0) {
         $info = [
             'faq_items'      => [],
             'cat_locale'     => self::$locale['faq_0001'],

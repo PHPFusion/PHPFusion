@@ -20,8 +20,8 @@ namespace PHPFusion\FAQ;
 class FaqAdminView extends FaqAdminModel {
     private $allowed_pages = ['faq', 'faq_cat', 'faq_cat_form', 'faq_form', 'submissions', 'settings'];
 
-    public function display_admin() {
-        $locale = self::get_faqAdminLocale();
+    public function displayAdmin() {
+        $locale = self::getFaqAdminLocale();
 
         // Back and Check Section
         if (check_get('section') && get('section') == "back") {
@@ -36,10 +36,6 @@ class FaqAdminView extends FaqAdminModel {
         $faqTitle = $locale['faq_0000'];
         $faqicon = 'fa fa-question-circle';
         add_breadcrumb(["link" => FUSION_REQUEST, "title" => $faqTitle]);
-
-        if ($submissions = dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'")) {
-            addnotice("info", sprintf($locale['faq_0064'], format_word($submissions, $locale['fmt_submission'])));
-        }
 
         if (!empty($sections)) {
             switch ($sections) {
@@ -79,7 +75,7 @@ class FaqAdminView extends FaqAdminModel {
         $tab['title'][] = $faqTitle;
         $tab['id'][] = 'faq';
         $tab['icon'][] = $faqicon;
-        $tab['title'][] = $locale['faq_0005'];
+        $tab['title'][] = $locale['faq_0005'].'&nbsp;<span class="badge">'.dbcount('(submit_id)', DB_SUBMISSIONS, "submit_type='q'").'</span>';
         $tab['id'][] = 'submissions';
         $tab['icon'][] = 'fa fa-inbox';
         $tab['title'][] = $locale['faq_0006'];

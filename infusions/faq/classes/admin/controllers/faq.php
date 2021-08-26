@@ -42,25 +42,25 @@ class FaqAdmin extends FaqAdminModel {
         if (check_post('cancel')) {
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
-        $this->locale = self::get_faqAdminLocale();
+        $this->locale = self::getFaqAdminLocale();
         if (check_get('ref')) {
             switch (get('ref')) {
                 case 'faq_cat_form':
-                    $this->display_faq_category_form();
+                    $this->displayFaqCategoryForm();
                     break;
                 case 'faq_form':
-                    $this->display_faq_form();
+                    $this->displayfaqForm();
                     break;
                 default:
-                    $this->display_faq_listing();
+                    $this->displayFaqListing();
             }
         } else {
-            $this->display_faq_listing();
+            $this->displayFaqListing();
         }
 
     }
 
-    private function display_faq_category_form() {
+    private function displayFaqCategoryForm() {
         if (check_post('save_cat')) {
             $this->cat_data = [
                 'faq_cat_id'          => sanitizer('faq_cat_id', 0, 'faq_cat_id'),
@@ -98,7 +98,7 @@ class FaqAdmin extends FaqAdminModel {
         }
         echo openform('add_faq_cat', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo form_hidden('faq_cat_id', '', $this->cat_data['faq_cat_id']);
-        echo form_text('faq_cat_name', $this->locale['faq_0115'], $this->cat_data['faq_cat_name'], ['error_text' => $this->locale['460'], 'required' => TRUE, 'inline' => TRUE]);
+        echo form_text('faq_cat_name', $this->locale['faq_0115'], $this->cat_data['faq_cat_name'], ['required' => TRUE, 'inline' => TRUE]);
         echo form_textarea('faq_cat_description', $this->locale['faq_0116'], $this->cat_data['faq_cat_description'], ['autosize' => TRUE, 'inline' => TRUE]);
         if (multilang_table("FQ")) {
             echo form_select('faq_cat_language[]', $this->locale['faq_0117'], $this->cat_data['faq_cat_language'], [
@@ -117,7 +117,7 @@ class FaqAdmin extends FaqAdminModel {
     /**
      * Displays Faq Form
      */
-    private function display_faq_form() {
+    private function displayfaqForm() {
         $default_data = [
             'faq_id'         => 0,
             'faq_cat_id'     => 0,
@@ -132,10 +132,10 @@ class FaqAdmin extends FaqAdminModel {
         ];
 
         // Delete
-        self::execute_Delete();
+        self::executeDelete();
 
         // Update
-        self::execute_Update();
+        self::executeUpdate();
 
         /**
          * Global vars
@@ -147,7 +147,7 @@ class FaqAdmin extends FaqAdminModel {
                 'join'     => "LEFT JOIN ".DB_USERS." AS u ON u.user_id=ac.faq_name",
                 'where'    => "ac.faq_id='$id'".(multilang_table("FQ") ? " AND ".in_group('ac.faq_language', LANGUAGE) : ""),
             ];
-            $result = self::FaqData($criteria);
+            $result = self::faqData($criteria);
             if (dbrows($result) > 0) {
                 $this->faq_data = dbarray($result);
             } else {
@@ -157,10 +157,10 @@ class FaqAdmin extends FaqAdminModel {
             $this->faq_data = $default_data;
             $this->faq_data['faq_breaks'] = (fusion_get_settings('tinymce_enabled') ? 'n' : 'y');
         }
-        self::faqContent_form();
+        self::faqContentForm();
     }
 
-    private function execute_Delete() {
+    private function executeDelete() {
         if (check_get('action') && get('action') == "delete" && check_get('faq_id') && get('faq_id', FILTER_VALIDATE_INT)) {
             $faq_id = (int)get('faq_id');
 
@@ -174,7 +174,7 @@ class FaqAdmin extends FaqAdminModel {
     /**
      * Create or Update
      */
-    private function execute_Update() {
+    private function executeUpdate() {
         if ((check_post('save')) or (check_post('save_and_close'))) {
 
             $this->faq_data = [
@@ -219,8 +219,7 @@ class FaqAdmin extends FaqAdminModel {
         }
     }
 
-    private static function FaqData(array $filters = []) {
-
+    private static function faqData(array $filters = []) {
         return dbquery("SELECT ".(!empty($filters['criteria']) ? $filters['criteria'] : "")."
             FROM ".DB_FAQS." ac
             ".(!empty($filters['join']) ? $filters['join'] : "")."
@@ -235,7 +234,7 @@ class FaqAdmin extends FaqAdminModel {
     /**
      * Display Form
      */
-    private function faqContent_form() {
+    private function faqContentForm() {
         // Textarea Settings
         if (!fusion_get_settings("tinymce_enabled")) {
             $faqExtendedSettings = [
@@ -258,7 +257,7 @@ class FaqAdmin extends FaqAdminModel {
         }
 
         // Start Form
-        echo openform('faqform', 'post', $this->form_action, ['class' => 'spacer-sm']);
+        echo openform('faqform', 'post', $this->form_action);
         echo form_hidden('faq_id', '', $this->faq_data['faq_id']);
         ?>
 
@@ -334,32 +333,18 @@ class FaqAdmin extends FaqAdminModel {
             </div>
         </div>
         <?php
-        self::display_faqButtons('formend', FALSE);
+        echo '<div class="m-t-20">';
+        echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times"]);
+        echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o"]);
+        echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o"]);
+        echo '</div>';
         echo closeform();
-    }
-
-    /**
-     * Generate sets of push buttons for Content form
-     *
-     * @param string $unique_id
-     * @param bool   $breaker
-     */
-    private function display_faqButtons($unique_id, $breaker = TRUE) {
-        ?>
-        <div class="m-t-20">
-            <?php echo form_button("cancel", $this->locale['cancel'], $this->locale['cancel'], ["class" => "btn-default btn-sm", "icon" => "fa fa-times", "input_id" => "cancel-".$unique_id.""]); ?>
-            <?php echo form_button("save", $this->locale['save'], $this->locale['save'], ["class" => "btn-success btn-sm m-l-5", "icon" => "fa fa-hdd-o", "input_id" => "save-".$unique_id.""]); ?>
-            <?php echo form_button("save_and_close", $this->locale['save_and_close'], $this->locale['save_and_close'], ["class" => "btn-primary btn-sm m-l-5", "icon" => "fa fa-floppy-o", "input_id" => "save_and_close-".$unique_id.""]); ?>
-        </div>
-        <?php if ($breaker) { ?>
-            <hr/><?php } ?>
-        <?php
     }
 
     /**
      * Displays Listing
      */
-    private function display_faq_listing() {
+    private function displayFaqListing() {
         // Run functions
         $allowed_actions = array_flip(['publish', 'unpublish', 'delete', 'faq_display']);
         $table_action = post('table_action');
@@ -478,7 +463,7 @@ class FaqAdmin extends FaqAdminModel {
             'limit'    => "LIMIT $rowstart, $limit"
         ];
 
-        $result = self::FaqData($criteria);
+        $result = self::faqData($criteria);
         // Query
         $info['limit'] = $limit;
         $info['rowstart'] = $rowstart;
@@ -503,7 +488,6 @@ class FaqAdmin extends FaqAdminModel {
 
         $faq_cats = dbcount("(faq_cat_id)", DB_FAQ_CATS);
 
-        echo "<div class='m-t-15'>\n";
         echo openform('faq_filter', 'post', FUSION_REQUEST);
         echo "<div class='clearfix'>\n";
         echo "<div class='pull-right'>\n";
@@ -548,12 +532,12 @@ class FaqAdmin extends FaqAdminModel {
         </div><div class='display-inline-block'>\n";
         $author_opts = [0 => $this->locale['faq_0131']];
         $result0 = dbquery('
-                        SELECT n.faq_name, u.user_id, u.user_name, u.user_status
-                        FROM '.DB_FAQS.' n
-                        LEFT JOIN '.DB_USERS.' u on n.faq_name = u.user_id
-                        GROUP BY u.user_id
-                        ORDER BY user_name ASC
-                    ');
+            SELECT n.faq_name, u.user_id, u.user_name, u.user_status
+            FROM '.DB_FAQS.' n
+            LEFT JOIN '.DB_USERS.' u on n.faq_name = u.user_id
+            GROUP BY u.user_id
+            ORDER BY user_name ASC
+        ');
         if (dbrows($result0) > 0) {
             while ($data = dbarray($result0)) {
                 $author_opts[$data['user_id']] = $data['user_name'];
@@ -566,10 +550,9 @@ class FaqAdmin extends FaqAdminModel {
         ]);
         echo "</div>\n</div>\n";
         echo closeform();
-        echo "</div>\n";
 
         echo openform('faq_table', 'post', FUSION_REQUEST);
-        echo form_hidden('table_action', '', '');
+        echo form_hidden('table_action');
         echo "<div class='display-block'>\n";
 
         // Category Management
@@ -663,5 +646,4 @@ class FaqAdmin extends FaqAdminModel {
         ");
 
     }
-
 }

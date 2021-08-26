@@ -35,7 +35,7 @@ class FaqSubmissions extends FaqServer {
         add_to_title($this->locale['faq_0900']);
         $this->info['faq_tablename'] = $this->locale['faq_0900'];
         if (iMEMBER && self::$faq_settings['faq_allow_submission'] && checkgroup(self::$faq_settings['faq_submission_access'])) {
-            display_faq_submissions($this->display_submission_form());
+            display_faq_submissions($this->displaySubmissionForm());
         } else {
             $info['no_submissions'] = $this->locale['faq_0922'];
             $info += $this->info;
@@ -43,7 +43,7 @@ class FaqSubmissions extends FaqServer {
         }
     }
 
-    private function display_submission_form() {
+    private function displaySubmissionForm() {
         $settings = fusion_get_settings();
         $criteriaArray = [
             'faq_id'       => 0,
@@ -84,8 +84,6 @@ class FaqSubmissions extends FaqServer {
                     'submit_link' => "<a href='".BASEDIR."submit.php?stype=q'>".$this->locale['faq_0912']."</a>",
                     'index_link'  => "<a href='".BASEDIR.$settings['opening_page']."'>".str_replace("[SITENAME]", $settings['sitename'], $this->locale['faq_0913'])."</a>"
                 ];
-                $info += $this->info;
-                return (array)$info;
             } else {
                 $options = [];
                 $faq_result = dbquery("SELECT faq_cat_id, faq_cat_name FROM ".DB_FAQ_CATS.(multilang_table("FQ") ? " WHERE ".in_group('faq_cat_language', LANGUAGE) : "")." ORDER BY faq_cat_name ASC");
@@ -98,7 +96,7 @@ class FaqSubmissions extends FaqServer {
 
                 $info['item'] = [
                     'guidelines'     => str_replace("[SITENAME]", $settings['sitename'], $this->locale['faq_0920']),
-                    'openform'       => openform('submit_form', 'post', BASEDIR."submit.php?stype=q", ['enctype' => self::$faq_settings['faq_allow_submission'] ? TRUE : FALSE]),
+                    'openform'       => openform('submit_form', 'post', BASEDIR."submit.php?stype=q", ['enctype' => (bool)self::$faq_settings['faq_allow_submission']]),
                     'faq_question'   => form_text('faq_question', $this->locale['faq_0100'], $criteriaArray['faq_question'],
                         [
                             'error_text' => $this->locale['faq_0271'],
@@ -131,13 +129,11 @@ class FaqSubmissions extends FaqServer {
                     'criteria_array' => $criteriaArray
 
                 ];
-                $info += $this->info;
-                return (array)$info;
             }
         } else {
             $info['no_submissions'] = $this->locale['faq_0923'];
-            $info += $this->info;
-            return (array)$info;
         }
+        $info += $this->info;
+        return $info;
     }
 }

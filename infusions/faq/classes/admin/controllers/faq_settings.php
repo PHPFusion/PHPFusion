@@ -19,12 +19,12 @@ namespace PHPFusion\FAQ;
 
 class FaqSettingsAdmin extends FaqAdminModel {
     private static $instance = NULL;
-    private $locale = [];
+    private $locale;
 
     public function __construct() {
         parent::__construct();
 
-        $this->locale = self::get_faqAdminLocale();
+        $this->locale = self::getFaqAdminLocale();
     }
 
     public static function getInstance() {
@@ -39,12 +39,12 @@ class FaqSettingsAdmin extends FaqAdminModel {
         pageaccess("FQ");
         // Save
         if (!empty($this->save)) {
-            $this->SaveFaqAdmin();
+            $this->saveFaqAdmin();
         }
-        $this->FaqAdminForm();
+        $this->faqAdminForm();
     }
 
-    private function SaveFaqAdmin() {
+    private function saveFaqAdmin() {
         if (check_post('savesettings')) {
             $inputArray = [
                 'faq_allow_submission'  => sanitizer('faq_allow_submission', 0, 'faq_allow_submission'),
@@ -69,9 +69,9 @@ class FaqSettingsAdmin extends FaqAdminModel {
         }
     }
 
-    private function FaqAdminForm() {
-        echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']).
-            "<div class='well spacer-xs'>".$this->locale['faq_0400']."</div>\n".
+    private function faqAdminForm() {
+        echo openform('settingsform', 'post', FUSION_REQUEST).
+            "<div class='well'>".$this->locale['faq_0400']."</div>".
             form_select('faq_allow_submission', $this->locale['faq_0005'], self::$faq_settings['faq_allow_submission'], [
                 'inline'  => TRUE,
                 'options' => [

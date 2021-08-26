@@ -26,7 +26,7 @@ class FaqAdminModel extends FaqServer {
         self::$faq_settings = get_settings("faq");
     }
 
-    public static function get_faqAdminLocale() {
+    public static function getFaqAdminLocale() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE.'English/admin/settings.php';
             if (file_exists(LOCALE.LOCALESET.'admin/settings.php')) {

@@ -24,14 +24,15 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         'faq_visibility' => 0,
         'faq_status'     => 1,
     ];
-    private $locale = [];
+    private $locale;
     private $inputArray = [];
 
     public function __construct() {
         parent::__construct();
 
-        $this->locale = self::get_faqAdminLocale();
+        $this->locale = self::getFaqAdminLocale();
     }
+
     public static function getInstance() {
         if (self::$instance == NULL) {
             self::$instance = new static();
@@ -45,7 +46,6 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
     public function displayFaqAdmin() {
         pageaccess("FQ");
 
-        //$this->locale = self::get_faqAdminLocale();
         // Handle a Submission
         if (check_get('submit_id') && get('submit_id', FILTER_VALIDATE_INT) && dbcount("(submit_id)", DB_SUBMISSIONS, "submit_id=:submitid AND submit_type=:submittype", [':submitid' => get('submit_id'), ':submittype' => 'q'])) {
             $criteria = [
@@ -106,7 +106,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
 
     private function handlePostSubmission() {
         if (check_post('publish_submission') || check_post('preview_submission')) {
-            // Check posted Informations
+            // Check posted information
             $faq_answer = "";
             if (check_post('faq_answer')) {
                 $faq_answer = stripslashes(post('faq_answer'));
@@ -188,7 +188,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         echo openform('submissionform', 'post', FUSION_REQUEST);
         echo form_hidden('faq_name', '', $this->inputArray['user_id']);
         ?>
-        <div class="well clearfix m-t-15">
+        <div class="well clearfix">
             <div class="pull-left">
                 <?php echo display_avatar($this->inputArray, '30px', '', FALSE, 'img-rounded m-t-5 m-r-5'); ?>
             </div>
@@ -279,26 +279,12 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
             </div>
         </div>
         <?php
-        self::displayFormButtons('formend', FALSE);
+        echo '<div class="m-t-20">';
+        echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-eye']);
+        echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o']);
+        echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger', 'icon' => 'fa fa-fw fa-trash']);
+        echo '</div>';
         echo closeform();
-    }
-
-    /**
-     *  Display Buttons for Form
-     *
-     * @param      $unique_id
-     * @param bool $breaker
-     */
-    private function displayFormButtons($unique_id, $breaker = TRUE) {
-        ?>
-        <div class="m-t-20">
-            <?php echo form_button('preview_submission', $this->locale['preview'], $this->locale['preview'], ['class' => 'btn-default', 'icon' => 'fa fa-fw fa-eye', 'input_id' => 'preview_submission-'.$unique_id.'']); ?>
-            <?php echo form_button('publish_submission', $this->locale['publish'], $this->locale['publish'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-fw fa-hdd-o', 'input_id' => 'publish_submission-'.$unique_id.'']); ?>
-            <?php echo form_button('delete_submission', $this->locale['delete'], $this->locale['delete'], ['class' => 'btn-danger', 'icon' => 'fa fa-fw fa-trash', 'input_id' => 'delete_submission-'.$unique_id.'']); ?>
-        </div>
-        <?php if ($breaker) { ?>
-            <hr/><?php } ?>
-        <?php
     }
 
     /**
@@ -317,7 +303,7 @@ class FaqSubmissionsAdmin extends FaqAdminModel {
         $data = self::submitData($criteria);
 
         if (!empty($data)) {
-            echo "<div class='well m-t-15'>".sprintf($this->locale['faq_0064'], format_word(count($data), $this->locale['fmt_submission']))."</div>\n";
+            echo "<div class='well'>".sprintf($this->locale['faq_0064'], format_word(count($data), $this->locale['fmt_submission']))."</div>\n";
             echo "<div class='table-responsive m-t-10'><table class='table table-striped'>\n";
             echo "<thead>\n";
             echo "<tr>\n";

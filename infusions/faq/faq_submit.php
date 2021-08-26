@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/header.php';
-require_once FAQ_CLASS.'autoloader.php';
+require_once FAQ_CLASSES.'autoloader.php';
 require_once INFUSIONS.'faq/templates/faq.tpl.php';
-PHPFusion\FAQ\FaqServer::FaqSubmit()->displayFaq();
+PHPFusion\FAQ\FaqServer::faqSubmit()->displayFaq();
 require_once THEMES.'templates/footer.php';
