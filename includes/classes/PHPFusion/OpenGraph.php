@@ -40,11 +40,10 @@ class OpenGraph {
         $result = dbquery("SELECT page_content, page_keywords, page_title FROM ".DB_CUSTOM_PAGES." WHERE page_id=:pageid LIMIT 1", [':pageid' => $pageid]);
         if (dbrows($result)) {
             $data = dbarray($result);
+            $info['title'] = $data['page_title'].' - '.$settings['sitename'];
+            $info['description'] = !empty($data['page_content']) ? fusion_first_words(strip_tags($data['page_content']), 50) : $settings['description'];
             $info['url'] = $settings['siteurl'].'viewpage.php?page_id='.$pageid;
             $info['keywords'] = !empty($data['page_keywords']) ? $data['page_keywords'] : $settings['keywords'];
-            $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
-            $info['title'] = $data['page_title'].' - '.$settings['sitename'];
-            $info['description'] = $data['page_content'] ? fusion_first_words(strip_tags($data['page_content']), 50) : $settings['description'];
         }
 
         self::setValues($info);
@@ -62,8 +61,6 @@ class OpenGraph {
         // I know that is not good idea, but some user fields may be disabled... See next code
         if (dbrows($result)) {
             $data = dbarray($result);
-            $info['url'] = $settings['siteurl'].'profile.php?lookup='.$userid;
-            $info['keywords'] = $settings['keywords'];
             $realname = "";
             if (isset($data['user_name_first']) && trim($data['user_name_first'])) {
                 $realname .= trim($data['user_name_first']);
@@ -78,8 +75,10 @@ class OpenGraph {
             }
 
             $info['title'] = $locale['u103'].$locale['global_201'].$data['user_name'];
-            $info['image'] = $data['user_avatar'] ? $settings['siteurl'].'images/avatars/'.$data['user_avatar'] : $settings['siteurl'].'images/avatars/no-avatar.jpg';
             $info['description'] = $settings['description'];
+            $info['url'] = $settings['siteurl'].'profile.php?lookup='.$userid;
+            $info['keywords'] = $settings['keywords'];
+            $info['image'] = $data['user_avatar'] ? $settings['siteurl'].'images/avatars/'.$data['user_avatar'] : $settings['siteurl'].'images/avatars/no-avatar.jpg';
         }
 
         self::setValues($info);
@@ -106,21 +105,25 @@ class OpenGraph {
         $settings = fusion_get_settings();
 
         if (!self::$og_added) {
-
-            foreach ($values as $key => $value) {
-                self::$data[$key] = trim($value);
-            }
-
             self::$data['site_name'] = $settings['sitename'];
             if (!empty($values['title']) && !empty($values['description']) && !empty($values['url']) && !empty($values['keywords'])) {
                 self::$data['title'] = $values['title'];
                 self::$data['description'] = str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($values['description'])));
                 self::$data['url'] = $values['url'];
                 self::$data['keywords'] = $values['keywords'];
-                if (!empty($values['image']))
+
+                if (
+                    !empty($values['image']) &&
+                    in_array(strtolower(pathinfo($values['image'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp'])
+                ) {
                     self::$data['image'] = $values['image'];
-                if (!empty($values['type']))
+                } else {
+                    self::$data['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
+                }
+
+                if (!empty($values['type'])) {
                     self::$data['type'] = $values['type'];
+                }
             } else {
                 self::setDefaults();
             }
@@ -153,7 +156,7 @@ class OpenGraph {
     private static function addToHead() {
         foreach (self::$data as $key => $value) {
             if (self::$data != '') {
-                add_to_head('<meta property="og:'.$key.'" content="'.$value.'" />');
+                add_to_head('<meta property="og:'.$key.'" content="'.$value.'">');
             }
         }
     }

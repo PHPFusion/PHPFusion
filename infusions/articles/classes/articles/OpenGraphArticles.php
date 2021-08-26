@@ -25,15 +25,18 @@ class OpenGraphArticles extends OpenGraph {
         $result = dbquery("SELECT article_subject, article_snippet, article_keywords, article_thumbnail FROM ".DB_ARTICLES." WHERE article_id = :article", [':article' => $article_id]);
         if (dbrows($result)) {
             $data = dbarray($result);
+            $info['title'] = $data['article_subject'].' - '.$settings['sitename'];
+            $info['description'] = !empty($data['article_snippet']) ? fusion_first_words(strip_tags(html_entity_decode($data['article_snippet'])), 50) : $settings['description'];
             $info['url'] = $settings['siteurl'].'infusions/articles/articles.php?readmore='.$article_id;
             $info['keywords'] = !empty($data['article_keywords']) ? $data['article_keywords'] : $settings['keywords'];
-            $info['image'] = file_exists(IMAGES_A.'thumbs/'.$data['article_thumbnail']) ? $settings['siteurl'].'infusions/articles/images/thumbs/'.$data['article_thumbnail'] : (defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png');
-            $info['title'] = $data['article_subject'].' - '.$settings['sitename'];
-            $info['description'] = $data['article_snippet'] ? fusion_first_words(strip_tags(html_entity_decode($data['article_snippet'])), 50) : $settings['description'];
             $info['type'] = 'article';
+
+            if (!empty($data['article_thumbnail']) && file_exists(IMAGES_A.'thumbs/'.$data['article_thumbnail'])) {
+                $info['image'] = $settings['siteurl'].'infusions/articles/images/thumbs/'.$data['article_thumbnail'];
+            }
         }
 
-        OpenGraphArticles::setValues($info);
+        self::setValues($info);
     }
 
     public static function ogArticleCat($cat_id = 0) {
@@ -43,14 +46,12 @@ class OpenGraphArticles extends OpenGraph {
 
         if (dbrows($result)) {
             $data = dbarray($result);
-            $info['url'] = $settings['siteurl'].'infusions/articles/articles.php?cat_id='.$cat_id;
-            $info['keywords'] = $settings['keywords'];
-            $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             $info['title'] = $data['article_cat_name'].' - '.$settings['sitename'];
             $info['description'] = !empty($data['article_cat_description']) ? fusion_first_words(strip_tags(html_entity_decode($data['article_cat_description'])), 50) : $settings['description'];
-            $info['type'] = 'website';
+            $info['url'] = $settings['siteurl'].'infusions/articles/articles.php?cat_id='.$cat_id;
+            $info['keywords'] = $settings['keywords'];
         }
 
-        OpenGraphArticles::setValues($info);
+        self::setValues($info);
     }
 }
