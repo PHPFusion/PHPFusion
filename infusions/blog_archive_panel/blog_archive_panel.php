@@ -39,12 +39,16 @@ if (defined('BLOG_EXISTS')) {
         }
         foreach ($data as $blog_year => $blog_months) {
             echo "<li>";
-            echo "<a data-toggle='collapse' data-parent='#blog_archive' aria-expanded='false' aria-controls='#blog_archive' href='#link-".$blog_year."'><b>".$blog_year."</b></a>";
+            echo "<a data-toggle='collapse' data-parent='#blog_archive' aria-expanded='false' aria-controls='#blog_archive' href='#link-".$blog_year."'>";
+            echo "<b>".$blog_year."</b>";
+            echo "</a>";
             echo "<ul id='link-".$blog_year."' class='collapse'>";
             foreach ($blog_months as $blog_month => $blog_entries) {
                 echo "<li class='m-l-10'><strong>".$blog_month."</strong></li>";
                 foreach ($blog_entries as $blog_entry) {
-                    echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>".trimlink($blog_entry['blog_subject'], 25)."</a></li>";
+                    echo "<li class='m-l-20'><a href='".INFUSIONS."blog/blog.php?readmore=".$blog_entry['blog_id']."'>";
+                    echo trimlink($blog_entry['blog_subject'], 25);
+                    echo "</a></li>";
                 }
             }
             echo "</ul>";
