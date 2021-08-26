@@ -1967,8 +1967,8 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 /**
  * Get the locale file name for infusions
  *
- * @param        $locale_file
- * @param        $locale_folder
+ * @param string $locale_file
+ * @param string $locale_folder
  * @param bool   $localeset_folder
  * @param string $default_lang
  *
