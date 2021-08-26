@@ -47,7 +47,7 @@ class OpenGraphArticles extends OpenGraph {
             $info['keywords'] = $settings['keywords'];
             $info['image'] = defined('THEME_ICON') ? THEME_ICON.'mstile-150x150.png' : $settings['siteurl'].'images/favicons/mstile-150x150.png';
             $info['title'] = $data['article_cat_name'].' - '.$settings['sitename'];
-            $info['description'] = $data['article_cat_description'] ? fusion_first_words(strip_tags(html_entity_decode($data['article_cat_description'])), 50) : $settings['description'];
+            $info['description'] = !empty($data['article_cat_description']) ? fusion_first_words(strip_tags(html_entity_decode($data['article_cat_description'])), 50) : $settings['description'];
             $info['type'] = 'website';
         }
 
