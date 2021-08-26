@@ -1201,8 +1201,8 @@ if (!function_exists('tab_active')
                             $getArray = [];
                             $keep_filtered = TRUE;
                         }
-
-                        $link_url = clean_request($getname.'='.$tab_id.(defined('ADMIN_PANEL') ? "&aid=".$_GET['aid'] : ""), $getArray, $keep_filtered);
+                        
+                        $link_url = clean_request($getname.'='.$tab_id.(check_get('aid') ? "&aid=".get('aid') : ""), $getArray, $keep_filtered);
                     }
 
                     $active = ($link_active_arrkey == $tab_id) ? ' active' : '';
