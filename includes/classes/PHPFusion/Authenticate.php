@@ -105,7 +105,6 @@ class Authenticate {
 
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
                     Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember);
-                    Authenticate::_setUserTheme($user);
                     Authenticate::storeUserSession($passAuth, $user["user_id"]);
                     $this->user_data = $user;
                 } else {
@@ -202,25 +201,6 @@ class Authenticate {
         }
 
         return $return;
-    }
-
-    /**
-     * @param array $user
-     *
-     * @return mixed|null
-     */
-    public static function _setUserTheme($user) {
-        if ($user['user_level'] == USER_LEVEL_SUPER_ADMIN) {
-            return $user['user_level'];
-        }
-
-        if (fusion_get_settings("userthemes") == 0 && $user['user_level'] < USER_LEVEL_ADMIN && $user['user_theme'] != "Default") {
-            $user['user_theme'] = "Default";
-
-            return NULL;
-        } else {
-            return NULL;
-        }
     }
 
     /**
@@ -432,8 +412,6 @@ class Authenticate {
                                     }
                                 }
                             }
-
-                            Authenticate::_setUserTheme($user);
 
                             return $user;
                         } else {
