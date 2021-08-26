@@ -135,14 +135,14 @@ class Infusions {
                 'insertdbrow'     => $inf_insertdbrow,
                 'updatedbrow'     => $inf_updatedbrow,
             ];
-            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
+
             /*
              * Status Remarks
              * 2 - When upgrade is a must
              * 1 - Nothing to upgrade
              * 0 - Infusions not found.
              */
-            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">") ? 2 : 1) : 0;
+            $infusion['status'] = defined(strtoupper($folder).'_EXISTS') ? (version_compare($infusion['version'], constant(strtoupper($folder).'_VERSION'), ">") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -274,7 +274,7 @@ class Infusions {
                                  *
                                  * The version of the CMS is irrelevant. Infusion can be upgraded as many times as the authors
                                  * make it available to be distributed. (i.e. they can say Version 1 is for Version 9 of the CMS)
-                                 * in their own website, Version 2 is for Version 10 of the CMS etc.). Apps and CMS are not tied
+                                 * in their own website, Version 2 is for Version 10 of the CMS etc. Apps and CMS are not tied
                                  * together in terms of version-ing, as PHPFusion does not track it as we do not maintain them.
                                  *
                                  * When developing upgrades, people should not just make insertions and declare without checking
