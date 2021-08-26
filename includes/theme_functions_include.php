@@ -98,7 +98,8 @@ function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '
                                     $debug_param .= $debug_backtrace['args'][1];
                                 }
                             }
-                            $modal_body .= "Statement::: <code>".addslashes($debug_line)."</code><br/>Parameters::: <code>".($debug_param ?: "--")."</code><br/>";
+                            $modal_body .= "Statement::: <code>".addslashes($debug_line)."</code>";
+                            $modal_body .= !empty($debug_param) ? "<br/>Parameters::: <code>".$debug_param ."</code>" : '';
                         }
 
                     }
