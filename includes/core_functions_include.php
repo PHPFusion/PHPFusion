@@ -2636,3 +2636,22 @@ function maintenance_mode($maintenance = TRUE) {
         return NULL;
     }
 }
+
+/**
+ * Recursive in_array
+ *
+ * @param mixed $needle   The searched value.
+ * @param array $haystack The array.
+ * @param bool  $strict   If the third parameter strict is set to true then the in_array() function will also check the types of the needle in the haystack.
+ *
+ * @return bool
+ */
+function in_array_r($needle, $haystack, $strict = FALSE) {
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}

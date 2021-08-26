@@ -36,15 +36,15 @@ if (isset($_POST['sendmessage'])) {
         if (isset($_POST[$key])) {
             // Subject needs 'special' treatment
             if ($key == 'subject') {
-                $input['subject'] = substr(str_replace(["\r", "\n", "@"], "", descript(stripslashes(trim($_POST['subject'])))), 0, 128); // most unique in the entire CMS. keep.
+                $input['subject'] = substr(str_replace(["\r", "\n", "@"], "", descript(stripslashes(trim($_POST['subject'])))), 0, 128);
                 $input['subject'] = form_sanitizer($input['subject'], $input[$key], $key);
                 // Others don't
             } else {
-                $input[$key] = form_sanitizer($_POST[$key], $input[$key], $key);
+                $input[$key] = form_sanitizer($_POST[$key], $value, $key);
             }
             // Input not posted, fallback to the default
         } else {
-            $input[$key] = form_sanitizer($input[$key], $input[$key], $key);
+            $input[$key] = form_sanitizer($value, $value, $key);
         }
     }
 
@@ -60,12 +60,19 @@ if (isset($_POST['sendmessage'])) {
     if (fusion_safe()) {
         require_once INCLUDES."sendmail_include.php";
 
-        $template_result = dbquery("SELECT template_key, template_active, template_sender_name, template_sender_email FROM ".DB_EMAIL_TEMPLATES." WHERE template_key='CONTACT' LIMIT 1");
+        $template_result = dbquery("SELECT template_key, template_active, template_sender_name, template_sender_email
+            FROM ".DB_EMAIL_TEMPLATES."
+            WHERE template_key='CONTACT'
+            LIMIT 1
+        ");
+
         if (dbrows($template_result)) {
 
             $template_data = dbarray($template_result);
             if ($template_data['template_active'] == "1") {
-                if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "", $template_data['template_sender_name'], "", $template_data['template_sender_email'], $input['mailname'], $input['email'])) {
+                if (!sendemail_template("CONTACT", $input['subject'], $input['message'], "",
+                    $template_data['template_sender_name'], "", $template_data['template_sender_email'],
+                    $input['mailname'], $input['email'])) {
                     fusion_stop();
                     addnotice('danger', $locale['CT_425']);
                 }
@@ -91,7 +98,11 @@ if (isset($_POST['sendmessage'])) {
 }
 
 $site_email = hide_email(fusion_get_settings('siteemail'));
-$info['message'] = str_replace(["[PM_LINK]", "[SITE_EMAIL]"], ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email], $locale['CT_401']);
+$info['message'] = str_replace(
+    ["[PM_LINK]", "[SITE_EMAIL]"],
+    ["<a href='messages.php?msg_send=1'>".$locale['global_121']."</a>", $site_email],
+    $locale['CT_401']
+);
 $info['input'] = $input;
 
 $info['captcha_code'] = '';
@@ -106,12 +117,16 @@ if (iGUEST) {
 
     $info['captcha'] = display_captcha($captcha_settings);
     if (!isset($_CAPTCHA_HIDE_INPUT) || (!$_CAPTCHA_HIDE_INPUT)) {
-        $info['captcha_code'] = form_text('captcha_code', $locale['CT_408'], '', ['required' => TRUE, 'autocomplete_off' => TRUE, 'input_id' => 'captcha_code_contact']);
+        $info['captcha_code'] = form_text('captcha_code', $locale['CT_408'], '', [
+            'required'         => TRUE,
+            'autocomplete_off' => TRUE,
+            'input_id'         => 'captcha_code_contact'
+        ]);
     }
 }
 
-echo openform('contactform', 'post', FORM_REQUEST);
-echo render_contact_form($info);
+echo openform('contactform', 'post');
+render_contact_form($info);
 echo closeform();
 
 require_once THEMES.'templates/footer.php';

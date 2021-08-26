@@ -32,7 +32,9 @@ if ($settings['maintenance'] == "1") {
 }
 
 if (iMEMBER) {
-    dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata('user_id')."'");
+    dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
+        WHERE user_id='".fusion_get_userdata('user_id')."'
+    ");
 }
 
 echo "<!DOCTYPE html>\n";
@@ -66,11 +68,14 @@ if (isset($_GET['type'])) {
             if (!defined('ARTICLES_EXISTS')) {
                 redirect(BASEDIR."error.php?code=404");
             }
-            $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, ta.article_datestamp, tu.user_id, tu.user_name, tu.user_status
+            $result = dbquery("SELECT ta.article_subject, ta.article_article, ta.article_breaks, ta.article_datestamp,
+                tu.user_id, tu.user_name, tu.user_status
                 FROM ".DB_ARTICLES." ta
                 INNER JOIN ".DB_ARTICLE_CATS." tac ON ta.article_cat=tac.article_cat_id
                 LEFT JOIN ".DB_USERS." tu ON ta.article_name=tu.user_id
-                WHERE ta.article_id=:item_id AND ta.article_draft='0' AND tac.article_cat_status='1' AND ".groupaccess("ta.article_visibility")." AND ".groupaccess("tac.article_cat_visibility")."
+                WHERE ta.article_id=:item_id AND ta.article_draft='0' AND tac.article_cat_status='1' AND
+                ".groupaccess("ta.article_visibility")." AND
+                ".groupaccess("tac.article_cat_visibility")."
                 LIMIT 0,1
             ", [':item_id' => intval($item_id)]);
             $res = FALSE;
@@ -82,7 +87,9 @@ if (isset($_GET['type'])) {
                     'add_line_breaks' => $data['article_breaks'] == 'y'
                 ]));
                 echo "<strong>".$data['article_subject']."</strong><br />\n";
-                echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']))."</span>\n";
+                echo "<span class='small'>";
+                echo $locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['article_datestamp']));
+                echo "</span>\n";
                 echo "<hr />".$article."\n";
             }
             if (!$res) {
@@ -93,7 +100,8 @@ if (isset($_GET['type'])) {
             if (!defined('BLOG_EXISTS')) {
                 redirect(BASEDIR."error.php?code=404");
             }
-            $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility, tu.user_id, tu.user_name, tu.user_status
+            $result = dbquery("SELECT tn.blog_subject, tn.blog_blog, tn.blog_extended, tn.blog_breaks, tn.blog_datestamp, tn.blog_visibility,
+                tu.user_id, tu.user_name, tu.user_status
                 FROM ".DB_BLOG." tn
                 LEFT JOIN ".DB_USERS." tu ON tn.blog_name=tu.user_id
                 WHERE blog_id=:item_id AND blog_draft='0'
@@ -109,7 +117,9 @@ if (isset($_GET['type'])) {
                         $blog_extended = parse_text($data['blog_extended'], ['parse_bbcode' => FALSE, 'add_line_breaks' => $data['blog_breaks'] == 'y']);
                     }
                     echo "<strong>".$data['blog_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']))."</span>\n";
+                    echo "<span class='small'>";
+                    echo $locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['blog_datestamp']));
+                    echo "</span>\n";
                     echo "<hr />".$blog."\n";
                     if ($blog_extended) {
                         echo "<hr />\n<strong>".$locale['403']."</strong>\n<hr />\n$blog_extended\n";
@@ -140,7 +150,9 @@ if (isset($_GET['type'])) {
                 ]));
 
                 echo "<strong>".$data['faq_question']."</strong><br />\n";
-                echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']))."</span>\n";
+                echo "<span class='small'>";
+                echo $locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['faq_datestamp']));
+                echo "</span>\n";
                 echo "<hr />".$faq."\n";
             }
             if (!$res) {
@@ -168,7 +180,9 @@ if (isset($_GET['type'])) {
                         $res = TRUE;
                         echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                         echo "<div style='margin-left:20px'>\n";
-                        echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".$_GET['nr']."</div><div style='float:none;clear:both'></div><hr />\n";
+                        echo "<div style='float:left'>";
+                        echo $locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp']);
+                        echo "</div><div style='float:right'>#".$_GET['nr']."</div><hr />\n";
                         echo parse_text($data['post_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]);
                         if ($data['edit_name'] != "") {
                             echo "<div style='margin-left:20px'>\n<hr />\n";
@@ -205,7 +219,9 @@ if (isset($_GET['type'])) {
                                 echo $locale['500']." <strong>".$settings['sitename']." :: ".$data['thread_subject']."</strong><hr /><br />\n";
                             }
                             echo "<div style='margin-left:20px'>\n";
-                            echo "<div style='float:left'>".$locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp'])."</div><div style='float:right'>#".($i + 1)."</div><div style='float:none;clear:both'></div><hr />\n";
+                            echo "<div style='float:left'>";
+                            echo $locale['501'].$data['user_name'].$locale['502'].showdate("forumdate", $data['post_datestamp']);
+                            echo "</div><div style='float:right'>#".($i + 1)."</div><hr />\n";
                             echo parse_text($data['post_message'], ['decode' => FALSE, 'add_line_breaks' => TRUE]);
                             if ($data['edit_name'] != '') {
                                 echo "<div style='margin-left:20px'>\n<hr />\n";
@@ -244,7 +260,9 @@ if (isset($_GET['type'])) {
                         $news_extended = "";
                     }
                     echo "<strong>".$data['news_subject']."</strong><br />\n";
-                    echo "<span class='small'>".$locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['news_datestamp']))."</span>\n";
+                    echo "<span class='small'>";
+                    echo $locale['400'].$data['user_name'].$locale['401'].ucfirst(showdate("longdate", $data['news_datestamp']));
+                    echo "</span>\n";
                     echo "<hr />".$news."\n";
                     if ($news_extended) {
                         echo "<hr />\n<strong>".$locale['402']."</strong>\n<hr />\n$news_extended\n";

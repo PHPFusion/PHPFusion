@@ -28,7 +28,7 @@ class ImageValidation {
     /**
      * Check extensions only. This will not check against mimetype header
      */
-    public static function ValidateExtensions() {
+    public static function validateExtensions() {
         if (fusion_get_settings('mime_check')) {
             if (isset($_FILES) && count($_FILES)) {
                 $mime_types = mimetypes();
@@ -100,13 +100,13 @@ class ImageValidation {
      * Check for alteration of file extensions to prevent unwanted payload executions
      * https://securelist.com/blog/virus-watch/74297/png-embedded-malicious-payload-hidden-in-a-png-file/
      *
-     * @param $file_src  - the tmp src file
-     * @param $file_ext  - the current tmp src file extensions
-     * @param $valid_ext - all accepted file extensions
+     * @param string $file_src  The tmp src file
+     * @param string $file_ext  The current tmp src file extensions
+     * @param array  $valid_ext All accepted file extensions
      *
      * @return bool
      */
-    public static function mime_check($file_src, $file_ext, $valid_ext) {
+    public static function mimeCheck($file_src, $file_ext, $valid_ext) {
         if (extension_loaded('fileinfo')) {
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $type = $finfo->file($file_src);
@@ -123,7 +123,7 @@ class ImageValidation {
             $check_ext = strtolower(ltrim($file_ext, '.'));
             if (!empty($check_type[$check_ext])) {
                 if (is_array($check_type[$check_ext])) {
-                    if (self::in_array_r($type, $check_type[$check_ext])) {
+                    if (in_array_r($type, $check_type[$check_ext])) {
                         return TRUE;
                     }
                 }
@@ -134,16 +134,6 @@ class ImageValidation {
          * Abort mimecheck because the webserver does not have this extension.
          */
         return TRUE;
-    }
-
-    private static function in_array_r($needle, $haystack, $strict = FALSE) {
-        foreach ($haystack as $item) {
-            if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && self::in_array_r($needle, $item, $strict))) {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
     }
 }
 

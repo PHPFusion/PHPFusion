@@ -68,7 +68,8 @@ if (isset($_GET['user_id']) && isnum($_GET['user_id']) && isset($_GET['code']) &
                     $locale['505']
                 );
                 require_once INCLUDES."sendmail_include.php";
-                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'], str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['504']), $message);
+                sendemail($data['user_name'], $data['user_email'], $settings['siteusername'], $settings['siteemail'],
+                    str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['504']), $message);
                 redirect(BASEDIR."login.php");
             } else {
                 redirect(FUSION_SELF."?error=1");

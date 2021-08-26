@@ -44,7 +44,9 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     if (iADMIN && checkrights("UG") && $_GET['lookup'] != $user_data['user_id']) {
         if ((isset($_POST['add_to_group'])) && (isset($_POST['user_group']) && isnum($_POST['user_group']))) {
             if (!preg_match("(^\.{$_POST['user_group']}$|\.{$_POST['user_group']}\.|\.{$_POST['user_group']}$)", $user_data['user_groups'])) {
-                $result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$user_data['user_groups'].".".$_POST['user_group']."' WHERE user_id='".$_GET['lookup']."'");
+                $result = dbquery("UPDATE ".DB_USERS." SET user_groups='".$user_data['user_groups'].".".$_POST['user_group']."'
+                    WHERE user_id='".$_GET['lookup']."'
+                ");
             }
             redirect(FUSION_SELF."?lookup=".$_GET['lookup']);
         }

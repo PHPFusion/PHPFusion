@@ -53,9 +53,14 @@ if (!iMEMBER) {
     $info = [
         "open_form"            => openform('loginpageform', 'POST', $path),
         "user_name"            => form_text('user_name', "", $user_name, ['placeholder' => $placeholder, 'inline' => TRUE]),
-        "user_pass"            => form_text('user_pass', "", $user_password, ['placeholder' => $locale['global_102'], 'type' => 'password', 'inline' => TRUE]),
+        "user_pass"            => form_text('user_pass', "", $user_password, [
+            'placeholder' => $locale['global_102'],
+            'type'        => 'password', 'inline' => TRUE
+        ]),
         "remember_me"          => form_checkbox('remember_me', $locale['global_103'], ""),
-        "login_button"         => form_button('login', $locale['global_104'], $locale['global_104'], ['class' => 'btn-primary btn-block m-b-20']),
+        "login_button"         => form_button('login', $locale['global_104'], $locale['global_104'], [
+            'class' => 'btn-primary btn-block m-b-20'
+        ]),
         "registration_link"    => $settings['enable_registration'] ? "<p>".$locale['global_105']."</p>\n" : "",
         "forgot_password_link" => $locale['global_106'],
         "close_form"           => closeform(),
@@ -114,7 +119,7 @@ if (!defined('NO_DEFAULT_CSS')) {
 $theme_css = file_exists(THEME.'styles.min.css') ? THEME.'styles.min.css' : THEME.'styles.css';
 echo "<link rel='stylesheet' href='".$theme_css."?v=".filemtime($theme_css)."'>\n";
 
-if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
+/*if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $user_theme = fusion_get_userdata('user_theme');
     $theme_name = $user_theme !== 'Default' ? $user_theme : $settings['theme'];
     $theme_data = dbarray(dbquery("SELECT theme_file FROM ".DB_THEME." WHERE theme_name='".$theme_name."' AND theme_active='1'"));
@@ -122,7 +127,7 @@ if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     if (!empty($theme_data)) {
         echo "<link rel='stylesheet' href='".THEMES.$theme_data['theme_file']."'>\n";
     }
-}
+}*/
 
 echo render_favicons(defined('THEME_ICON') ? THEME_ICON : IMAGES.'favicons/');
 

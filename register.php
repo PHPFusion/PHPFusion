@@ -50,7 +50,9 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
             redirect("register.php?error=activate");
         }
 
-        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [':code' => get('code'), ':email' => get('email')]);
+        $result = dbquery("SELECT user_info FROM ".DB_NEW_USERS." WHERE user_code=:code AND user_email=:email", [
+            ':code' => get('code'), ':email' => get('email')
+        ]);
 
         if (dbrows($result) > 0) {
 

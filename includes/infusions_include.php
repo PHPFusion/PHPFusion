@@ -275,7 +275,7 @@ if (!function_exists('upload_file')) {
             } else if (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
-            } else if (fusion_get_settings('mime_check') && Defender\ImageValidation::mime_check($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+            } else if (fusion_get_settings('mime_check') && Defender\ImageValidation::mimeCheck($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
                 $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
@@ -368,7 +368,7 @@ if (!function_exists('upload_image')) {
 
             if ($image['size']) {
 
-                if (Defender\ImageValidation::mime_check($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
+                if (Defender\ImageValidation::mimeCheck($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
 
                     $image_res = [0, 1];
 

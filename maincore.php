@@ -16,10 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use Defender\ImageValidation;
 use Defender\Token;
 use PHPFusion\Authenticate;
-use PHPFusion\Installer\Infusions;
 use PHPFusion\OutputHandler;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
@@ -60,7 +58,7 @@ if (stripget($_GET)) {
 
 // Establish mySQL database connection
 if (!empty($db_host) && !empty($db_user) && !empty($db_name)) {
-    dbconnect($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+    dbconnect($db_host, $db_user, (!empty($db_pass) ? $db_pass : ''), $db_name, (!empty($db_port) ? $db_port : 3306));
 }
 
 // Fetch the settings from the database
@@ -86,15 +84,17 @@ ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
 ini_set('session.gc_maxlifetime', 172800); // 48 hours
-// Session cookie life time
+// Session cookie lifetime
 ini_set('session.cookie_lifetime', 172800); // 48 hours
 // Prevent document expiry when user hits Back in browser
 session_cache_limiter('private, must-revalidate');
 session_name(COOKIE_PREFIX.'session');
 // Start DB session.
-if (!empty($settings['database_sessions'])) {
-    // Establish secondary mySQL database connection for session caches
-    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig($db_host, $db_user, $db_pass, $db_name, !empty($db_port) ? $db_port : 3306);
+if (!empty($settings['database_sessions']) && (!empty($db_host) && !empty($db_user) && !empty($db_name))) {
+    // Establish secondary MySQL database connection for session caches
+    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig(
+        $db_host, $db_user, (!empty($db_pass) ? $db_pass : ''), $db_name, (!empty($db_port) ? $db_port : 3306)
+    );
     session_set_save_handler(
         [$handler, '_open'],
         [$handler, '_close'],
@@ -128,13 +128,16 @@ $_SERVER['QUERY_STRING'] = isset($_SERVER['QUERY_STRING']) ? cleanurl($_SERVER['
 $_SERVER['REQUEST_URI'] = isset($_SERVER['REQUEST_URI']) ? cleanurl($_SERVER['REQUEST_URI']) : "";
 $PHP_SELF = cleanurl($_SERVER['PHP_SELF']);
 
-// Redirects to the index if the URL is invalid (eg. file.php/folder/)
+// Redirects to the index if the URL is invalid (e.g. file.php/folder/)
 if ($_SERVER['SCRIPT_NAME'] != $_SERVER['PHP_SELF']) {
     redirect($settings['siteurl']);
 }
 
 // Force protocol change if https turned on main settings
-if ($settings['site_protocol'] == 'https' && (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'))) {
+if ($settings['site_protocol'] == 'https' && (
+    !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+        isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+    )) {
     redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
 }
 
@@ -174,17 +177,11 @@ if (explode("?", PERMALINK_CURRENT_PATH)) {
 }
 
 $count = substr_count(PERMALINK_CURRENT_PATH, "/");
-$root = "";
-for ($i = 0; $i < $count; $i++) { // moved 0 to 1 will crash.
-    $root .= "../";
-}
+$root = str_repeat("../", $count);
 define("ROOT", $root);
 
 $root_count = $count - substr_count(BASEDIR, "/");
-$fusion_root = '';
-for ($i = 0; $i < $root_count; $i++) { // moved 0 to 1 will crash.
-    $fusion_root .= "../";
-}
+$fusion_root = str_repeat("../", $root_count);
 define("FUSION_ROOT", $fusion_root);
 
 // Calculate current true url
@@ -200,7 +197,10 @@ while ($base_url_count != 0) {
 
 // Set TRUE_PHP_SELF and START_PAGE
 define("TRUE_PHP_SELF", $current_page);
-define("START_PAGE", substr(preg_replace("#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "", TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")), 1));
+define("START_PAGE", substr(preg_replace(
+    "#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "",
+    TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")
+), 1));
 
 /**
  * Login / Logout / Revalidate
@@ -273,7 +273,7 @@ if (!defined('FUSION_ALLOW_REMOTE')) {
     new Token();
 }
 
-ImageValidation::ValidateExtensions();
+Defender\ImageValidation::validateExtensions();
 
 // Define aidlink
 if (iADMIN) {
@@ -325,4 +325,4 @@ if (cdrows($result)) {
  * Reduction of 0.04 seconds in performance.
  * We can use manually include the configuration if needed.
  */
-Infusions::loadConfiguration();
+PHPFusion\Installer\Infusions::loadConfiguration();

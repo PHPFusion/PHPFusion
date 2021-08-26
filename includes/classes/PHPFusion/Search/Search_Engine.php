@@ -163,16 +163,15 @@ class Search_Engine extends SearchModel {
          * Char list
          */
         $char_areas = form_select('chars', '', self::get_param('chars'), [
-                'inner_width' => '150px',
-                'options'     => [
-                    '50'  => '50',
-                    '100' => '100',
-                    '150' => '150',
-                    '200' => '200'
-                ],
-                'deactivate'  => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("chars", $form_elements[self::get_param('stype')]['disabled']))
-            ]
-        );
+            'inner_width' => '150px',
+            'options'     => [
+                '50'  => '50',
+                '100' => '100',
+                '150' => '150',
+                '200' => '200'
+            ],
+            'deactivate'  => (self::get_param('stype') != "all" && isset($form_elements[self::get_param('stype')]) && in_array("chars", $form_elements[self::get_param('stype')]['disabled']))
+        ]);
 
         /*
          * Bind
@@ -429,7 +428,7 @@ class Search_Engine extends SearchModel {
     private function __clone() {
     }
 
-    public static function display_search() {
+    public static function displaySearch() {
         echo '<div class="search-page">';
         self::displaySearchForm();
         if (strlen(self::get_param('stext')) >= 3) {
