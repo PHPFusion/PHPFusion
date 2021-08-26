@@ -361,7 +361,7 @@ class ArticlesSubmissionsAdmin extends ArticlesAdminModel {
         ?>
 
         <!-- Display Table -->
-        <div class="table-responsive m-t-10">
+        <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                 <tr>
