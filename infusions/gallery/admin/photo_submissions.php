@@ -42,8 +42,8 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "photo_order"          => form_sanitizer($_POST['photo_order'], "", "photo_order"),
                 "photo_datestamp"      => $data['submit_datestamp'],
                 "photo_user"           => $data['submit_user'],
-                "photo_allow_comments" => 0,
-                "photo_allow_ratings"  => 0,
+                "photo_allow_comments" => 1,
+                "photo_allow_ratings"  => 1,
                 "photo_views"          => 0,
                 "photo_filename"       => form_sanitizer($_POST['photo_filename'], "", "photo_filename"),
                 "photo_thumb1"         => isset($_POST['photo_thumb1']) ? form_sanitizer($_POST['photo_thumb1'], "", "photo_thumb1") : "",
@@ -124,22 +124,24 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 $data = dbarray($result);
                 $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
                 $callback_data = [
-                    "album_id"          => $submit_criteria['album_id'],
-                    "photo_title"       => $submit_criteria['photo_title'],
-                    "photo_keywords"    => $submit_criteria['photo_keywords'],
-                    "photo_description" => parse_text($submit_criteria['photo_description']),
-                    "photo_filename"    => $submit_criteria['photo_filename'],
-                    "photo_thumb1"      => $submit_criteria['photo_thumb1'],
-                    "photo_thumb2"      => $submit_criteria['photo_thumb2'],
-                    "photo_datestamp"   => $data['submit_datestamp'],
-                    "photo_user"        => $data['user_id'],
-                    "photo_order"       => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1
+                    "album_id"             => $submit_criteria['album_id'],
+                    "photo_title"          => $submit_criteria['photo_title'],
+                    "photo_keywords"       => $submit_criteria['photo_keywords'],
+                    "photo_description"    => parse_text($submit_criteria['photo_description']),
+                    "photo_filename"       => $submit_criteria['photo_filename'],
+                    "photo_thumb1"         => $submit_criteria['photo_thumb1'],
+                    "photo_thumb2"         => $submit_criteria['photo_thumb2'],
+                    "photo_datestamp"      => $data['submit_datestamp'],
+                    "photo_user"           => $data['user_id'],
+                    "photo_order"          => dbresult(dbquery("SELECT MAX(photo_order) FROM ".DB_PHOTOS), 0) + 1,
+                    'photo_allow_comments' => 1,
+                    'photo_allow_ratings'  => 1
                 ];
                 $l_image = "";
                 $submissions_dir = INFUSIONS."gallery/submissions/";
                 $submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
-                echo openform("publish_article", "post", FUSION_REQUEST);
-                echo "<div class='well clearfix m-t-15'>\n";
+                echo openform("publish_photo", "post", FUSION_REQUEST);
+                echo "<div class='well clearfix'>\n";
                 echo "<div class='pull-left'>\n";
                 echo display_avatar($data, "30px", "", "", "img-rounded m-t-5 m-r-5");
                 echo "</div>\n";
@@ -226,14 +228,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             ");
     $rows = dbrows($result);
     if ($rows > 0) {
-        echo "<div class='well m-t-15'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
+        echo "<div class='well'>".sprintf($locale['gallery_0151'], format_word($rows, $locale['fmt_submission']))."</div>\n";
         echo "<div class='table-responsive'><table class='table table-striped'>\n";
-        echo "<tr>\n";
+        echo "<thead><tr>\n";
         echo "<th>".$locale['gallery_0152']."</th>\n";
         echo "<th>".$locale['gallery_0153']."</th>\n";
         echo "<th>".$locale['gallery_0154']."</th>\n";
         echo "<th>".$locale['gallery_0155']."</th>";
-        echo "</tr>\n";
+        echo "</tr></thead>\n";
         echo "<tbody>\n";
         while ($data = dbarray($result)) {
             $submit_criteria = unserialize(stripslashes($data['submit_criteria']));
@@ -241,7 +243,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], [
                     "section",
                     "aid"
-                ])."'>".$submit_criteria['photo_title']."</a></td>\n";
+                ])."'>".(!empty($submit_criteria['photo_title']) ? $submit_criteria['photo_title'] : 'n/a')."</a></td>\n";
             echo "<td>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
             echo "<td>".timer($data['submit_datestamp'])."</td>\n";
             echo "<td>".$data['submit_id']."</td>\n";
@@ -249,6 +251,6 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
         }
         echo "</tbody>\n</table>\n</div>";
     } else {
-        echo "<div class='well text-center m-t-20'>".$locale['gallery_0150']."</div>\n";
+        echo "<div class='well text-center'>".$locale['gallery_0150']."</div>\n";
     }
 }

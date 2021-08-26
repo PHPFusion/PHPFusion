@@ -143,20 +143,20 @@ function photo_form() {
                     addnotice('danger', $locale['photo_0014']);
                 }
             }
+
             if (fusion_safe()) {
                 if (dbcount("(photo_id)", DB_PHOTOS, "photo_id=:photoid", [':photoid' => intval($data['photo_id'])])) {
                     // update album
-                    dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE, FALSE, '', 'update');
+                    dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', $data['photo_id'], 'photo_id', FALSE, FALSE);
                     dbquery_insert(DB_PHOTOS, $data, 'update');
                     addnotice('success', $locale['photo_0015']);
-                    redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
                 } else {
                     // create album
                     dbquery_order(DB_PHOTOS, $data['photo_order'], 'photo_order', 0, "photo_id", FALSE, FALSE, FALSE, '', 'save');
                     dbquery_insert(DB_PHOTOS, $data, 'save');
                     addnotice('success', $locale['photo_0016']);
-                    redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
                 }
+                redirect(clean_request('album_id='.$data['album_id'], ['ref', 'action', 'album_id', 'photo_id', 'section'], FALSE));
             }
         }
         if ($photo_edit) {
@@ -264,7 +264,7 @@ function photo_form() {
 
         echo "</div>\n";
         echo "<div class='col-xs-12 col-sm-4'>\n";
-
+        openside('');
         echo form_select('photo_keywords', $locale['album_0005'], $data['photo_keywords'], [
             'placeholder' => $locale['album_0006'],
             'multiple'    => TRUE,
@@ -275,6 +275,7 @@ function photo_form() {
 
         echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $data['photo_allow_comments']);
         echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $data['photo_allow_ratings']);
+        closeside();
         echo "</div>\n</div>\n";
         echo form_button('save_photo', $locale['photo_0012'], $locale['photo_0012'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();

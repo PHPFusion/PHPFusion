@@ -221,7 +221,7 @@ function gallery_photo_listing() {
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
                 echo "<div class='panel-image-wrapper'>\n";
-                echo displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], '', $data['album_id']);
+                echo display_photo_image($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], '', $data['album_id']);
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";
                 echo "<div class='dropdown pull-right spacer-xs'>\n";
@@ -304,9 +304,9 @@ function gallery_album_listing() {
                 echo "<div class='panel-image-wrapper'>\n";
                 if ($data['photo_count']) {
                     $link = FUSION_SELF.$aidlink."&amp;album_id=".$data['album_id'];
-                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link, $data['album_id']);
+                    echo display_album_image($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], $link, $data['album_id']);
                 } else {
-                    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
+                    echo display_album_image($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
                 }
                 echo "</div>\n";
                 echo "<div class='panel-body p-0'>\n";

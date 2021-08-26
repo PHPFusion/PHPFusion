@@ -43,10 +43,8 @@ if (isset($_POST['delete_watermarks'])) {
             }
             unset($parts);
         }
-        redirect(FUSION_REQUEST);
-    } else {
-        redirect(FUSION_REQUEST);
     }
+    redirect(FUSION_REQUEST);
 } else {
     if (isset($_POST['savesettings'])) {
 
@@ -59,7 +57,7 @@ if (isset($_POST['delete_watermarks'])) {
             'photo_max_h'                 => form_sanitizer($_POST['photo_max_h'], 1800, 'photo_max_h'),
             'photo_max_b'                 => form_sanitizer($_POST['calc_b'], 2097152, 'calc_b') * form_sanitizer($_POST['calc_c'], 1, 'calc_c'),
             'gallery_pagination'          => form_sanitizer($_POST['gallery_pagination'], 24, 'gallery_pagination'),
-            'photo_watermark'             => form_sanitizer($_POST['photo_watermark'], 0, 'photo_watermark'),
+            'photo_watermark'             => post('photo_watermark'),
             'photo_watermark_save'        => isset($_POST['photo_watermark_save']) ? 1 : 0,
             'photo_watermark_image'       => isset($_POST['photo_watermark_image']) ? form_sanitizer($_POST['photo_watermark_image'], '', 'photo_watermark_image') : IMAGES_G.'watermark.png',
             'photo_watermark_text'        => isset($_POST['photo_watermark_text']) ? 1 : 0,
@@ -67,10 +65,11 @@ if (isset($_POST['delete_watermarks'])) {
             'photo_watermark_text_color2' => isset($_POST['photo_watermark_text_color2']) ? form_sanitizer($_POST['photo_watermark_text_color2'], 'FFFF00', 'photo_watermark_text_color2') : 'FFFF00',
             'photo_watermark_text_color3' => isset($_POST['photo_watermark_text_color3']) ? form_sanitizer($_POST['photo_watermark_text_color3'], 'FFFFFF', 'photo_watermark_text_color3') : 'FFFFFF',
             'gallery_allow_submission'    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
-            'gallery_extended_required'   => isset($_POST['gallery_extended_required']) ? 1 : 0,
+            'gallery_extended_required'   => form_sanitizer($_POST['gallery_extended_required'], 0, 'gallery_extended_required'),
             'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.gif,.jpg,.png,.svg,.webp', 'gallery_file_types'),
             'gallery_submission_access'   => form_sanitizer($_POST['gallery_submission_access'], USER_LEVEL_MEMBER, 'gallery_submission_access')
         ];
+
         if (fusion_safe()) {
             foreach ($inputArray as $settings_name => $settings_value) {
                 $inputSettings = [
@@ -93,7 +92,6 @@ $calc_opts = $locale['1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
 
-echo "<div class='m-t-20'>";
 echo "<div class='well'>".$locale['gallery_0022']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
@@ -271,7 +269,7 @@ echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'm-l-5 btn-danger', 'icon' => 'fa fa-trash'
 ]);
 echo closeform();
-echo '</div>';
+
 add_to_jquery("
     $('#photo_watermark').bind('change', function(){
     var vals = $(this).select2().val();

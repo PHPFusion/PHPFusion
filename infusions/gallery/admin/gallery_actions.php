@@ -64,7 +64,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order+1 WHERE photo_order='".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
                     addnotice("success", $locale['photo_0022']);
-                    redirect(clean_request("", ["album_id", "aid"], TRUE));
+                    redirect(clean_request("", ["album_id", "aid"]));
                 }
                 break;
             case "pd":
@@ -72,7 +72,7 @@ if (isset($_GET['action']) && ($_GET['action'] == "pu" || $_GET['action'] == "pd
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order = photo_order-1 WHERE photo_order = '".$_GET['order']."'");
                     dbquery("UPDATE ".DB_PHOTOS." SET photo_order= '".$_GET['order']."' WHERE photo_id ='".$_GET['photo_id']."'");
                     addnotice("success", $locale['photo_0023']); //change
-                    redirect(clean_request("", ["album_id", "aid"], TRUE));
+                    redirect(clean_request("", ["album_id", "aid"]));
                 }
                 break;
             default:
@@ -127,7 +127,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 purgeAlbumImage($albumData);
                 rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
-                redirect(clean_request("", ["aid"], TRUE));
+                redirect(clean_request("", ["aid"]));
             } else {
                 // Confirmation form
                 echo openmodal('confirm_steps', $locale['album_0027']);
@@ -150,7 +150,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
             rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
             dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
             addnotice("success", $locale['album_0030']);
-            redirect(clean_request("", ["aid"], TRUE));
+            redirect(clean_request("", ["aid"]));
         }
     } else {
         redirect(INFUSIONS.'gallery/gallery_admin.php'.$aidlink);
@@ -167,7 +167,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_
         dbquery_order(DB_PHOTOS, $photo_data['photo_order'], "photo_order", $photo_data['photo_id'], "photo_id", $photo_data['album_id'], "album_id", FALSE, FALSE, "delete");
         dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
         addnotice("success", $locale['photo_0024']);
-        redirect(clean_request("", ["aid"], TRUE));
+        redirect(clean_request("", ["aid"]));
     }
 }
 

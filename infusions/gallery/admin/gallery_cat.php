@@ -33,6 +33,7 @@ $data = [
     'album_thumb2'      => '',
     'album_order'       => 0
 ];
+
 if (isset($_POST['save_album'])) {
     $data = [
         'album_id'          => form_sanitizer($_POST['album_id'], 0, 'album_id'),
@@ -87,28 +88,28 @@ if (isset($_POST['save_album'])) {
             }
         }
     }
+
     if (fusion_safe()) {
         if (dbcount("(album_id)", DB_PHOTO_ALBUMS, "album_id=:albumid", [':albumid' => intval($data['album_id'])])) {
             // update album
-            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE, 'album_language', 'update');
+            $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', $data['album_id'], 'album_id', FALSE, FALSE, TRUE, 'album_language');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'update');
             addnotice('success', $locale['album_0013']);
-            redirect(FUSION_REQUEST);
         } else {
             // create album
             $result = dbquery_order(DB_PHOTO_ALBUMS, $data['album_order'], 'album_order', 0, "album_id", FALSE, FALSE, TRUE, 'album_language', 'save');
             dbquery_insert(DB_PHOTO_ALBUMS, $data, 'save');
 
             $album_id = dblastid();
-            @mkdir(IMAGES_G.'album_'.$album_id, 0777);
+            @mkdir(IMAGES_G.'album_'.$album_id);
             @copy(IMAGES.'index.php', IMAGES_G.'album_'.$album_id.'/index.php');
 
-            @mkdir(IMAGES_G.'album_'.$album_id.'/thumbs', 0777);
+            @mkdir(IMAGES_G.'album_'.$album_id.'/thumbs');
             @copy(IMAGES.'index.php', IMAGES_G.'album_'.$album_id.'/thumbs/index.php');
 
             addnotice('success', $locale['album_0014']);
-            redirect(FUSION_REQUEST);
         }
+        redirect(FUSION_REQUEST);
     }
 }
 
@@ -122,9 +123,9 @@ if ($album_edit) {
     }
 }
 // edit features - add more in roadmap.
-// add features to purge all album photos and it's administration
+// add features to purge all album photos, and it's administration
 // add features to move all album photos to another album.
-echo openform('albumform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-20']);
+echo openform('albumform', 'post', FUSION_REQUEST, ['enctype' => TRUE]);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 echo form_hidden('album_id', '', $data['album_id']);
 echo form_text('album_title', $locale['album_0001'], $data['album_title'], [
@@ -142,7 +143,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
     echo form_hidden('album_image', '', $data['album_image']);
     echo form_hidden('album_thumb2', '', $data['album_thumb2']);
     echo form_hidden('album_thumb1', '', $data['album_thumb1']);
-    echo displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
+    echo display_album_image($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], "", $data['album_id']);
     echo form_checkbox('del_image', $locale['album_0016']);
 } else {
     $extip = sprintf($locale['album_0010'], parsebytesize($gll_settings['photo_max_b']), $gll_settings['gallery_file_types'], $gll_settings['photo_max_w'], $gll_settings['photo_max_h']);
@@ -172,7 +173,7 @@ if ($data['album_image'] || $data['album_thumb1']) {
 }
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
-echo fusion_get_function('openside', '');
+openside('');
 echo form_select('album_access[]', $locale['album_0007'], $data['album_access'], [
     'options'  => fusion_get_groups(),
     'multiple' => TRUE,
@@ -192,7 +193,7 @@ echo form_select("album_keywords", $locale['album_0005'], $data['album_keywords'
 echo form_text('album_order', $locale['album_0011'], $data['album_order'], [
     'type' => 'number'
 ]);
-echo fusion_get_function('closeside', '');
+closeside();
 echo "</div>\n</div>\n";
 echo form_button('save_album', $locale['album_0012'], $locale['album_0012'], ['class' => 'btn-success m-t-10', 'icon' => 'fa fa-hdd-o']);
 echo closeform();

@@ -216,7 +216,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 add_to_meta("keywords", $info['album_keywords']);
             }
             /* Category Info */
-            $info['album_thumb'] = displayAlbumImage($info['album_image'], $info['album_thumb2'], $info['album_thumb1'], "", $info['album_id']);
+            $info['album_thumb'] = display_album_image($info['album_image'], $info['album_thumb2'], $info['album_thumb1'], "", $info['album_id']);
             $info['album_link'] = [
                 'link' => INFUSIONS.'gallery/gallery.php?album_id='.$_GET['album_id'],
                 'name' => $info['album_title']
@@ -268,7 +268,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     $info['max_rows'], 3,
                     INFUSIONS."gallery/gallery.php?album_id=".$_GET['album_id']."&") : '';
                 if ($info['photo_rows'] > 0) {
-                    // this is photo
+
                     while ($data = dbarray($result)) {
                         // data manipulation
                         $data += [
@@ -276,7 +276,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                                 'link' => INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'],
                                 'name' => $data['photo_title']
                             ],
-                            'image'       => displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], $data['album_id']),
+                            'image'       => display_photo_image($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], INFUSIONS."gallery/gallery.php?photo_id=".$data['photo_id'], $data['album_id']),
                             'title'       => !empty($data['photo_title']) ? $data['photo_title'] : $data['photo_filename'],
                             'description' => !empty($data['photo_description']) ? parse_text($data['photo_description'], [
                                 'parse_bbcode'    => TRUE,
@@ -364,7 +364,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                     ];
                 }
 
-                $data['image'] = displayAlbumImage($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], $data['album_id']);
+                $data['image'] = display_album_image($data['album_image'], $data['album_thumb1'], $data['album_thumb2'], INFUSIONS."gallery/gallery.php?album_id=".$data['album_id'], $data['album_id']);
 
                 $data['title'] = !empty($data['album_title']) ? $data['album_title'] : $locale['gallery_402'];
                 $data['description'] = !empty($data['album_description']) ? parse_text($data['album_description'], [

@@ -127,7 +127,7 @@ if (!empty($enabled_languages)) {
 if (is_dir(IMAGES."photoalbum/")) {
     rrmdir(IMAGES.'photoalbum/submissions/');
 
-    $files = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."photoalbum/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."photoalbum/".$file, INFUSIONS.'gallery/photos/'.$file);
     }

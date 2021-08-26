@@ -40,9 +40,9 @@ function convert_color($hex) {
         $red = $green = $blue = 0;
         sscanf($hex, '%2x%2x%2x', $red, $green, $blue);
         $color['success'] = TRUE;
-        $color['r'] = (int)$red;
-        $color['g'] = (int)$green;
-        $color['b'] = (int)$blue;
+        $color['r'] = $red;
+        $color['g'] = $green;
+        $color['b'] = $blue;
     } else {
         $color['success'] = FALSE;
         $color['error'] = $locale['global_900'];
@@ -164,7 +164,7 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $dec = ["&", "\"", "'", "\\", '\"', "\'", "<", ">"];
                 // drop the function and use a rgb output.
 
-                $black = ImageColorAllocate(($image2 ? $image2 : $image), 0, 0, 0);
+                $black = ImageColorAllocate((!empty($image2) ? $image2 : $image), 0, 0, 0);
                 // lets just do a rgb value instead of converting.
                 // bugged
                 //@todo: drop function and scan image brightness to go for either black or white.
@@ -172,13 +172,13 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
                 $colors2 = convert_color($gallery_settings['photo_watermark_text_color2']);
                 $colors3 = convert_color($gallery_settings['photo_watermark_text_color3']);
 
-                $color1 = ImageColorAllocate(($image2 ? $image2 : $image), $colors1['r'], $colors1['g'], $colors1['b']);
-                $color2 = ImageColorAllocate(($image2 ? $image2 : $image), $colors2['r'], $colors2['g'], $colors2['b']);
-                $color3 = ImageColorAllocate(($image2 ? $image2 : $image), $colors3['r'], $colors3['g'], $colors3['b']);
+                $color1 = ImageColorAllocate((!empty($image2) ? $image2 : $image), $colors1['r'], $colors1['g'], $colors1['b']);
+                $color2 = ImageColorAllocate((!empty($image2) ? $image2 : $image), $colors2['r'], $colors2['g'], $colors2['b']);
+                $color3 = ImageColorAllocate((!empty($image2) ? $image2 : $image), $colors3['r'], $colors3['g'], $colors3['b']);
                 //move text y
-                $mty1 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 40 : 50) - 25;
-                $mty2 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 25 : 35) - 20;
-                $mty3 = ($thumb_h ? $thumb_h : $image_dim_y) - ($thumb_h ? 15 : 20) - 15;
+                $mty1 = (!empty($thumb_h) ? $thumb_h : $image_dim_y) - ($thumb_h ? 40 : 50) - 25;
+                $mty2 = (!empty($thumb_h) ? $thumb_h : $image_dim_y) - ($thumb_h ? 25 : 35) - 20;
+                $mty3 = (!empty($thumb_h) ? $thumb_h : $image_dim_y) - ($thumb_h ? 15 : 20) - 15;
                 $album_title = str_replace("\r", "", $data['album_title']);
                 $album_title = str_replace("\n", "", $album_title);
                 $album_title = preg_replace("[\[(.*?)\]]", "", $album_title);
@@ -203,28 +203,28 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
 
                 $fontfile = dirname(__FILE__).'/font/NotoSansRegular.ttf';
                 //album title
-                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 - 1, $black, $fontfile, $album_title);
-                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 + 1, $black, $fontfile, $album_title);
-                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 9, $mty1, $black, $fontfile, $album_title);
-                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 11, $mty1, $black, $fontfile, $album_title);
-                imagettftext(($image2 ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1, $color1, $fontfile, $album_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 - 1, $black, $fontfile, $album_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1 + 1, $black, $fontfile, $album_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 9, $mty1, $black, $fontfile, $album_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 11, $mty1, $black, $fontfile, $album_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_title_font_size + 10, 0, 10 + 10, $mty1, $color1, $fontfile, $album_title);
                 //album info
-                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 - 1, $black, $fontfile,$album_description);
-                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 + 1, $black, $fontfile, $album_description);
-                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 9, $mty2, $black, $fontfile, $album_description);
-                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 11, $mty2, $black, $fontfile, $album_description);
-                imagettftext(($image2 ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2, $color2, $fontfile, $album_description);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 - 1, $black, $fontfile, $album_description);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2 + 1, $black, $fontfile, $album_description);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 9, $mty2, $black, $fontfile, $album_description);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 11, $mty2, $black, $fontfile, $album_description);
+                imagettftext((!empty($image2) ? $image2 : $image), $album_descr_font_size + 10, 0, 10 + 10, $mty2, $color2, $fontfile, $album_description);
                 //photo name
-                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 - 1, $black, $fontfile, $photo_title);
-                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 + 1, $black, $fontfile, $photo_title);
-                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 9, $mty3, $black, $fontfile, $photo_title);
-                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 11, $mty3, $black, $fontfile, $photo_title);
-                imagettftext(($image2 ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3, $color3, $fontfile, $photo_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 - 1, $black, $fontfile, $photo_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3 + 1, $black, $fontfile, $photo_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 9, $mty3, $black, $fontfile, $photo_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 11, $mty3, $black, $fontfile, $photo_title);
+                imagettftext((!empty($image2) ? $image2 : $image), $photo_title_font_size + 10, 0, 10 + 10, $mty3, $color3, $fontfile, $photo_title);
             }
         }
         //create image
         if ($gallery_settings['photo_watermark_save']) {
-            ImageJPEG(($image2 ? $image2 : $image), $wm_file);
+            ImageJPEG((!empty($image2) ? $image2 : $image), $wm_file);
         }
         ImageJPEG((isset($image2) && $image2 ? $image2 : $image));
         ImageDestroy((isset($image2) && $image2 ? $image2 : $image));

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Displays the Album Image
  *
@@ -26,7 +27,7 @@
  *
  * @return string
  */
-function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $album_id = 0) {
+function display_album_image($album_image, $album_thumb1, $album_thumb2, $link, $album_id = 0) {
     $gallery_settings = get_settings("gallery");
 
     if (defined('GALLERY_ALBUM_LATEST_PHOTO')) {
@@ -38,10 +39,9 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $a
 
         if (dbrows($result) > 0) {
             $data = dbarray($result);
-            return displayPhotoImage($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], $link, $album_id);
+            return display_photo_image($data['photo_filename'], $data['photo_thumb1'], $data['photo_thumb2'], $link, $album_id);
         }
 
-        return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
     } else {
         if (!empty($album_thumb1) && (file_exists(IMAGES_G_T.$album_thumb1) || file_exists(IMAGES_G.$album_thumb1))) {
             if (file_exists(IMAGES_G.$album_thumb1)) {
@@ -62,8 +62,9 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $a
             return thumbnail(IMAGES_G.$album_image, $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
         }
 
-        return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
     }
+
+    return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", $link, FALSE, TRUE, "cropfix");
 }
 
 /**
@@ -77,7 +78,7 @@ function displayAlbumImage($album_image, $album_thumb1, $album_thumb2, $link, $a
  *
  * @return string
  */
-function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link, $album_id = 0) {
+function display_photo_image($photo_filename, $photo_thumb1, $photo_thumb2, $link, $album_id = 0) {
     $gallery_settings = get_settings('gallery');
 
     if (!empty($photo_thumb1) && (file_exists(IMAGES_G_T.$photo_thumb1) || file_exists(IMAGES_G.'album_'.$album_id.'/thumbs/'.$photo_thumb1) || file_exists(IMAGES_G.'album_'.$album_id.'/'.$photo_thumb1))) {
@@ -124,6 +125,11 @@ function displayPhotoImage($photo_filename, $photo_thumb1, $photo_thumb2, $link,
     return thumbnail(IMAGES_G."album_default.jpg", $gallery_settings['thumb_w']."px", "", FALSE, TRUE, "cropfix");
 }
 
+/**
+ * @param array $data
+ *
+ * @return string[]
+ */
 function return_photo_paths($data) {
     $photo_thumb2 = '';
     $photo_thumb1 = '';
