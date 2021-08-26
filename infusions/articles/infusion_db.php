@@ -17,45 +17,31 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+use PHPFusion\Admins;
+
 // Locales
-if (!defined("ARTICLE_LOCALE")) {
-    if (file_exists(INFUSIONS."articles/locale/".LOCALESET."articles.php")) {
-        define("ARTICLE_LOCALE", INFUSIONS."articles/locale/".LOCALESET."articles.php");
-    } else {
-        define("ARTICLE_LOCALE", INFUSIONS."articles/locale/English/articles.php");
-    }
-}
-if (!defined("ARTICLE_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."articles/locale/".LOCALESET."article_admin.php")) {
-        define("ARTICLE_ADMIN_LOCALE", INFUSIONS."articles/locale/".LOCALESET."article_admin.php");
-    } else {
-        define("ARTICLE_ADMIN_LOCALE", INFUSIONS."articles/locale/English/article_admin.php");
-    }
-}
+define('ARTICLE_LOCALE', fusion_get_inf_locale_path('articles.php', INFUSIONS.'articles/locale/'));
+define('ARTICLE_ADMIN_LOCALE', fusion_get_inf_locale_path('article_admin.php', INFUSIONS.'articles/locale/'));
 
 // Paths
-if (!defined("ARTICLE_CLASS")) {
-    define("ARTICLE_CLASS", INFUSIONS."articles/classes/");
-}
-if (!defined("IMAGES_A")) {
-    define("IMAGES_A", INFUSIONS."articles/images/");
-}
+const ARTICLE_CLASSES = INFUSIONS.'articles/classes/';
+const IMAGES_A = INFUSIONS.'articles/images/';
+
 // Database
-if (!defined("DB_ARTICLE_CATS")) {
-    define("DB_ARTICLE_CATS", DB_PREFIX."article_cats");
-}
-if (!defined("DB_ARTICLES")) {
-    define("DB_ARTICLES", DB_PREFIX."articles");
-}
+const DB_ARTICLES = DB_PREFIX.'articles';
+const DB_ARTICLE_CATS = DB_PREFIX.'article_cats';
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
+Admins::getInstance()->setAdminPageIcons("A", "<i class='admin-ico fa fa-fw fa-book'></i>");
+Admins::getInstance()->setCommentType("A", fusion_get_locale("A", LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType("A", fusion_get_settings("siteurl")."infusions/articles/articles.php?article_id=%s");
 
 $inf_settings = get_settings('articles');
-if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article_allow_submission']) && (!empty($inf_settings['article_submission_access']) && checkgroup($inf_settings['article_submission_access']))) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('a', [
+if (
+    (!empty($inf_settings['article_allow_submission']) && $inf_settings['article_allow_submission']) &&
+    (!empty($inf_settings['article_submission_access']) && checkgroup($inf_settings['article_submission_access']))
+) {
+    Admins::getInstance()->setSubmitData('a', [
         'infusion_name' => 'articles',
         'link'          => INFUSIONS."articles/article_submit.php",
         'submit_link'   => "submit.php?stype=a",
@@ -65,11 +51,12 @@ if ((!empty($inf_settings['article_allow_submission']) && $inf_settings['article
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('articles', [
-    'infusions/articles/images/' => TRUE
+Admins::getInstance()->setFolderPermissions('articles', [
+    'infusions/articles/images/'        => TRUE,
+    'infusions/articles/images/thumbs/' => TRUE
 ]);
 
-\PHPFusion\Admins::getInstance()->setCustomFolder('A', [
+Admins::getInstance()->setCustomFolder('A', [
     [
         'path'  => IMAGES_A,
         'URL'   => fusion_get_settings('siteurl').'infusions/articles/images/',
@@ -82,11 +69,13 @@ if (defined('ARTICLES_EXISTS')) {
         $locale = fusion_get_locale();
 
         if (fusion_get_settings('comments_enabled') == 1) {
-            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = ar.article_id AND c1.comment_type = 'A') AS comments_count,";
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1
+                WHERE c1.comment_item_id = ar.article_id AND c1.comment_type = 'A') AS comments_count,";
         }
 
         if (fusion_get_settings('ratings_enabled') == 1) {
-            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = ar.article_id AND r1.rating_type = 'A') AS ratings_count,";
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1
+                WHERE r1.rating_item_id = ar.article_id AND r1.rating_type = 'A') AS ratings_count,";
         }
 
         $result = dbquery("SELECT
@@ -105,7 +94,8 @@ if (defined('ARTICLES_EXISTS')) {
             LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id = ar.article_cat
             LEFT JOIN ".DB_USERS." AS u ON u.user_id = ar.article_name
             WHERE ar.article_draft = 0
-            AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "AND ".in_group('ac.article_cat_language', LANGUAGE) : "")."
+            AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "
+            AND ".in_group('ac.article_cat_language', LANGUAGE) : "")."
             ORDER BY ar.article_datestamp DESC LIMIT ".$limit
         );
 
