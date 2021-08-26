@@ -2154,58 +2154,6 @@ function fusion_get_language_switch() {
 }
 
 /**
- * Language switcher function.
- *
- * @param bool $icon Set false to hide the icon.
- */
-function lang_switcher($icon = TRUE) {
-    $locale = fusion_get_locale();
-    $enabled_languages = fusion_get_enabled_languages();
-    if (count($enabled_languages) <= 1) {
-        return;
-    }
-    openside($locale['global_ML102']);
-    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-    if ($icon) {
-        $language_switch = fusion_get_language_switch();
-        if (!empty($language_switch)) {
-            $row = 0;
-            foreach ($language_switch as $folder => $langData) {
-                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
-                if ($folder != LANGUAGE) {
-                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
-                }
-                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
-                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
-                $row++;
-            }
-        }
-    } else {
-        include_once INCLUDES."translate_include.php";
-        echo openform('lang_menu_form', 'post', FUSION_SELF);
-        echo form_select('lang_menu', '', fusion_get_settings('locale'), ["options" => fusion_get_enabled_languages(), "width" => "100%"]);
-        echo closeform();
-        add_to_jquery("
-            function showflag(item){
-                return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\">
-                    <img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\" alt=\"'+item.text + '\"/>
-                    <span class=\"p-l-10\">'+ item.text +'</span>
-                </div>';
-            }
-            $('#lang_menu').select2({
-            placeholder: '".$locale['global_ML103']."',
-            formatSelection: showflag,
-            escapeMarkup: function(m) { return m; },
-            formatResult: showflag,
-            }).bind('change', function(item) {
-                window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-            });
-        ");
-    }
-    closeside();
-}
-
-/**
  * Get the array of enabled languages.
  *
  * @return array
