@@ -17,60 +17,48 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (!defined("DOWNLOAD_LOCALE")) {
-    if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads.php")) {
-        define("DOWNLOAD_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads.php");
-    } else {
-        define("DOWNLOAD_LOCALE", INFUSIONS."downloads/locale/English/downloads.php");
-    }
-}
+use PHPFusion\Admins;
 
-if (!defined("DOWNLOAD_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php")) {
-        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/".LOCALESET."downloads_admin.php");
-    } else {
-        define("DOWNLOAD_ADMIN_LOCALE", INFUSIONS."downloads/locale/English/downloads_admin.php");
-    }
-}
+// Locales
+define('DOWNLOAD_LOCALE', fusion_get_inf_locale_path('downloads.php', INFUSIONS.'downloads/locale/'));
+define('DOWNLOAD_ADMIN_LOCALE', fusion_get_inf_locale_path('downloads_admin.php', INFUSIONS.'downloads/locale/'));
 
-if (!defined("DOWNLOADS")) {
-    define("DOWNLOADS", INFUSIONS."downloads/");
-}
-if (!defined("IMAGES_D")) {
-    define("IMAGES_D", INFUSIONS."downloads/images/");
-}
-if (!defined("DB_DOWNLOAD_CATS")) {
-    define("DB_DOWNLOAD_CATS", DB_PREFIX."download_cats");
-}
-if (!defined("DB_DOWNLOADS")) {
-    define("DB_DOWNLOADS", DB_PREFIX."downloads");
-}
+// Paths
+const DOWNLOADS = INFUSIONS."downloads/";
+const IMAGES_D = INFUSIONS."downloads/images/";
+
+// Database
+const DB_DOWNLOADS = DB_PREFIX."downloads";
+const DB_DOWNLOAD_CATS = DB_PREFIX."download_cats";
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
+Admins::getInstance()->setAdminPageIcons("D", "<i class='admin-ico fa fa-fw fa-cloud-download'></i>");
+Admins::getInstance()->setCommentType('D', fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType('D', fusion_get_settings("siteurl")."infusions/downloads/downloads.php?download_id=%s");
 
 $inf_settings = get_settings('downloads');
-if ((!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) && (!empty($inf_settings['download_submission_access']) && checkgroup($inf_settings['download_submission_access']))) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('d', [
+if (
+    (!empty($inf_settings['download_allow_submission']) && $inf_settings['download_allow_submission']) &&
+    (!empty($inf_settings['download_submission_access']) && checkgroup($inf_settings['download_submission_access']))
+) {
+    Admins::getInstance()->setSubmitData('d', [
         'infusion_name' => 'downloads',
         'link'          => INFUSIONS."downloads/download_submit.php",
         'submit_link'   => "submit.php?stype=d",
         'submit_locale' => fusion_get_locale('D', LOCALE.LOCALESET."admin/main.php"),
         'title'         => fusion_get_locale('download_submit', LOCALE.LOCALESET."submissions.php"),
-        'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+        'admin_link'    => INFUSIONS."downloads/downloads_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('downloads', [
+Admins::getInstance()->setFolderPermissions('downloads', [
     'infusions/downloads/files/'              => TRUE,
     'infusions/downloads/images/'             => TRUE,
     'infusions/downloads/submissions/'        => TRUE,
     'infusions/downloads/submissions/images/' => TRUE
 ]);
 
-\PHPFusion\Admins::getInstance()->setCustomFolder('D', [
+Admins::getInstance()->setCustomFolder('D', [
     [
         'path'  => IMAGES_D,
         'URL'   => fusion_get_settings('siteurl').'infusions/download/images/',
@@ -83,11 +71,13 @@ if (defined('DOWNLOADS_EXISTS')) {
         $locale = fusion_get_locale();
 
         if (fusion_get_settings('comments_enabled') == 1) {
-            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = dl.download_id AND c1.comment_type = 'D') AS comments_count,";
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1
+                WHERE c1.comment_item_id = dl.download_id AND c1.comment_type = 'D') AS comments_count,";
         }
 
         if (fusion_get_settings('ratings_enabled') == 1) {
-            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = dl.download_id AND r1.rating_type = 'D') AS ratings_count,";
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1
+                WHERE r1.rating_item_id = dl.download_id AND r1.rating_type = 'D') AS ratings_count,";
         }
 
         $result = dbquery("SELECT
@@ -106,7 +96,8 @@ if (defined('DOWNLOADS_EXISTS')) {
             FROM ".DB_DOWNLOADS." dl
             LEFT JOIN ".DB_DOWNLOAD_CATS." dc ON dc.download_cat_id = dl.download_cat
             LEFT JOIN ".DB_USERS." u ON u.user_id = dl.download_user
-            WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "AND ".in_group('dc.download_cat_language', LANGUAGE) : "")."
+            WHERE ".groupaccess('dl.download_visibility')." ".(multilang_table("DL") ? "
+            AND ".in_group('dc.download_cat_language', LANGUAGE) : "")."
             GROUP BY dl.download_id
             ORDER BY dl.download_datestamp DESC LIMIT ".$limit
         );
