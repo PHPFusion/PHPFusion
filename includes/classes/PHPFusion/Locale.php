@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Locale.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -47,11 +47,11 @@ class Locale {
 
         return self::$instances[$key];
     }
-    
+
     public static function getLoadedFiles() {
         return self::$locale_file;
     }
-    
+
     /**
      * Includes a locale file and logs a trace
      *
@@ -67,7 +67,6 @@ class Locale {
         self::$locale += $locale;
         self::$locale_file[$filename] = debug_backtrace();
     }
-
 
 
     /**
@@ -95,7 +94,7 @@ class Locale {
      * @return array|mixed|string
      */
     public function getLocale($key = NULL) {
-        return empty($key) ? self::$locale : (self::$locale[$key] ?? '');
+        return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : '');
     }
 
     /**
@@ -256,7 +255,7 @@ class Locale {
             "Ukrainian"           => "Українська",
         ];
 
-        return $key === NULL ? $translated_langs : ($translated_langs[$key] ?? $key);
+        return $key === NULL ? $translated_langs : (isset($translated_langs[$key]) ? $translated_langs[$key] : $key);
     }
 
     /**
@@ -418,7 +417,7 @@ class Locale {
             return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translateLangNames($language_codes[$key]) : NULL);
         }
 
-        return $key === NULL ? array_flip($iso_codes) : ($iso_codes[$key] ?? NULL);
+        return $key === NULL ? array_flip($iso_codes) : (isset($iso_codes[$key]) ? $iso_codes[$key] : NULL);
     }
 
     /**
@@ -433,21 +432,21 @@ class Locale {
     public static function format_word($count, $words, $options = []) {
         return self::formatWord($count, $words, $options);
     }
-    
+
     /**
      * Performs the language file checks to get the correct locale file for the current user
      *
      * This function will not check whether the locale file exists for debugging purposes.
      * Error codes must be generated in order to know when a locale file is missing.
-     * @param        $locale_file
-     * @param        $locale_folder
+     *
+     * @param string $locale_file
+     * @param string $locale_folder
      * @param bool   $localeset_folder
      * @param string $default_lang
      *
      * @return string
      */
     public function getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English') {
-        
         // prune the locale folder and ensures the correct forumat is used
         $locale_folder = rtrim($locale_folder, '/').'/';
         $locale_set = rtrim(LOCALESET, '/');
@@ -459,14 +458,14 @@ class Locale {
             }
             return $locale_path;
         }
-        
+
         // when there are no folder, typical solution was to store the files in a single locale folder and have the file named as the language - English.php
-        
+
         $locale_path = $locale_folder.$default_lang.'.php';
         if (is_file($locale_folder.$locale_set.'.php')) {
-            $locale_path =$locale_folder.$locale_set.'.php';
+            $locale_path = $locale_folder.$locale_set.'.php';
         }
-        
+
         return $locale_path;
     }
 }

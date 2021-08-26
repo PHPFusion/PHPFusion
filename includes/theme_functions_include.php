@@ -1201,7 +1201,7 @@ if (!function_exists('tab_active')
                             $getArray = [];
                             $keep_filtered = TRUE;
                         }
-                        
+
                         $link_url = clean_request($getname.'='.$tab_id.(check_get('aid') ? "&aid=".get('aid') : ""), $getArray, $keep_filtered);
                     }
 

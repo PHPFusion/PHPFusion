@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-(defined('IN_FUSION') || exit);
+defined('IN_FUSION') || exit;
 
 use Defender\Token;
 use PHPFusion\Authenticate;
@@ -23,23 +23,6 @@ use PHPFusion\ImageRepo;
 use PHPFusion\Minify\JS;
 use PHPFusion\PrivateMessages;
 use PHPFusion\QuantumFields;
-
-// Adds deprecated function for BC issues
-/**
- * @deprecated
- */
-function stripslash() {}
-
-/**
- * @deprecated
- */
-function addslash() {}
-
-/**
- * @deprecated
- */
-function makefileopts() {}
-
 
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
@@ -277,7 +260,7 @@ function set_status_header($code = 200) {
         510 => 'Not Extended'
     ];
 
-    $desc = $desc[$code] ?? '';
+    $desc = !empty($desc[$code]) ? $desc[$code] : '';
 
     header("$protocol $code $desc");
 
@@ -1100,9 +1083,7 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
     if ($strip_tags) {
         do {
             $count = 0;
-            //$iframe = !defined('ENABLE_IFRAME') ? 'embed|iframe|' : '';
-            $iframe = '';
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|'.$iframe.'frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
         } while ($count);
     }
 
@@ -1113,10 +1094,10 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
         '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
         '/(&#*\w+)[\x00-\x20]+;/u'                                                                                                                                                                      => '$1;>',
         '/(&#x*[0-9A-F]+);*/iu'                                                                                                                                                                         => '$1;',
-        //any attribute starting with "on" or xml name space
+        // Remove any attribute starting with "on" or xml name space
         //'#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>',
         '#(<[^>]+?[\x00-\x20"\'])((?:on|xmlns)+[=\w\d()]*+)#iu'                                                                                                                                         => '$1>',
-        //javascript: and VB script: protocols
+        // javascript: and VB script: protocols
         '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu' => '$1=$2nojavascript...',
         '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu'                                        => '$1=$2novbscript...',
         '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u'                                                                                                                         => '$1=$2nomozbinding...',
@@ -1831,7 +1812,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  *
  * @param string $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
  *
- *                       Date pattern definitions
+ *                       Date pattern definitions:
  *                       Day
  *                       %a Sun through Sat
  *                       %A Sunday through Staturday
@@ -1853,11 +1834,12 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  *                       %G 2009 for 2009
  *                       %y 09 for 2009
  *                       %Y 2020 for year 2020
+ *
  *                       Time
  *                       %H hour 00 through 23 for 24hr hour format
  *                       %k hour 0 through 23 for 24hour format, with space preceding single digits
- *                       %I hour 01 through 12 for 12 hour format
- *                       %l Hour 1 through 12 for 12 hour format, with space preceding single digits
+ *                       %I hour 01 through 12 for 12hour format
+ *                       %l Hour 1 through 12 for 12hour format, with space preceding single digits
  *                       %M Minute 00 through 59
  *                       %p Uppercase AM or PM
  *                       %P Lowercase am or pm
@@ -1867,12 +1849,14 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  *                       %T Alias for %H:%M%S (21:34:17 for 09:34:17PM)
  *                       %X Time preferred by locale without date 03:59:16)
  *                       %z Timezone offset (not available for window version php) -0500 for US Eastern Time
+ *
  *                       Time and Datestamps
  *                       %c Date and Time stamp Tue Feb 5 00:43:10 2009
  *                       %D Alias for "%m/%d/%y" (02/05/09)
  *                       %F Alias for "%Y-%m-%d" (2009-02-05)
  *                       %s Timestamp 305815200 for September 10, 1979 08:40:00 AM
  *                       %x Alias for "02/05/09" for February 5, 2009
+ *
  *                       Cheatsheet
  *                       %d %b, %Y  31 Jul, 2021
  * @param int    $val    unix timestamp
@@ -1882,7 +1866,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  */
 function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
-    
+
     if (isset($options['tz_override'])) {
         $tz_client = $options['tz_override'];
     } else {
@@ -1892,13 +1876,13 @@ function showdate($format, $val, $options = []) {
             $tz_client = fusion_get_settings('timeoffset');
         }
     }
-    
+
     if (empty($tz_client)) {
         $tz_client = 'Europe/London';
     }
-    
+
     $offset = 0;
-    
+
     try {
         $client_dtz = new DateTimeZone($tz_client);
         $client_dt = new DateTime('now', $client_dtz);
@@ -1906,21 +1890,21 @@ function showdate($format, $val, $options = []) {
     } catch (Exception $e) {
         set_error(E_CORE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
     }
-    
+
     if (!empty($val)) {
         $offset = (int)$val + $offset;
         if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
             $format = fusion_get_settings($format);
             return strftime($format, $offset);
         }
-        
+
         return strftime($format, $offset);
-        
+
     }
-    
+
     $format = fusion_get_settings($format);
     $offset = time() + $offset;
-    
+
     return strftime($format, $offset);
 }
 
@@ -2029,6 +2013,7 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 
 /**
  * Get the locale file name for infusions
+ *
  * @param        $locale_file
  * @param        $locale_folder
  * @param bool   $localeset_folder
@@ -2481,21 +2466,20 @@ function is_json($string) {
  * Cached script loader.
  * This function will cache the path that has been added and avoid duplicates.
  *
- * @param string $file_path     The source file.
- * @param string $file_type     Possible value: script, css.
- * @param bool   $html          Return as html tags instead add to output handler.
- * @param bool   $cached        False to invalidate browser's cache.
- * @param bool   $show_warnings True to show error notices.
+ * @param string $file_path The source file.
+ * @param string $file_type Possible value: script, css.
+ * @param bool   $html      Return as html tags instead add to output handler.
+ * @param bool   $cached    False to invalidate browser's cache.
  *
  * @return string
  */
-function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE, $show_warnings = FALSE) {
+function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE) {
     static $paths = [];
-    
+
     $file_info = pathinfo($file_path);
-    
+
     if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
-        
+
         $mtime = 0;
         $file = $file_info['dirname'].'/'.$file_info['basename'];
         $min_file = $file_info['dirname'].'/'.$file_info['filename'].(!stristr($file_info['filename'], '.min') ? '.min.' : '.').$file_info['extension'];
@@ -2512,38 +2496,38 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
                 $return_file = $min_file;
             }
         }
-        
+
         if (is_file($return_file)) {
             $mtime = filemtime($return_file);
         }
-        
+
         $file_path = $return_file."?v=".$mtime;
         if (!$cached) {
             $file_path = $return_file;
         }
     }
-    
+
     if ($file_path && empty($paths[$file_path])) {
-        
+
         $paths[$file_path] = $file_path;
-        
+
         if ($file_type == "script") {
-            
+
             $html_tag = "<script src='$file_path'></script>";
             if ($html === TRUE) {
                 return $html_tag;
             }
             add_to_footer($html_tag);
-            
+
         } else if ($file_type == "css") {
-            $html_tag = "<link rel='stylesheet' href='$file_path' media='all' type='text/css'>";
+            $html_tag = "<link rel='stylesheet' href='$file_path' media='all'>";
             if ($html === TRUE) {
                 return $html_tag;
             }
             add_to_head($html_tag);
         }
     }
-    
+
     return '';
 }
 
