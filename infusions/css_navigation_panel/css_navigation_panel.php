@@ -25,7 +25,9 @@ if (!function_exists('show_nav_sublinks')) {
         $res = '';
 
         if (empty($id)) {
-            $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat", "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
+            $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat",
+                "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." 
+                AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
 
             $res = show_nav_links($id, $data);
         }
@@ -70,7 +72,10 @@ if (!function_exists('show_nav_links')) {
                     $link_target = ($link_data['link_window'] == "1" ? " target='_blank'" : '');
                     if ($secondary_active) {
                         $link_is_active = TRUE;
-                    } else if (strtr(FUSION_REQUEST, [fusion_get_settings('site_path') => '', '&amp;' => '&']) == str_replace('../', '', $link_data['link_url'])) {
+                    } else if (
+                        strtr(FUSION_REQUEST, [fusion_get_settings('site_path') => '', '&amp;' => '&']) ==
+                        str_replace('../', '', $link_data['link_url'])
+                    ) {
                         $link_is_active = TRUE;
                     } else if ($start_page == $link_data['link_url']) {
                         $link_is_active = TRUE;
