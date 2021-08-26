@@ -17,64 +17,48 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-//  Define Paths
-if (!defined("IMAGES_G")) {
-    define("IMAGES_G", INFUSIONS."gallery/photos/");
-}
-if (!defined("IMAGES_G_T")) {
-    define("IMAGES_G_T", INFUSIONS."gallery/photos/thumbs/");
-}
+use PHPFusion\Admins;
 
-//  Define Tables
-if (!defined("DB_PHOTO_ALBUMS")) {
-    define("DB_PHOTO_ALBUMS", DB_PREFIX."photo_albums");
-}
-if (!defined("DB_PHOTOS")) {
-    define("DB_PHOTOS", DB_PREFIX."photos");
-}
+// Locales
+define('GALLERY_LOCALE', fusion_get_inf_locale_path('gallery.php', INFUSIONS."gallery/locale/"));
+define('GALLERY_ADMIN_LOCALE', fusion_get_inf_locale_path('gallery_admin.php', INFUSIONS."gallery/locale/"));
 
-//  Define Locale
-if (!defined("GALLERY_LOCALE")) {
-    if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery.php")) {
-        define('GALLERY_LOCALE', INFUSIONS."gallery/locale/".LOCALESET."gallery.php");
-    } else {
-        define('GALLERY_LOCALE', INFUSIONS."gallery/locale/English/gallery.php");
-    }
-}
+// Paths
+const IMAGES_G = INFUSIONS."gallery/photos/";
+const IMAGES_G_T = INFUSIONS."gallery/photos/thumbs/";
 
-if (!defined("GALLERY_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php")) {
-        define('GALLERY_ADMIN_LOCALE', INFUSIONS."gallery/locale/".LOCALESET."gallery_admin.php");
-    } else {
-        define('GALLERY_ADMIN_LOCALE', INFUSIONS."gallery/locale/English/gallery_admin.php");
-    }
-}
+//  Database
+const DB_PHOTO_ALBUMS = DB_PREFIX."photo_albums";
+const DB_PHOTOS = DB_PREFIX."photos";
 
 // Admin Settings
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType('P', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
+Admins::getInstance()->setAdminPageIcons("PH", "<i class='admin-ico fa fa-fw fa-camera-retro'></i>");
+Admins::getInstance()->setCommentType('P', fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"));
+Admins::getInstance()->setLinkType('P', fusion_get_settings("siteurl")."infusions/gallery/gallery.php?photo_id=%s");
 
 $inf_settings = get_settings('gallery');
-if ((!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_allow_submission']) && (!empty($inf_settings['gallery_submission_access']) && checkgroup($inf_settings['gallery_submission_access']))) {
-    \PHPFusion\Admins::getInstance()->setSubmitData('p', [
+if (
+    (!empty($inf_settings['gallery_allow_submission']) && $inf_settings['gallery_allow_submission']) &&
+    (!empty($inf_settings['gallery_submission_access']) && checkgroup($inf_settings['gallery_submission_access']))
+) {
+    Admins::getInstance()->setSubmitData('p', [
         'infusion_name' => 'gallery',
         'link'          => INFUSIONS."gallery/photo_submit.php",
         'submit_link'   => "submit.php?stype=p",
         'submit_locale' => fusion_get_locale('272', LOCALE.LOCALESET."admin/main.php"),
         'title'         => fusion_get_locale('gallery_submit', LOCALE.LOCALESET."submissions.php"),
-        'admin_link'    => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+        'admin_link'    => INFUSIONS."gallery/gallery_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
     ]);
 }
 
-\PHPFusion\Admins::getInstance()->setFolderPermissions('gallery', [
+Admins::getInstance()->setFolderPermissions('gallery', [
     'infusions/gallery/photos/'             => TRUE,
     'infusions/gallery/photos/thumbs/'      => TRUE,
     'infusions/gallery/submissions/'        => TRUE,
     'infusions/gallery/submissions/thumbs/' => TRUE
 ]);
 
-\PHPFusion\Admins::getInstance()->setCustomFolder('PH', [
+Admins::getInstance()->setCustomFolder('PH', [
     [
         'path'  => IMAGES_G,
         'URL'   => fusion_get_settings('siteurl').'infusions/gallery/photos/',
