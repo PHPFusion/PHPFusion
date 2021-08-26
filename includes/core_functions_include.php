@@ -1808,61 +1808,14 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 }
 
 /**
- * Format the date & time accordingly
+ * Format the date and time according to the site and user offset.
  *
- * @param string $format shortdate, longdate, forumdate, newsdate or date pattern for the strftime
+ * @param string $format  Possible value: shortdate, longdate, forumdate, newsdate or date pattern for the strftime.
+ * @param int    $val     Unix timestamp.
+ * @param array  $options Possible options tz_override.
  *
- *                       Date pattern definitions:
- *                       Day
- *                       %a Sun through Sat
- *                       %A Sunday through Staturday
- *                       %d 01 to 31 for day
- *                       %e 1 to 31 for day
- *                       %j 001 to 366 for day of the year
- *                       %w 0 (for Sunday) through 6 (for Saturday)
- *                       Week
- *                       %U 13 (for the 13 full week of the year)
- *                       %V ISO-8i601 01 through 53 week (where 53 accounts for an overlapping week)
- *                       %W 46 (for 46th week of the year beginning with a Monday)
- *                       Month
- *                       %b or %h Jan through Dec
- *                       %B January through December
- *                       %m 01 (for Jan) through 12 (for December)
- *                       Year
- *                       %C 19 for 20th Century
- *                       %g 09 for the week of Jan 6, 2009
- *                       %G 2009 for 2009
- *                       %y 09 for 2009
- *                       %Y 2020 for year 2020
- *
- *                       Time
- *                       %H hour 00 through 23 for 24hr hour format
- *                       %k hour 0 through 23 for 24hour format, with space preceding single digits
- *                       %I hour 01 through 12 for 12hour format
- *                       %l Hour 1 through 12 for 12hour format, with space preceding single digits
- *                       %M Minute 00 through 59
- *                       %p Uppercase AM or PM
- *                       %P Lowercase am or pm
- *                       %r Alias for %l:%M:%S %p (09:34:17 PM for 21:34:17)
- *                       %R Alias for %H:%M (00:31, pm for 12:31 AM)
- *                       %S Second 00 through 59
- *                       %T Alias for %H:%M%S (21:34:17 for 09:34:17PM)
- *                       %X Time preferred by locale without date 03:59:16)
- *                       %z Timezone offset (not available for window version php) -0500 for US Eastern Time
- *
- *                       Time and Datestamps
- *                       %c Date and Time stamp Tue Feb 5 00:43:10 2009
- *                       %D Alias for "%m/%d/%y" (02/05/09)
- *                       %F Alias for "%Y-%m-%d" (2009-02-05)
- *                       %s Timestamp 305815200 for September 10, 1979 08:40:00 AM
- *                       %x Alias for "02/05/09" for February 5, 2009
- *
- *                       Cheatsheet
- *                       %d %b, %Y  31 Jul, 2021
- * @param int    $val    unix timestamp
- * @param array  $options
- *
- * @return string
+ * @return string String formatted according to the given format string.
+ *                Month and weekday names and other language dependent strings respect the current locale set.
  */
 function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
