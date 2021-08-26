@@ -77,8 +77,6 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $calc_c = calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
 
-        echo "<div class='m-t-20'>";
-        echo "<h2>".$locale['news_settings']."</h2><hr/>";
         echo "<div class='well'>".$locale['news_description']."</div>";
 
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
@@ -246,7 +244,5 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "</div></div>\n";
         echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
-
-        echo '</div>';
     }
 }
