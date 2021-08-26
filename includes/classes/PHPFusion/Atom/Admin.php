@@ -258,7 +258,7 @@ class Admin {
     }
 
     /**
-     * Verify that theme exist and not active
+     * Verify that theme exists and not active
      *
      * @param string $theme_name
      * @param bool   $admin
@@ -325,130 +325,5 @@ class Admin {
             }
         }
         echo '</div>';
-    }
-
-    /**
-     * Upload site/admin theme
-     */
-    public static function themeUploader() {
-        $defender = \Defender::getInstance();
-        $locale = fusion_get_locale();
-        $aidlink = fusion_get_aidlink();
-
-        require_once INCLUDES."infusions_include.php";
-
-        if (isset($_POST['upload'])) {
-            $target_folder = THEMES;
-            $max_size = 5 * 1000 * 1000;
-            $upload = upload_file('theme_files', '', $target_folder, ',.zip', $max_size);
-            if ($upload['error'] != '0') {
-                $defender->stop();
-                switch ($upload['error']) {
-                    case 1:
-                        addnotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
-                        break;
-                    case 2:
-                        addnotice('danger', $locale['theme_error_002']);
-                        break;
-                    case 3:
-                        addnotice('danger', $locale['theme_error_003']);
-                        break;
-                    case 4:
-                        addnotice('danger', $locale['theme_error_004']);
-                        break;
-                    default :
-                        addnotice('danger', $locale['theme_error_003']);
-                }
-            } else {
-                $target_file = $target_folder.$upload['target_file'];
-                if (is_file($target_file)) {
-                    $path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
-                    if (class_exists('ZipArchive')) {
-                        $zip = new \ZipArchive();
-                        if ($zip->open($target_file) === TRUE) {
-                            // checks if first folder is theme.php
-                            if ($zip->locateName('theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
-                                // extract it to the path we determined above
-                                $zip->extractTo($path);
-                                addnotice('success', $locale['theme_success_001']);
-                            } else {
-                                $defender->stop();
-                                addnotice('danger', $locale['theme_error_009']);
-                            }
-                            $zip->close();
-                        } else {
-                            addnotice('danger', $locale['theme_error_005']);
-                        }
-                    } else {
-                        addnotice('warning', $locale['theme_error_006']);
-                    }
-                    @unlink($target_file);
-                    redirect(FUSION_SELF.$aidlink.'&section=list');
-                }
-            }
-        }
-
-        if (isset($_POST['uploadadmintheme'])) {
-            $target_folder = THEMES.'admin_themes/';
-            $max_size = 5 * 1000 * 1000;
-            $upload = upload_file('admintheme_files', '', $target_folder, ',.zip', $max_size);
-            if ($upload['error'] != '0') {
-                $defender->stop();
-                switch ($upload['error']) {
-                    case 1:
-                        addnotice('danger', sprintf($locale['theme_error_001'], parsebytesize($max_size)));
-                        break;
-                    case 2:
-                        addnotice('danger', $locale['theme_error_002']);
-                        break;
-                    case 3:
-                        addnotice('danger', $locale['theme_error_003']);
-                        break;
-                    case 4:
-                        addnotice('danger', $locale['theme_error_004']);
-                        break;
-                    default :
-                        addnotice('danger', $locale['theme_error_003']);
-                }
-            } else {
-                $target_file = $target_folder.$upload['target_file'];
-                if (is_file($target_file)) {
-                    $path = pathinfo(realpath($target_file), PATHINFO_DIRNAME);
-                    if (class_exists('ZipArchive')) {
-                        $zip = new \ZipArchive();
-                        if ($zip->open($target_file) === TRUE) {
-                            // checks if first folder is theme.php
-                            if ($zip->locateName('acp_theme.php', \ZipArchive::FL_NODIR) !== FALSE) {
-                                // extract it to the path we determined above
-                                $zip->extractTo($path);
-                                addnotice('success', $locale['theme_success_001']);
-                            } else {
-                                $defender->stop();
-                                addnotice('danger', $locale['theme_error_009']);
-                            }
-                            $zip->close();
-                        } else {
-                            addnotice('danger', $locale['theme_error_005']);
-                        }
-                    } else {
-                        addnotice('warning', $locale['theme_error_006']);
-                    }
-                    @unlink($target_file);
-                    redirect(FUSION_SELF.$aidlink.'&section=admin_themes');
-                }
-            }
-        }
-
-        echo openform('uploadthemeform', 'post', FUSION_SELF.$aidlink, ['enctype' => 1, 'max_tokens' => 1]);
-        openside($locale['theme_1010']);
-        echo form_fileinput('theme_files', '', '', ['type' => 'object', 'preview_off' => TRUE,]);
-        echo form_button('upload', $locale['theme_1007'], 'upload', ['class' => 'btn btn-primary']);
-        closeside();
-
-        openside($locale['theme_1011a']);
-        echo form_fileinput('admintheme_files', '', '', ['type' => 'object', 'preview_off' => TRUE,]);
-        echo form_button('uploadadmintheme', $locale['theme_1007a'], 'uploadadmintheme', ['class' => 'btn btn-primary']);
-        closeside();
-        echo closeform();
     }
 }

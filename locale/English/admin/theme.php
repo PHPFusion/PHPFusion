@@ -6,12 +6,11 @@ $locale['theme_1003'] = "Loaded";
 $locale['theme_1004'] = "Load";
 $locale['theme_1005'] = "Manage Theme";
 $locale['theme_1006'] = "Current Active Theme";
-$locale['theme_1007'] = "Upload Theme ZIP file";
-$locale['theme_1007a'] = "Upload Admin Theme ZIP file";
+
 $locale['theme_1008'] = "Upload Theme";
 $locale['theme_1009'] = "Theme Styling";
 $locale['theme_1010'] = "Site Themes";
-$locale['theme_1011'] = "Upload New Theme";
+
 $locale['theme_1011a'] = "Admin Themes";
 $locale['theme_1012'] = "Set as Active";
 $locale['theme_1013'] = "License:";
@@ -134,17 +133,10 @@ $locale['theme_5010'] = "Vertical Gradient";
 $locale['theme_5011'] = "Radial Gradient";
 $locale['theme_5012'] = "Diagonal Gradient";
 $locale['theme_5013'] = "Save Preset";
-$locale['theme_success_001'] = "Theme was uploaded to your theme folder";
+
 $locale['theme_success_002'] = "Theme Presets deleted";
 $locale['theme_success_003'] = "Theme Presets updated";
 $locale['theme_success_004'] = "Theme Presets added successfully";
 
-$locale['theme_error_001'] = "Theme package is too big. Please upload files less than %s";
-$locale['theme_error_002'] = "Theme package is not a valid. Please only compress themes using .zip file extension";
-$locale['theme_error_003'] = "Unknown Upload Error";
-$locale['theme_error_004'] = "Theme file was not being uploaded by the server";
-$locale['theme_error_005'] = "The file failed to be verified. Please extract the zip and do a manual FTP upload";
-$locale['theme_error_006'] = "Your server do not support ZipArchive. Please extract the zip and do a manual FTP upload";
 $locale['theme_error_007'] = "Theme cannot rebuild due to the following reason(s): - Variables were not set or form is has error";
 $locale['theme_error_008'] = "Compiler error. Theme was not updated.";
-$locale['theme_error_009'] = "File theme.php was not found.";
