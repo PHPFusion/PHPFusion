@@ -367,7 +367,7 @@ if (!empty($info['download_rows'])) {
         $data['comments_count'] = !empty($data['comments_count']) ? $data['comments_count'] : 0;
         $data['count_votes'] = !empty($data['count_votes']) ? $data['count_votes'] : 0;
         $data['sum_rating'] = !empty($data['sum_rating']) ? $data['sum_rating'] : 0;
-        $data = array_merge($data, parseInfo($data));
+        $data = array_merge($data, parse_dl_info($data));
         $info['download_item'][$data['download_id']] = $data;
     }
 }
@@ -517,7 +517,7 @@ function downloadCats_breadcrumbs($index) {
  *
  * @return array
  */
-function parseInfo($data) {
+function parse_dl_info($data) {
     global $dl_settings;
     $locale = fusion_get_locale();
     $download_image = '';
