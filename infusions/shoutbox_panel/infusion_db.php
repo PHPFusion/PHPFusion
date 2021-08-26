@@ -17,17 +17,11 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+// Locales
+define('SHOUTBOX_LOCALE', fusion_get_inf_locale_path('', INFUSIONS.'shoutbox_panel/locale/', FALSE));
+
+// Database
+const DB_SHOUTBOX = DB_PREFIX."shoutbox";
+
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("S", "<i class='admin-ico fa fa-fw fa-commenting'></i>");
-
-if (!defined("DB_SHOUTBOX")) {
-    define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
-}
-
-// Added Shoutbox Locale Constant
-if (!defined("SHOUTBOX_LOCALE")) {
-    if (file_exists(INFUSIONS."shoutbox_panel/locale/".LOCALESET."shoutbox.php")) {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/".LOCALESET."shoutbox.php");
-    } else {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/English/shoutbox.php");
-    }
-}
