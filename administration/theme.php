@@ -38,18 +38,11 @@ switch (get('action')) {
         $tabs['id'][] = 'admin_themes';
         $tabs['icon'][] = '';
 
-        $tabs['title'][] = $locale['theme_1011'];
-        $tabs['id'][] = 'upload';
-        $tabs['icon'][] = '';
-
-        $allowed_sections = ['list', 'admin_themes', 'upload'];
+        $allowed_sections = ['list', 'admin_themes'];
         $section = in_array(get('section'), $allowed_sections) ? get('section') : 'list';
 
         echo opentab($tabs, $section, 'theme_tab', TRUE);
         switch ($section) {
-            case 'upload':
-                $theme_admin::themeUploader();
-                break;
             case 'admin_themes':
                 $theme_admin::adminThemesList();
                 break;
