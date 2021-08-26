@@ -31,10 +31,9 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
     }
 
     public function displayNewsAdmin() {
-
         pageaccess('N');
 
-        self::$locale = self::get_newsAdminLocale();
+        self::$locale = self::getNewsAdminLocale();
 
         if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
 
@@ -121,10 +120,24 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
 
                         if (isset($_POST['preview'])) {
 
-                            $preview = new News_Preview();
-                            $preview->set_PreviewData($this->news_data);
-                            $preview->display_preview();
-
+                            $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".self::$locale['preview'].": ".$this->news_data['news_subject']);
+                            $footer .= parse_text($this->news_data['news_news'], [
+                                'parse_smileys'        => FALSE,
+                                'parse_bbcode'         => FALSE,
+                                'default_image_folder' => IMAGES_N,
+                                'add_line_breaks'      => TRUE
+                            ]);
+                            if ($this->news_data['news_extended']) {
+                                $footer .= "<hr class='m-t-20 m-b-20'>\n";
+                                $footer .= parse_text($this->news_data['news_extended'], [
+                                    'parse_smileys'        => FALSE,
+                                    'parse_bbcode'         => FALSE,
+                                    'default_image_folder' => IMAGES_N,
+                                    'add_line_breaks'      => TRUE
+                                ]);
+                            }
+                            $footer .= closemodal();
+                            add_to_footer($footer);
                             dbquery("UPDATE ".DB_SUBMISSIONS." SET submit_criteria=:config WHERE submit_id=:submit_id", [
                                 ':config'    => \Defender::encode($this->news_data),
                                 ':submit_id' => $_GET['submit_id']
@@ -222,14 +235,14 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     'news_cat'                 => $submit_criteria['news_cat'],
                     'news_news'                => phpentities($submit_criteria['news_news']),
                     'news_extended'            => phpentities($submit_criteria['news_extended']),
-                    'news_breaks'              => fusion_get_settings('tinyce_enabled') ? TRUE : FALSE,
+                    'news_breaks'              => (bool)fusion_get_settings('tinyce_enabled'),
                     'news_name'                => $data['user_id'],
-                    'news_allow_comments'      => 0,
-                    'news_allow_ratings'       => 0,
+                    'news_allow_comments'      => 1,
+                    'news_allow_ratings'       => 1,
                 ];
 
                 echo openform('publish_news', 'post', FUSION_REQUEST);
-                echo "<div class='spacer-sm'>\n";
+                echo "<div class='m-b-20'>\n";
                 echo form_button('preview', self::$locale['news_0141'], self::$locale['news_0141'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
                 echo form_button('publish', self::$locale['news_0134'], self::$locale['news_0134'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o']);
                 echo form_button('delete', self::$locale['news_0135'], self::$locale['news_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
@@ -334,12 +347,12 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                         closeside();
 
                         if ($this->news_data['news_image_full_default']) {
-                            // can i delete this image and replace with another image? yes. i can. but just 1, you cannot manage gallery
+                            // can I delete this image and replace with another image? yes. I can. but just 1, you cannot manage gallery
                             // this is because the news_id is not present at this moment.
                             $this->newsGallery();
                         } else {
                             openside(self::$locale['news_0006']);
-                            $news_settings = self::get_news_settings();
+                            $news_settings = self::getNewsSettings();
                             echo form_fileinput('featured_image', self::$locale['news_0011'], '',
                                 [
                                     'upload_path'      => IMAGES_N,
@@ -450,6 +463,10 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     </div>
                 </div>
                 <?php
+
+                echo form_button('preview', self::$locale['news_0141'], self::$locale['news_0141'], ['class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye', 'input_id' => 'previewbtn_bottom']);
+                echo form_button('publish', self::$locale['news_0134'], self::$locale['news_0134'], ['class' => 'btn-success m-r-10', 'icon' => 'fa fa-hdd-o', 'input_id' => 'publishbtn_bottom']);
+                echo form_button('delete', self::$locale['news_0135'], self::$locale['news_0135'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash', 'input_id' => 'deletebtn_bottom']);
                 echo closeform();
             }
 
@@ -462,7 +479,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
             ");
             $rows = dbrows($result);
             if ($rows > 0) {
-                echo "<div class='well m-t-15'>".sprintf(self::$locale['news_0137'], format_word($rows, self::$locale['fmt_submission']))."</div>\n";
+                echo "<div class='well'>".sprintf(self::$locale['news_0137'], format_word($rows, self::$locale['fmt_submission']))."</div>\n";
                 echo "<div class='table-responsive'><table class='table table-striped'>\n";
                 echo "<thead>\n";
                 echo "<tr>\n";
@@ -477,7 +494,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                     $submit_criteria = \Defender::decode($data['submit_criteria']);
                     echo "<tr>\n";
                     echo "<td>".$data['submit_id']."</td>\n";
-                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], ['section', 'aid'], TRUE)."'>".$submit_criteria['news_subject']."</a></td>\n";
+                    echo "<td><a href='".clean_request("submit_id=".$data['submit_id'], ['section', 'aid'], TRUE)."'>".(!empty($submit_criteria['news_subject']) ? $submit_criteria['news_subject'] : 'n/a')."</a></td>\n";
                     echo "<td>".display_avatar($data, '20px', '', TRUE, 'img-rounded m-r-5').profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</td>\n";
                     echo "<td>".timer($data['submit_datestamp'])."</td>\n";
 
@@ -486,7 +503,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
                 echo "</tbody>\n";
                 echo "</table>\n</div>";
             } else {
-                echo "<div class='well text-center m-t-20'>".self::$locale['news_0130']."</div>\n";
+                echo "<div class='well text-center'>".self::$locale['news_0130']."</div>\n";
             }
         }
     }
@@ -495,8 +512,7 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
      * Gallery Features
      */
     private function newsGallery() {
-
-        $news_settings = self::get_news_settings();
+        $news_settings = self::getNewsSettings();
 
         $default_fileinput_options = [
             'upload_path'      => IMAGES_N,
@@ -655,8 +671,8 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
             <div class="row">
                 <?php
                 if (!empty($news_photos)) :
-                    foreach ($news_photos as $photo_id => $photo_data) :
-                        $image_path = self::get_news_image_path($photo_data['news_image'], $photo_data['news_image_t1'],
+                    foreach ($news_photos as $photo_data) :
+                        $image_path = self::getNewsImagePath($photo_data['news_image'], $photo_data['news_image_t1'],
                             $photo_data['news_image_t2']);
                         ?>
                         <div class="pull-left m-r-10 m-l-10 text-center">
@@ -703,5 +719,4 @@ class NewsSubmissionsAdmin extends NewsAdminModel {
         ob_end_clean();
         add_to_footer($html);
     }
-
 }

@@ -15,21 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+defined('IN_FUSION') || exit;
 
 use PHPFusion\Admins;
 
-defined('IN_FUSION') || exit;
+// Locales
+define('NEWS_LOCALE', fusion_get_inf_locale_path('news.php', INFUSIONS.'news/locale/'));
+define('NEWS_ADMIN_LOCALE', fusion_get_inf_locale_path('news_admin.php', INFUSIONS.'news/locale/'));
 
+// Paths
 const IMAGES_N = INFUSIONS.'news/images/';
+const IMAGES_N_T = INFUSIONS."news/images/thumbs/";
 const IMAGES_NC = INFUSIONS.'news/news_cats/';
+const NEWS_CLASSES = INFUSIONS.'news/classes/';
+
+// Database
 const DB_NEWS = DB_PREFIX.'news';
 const DB_NEWS_CATS = DB_PREFIX.'news_cats';
 const DB_NEWS_IMAGES = DB_PREFIX.'news_gallery';
-
-// File paths
-const NEWS_CLASS = INFUSIONS.'news/classes/';
-define('NEWS_LOCALE', fusion_get_inf_locale_path('news.php', INFUSIONS.'news/locale/'));
-define('NEWS_ADMIN_LOCALE', fusion_get_inf_locale_path('news_admin.php', INFUSIONS.'news/locale/'));
 
 // Admin Settings
 Admins::getInstance()->setAdminPageIcons("N", "<i class='admin-ico fa fa-fw fa-newspaper-o'></i>");
@@ -37,14 +40,17 @@ Admins::getInstance()->setCommentType('N', fusion_get_locale('N', LOCALE.LOCALES
 Admins::getInstance()->setLinkType('N', fusion_get_settings("siteurl")."infusions/news/news.php?readmore=%s");
 
 $inf_settings = get_settings('news');
-if ((!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) && (!empty($inf_settings['news_submission_access']) && checkgroup($inf_settings['news_submission_access']))) {
+if (
+    (!empty($inf_settings['news_allow_submission']) && $inf_settings['news_allow_submission']) &&
+    (!empty($inf_settings['news_submission_access']) && checkgroup($inf_settings['news_submission_access']))
+) {
     Admins::getInstance()->setSubmitData('n', [
         'infusion_name' => 'news',
         'link'          => INFUSIONS."news/news_submit.php",
         'submit_link'   => "submit.php?stype=n",
         'submit_locale' => fusion_get_locale('N', LOCALE.LOCALESET."admin/main.php"),
         'title'         => fusion_get_locale('news_submit', LOCALE.LOCALESET."submissions.php"),
-        'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s"
+        'admin_link'    => INFUSIONS."news/news_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
     ]);
 }
 
@@ -71,11 +77,13 @@ if (defined('NEWS_EXISTS')) {
         $locale = fusion_get_locale();
 
         if (fusion_get_settings('comments_enabled') == 1) {
-            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1 WHERE c1.comment_item_id = ns.news_id AND c1.comment_type = 'NS') AS comments_count,";
+            $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1
+                WHERE c1.comment_item_id = ns.news_id AND c1.comment_type = 'NS') AS comments_count,";
         }
 
         if (fusion_get_settings('ratings_enabled') == 1) {
-            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1 WHERE r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS') AS ratings_count,";
+            $ratings_query = "(SELECT COUNT(r1.rating_id) FROM ".DB_RATINGS." r1
+                WHERE r1.rating_item_id = ns.news_id AND r1.rating_type = 'NS') AS ratings_count,";
         }
 
         $result = dbquery("SELECT

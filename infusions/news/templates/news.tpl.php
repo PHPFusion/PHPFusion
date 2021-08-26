@@ -25,7 +25,7 @@ if (!function_exists('display_main_news')) {
      */
     function display_main_news($info) {
         $locale = fusion_get_locale();
-        $news_settings = \PHPFusion\News\NewsServer::get_news_settings();
+        $news_settings = \PHPFusion\News\NewsServer::getNewsSettings();
 
         echo '<div class="news-index">';
         opentable($locale['news_0004']);
@@ -35,7 +35,7 @@ if (!function_exists('display_main_news')) {
 
         if (!empty($info['news_items'])) {
             echo '<div class="row equal-height">';
-            foreach ($info['news_items'] as $id => $data) {
+            foreach ($info['news_items'] as $data) {
                 $link = INFUSIONS.'news/news.php?readmore='.$data['news_id'];
 
                 echo '<div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 news-item m-b-20"><div>';
@@ -92,7 +92,7 @@ if (!function_exists('display_main_news')) {
             $side_panel .= '</ul>';
         }
         $side_panel .= fusion_get_function('closeside');
-        \PHPFusion\Panels::addPanel('news_menu_panel', $side_panel, \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 0);
+        \PHPFusion\Panels::addPanel('news_menu_panel', $side_panel, \PHPFusion\Panels::PANEL_RIGHT, iGUEST);
         \PHPFusion\Panels::addPanel('news_menu_panel', display_news_categories($info), \PHPFusion\Panels::PANEL_RIGHT, iGUEST, 9);
     }
 }
@@ -140,7 +140,7 @@ if (!function_exists('render_news_item')) {
             echo '<div class="overflow-hide m-b-20">';
             foreach ($data['news_gallery'] as $id => $image) {
                 echo '<div class="pull-left overflow-hide" style="width: 250px; height: 120px;">';
-                echo colorbox(IMAGES_N.$image['news_image'], 'Image #'.$id, TRUE);
+                echo colorbox(IMAGES_N.$image['news_image'], 'Image #'.$id);
                 echo '</div>';
             }
             echo '</div>';

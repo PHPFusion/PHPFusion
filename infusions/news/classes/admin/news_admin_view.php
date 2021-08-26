@@ -27,13 +27,13 @@ class NewsAdminView extends NewsAdminModel {
 
     private $allowed_pages = ["news", "news_category", "news_form", "submissions", "settings"];
 
-    public function display_admin() {
+    public function displayAdmin() {
 
         if (check_get('section') && get('section') == "back") {
             redirect(clean_request('', ['ref', 'section', 'news_id', 'action', 'cat_id'], FALSE));
         }
 
-        $locale = self::get_newsAdminLocale();
+        $locale = self::getNewsAdminLocale();
 
         $sections = in_array(get('section'), $this->allowed_pages) ? get('section') : $this->allowed_pages[0];
 
@@ -71,15 +71,11 @@ class NewsAdminView extends NewsAdminModel {
         }
         $edit = (check_get('action') && get('action') == 'edit' && check_get('cat_id') && isnum(get('cat_id')));
 
-        if ($submissions = dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'")) {
-            addnotice("info", sprintf($locale['news_0137'], format_word($submissions, $locale['fmt_submission'])));
-        }
-
         $tab['title'][] = $news_cat_title;
         $tab['id'][] = 'news_category';
         $tab['icon'][] = $edit ? 'fa fa-pencil m-r-5' : 'fa fa-folder m-r-5';
 
-        $tab['title'][] = $locale['news_0023'];
+        $tab['title'][] = $locale['news_0023'].' <span class="badge">'.dbcount("(submit_id)", DB_SUBMISSIONS, "submit_type='n'").'</span>';
         $tab['id'][] = 'submissions';
         $tab['icon'][] = 'fa fa-inbox m-r-5';
 

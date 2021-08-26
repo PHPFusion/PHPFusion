@@ -33,8 +33,8 @@ class NewsSettingsAdmin extends NewsAdminModel {
         pageaccess("N");
         require_once INCLUDES."mimetypes_include.php";
 
-        $locale = self::get_newsAdminLocale();
-        $news_settings = self::get_news_settings();
+        $locale = self::getNewsAdminLocale();
+        $news_settings = self::getNewsSettings();
 
         add_breadcrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
         if (isset($_POST['savesettings'])) {

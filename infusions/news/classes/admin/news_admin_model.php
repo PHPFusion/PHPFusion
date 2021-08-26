@@ -61,7 +61,7 @@ class NewsAdminModel extends NewsServer {
      *
      * @return array|null
      */
-    public static function get_newsAdminLocale() {
+    public static function getNewsAdminLocale() {
         if (empty(self::$admin_locale)) {
             $admin_locale_path = LOCALE."English/admin/settings.php";
             if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
@@ -84,7 +84,7 @@ class NewsAdminModel extends NewsServer {
      *
      * @return string
      */
-    protected function get_news_image_path($news_image, $news_image_t1, $news_image_t2, $hiRes = FALSE) {
+    protected function getNewsImagePath($news_image, $news_image_t1, $news_image_t2, $hiRes = FALSE) {
         if (!$hiRes) {
             if ($news_image_t1 && file_exists(IMAGES_N_T.$news_image_t1)) {
                 return IMAGES_N_T.$news_image_t1;
@@ -121,5 +121,4 @@ class NewsAdminModel extends NewsServer {
 
         return FALSE;
     }
-
 }

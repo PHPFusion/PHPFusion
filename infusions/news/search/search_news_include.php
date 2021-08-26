@@ -101,7 +101,7 @@ if (defined('NEWS_EXISTS')) {
 
                 $search_result .= render_search_item_list([
                     'item_url'             => INFUSIONS."news/news.php?readmore=".$data['news_id'],
-                    'item_image'           => News::get_NewsImage($data, TRUE, FALSE, '100'),
+                    'item_image'           => News::getNewsImage($data, TRUE, FALSE, '100'),
                     'item_title'           => $data['news_subject'],
                     'item_description'     => $meta,
                     'item_search_criteria' => $criteria,

@@ -17,6 +17,6 @@
 +--------------------------------------------------------*/
 require_once __DIR__.'/../../maincore.php';
 require_once THEMES.'templates/admin_header.php';
-require_once NEWS_CLASS."autoloader.php";
-PHPFusion\News\NewsServer::NewsAdmin()->display_admin();
+require_once NEWS_CLASSES."autoloader.php";
+PHPFusion\News\NewsServer::newsAdmin()->displayAdmin();
 require_once THEMES.'templates/footer.php';

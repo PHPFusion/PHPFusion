@@ -31,18 +31,18 @@ class NewsCategoryAdmin extends NewsAdminModel {
 
     public function displayNewsAdmin() {
         pageaccess("N");
-        self::$locale = self::get_newsAdminLocale();
+        self::$locale = self::getNewsAdminLocale();
         if (isset($_GET['ref']) && $_GET['ref'] == "news_cat_form") {
-            $this->display_news_cat_form();
+            $this->displayNewsCatForm();
         } else {
-            $this->display_news_cat_listing();
+            $this->displayNewsCatListing();
         }
     }
 
     /**
      * Displays News Category Form
      */
-    private function display_news_cat_form() {
+    private function displayNewsCatForm() {
         if (isset($_POST['cancel'])) {
             redirect(FUSION_SELF.fusion_get_aidlink()."&section=news_category");
         }
@@ -149,7 +149,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
             }
         }
         add_breadcrumb(['link' => FUSION_REQUEST, 'title' => $formTitle]);
-        echo "<div class='m-t-20 m-b-20'>\n";
         echo openform("addcat", "post", $formAction);
         ?>
         <div class="row">
@@ -182,6 +181,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
             </div>
             <div class="col-xs-12 col-sm-4">
                 <?php
+                openside('');
                 if (multilang_table("NS")) {
                     echo form_select("news_cat_language[]", self::$locale['global_ML100'], $data['news_cat_language'], [
                         "inline"      => TRUE,
@@ -192,14 +192,10 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 } else {
                     echo form_hidden("news_cat_language", "", $data['news_cat_language']);
                 }
-                openside("");
+
                 echo form_checkbox("news_cat_draft", self::$locale['news_0306'], $data['news_cat_draft'], ["reverse_label" => TRUE]);
                 echo form_checkbox("news_cat_sticky", self::$locale['news_0307'], $data['news_cat_sticky'],
                     ["reverse_label" => TRUE]);
-                echo form_button("cancel", self::$locale['cancel'], self::$locale['cancel'], ['input_id' => 'cancel-btn', "class" => "btn-default", 'icon' => 'fa fa-times']);
-                echo form_button("save_cat", self::$locale['news_0302'], self::$locale['news_0302'], ['input_id' => 'save-btn', "class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o']);
-                echo form_button("save_cat_and_close", self::$locale['save_and_close'], self::$locale['save_and_close'],
-                    ["class" => "btn-primary", 'icon' => 'fa fa-hdd-o']);
                 closeside();
                 ?>
             </div>
@@ -208,7 +204,6 @@ class NewsCategoryAdmin extends NewsAdminModel {
         echo form_button("cancel", self::$locale['cancel'], self::$locale['cancel'], ["class" => "btn-default", 'icon' => 'fa fa-times']);
         echo form_button("save_cat", self::$locale['news_0302'], self::$locale['news_0302'], ["class" => "btn-success m-l-10", 'icon' => 'fa fa-hdd-o']);
         echo form_button("save_cat_and_close", self::$locale['save_and_close'], self::$locale['save_and_close'], ["input_id" => 's2', "class" => "btn-primary m-l-10", 'icon' => 'fa fa-hdd-o']);
-        echo "</div>\n";
     }
 
     private function newsCatImageOpts() {
@@ -224,8 +219,8 @@ class NewsCategoryAdmin extends NewsAdminModel {
     /**
      * Displays News Category Listing
      */
-    private function display_news_cat_listing() {
-        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS, "") ? intval($_GET['rowstart']) : 0;
+    private function displayNewsCatListing() {
+        $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= dbcount("(news_cat_id)", DB_NEWS_CATS) ? intval($_GET['rowstart']) : 0;
 
         // Run functions
         $allowed_actions = array_flip(["publish", "unpublish", "sticky", "unsticky", "delete"]);
@@ -332,54 +327,52 @@ class NewsCategoryAdmin extends NewsAdminModel {
                             LEFT JOIN ".DB_NEWS." n3 ON n2.news_id=nc.news_cat_id AND n3.news_sticky='1' AND (n3.news_start='0'|| n3.news_start<=NOW()) AND (n3.news_end='0'|| n3.news_end>=NOW())
                             ".($sql_condition ? " WHERE ".$sql_condition : "")."
                             GROUP BY news_cat_id
-                            ORDER BY news_cat_parent ASC, news_cat_id ASC LIMIT ".intval($_GET['rowstart']).", 20"
+                            ORDER BY news_cat_parent ASC, news_cat_id ASC LIMIT ".$_GET['rowstart'].", 20"
         );
-        ?>
-        <div class="m-t-15">
-            <?php
-            echo openform("news_filter", "post", FUSION_REQUEST);
-            echo "<div class='clearfix'>\n";
 
-            echo "<div class='pull-right'>\n";
-            echo "<a class='btn btn-success btn-sm' href='".clean_request("ref=news_cat_form", ["ref"], FALSE)."'><i class='fa fa-plus'></i> ".self::$locale['news_0022']."</a>";
-            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check'></i> ".self::$locale['publish']."</button>";
-            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban'></i> ".self::$locale['unpublish']."</button>";
-            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note'></i> ".self::$locale['sticky']."</button>";
-            echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o'></i> ".self::$locale['unsticky']."</button>";
-            echo "<button type='button' class='hidden-xs btn m-l-5 btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o'></i> ".self::$locale['delete']."</button>";
-            echo "</div>\n";
+        echo openform("news_filter", "post", FUSION_REQUEST);
+        echo "<div class='clearfix'>\n";
 
-            $filter_values = [
-                "news_cat_name"       => !empty($_POST['news_cat_name']) ? form_sanitizer($_POST['news_cat_name'], "", "news_cat_name") : "",
-                "news_cat_status"     => !empty($_POST['news_cat_status']) ? form_sanitizer($_POST['news_cat_status'], "", "news_cat_status") : "",
-                "news_cat_visibility" => !empty($_POST['news_cat_visibility']) ? form_sanitizer($_POST['news_cat_visibility'], "", "news_cat_visibility") : ""
-            ];
-            $filter_empty = TRUE;
-            foreach ($filter_values as $val) {
-                if ($val) {
-                    $filter_empty = FALSE;
-                }
+        echo "<div class='pull-right'>\n";
+        echo "<a class='btn btn-success btn-sm' href='".clean_request("ref=news_cat_form", ["ref"], FALSE)."'><i class='fa fa-plus'></i> ".self::$locale['news_0022']."</a>";
+        echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check'></i> ".self::$locale['publish']."</button>";
+        echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban'></i> ".self::$locale['unpublish']."</button>";
+        echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note'></i> ".self::$locale['sticky']."</button>";
+        echo "<button type='button' class='hidden-xs btn m-l-5 btn-default btn-sm' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o'></i> ".self::$locale['unsticky']."</button>";
+        echo "<button type='button' class='hidden-xs btn m-l-5 btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o'></i> ".self::$locale['delete']."</button>";
+        echo "</div>\n";
+
+        $filter_values = [
+            "news_cat_name"       => !empty($_POST['news_cat_name']) ? form_sanitizer($_POST['news_cat_name'], "", "news_cat_name") : "",
+            "news_cat_status"     => !empty($_POST['news_cat_status']) ? form_sanitizer($_POST['news_cat_status'], "", "news_cat_status") : "",
+            "news_cat_visibility" => !empty($_POST['news_cat_visibility']) ? form_sanitizer($_POST['news_cat_visibility'], "", "news_cat_visibility") : ""
+        ];
+        $filter_empty = TRUE;
+        foreach ($filter_values as $val) {
+            if ($val) {
+                $filter_empty = FALSE;
             }
-            echo "<div class='display-inline-block pull-left m-r-10'>\n";
-            echo form_text("news_cat_name", '', $filter_values['news_cat_name'], [
-                "placeholder"       => self::$locale['news_0300'],
-                "append_button"     => TRUE,
-                "append_value"      => "<i class='fa fa-search'></i> ".self::$locale['search'],
-                "append_form_value" => "search_news",
-                "width"             => "170px",
-                'group_size'        => 'sm'
-            ]);
-            echo "</div>\n";
-            echo "<div class='display-inline-block hidden-xs'>";
-            echo "<a class='btn btn-sm".($filter_empty == FALSE ? " btn-info" : " btn-default'")."' id='toggle_options' href='#'>\n";
-            echo self::$locale['news_0242']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span>\n";
-            echo "</a>\n";
-            echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default btn-sm']);
-            echo "</div>\n";
+        }
+        echo "<div class='display-inline-block pull-left m-r-10'>\n";
+        echo form_text("news_cat_name", '', $filter_values['news_cat_name'], [
+            "placeholder"       => self::$locale['news_0300'],
+            "append_button"     => TRUE,
+            "append_value"      => "<i class='fa fa-search'></i> ".self::$locale['search'],
+            "append_form_value" => "search_news",
+            "width"             => "170px",
+            'group_size'        => 'sm'
+        ]);
+        echo "</div>\n";
+        echo "<div class='display-inline-block hidden-xs'>";
+        echo "<a class='btn btn-sm".($filter_empty == FALSE ? " btn-info" : " btn-default'")."' id='toggle_options' href='#'>\n";
+        echo self::$locale['news_0242']." <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span>\n";
+        echo "</a>\n";
+        echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default btn-sm']);
+        echo "</div>\n";
 
-            echo "</div>\n";
+        echo "</div>\n";
 
-            add_to_jquery("
+        add_to_jquery("
             $('#toggle_options').bind('click', function(e) {
                 e.preventDefault();
                 $('#news_filter_options').slideToggle();
@@ -398,29 +391,28 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 $(this).closest('form').submit();
             });
             ");
-            unset($filter_values['news_text']);
-            echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
-            echo "<div class='display-inline-block'>\n";
-            echo form_select("news_cat_status", "", $filter_values['news_cat_status'], [
-                "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0244']." -", "options" => [
-                    0 => self::$locale['news_0245'],
-                    1 => self::$locale['news_0215'],
-                    2 => self::$locale['sticky'],
-                ]
-            ]);
-            echo "</div>\n";
-            echo "<div class='display-inline-block'>\n";
-            echo form_select("news_cat_visibility", "", $filter_values['news_cat_visibility'], [
-                "allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0246']." -", "options" => fusion_get_groups()
-            ]);
-            echo "</div>\n";
-            echo "</div>\n";
-            echo closeform();
-            ?>
-        </div>
-        <?php echo openform("news_table", "post", FUSION_REQUEST);
-        echo form_hidden("table_action", "", "");
-        $this->display_news_category($result);
+        unset($filter_values['news_text']);
+        echo "<div id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
+        echo "<div class='display-inline-block'>\n";
+        echo form_select("news_cat_status", "", $filter_values['news_cat_status'], [
+            "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0244']." -", "options" => [
+                0 => self::$locale['news_0245'],
+                1 => self::$locale['news_0215'],
+                2 => self::$locale['sticky'],
+            ]
+        ]);
+        echo "</div>\n";
+        echo "<div class='display-inline-block'>\n";
+        echo form_select("news_cat_visibility", "", $filter_values['news_cat_visibility'], [
+            "allowclear" => TRUE, "placeholder" => "-  ".self::$locale['news_0246']." -", "options" => fusion_get_groups()
+        ]);
+        echo "</div>\n";
+        echo "</div>\n";
+        echo closeform();
+
+        echo openform("news_table", "post", FUSION_REQUEST);
+        echo form_hidden("table_action");
+        $this->displayNewsCategory($result);
         echo closeform();
         echo "<div class='text-center'><a class='btn btn-primary' href='".ADMIN."images.php".fusion_get_aidlink()."&amp;ifolder=imagesnc'>".self::$locale['news_0304']."</a><br /><br />\n</div>\n";
     }
@@ -428,11 +420,10 @@ class NewsCategoryAdmin extends NewsAdminModel {
     /**
      * Recursive function to display administration table
      *
-     * @param     $data
-     * @param int $id
+     * @param array $data
+     * @param int   $id
      */
-    private function display_news_category($data, $id = 0) {
-
+    private function displayNewsCategory($data, $id = 0) {
         if (!$id) :
             ?>
             <div class="table-responsive"><table class="table table-hover">
@@ -488,7 +479,7 @@ class NewsCategoryAdmin extends NewsAdminModel {
                 </tr>
                 <?php
                 if (isset($data[$cdata['news_cat_id']])) {
-                    $this->display_news_category($data, $cdata['news_cat_id']);
+                    $this->displayNewsCategory($data, $cdata['news_cat_id']);
                 }
                 ?>
             <?php endforeach; ?>

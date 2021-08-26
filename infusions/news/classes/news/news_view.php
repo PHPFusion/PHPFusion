@@ -26,11 +26,11 @@ use PHPFusion\OpenGraphNews;
  * @package PHPFusion\News
  */
 class NewsView extends News {
-    public function display_news() {
+    public function displayNews() {
 
         if (isset($_GET['readmore'])) {
             if (isnum($_GET['readmore'])) {
-                $info = $this->set_NewsItemInfo($_GET['readmore']);
+                $info = $this->setNewsItemInfo($_GET['readmore']);
                 render_news_item($info);
                 OpenGraphNews::ogNews($_GET['readmore']);
             } else {
@@ -39,7 +39,7 @@ class NewsView extends News {
         } else if (isset($_GET['cat_id'])) {
             // Category Result
             if (isnum($_GET['cat_id'])) {
-                $info = $this->set_NewsCatInfo($_GET['cat_id']);
+                $info = $this->setNewsCatInfo($_GET['cat_id']);
                 display_main_news($info);
                 OpenGraphNews::ogNewsCat($_GET['cat_id']);
             } else {
@@ -47,7 +47,7 @@ class NewsView extends News {
             }
         } else {
             // All Results
-            $info = $this->set_NewsInfo();
+            $info = $this->setNewsInfo();
             display_main_news($info);
         }
     }

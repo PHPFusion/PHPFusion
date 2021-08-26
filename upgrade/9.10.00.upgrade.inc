@@ -140,7 +140,9 @@ $deleted_files = [
     IMAGES.'error/',
     INCLUDES.'multi_attachment.js',
     INFUSIONS.'blog/classes/Functions.php',
-    INFUSIONS.'downloads/classes/Functions.php'
+    INFUSIONS.'downloads/classes/Functions.php',
+    INFUSIONS.'news/classes/admin/controllers/news_preview.php',
+    INFUSIONS.'news/classes/news/news_preview.php',
 ];
 
 foreach ($deleted_files as $file) {

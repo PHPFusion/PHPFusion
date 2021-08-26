@@ -26,7 +26,7 @@ class OpenGraphNews extends OpenGraph {
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['url'] = $settings['siteurl'].'infusions/news/news.php?readmore='.$news_id;
-            $info['keywords'] = $data['news_keywords'] ? $data['news_keywords'] : $settings['keywords'];
+            $info['keywords'] = !empty($data['news_keywords']) ? $data['news_keywords'] : $settings['keywords'];
             $info['title'] = $data['news_subject'].' - '.$settings['sitename'];
             $info['description'] = $data['news_news'] ? fusion_first_words(strip_tags(html_entity_decode($data['news_news'])), 50) : $settings['description'];
             $info['type'] = 'article';

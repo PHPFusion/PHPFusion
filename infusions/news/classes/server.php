@@ -22,7 +22,7 @@ class NewsServer {
     private static $news_instance = NULL;
     private static $news_admin_instance = NULL;
 
-    public static function News() {
+    public static function news() {
         if (self::$news_instance === NULL) {
             self::$news_instance = new NewsView();
         }
@@ -30,7 +30,7 @@ class NewsServer {
         return self::$news_instance;
     }
 
-    public static function NewsAdmin() {
+    public static function newsAdmin() {
         if (self::$news_admin_instance === NULL) {
             self::$news_admin_instance = new NewsAdminView();
         }
@@ -38,7 +38,7 @@ class NewsServer {
         return self::$news_admin_instance;
     }
 
-    public static function get_news_settings($key = NULL) {
+    public static function getNewsSettings($key = NULL) {
         if (empty(self::$news_settings)) {
             self::$news_settings = get_settings("news");
         }

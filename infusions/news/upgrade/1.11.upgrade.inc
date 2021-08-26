@@ -121,7 +121,7 @@ if (dbrows($result)) {
 }
 
 if (is_dir(IMAGES."news/thumbs/")) {
-    $files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
     }
@@ -130,7 +130,7 @@ if (is_dir(IMAGES."news/thumbs/")) {
 }
 
 if (is_dir(IMAGES."news/")) {
-    $files = makefilelist(IMAGES."news/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."news/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
     }
@@ -139,7 +139,7 @@ if (is_dir(IMAGES."news/")) {
 }
 
 if (is_dir(IMAGES."news_cats/")) {
-    $files = makefilelist(IMAGES."news_cats/", ".|..|index.php", TRUE);
+    $files = makefilelist(IMAGES."news_cats/", ".|..|index.php");
     foreach ($files as $file) {
         fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
     }

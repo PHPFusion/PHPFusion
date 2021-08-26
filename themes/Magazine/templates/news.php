@@ -21,7 +21,7 @@ use PHPFusion\Panels;
 
 function display_main_news($info) {
     $locale = fusion_get_locale('', MG_LOCALE);
-    $news_settings = PHPFusion\News\NewsServer::get_news_settings();
+    $news_settings = PHPFusion\News\NewsServer::getNewsSettings();
 
     Panels::getInstance(TRUE)->hidePanel('RIGHT');
     Panels::getInstance(TRUE)->hidePanel('LEFT');
@@ -233,7 +233,7 @@ function render_news_item($info) {
                 openside($locale['MG_102'], 'shadow popular-items');
 
                 while ($data = dbarray($result)) {
-                    $image = \PHPFusion\News\News::get_NewsImage($data);
+                    $image = \PHPFusion\News\News::getNewsImage($data);
 
                     echo '<div class="item clearfix">';
                         echo '<a class="text-dark title display-block" href="'.INFUSIONS.'news/news.php?readmore='.$data['news_id'].'">'.$image.'</a>';
