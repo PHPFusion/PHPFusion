@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: submit.php
-| Author: Core Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,18 +15,29 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
 require_once __DIR__.'/maincore.php';
+
 if (!iMEMBER) {
     redirect(BASEDIR.'index.php');
 }
-require_once THEMES.'templates/header.php';
-$modules = \PHPFusion\Admins::getInstance()->getSubmitData();
+require_once FUSION_HEADER;
 
-$_GET['stype'] = !empty($_GET['stype']) && isset($modules[$_GET['stype']]) ? $_GET['stype'] : "";
-
-if (!empty($modules) && $_GET['stype']) {
-    require_once $modules[$_GET['stype']]['link'];
+if ($type = get('stype')) {
+    
+    $modules = Admins::getInstance()->getSubmitData();
+    
+    if (isset($modules[$type]['link'])) {
+        
+        require_once $modules[$type]['link'];
+        
+    } else {
+        
+        redirect(BASEDIR.'index.php');
+    }
 } else {
     redirect(BASEDIR.'index.php');
 }
-require_once THEMES.'templates/footer.php';
+
+require_once FUSION_FOOTER;
