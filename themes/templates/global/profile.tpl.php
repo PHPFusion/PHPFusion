@@ -140,7 +140,7 @@ if (!function_exists('display_user_profile')) {
                                 echo '<div class="col-xs-12 col-sm-9">';
                                 if (!empty($field_data['value']) && is_array($field_data['value'])) {
                                     $i = 0;
-                                    foreach ($field_data['value'] as $id => $group) {
+                                    foreach ($field_data['value'] as $group) {
                                         echo $i > 0 ? ', ' : '';
                                         echo '<a href="'.$group['group_url'].'">'.$group['group_name'].'</a>';
                                         $i++;
@@ -156,10 +156,7 @@ if (!function_exists('display_user_profile')) {
                             $avatar['user_status'] = $field_data['status'];
                             break;
                         case 'profile_user_name':
-                            $user_level['user_name'] = $field_data['value'];
-                            break;
                         case 'profile_user_level':
-                            $user_level['user_level'] = $field_data['value'];
                             break;
                         default:
                             if (!empty($field_data['value'])) {
@@ -206,10 +203,10 @@ if (!function_exists('display_user_profile')) {
                     }
 
                     if (!empty($info['user_field'])) {
-                            foreach ($info['user_field'] as $cat_id => $category_data) {
+                            foreach ($info['user_field'] as $category_data) {
                                 if (!empty($category_data['fields'])) {
                                     if (isset($category_data['fields'])) {
-                                        foreach ($category_data['fields'] as $field_id => $field_data) {
+                                        foreach ($category_data['fields'] as $field_data) {
                                             $fields[] = $field_data;
                                         }
                                     }
