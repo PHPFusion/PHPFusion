@@ -31,12 +31,6 @@ if ($settings['maintenance'] == "1") {
     }
 }
 
-if (iMEMBER) {
-    dbquery("UPDATE ".DB_USERS." SET user_lastvisit='".time()."', user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."'
-        WHERE user_id='".fusion_get_userdata('user_id')."'
-    ");
-}
-
 echo "<!DOCTYPE html>\n";
 echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'>\n";
 echo "<head>\n<title>".$settings['sitename']."</title>\n";
