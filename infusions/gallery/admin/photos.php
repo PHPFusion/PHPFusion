@@ -126,7 +126,7 @@ function photo_form() {
                         $result = dbquery("select album_id, photo_filename, photo_thumb1, photo_thumb2 FROM ".DB_PHOTOS." WHERE photo_id=:photoid", [':photoid' => $data['photo_id']]);
                         if (dbrows($result) > 0) {
                             $pData = dbarray($result);
-                            purgePhotoImage($pData);
+                            purge_photo_image($pData);
                             $data['photo_filename'] = "";
                             $data['photo_thumb1'] = "";
                             $data['photo_thumb2'] = "";
@@ -168,7 +168,7 @@ function photo_form() {
             }
         }
 
-        echo openform('photoform', 'post', FUSION_REQUEST, ['enctype' => TRUE, 'class' => 'm-t-20']);
+        echo openform('photoform', 'post', FUSION_REQUEST, ['enctype' => TRUE]);
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
         echo form_hidden('photo_id', '', $data['photo_id']);
         echo form_hidden('photo_datestamp', '', $data['photo_datestamp']);
@@ -181,7 +181,7 @@ function photo_form() {
         ]);
 
         echo form_select('album_id', $locale['photo_0003'], $data['album_id'], [
-            'options'     => get_albumOpts(),
+            'options'     => get_album_opts(),
             'inner_width' => "100%",
         ]);
 
@@ -280,7 +280,7 @@ function photo_form() {
         echo form_button('save_photo', $locale['photo_0012'], $locale['photo_0012'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
     } else {
-        echo "<div class='well m-t-20 text-center'>\n";
+        echo "<div class='well text-center'>\n";
         echo str_replace(
             ['[link]', '[/link]'], ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'], $locale['gallery_0012']
         );
@@ -370,7 +370,7 @@ function mass_photo_form() {
         echo "<div class='well text-center m-t-10'>\n".$locale['photo_0019']."</div>\n";
         echo form_select('album_id', $locale['photo_0003'], '', [
             'input_id' => 'album',
-            'options'  => get_albumOpts(),
+            'options'  => get_album_opts(),
         ]);
 
         $upload_settings = [
@@ -384,7 +384,7 @@ function mass_photo_form() {
         echo form_button('upload_photo', $locale['photo_0020'], $locale['photo_0020'], ['class' => 'btn-primary']);
         echo closeform();
     } else {
-        echo "<div class='well m-t-20 text-center'>\n";
+        echo "<div class='well text-center'>\n";
         echo str_replace(
             ['[link]', '[/link]'], ['<a href="'.FUSION_SELF.$aidlink.'&amp;section=album_form">', '</a>'], $locale['gallery_0012']
         );

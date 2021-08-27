@@ -103,8 +103,6 @@ $tab['id'][] = "settings";
 $tab['icon'][] = "fa fa-cogs";
 
 // Need to put breadcrumb here before opentable, or else it won't cache in Artemis.
-// @todo Class so that query data can be passed around.
-
 if (isset($_GET['album_id']) && isnum($_GET['album_id'])) {
     $sql = "SELECT album_title FROM ".DB_PHOTO_ALBUMS." WHERE album_id=:id";
     $param = [':id' => $_GET['album_id']];
@@ -150,7 +148,7 @@ require_once THEMES.'templates/footer.php';
  *
  * @return int
  */
-function rating_vote($id, $type) {
+function gallery_rating_vote($id, $type) {
     $count_db = dbarray(dbquery("SELECT
                 IF(SUM(rating_vote)>0, SUM(rating_vote), 0) AS total_votes
                 FROM ".DB_RATINGS."
@@ -159,7 +157,7 @@ function rating_vote($id, $type) {
     return $count_db['total_votes'];
 }
 
-function rating_count($id, $type) {
+function gallery_rating_count($id, $type) {
     $count_db = dbarray(dbquery("SELECT
                 COUNT(rating_id) AS rating_count
                 FROM ".DB_RATINGS."
@@ -215,8 +213,8 @@ function gallery_photo_listing() {
             echo "<div class='row m-t-20'>\n";
             $i = 1;
             while ($data = dbarray($result)) {
-                $rcount = rating_count($data['photo_id'], 'P');
-                $vcount = rating_vote($data['photo_id'], 'P');
+                $rcount = gallery_rating_count($data['photo_id'], 'P');
+                $vcount = gallery_rating_vote($data['photo_id'], 'P');
                 echo "<div class='col-xs-12' style='float:left; width:20%; padding:0 15px;'>\n";
                 // <!-------panel------>
                 echo "<div class='panel-default m-b-20'>\n";
@@ -256,9 +254,7 @@ function gallery_photo_listing() {
     }
 }
 
-/**
- * Gallery Album Listing UI
- */
+
 function gallery_album_listing() {
     $locale = fusion_get_locale();
     $aidlink = fusion_get_aidlink();
@@ -335,12 +331,12 @@ function gallery_album_listing() {
             }
             echo "</div>\n";
         } else {
-            echo "<div class='well m-t-20 text-center'>\n";
+            echo "<div class='well text-center'>\n";
             echo $locale['gallery_0024'];
             echo "</div>\n";
         }
     } else {
-        echo "<div class='well m-t-20 text-center'>\n";
+        echo "<div class='well text-center'>\n";
         echo $locale['gallery_0024'];
         echo "</div>\n";
     }
@@ -351,7 +347,7 @@ function gallery_album_listing() {
  *
  * @return array
  */
-function get_albumOpts() {
+function get_album_opts() {
     $list = [];
     $result = dbquery("SELECT * FROM ".DB_PHOTO_ALBUMS." ".(multilang_table("PG") ? "where ".in_group('album_language', LANGUAGE) : "")." ORDER BY album_order DESC, album_datestamp DESC");
     if (dbrows($result) > 0) {
@@ -368,7 +364,7 @@ function get_albumOpts() {
  *
  * @param $albumData
  */
-function purgeAlbumImage($albumData) {
+function purge_album_image($albumData) {
     if (!empty($albumData['album_image']) && file_exists(IMAGES_G.$albumData['album_image'])) {
         unlink(IMAGES_G.$albumData['album_image']);
     }
@@ -387,7 +383,7 @@ function purgeAlbumImage($albumData) {
  *
  * @param $photoData
  */
-function purgePhotoImage($photoData) {
+function purge_photo_image($photoData) {
     $photo_path = return_photo_paths($photoData);
     $parts = pathinfo($photo_path['photo_filename']);
     $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
@@ -443,7 +439,7 @@ function purgePhotoImage($photoData) {
  *
  * @param $photoData
  */
-function purgeSubmissionsPhotoImage($photoData) {
+function purge_submissions_photo_image($photoData) {
     $submissions_dir = INFUSIONS."gallery/submissions/";
     $submissions_dir_t = INFUSIONS."gallery/submissions/thumbs/";
     if (!empty($photoData['photo_filename']) && file_exists($submissions_dir.$photoData['photo_filename'])) {

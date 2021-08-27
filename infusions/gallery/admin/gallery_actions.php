@@ -88,7 +88,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
         $albumData = dbarray($result);
         // photo existed
         if (dbcount("('photo_id')", DB_PHOTOS, "album_id = '".intval($_GET['cat_id'])."'")) {
-            $list = get_albumOpts();
+            $list = get_album_opts();
             $albumArray[0] = $locale['album_0028'];
             foreach ($list as $album_id => $album_title) {
                 $albumArray[$album_id] = sprintf($locale['album_0029'], $album_title);
@@ -115,7 +115,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                         // delete all
                         $photoRows = 0;
                         while ($photo_data = dbarray($photosResult)) {
-                            purgePhotoImage($photo_data);
+                            purge_photo_image($photo_data);
                             dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
                             dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
                             dbquery_insert(DB_PHOTOS, $photo_data, 'delete');
@@ -124,7 +124,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                         addnotice("success", sprintf($locale['album_0032'], $photoRows));
                     }
                 }
-                purgeAlbumImage($albumData);
+                purge_album_image($albumData);
                 rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
                 dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
                 redirect(clean_request("", ["aid"]));
@@ -146,7 +146,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
                 echo closemodal();
             }
         } else {
-            purgeAlbumImage($albumData);
+            purge_album_image($albumData);
             rrmdir(IMAGES_G.'album_'.$albumData['album_id']);
             dbquery_insert(DB_PHOTO_ALBUMS, $albumData, "delete");
             addnotice("success", $locale['album_0030']);
@@ -161,7 +161,7 @@ if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['cat_id
 if (isset($_GET['action']) && $_GET['action'] == "delete" && isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
     if (dbcount("(photo_id)", DB_PHOTOS, "photo_id='".intval($_GET['photo_id'])."'")) {
         $photo_data = dbarray(dbquery("SELECT photo_id, album_id, photo_title, photo_filename, photo_thumb1, photo_thumb2, photo_order FROM ".DB_PHOTOS." WHERE photo_id='".intval($_GET['photo_id'])."'"));
-        purgePhotoImage($photo_data);
+        purge_photo_image($photo_data);
         dbquery("delete from ".DB_COMMENTS." where comment_item_id='".intval($photo_data['photo_id'])."' and comment_type='P'");
         dbquery("delete from ".DB_RATINGS." where rating_item_id='".intval($photo_data['photo_id'])."' and rating_type='P'");
         dbquery_order(DB_PHOTOS, $photo_data['photo_order'], "photo_order", $photo_data['photo_id'], "photo_id", $photo_data['album_id'], "album_id", FALSE, FALSE, "delete");
@@ -186,7 +186,7 @@ if (isset($_GET['action']) && $_GET['action'] == "purge" && isset($_GET['cat_id'
                 echo closeform();
             } else {
                 while ($pData = dbarray($photoResult)) {
-                    purgePhotoImage($pData);
+                    purge_photo_image($pData);
                     // purging everything, order is not relevant
                     dbquery_insert(DB_PHOTOS, $pData, "delete");
                 }

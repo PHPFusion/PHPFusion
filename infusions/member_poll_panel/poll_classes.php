@@ -346,7 +346,7 @@ class MemberPoll {
         echo ($total_rows > $rows) ? makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&amp;") : "";
 
         if ($rows > 0) {
-            echo "<div class='row m-t-20'>\n";
+            echo "<div class='row'>\n";
             while ($data = dbarray($result)) {
                 $title = unserialize(stripslashes($data['poll_title']));
                 $poll_opt = unserialize(stripslashes($data['poll_opt']));
@@ -418,7 +418,6 @@ class MemberPoll {
     }
 
     public function displayPoll() {
-
         $res = $this->selectPoll();
         if (!$res) {
             return;

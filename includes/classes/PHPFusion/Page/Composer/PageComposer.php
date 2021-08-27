@@ -40,7 +40,7 @@ class PageComposer extends PageAdmin {
             self::validatePageSql();
         }
 
-        echo openform('inputform', 'post', FUSION_REQUEST, ["class" => "m-t-20"]);
+        echo openform('inputform', 'post', FUSION_REQUEST);
 
         echo form_hidden('page_id', '', self::$data['page_id']);
 

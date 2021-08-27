@@ -106,7 +106,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             if (dbrows($result) > 0) {
                 $data = dbarray($result);
                 $criteriaArray = unserialize(stripslashes($data['submit_criteria']));
-                purgeSubmissionsPhotoImage($criteriaArray);
+                purge_submissions_photo_image($criteriaArray);
                 $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($data['submit_id'])."'");
                 addnotice("success", $locale['gallery_0161']);
             }
@@ -207,7 +207,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 }
                 openside("");
                 echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], [
-                    'options' => get_albumOpts()
+                    'options' => get_album_opts()
                 ]);
                 echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
                 closeside();
