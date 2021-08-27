@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-defined('IN_FUSION') || exit;
+use Defender\ImageValidation;
+use PHPFusion\PrivateMessages;
 
 /**
  * Get max rowstart from a query to prevent renumbering pagenav.
@@ -34,6 +35,8 @@ function get_rowstart($key, $max_limit) {
     return 0;
 }
 
+
+// Protect filename from uploader by renaming file.
 if (!function_exists('random_filename')) {
     /**
      * Generate random filename.
@@ -275,7 +278,7 @@ if (!function_exists('upload_file')) {
             } else if (empty($valid_ext) || !in_array($file_ext, $valid_ext)) {
                 // Invalid file extension
                 $upload_file['error'] = 2;
-            } else if (fusion_get_settings('mime_check') && Defender\ImageValidation::mimeCheck($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
+            } else if (fusion_get_settings('mime_check') && ImageValidation::mimeCheck($file['tmp_name'], $file_ext, $valid_ext) === FALSE) {
                 $upload_file['error'] = 4;
             } else {
                 $target_file = ($replace_upload ? $target_file.$file_ext : filename_exists($target_folder, $target_file.$file_ext));
@@ -367,15 +370,15 @@ if (!function_exists('upload_image')) {
             }
 
             if ($image['size']) {
-
-                if (Defender\ImageValidation::mimeCheck($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
-
+    
+                if (ImageValidation::mimeCheck($image['tmp_name'], $image_ext, $allowed_extensions) === TRUE) {
+        
                     $image_res = [0, 1];
-
+        
                     if (getimagesize($image['tmp_name'])) {
                         $image_res = getimagesize($image['tmp_name']);
                     }
-
+        
                     $image_info = [
                         "image"         => FALSE,
                         "target_folder" => $target_folder,
@@ -522,17 +525,35 @@ if (!function_exists('download_file')) {
  * @param array  $options
  *
  * Options for columns parameters (Example)
- * $options["columns"] = array(
- *     array("data" => "column_1_name", "orderable"=>FALSE, "width"=>200, "class"=>"min"),
- *     array("data" => "column_1_name")
- * )
+ *                          $options["columns"] = array(
+ *                          array("data" => "column_1_name", "orderable"=>FALSE, "width"=>200, "class"=>"min"),
+ *                          array("data" => "column_1_name")
+ *                          )
+ *
+ *                          'orderable' - boolean (true/false)
+ *                          'width' - width of column
+ *                          'class' - class name,
+ *                          'responsive' - boolean (true/false)
+ *                          'className' -   'never' // hide on all devices
+ *                                      -   'all' //show on all devices
+ *                                      -   'not-mobile' // hide on mobile
+ *
  * The response for the item must contains such:
- * array(
- *     "data" => array( 0 => array("column_1" => "data", "column_2" => "data"...), 1 => ... ),
- *     "recordsTotal" => $rows,
- *     "recordsFiltered" => $max_rows,
- *     "responsive" => TRUE
- * )
+ *  [
+ *       "data" => array( 0 => array("column_1" => "data", "column_2" => "data"...), 1 => ... ),
+ *       "recordsTotal" => $rows,
+ *       "recordsFiltered" => $max_rows,
+ *       "responsive" => TRUE
+ *  ]
+ *
+ * @todo-meangczac https://www.mobilespoon.net/2019/11/design-ui-tables-20-rules-guide.html
+ *                          Column Sort ON  - done
+ *                          Column Resize ON    -done
+ *                          Column Reorder ON   -
+ *
+ *
+ *
+ *
  *
  * @return string
  */
@@ -545,49 +566,96 @@ function fusion_table($table_id, array $options = []) {
     $js_filter_function = "";
 
     $default_options = [
-        'remote_file'       => '', // "remote_file" => INFUSIONS."file-path.php", // iMEMBER will work with these, but https:// those will have no maincore parsing and no access to globals.
-        'boilerplate'       => "bootstrap3", // @todo: implement boilerplate switch functions
-        'page_length'       => 0,
-        'debug'             => FALSE,
-        'reponse_debug'     => FALSE,
+        'remote_file'         => '',
+        'boilerplate'         => "bootstrap3", // @todo: implement boilerplate switch functions
+        'cdnurl'              => fusion_get_settings("siteurl"),
+        'page_length'         => 0, // result length 0 for default 10
+        'debug'               => FALSE,
+        'reponse_debug'       => FALSE,
         // Documentation required for these.
-        'server_side'       => "false",
-        'processing'        => "false",
-        'ajax'              => FALSE,
-        'ajax_debug'        => FALSE,
-        'responsive'        => TRUE,
+        'server_side'         => "false",
+        'processing'          => "false",
+        'ajax'                => FALSE,
+        'ajax_debug'          => FALSE,
+        'responsive'          => TRUE,
         // filter input name on the page if extra filters are used
-        'ajax_filters'      => [],
+        'ajax_filters'        => [],
         // not functional yet
-        'ajax_data'         => [],
-        'state_save'        => "true", // utilizes localStorage to store latest state
+        'ajax_data'           => [],
+        'order'               => [], // [0, 'desc'] // column 0 order desc - sets default ordering
+        'state_save'          => TRUE, // utilizes localStorage to store latest state
         // documentation needed for columns
-        "columns"           => NULL,
-        "ordering"          => TRUE,
-        "processing_locale" => "Please wait patiently while processing...",
-        "menu_locale"       => "Display _MENU_ records per page",
-        "zero_locale"       => "Nothing found - sorry",
-        "result_locale"     => "Showing page _PAGE_ of _PAGES_",
-        "empty_locale"      => "No records available",
-        "filter_locale"     => "(Filtered from _MAX_ total records)"
+        "columns"             => NULL,
+        "ordering"            => TRUE,
+        "processing_locale"   => "Please wait patiently while processing...",
+        "menu_locale"         => "Display _MENU_ records per page",
+        "zero_locale"         => "Nothing found - sorry",
+        "result_locale"       => "Showing page _PAGE_ of _PAGES_",
+        "empty_locale"        => "No records available",
+        "filter_locale"       => "(Filtered from _MAX_ total records)",
+        'search_input_locale' => "Search Records",
+        'pagination'          => TRUE, //hides table navigation
+        'hide_search_input'   => FALSE, // hides search input
+        // Ui as aesthetics for maximum user experience
+        'col_resize'          => TRUE,
+        'col_reorder'         => TRUE,
+        'fixed_header'        => TRUE,
+        // custom jsscript append
+        'js_script'           => '',
     ];
-
+    
     $options += $default_options;
-
     // Strings
     $options["ordering"] = ($options["ordering"] ? "true" : "false");
     $options["responsive"] = ($options["responsive"] ? "true" : "false");
     $options["state_save"] = ($options["state_save"] ? "true" : "false");
     $options["server_side"] = ($options["server_side"] ? "true" : "false");
     $options["processing"] = ($options["processing"] ? "true" : "false");
-
+    
     if ($options['page_length'] && isnum($options['page_length'])) {
         $options['datatable_config']['pageLength'] = (int)$options['page_length'];
     }
-
+    
+    $url_prefix = rtrim($options['cdnurl'], '/');
+    
+    // Build configurations
+    $config = "";
+    if (!empty($options["order"])) {
+        $config .= "'order' : [ ".json_encode($options["order"])." ],";
+    }
+    
+    if ($options['pagination'] === FALSE) {
+        $config .= "'paging' : false,";
+    }
+    
+    if ($options['hide_search_input'] === TRUE) {
+        $config .= "'dom': '<\"top\">rt<\"bottom\"><\"clear\">',";
+    }
+    
+    // Javascript Init
+    $js_config_script = "
+    {
+       //'responsive' :".$options["responsive"].",
+        'searching' : true,
+        'ordering' : ".$options["ordering"].",
+        'stateSave' : ".$options["state_save"].",
+        'autoWidth' : true,
+        $config
+        'language': {
+            'processing': '".$options["processing_locale"]."',
+            'lengthMenu': '".$options["menu_locale"]."',
+            'zeroRecords': '".$options["zero_locale"]."',
+            'info': '".$options["result_locale"]."',
+            'infoEmpty': '".$options["empty_locale"]."',
+            'infoFiltered': '".$options["filter_locale"]."',
+            'searchPlaceholder': '".$options['search_input_locale']."',
+            'search': '',
+        },
+    }";
+    
     // Ajax handling script
     if ($options['remote_file']) {
-
+        
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
@@ -630,6 +698,7 @@ function fusion_table($table_id, array $options = []) {
                 url : '".$options['remote_file']."',
                 <data_filters>
             },
+            $config
             'language': {
                 'processing': '".$options["processing_locale"]."',
                 'lengthMenu': '".$options["menu_locale"]."',
@@ -640,10 +709,12 @@ function fusion_table($table_id, array $options = []) {
             },
             'columns' : ".json_encode($options['columns'])."
         }";
-
-        $fields_doms = [];
-        if ($options['ajax'] && !empty($options['ajax_filters'])) {
-            foreach ($options['ajax_filters'] as $field_id) {
+        
+        
+        $field_doms = [];
+        if (!empty($options["ajax_filters"])) {
+            
+            foreach ($options["ajax_filters"] as $field_id) {
                 $field_doms[] = "#".$field_id;
                 $filters .= "data.".$field_id."= $('#".$field_id."').val();";
             }
@@ -652,39 +723,184 @@ function fusion_table($table_id, array $options = []) {
             ".$table_id."Table.draw();
             });";
         }
-
+        
         $js_config_script = str_replace("<data_filters>", $js_filter_function, $js_config_script);
     }
-
-    if (!defined('FUSION_DATATABLES')) {
-        define('FUSION_DATATABLES', TRUE);
-        add_to_footer("<script src='".INCLUDES."jquery/datatables/datatables.min.js'></script>");
-
-        if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
-            if (defined('BOOTSTRAP4')) {
-                add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/bs4/datatables.bootstrap4.min.css'>");
-                add_to_footer("<script src='".INCLUDES."jquery/datatables/bs4/datatables.bootstrap4.min.js'></script>");
-            } else {
-                add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/bs3/datatables.bootstrap.min.css'>");
-                add_to_footer("<script src='".INCLUDES."jquery/datatables/bs3/datatables.bootstrap.min.js'></script>");
+    
+    // Map for file inclusion
+    $plugin_registers = [
+        'BOOTSTRAP4' => [
+            'css' => [
+                $url_prefix.'/includes/jquery/datatables/bs4/datatables.bootstrap4.min.css'
+            ],
+            'js'  => [
+                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
+                $url_prefix.'/includes/jquery/datatables/bs4/datatables.bootstrap4.min.js',
+            ]
+        ],
+        'BOOTSTRAP'  => [
+            'css' => [
+                $url_prefix.'/includes/jquery/datatables/bs3/datatables.bootstrap.min.css',
+            ],
+            'js'  => [
+                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
+                $url_prefix.'/includes/jquery/datatables/bs3/datatables.bootstrap.min.js',
+            ]
+        ],
+        'default'    => [
+            'css' => [
+                $url_prefix.'/includes/jquery/datatables/datatables.min.css',
+            ],
+            'js'  => [
+                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
+            ]
+        ]
+    ];
+    
+    // Enable column resizing
+    if ($options['col_resize']) {
+        $files = [
+            'all' => [
+                'js'  => [$url_prefix.'/includes/jquery/datatables/assets/ColResize-1.0.0/datatables.colresize.min.js'],
+                'css' => [$url_prefix.'/includes/jquery/datatables/assets/ColResize-1.0.0/datatables.colresize.min.css'],
+            ]
+        ];
+        
+        $plugin_registers = array_merge_recursive($files, $plugin_registers);
+        
+        $options['js_script'] .= 'new $.fn.dataTable.ColResize('.$table_id.'Table, {
+        isEnabled: true,
+        hoverClass: \'dt-colresizable-hover\',
+        hasBoundCheck: true,
+        minBoundClass: \'dt-colresizable-bound-min\',
+        maxBoundClass: \'dt-colresizable-bound-max\',
+        isResizable: function(column) { return true; },
+        onResize: function(column) {},
+        onResizeEnd: function(column, columns) {},
+        getMinWidthOf: function($thNode) {}
+        });';
+    }
+    
+    // Enable column reordering
+    if ($options['col_reorder']) {
+        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/ColReorder-1.5.2/';
+        $files = [
+            'BOOTSTRAP4' => [
+                'css' => [$_plugin_folder.'css/datatables.colreorder.bootstrap4.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.colreorder.bootstrap4.min.js'],
+            ],
+            'BOOTSTRAP'  => [
+                'css' => [$_plugin_folder.'css/datatables.colreorder.bootstrap.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.colreorder.bootstrap.min.js'],
+            ],
+            'SEMANTIC'   => [
+                'css' => [$_plugin_folder.'css/datatables.colreorder.semanticui.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.colreorder.semanticui.min.js'],
+            ],
+            'all'        => [
+                'css' => [$_plugin_folder.'css/datatables.colreorder.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.colreorder.min.js'],
+            ],
+        ];
+        $plugin_registers = array_merge_recursive($plugin_registers, $files);
+        $options['js_script'] .= 'new $.fn.dataTable.ColReorder('.$table_id.'Table, {} );';
+    }
+    
+    // Enable responsive design
+    if ($options['responsive']) {
+        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/Responsive-2.2.9/';
+        // do not shuffle the order. 'all' doesn't work
+        $files = [
+            'BOOTSTRAP4' => [
+                'css' => [$_plugin_folder.'css/datatables.responsive.bootstrap4.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.bootstrap4.min.js'],
+            ],
+            'BOOTSTRAP'  => [
+                'css' => [$_plugin_folder.'css/datatables.responsive.bootstrap.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.bootstrap.min.js'],
+            ],
+            'SEMANTIC'   => [
+                'css' => [$_plugin_folder.'css/datatables.responsive.semanticui.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.semanticui.min.js'],
+            ],
+            'default'    => [
+                'css' => [$_plugin_folder.'css/datatables.responsive.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js'],
+            ],
+        ];
+        
+        $plugin_registers = array_merge_recursive($plugin_registers, $files);
+        
+        $options['js_script'] .= 'new $.fn.dataTable.Responsive('.$table_id.'Table);';
+    }
+    
+    // Fixed header
+    if ($options['fixed_header']) {
+        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/FixedHeader-3.1.6/';
+        $files = [
+            'BOOTSTRAP4' => [
+                'css' => [$_plugin_folder.'css/datatables.fixedheader.bootstrap4.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.bootstrap4.min.js'],
+            ],
+            'BOOTSTRAP'  => [
+                'css' => [$_plugin_folder.'css/datatables.fixedheader.bootstrap.min.css', $_plugin_folder.'css/datatables.fixedheader.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.bootstrap.min.js'],
+            ],
+            //'all'        => [
+            //    'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
+            //    'js' => [$_plugin_folder.'js/datatables.fixedheader.datatables.min.js']
+            //],
+            'SEMANTIC'   => [
+                'css' => [$_plugin_folder.'css/datatables.fixedheader.semanticui.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.semanticui.min.js'],
+            ],
+            'default'    => [
+                'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js']
+            ]
+        ];
+        $plugin_registers = array_merge_recursive($plugin_registers, $files);
+        $options['js_script'] .= 'new $.fn.dataTable.FixedHeader('.$table_id.'Table);';
+    }
+    
+    // Load file into cache and auto include them
+    if ($template = fusion_theme_framework()) {
+        if (isset($plugin_registers[$template])) {
+            if (isset($plugin_registers[$template]['css'])) {
+                foreach ($plugin_registers[$template]['css'] as $css_file) {
+                    fusion_load_script($css_file, 'css');
+                }
             }
-        } else {
-            add_to_head("<link rel='stylesheet' href='".INCLUDES."jquery/datatables/datatables.min.css'>");
+            if (isset($plugin_registers[$template]['js'])) {
+                foreach ($plugin_registers[$template]['js'] as $js_file) {
+                    fusion_load_script($js_file);
+                }
+            }
+        }
+        if (isset($plugin_registers['all'])) {
+            if (isset($plugin_registers['all']['css'])) {
+                foreach ($plugin_registers['all']['css'] as $css_file) {
+                    fusion_load_script($css_file, 'css');
+                }
+            }
+            if (isset($plugin_registers['all']['js'])) {
+                foreach ($plugin_registers['all']['js'] as $js_file) {
+                    fusion_load_script($js_file);
+                }
+            }
         }
     }
-
-    $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);$js_event_function
-
+    
     //$(window).resize(function() {
     //    $('#$table_id').DataTable().ajax.reload();
     //});
-    ";
-
+    
+    $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);".$options['js_script']."$js_event_function";
+    
     if ($options['debug']) {
         print_p($javascript);
     }
-
     add_to_jquery(/** @lang JavaScript */ $javascript);
-
+    
     return $table_id;
 }
