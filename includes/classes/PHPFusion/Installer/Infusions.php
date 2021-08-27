@@ -136,13 +136,15 @@ class Infusions {
                 'updatedbrow'     => $inf_updatedbrow,
             ];
 
+            $result = dbquery("SELECT inf_version FROM ".DB_INFUSIONS." WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
+
             /*
              * Status Remarks
              * 2 - When upgrade is a must
              * 1 - Nothing to upgrade
              * 0 - Infusions not found.
              */
-            $infusion['status'] = defined(strtoupper($folder).'_EXISTS') ? (version_compare($infusion['version'], constant(strtoupper($folder).'_VERSION'), ">") ? 2 : 1) : 0;
+            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -850,5 +852,68 @@ class Infusions {
         }
 
         return $error;
+    }
+
+    /**
+     * Return list of infusions with available update
+     *
+     * @param bool $return_count Return only number
+     *
+     * @return array|int
+     */
+    public static function updateChecker($return_count = TRUE) {
+        $infusion = [];
+        $inf_title = "";
+        $inf_description = "";
+        $inf_version = "";
+        $inf_developer = "";
+        $inf_email = "";
+        $inf_weburl = "";
+        $inf_folder = "";
+        $inf_image = "";
+        $inf_newtable = [];
+        $inf_insertdbrow = [];
+        $inf_updatedbrow = [];
+        $inf_droptable = [];
+        $inf_altertable = [];
+        $inf_deldbrow = [];
+        $inf_sitelink = [];
+        $inf_adminpanel = [];
+        $mlt_adminpanel = [];
+        $inf_mlt = [];
+        $mlt_insertdbrow = [];
+        $mlt_deldbrow = [];
+        $inf_delfiles = [];
+        $inf_newcol = [];
+        $inf_dropcol = [];
+        $db_prefix = DB_PREFIX;
+        $cookie_prefix = COOKIE_PREFIX;
+
+        $temp = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
+        $infusions = [];
+        $inf_version = '';
+
+        foreach ($temp as $folder) {
+            if (is_dir(INFUSIONS.$folder) && file_exists(INFUSIONS.$folder."/infusion.php")) {
+                include(INFUSIONS.$folder.'/infusion.php');
+                $infusions[$folder]['version'] = $inf_version ?: '0';
+                $infusions[$folder]['status'] = defined(strtoupper($folder).'_EXISTS') ? (version_compare($infusions[$folder]['version'], constant(strtoupper($folder).'_VERSION'), ">") ? 2 : 1) : 0;
+            }
+        }
+
+        if ($return_count) {
+            $count = [];
+            if ($infusions) {
+                foreach ($infusions as $inf) {
+                    if ($inf['status'] > 1) {
+                        $count[] = $inf;
+                    }
+                }
+            }
+
+            return count($count);
+        }
+
+        return $infusions;
     }
 }
