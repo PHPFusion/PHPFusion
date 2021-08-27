@@ -28,12 +28,10 @@ defined('IN_FUSION') || exit;
  * @return string
  */
 function fusion_theme_framework() {
-    if (defined('BOOTSTRAP')) {
-        $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
-        foreach ($level as $framework) {
-            if (defined($framework)) {
-                return $framework;
-            }
+    $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
+    foreach ($level as $framework) {
+        if (defined($framework)) {
+            return $framework;
         }
     }
 

@@ -557,6 +557,8 @@ if (!function_exists('download_file')) {
  * @return string
  */
 function fusion_table($table_id, array $options = []) {
+    $locale = fusion_get_locale();
+
     $table_id = str_replace(["-", " "], "_", $table_id);
 
     $js_event_function = "";
@@ -564,42 +566,33 @@ function fusion_table($table_id, array $options = []) {
     $js_filter_function = "";
 
     $default_options = [
-        'remote_file'         => '',
-        'boilerplate'         => "bootstrap3", // @todo: implement boilerplate switch functions
-        'cdnurl'              => fusion_get_settings("siteurl"),
-        'page_length'         => 0, // result length 0 for default 10
-        'debug'               => FALSE,
-        'reponse_debug'       => FALSE,
+        'remote_file'       => '',
+        'page_length'       => 0, // result length 0 for default 10
+        'debug'             => FALSE,
+        'reponse_debug'     => FALSE,
         // Documentation required for these.
-        'server_side'         => "false",
-        'processing'          => "false",
-        'ajax'                => FALSE,
-        'ajax_debug'          => FALSE,
-        'responsive'          => FALSE,
+        'server_side'       => "false",
+        'processing'        => "false",
+        'ajax'              => FALSE,
+        'ajax_debug'        => FALSE,
+        'responsive'        => TRUE,
         // filter input name on the page if extra filters are used
-        'ajax_filters'        => [],
+        'ajax_filters'      => [],
         // not functional yet
-        'ajax_data'           => [],
-        'order'               => [], // [0, 'desc'] // column 0 order desc - sets default ordering
-        'state_save'          => TRUE, // utilizes localStorage to store latest state
+        'ajax_data'         => [],
+        'order'             => [], // [0, 'desc'] // column 0 order desc - sets default ordering
+        'state_save'        => TRUE, // utilizes localStorage to store latest state
         // documentation needed for columns
-        "columns"             => NULL,
-        "ordering"            => TRUE,
-        "processing_locale"   => "Please wait patiently while processing...",
-        "menu_locale"         => "Display _MENU_ records per page",
-        "zero_locale"         => "Nothing found - sorry",
-        "result_locale"       => "Showing page _PAGE_ of _PAGES_",
-        "empty_locale"        => "No records available",
-        "filter_locale"       => "(Filtered from _MAX_ total records)",
-        'search_input_locale' => "Search Records",
-        'pagination'          => TRUE, //hides table navigation
-        'hide_search_input'   => FALSE, // hides search input
+        'columns'           => NULL,
+        'ordering'          => TRUE,
+        'pagination'        => TRUE, //hides table navigation
+        'hide_search_input' => FALSE, // hides search input
         // Ui as aesthetics for maximum user experience
-        'col_resize'          => FALSE,
-        'col_reorder'         => FALSE,
-        'fixed_header'        => FALSE,
+        'col_resize'        => TRUE,
+        'col_reorder'       => TRUE,
+        'fixed_header'      => TRUE,
         // custom jsscript append
-        'js_script'           => '',
+        'js_script'         => '',
     ];
 
     $options += $default_options;
@@ -607,8 +600,6 @@ function fusion_table($table_id, array $options = []) {
     if ($options['page_length'] && isnum($options['page_length'])) {
         $options['datatable_config']['pageLength'] = (int)$options['page_length'];
     }
-
-    $url_prefix = rtrim($options['cdnurl'], '/');
 
     // Build configurations
     $config = "";
@@ -627,27 +618,26 @@ function fusion_table($table_id, array $options = []) {
     // Javascript Init
     $js_config_script = "
     {
-       'responsive' :".($options["responsive"] ? "true" : "false").",
+        'responsive' :".($options["responsive"] ? "true" : "false").",
         'searching' : true,
         'ordering' : ".($options["ordering"] ? "true" : "false").",
         'stateSave' : ".($options["state_save"] ? "true" : "false").",
         'autoWidth' : true,
         $config
         'language': {
-            'processing': '".$options["processing_locale"]."',
-            'lengthMenu': '".$options["menu_locale"]."',
-            'zeroRecords': '".$options["zero_locale"]."',
-            'info': '".$options["result_locale"]."',
-            'infoEmpty': '".$options["empty_locale"]."',
-            'infoFiltered': '".$options["filter_locale"]."',
-            'searchPlaceholder': '".$options['search_input_locale']."',
+            'processing': '".$locale['processing_locale']."',
+            'lengthMenu': '".$locale['menu_locale']."',
+            'zeroRecords': '".$locale['zero_locale']."',
+            'info': '".$locale['result_locale']."',
+            'infoEmpty': '".$locale['empty_locale']."',
+            'infoFiltered': '".$locale['filter_locale']."',
+            'searchPlaceholder': '".$locale['search_input_locale']."',
             'search': '',
         },
     }";
 
     // Ajax handling script
     if ($options['remote_file']) {
-
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
@@ -692,12 +682,12 @@ function fusion_table($table_id, array $options = []) {
             },
             $config
             'language': {
-                'processing': '".$options["processing_locale"]."',
-                'lengthMenu': '".$options["menu_locale"]."',
-                'zeroRecords': '".$options["zero_locale"]."',
-                'info': '".$options["result_locale"]."',
-                'infoEmpty': '".$options["empty_locale"]."',
-                'infoFiltered': '".$options["filter_locale"]."',
+                'processing': '".$locale['processing_locale']."',
+                'lengthMenu': '".$locale['menu_locale']."',
+                'zeroRecords': '".$locale['zero_locale']."',
+                'info': '".$locale['result_locale']."',
+                'infoEmpty': '".$locale['empty_locale']."',
+                'infoFiltered': '".$locale['filter_locale']."',
             },
             'columns' : ".json_encode($options['columns'])."
         }";
@@ -722,38 +712,39 @@ function fusion_table($table_id, array $options = []) {
     $plugin_registers = [
         'BOOTSTRAP4' => [
             'css' => [
-                $url_prefix.'/includes/jquery/datatables/bs4/datatables.bootstrap4.min.css'
+                INCLUDES.'jquery/datatables/css/dataTables.bootstrap4.min.css'
             ],
             'js'  => [
-                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
-                $url_prefix.'/includes/jquery/datatables/bs4/datatables.bootstrap4.min.js',
+                INCLUDES.'jquery/datatables/js/jquery.dataTables.min.js',
+                INCLUDES.'jquery/datatables/js/dataTables.bootstrap4.min.js',
             ]
         ],
         'BOOTSTRAP'  => [
             'css' => [
-                $url_prefix.'/includes/jquery/datatables/bs3/datatables.bootstrap.min.css',
+                INCLUDES.'jquery/datatables/css/dataTables.bootstrap.min.css',
             ],
             'js'  => [
-                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
-                $url_prefix.'/includes/jquery/datatables/bs3/datatables.bootstrap.min.js',
+                INCLUDES.'jquery/datatables/js/jquery.dataTables.min.js',
+                INCLUDES.'jquery/datatables/js/dataTables.bootstrap.min.js',
             ]
         ],
         'default'    => [
             'css' => [
-                $url_prefix.'/includes/jquery/datatables/datatables.min.css',
+                INCLUDES.'jquery/datatables/css/jquery.dataTables.min.css',
             ],
             'js'  => [
-                $url_prefix.'/includes/jquery/datatables/datatables.min.js',
+                INCLUDES.'jquery/datatables/js/jquery.dataTables.min.js',
             ]
         ]
     ];
 
     // Enable column resizing
     if ($options['col_resize']) {
+        $_plugin_folder = INCLUDES.'jquery/datatables/extensions/ColResize/';
         $files = [
             'all' => [
-                'js'  => [$url_prefix.'/includes/jquery/datatables/assets/ColResize-1.0.0/datatables.colresize.min.js'],
-                'css' => [$url_prefix.'/includes/jquery/datatables/assets/ColResize-1.0.0/datatables.colresize.min.css'],
+                'css' => [$_plugin_folder.'css/datatables.colresize.min.css'],
+                'js'  => [$_plugin_folder.'js/datatables.colresize.min.js']
             ]
         ];
 
@@ -774,19 +765,21 @@ function fusion_table($table_id, array $options = []) {
 
     // Enable column reordering
     if ($options['col_reorder']) {
-        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/ColReorder-1.5.2/';
+        $_plugin_folder = INCLUDES.'jquery/datatables/extensions/ColReorder/';
         $files = [
             'BOOTSTRAP4' => [
-                'css' => [$_plugin_folder.'css/datatables.colreorder.bootstrap4.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.colreorder.bootstrap4.min.js'],
+                'css' => [$_plugin_folder.'css/colReorder.bootstrap4.min.css'],
+                'js'  => [$_plugin_folder.'js/colReorder.bootstrap4.min.js'],
             ],
             'BOOTSTRAP'  => [
-                'css' => [$_plugin_folder.'css/datatables.colreorder.bootstrap.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.colreorder.bootstrap.min.js'],
+                'css' => [$_plugin_folder.'css/colReorder.bootstrap.min.css'],
+                'js'  => [$_plugin_folder.'js/colReorder.bootstrap.min.js'],
+            ],
+            'default'    => [
+                'css' => [$_plugin_folder.'css/colReorder.dataTables.min.css'],
             ],
             'all'        => [
-                'css' => [$_plugin_folder.'css/datatables.colreorder.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.colreorder.min.js'],
+                'js' => [$_plugin_folder.'js/dataTables.colReorder.min.js'],
             ],
         ];
         $plugin_registers = array_merge_recursive($plugin_registers, $files);
@@ -795,20 +788,19 @@ function fusion_table($table_id, array $options = []) {
 
     // Enable responsive design
     if ($options['responsive']) {
-        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/Responsive-2.2.9/';
-        // do not shuffle the order. 'all' doesn't work
+        $_plugin_folder = INCLUDES.'jquery/datatables/extensions/Responsive/';
         $files = [
             'BOOTSTRAP4' => [
-                'css' => [$_plugin_folder.'css/datatables.responsive.bootstrap4.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.bootstrap4.min.js'],
+                'css' => [$_plugin_folder.'css/responsive.bootstrap4.min.css', $_plugin_folder.'css/responsive.dataTables.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.responsive.min.js', $_plugin_folder.'js/responsive.bootstrap4.min.js'],
             ],
             'BOOTSTRAP'  => [
-                'css' => [$_plugin_folder.'css/datatables.responsive.bootstrap.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.bootstrap.min.js'],
+                'css' => [$_plugin_folder.'css/responsive.bootstrap.min.css', $_plugin_folder.'css/responsive.dataTables.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.responsive.min.js', $_plugin_folder.'js/responsive.bootstrap.min.js'],
             ],
             'default'    => [
-                'css' => [$_plugin_folder.'css/datatables.responsive.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js'],
+                'css' => [$_plugin_folder.'css/responsive.dataTables.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.responsive.min.js', $_plugin_folder.'js/dataTables.responsive.min.js'],
             ],
         ];
 
@@ -819,23 +811,19 @@ function fusion_table($table_id, array $options = []) {
 
     // Fixed header
     if ($options['fixed_header']) {
-        $_plugin_folder = $url_prefix.'/includes/jquery/datatables/assets/FixedHeader-3.1.6/';
+        $_plugin_folder = INCLUDES.'jquery/datatables/extensions/FixedHeader/';
         $files = [
             'BOOTSTRAP4' => [
-                'css' => [$_plugin_folder.'css/datatables.fixedheader.bootstrap4.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.bootstrap4.min.js'],
+                'css' => [$_plugin_folder.'css/fixedHeader.bootstrap4.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.fixedHeader.min.js', $_plugin_folder.'js/fixedHeader.bootstrap4.min.js'],
             ],
             'BOOTSTRAP'  => [
-                'css' => [$_plugin_folder.'css/datatables.fixedheader.bootstrap.min.css', $_plugin_folder.'css/datatables.fixedheader.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.bootstrap.min.js'],
+                'css' => [$_plugin_folder.'css/fixedHeader.bootstrap.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.fixedHeader.min.js', $_plugin_folder.'js/fixedHeader.bootstrap.min.js'],
             ],
-            //'all'        => [
-            //    'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
-            //    'js' => [$_plugin_folder.'js/datatables.fixedheader.datatables.min.js']
-            //],
             'default'    => [
-                'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js']
+                'css' => [$_plugin_folder.'css/fixedHeader.dataTables.min.css'],
+                'js'  => [$_plugin_folder.'js/dataTables.fixedHeader.min.js', $_plugin_folder.'js/fixedHeader.dataTables.min.js']
             ]
         ];
         $plugin_registers = array_merge_recursive($plugin_registers, $files);
