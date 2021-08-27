@@ -23,6 +23,32 @@ use PHPFusion\Panels;
 defined('IN_FUSION') || exit;
 
 /**
+ * Get the current theme framework
+ *
+ * @return string
+ */
+function fusion_theme_framework() {
+    if (defined('BOOTSTRAP')) {
+        $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
+        foreach ($level as $framework) {
+            if (defined($framework)) {
+                return $framework;
+            }
+        }
+    }
+    if (defined('SEMANTIC')) {
+        $level = ['SEMANTIC5', 'SEMANTIC4', 'SEMANTIC3', 'SEMANTIC'];
+        foreach ($level as $framework) {
+            if (defined($framework)) {
+                return $framework;
+            }
+        }
+        
+    }
+    return 'default';
+}
+
+/**
  * Show PHPFusion performance.
  *
  * @param bool $queries Show the number of queries used on the current page.
