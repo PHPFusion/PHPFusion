@@ -511,7 +511,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             "remote_file" => ADMIN."includes/?api=sitelinks-list&refs=".$tab_active."&cat=$cat",
             "server_side" => TRUE,
             "processing"  => TRUE,
-            "responsive"  => TRUE,
+            //"responsive"  => TRUE,
             "debug"       => FALSE,
             "zero_locale" => $this->locale["SL_0062"],
             "columns"     => [

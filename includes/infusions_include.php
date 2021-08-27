@@ -575,7 +575,7 @@ function fusion_table($table_id, array $options = []) {
         'processing'          => "false",
         'ajax'                => FALSE,
         'ajax_debug'          => FALSE,
-        'responsive'          => TRUE,
+        'responsive'          => FALSE,
         // filter input name on the page if extra filters are used
         'ajax_filters'        => [],
         // not functional yet
@@ -595,9 +595,9 @@ function fusion_table($table_id, array $options = []) {
         'pagination'          => TRUE, //hides table navigation
         'hide_search_input'   => FALSE, // hides search input
         // Ui as aesthetics for maximum user experience
-        'col_resize'          => TRUE,
-        'col_reorder'         => TRUE,
-        'fixed_header'        => TRUE,
+        'col_resize'          => FALSE,
+        'col_reorder'         => FALSE,
+        'fixed_header'        => FALSE,
         // custom jsscript append
         'js_script'           => '',
     ];
@@ -784,10 +784,6 @@ function fusion_table($table_id, array $options = []) {
                 'css' => [$_plugin_folder.'css/datatables.colreorder.bootstrap.min.css'],
                 'js'  => [$_plugin_folder.'js/datatables.colreorder.bootstrap.min.js'],
             ],
-            'SEMANTIC'   => [
-                'css' => [$_plugin_folder.'css/datatables.colreorder.semanticui.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.colreorder.semanticui.min.js'],
-            ],
             'all'        => [
                 'css' => [$_plugin_folder.'css/datatables.colreorder.min.css'],
                 'js'  => [$_plugin_folder.'js/datatables.colreorder.min.js'],
@@ -809,10 +805,6 @@ function fusion_table($table_id, array $options = []) {
             'BOOTSTRAP'  => [
                 'css' => [$_plugin_folder.'css/datatables.responsive.bootstrap.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
                 'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.bootstrap.min.js'],
-            ],
-            'SEMANTIC'   => [
-                'css' => [$_plugin_folder.'css/datatables.responsive.semanticui.min.css', $_plugin_folder.'css/datatables.responsive.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.responsive.min.js', $_plugin_folder.'js/datatables.responsive.semanticui.min.js'],
             ],
             'default'    => [
                 'css' => [$_plugin_folder.'css/datatables.responsive.min.css'],
@@ -841,10 +833,6 @@ function fusion_table($table_id, array $options = []) {
             //    'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
             //    'js' => [$_plugin_folder.'js/datatables.fixedheader.datatables.min.js']
             //],
-            'SEMANTIC'   => [
-                'css' => [$_plugin_folder.'css/datatables.fixedheader.semanticui.min.css'],
-                'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js', $_plugin_folder.'js/datatables.fixedheader.semanticui.min.js'],
-            ],
             'default'    => [
                 'css' => [$_plugin_folder.'css/datatables.fixedheader.min.css'],
                 'js'  => [$_plugin_folder.'js/datatables.fixedheader.min.js']
@@ -882,16 +870,12 @@ function fusion_table($table_id, array $options = []) {
         }
     }
 
-    //$(window).resize(function() {
-    //    $('#$table_id').DataTable().ajax.reload();
-    //});
-
     $javascript = "let ".$table_id."Table = $('#$table_id').DataTable($js_config_script);".$options['js_script']."$js_event_function";
 
     if ($options['debug']) {
         print_p($javascript);
     }
-    add_to_jquery(/** @lang JavaScript */ $javascript);
+    add_to_jquery($javascript);
 
     return $table_id;
 }

@@ -36,15 +36,7 @@ function fusion_theme_framework() {
             }
         }
     }
-    if (defined('SEMANTIC')) {
-        $level = ['SEMANTIC5', 'SEMANTIC4', 'SEMANTIC3', 'SEMANTIC'];
-        foreach ($level as $framework) {
-            if (defined($framework)) {
-                return $framework;
-            }
-        }
-        
-    }
+
     return 'default';
 }
 
@@ -125,7 +117,7 @@ function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '
                                 }
                             }
                             $modal_body .= "Statement::: <code>".addslashes($debug_line)."</code>";
-                            $modal_body .= !empty($debug_param) ? "<br/>Parameters::: <code>".$debug_param ."</code>" : '';
+                            $modal_body .= !empty($debug_param) ? "<br/>Parameters::: <code>".$debug_param."</code>" : '';
                         }
 
                     }
