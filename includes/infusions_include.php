@@ -615,6 +615,21 @@ function fusion_table($table_id, array $options = []) {
         $config .= "'dom': '<\"top\">rt<\"bottom\"><\"clear\">',";
     }
 
+    $config .= "'language': {
+        'processing': '".$locale['processing_locale']."',
+        'lengthMenu': '".$locale['menu_locale']."',
+        'zeroRecords': '".$locale['zero_locale']."',
+        'info': '".$locale['result_locale']."',
+        'infoEmpty': '".$locale['empty_locale']."',
+        'infoFiltered': '".$locale['filter_locale']."',
+        'searchPlaceholder': '".$locale['search_input_locale']."',
+        'search': '".$locale['search']."',
+        'paginate': {
+            'next': '".$locale['next']."',
+            'previous': '".$locale['previous']."',
+        },
+    },";
+
     // Javascript Init
     $js_config_script = "
     {
@@ -624,16 +639,6 @@ function fusion_table($table_id, array $options = []) {
         'stateSave' : ".($options["state_save"] ? "true" : "false").",
         'autoWidth' : true,
         $config
-        'language': {
-            'processing': '".$locale['processing_locale']."',
-            'lengthMenu': '".$locale['menu_locale']."',
-            'zeroRecords': '".$locale['zero_locale']."',
-            'info': '".$locale['result_locale']."',
-            'infoEmpty': '".$locale['empty_locale']."',
-            'infoFiltered': '".$locale['filter_locale']."',
-            'searchPlaceholder': '".$locale['search_input_locale']."',
-            'search': '',
-        },
     }";
 
     // Ajax handling script
@@ -681,14 +686,6 @@ function fusion_table($table_id, array $options = []) {
                 <data_filters>
             },
             $config
-            'language': {
-                'processing': '".$locale['processing_locale']."',
-                'lengthMenu': '".$locale['menu_locale']."',
-                'zeroRecords': '".$locale['zero_locale']."',
-                'info': '".$locale['result_locale']."',
-                'infoEmpty': '".$locale['empty_locale']."',
-                'infoFiltered': '".$locale['filter_locale']."',
-            },
             'columns' : ".json_encode($options['columns'])."
         }";
 
