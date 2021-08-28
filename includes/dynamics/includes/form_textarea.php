@@ -224,13 +224,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     width: '100%',
                     height: 300,
                     plugins: [
-                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak',
                         'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                         'save table directionality template paste ".($options['inline_editing'] ? " save " : "")."'
                     ],
                     image_list: $tinymce_list,
                     ".(!empty($options['tinymce_css'] ? "content_css: '".$options['tinymce_css']."'," : ''))." 
-                    toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
+                    toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext searchreplace code',
                     toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                     toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
                     image_advtab: true,
@@ -276,7 +276,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     content_css: '".$options['tinymce_css']."',
                     image_list: $tinymce_list,
                     plugins: [
-                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak',
                         'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
                         'directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
                     ],
