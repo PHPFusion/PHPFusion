@@ -166,10 +166,9 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     "tags"        => TRUE,
                     'width'       => '100%',
                 ]);
-                echo form_text('photo_order', $locale['photo_0013'], $callback_data['photo_order'], [
-                    "type"   => "number",
-                    "inline" => TRUE,
-                    "width"  => "100px"
+                echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], [
+                    'options' => get_album_opts(),
+                    'inline'  => TRUE,
                 ]);
                 $snippetSettings = [
                     "preview"     => TRUE,
@@ -186,8 +185,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
 
                 if ($callback_data['photo_filename'] || $callback_data['photo_thumb1']) {
-
-                    echo "<div class='list-group-item m-t-0'>\n";
+                    echo "<div class='list-group-item m-b-10'>\n";
                     $image = "";
                     if ($callback_data['photo_filename'] && file_exists($submissions_dir.$callback_data['photo_filename'])) {
                         $image = thumbnail($submissions_dir.$callback_data['photo_filename'], $gll_settings['thumb_w']);
@@ -205,11 +203,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     echo $image;
                     echo "</div>\n";
                 }
-                openside("");
-                echo form_select('album_id', $locale['photo_0003'], $callback_data['album_id'], [
-                    'options' => get_album_opts()
+
+                openside('');
+                echo form_checkbox('photo_allow_comments', $locale['photo_0010'], $callback_data['photo_allow_comments'], ['class' => 'm-b-0']);
+                echo form_checkbox('photo_allow_ratings', $locale['photo_0011'], $callback_data['photo_allow_ratings']);
+                echo form_text('photo_order', $locale['photo_0013'], $callback_data['photo_order'], [
+                    "type"  => "number",
+                    "width" => "100px"
                 ]);
-                echo form_button('publish', $locale['gallery_0158'], $locale['gallery_0158'], ['class' => 'btn-primary m-r-10']);
                 closeside();
                 echo "</div></div>\n";
                 echo form_button('close', $locale['close'], $locale['close'], ['class' => 'btn-default m-r-10']);
