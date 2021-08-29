@@ -15,6 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+/**
+ * @param string $modal_input
+ * @param string $title
+ * @param string $htmlcode
+ * @param false  $array
+ *
+ * @return string
+ */
 function form_modal($modal_input, $title, $htmlcode = "", $array = FALSE) {
     $locale = fusion_get_locale();
     if (!is_array($array)) {

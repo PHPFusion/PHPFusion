@@ -24,11 +24,12 @@ defined('IN_FUSION') || exit;
  */
 function _get_states() {
     require_once INCLUDES.'ajax_include.php';
+    $states = [];
     require_once INCLUDES.'geomap/geo.states.php';
     $id = get('id');
 
     $states_array = [];
-    $states = ['id' => 'Other', 'text' => fusion_get_locale('other_states')];
+    $states += ['id' => 'Other', 'text' => fusion_get_locale('other_states')];
 
     foreach ($states as $key => $value) {
         if ($id == $key) {

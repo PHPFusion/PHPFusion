@@ -257,7 +257,8 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 function calling_codes($country_code = NULL) {
     $countries = [];
     static $calling_codes = [];
-    require_once INCLUDES."geomap/callingcodes.inc.php";
+    require_once INCLUDES.'geomap/geo.countries.php';
+
     if (!empty($countries) && empty($calling_codes)) {
         foreach ($countries as $country) {
             // there is an array for these areas replicated.

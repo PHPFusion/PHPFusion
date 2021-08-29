@@ -40,7 +40,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     include INCLUDES.'geomap/geo.countries.php';
     include INCLUDES.'geomap/geo.states.php';
 
-    $states[] = ["id" => "Other", "text" => fusion_get_locale('other_states')];
+    $states += ["id" => "Other", "text" => fusion_get_locale('other_states')];
     $states_array = json_encode($states);
 
     $id = trim($input_name, "[]");
@@ -216,18 +216,17 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
         ";
     }
 
-
     add_to_jquery("
     ".$flag_function."
     $('#$input_id-country').select2({
-    $flag_plugin
-    placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
+        $flag_plugin
+        placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
     });
 
     $('#".$input_id."-state').select2({
-            placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
-            allowClear: true,
-            data: $states_array
+        placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
+        allowClear: true,
+        data: $states_array
     });
 
     $('#".$input_id."-country').bind('change', function(){
@@ -242,7 +241,6 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
             $('#".$input_id."-state').hide();
         },
         success: function(data) {
-            console.log(data);
             //$('#state-spinner').hide();
             $('#".$input_id."-state').select2({
                 placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',

@@ -66,9 +66,9 @@ function form_button($input_name, $title, $input_value, array $options = []) {
 /**
  * Button Groups
  *
- * @param        $input_name
+ * @param string $input_name
  * @param string $label
- * @param        $input_value
+ * @param string $input_value
  * @param array  $options
  *
  * @return string

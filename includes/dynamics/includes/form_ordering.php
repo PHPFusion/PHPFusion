@@ -34,13 +34,15 @@ function make_order_opts($result, $id_col, $cat_col, $title_col, $order_col) {
     return $option;
 }
 
-function form_select_order($title, $input_name, $input_id, $option_array, $input_value, $chain_to_parent_id, $array = FALSE) {
-
+function form_select_order($title, $input_name, $option_array, $input_value, $chain_to_parent_id, $array = FALSE) {
     if (isset($title) && ($title !== "")) {
         $title = stripinput($title);
     } else {
         $title = "";
     }
+
+    $input_id = !empty($input_name) ? $input_name : '';
+
     if (isset($input_name) && ($input_name !== "")) {
         $input_name = stripinput($input_name);
     } else {

@@ -49,7 +49,7 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'inner_class'     => '', // inner element class
         'inline'          => FALSE, // whether element is inline or not
         'min'             => 1, // minimum slider value
-        'max'             => 2, // maximum slider value
+        'max'             => 100, // maximum slider value
         'step'            => 1, // per slider step, set to 0 for fluid
         'tip'             => '', // the tip on label
         'ext_tip'         => '', // the tip on below field
