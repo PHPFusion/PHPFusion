@@ -1212,21 +1212,8 @@ class CoreSettings {
                     'link_window'     => '0',
                     'link_order'      => '10',
                     'link_language'   => $localeset,
-                ],
-                [
-                    'link_name'       => '---',
-                    'link_cat'        => '0',
-                    'link_icon'       => '',
-                    'link_url'        => '---',
-                    'link_visibility' => '-101',
-                    'link_position'   => '1',
-                    'link_status'     => '1',
-                    'link_window'     => '0',
-                    'link_order'      => '11',
-                    'link_language'   => $localeset,
                 ]
             ]
-
         ];
         $table_settings['email_templates'] = [
             'insert' => [
