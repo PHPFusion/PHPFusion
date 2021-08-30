@@ -89,7 +89,7 @@ class PanelsAdministration {
                     $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'"));
                     dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'");
                     dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".intval($data['panel_side'])."' AND panel_order>='".intval($data['panel_order'])."'");
-                    addnotice('warning', self::$locale['489']);
+                    addnotice('success', self::$locale['489']);
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
                 break;
