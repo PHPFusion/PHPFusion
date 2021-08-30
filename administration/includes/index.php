@@ -19,12 +19,13 @@ require_once __DIR__.'/../../maincore.php';
 
 if (iADMIN) {
     $endpoints = [
-        'sitelinks-list'     => 'sitelinks/sitelinks-list.php',
-        'sitelinks-order'    => 'sitelinks/sitelinks-order.php',
-        'update-checker'     => 'update/update_checker.php',
-        'update-core'        => 'update/update_core.php',
-        'cache-update'       => 'cache_update.php',
-        'error-logs-updater' => 'error_logs_updater.php',
+        'sitelinks-list'      => 'sitelinks/sitelinks-list.php',
+        'sitelinks-order'     => 'sitelinks/sitelinks-order.php',
+        'cache-update'        => 'cache_update.php',
+        'error-logs-updater'  => 'error_logs_updater.php',
+        'update-checker'      => 'update/update_checker.php',
+        'update-core'         => 'update/update_core.php',
+        'available-languages' => 'update/available_languages.php',
     ];
 
     if ($api = get('api')) {

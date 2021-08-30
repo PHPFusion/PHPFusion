@@ -131,8 +131,7 @@ if (check_post('savesettings')) {
                     $home_links = [
                         ['link_name' => $locale['setup_3300'], 'link_cat' => '0', 'link_url' => 'index.php', 'link_visibility' => '0', 'link_position' => '2', 'link_order' => '1', 'link_language' => $language],
                         ['link_name' => $locale['setup_3305'], 'link_cat' => '0', 'link_url' => 'contact.php', 'link_visibility' => '0', 'link_position' => '3', 'link_order' => '8', 'link_language' => $language],
-                        ['link_name' => $locale['setup_3309'], 'link_cat' => '0', 'link_url' => 'search.php', 'link_visibility' => '0', 'link_position' => '1', 'link_order' => '10', 'link_language' => $language],
-                        ['link_name' => '---', 'link_cat' => '0', 'link_url' => '---', 'link_visibility' => '-101', 'link_position' => '1', 'link_order' => '11', 'link_language' => $language]
+                        ['link_name' => $locale['setup_3309'], 'link_cat' => '0', 'link_url' => 'search.php', 'link_visibility' => '0', 'link_position' => '1', 'link_order' => '10', 'link_language' => $language]
                     ];
 
                     foreach ($home_links as $link) {
@@ -142,7 +141,6 @@ if (check_post('savesettings')) {
                     /**
                      * Admin Links
                      */
-
                     $admin_links = [
                         ['admin_rights' => 'AD', 'admin_image' => 'administrator.png', 'admin_title' => $locale['setup_3000'], 'admin_link' => 'administrators.php', 'admin_page' => 2, 'admin_language' => $language],
                         ['admin_rights' => 'APWR', 'admin_image' => 'adminpass.png', 'admin_title' => $locale['setup_3047'], 'admin_link' => 'admin_reset.php', 'admin_page' => 2, 'admin_language' => $language],
@@ -205,7 +203,6 @@ if (check_post('savesettings')) {
             }
 
             // Update all infusions and remove registered multilang table records
-
             $inf_result = dbquery("SELECT * FROM ".DB_INFUSIONS);
 
             $lang_cmd = [];
@@ -373,35 +370,25 @@ echo "</div>\n";
 echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
 echo closeform();
 
-$update = new PHPFusion\Update();
-$list = $update->getAvailableLanguages();
 
-if (!empty($list) && is_array($list)) {
-    if (check_post('download_lang')) {
-        $update->downloadLanguage(post('lang_pack'));
+if (check_post('download_lang')) {
+    $update = new PHPFusion\Update();
+    $update->downloadLanguage(post('lang_pack'));
 
-        addnotice('success', sprintf($locale['670a'], post('lang_pack')));
-        redirect(FUSION_REQUEST);
-    }
-
-    echo openform('dllangs', 'post', FUSION_REQUEST, ['class' => 'm-t-15']);
-    openside();
-
-    $langs = [];
-    foreach ($list as $lang) {
-        $langs[$lang] = $lang;
-    }
-    $langs = array_diff_key($langs, array_flip(makefilelist(LOCALE, '.svn|.|..', TRUE, 'folders')));
-
-    echo form_select('lang_pack', $locale['670b'], '', [
-        'options' => $langs,
-        'inline'  => TRUE
-    ]);
-
-    echo form_button('download_lang', $locale['670c'], 'download_lang');
-    closeside();
-    echo closeform();
+    addnotice('success', sprintf($locale['670a'], post('lang_pack')));
+    redirect(FUSION_REQUEST);
 }
+
+echo openform('dllangs', 'post', FUSION_REQUEST, ['class' => 'm-t-15']);
+openside();
+
+echo form_language_select('lang_pack', $locale['670b'], '', [
+    'inline' => TRUE
+]);
+
+echo form_button('download_lang', $locale['670c'], 'download_lang');
+closeside();
+echo closeform();
 
 closetable();
 require_once THEMES.'templates/footer.php';
@@ -432,4 +419,101 @@ function form_lang_checkbox() {
     }
 
     return $res;
+}
+
+function form_language_select($input_name, $label = "", $input_value = FALSE, array $options = []) {
+    $locale = fusion_get_locale();
+
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+    $input_value = clean_input_value($input_value);
+
+    $default_options = [
+        'required'          => FALSE,
+        'regex'             => '',
+        'input_id'          => $input_name,
+        'placeholder'       => $locale['choose'],
+        'deactivate'        => FALSE,
+        'safemode'          => FALSE,
+        'inner_width'       => '250px',
+        'width'             => '',
+        'keyflip'           => FALSE,
+        'tags'              => FALSE,
+        'jsonmode'          => FALSE,
+        'chainable'         => FALSE,
+        'max_select'        => 1,
+        'error_text'        => '',
+        'class'             => '',
+        'stacked'           => '',
+        'inline'            => FALSE,
+        'tip'               => '',
+        'ext_tip'           => '',
+        'delimiter'         => ',',
+        'callback_check'    => '',
+        'file'              => '',
+        'callback_function' => ''
+    ];
+
+    $options += $default_options;
+
+    $options['input_id'] = trim($options['input_id'], "[]");
+
+    $error_class = "";
+
+    if (Defender::inputHasError($input_name)) {
+        $error_class = "has-error ";
+        $new_error_text = Defender::getErrorText($input_name);
+        if (!empty($new_error_text)) {
+            $options['error_text'] = $new_error_text;
+        }
+        addnotice("danger", $options['error_text']);
+    }
+
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' style='width:".$options['width']."'>\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '')."' for='".$options['input_id']."'>$label ".($options['required'] == TRUE ? "<span class='required'>*</span>" : '')."</label>\n" : '';
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+    $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='$input_name' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width:".$options['inner_width']."'".($options['deactivate'] ? ' disabled' : '')."/>\n";
+    if ($options['deactivate']) {
+        $html .= form_hidden($input_name, '', $input_value, ["input_id" => $options['input_id']]);
+    }
+
+    $html .= $options['stacked'];
+    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>".$options['ext_tip']."</i></div>" : "";
+    $html .= \Defender::inputHasError($input_name) && !$options['inline'] ? "<br/>" : "";
+    $html .= \Defender::inputHasError($input_name) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
+    $html .= $options['inline'] && $label ? "</div>\n" : '';
+
+    $html .= "</div>\n";
+
+    $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."administration/" : ADMIN;
+    $path = !empty($options['file']) ? $options['file'] : $root_prefix."includes/?api=available-languages";
+
+    Defender::getInstance()->add_field_session([
+        'input_name' => clean_input_name($input_name),
+        'title'      => $title,
+        'id'         => $options['input_id'],
+        'type'       => 'dropdown',
+        'required'   => $options['required'],
+        'safemode'   => $options['safemode'],
+        'error_text' => $options['error_text']
+    ]);
+
+    add_to_jquery("$('#".$options['input_id']."').select2({
+        placeholder: '".$options['placeholder']."',
+        ajax: {
+            url: '$path',
+            dataType: 'json',
+            data: function (term, page) {
+                return {q: term};
+            },
+            results: function (data, page) {
+                return {results: data};
+            }
+        },
+        escapeMarkup: function(m) { return m; },
+    });");
+
+    load_select2_script();
+
+    return $html;
 }
