@@ -30,7 +30,7 @@
 function display_album_image($album_image, $album_thumb1, $album_thumb2, $link, $album_id = 0) {
     $gallery_settings = get_settings("gallery");
 
-    if (defined('GALLERY_ALBUM_LATEST_PHOTO')) {
+    if ($gallery_settings['gallery_album_latest_photo']) {
         $result = dbquery("
             SELECT ph.photo_id, ph.photo_title, ph.photo_datestamp, ph.photo_filename, ph.photo_thumb1, ph.photo_thumb2, pa.album_id, pa.album_access FROM ".DB_PHOTOS." ph
             LEFT JOIN ".DB_PHOTO_ALBUMS." AS pa USING (album_id)

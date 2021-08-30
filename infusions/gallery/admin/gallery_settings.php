@@ -67,7 +67,8 @@ if (isset($_POST['delete_watermarks'])) {
             'gallery_allow_submission'    => isset($_POST['gallery_allow_submission']) ? 1 : 0,
             'gallery_extended_required'   => form_sanitizer($_POST['gallery_extended_required'], 0, 'gallery_extended_required'),
             'gallery_file_types'          => form_sanitizer($_POST['gallery_file_types'], '.gif,.jpg,.png,.svg,.webp', 'gallery_file_types'),
-            'gallery_submission_access'   => form_sanitizer($_POST['gallery_submission_access'], USER_LEVEL_MEMBER, 'gallery_submission_access')
+            'gallery_submission_access'   => form_sanitizer($_POST['gallery_submission_access'], USER_LEVEL_MEMBER, 'gallery_submission_access'),
+            'gallery_album_latest_photo'  => form_sanitizer($_POST['gallery_album_latest_photo'], 0, 'gallery_album_latest_photo')
         ];
 
         if (fusion_safe()) {
@@ -203,6 +204,14 @@ echo form_text('gallery_pagination', $locale['gallery_0202'], $gll_settings['gal
     'type'        => 'number',
     'inner_width' => '150px'
 ]);
+
+echo form_select("gallery_album_latest_photo", $locale['gallery_0224'], $gll_settings['gallery_album_latest_photo'], [
+    'inline'  => TRUE,
+    'options' => [
+        $locale['no'], $locale['yes']
+    ]
+]);
+
 echo form_select("gallery_allow_submission", $locale['gallery_0200'], $gll_settings['gallery_allow_submission'], [
     'inline'  => TRUE,
     'options' => [
@@ -244,6 +253,11 @@ echo form_colorpicker('photo_watermark_text_color2', $locale['gallery_0209'], $g
 echo form_colorpicker('photo_watermark_text_color3', $locale['gallery_0210'], $gll_settings['photo_watermark_text_color3'], [
     'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0,
 ]);
+
+echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
+    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'm-t-5 m-b-10 btn-danger', 'icon' => 'fa fa-trash'
+]);
+
 require_once INCLUDES."mimetypes_include.php";
 $mime = mimetypes();
 $mime_opts = [];
@@ -265,9 +279,6 @@ echo form_select('gallery_file_types', $locale['gallery_0217'], $gll_settings['g
 closeside();
 echo "</div>\n</div>\n";
 echo form_button('savesettings', $locale['gallery_0216'], $locale['gallery_0216'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
-echo form_button('delete_watermarks', $locale['gallery_0211'], $locale['gallery_0211'], [
-    'deactivate' => !$gll_settings['photo_watermark'] ? 1 : 0, 'class' => 'm-l-5 btn-danger', 'icon' => 'fa fa-trash'
-]);
 echo closeform();
 
 add_to_jquery("

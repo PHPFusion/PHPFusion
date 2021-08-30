@@ -88,7 +88,8 @@ $settings = [
     'gallery_allow_submission'    => 1,
     'gallery_extended_required'   => 1,
     'gallery_file_types'          => '.gif,.jpg,.png,.svg,.webp',
-    'gallery_submission_access'   => USER_LEVEL_MEMBER
+    'gallery_submission_access'   => USER_LEVEL_MEMBER,
+    'gallery_album_latest_photo'  => 0
 ];
 
 foreach ($settings as $name => $value) {

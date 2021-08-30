@@ -29,8 +29,10 @@ foreach ($change_gallery as $key => $value) {
 
 $settings = get_settings('gallery');
 $check_array = [
-    'gallery_submission_access' => USER_LEVEL_MEMBER
+    'gallery_submission_access'  => USER_LEVEL_MEMBER,
+    'gallery_album_latest_photo' => 0
 ];
+
 foreach ($check_array as $key => $value) {
     if (!isset($settings[$key])) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'gallery')";
