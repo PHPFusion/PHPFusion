@@ -24,13 +24,18 @@ function ajax_available_languages() {
     $update = new PHPFusion\Update();
     $list = $update->getAvailableLanguages();
 
-    header('Content-Type: application/json');
+    $langs_temp = [];
+    foreach ($list as $lang) {
+        $langs_temp[$lang] = $lang;
+    }
+    $langs_temp = array_diff_key($langs_temp, array_flip(makefilelist(LOCALE, '|.|..', TRUE, 'folders')));
 
     $langs = [];
-    foreach ($list as $lang) {
+    foreach ($langs_temp as $lang) {
         $langs[] = ['id' => $lang, 'text' => str_replace('_', ' ', $lang)];
     }
 
+    header('Content-Type: application/json');
     echo json_encode($langs);
 }
 
