@@ -20,6 +20,9 @@ defined('IN_FUSION') || exit;
 // Locales
 define('SHOUTBOX_LOCALE', fusion_get_inf_locale_path('shoutbox.php', INFUSIONS.'shoutbox_panel/locale/'));
 
+// Paths
+const SHOUTBOX = INFUSIONS.'shoutbox_panel/';
+
 // Database
 const DB_SHOUTBOX = DB_PREFIX."shoutbox";
 

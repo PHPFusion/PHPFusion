@@ -20,6 +20,9 @@ defined('IN_FUSION') || exit;
 // Locales
 define('POLLS_LOCALE', fusion_get_inf_locale_path('polls.php', INFUSIONS.'member_poll_panel/locale/'));
 
+// Paths
+const POLLS = INFUSIONS.'member_poll_panel/';
+
 // Database
 const DB_POLL_VOTES = DB_PREFIX."poll_votes";
 const DB_POLLS = DB_PREFIX."polls";

@@ -123,11 +123,9 @@ if (!empty($enabled_languages)) {
 
         // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".$language."')";
 
         // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/gallery.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_PHOTO_ALBUMS." WHERE album_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='PH' AND admin_language='".$language."'";
     }
@@ -142,7 +140,6 @@ if (!empty($enabled_languages)) {
     ];
 
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/".$inf_folder."/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '24', '1', '".LANGUAGE."')";
 }
 
 // Uninstallation
@@ -153,7 +150,6 @@ $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='P'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='p'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='PH'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/gallery.php'";
-$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='PG'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_delfiles[] = IMAGES_G;

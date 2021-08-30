@@ -52,11 +52,10 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             if (fusion_safe()) {
                 // move files
                 if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."submissions/".$callback_data['download_file'])) {
-                    $dest = DOWNLOADS."files/";
                     $temp_file = $callback_data['download_file'];
-                    $callback_data['download_file'] = filename_exists($dest, $callback_data['download_file']);
-                    copy(DOWNLOADS."submissions/".$temp_file, $dest.$callback_data['download_file']);
-                    chmod($dest.$callback_data['download_file'], 0644);
+                    $callback_data['download_file'] = filename_exists(DOWNLOADS_FILES, $callback_data['download_file']);
+                    copy(DOWNLOADS."submissions/".$temp_file, DOWNLOADS_FILES.$callback_data['download_file']);
+                    chmod(DOWNLOADS_FILES.$callback_data['download_file'], 0644);
                     unlink(DOWNLOADS."submissions/".$temp_file);
                 }
                 // move images

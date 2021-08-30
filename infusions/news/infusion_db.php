@@ -24,10 +24,11 @@ define('NEWS_LOCALE', fusion_get_inf_locale_path('news.php', INFUSIONS.'news/loc
 define('NEWS_ADMIN_LOCALE', fusion_get_inf_locale_path('news_admin.php', INFUSIONS.'news/locale/'));
 
 // Paths
+const NEWS = INFUSIONS.'news/';
+const NEWS_CLASSES = INFUSIONS.'news/classes/';
 const IMAGES_N = INFUSIONS.'news/images/';
 const IMAGES_N_T = INFUSIONS."news/images/thumbs/";
 const IMAGES_NC = INFUSIONS.'news/news_cats/';
-const NEWS_CLASSES = INFUSIONS.'news/classes/';
 
 // Database
 const DB_NEWS = DB_PREFIX.'news';
@@ -129,14 +130,14 @@ if (defined('NEWS_EXISTS')) {
                         $data['image'] = INFUSIONS.'news/news_cats/'.$data['cat_image'];
                     }
                 } else {
-                    if ($data['image_main'] || $data['cat_image']) {
-                        if ($data['image_thumb'] && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb'])) {
+                    if (!empty($data['image_main']) || !empty($data['cat_image'])) {
+                        if (!empty($data['image_thumb']) && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb'])) {
                             $data['image'] = INFUSIONS.'news/images/thumbs/'.$data['image_thumb'];
-                        } else if ($data['image_thumb2'] && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb2'])) {
+                        } else if (!empty($data['image_thumb2']) && file_exists(INFUSIONS.'news/images/thumbs/'.$data['image_thumb2'])) {
                             $data['image'] = INFUSIONS.'news/images/thumbs/'.$data['image_thumb2'];
-                        } else if ($data['image_main'] && file_exists(INFUSIONS.'news/images/'.$data['image_main'])) {
+                        } else if (!empty($data['image_main']) && file_exists(INFUSIONS.'news/images/'.$data['image_main'])) {
                             $data['image'] = INFUSIONS.'news/images/'.$data['image_main'];
-                        } else if ($data['cat_image']) {
+                        } else if (!empty($data['cat_image'])) {
                             $data['image'] = INFUSIONS.'news/news_cats/'.$data['cat_image'];
                         } else {
                             $data['image'] = get_image('imagenotfound');

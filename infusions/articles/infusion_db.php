@@ -24,8 +24,10 @@ define('ARTICLE_LOCALE', fusion_get_inf_locale_path('articles.php', INFUSIONS.'a
 define('ARTICLE_ADMIN_LOCALE', fusion_get_inf_locale_path('article_admin.php', INFUSIONS.'articles/locale/'));
 
 // Paths
+const ARTICLES = INFUSIONS.'articles/';
 const ARTICLE_CLASSES = INFUSIONS.'articles/classes/';
 const IMAGES_A = INFUSIONS.'articles/images/';
+const IMAGES_A_T = INFUSIONS.'articles/images/thumbs/';
 
 // Database
 const DB_ARTICLES = DB_PREFIX.'articles';
@@ -110,8 +112,8 @@ if (defined('ARTICLES_EXISTS')) {
                 $data['category_link'] = INFUSIONS.'articles/articles.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
 
-                if ($data['image_main'] && file_exists(INFUSIONS.'articles/images/thumbs/'.$data['image_main'])) {
-                    $data['image'] = INFUSIONS.'articles/images/thumbs/'.$data['image_main'];
+                if (!empty($data['image_main']) && file_exists(IMAGES_A_T.$data['image_main'])) {
+                    $data['image'] = IMAGES_A_T.$data['image_main'];
                 }
 
                 $module[DB_ARTICLES]['data'][] = $data;

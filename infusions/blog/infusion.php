@@ -67,9 +67,6 @@ $inf_newtable[] = DB_BLOG_CATS." (
     PRIMARY KEY (blog_cat_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
-// Insert panel
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3318']."', 'blog_archive_panel', '', '1', '5', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
-
 // Insert settings
 $settings = [
     'blog_thumb_ratio'            => 0,
@@ -120,7 +117,6 @@ if (!empty($enabled_languages)) {
 
         // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '21', '1', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_BLOG_CATS." (blog_cat_name, blog_cat_image, blog_cat_language) VALUES ('".$locale['setup_3502']."', 'games.svg', '".$language."')";
@@ -138,7 +134,6 @@ if (!empty($enabled_languages)) {
 
         // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_BLOG_CATS." WHERE blog_cat_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_BLOG." WHERE blog_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='BLOG' AND admin_language='".$language."'";
@@ -154,7 +149,6 @@ if (!empty($enabled_languages)) {
     ];
 
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3055']."', 'infusions/blog/blog.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3317']."', 'submit.php?stype=b', ".USER_LEVEL_MEMBER.", '1', '0', '21', '1', '".LANGUAGE."')";
 }
 
 // Uninstallation
@@ -163,11 +157,9 @@ $inf_droptable[] = DB_BLOG_CATS;
 $inf_deldbrow[] = DB_COMMENTS." WHERE comment_type='B'";
 $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='B'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='b'";
-$inf_deldbrow[] = DB_PANELS." WHERE panel_filename='blog_archive_panel'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='BLOG'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/blog/blog.php'";
-$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=b'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='BL'";
 $inf_delfiles[] = IMAGES_B;
 $inf_delfiles[] = IMAGES_B_T;

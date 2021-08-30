@@ -133,7 +133,6 @@ if (!empty($enabled_languages)) {
 
         // Add
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3205']."', 'infusions/".$inf_folder."/news.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".$language."')";
 
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.svg', '".$language."')";
@@ -153,7 +152,6 @@ if (!empty($enabled_languages)) {
 
         // Delete
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/news.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_NEWS_CATS." WHERE news_cat_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_NEWS." WHERE news_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_ADMIN." WHERE admin_rights='N' AND admin_language='".$language."'";
@@ -169,7 +167,6 @@ if (!empty($enabled_languages)) {
     ];
 
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3205']."', 'infusions/".$inf_folder."/news.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '25', '1', '".LANGUAGE."')";
 }
 
 // Uninstallation
@@ -181,6 +178,5 @@ $inf_deldbrow[] = DB_RATINGS." WHERE rating_type='N'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='N'";
 $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_inf='".$inf_folder."'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='infusions/".$inf_folder."/news.php'";
-$inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n'";
 $inf_deldbrow[] = DB_LANGUAGE_TABLES." WHERE mlt_rights='NS'";
 $inf_deldbrow[] = DB_SUBMISSIONS." WHERE submit_type='n'";

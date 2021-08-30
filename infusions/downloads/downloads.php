@@ -66,12 +66,12 @@ if ($_get_file_id) {
     if (dbrows($result) > 0 && checkgroup($data['download_visibility'])) {
         dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id=$_get_file_id");
 
-        if (!empty($data['download_file']) && file_exists(DOWNLOADS.'files/'.$data['download_file'])) {
+        if (!empty($data['download_file']) && file_exists(DOWNLOADS_FILES.$data['download_file'])) {
             $res = 1;
             require_once INCLUDES."class.httpdownload.php";
             ob_end_clean();
             $object = new httpdownload;
-            $object->set_byfile(DOWNLOADS.'files/'.$data['download_file']);
+            $object->set_byfile(DOWNLOADS_FILES.$data['download_file']);
             $object->use_resume = TRUE;
             $object->download();
             exit;
@@ -449,11 +449,11 @@ function validate_downloadCats($download_cat_id) {
  * @return string
  */
 function get_download_image_path($download_image, $download_image_thumb) {
-    if ($download_image && file_exists(DOWNLOADS.'images/'.$download_image)) {
-        return DOWNLOADS.'images/'.$download_image;
+    if ($download_image && file_exists(IMAGES_D.$download_image)) {
+        return IMAGES_D.$download_image;
     }
-    if ($download_image_thumb && file_exists(DOWNLOADS.'images/'.$download_image_thumb)) {
-        return DOWNLOADS.'images/'.$download_image_thumb;
+    if ($download_image_thumb && file_exists(IMAGES_D.$download_image_thumb)) {
+        return IMAGES_D.$download_image_thumb;
     }
 
     return NULL;
@@ -543,7 +543,7 @@ function parse_dl_info($data) {
         'download_user_link'         => profile_link($data['user_id'], $data['user_name'], $data['user_status'], 'strong'),
         'download_post_time'         => showdate('shortdate', $data['download_datestamp']),
         'download_post_time2'        => $locale['global_049']." ".timer($data['download_datestamp']),
-        'download_file_link'         => file_exists(DOWNLOADS.'files/'.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
+        'download_file_link'         => file_exists(DOWNLOADS_FILES.$data['download_file']) ? INFUSIONS."downloads/downloads.php?file_id=".$data['download_id'] : '',
     ];
 }
 

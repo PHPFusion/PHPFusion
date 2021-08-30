@@ -24,6 +24,7 @@ define('GALLERY_LOCALE', fusion_get_inf_locale_path('gallery.php', INFUSIONS."ga
 define('GALLERY_ADMIN_LOCALE', fusion_get_inf_locale_path('gallery_admin.php', INFUSIONS."gallery/locale/"));
 
 // Paths
+const GALLERY = INFUSIONS."gallery/";
 const IMAGES_G = INFUSIONS."gallery/photos/";
 const IMAGES_G_T = INFUSIONS."gallery/photos/thumbs/";
 

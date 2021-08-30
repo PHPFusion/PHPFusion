@@ -23,6 +23,7 @@ use PHPFusion\Admins;
 define("FAQ_LOCALE", fusion_get_inf_locale_path('faq.php', INFUSIONS.'faq/locale/'));
 
 // Paths
+const FAQ = INFUSIONS.'faq/';
 const FAQ_CLASSES = INFUSIONS.'faq/classes/';
 
 // Database

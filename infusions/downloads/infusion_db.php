@@ -25,6 +25,7 @@ define('DOWNLOAD_ADMIN_LOCALE', fusion_get_inf_locale_path('downloads_admin.php'
 
 // Paths
 const DOWNLOADS = INFUSIONS."downloads/";
+const DOWNLOADS_FILES = INFUSIONS."downloads/files/";
 const IMAGES_D = INFUSIONS."downloads/images/";
 
 // Database
@@ -114,10 +115,10 @@ if (defined('DOWNLOADS_EXISTS')) {
                 $data['views'] = format_word($data['views_count'], $locale['fmt_download']);
 
                 if ($module[DB_DOWNLOADS]['inf_settings']['download_screenshot']) {
-                    if ($data['image_thumb'] && file_exists(INFUSIONS.'downloads/images/'.$data['image_thumb'])) {
-                        $data['image'] = INFUSIONS.'downloads/images/'.$data['image_thumb'];
-                    } else if ($data['image_main'] && file_exists(INFUSIONS.'downloads/images/'.$data['image_main'])) {
-                        $data['image'] = INFUSIONS.'downloads/images/'.$data['image_main'];
+                    if (!empty($data['image_thumb']) && file_exists(IMAGES_D.$data['image_thumb'])) {
+                        $data['image'] = IMAGES_D.$data['image_thumb'];
+                    } else if (!empty($data['image_main']) && file_exists(IMAGES_D.$data['image_main'])) {
+                        $data['image'] = IMAGES_D.$data['image_main'];
                     } else {
                         $data['image'] = get_image('imagenotfound');
                     }

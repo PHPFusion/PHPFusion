@@ -90,18 +90,15 @@ if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".$language."')";
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/downloads/downloads.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=d' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_DOWNLOAD_CATS." WHERE download_cat_language='".$language."'";
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3302']."', 'infusions/downloads/downloads.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3314']."', 'submit.php?stype=d', ".USER_LEVEL_MEMBER.", '1', '0', '22', '1', '".LANGUAGE."')";
 }
 
-// Move download files to new infusions folder
+// Move download files to new infusion folder
 // Change download path to new path
 $result = dbquery("SELECT download_id, download_url FROM ".DB_DOWNLOADS." WHERE download_url!=''");
 if (dbrows($result)) {
@@ -134,7 +131,7 @@ if (is_dir(BASEDIR.'downloads/')) {
         $files = makefilelist(BASEDIR.'downloads/images/', ".|..|index.php");
         if (!empty($files)) {
             foreach ($files as $filename) {
-                fusion_rename(BASEDIR.'downloads/images/'.$filename, INFUSIONS.'downloads/images/'.$filename);
+                fusion_rename(BASEDIR.'downloads/images/'.$filename, IMAGES_D.$filename);
             }
         }
         rrmdir(BASEDIR.'downloads/images');

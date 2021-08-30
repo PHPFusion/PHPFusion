@@ -22,6 +22,7 @@ define('WEBLINK_LOCALE', fusion_get_inf_locale_path('weblinks.php', INFUSIONS.'w
 define('WEBLINK_ADMIN_LOCALE', fusion_get_inf_locale_path('weblinks_admin.php', INFUSIONS.'weblinks/locale/'));
 
 // Paths
+const WEBLINKS = INFUSIONS."weblinks/";
 const WEBLINKS_CLASSES = INFUSIONS."weblinks/classes/";
 
 // Database

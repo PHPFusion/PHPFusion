@@ -24,6 +24,7 @@ define('BLOG_LOCALE', fusion_get_inf_locale_path('blog.php', INFUSIONS.'blog/loc
 define('BLOG_ADMIN_LOCALE', fusion_get_inf_locale_path('blog_admin.php', INFUSIONS.'blog/locale/'));
 
 // Paths
+const BLOG = INFUSIONS.'blog/';
 const IMAGES_B = INFUSIONS.'blog/images/';
 const IMAGES_B_T = INFUSIONS.'blog/images/thumbs/';
 const IMAGES_BC = INFUSIONS.'blog/blog_cats/';
@@ -126,15 +127,15 @@ if (defined('BLOG_EXISTS')) {
                 $data['category_link'] = INFUSIONS.'blog/blog.php?cat_id='.$data['cat_id'];
                 $data['views'] = format_word($data['views_count'], $locale['fmt_read']);
 
-                if ($data['image_main'] || $data['cat_image']) {
-                    if ($data['image_thumb'] && file_exists(INFUSIONS.'blog/images/thumbs/'.$data['image_thumb'])) {
-                        $data['image'] = INFUSIONS.'blog/images/thumbs/'.$data['image_thumb'];
-                    } else if ($data['image_thumb2'] && file_exists(INFUSIONS.'blog/images/thumbs/'.$data['image_thumb2'])) {
-                        $data['image'] = INFUSIONS.'blog/images/thumbs/'.$data['image_thumb2'];
-                    } else if ($data['image_main'] && file_exists(INFUSIONS.'blog/images/'.$data['image_main'])) {
-                        $data['image'] = INFUSIONS.'blog/images/'.$data['image_main'];
-                    } else if ($data['cat_image']) {
-                        $data['image'] = INFUSIONS.'blog/blog_cats/'.$data['cat_image'];
+                if (!empty($data['image_main']) || !empty($data['cat_image'])) {
+                    if (!empty($data['image_thumb']) && file_exists(IMAGES_B_T.$data['image_thumb'])) {
+                        $data['image'] = IMAGES_B_T.$data['image_thumb'];
+                    } else if (!empty($data['image_thumb2']) && file_exists(IMAGES_B_T.$data['image_thumb2'])) {
+                        $data['image'] = IMAGES_B_T.$data['image_thumb2'];
+                    } else if (!empty($data['image_main']) && file_exists(IMAGES_B.$data['image_main'])) {
+                        $data['image'] = IMAGES_B.$data['image_main'];
+                    } else if (!empty($data['cat_image']) && file_exists(IMAGES_BC.$data['cat_image'])) {
+                        $data['image'] = IMAGES_BC.$data['cat_image'];
                     } else {
                         $data['image'] = get_image('imagenotfound');
                     }

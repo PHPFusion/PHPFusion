@@ -27,7 +27,7 @@ if (dbrows($result) > 0) {
     $data = dbarray($result);
     require_once INCLUDES."class.httpdownload.php";
     $object = new PHPFusion\httpdownload;
-    $object->set_byfile(DOWNLOADS."/files/".$data['download_file']);
+    $object->set_byfile(DOWNLOADS_FILES.$data['download_file']);
     $object->use_resume = TRUE;
     $object->download();
 } else {

@@ -283,7 +283,6 @@ foreach ($forum_settings as $name => $value) {
 $inf_updatedbrow[] = DB_USERS." SET user_reputation='".$forum_settings['default_points']."'";
 
 // Insert panels
-$inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3402']."', 'forum_threads_panel', '', '1', '4', 'file', '0', '1', '1', '', '3', '".fusion_get_settings('enabled_languages')."')";
 $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, panel_side, panel_order, panel_type, panel_access, panel_display, panel_status, panel_url_list, panel_restriction, panel_languages) VALUES ('".$locale['setup_3405']."', 'forum_threads_list_panel', '', '2', '1', 'file', '0', '1', '1', '".fusion_get_settings('opening_page')."', '2', '".fusion_get_settings('enabled_languages')."')";
 
 // Multilanguage table
@@ -397,7 +396,6 @@ $inf_droptable[] = DB_FORUM_USER_REP;
 
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='F'";
 $inf_deldbrow[] = DB_ADMIN." WHERE admin_rights='FR'";
-$inf_deldbrow[] = DB_PANELS." WHERE panel_filename='forum_threads_panel'";
 $inf_deldbrow[] = DB_PANELS." WHERE panel_filename='forum_threads_list_panel'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url = 'infusions/forum/index.php'";
 $inf_deldbrow[] = DB_SITE_LINKS." WHERE link_url = 'infusions/forum/newthread.php'";

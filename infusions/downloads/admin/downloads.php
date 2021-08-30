@@ -49,14 +49,14 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['dow
     $result = dbquery("SELECT download_file, download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
     if (dbrows($result)) {
         $data = dbarray($result);
-        if (!empty($data['download_file']) && file_exists(DOWNLOADS.'files/'.$data['download_file'])) {
-            @unlink(DOWNLOADS.'files/'.$data['download_file']);
+        if (!empty($data['download_file']) && file_exists(DOWNLOADS_FILES.$data['download_file'])) {
+            @unlink(DOWNLOADS_FILES.$data['download_file']);
         }
-        if (!empty($data['download_image']) && file_exists(DOWNLOADS."images/".$data['download_image'])) {
-            @unlink(DOWNLOADS."images/".$data['download_image']);
+        if (!empty($data['download_image']) && file_exists(IMAGES_D.$data['download_image'])) {
+            @unlink(IMAGES_D.$data['download_image']);
         }
-        if (!empty($data['download_image_thumb']) && file_exists(DOWNLOADS."images/".$data['download_image_thumb'])) {
-            @unlink(DOWNLOADS."images/".$data['download_image_thumb']);
+        if (!empty($data['download_image_thumb']) && file_exists(IMAGES_D.$data['download_image_thumb'])) {
+            @unlink(IMAGES_D.$data['download_image_thumb']);
         }
         $result = dbquery("DELETE FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
     }
@@ -70,8 +70,8 @@ if (isset($_POST['del_upload']) && isnum($_POST['del_upload'])) {
     $result2 = dbquery($delete_query);
     if (dbrows($result2) > 0) {
         $data2 = dbarray($result2);
-        if (!empty($data2['download_file']) && file_exists(DOWNLOADS.'files/'.$data2['download_file'])) {
-            @unlink(DOWNLOADS.'files/'.$data2['download_file']);
+        if (!empty($data2['download_file']) && file_exists(DOWNLOADS_FILES.$data2['download_file'])) {
+            @unlink(DOWNLOADS_FILES.$data2['download_file']);
         }
         $data2['download_file'] = "";
         dbquery_insert(DB_DOWNLOADS, $data2, 'update');
@@ -128,11 +128,11 @@ if (isset($_POST['save_download'])) {
         $result = dbquery("SELECT download_image, download_image_thumb FROM ".DB_DOWNLOADS." WHERE download_id='".$_GET['download_id']."'");
         if (dbrows($result)) {
             $data += dbarray($result);
-            if (!empty($data['download_image']) && file_exists(DOWNLOADS."images/".$data['download_image'])) {
-                @unlink(DOWNLOADS."images/".$data['download_image']);
+            if (!empty($data['download_image']) && file_exists(IMAGES_D.$data['download_image'])) {
+                @unlink(IMAGES_D.$data['download_image']);
             }
-            if (!empty($data['download_image_thumb']) && file_exists(DOWNLOADS."images/".$data['download_image_thumb'])) {
-                @unlink(DOWNLOADS."images/".$data['download_image_thumb']);
+            if (!empty($data['download_image_thumb']) && file_exists(IMAGES_D.$data['download_image_thumb'])) {
+                @unlink(IMAGES_D.$data['download_image_thumb']);
             }
         }
         $data['download_image'] = '';
@@ -193,7 +193,7 @@ if ($dl_settings['download_screenshot']) {
     if (!empty($data['download_image']) && !empty($data['download_image_thumb'])) {
         echo "<div class='clearfix list-group-item m-b-20'>\n";
         echo "<div class='pull-left m-r-10'>\n";
-        echo thumbnail(DOWNLOADS."images/".$data['download_image_thumb'], '80px');
+        echo thumbnail(IMAGES_D.$data['download_image_thumb'], '80px');
         echo "</div>\n";
         echo "<div class='overflow-hide'>\n";
         echo "<span class='text-dark strong'>".$locale['download_0220']."</span>\n";
@@ -204,7 +204,7 @@ if ($dl_settings['download_screenshot']) {
     } else {
         //require_once INCLUDES."mimetypes_include.php";
         $file_options = [
-            'upload_path'      => DOWNLOADS."images/",
+            'upload_path'      => IMAGES_D,
             'max_width'        => $dl_settings['download_screen_max_w'],
             'max_height'       => $dl_settings['download_screen_max_w'],
             'max_byte'         => $dl_settings['download_screen_max_b'],
@@ -253,7 +253,7 @@ echo opentabbody($tab_title['title'][0], 'dlf', $tab_active);
 
 if (!empty($data['download_file'])) {
     echo "<div class='m-t-20 m-b-20'>\n";
-    echo $locale['download_0214']." - <a href='".DOWNLOADS."files/".$data['download_file']."'>".DOWNLOADS."files/".$data['download_file']."</a>\n";
+    echo $locale['download_0214']." - <a href='".DOWNLOADS_FILES.$data['download_file']."'>".DOWNLOADS_FILES.$data['download_file']."</a>\n";
     echo form_button('del_upload', $locale['delete'], $data['download_id'],
         ['class' => 'm-b-0 pull-right btn-danger', 'icon' => 'fa fa-trash fa-fw']);
     echo form_hidden('download_file', '', $data['download_file']);
@@ -263,7 +263,7 @@ if (!empty($data['download_file'])) {
         "class"       => "m-t-10",
         //"required"    => TRUE,
         "width"       => "100%",
-        "upload_path" => DOWNLOADS."files/",
+        "upload_path" => DOWNLOADS_FILES,
         "max_byte"    => $dl_settings['download_max_b'],
         "valid_ext"   => $dl_settings['download_types'],
         "error_text"  => $locale['download_0115'],

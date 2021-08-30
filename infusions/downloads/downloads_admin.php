@@ -19,9 +19,7 @@ require_once __DIR__.'/../../maincore.php';
 pageaccess('D');
 require_once THEMES.'templates/admin_header.php';
 
-$downloads_locale = (file_exists(DOWNLOADS."locale/".LOCALESET."downloads_admin.php")) ? DOWNLOADS."locale/".LOCALESET."downloads_admin.php" : DOWNLOADS."locale/English/downloads_admin.php";
-$settings_locale = file_exists(LOCALE.LOCALESET."admin/settings.php") ? LOCALE.LOCALESET."admin/settings.php" : LOCALE."English/admin/settings.php";
-$locale = fusion_get_locale('', [$downloads_locale, $settings_locale]);
+$locale = fusion_get_locale('', [DOWNLOAD_ADMIN_LOCALE, LOCALE.LOCALESET."admin/settings.php"]);
 $aidlink = fusion_get_aidlink();
 
 require_once INCLUDES."infusions_include.php";
@@ -164,14 +162,14 @@ function download_listing() {
     if ($rows > 0) {
         while ($data2 = dbarray($result)) {
             $download_url = '';
-            if (!empty($data2['download_file']) && file_exists(DOWNLOADS."files/".$data2['download_file'])) {
+            if (!empty($data2['download_file']) && file_exists(DOWNLOADS_FILES.$data2['download_file'])) {
                 $download_url = INFUSIONS."downloads/downloads.php?file_id=".$data2['download_id'];
             } else if (!strstr($data2['download_url'], "http://") && !strstr($data2['download_url'], "../")) {
                 $download_url = $data2['download_url'];
             }
             echo "<li class='list-group-item'>\n";
             echo "<div class='pull-left m-r-10'>\n";
-            echo thumbnail(DOWNLOADS."images/".$data2['download_image_thumb'], '50px');
+            echo thumbnail(IMAGES_D.$data2['download_image_thumb'], '50px');
             echo "</div>\n";
             echo "<div class='overflow-hide'>\n";
 
