@@ -35,8 +35,8 @@ class Admins {
         '0' => "<i class='fa fa-fw fa-dashboard'></i>",
         '1' => "<i class='fa fa-fw fa-microphone'></i>",
         '2' => "<i class='fa fa-fw fa-users'></i>",
-        '3' => "<i class='fa fa-fw fa-cog'></i>",
-        '4' => "<i class='fa fa-fw fa-wrench'></i>",
+        '3' => "<i class='fa fa-fw fa-wrench'></i>",
+        '4' => "<i class='fa fa-fw fa-cog'></i>",
         '5' => "<i class='fa fa-fw fa-cubes'></i>"
     ];
     /**
