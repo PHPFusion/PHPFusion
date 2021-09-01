@@ -26,6 +26,13 @@ class ThreadTags extends ForumServer {
     }
 
     /**
+     * @deprecated use getTagInfo()
+     */
+    public function get_TagInfo() {
+        return $this->getTagInfo();
+    }
+
+    /**
      * Fetches all Forum Tag Table records
      *
      * @param bool $setTitle

@@ -45,4 +45,11 @@ class NewsServer {
 
         return $key === NULL ? self::$news_settings : (isset(self::$news_settings[$key]) ? self::$news_settings[$key] : NULL);
     }
+
+    /**
+     * @deprecated use getNewsSettings()
+     */
+    public static function get_news_settings($key = NULL) {
+        return self::getNewsSettings($key);
+    }
 }

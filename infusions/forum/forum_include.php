@@ -153,3 +153,10 @@ function get_forum($forum_id = 0, $forum_branch = 0) {
 function get_forum_icons($type = '') {
     return \PHPFusion\Forums\ForumServer::getForumIcons($type);
 }
+
+/**
+ * @deprecated use get_forum_icons()
+ */
+function get_forumIcons($type = '') {
+    return get_forum_icons($type);
+}

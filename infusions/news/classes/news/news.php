@@ -326,6 +326,13 @@ abstract class News extends NewsServer {
     }
 
     /**
+     * @deprecated use getNewsImage()
+     */
+    public static function get_NewsImage($data, $thumbnail = FALSE, $link = FALSE, $image_width = '') {
+        return self::getNewsImage($data, $thumbnail, $link, $image_width);
+    }
+
+    /**
      * Parse MVC Data output
      *
      * @param array $data - dbarray of newsQuery()

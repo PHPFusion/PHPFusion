@@ -45,4 +45,11 @@ class ArticlesServer {
 
         return self::$article_settings;
     }
+
+    /**
+     * @deprecated use getArticleSettings()
+     */
+    public static function get_article_settings() {
+        return self::getArticleSettings();
+    }
 }
