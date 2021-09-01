@@ -51,7 +51,7 @@ class Attachment {
      *
      * @return bool
      */
-    private static function getAttachmentPermissions($key) {
+    private static function getAttachmentPermissions($key = NULL) {
         return (isset(self::$permissions[$key])) ? self::$permissions[$key] : FALSE;
     }
 
