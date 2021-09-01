@@ -5,8 +5,6 @@ __Usage__
 ```php
 $cache = new PHPFusion\Cache\Cache();
 
-print_p($cache->getStorageType()); // Return current storage type
-
 if ($cache->isConnected()) {
     $key = 'item';
 

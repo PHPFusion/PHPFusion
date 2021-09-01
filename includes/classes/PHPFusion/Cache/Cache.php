@@ -31,11 +31,9 @@ class Cache {
     private $cache;
 
     /**
-     * Current storage
-     *
-     * @var string
+     * @var array
      */
-    private $cache_storage;
+    private $config;
 
     /**
      * @var mixed
@@ -45,7 +43,7 @@ class Cache {
     /**
      * Cache constructor.
      *
-     * @param string $cache_storage
+     * @param array $config
      *
      * @throws CacheException
      *
@@ -53,34 +51,19 @@ class Cache {
      * @uses \PHPFusion\Cache\Storage\RedisCache
      * @uses \PHPFusion\Cache\Storage\MemcacheCache
      */
-    public function __construct($cache_storage = NULL) {
-        if (!empty($cache_storage)) {
-            $driver = $cache_storage;
-        } else {
-            $cache_config = $this->getCacheConfig();
-            $driver = $cache_config['storage'];
-        }
+    public function __construct($config = []) {
+        $this->config = $this->getCacheConfig($config);
+        $this->config['storage'] = ucfirst($this->config['storage']).'Cache';
 
-        $this->cache_storage = ucfirst($driver).'Cache';
-
-        $this->init();
-    }
-
-    /**
-     * @throws CacheException
-     */
-    public function init() {
-        $cache_config = $this->getCacheConfig();
-
-        if (empty($this->cache_storage)) {
+        if (empty($this->config['storage'])) {
             throw new CacheException('Can\'t find cache storage in config.');
         }
 
-        $path = CLASSES.'PHPFusion/Cache/Storage/'.$this->cache_storage.'.php';
+        $path = CLASSES.'PHPFusion/Cache/Storage/'.$this->config['storage'].'.php';
 
         if (file_exists($path)) {
-            $class = '\\PHPFusion\\Cache\\Storage\\'.$this->cache_storage;
-            $this->cache = new $class($cache_config);
+            $class = '\\PHPFusion\\Cache\\Storage\\'.$this->config['storage'];
+            $this->cache = new $class($this->config);
         } else {
             throw new CacheException('Cache file '.$path.' not found');
         }
@@ -100,9 +83,11 @@ class Cache {
     /**
      * Get cache config
      *
+     * @param array $config Custom config.
+     *
      * @return array
      */
-    private function getCacheConfig() {
+    public function getCacheConfig($config = []) {
         global $config_inc;
 
         if (!is_array($config_inc) && empty($config_inc['cache'])) {
@@ -114,16 +99,9 @@ class Cache {
             ];
         }
 
-        return $config_inc['cache'];
-    }
+        $config += $config_inc['cache'];
 
-    /**
-     * Get current storage type
-     *
-     * @return string
-     */
-    public function getStorageType() {
-        return $this->cache_storage;
+        return $config;
     }
 
     /**
