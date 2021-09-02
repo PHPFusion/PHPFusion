@@ -82,20 +82,22 @@ class Forum_Bounty extends ForumServer {
                         );
                     } else {
                         $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, 0, 'bounty_points');
-                        $point_bal = (int)fusion_get_userdata('user_reputation') - $bounty_points;
-                        $user_id = fusion_get_userdata('user_id');
-                        dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
-                            ':point_balance' => $point_bal,
-                            ':my_id'         => $user_id
-                        ]);
-                        $bounty_arr = [
-                            'thread_id'                 => self::$data['thread_id'],
-                            'thread_bounty'             => $bounty_points,
-                            'thread_bounty_user'        => fusion_get_userdata('user_id'),
-                            'thread_bounty_description' => $bounty_description,
-                            'thread_bounty_start'       => time(),
-                        ];
-                        dbquery_insert(DB_FORUM_THREADS, $bounty_arr, 'update');
+                        if ($bounty_points <= $my_bounty_points) {
+                            $point_bal = $my_bounty_points - $bounty_points;
+                            $user_id = fusion_get_userdata('user_id');
+                            dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
+                                ':point_balance' => $point_bal,
+                                ':my_id'         => $user_id
+                            ]);
+                            $bounty_arr = [
+                                'thread_id'                 => self::$data['thread_id'],
+                                'thread_bounty'             => $bounty_points,
+                                'thread_bounty_user'        => fusion_get_userdata('user_id'),
+                                'thread_bounty_description' => $bounty_description,
+                                'thread_bounty_start'       => time(),
+                            ];
+                            dbquery_insert(DB_FORUM_THREADS, $bounty_arr, 'update');
+                        }
                     }
                     redirect(FORUM.'postify.php?post=bounty&error=0&forum_id='.self::$data['forum_id'].'&thread_id='.self::$data['thread_id']);
                 }
