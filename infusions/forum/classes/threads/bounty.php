@@ -51,14 +51,25 @@ class Forum_Bounty extends ForumServer {
 
     public function renderBountyForm($edit = FALSE) {
         $bounty_description = '';
-        $bounty_points = self::getForumSettings('bounty_points');
-        $points = [];
+        $my_bounty_points = (int)fusion_get_userdata('user_reputation');
+
         $locale = fusion_get_locale("", FORUM_LOCALE);
         // In order to prevent reputation point laundering, only author can start the bounty
         if ($edit ? self::getBountyPermissions('can_edit_bounty') : self::getBountyPermissions('can_start_bounty')) {
-            for ($i = 1; $i <= 10; $i++) {
-                $points[$i * $bounty_points] = format_word($i * $bounty_points, $locale['forum_2015']);
+            $length = strlen($my_bounty_points);
+            if ($length <= 2) {
+                $divide = $length;
+            } else {
+                $divide = $length * intval('1'.str_repeat('0', $length - 2));
             }
+
+            $divided = $my_bounty_points / $divide;
+            $points = [];
+
+            for ($i = 1; $i <= floor($divided); $i++) {
+                $points[$divide * $i] = format_word($divide * $i, $locale['forum_2015']);
+            }
+
             if (isset($_POST['save_bounty'])) {
                 $bounty_description = form_sanitizer($_POST['bounty_description'], '', 'bounty_description');
                 if (fusion_safe()) {
@@ -70,7 +81,7 @@ class Forum_Bounty extends ForumServer {
                             ]
                         );
                     } else {
-                        $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, $bounty_points, 'bounty_points');
+                        $bounty_points = form_sanitizer(isset($_POST['bounty_points']) ? $_POST['bounty_points'] : 0, 0, 'bounty_points');
                         $point_bal = (int)fusion_get_userdata('user_reputation') - $bounty_points;
                         $user_id = fusion_get_userdata('user_id');
                         dbquery('UPDATE '.DB_USERS.' SET user_reputation=:point_balance WHERE user_id=:my_id', [
@@ -97,7 +108,7 @@ class Forum_Bounty extends ForumServer {
             $bounty_field['openform'] = openform('set_bountyfrm', 'post', FUSION_REQUEST, ['class' => 'spacer-xs']);
             $bounty_field['closeform'] = closeform();
             $bounty_field['bounty_description'] = form_textarea('bounty_description', $locale['forum_2016'], $bounty_description, ['type' => 'bbcode']);
-            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'], $bounty_points, ['options' => $points]) : '');
+            $bounty_field['bounty_select'] = (!$edit ? form_select('bounty_points', $locale['forum_2017'], 0, ['options' => $points]) : '');
             $bounty_field['bounty_button'] = form_button('save_bounty', $locale['forum_2018'], $locale['forum_2018'], ['class' => 'btn-primary']);
             $info = [
                 'title'       => $locale['forum_2014'],
@@ -154,22 +165,33 @@ class Forum_Bounty extends ForumServer {
     }
 
     public function displayBounty() {
-        $html = '';
         if (self::$data['thread_bounty']) {
             $user = fusion_get_user(self::$data['thread_bounty_user']);
-            $html = "<div class='list-group-item-info p-15'>\n";
-            $html .= (self::getBountyPermissions('can_edit_bounty') ? "<span class='spacer-xs'><a href='".FORUM."viewthread.php?action=editbounty&thread_id=".$_GET['thread_id']."'>".self::$locale['forum_4100']."</a></span>" : '');
-            $html .= "<h4>".strtr(self::$locale['forum_4101'], [
-                    '{%points%}'       => "<span class='label label-primary'>+".format_word(self::$data['thread_bounty'], self::$locale['fmt_points'])."</span>",
+
+            $bounty_edit = [];
+            if (self::getBountyPermissions('can_edit_bounty')) {
+                $bounty_edit = [
+                    'link'  => FORUM.'viewthread.php?action=editbounty&thread_id='.$_GET['thread_id'],
+                    'title' => self::$locale['forum_4100']
+                ];
+            }
+
+            return [
+                'bounty_edit'         => $bounty_edit,
+                'bounty_title'        => strtr(self::$locale['forum_4101'], [
+                    '{%points%}'       => '<span class="label label-primary">+'.format_word(self::$data['thread_bounty'], self::$locale['fmt_points']).'</span>',
                     '{%profile_link%}' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
                     '{%countdown%}'    => countdown(self::$bounty_end)
-                ])."</h4>\n";
-            $html .= self::$locale['forum_4102'];
-            $html .= "<p class='spacer-xs text-dark'>".self::$data['thread_bounty_description']."</strong>\n</p>";
-            $html .= "</div>";
+                ]),
+                'bounty_points'       => self::$data['thread_bounty'],
+                'bounty_user'         => $user,
+                'bounty_user_profile' => profile_link($user['user_id'], $user['user_name'], $user['user_status']),
+                'bounty_end'          => self::$bounty_end,
+                'bounty_description'  => self::$data['thread_bounty_description']
+            ];
         }
 
-        return $html;
+        return NULL;
     }
 
     private static function setThreadPostData(array $post_data) {
@@ -187,8 +209,8 @@ class Forum_Bounty extends ForumServer {
                 $result = dbquery("
                     SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status
                     FROM ".DB_FORUM_VOTES." v
-                    INNER JOIN ".DB_FORUM_POSTS." p.post_id=v.post_id
-                    INNER JOIN ".DB_USERS." u.user_id=p.post_author
+                    INNER JOIN ".DB_FORUM_POSTS." p ON p.post_id=v.post_id
+                    INNER JOIN ".DB_USERS." u ON u.user_id=p.post_author
                     WHERE v.thread_id=:thread_id AND v.vote_points>0 ORDER BY v.vote_points DESC LIMIT 0,1",
                     [':thread_id' => self::$data['thread_id']]
                 );

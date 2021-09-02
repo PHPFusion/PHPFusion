@@ -47,8 +47,8 @@ if (!function_exists('render_forum')) {
 
         echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
         if (iMEMBER) {
-            echo '<a id="create_new_thread" href="'.FORUM.'newthread.php" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
-            forum_newtopic();
+            echo '<a id="create_new_thread" href="'.FORUM.'newthread.php'.(check_get('forum_id') ? '?forum_id='.get('forum_id') : '').'" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
+            //forum_newtopic();
         }
 
         $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->getTagInfo();
@@ -1049,8 +1049,15 @@ if (!function_exists('render_thread')) {
                 render_post_item($post_data, $i + (isset($_GET['rowstart']) ? $_GET['rowstart'] : ''));
 
                 if ($post_id == $info['post_firstpost']) {
-                    if ($info['thread_bounty']) {
-                        echo '<div class="block-bounty m-b-20">'.$info['thread_bounty'].'</div>';
+                    if (!empty($info['thread_bounty'])) {
+                        echo '<div class="block-bounty list-group m-b-20"><div class="list-group-item list-group-item-info">';
+                            if (!empty($info['thread_bounty']['bounty_edit'])) {
+                                echo '<a href="'.$info['thread_bounty']['bounty_edit']['link'].'">'.$info['thread_bounty']['bounty_edit']['title'].'</a>';
+                            }
+                            echo '<h4>'.$info['thread_bounty']['bounty_title'].'</h4>';
+                            echo $locale['forum_4102'];
+                            echo '<p class="text-dark">'.$info['thread_bounty']['bounty_description'].'</p>';
+                        echo '</div></div>';
                     }
                 }
 
@@ -1113,7 +1120,10 @@ if (!function_exists('render_thread')) {
         if (!empty($info['thread_users'])) {
             echo '<div class="clearfix"><strong>'.$locale['forum_0581'].'</strong> ';
                 foreach ($info['thread_users'] as $user_id => $user) {
-                    echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</a>, ';
+                    echo '<a href="'.BASEDIR.'profile.php?lookup='.$user_id.'">'.$user['user_name'].'</a>';
+                    if (next($info['thread_users'])) {
+                        echo ', ';
+                    }
                 }
             echo '</div>';
         }
