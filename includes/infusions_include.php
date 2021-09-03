@@ -571,8 +571,8 @@ function fusion_table($table_id, array $options = []) {
         'debug'             => FALSE,
         'reponse_debug'     => FALSE,
         // Documentation required for these.
-        'server_side'       => "false",
-        'processing'        => "false",
+        'server_side'       => '',
+        'processing'        => '',
         'ajax'              => FALSE,
         'ajax_debug'        => FALSE,
         'responsive'        => TRUE,
