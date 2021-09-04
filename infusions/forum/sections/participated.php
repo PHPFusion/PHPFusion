@@ -54,10 +54,8 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->getForumThread(0,
         INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id
         ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." p.post_author='".$userdata['user_id']."' AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id",
 
-        "query" => "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id 'thread_id', p.forum_id 'forum_id',
-        t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount,
-        t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views, t.thread_tags,
-        tf.forum_name, tf.forum_access, tf.forum_type
+        "query" => "SELECT p.forum_id, p.thread_id, p.post_id, p.thread_id, p.forum_id, 
+        t.*, tf.forum_name, tf.forum_access, tf.forum_type
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_POSTS." p ON p.forum_id=tf.forum_id
         INNER JOIN ".DB_FORUM_THREADS." t ON p.thread_id=t.thread_id AND t.forum_id=tf.forum_id

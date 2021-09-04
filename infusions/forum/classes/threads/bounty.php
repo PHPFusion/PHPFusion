@@ -43,10 +43,10 @@ class Forum_Bounty extends ForumServer {
      * @param array $thread_info
      */
     public function __construct(array $thread_info) {
+        self::$locale = fusion_get_locale('', FORUM_LOCALE);
         self::setBountyPermissions($thread_info['permissions']);
         self::setThreadData($thread_info['thread']);
         self::setThreadPostData($thread_info);
-        self::$locale = fusion_get_locale('', FORUM_LOCALE);
     }
 
     public function renderBountyForm($edit = FALSE) {
@@ -59,6 +59,8 @@ class Forum_Bounty extends ForumServer {
             $length = strlen($my_bounty_points);
             if ($length <= 2) {
                 $divide = $length;
+            } else if ($length <= 4) {
+                $divide = 50;
             } else {
                 $divide = 5 * intval('1'.str_repeat('0', $length - 2));
             }
@@ -149,7 +151,7 @@ class Forum_Bounty extends ForumServer {
                     ];
                     dbquery_insert(DB_FORUM_USER_REP, $d, 'save');
                     $title = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
+                    $message = strtr(self::$locale['forum_4122'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($post_data['post_author'], 0, $title, stripinput($message));
                     dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty=:bounty, thread_bounty_description=:desc, thread_bounty_user=:user, thread_bounty_start=:start WHERE thread_id=:thread_id",
                         [
@@ -207,36 +209,85 @@ class Forum_Bounty extends ForumServer {
         self::$bounty_end = self::$data['thread_bounty_start'] + (7 * 24 * 3600);
         if (time() > self::$bounty_end) {
             if (self::$data['thread_bounty']) { // have a bounty
-                // find the highest post
-                $result = dbquery("
-                    SELECT v.post_id, p.post_author, u.user_id, u.user_name, u.user_status
-                    FROM ".DB_FORUM_VOTES." v
-                    INNER JOIN ".DB_FORUM_POSTS." p ON p.post_id=v.post_id
+                // selected answer
+                $result_ = dbquery("
+                    SELECT p.post_id, p.post_author, p.post_answer, p.forum_id, t.thread_id, u.user_id, u.user_name, u.user_status
+                    FROM ".DB_FORUM_THREADS." t
+                    INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id=t.thread_id
                     INNER JOIN ".DB_USERS." u ON u.user_id=p.post_author
-                    WHERE v.thread_id=:thread_id AND v.vote_points>0 ORDER BY v.vote_points DESC LIMIT 0,1",
+                    WHERE t.thread_id=:thread_id AND p.post_answer=1",
                     [':thread_id' => self::$data['thread_id']]
                 );
-                if (dbrows($result)) {
-                    $data = dbarray($result);
+
+                if (dbrows($result_) > 0) {
+                    $data = dbarray($result_);
+
                     // with the post id, we give the post user.
                     dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author", [
-                            ':points'      => self::$data['thread_bounty'] / 2,
-                            ':post_author' => $data['post_author']
-                        ]
-                    );
+                        ':points'      => self::$data['thread_bounty'],
+                        ':post_author' => $data['post_author']
+                    ]);
+
+                    $d = [
+                        'post_id'     => $data['post_id'],
+                        'thread_id'   => $data['thread_id'],
+                        'forum_id'    => $data['forum_id'],
+                        'points_gain' => self::$data['thread_bounty'],
+                        'voter_id'    => fusion_get_userdata('user_id'),
+                        'user_id'     => $data['post_author'],
+                    ];
+                    dbquery_insert(DB_FORUM_USER_REP, $d, 'save', ['keep_session' => TRUE]);
+
                     $subject = strtr(self::$locale['forum_4103'], ['{%user_name%}' => $data['user_name']]);
-                    $message = strtr(self::$locale['forum_4014'], ['{%link_start%}' => "<a href='".FORUM."viewthread.php?thread_id=".self::$data['thread_id']."'>", '{%link_end%}' => "</a>"]);
+                    $message = strtr(self::$locale['forum_4123'], ['{%link_start%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."#post_".$data['post_id']."]", '{%link_end%}' => "[/url]"]);
                     send_pm(self::$data['thread_bounty_user'], 0, $subject, stripinput($message));
 
                     $subject = self::$locale['forum_4105'];
-                    $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."]".self::$data['thread_subject']."[/url]"]);
+                    $message = strtr(self::$locale['forum_4122'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."#post_".$data['post_id']."]".self::$data['thread_subject']."[/url]"]);
                     send_pm($data['post_author'], 0, $subject, stripinput($message));
+                } else {
+                    // find the highest post
+                    $result = dbquery("
+                        SELECT v.post_id, p.post_author, p.thread_id, p.forum_id, u.user_id, u.user_name, u.user_status
+                        FROM ".DB_FORUM_VOTES." v
+                        INNER JOIN ".DB_FORUM_POSTS." p ON p.post_id=v.post_id
+                        INNER JOIN ".DB_USERS." u ON u.user_id=p.post_author
+                        WHERE v.thread_id=:thread_id AND v.vote_points>0 ORDER BY v.vote_points DESC LIMIT 0,1",
+                        [':thread_id' => self::$data['thread_id']]
+                    );
+                    if (dbrows($result) > 0) {
+                        $data = dbarray($result);
+
+                        // with the post id, we give the post user.
+                        dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author", [
+                            ':points'      => (int)(self::$data['thread_bounty'] / 2),
+                            ':post_author' => $data['post_author']
+                        ]);
+
+                        $d = [
+                            'post_id'     => $data['post_id'],
+                            'thread_id'   => $data['thread_id'],
+                            'forum_id'    => $data['forum_id'],
+                            'points_gain' => (int)(self::$data['thread_bounty'] / 2),
+                            'voter_id'    => fusion_get_userdata('user_id'),
+                            'user_id'     => $data['post_author'],
+                        ];
+                        dbquery_insert(DB_FORUM_USER_REP, $d, 'save', ['keep_session' => TRUE]);
+
+                        $subject = strtr(self::$locale['forum_4103'], ['{%user_name%}' => $data['user_name']]);
+                        $message = strtr(self::$locale['forum_4104'], ['{%link_start%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."#post_".$data['post_id']."]", '{%link_end%}' => "[/url]"]);
+                        send_pm(self::$data['thread_bounty_user'], 0, $subject, stripinput($message));
+
+                        $subject = self::$locale['forum_4105'];
+                        $message = strtr(self::$locale['forum_4106'], ['{%thread_link%}' => "[url=".fusion_get_settings('siteurl')."infusions/forum/viewthread.php?thread_id=".self::$data['thread_id']."#post_".$data['post_id']."]".self::$data['thread_subject']."[/url]"]);
+                        send_pm($data['post_author'], 0, $subject, stripinput($message));
+                    }
                 }
+
                 // consumes the bounty
                 dbquery("UPDATE ".DB_FORUM_THREADS." SET thread_bounty='', thread_bounty_description='', thread_bounty_start='0' WHERE thread_id=:thread_id",
                     [':thread_id' => self::$data['thread_id']]
                 );
-                // now anyone can post a bounty again.
             }
         }
     }

@@ -49,8 +49,7 @@ $threads = \PHPFusion\Forums\ForumServer::thread(FALSE)->getForumThread(0,
         INNER JOIN ".DB_FORUMS." tf ON tf.forum_id = t.forum_id
         ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." t.thread_hidden='0' AND ".groupaccess('tf.forum_access')." GROUP BY t.thread_id",
 
-        "query" => "SELECT t.thread_id, t.thread_subject, t.thread_author, t.thread_lastuser, t.thread_lastpost, t.thread_lastpostid, t.thread_postcount, t.thread_locked, t.thread_sticky, t.thread_poll, t.thread_postcount, t.thread_views,
-        t.forum_id 'forum_id', t.thread_tags, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_cat
+        "query" => "SELECT t.*, tf.forum_name, tf.forum_access, tf.forum_type, tf.forum_cat
         FROM ".DB_FORUMS." tf
         INNER JOIN ".DB_FORUM_THREADS." t ON t.forum_id=tf.forum_id
         ".(multilang_table("FO") ? "WHERE ".in_group('tf.forum_language', LANGUAGE)." AND " : "WHERE ").$time_sql." ".groupaccess('tf.forum_access')."

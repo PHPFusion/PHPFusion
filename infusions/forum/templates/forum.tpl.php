@@ -48,7 +48,7 @@ if (!function_exists('render_forum')) {
         echo '<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">';
         if (iMEMBER) {
             echo '<a id="create_new_thread" href="'.FORUM.'newthread.php'.(check_get('forum_id') ? '?forum_id='.get('forum_id') : '').'" class="btn btn-primary btn-block m-b-20"><i class="fa fa-comment m-r-10"></i> '.$locale['forum_0057'].'</a>';
-            //forum_newtopic();
+            forum_newtopic();
         }
 
         $thread_tags = \PHPFusion\Forums\ForumServer::tag(TRUE, FALSE)->getTagInfo();
@@ -486,6 +486,9 @@ if (!function_exists('render_thread_item')) {
 
         echo '<div id="thread_'.$info['thread_id'].'" class="row">';
         echo '<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">';
+        if ($info['forum_type'] == '4' && isset($info['thread_bounty']) && $info['thread_bounty'] !== 0) {
+            echo '<i title="'.$locale['forum_4124'].'" class="fas fa-award m-r-5"></i>';
+        }
         echo '<a class="display-inline-block forum-link strong text-dark" href="'.$info['thread_link']['link'].'">';
         echo $info['thread_link']['title'];
         echo '</a>';
