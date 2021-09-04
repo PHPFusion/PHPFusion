@@ -60,7 +60,7 @@ class Forum_Bounty extends ForumServer {
             if ($length <= 2) {
                 $divide = $length;
             } else {
-                $divide = $length * intval('1'.str_repeat('0', $length - 2));
+                $divide = 5 * intval('1'.str_repeat('0', $length - 2));
             }
 
             $divided = $my_bounty_points / $divide;
@@ -220,7 +220,7 @@ class Forum_Bounty extends ForumServer {
                     $data = dbarray($result);
                     // with the post id, we give the post user.
                     dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:post_author", [
-                            ':points'      => floor(self::$data['thread_bounty'] / 2),
+                            ':points'      => self::$data['thread_bounty'] / 2,
                             ':post_author' => $data['post_author']
                         ]
                     );
