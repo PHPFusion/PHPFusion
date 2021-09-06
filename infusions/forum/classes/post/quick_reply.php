@@ -54,7 +54,6 @@ class QuickReply extends ForumServer {
                         'input_id'    => 'file_attachments',
                         'upload_path' => INFUSIONS.'forum/attachments/',
                         'type'        => 'object',
-                        'template'    => 'modern',
                         'preview_off' => TRUE,
                         'multiple'    => TRUE,
                         'inline'      => FALSE,
