@@ -377,7 +377,7 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             ]);
 
         echo form_checkbox('link_status', $this->locale['SL_0031'], $this->data['link_status'], [
-            'options' => [0 => $this->locale['unpublish'], 1 => $this->locale['publish']],
+            'options' => [1 => $this->locale['publish'], 0 => $this->locale['unpublish']],
             'width'   => '100%',
             "type"    => "radio",
             "inline"  => TRUE,
