@@ -33,7 +33,7 @@ class PageModel {
         'page_access'       => iGUEST,
         'page_content'      => '',
         'page_keywords'     => '',
-        'page_status'       => 0,
+        'page_status'       => 1,
         'page_breaks'       => '',
         'page_user'         => 0,
         'page_datestamp'    => 0,
