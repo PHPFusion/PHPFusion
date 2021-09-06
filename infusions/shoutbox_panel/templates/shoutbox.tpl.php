@@ -39,7 +39,9 @@ if (!function_exists('render_shoutbox')) {
                         echo '</div>';
 
                         echo '<div class="pull-right btn-group btn-group-xs">';
-                            echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
+                            if (!empty($item['reply_link'])) {
+                                echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
+                            }
 
                             if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
                                 echo '<a class="btn btn-default" href="'.$item['edit_link'].'" title="'.$item['edit_title'].'"><i class="fas fa-edit"></i></a>';
