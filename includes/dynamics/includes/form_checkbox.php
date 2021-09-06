@@ -56,7 +56,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
     ];
 
     $options += $default_options;
-    $default_checked = FALSE;
 
     if ($options['toggle']) {
         if (!defined("CHECKBOX_SWITCH_CSS")) {
@@ -92,8 +91,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             $option_value = array_flip(explode($options['delimiter'], (string)$input_value)); // require key to value
         }
 
-        $default_checked = empty($option_value);
-
         // The options_value to set check to the input on its value permanently
         $input_value = [];
         foreach (array_keys($options['options']) as $key) {
@@ -126,7 +123,7 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 
             $checkbox .= "<input id='".$options['input_id']."-$key' name='$input_name' value='$key' type='".$options['type']."'
 
-            ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($default_checked || $input_value[$key] == TRUE ? ' checked' : '')." />";
+            ".($options['deactivate'] || $options['deactivate_key'] === $key ? 'disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value[$key] == TRUE ? ' checked' : '')." />";
 
             $checkbox .= $value;
 
