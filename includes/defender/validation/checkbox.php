@@ -39,7 +39,7 @@ class Checkbox extends \Defender\Validation {
             }
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : ",";
             return implode($delimiter, $vars);
-        } else if (!empty(self::$inputValue)) {
+        } else if (self::$inputValue !== NULL) {
             if (isnum(self::$inputValue)) {
                 if (self::$inputValue == 1) {
                     return 1;
