@@ -214,11 +214,6 @@ class ForumAdminTags extends ForumAdminInterface {
         $result = dbquery($tag_list_query);
 
         if (dbrows($result) > 0) {
-            add_to_jquery("$('.tag-container').hover(
-                function(e) { $(this).parent().find('.tag-action').show(); },
-                function(e) { $(this).parent().find('.tag-action').hide(); }
-                );
-            ");
             $html = "<div class='row m-t-20 equal-height'>\n";
 
             while ($data = dbarray($result)) {
@@ -235,8 +230,8 @@ class ForumAdminTags extends ForumAdminInterface {
                 $html .= "<div class='overflow-hide'>\n";
                 $html .= "<div class='strong text-bigger m-b-5'>".$data['tag_title']."</div>\n";
                 $html .= "<p class='description'>".$data['tag_description']."</p>";
-                $html .= "<small>".($data['tag_status'] ? self::$locale['forum_tag_0205'] : self::$locale['forum_tag_0206'])."</small><br/><br/>".
-                    "<span class='tag-action' style='display:none; height: 40px;'>".
+                $html .= "<small>".($data['tag_status'] ? self::$locale['forum_tag_0205'] : self::$locale['forum_tag_0206'])."</small><br/>".
+                    "<span class='tag-action''>".
                     "<a href='".clean_request("tag_id=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['edit']."</a> -\n".
                     "<a href='".clean_request("delete=".$data['tag_id']."&section=ft&ref=tag_form", ["tag_id", "ref"], FALSE)."'>".self::$locale['delete']."</a>".
                     "</span>".
