@@ -28,8 +28,12 @@ class panelWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
         $panelData = \Defender::unserialize($columnData['page_content']);
         $panelPath = INFUSIONS.$panelData['panel_include']."/".$panelData['panel_include'].".php";
         if (!empty($panelData['panel_include']) && file_exists($panelPath)) {
+            ob_start();
             require_once $panelPath;
+            return ob_get_clean();
         }
+
+        return NULL;
     }
 
 }
