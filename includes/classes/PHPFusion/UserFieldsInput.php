@@ -171,7 +171,7 @@ class UserFieldsInput {
             // Compulsory Core Fields
             return [
                 'user_id'         => 0,
-                'user_hide_email' => 0,
+                'user_hide_email' => 1,
                 'user_avatar'     => '',
                 'user_posts'      => 0,
                 'user_threads'    => 0,
@@ -517,8 +517,9 @@ class UserFieldsInput {
             }
         }
 
-        $this->data['user_hide_email'] = post('user_hide_email');
-
+        if (!$this->registration) {
+            $this->data['user_hide_email'] = post('user_hide_email') ? 1 : 0;
+        }
     }
 
     /**

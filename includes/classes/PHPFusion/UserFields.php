@@ -296,6 +296,11 @@ class UserFields extends QuantumFields {
                         'ext_tip'         => sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))
                     ]);
                 }
+
+                $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"), [
+                    'inline' => TRUE,
+                    'toggle' => TRUE
+                ]);
             }
 
             $ext_tip = '';
@@ -321,11 +326,6 @@ class UserFields extends QuantumFields {
                     'error_text'  => $locale['u126'],
                     'ext_tip'     => $ext_tip
                 ]).'</div>';
-
-            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"), [
-                'inline' => TRUE,
-                'toggle' => TRUE
-            ]);
 
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();

@@ -34,7 +34,6 @@ if (!function_exists('display_register_form')) {
             $info['user_id'].
             $info['user_name'].
             $info['user_email'].
-            $info['user_hide_email'].
             $info['user_avatar'].
             $info['user_password'].
             $info['user_admin_password'].

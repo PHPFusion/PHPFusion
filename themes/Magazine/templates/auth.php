@@ -109,7 +109,6 @@ function display_register_form($info) {
                 echo !empty($info['openform']) ? $info['openform'] : '';
                 echo !empty($info['user_name']) ? $info['user_name'] : '';
                 echo !empty($info['user_email']) ? $info['user_email'] : '';
-                echo !empty($info['user_hide_email']) ? $info['user_hide_email'] : '';
                 echo !empty($info['user_avatar']) ? $info['user_avatar'] : '';
                 echo !empty($info['user_password']) ? $info['user_password'] : '';
                 echo !empty($info['user_admin_password']) && iADMIN ? $info['user_admin_password'] : '';
