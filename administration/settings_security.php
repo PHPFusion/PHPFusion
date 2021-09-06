@@ -52,7 +52,7 @@ if (check_post('savesettings')) {
     $inputData = [
         'captcha'               => sanitizer('captcha', '', 'captcha'),
         'display_validation'    => post('display_validation') ? 1 : 0,
-        'privacy_policy'        => sanitizer(['privacy_policy'], '', 'privacy_policy', $is_multilang),
+        'privacy_policy'        => sanitizer($is_multilang ? ['privacy_policy'] : 'privacy_policy', '', 'privacy_policy', $is_multilang),
         'allow_php_exe'         => post('allow_php_exe') ? 1 : 0,
         'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
         'flood_autoban'         => post('flood_autoban') ? 1 : 0,
