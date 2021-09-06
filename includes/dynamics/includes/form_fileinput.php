@@ -265,6 +265,29 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
 
         $lang = file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
 
+        $icons = "
+        browseIcon: '<i class=\"".$options['icon']."\"></i>&nbsp;',
+        previewFileIcon: '<i class=\"fas fa-file\"></i>',
+        removeIcon: '<i class=\"fas fa-trash\"></i>',
+        cancelIcon: '<i class=\"fas fa-ban\"></i>',
+        pauseIcon: '<i class=\"fas fa-pause\"></i>',
+        uploadIcon: '<i class=\"fas fa-upload\"></i>',
+        msgValidationErrorIcon: '<i class=\"fas fa-exclamation-circle\"></i> ',
+        fileActionSettings: {
+            removeIcon: '<i class=\"fas fa-trash\"></i>',
+            uploadIcon: '<i class=\"fas fa-upload\"></i>',
+            uploadRetryIcon: '<i class=\"fas fa-redo\"></i>',
+            downloadIcon: '<i class=\"fas fa-download\"></i>',
+            zoomIcon: '<i class=\"fas fa-search-plus\"></i>',
+            dragIcon: '<i class=\"fas fa-arrows-alt\"></i>',
+            indicatorNew: '<i class=\"fas fa-plus text-warning\"></i>',
+            indicatorSuccess: '<i class=\"fas fa-check text-success\"></i>',
+            indicatorError: '<i class=\"fas fa-exclamation text-danger\"></i>',
+            indicatorLoading: '<i class=\"fas fa-hourglass-end text-muted\"></i>',
+            indicatorPaused: '<i class=\"fas fa-pause text-primary\"></i>'
+        },
+        ";
+
         switch ($options['template']) {
             case "classic":
                 add_to_jquery("
@@ -280,7 +303,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         maxFileCount: '".$options['max_count']."',
                         removeClass : 'btn ".$options['btn_class']." button',
                         browseLabel: '".$browseLabel."',
-                        browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
+                        ".$icons."
                         ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
                         ".($options['hide_upload'] ? 'showUpload: false,' : '')."
                         ".($options['hide_remove'] ? 'showRemove: false,' : '')."
@@ -305,7 +328,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         maxFileCount: '".$options['max_count']."',
                         removeClass : 'btn button',
                         browseLabel: '".$browseLabel."',
-                        browseIcon: '<i class=\"".$options['icon']."\"></i>',
+                        ".$icons."
                         showCaption: false,
                         showRemove: false,
                         ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
@@ -335,7 +358,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                         maxFileCount: '".$options['max_count']."',
                         removeClass : 'btn button',
                         browseLabel: '".$browseLabel."',
-                        browseIcon: '<i class=\"".$options['icon']."\"></i>',
+                        ".$icons."
                         showCaption: false,
                         showRemove: false,
                         ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
