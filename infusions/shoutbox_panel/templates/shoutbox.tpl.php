@@ -27,23 +27,30 @@ if (!function_exists('render_shoutbox')) {
             if (!empty($info['items'])) {
                 echo '<div class="shoutbox-items m-t-10">';
                 foreach ($info['items'] as $item) {
-                    echo '<div class="shoutbox-item clearfix m-b-10">';
+                    echo '<div class="shoutbox-item clearfix m-b-20" id="shout'.$item['shout_id'].'">';
                         echo '<div class="shoutboxavatar pull-left m-r-5 m-t-5">';
-                            echo display_avatar($item, '30px', '', !empty($item['user_id']), 'img-rounded');
+                            echo display_avatar($item, '20px', '', !empty($item['user_id']), 'img-rounded');
+
+                            if (!empty($item['user_lastvisit'])) {
+                                echo '<span style="font-size:7px;position:absolute;margin-left:-5px;margin-top:-3px;">';
+                                    echo '<i class="fas fa-circle text-'.($item['user_lastvisit'] >= time() - 300 ? 'success' : 'danger').'"></i>';
+                                echo '</span>';
+                            }
                         echo '</div>';
 
-                        if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
-                            echo '<div class="pull-right btn-group btn-group-xs">';
-                                echo '<a class="btn btn-default" href="'.$item['edit_link'].'" title="'.$item['edit_title'].'"><i class="fa fa-edit"></i></a>';
-                                echo '<a class="btn btn-default" href="'.$item['delete_link'].'" title="'.$item['delete_title'].'"><i class="fa fa-trash"></i></a>';
-                            echo '</div>';
-                        }
+                        echo '<div class="pull-right btn-group btn-group-xs">';
+                            echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
 
-                        $online = !empty($item['user_lastvisit']) ? '<span style="color: #5CB85C; font-size: 10px;"><i class="m-l-5 m-r-5 fa fa-'.($item['user_lastvisit'] >= time() - 300 ? 'circle' : 'circle-thin').'"></i></span>' : '';
+                            if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
+                                echo '<a class="btn btn-default" href="'.$item['edit_link'].'" title="'.$item['edit_title'].'"><i class="fas fa-edit"></i></a>';
+                                echo '<a class="btn btn-default" href="'.$item['delete_link'].'" title="'.$item['delete_title'].'"><i class="fas fa-trash"></i></a>';
+                            }
+                        echo '</div>';
 
                         echo '<div class="clearfix">';
-                            echo '<strong class="display-block">'.(!empty($item['user_id']) ? $item['profile_link'].$online : '<span class="m-r-5">'.$item['shout_name'].'</span>').'</strong>';
+                            echo '<strong class="display-block">'.(!empty($item['user_id']) ? $item['profile_link'] : $item['shout_name']).'</strong>';
                             echo timer($item['shout_datestamp']);
+                            echo '<span class="m-l-5">#'.$item['shout_id'].'</span>';
                         echo '</div>';
 
                         echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';

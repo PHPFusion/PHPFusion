@@ -57,7 +57,7 @@ class Shoutbox {
         // Just use this. You do not want "s_action" and "shoutbox_id"
         $this->postLink = clean_request("", ["s_action", "shout_id"], FALSE);
 
-        switch (get("s_action")) {
+        switch (get('s_action')) {
             case 'delete':
                 $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutId(get("shout_id"));
                 self::deleteShout($id);
@@ -73,7 +73,7 @@ class Shoutbox {
                 }
                 break;
             case 'edit':
-                $id = defined('ADMIN_PANEL') ? get("shout_id") : $this->getSecureShoutId(get("shout_id"));
+                $id = defined('ADMIN_PANEL') ? get('shout_id') : $this->getSecureShoutId(get('shout_id'));
 
                 if (self::verifyShout($id)) {
                     $result = dbquery("SELECT shout_id, shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden, shout_language
@@ -85,6 +85,10 @@ class Shoutbox {
                         $this->data = dbarray($result);
                     }
                 }
+                break;
+            case 'reply':
+                $id = defined('ADMIN_PANEL') ? get('shout_id') : $this->getSecureShoutId(get('shout_id'));
+                $this->data['shout_message'] = self::$locale['SB_reply_to'].' [shoutid-'.$id.']';
                 break;
             default:
                 break;
@@ -359,7 +363,6 @@ class Shoutbox {
     }
 
     public function settingsForm() {
-
         add_to_jquery("$('#sb_delete_old').bind('click', function() { return confirm('".self::$locale['SB_warning_shouts']."'); });");
         echo openform('shoutbox', 'post', $this->postLink);
 
@@ -519,6 +522,8 @@ class Shoutbox {
                 $data['user_name'] = !empty($data['user_id']) ? $data['user_name'] : $data['shout_name'];
                 if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     $shout_id = $this->doSecureShoutId($data['shout_id']);
+                    $data['reply_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=reply&shout_id='.$shout_id;
+                    $data['reply_title'] = self::$locale['SB_reply'];
                     $data['edit_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id='.$shout_id;
                     $data['edit_title'] = self::$locale['edit'];
                     $data['delete_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id='.$shout_id;
@@ -531,6 +536,8 @@ class Shoutbox {
                     'default_image_folder' => NULL,
                     'add_line_breaks'      => TRUE
                 ]);
+
+                $data['message'] = preg_replace('#\[shoutid-(.*?)\]#i', '<a href="#shout\1">#\1</a>', $data['message']);
 
                 $sdata['items'][] = $data;
             }
