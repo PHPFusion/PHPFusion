@@ -280,22 +280,21 @@ class UserFields extends QuantumFields {
                 } else {
 
                     $this->info['user_avatar'] = form_fileinput('user_avatar', $locale['u185'], '', [
-                            'upload_path'     => IMAGES."avatars/",
-                            'input_id'        => 'user_avatar_upload',
-                            'type'            => 'image',
-                            'max_byte'        => fusion_get_settings('avatar_filesize'),
-                            'max_height'      => fusion_get_settings('avatar_width'),
-                            'max_width'       => fusion_get_settings('avatar_height'),
-                            'inline'          => TRUE,
-                            'thumbnail'       => 0,
-                            //'width'           => '100%',
-                            "delete_original" => FALSE,
-                            'class'           => 'm-t-10 m-b-0',
-                            "error_text"      => $locale['u180'],
-                            "template"        => "modern",
-                            'ext_tip'         => sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))
-                        ]
-                    );
+                        'upload_path'     => IMAGES."avatars/",
+                        'input_id'        => 'user_avatar_upload',
+                        'type'            => 'image',
+                        'max_byte'        => fusion_get_settings('avatar_filesize'),
+                        'max_height'      => fusion_get_settings('avatar_width'),
+                        'max_width'       => fusion_get_settings('avatar_height'),
+                        'inline'          => TRUE,
+                        'thumbnail'       => 0,
+                        //'width'           => '100%',
+                        "delete_original" => FALSE,
+                        'class'           => 'm-t-10 m-b-0',
+                        "error_text"      => $locale['u180'],
+                        "template"        => "modern",
+                        'ext_tip'         => sprintf($locale['u184'], parsebytesize(fusion_get_settings('avatar_filesize')), fusion_get_settings('avatar_width'), fusion_get_settings('avatar_height'))
+                    ]);
                 }
             }
 
@@ -305,37 +304,28 @@ class UserFields extends QuantumFields {
             }
 
             $this->info['user_email'] = form_text('user_email', $locale['u128'], $this->getInputValue("user_email"), [
-                    'type'       => 'email',
-                    "required"   => TRUE,
-                    'inline'     => TRUE,
-                    'max_length' => '100',
-                    'error_text' => $locale['u126'],
-                    'ext_tip'    => $ext_tip
-                ]
-            );
+                'type'       => 'email',
+                "required"   => TRUE,
+                'inline'     => TRUE,
+                'max_length' => '100',
+                'error_text' => $locale['u126'],
+                'ext_tip'    => $ext_tip
+            ]);
 
             $this->info['user_email_password'] = '<div id="user_email_change" style="display:none;">'.form_text('user_email_password', 'Password', $this->getInputValue("user_email_password"), [
-                        'type'        => 'password',
-                        "required"    => FALSE,
-                        'inline'      => TRUE,
-                        'max_length'  => '100',
-                        'placeholder' => 'Enter password to change your email address',
-                        'error_text'  => $locale['u126'],
-                        'ext_tip'     => $ext_tip
-                    ]
-                ).'</div>';
+                    'type'        => 'password',
+                    "required"    => FALSE,
+                    'inline'      => TRUE,
+                    'max_length'  => '100',
+                    'placeholder' => 'Enter password to change your email address',
+                    'error_text'  => $locale['u126'],
+                    'ext_tip'     => $ext_tip
+                ]).'</div>';
 
-            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"),
-                [
-                    'inline'         => TRUE,
-                    'inline_options' => TRUE,
-                    'type'           => 'radio',
-                    'options'        => [
-                        1 => $locale['u052'],
-                        0 => $locale['u053'],
-                    ],
-                ]
-            );
+            $this->info['user_hide_email'] = form_checkbox('user_hide_email', $locale['u051'], $this->getInputValue("user_hide_email"), [
+                'inline' => TRUE,
+                'toggle' => TRUE
+            ]);
 
             if ($this->displayValidation == 1 && !defined('ADMIN_PANEL')) {
                 $this->info['validate'] = $this->renderValidation();
