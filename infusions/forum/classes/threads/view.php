@@ -657,6 +657,7 @@ class ViewThread extends ForumServer {
                                 'upload_path' => FORUM.'attachments/',
                                 'type'        => 'object',
                                 'multiple'    => TRUE,
+                                'inline'      => FALSE,
                                 'max_count'   => $attach_rows > 0 ? $forum_settings['forum_attachmax_count'] - $attach_rows : $forum_settings['forum_attachmax_count'],
                                 'max_width'   => $forum_settings['forum_attachmax_w'],
                                 'max_height'  => $forum_settings['forum_attachmax_h'],
