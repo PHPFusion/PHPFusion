@@ -117,8 +117,8 @@ class ForumAdminMood extends ForumAdminInterface {
 
             form_checkbox('mood_status', self::$locale['forum_100'], $this->data['mood_status'],
                 ['options' => [
-                    self::$locale['forum_101'],
-                    self::$locale['forum_102']
+                    1 => self::$locale['forum_102'],
+                    0 => self::$locale['forum_101']
                 ],
                  'inline'  => TRUE,
                  'type'    => 'radio'
@@ -146,7 +146,7 @@ class ForumAdminMood extends ForumAdminInterface {
                 'mood_name'        => form_sanitizer($_POST['mood_name'], '', 'mood_name', TRUE),
                 'mood_description' => form_sanitizer($_POST['mood_description'], '', 'mood_description', TRUE),
                 'mood_icon'        => form_sanitizer($_POST['mood_icon'], '', 'mood_icon'),
-                'mood_status'      => form_sanitizer($_POST['mood_status'], '', 'mood_status'),
+                'mood_status'      => form_sanitizer($_POST['mood_status'], 0, 'mood_status'),
                 'mood_notify'      => form_sanitizer($_POST['mood_notify'], '', 'mood_notify'),
                 'mood_access'      => form_sanitizer($_POST['mood_access'], '', 'mood_access'),
             ];

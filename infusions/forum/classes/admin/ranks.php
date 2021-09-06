@@ -130,7 +130,7 @@ class ForumAdminRanks extends ForumAdminInterface {
         }
 
         $html =
-            openform('rank_form', 'post', $form_action, ['class' => 'm-t-20']).
+            openform('rank_form', 'post', $form_action).
 
             form_hidden('rank_id', '', $this->data['rank_id']).
 
