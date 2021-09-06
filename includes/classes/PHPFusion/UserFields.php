@@ -373,10 +373,11 @@ class UserFields extends QuantumFields {
                     $user_fields .= form_para($fieldData['title'], 'fieldcat'.$catID);
                 }
                 if (!empty($fieldData['fields'])) {
-                    $user_fields = implode('', $fieldData['fields']);
+                    $user_fields .= implode('', $fieldData['fields']);
                 }
             }
         }
+
         $this->info["user_custom"] = $user_fields;
 
         if (isset($this->info['section']) && count($this->info['section']) > 1) {
