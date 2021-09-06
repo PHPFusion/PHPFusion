@@ -399,8 +399,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } else if ($options['type'] == "html" && $options['form_name']) {
-        $html .= "<div class='m-t-10 m-b-10'>\n";
-        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']); // @todo: image_path to be turned off by default
+        $html .= "<div class='html-buttons'>\n";
+        $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
         $html .= $options['preview'] ? "</div>\n" : "";
     }
 
@@ -508,7 +508,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
     $link_mode = !empty($link) ? $link : 0;
     $html = "<div class='nav-wrapper $class'>\n";
-    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >\n";
+    $html .= "<ul class='m-t-5 nav' ".($id ? "id='".$id."'" : "")." >\n";
     if (!empty($tab_title['title'])) {
         foreach ($tab_title['title'] as $arr => $v) {
             $v_title = str_replace("-", " ", $v);
