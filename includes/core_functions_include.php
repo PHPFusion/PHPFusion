@@ -658,7 +658,7 @@ function displaysmileys($textarea, $form = "inputform") {
         }
         $i++;
         $img = get_image("smiley_".$smiley['smiley_text']);
-        $smileys .= "<img class='smiley' style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\">\n";
+        $smileys .= "<img class='smiley m-2' style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\">\n";
     }
     return $smileys;
 }

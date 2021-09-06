@@ -395,7 +395,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
-        $html .= "<div class='bbcode_input'>\n";
+        $html .= "<div class='bbcode_input' style='line-height:0;'>\n";
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
         $html .= $options['preview'] ? "</div>\n" : "";
     } else if ($options['type'] == "html" && $options['form_name']) {

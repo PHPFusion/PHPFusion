@@ -18,11 +18,10 @@
 defined('IN_FUSION') || exit;
 
 $__BBCODE__[] = [
-    "description"    => $locale['bb_smiley_description'],
-    "value"          => "smiley",
-    "usage"          => $locale['bb_smiley_usage'],
-    'id'             => 'bbcode_smileys_list_'.$textarea_name,
-    "phpfunction"    => "echo displaysmileys('$textarea_name', '$inputform_name');",
-    'dropdown'       => TRUE,
-    'dropdown_class' => 'p-5'
+    "description" => $locale['bb_smiley_description'],
+    "value"       => "smiley",
+    "usage"       => $locale['bb_smiley_usage'],
+    'id'          => 'bbcode_smileys_list_'.$textarea_name,
+    "phpfunction" => "echo displaysmileys('$textarea_name', '$inputform_name');", /** @uses displaysmileys() */
+    'dropdown'    => TRUE
 ];
