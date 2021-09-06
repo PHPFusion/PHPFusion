@@ -337,23 +337,23 @@ class Shoutbox {
             }
 
             if (iMEMBER && self::$sb_settings['hidden_shouts']) {
-                $html .= "<div class='btn-group dropup'>
+                $html .= "<div class='btn-group btn-group-sm dropup'>
                 ".form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary'])."
-                <button id='ddsg' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
-                $html .= "<span class='caret'></span>\n";
-                $html .= "</button>\n";
-                $html .= "<ul class='dropdown-menu' aria-labelledby='ddsg'>\n";
+                <button id='ddsg' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
+                $html .= "<span class='caret'></span>";
+                $html .= "</button>";
+                $html .= "<ul class='dropdown-menu' aria-labelledby='ddsg'>";
                 foreach (fusion_get_groups() as $key => $glink) {
                     if (!iADMIN && $key > 0) {
-                        $html .= users_groupaccess($key) ? "<li>".form_button($glink, $glink, $glink, ['class' => 'btn-primary'])."</li>\n" : "";
+                        $html .= users_groupaccess($key) ? "<li>".form_button($glink, $glink, $glink, ['class' => 'btn-link btn-sm btn-block'])."</li>" : "";
                     } else {
-                        $html .= "<li>".form_button($glink, $glink, $glink, ['class' => 'btn-primary'])."</li>\n";
+                        $html .= "<li>".form_button($glink, $glink, $glink, ['class' => 'btn-link btn-sm btn-block'])."</li>";
                     }
                 }
-                $html .= "</ul>\n";
-                $html .= "</div>\n";
+                $html .= "</ul>";
+                $html .= "</div>";
             } else {
-                $html .= form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['send_message'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary btn-block']);
+                $html .= form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['send_message'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary btn-sm btn-block']);
             }
 
             $html .= closeform();
@@ -520,10 +520,15 @@ class Shoutbox {
         if ($rows > 0) {
             while ($data = dbarray($result)) {
                 $data['user_name'] = !empty($data['user_id']) ? $data['user_name'] : $data['shout_name'];
-                if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
-                    $shout_id = $this->doSecureShoutId($data['shout_id']);
+
+                $shout_id = $this->doSecureShoutId($data['shout_id']);
+
+                if (iMEMBER || self::$sb_settings['guest_shouts']) {
                     $data['reply_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=reply&shout_id='.$shout_id;
                     $data['reply_title'] = self::$locale['SB_reply'];
+                }
+
+                if ((iADMIN && checkrights("S")) || (iMEMBER && $data['shout_name'] == fusion_get_userdata('user_id') && isset($data['user_name']))) {
                     $data['edit_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=edit&shout_id='.$shout_id;
                     $data['edit_title'] = self::$locale['edit'];
                     $data['delete_link'] = INFUSIONS.'shoutbox_panel/shoutbox_archive.php?s_action=delete&shout_id='.$shout_id;
