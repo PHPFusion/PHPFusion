@@ -50,6 +50,28 @@ class NewsAdmin extends NewsAdminModel {
      * Displays News Form
      */
     public function displayNewsForm() {
+        $this->news_data = [
+            'news_id'                  => 0,
+            'news_draft'               => 0,
+            'news_sticky'              => 0,
+            'news_news'                => '',
+            'news_datestamp'           => time(),
+            'news_extended'            => '',
+            'news_keywords'            => '',
+            'news_breaks'              => 'n',
+            'news_allow_comments'      => 1,
+            'news_allow_ratings'       => 1,
+            'news_language'            => LANGUAGE,
+            'news_visibility'          => 0,
+            'news_subject'             => '',
+            'news_start'               => '',
+            'news_end'                 => '',
+            'news_cat'                 => 0,
+            'news_image'               => '',
+            'news_image_full_default'  => '',
+            'news_image_front_default' => '',
+            'news_image_align'         => 'pull-left'
+        ];
 
         if ((isset($_POST['save'])) or (isset($_POST['save_and_close'])) or (isset($_POST['preview'])) or (isset($_POST['del_photo']))) {
 
