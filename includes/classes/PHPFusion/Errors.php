@@ -193,7 +193,7 @@ class Errors {
         $html .= "</td>\n<td>\n";
 
         $html .= "<div class='btn-group'>\n";
-        $html .= "<a class='btn btn-sm btn-default ' href='".ADMIN."errors.php".fusion_get_aidlink()."&amp;rowstart=".$this->rowstart."&amp;error_id=".$data['error_id']."#file' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
+        $html .= "<a class='btn btn-sm btn-default ' href='".ADMIN."errors.php".fusion_get_aidlink()."&rowstart=".$this->rowstart."&error_id=".$data['error_id']."#file' target='new_window'><i class='fa fa-eye m-0'></i></a>\n";
         $html .= "<button class='btn btn-sm btn-default copy-error' data-clipboard-target='#error-".$data['error_id']."'><i class='fa fa-copy m-0'></i></button>\n";
         $html .= "</div>\n";
         $html .= "</td>\n";
@@ -295,49 +295,37 @@ class Errors {
             add_to_jquery("$('#error_status_sel').bind('change', function(e){this.form.submit();});");
 
             echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active); ?>
+            <h2 class="m-t-0"><?php echo htmlspecialchars_decode(stripslashes($data['error_message'])); ?></h2>
 
-            <div class='m-t-20'>
-                <h2><?php echo $data['error_message'] ?></h2>
+            <div class='display-inline text-lighter'>
+                <strong><?php echo $locale['ERROR_419'] ?></strong>: <?php echo self::getMaxFolders($data['error_file'], 3); ?>
+                <label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
+            </div>
 
-                <h3 style='border-bottom:0;' class='display-inline'>
-                    <label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
-                </h3>
-
-                <div class='display-inline text-lighter'><strong><?php echo $locale['ERROR_419'] ?></strong>
-                    -- <?php echo self::getMaxFolders($data['error_file'], 3); ?></div>
-
-                <div class='m-t-10'>
-                    <div class='display-inline-block m-r-20'><i class='fa fa-file-code-o m-r-10'></i><strong
-                                class='m-r-10'><?php echo $locale['ERROR_411'] ?></strong> -- <a
-                                href='<?php echo FUSION_SELF.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id'] ?>#page'
-                                title='<?php echo $data['error_page'] ?>'>
-                            <?php echo self::getMaxFolders($data['error_page'], 3); ?></a>
-                    </div>
+            <div class='m-t-10'>
+                <div class='display-inline-block m-r-20'>
+                    <i class='fa fa-file-code-o'></i> <strong><?php echo $locale['ERROR_411']; ?></strong>:
+                    <a data-toggle="tab" data-target="#src-file" role="tab" href='<?php echo FUSION_SELF.$aidlink."&rowstart=".$_GET['rowstart']."&error_id=".$data['error_id'] ?>#src-file' title='<?php echo $data['error_page'] ?>'>
+                        <?php echo self::getMaxFolders($data['error_page'], 3); ?>
+                    </a>
+                </div>
+                <div>
                     <span class='text-lighter'><?php echo $locale['ERROR_463'] ?></span>
-
-                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
-                        <strong><?php
-                            echo $locale['ERROR_412']."-".$locale['ERROR_416'];
-                            echo $data['error_user_level']; ?> -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip'];
-                            ?></strong>
-                    </div>
-                    <span class='text-lighter'><?php echo lcfirst($locale['on']) ?></span>
-
-                    <div class='alert alert-info display-inline-block p-t-0 p-b-0 text-smaller'>
-                        <strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong>
-                    </div>
+                    <span class='label label-info'><strong><?php echo $locale['ERROR_412']."-".$locale['ERROR_416'].$data['error_user_level']; ?> -- <?php echo $locale['ERROR_417']." ".$data['error_user_ip']; ?></strong></span>
+                    <span class='text-lighter'><?php echo lcfirst($locale['on']); ?></span>
+                    <span class='label label-info'><strong class='m-r-10'><?php echo showdate("longdate", $data['error_timestamp']) ?></strong></span>
                 </div>
-                <div class='m-t-10 display-inline-block' style='width:300px'>
-                    <?php
-                    echo openform('logform', 'post', ADMIN.'errors.php'.$aidlink."&amp;rowstart=".$_GET['rowstart']."&amp;error_id=".$data['error_id']."#file");
-                    echo form_hidden('error_id', '', $data['error_id']);
-                    echo form_select('error_status', $locale['mark_as'], $data['error_status'], [
-                        'inline'  => TRUE,
-                        'options' => $this->getErrorLogTypes()
-                    ]);
-                    echo closeform();
-                    ?>
-                </div>
+            </div>
+            <div class='m-t-10 display-inline-block' style='width:300px'>
+                <?php
+                echo openform('logform', 'post', ADMIN.'errors.php'.$aidlink."&rowstart=".$_GET['rowstart']."&error_id=".$data['error_id']."#file");
+                echo form_hidden('error_id', '', $data['error_id']);
+                echo form_select('error_status', $locale['mark_as'], $data['error_status'], [
+                    'inline'  => TRUE,
+                    'options' => $this->getErrorLogTypes()
+                ]);
+                echo closeform();
+                ?>
             </div>
 
             <div class='m-t-10'>
@@ -410,7 +398,7 @@ class Errors {
 
             if ($this->rows > 20) {
                 $html .= "<div class='m-t-10 text-center'>\n";
-                $html .= makepagenav($this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&amp;");
+                $html .= makepagenav($this->rowstart, 20, $this->rows, 3, ADMIN."errors.php".$aidlink."&");
                 $html .= "</div>\n";
             }
         } else {
@@ -559,7 +547,7 @@ class Errors {
         $source_code = explode("\n", str_replace(["\r\n", "\r"], "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
-        $error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".$error_message['text']."</div>\n";
+        $error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".strtr(htmlspecialchars_decode(stripslashes($error_message['text'])), ['#' => '<br/>#'])."</div>\n";
         foreach ($source_code as $code_line) {
             $code_line = $this->codeWrap($code_line, 145);
             $line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
