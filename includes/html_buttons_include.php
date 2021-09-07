@@ -58,7 +58,6 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
 
         $res .= "<div class='btn-group m-t-5 m-b-5'>\n";
         $res .= "<button type='button' value='pagebreak' title='".$locale['html_016']."' class='btn btn-sm btn-default button' onclick=\"addText('".$textarea."', '&lt;!--PAGEBREAK--&gt;', '', '".$formname."');\"><i class='fa fa-minus'></i></button>\n";
-        $res .= fusion_get_settings("allow_php_exe") || defined('ALLOW_PHP') ? "<button type='button' class='btn btn-sm btn-default button' value='&lt;?php?&gt;' title='PHP' onclick=\"addText('".$textarea."', '&lt;?php\\n', '\\n?&gt;', '".$formname."');\"><i class='fab fa-php'></i></button>\n" : "";
         $res .= "<button type='button' class='btn btn-sm btn-default button' value='&lt;p&gt;' title='".$locale['html_018']."' onclick=\"addText('".$textarea."', '&lt;p&gt;', '&lt;/p&gt;', '".$formname."');\"><i class='fa fa-paragraph'></i></button>\n";
         $res .= "<button type='button' class='btn btn-default btn-sm button' value='&lt;br /&gt;' title='".$locale['html_020']."' onclick=\"insertText('".$textarea."', '&lt;br /&gt;', '".$formname."');\">&lt;br /&gt;</button>\n";
         $res .= "</div>\n";
