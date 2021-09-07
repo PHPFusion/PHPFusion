@@ -23,22 +23,6 @@ use PHPFusion\Panels;
 defined('IN_FUSION') || exit;
 
 /**
- * Get the current theme framework
- *
- * @return string
- */
-function fusion_theme_framework() {
-    $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
-    foreach ($level as $framework) {
-        if (defined($framework)) {
-            return $framework;
-        }
-    }
-
-    return 'default';
-}
-
-/**
  * Show PHPFusion performance.
  *
  * @param bool $queries Show the number of queries used on the current page.
@@ -544,29 +528,21 @@ if (!function_exists('showbanners')) {
         ob_start();
         if ($display == 2) {
             if ($settings['sitebanner2']) {
-                if ($settings['allow_php_exe']) {
-                    eval("?>".stripslashes($settings['sitebanner2'])."<?php ");
-                } else {
-                    echo parse_text($settings['sitebanner2'], [
-                        'parse_smileys'        => FALSE,
-                        'parse_bbcode'         => FALSE,
-                        'default_image_folder' => NULL,
-                        'add_line_breaks'      => TRUE
-                    ]);
-                }
+                echo parse_text($settings['sitebanner2'], [
+                    'parse_smileys'        => FALSE,
+                    'parse_bbcode'         => FALSE,
+                    'default_image_folder' => NULL,
+                    'add_line_breaks'      => TRUE
+                ]);
             }
         } else {
             if ($settings['sitebanner1']) {
-                if ($settings['allow_php_exe']) {
-                    eval("?>".stripslashes($settings['sitebanner1'])."<?php ");
-                } else {
-                    echo parse_text($settings['sitebanner1'], [
-                        'parse_smileys'        => FALSE,
-                        'parse_bbcode'         => FALSE,
-                        'default_image_folder' => NULL,
-                        'add_line_breaks'      => TRUE
-                    ]);
-                }
+                echo parse_text($settings['sitebanner1'], [
+                    'parse_smileys'        => FALSE,
+                    'parse_bbcode'         => FALSE,
+                    'default_image_folder' => NULL,
+                    'add_line_breaks'      => TRUE
+                ]);
             }
         }
         $output = ob_get_contents();
@@ -1702,4 +1678,20 @@ if (!function_exists('render_user_tags')) {
 
         return $html;
     }
+}
+
+/**
+ * Get the current theme framework
+ *
+ * @return string
+ */
+function fusion_theme_framework() {
+    $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
+    foreach ($level as $framework) {
+        if (defined($framework)) {
+            return $framework;
+        }
+    }
+
+    return 'default';
 }
