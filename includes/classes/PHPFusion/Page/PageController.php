@@ -76,18 +76,10 @@ class PageController extends PageModel {
         require_once THEMES."templates/global/custompage.tpl.php";
 
         $htmlArray = [];
-        ob_start();
-        if (fusion_get_settings("allow_php_exe")) {
-            eval("?>".stripslashes($colData['page_content'])."<?php ");
-        } else {
-            echo parse_text($colData['page_content'], ['parse_bbcode' => FALSE, 'descript' => FALSE]);
-        }
-
-        $eval = ob_get_contents();
-        ob_end_clean();
+        $html = parse_text($colData['page_content'], ['parse_bbcode' => FALSE, 'descript' => FALSE]);
         $htmlArray['pagenav'] = '';
         $htmlArray['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) ? intval($_GET['rowstart']) : 0;
-        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", self::$info['line_breaks'] == 'y' ? nl2br($eval) : $eval);
+        $htmlArray['body'] = preg_split("/<!?--\s*pagebreak\s*-->/i", self::$info['line_breaks'] == 'y' ? nl2br($html) : $html);
         $htmlArray['count'] = count($htmlArray['body']);
 
         if ($htmlArray['count'] > 0) {
