@@ -301,12 +301,12 @@ class PanelsAdministration {
             }
         }
 
-        echo "<div class='m-b-20'>".$locale['463']." <br />
-        /index.php <br />
-        /infusions/news* <br />
-        /infusions/news/news.php <br />
-        /infusions/forum* <br />
-        /infusions/forum/index.php <br />
+        echo "<div class='m-b-20'>".$locale['463']."<br>
+        /index.php<br>
+        /infusions/news*<br>
+        /infusions/news/news.php<br>
+        /infusions/forum*<br>
+        /infusions/forum/index.php<br>
         </div>\n";
 
         echo openform('settingsform', 'post', FUSION_REQUEST);
@@ -561,9 +561,9 @@ class PanelsAdministration {
         echo openform('panel_form', 'post', $this->formaction);
 
         echo "<div class='m-b-10'>\n";
-        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10', 'input_id' => 'btn1']);
-        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'btn-success', 'input_id' => 'btn3']);
-        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10 btn-default', 'input_id' => 'btn2']);
+        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-5', 'input_id' => 'btn1']);
+        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'm-r-5 btn-success', 'input_id' => 'btn3']);
+        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default', 'input_id' => 'btn2']);
         echo "</div>\n";
 
 
@@ -606,12 +606,12 @@ class PanelsAdministration {
             'inline' => FALSE,
             //'required' => TRUE
         ]);
-        echo "<div class='text-smaller'>".self::$locale['463']." <br />
-        /index.php <br />
-        /infusions/news* <br />
-        /infusions/news/news.php <br />
-        /infusions/forum* <br />
-        /infusions/forum/index.php <br />
+        echo "<div class='text-smaller'>".self::$locale['463']."<br>
+        /index.php<br>
+        /infusions/news*<br>
+        /infusions/news/news.php<br>
+        /infusions/forum*<br>
+        /infusions/forum/index.php<br>
         </div>\n";
         echo "</div>\n";
         echo form_hidden('panel_display', '', $this->data['panel_display']);
@@ -671,9 +671,9 @@ class PanelsAdministration {
         closeside();
         echo "</div>\n";
         echo "</div>\n";
-        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-10']);
-        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'btn-success']);
-        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'm-r-10 btn-default']);
+        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-5']);
+        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'm-r-5 btn-success']);
+        echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default']);
         echo closeform();
 
     }
