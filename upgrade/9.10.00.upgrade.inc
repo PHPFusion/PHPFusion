@@ -83,7 +83,9 @@ while ($data = dbarray($result)) {
 $inf_updatedbrow[] = DB_SITE_LINKS." SET link_url='index.php' WHERE link_url='home.php'";
 $inf_updatedbrow[] = DB_PANELS." SET panel_url_list='index.php' WHERE panel_url_list='home.php'";
 
-$inf_altertable[] = DB_PANELS." ADD panel_php_exe TINYINT(0) UNSIGNED NOT NULL DEFAULT '0' AFTER panel_side";
+if (!column_exists(DB_PANELS, 'panel_php_exe', FALSE)) {
+    $inf_altertable[] = DB_PANELS." ADD panel_php_exe TINYINT(0) UNSIGNED NOT NULL DEFAULT '0' AFTER panel_side";
+}
 
 $inf_altertable[] = DB_CUSTOM_PAGES." CHANGE page_access page_access VARCHAR(50) NOT NULL DEFAULT '0'";
 
