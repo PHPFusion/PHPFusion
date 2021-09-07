@@ -52,7 +52,7 @@ if (!function_exists('display_user_info_panel')) {
                     echo '<li><a href="'.BASEDIR.'edit_profile.php">'.$locale['UM080'].' <i class="fa fa-user-circle-o fa-pull-right"></i></a></li>';
                     echo '<li><a href="'.BASEDIR.'messages.php">'.$locale['UM081'].' <i class="fa fa-envelope-o  fa-pull-right"></i></a></li>';
 
-                    if ($info['forum_exists']) {
+                    if ($info['forum_exists'] && file_exists(INFUSIONS.'forum_threads_list_panel/my_tracked_threads.php')) {
                         echo '<li><a href="'.INFUSIONS.'forum_threads_list_panel/my_tracked_threads.php">'.$locale['UM088'].' <i class="fa fa-commenting-o fa-pull-right"></i></a></li>';
                     }
 
