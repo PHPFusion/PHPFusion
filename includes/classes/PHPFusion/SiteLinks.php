@@ -688,6 +688,7 @@ class SiteLinks {
                             }
                             $request_uri = str_replace('//', '/', $_SERVER['REQUEST_URI']);
                             $url = parse_url(htmlspecialchars_decode($request_uri));
+                            $url['path'] = !empty($url['path']) ? $url['path'] : '';
                             $current_url = str_replace(fusion_get_settings('site_path'), "", $url['path']);
                             if (stristr($url['path'], "index.php")) {
                                 $current_url = str_replace("index.php", "", $current_url);
