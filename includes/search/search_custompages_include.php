@@ -72,13 +72,6 @@ if (Search_Engine::get_param('stype') == 'custompages' || Search_Engine::get_par
             while ($data = dbarray($result)) {
                 $data['page_content'] = strip_tags(htmlspecialchars_decode($data['page_content']));
                 $text_all = stripslashes($data['page_content']);
-                if (fusion_get_settings('allow_php_exe')) {
-                    ob_start();
-                    eval ("?>".$text_all."<?php ");
-                    $text_all = ob_get_contents();
-                    ob_end_clean();
-                }
-
                 $text_all = Search_Engine::search_striphtmlbbcodes($text_all);
                 $text_frag = Search_Engine::search_textfrag($text_all);
                 $subj_c = Search_Engine::search_stringscount($data['page_title']);
