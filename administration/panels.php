@@ -685,9 +685,11 @@ class PanelsAdministration {
      */
     private function getPanelOpts() {
         $current_panels = [];
-        foreach ($this->panel_data as $panels) {
-            foreach ($panels as $data) {
-                $current_panels[$data['panel_filename']] = $data['panel_filename'];
+        if (!empty($this->panel_data)) {
+            foreach ($this->panel_data as $panels) {
+                foreach ($panels as $data) {
+                    $current_panels[$data['panel_filename']] = $data['panel_filename'];
+                }
             }
         }
 
