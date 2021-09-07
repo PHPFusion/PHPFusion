@@ -63,7 +63,7 @@ if (!function_exists('render_members')) {
                     if (!empty($members['groups'])) {
                         foreach ($members['groups'] as $groupData) {
                             if (!empty($groupData)) {
-                                $groups .= "<a class='btn btn-default btn-sm' href='".$groupData['link']."'>".$groupData['title']."</a>\n";
+                                $groups .= "<a href='".$groupData['link']."'>".$groupData['title']."</a>".(next($members['groups']) ? ', ' : '' );
                             }
                         }
                     }
