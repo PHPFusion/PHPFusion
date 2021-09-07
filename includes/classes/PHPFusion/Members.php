@@ -242,7 +242,7 @@ class Members {
                     while ($data = dbarray($result)) {
 
                         $info['member'][$data['user_id']] = $data;
-                        $info['member'][$data['user_id']]['user_avatar'] = display_avatar($data, '50px', '', TRUE, 'img-rounded');
+                        $info['member'][$data['user_id']]['user_avatar'] = display_avatar($data, '25px', '', TRUE, 'img-rounded');
                         $info['member'][$data['user_id']]['default_group'] = ($data['user_level'] == USER_LEVEL_SUPER_ADMIN ? self::$locale['MEMB_016'] : self::$locale['MEMB_015']);
 
                         $user_groups = explode(".", $data['user_groups']);
