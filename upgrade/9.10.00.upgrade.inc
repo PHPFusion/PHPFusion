@@ -52,6 +52,7 @@ $delete_settings_tbl = [
     'fontawesome',
     'serveroffset',
     'default_timezone',
+    'allow_php_exe'
 ];
 
 foreach ($delete_settings_tbl as $value) {

@@ -416,10 +416,6 @@ class CoreSettings {
                     'settings_value' => '0.5'
                 ],
                 [
-                    'settings_name'  => 'allow_php_exe',
-                    'settings_value' => 0
-                ],
-                [
                     'settings_name'  => 'multiple_logins',
                     'settings_value' => 0
                 ],

@@ -50,21 +50,20 @@ if (check_post('clear_cache')) {
 if (check_post('savesettings')) {
     // Save settings after validation
     $inputData = [
-        'captcha'               => sanitizer('captcha', '', 'captcha'),
-        'display_validation'    => post('display_validation') ? 1 : 0,
-        'privacy_policy'        => sanitizer($is_multilang ? ['privacy_policy'] : 'privacy_policy', '', 'privacy_policy', $is_multilang),
-        'allow_php_exe'         => post('allow_php_exe') ? 1 : 0,
-        'flood_interval'        => sanitizer('flood_interval', 15, 'flood_interval'),
-        'flood_autoban'         => post('flood_autoban') ? 1 : 0,
-        'maintenance_level'     => sanitizer('maintenance_level', -102, 'maintenance_level'),
-        'maintenance'           => post('maintenance') ? 1 : 0,
-        'maintenance_message'   => sanitizer('maintenance_message', '', 'maintenance_message'),
-        'bad_words_enabled'     => post('bad_words_enabled') ? 1 : 0,
-        'bad_words'             => stripinput(post('bad_words')),
-        'bad_word_replace'      => sanitizer('bad_word_replace', '', 'bad_word_replace'),
-        'database_sessions'     => sanitizer('database_sessions', 0, 'database_sessions'),
-        'form_tokens'           => sanitizer('form_tokens', '', 'form_tokens'),
-        'mime_check'            => post('mime_check') ? 1 : 0,
+        'captcha'             => sanitizer('captcha', '', 'captcha'),
+        'display_validation'  => post('display_validation') ? 1 : 0,
+        'privacy_policy'      => sanitizer($is_multilang ? ['privacy_policy'] : 'privacy_policy', '', 'privacy_policy', $is_multilang),
+        'flood_interval'      => sanitizer('flood_interval', 15, 'flood_interval'),
+        'flood_autoban'       => post('flood_autoban') ? 1 : 0,
+        'maintenance_level'   => sanitizer('maintenance_level', -102, 'maintenance_level'),
+        'maintenance'         => post('maintenance') ? 1 : 0,
+        'maintenance_message' => sanitizer('maintenance_message', '', 'maintenance_message'),
+        'bad_words_enabled'   => post('bad_words_enabled') ? 1 : 0,
+        'bad_words'           => stripinput(post('bad_words')),
+        'bad_word_replace'    => sanitizer('bad_word_replace', '', 'bad_word_replace'),
+        'database_sessions'   => sanitizer('database_sessions', 0, 'database_sessions'),
+        'form_tokens'         => sanitizer('form_tokens', '', 'form_tokens'),
+        'mime_check'          => post('mime_check') ? 1 : 0,
     ];
 
     // Validate extra fields
@@ -266,12 +265,6 @@ echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']
 echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
     'placeholder' => $locale['652'],
     'autosize'    => TRUE
-]);
-closeside();
-openside("");
-echo "<div class='alert alert-danger'>".$locale['695']."</div>\n";
-echo form_checkbox('allow_php_exe', $locale['694'], $settings['allow_php_exe'], [
-    'toggle' => TRUE
 ]);
 closeside();
 echo "</div>\n</div>\n";
