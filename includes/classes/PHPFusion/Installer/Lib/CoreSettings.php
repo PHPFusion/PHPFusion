@@ -289,7 +289,7 @@ class CoreSettings {
                 ],
                 [
                     'settings_name'  => 'userthemes',
-                    'settings_value' => 1
+                    'settings_value' => 0
                 ],
                 [
                     'settings_name'  => 'flood_interval',
