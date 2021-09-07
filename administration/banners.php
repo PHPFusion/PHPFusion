@@ -39,20 +39,12 @@ if (check_post('save_banners') || check_post('preview_banners')) {
         $modal = openmodal('banners_preview', $locale['855']);
         $modal .= fusion_get_function('openside', $locale['851']);
         if (!empty($settings_main['sitebanner1'])) {
-            if ($settings['allow_php_exe']) {
-                $modal .= eval("?>".stripslashes($settings_main['sitebanner1'])."<?php ");
-            } else {
-                $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
-            }
+            $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
         }
         $modal .= fusion_get_function('closeside', '');
         $modal .= fusion_get_function('openside', $locale['852']);
         if (!empty($settings_main['sitebanner2'])) {
-            if ($settings['allow_php_exe']) {
-                $modal .= eval("?>".stripslashes($settings_main['sitebanner2'])."<?php ");
-            } else {
-                $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
-            }
+            $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
         }
         $modal .= fusion_get_function('closeside', '');
         $modal .= closemodal();
