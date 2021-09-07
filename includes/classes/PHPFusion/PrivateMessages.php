@@ -394,11 +394,11 @@ class PrivateMessages {
                     if ($url['query']) {
                         parse_str($url['query'], $fusion_query); // this is original.
                     }
-                    $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $sql_param[':limit'], $this->info['max_rows'], 3, BASEDIR."messages.php?folder=".$_GET['folder']."&amp;");
+                    $this->info['pagenav'] = makepagenav($sql_param[':rowstart'], $sql_param[':limit'], $this->info['max_rows'], 3, BASEDIR."messages.php?folder=".$_GET['folder']."&");
                 }
                 while ($data = dbarray($result)) {
-                    if (!$data["user_id"]) {
-                        $data["user_name"] = fusion_get_settings("siteusername");
+                    if (!$data['user_id']) {
+                        $data['user_name'] = $this->locale['632'];
                     }
 
                     $data['contact_user'] = [
@@ -409,7 +409,7 @@ class PrivateMessages {
                         'user_level'  => $data['user_level']
                     ];
                     $data['message'] = [
-                        'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
+                        'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&msg_read=".$data['message_id'],
                         'name'           => $data['message_subject'],
                         'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
                         'message_text'   => parse_text($data['message_message'], [
@@ -465,7 +465,7 @@ class PrivateMessages {
             ];
 
             $data['message'] = [
-                'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&amp;msg_read=".$data['message_id'],
+                'link'           => BASEDIR."messages.php?folder=".$_GET['folder']."&msg_read=".$data['message_id'],
                 'name'           => $data['message_subject'],
                 'message_header' => "<strong>".$this->locale['462'].":</strong> ".$data['message_subject'],
                 'message_text'   => parse_text($data['message_message'], [
