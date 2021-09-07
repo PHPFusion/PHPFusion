@@ -614,11 +614,15 @@ class Update extends Installer\Infusions {
 
                 $result = ['result' => $text];
             } else {
-                $result = ['result' => $this->locale['U_006']];
+                if (check_get('force') && get('force') == 'true') {
+                    $result = ['result' => $this->locale['U_006']];
+                }
             }
 
-            header('Content-Type: application/json');
-            echo json_encode($result);
+            if (!empty($result)) {
+                header('Content-Type: application/json');
+                echo json_encode($result);
+            }
         }
     }
 
