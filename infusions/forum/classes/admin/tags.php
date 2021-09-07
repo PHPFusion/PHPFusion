@@ -62,9 +62,7 @@ class ForumAdminTags extends ForumAdminInterface {
 
         switch ($_GET['ref']) {
             case "tag_form":
-                echo '<div class="m-t-10">';
                 echo $this->displayTagForm();
-                echo '</div>';
                 break;
             default:
                 echo $this->displayTagList();
@@ -214,11 +212,11 @@ class ForumAdminTags extends ForumAdminInterface {
         $result = dbquery($tag_list_query);
 
         if (dbrows($result) > 0) {
-            $html = "<div class='row m-t-20 equal-height'>\n";
+            $html = "<div class='row equal-height'>\n";
 
             while ($data = dbarray($result)) {
 
-                $html .= "<div class='col-xs-12 col-sm-3 m-t-20'>\n";
+                $html .= "<div class='col-xs-12 col-sm-3'>\n";
                 $html .= "<div class='list-group-item tag-container'>\n";
                 $html .= "<div class='pull-left m-r-10'>\n";
                 $html .= '<span class="fa-stack"><i class="fa-stack-2x fa fa-square" style="color:'.$data['tag_color'].';"></i>';
