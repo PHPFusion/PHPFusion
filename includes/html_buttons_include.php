@@ -184,7 +184,7 @@ function display_html($formname, $textarea, $html = TRUE, $colors = FALSE, $imag
                         'options'     => $options,
                         'placeholder' => $locale['html_011'],
                         'allowclear'  => TRUE,
-                        'width'       => '200px',
+                        'inner_width' => '200px',
                         'class'       => 'display-inline-block m-b-0'
 
                     ]
