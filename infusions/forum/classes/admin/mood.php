@@ -245,7 +245,7 @@ class ForumAdminMood extends ForumAdminInterface {
         } ?>
 
         <?php else : ?>
-            <div class="well text-center m-t-10"><?php echo self::$locale['forum_114'] ?></div>
+            <div class="well text-center"><?php echo self::$locale['forum_114'] ?></div>
         <?php endif;
     }
 }

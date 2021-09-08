@@ -296,7 +296,7 @@ class ForumAdminRanks extends ForumAdminInterface {
 
         if (dbrows($result) > 0) {
 
-            $html = "<div class='table-responsive'><table class='table table-striped table-hover center m-t-20'>\n<thead>\n<tr>\n".
+            $html = "<div class='table-responsive'><table class='table table-striped table-hover center'>\n<thead>\n<tr>\n".
                 "<th class='col-xs-4'>".self::$locale['forum_rank_430']."</th>\n".
                 "<th>".self::$locale['forum_rank_431']."</th>\n".
                 "<th>".self::$locale['forum_rank_432']."</th>\n".
