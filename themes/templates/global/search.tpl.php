@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-if (!function_exists('display_search')) {
+if (!function_exists('render_search')) {
     /**
      * Template for search form
      *
