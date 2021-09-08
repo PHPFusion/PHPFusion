@@ -95,14 +95,14 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
             $callback_data = dbarray($result);
             // delete all the relevant files
             $delCriteria = unserialize(stripslashes($callback_data['submit_criteria']));
-            if (!empty($delCriteria['download_image']) && file_exists(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image'])) {
-                unlink(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image']);
+            if (!empty($delCriteria['download_image']) && file_exists(INFUSIONS."downloads/submissions/images/".$delCriteria['download_image'])) {
+                unlink(INFUSIONS."downloads/submissions/images/".$delCriteria['download_image']);
             }
-            if (!empty($delCriteria['download_image_thumb']) && file_exists(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image_thumb'])) {
-                unlink(INFUSIONS."downloads/submisisons/images/".$delCriteria['download_image_thumb']);
+            if (!empty($delCriteria['download_image_thumb']) && file_exists(INFUSIONS."downloads/submissions/images/".$delCriteria['download_image_thumb'])) {
+                unlink(INFUSIONS."downloads/submissions/images/".$delCriteria['download_image_thumb']);
             }
-            if (!empty($delCriteria['download_file']) && file_exists(INFUSIONS."downloads/submisisons/".$delCriteria['download_file'])) {
-                unlink(INFUSIONS."downloads/submisisons/".$delCriteria['download_file']);
+            if (!empty($delCriteria['download_file']) && file_exists(INFUSIONS."downloads/submissions/".$delCriteria['download_file'])) {
+                unlink(INFUSIONS."downloads/submissions/".$delCriteria['download_file']);
             }
             $result = dbquery("DELETE FROM ".DB_SUBMISSIONS." WHERE submit_id='".intval($callback_data['submit_id'])."'");
             addnotice("success", $locale['download_0062']);
@@ -180,9 +180,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 "form_name"  => "publish_download"
             ]);
             closeside();
-            echo "<div class='well'>\n";
-            echo $locale['download_0204'];
-            echo "</div>\n";
+
             echo form_textarea('download_description', $locale['download_0202a'], $callback_data['download_description'], [
                 "type"          => fusion_get_settings("tinymce_enabled") ? "tinymce" : "html",
                 "tinymce"       => fusion_get_settings("tinymce_enabled") && iADMIN ? "advanced" : "simple",
@@ -203,7 +201,7 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                 echo "</div>\n";
             }
 
-            if (!empty($callback_data['download_file'])) {
+            if (!empty($callback_data['download_file']) && file_exists(DOWNLOADS."submissions/".$callback_data['download_file'])) {
                 echo "<p><strong>".$locale['download_0214']."</strong></p>\n";
                 echo "<a class='btn btn-default' href='".DOWNLOADS."submissions/".$callback_data['download_file']."'>
             ".$locale['download_0226']."</a>\n";
