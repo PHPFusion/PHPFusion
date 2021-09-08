@@ -508,7 +508,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
     $link_mode = !empty($link) ? $link : 0;
     $html = "<div class='nav-wrapper $class'>\n";
-    $html .= "<ul class='m-t-5 nav' ".($id ? "id='".$id."'" : "")." >";
+    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
     if (!empty($tab_title['title'])) {
         foreach ($tab_title['title'] as $arr => $v) {
             $v_title = str_replace("-", " ", $v);
