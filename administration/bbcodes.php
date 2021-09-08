@@ -69,7 +69,7 @@ function bbcode_form() {
         }
     }
 
-    echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&section=bbcode_list");
+    echo openform('input_form', 'post', FUSION_SELF.fusion_get_aidlink()."&section=bbcode_form");
     echo form_textarea('test_message', $locale['BBCA_418a'], $test_message, [
         'required'   => TRUE,
         'error_text' => $locale['BBCA_418b'],
