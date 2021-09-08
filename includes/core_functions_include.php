@@ -674,7 +674,7 @@ function displaysmileys($textarea, $form = "inputform") {
 function fusion_parse_user($user_name, $tooltip = '') {
     return preg_replace_callback("/\@([A-Za-z0-9\-_!\.]+)/", function ($user_name) use ($tooltip) {
         $user = $user_name[1];
-        $result = dbquery("SELECT user_id, user_name, user_level, user_status, user_avatar
+        $result = dbquery("SELECT *
             FROM ".DB_USERS."
             WHERE (user_name=:user_00 OR user_name=:user_01 OR user_name=:user_02 OR user_name=:user_03) AND user_status='0'
             LIMIT 1
