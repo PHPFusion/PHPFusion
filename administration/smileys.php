@@ -25,7 +25,7 @@ add_breadcrumb(['link' => ADMIN.'smileys.php'.fusion_get_aidlink(), "title" => $
 
 opentable($locale['SMLY_403']);
 $allowed_sections = ["smiley_form", "smiley_list"];
-$sections = in_array(get('section'), $allowed_sections) ? get('section') : 'smiley_list';
+$sections = in_array(get('section'), $allowed_sections) ? get('section') : $allowed_sections[0];
 $edit = (check_get('action') && get('action') == 'edit' && check_get('smiley_id'));
 
 $tabs['title'][] = $locale['SMLY_400'];
@@ -35,7 +35,7 @@ $tabs['title'][] = $edit ? $locale['SMLY_402'] : $locale['SMLY_401'];
 $tabs['id'][] = 'smiley_form';
 $tabs['icon'][] = $edit ? "fa fa-pencil m-r-10" : 'fa fa-plus-square m-r-10';
 
-echo opentab($tabs, $sections, 'smiley_list', TRUE);
+echo opentab($tabs, $sections, 'smiley_list', TRUE, 'nav-tabs', "section", ['action', 'smiley_id', 'disable']);
 switch ($sections) {
     case "smiley_form":
         add_smiley_form();
