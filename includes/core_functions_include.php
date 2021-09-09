@@ -1487,9 +1487,9 @@ function getgroupdata($group_id) {
 function blacklist($field) {
     $userdata = fusion_get_userdata('user_id');
     $blacklist = [];
-    if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
+    if (column_exists('users', 'user_blacklist')) {
         if (!empty($userdata['user_id'])) {
-            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $userdata['user_id']));
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     if ($data['user_level'] > USER_LEVEL_ADMIN) {
@@ -1520,7 +1520,7 @@ function blacklist($field) {
  * @return bool True if the user is blacklisted.
  */
 function user_blacklisted($user_id) {
-    return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', fusion_get_userdata('user_blacklist')));
+    return column_exists('users', 'user_blacklist') && in_array($user_id, explode(',', fusion_get_userdata('user_blacklist')));
 }
 
 /**

@@ -32,6 +32,7 @@ foreach ($update_settings_tbl as $key => $value) {
  * Delete all unused files
  */
 $deleted_files = [
+    INCLUDES.'user_fields/user_blacklist.ajax.php'
 ];
 
 foreach ($deleted_files as $file) {
