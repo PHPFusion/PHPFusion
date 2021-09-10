@@ -466,7 +466,6 @@ function form_select($input_name, $label, $input_value, $options = []) {
                 $tag_js = ($tag_value) ? "tags: ".html_entity_decode($tag_value)."" : "tags: []";
             }
 
-
             if ($options['required']) {
                 add_to_jquery("
                 if ($('#".$options['input_id']."').select2('val')) { $('dummy-".$options['input_id']."').val($('#".$options['input_id']."').select2('val'));} else { $('dummy-".$options['input_id']."').val('');}
@@ -605,7 +604,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 
     if (!empty($input_value)) {
         // json mode.
-        $encoded = $options['callback_function'] && is_callable($options['callback_function']) ? $options['callback_function']($input_value) : user_search($input_value);
+        $encoded = $options['callback_function'] && is_callable($options['callback_function']) ? $options['callback_function']($input_value) : user_search($input_value, $options['delimiter']);
     } else {
         $encoded = json_encode([]);
     }
@@ -630,18 +629,18 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
         $('#".$options['input_id']."').select2({
         $length
         multiple: true,
-        maximumSelectionSize: ".$options['max_select'].",
+        ".($options['max_select'] !== FALSE ? "maximumSelectionSize: ".$options['max_select']."," : '')."
         placeholder: '".$options['placeholder']."',
         ajax: {
-        url: '$path',
-        dataType: 'json',
-        data: function (term, page) {
+            url: '$path',
+            dataType: 'json',
+            data: function (term, page) {
                 return {q: term};
-              },
-              results: function (data, page) {
+            },
+            results: function (data, page) {
                 //console.log(page);
                 return {results: data};
-              }
+            }
         },
         formatSelection: avatar,
         escapeMarkup: function(m) { return m; },
@@ -656,32 +655,31 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
 }
 
 /* Returns Json Encoded Object used in form_select_user */
-function user_search($user_id) {
-    $encoded = json_encode([]);
-    if (isnum($user_id)) {
-        $user_id = stripinput($user_id);
-        $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user_id]);
-        if (dbrows($result) > 0) {
-            while ($udata = dbarray($result)) {
-                $user_id = $udata['user_id'];
-                $user_avatar = !empty($udata['user_avatar']) ? $udata['user_avatar'] : "no-avatar.jpg";
-                $user_name = $udata['user_name'];
-                $user_level = getuserlevel($udata['user_level']);
-                $user_opts[] = [
-                    'id'     => $user_id,
-                    'text'   => $user_name,
-                    'avatar' => $user_avatar,
-                    "level"  => $user_level
-                ];
+function user_search($users, $delimiter) {
+    $user_opts = [];
+
+    $users = explode($delimiter, $users);
+
+    if (!empty($users)) {
+        foreach ($users as $user) {
+            $result = dbquery("SELECT user_id, user_name, user_avatar, user_level FROM ".DB_USERS." WHERE user_status=:status AND user_id=:id", [':status' => 0, ':id' => $user]);
+            if (dbrows($result) > 0) {
+                while ($udata = dbarray($result)) {
+                    $user_avatar = !empty($udata['user_avatar']) ? $udata['user_avatar'] : "no-avatar.jpg";
+                    $user_name = $udata['user_name'];
+                    $user_level = getuserlevel($udata['user_level']);
+                    $user_opts[] = [
+                        'id'     => $udata['user_id'],
+                        'text'   => $user_name,
+                        'avatar' => $user_avatar,
+                        "level"  => $user_level
+                    ];
+                }
             }
-            if (!isset($user_opts)) {
-                $user_opts = [];
-            }
-            $encoded = json_encode($user_opts);
         }
     }
 
-    return $encoded;
+    return json_encode($user_opts);
 }
 
 /**
