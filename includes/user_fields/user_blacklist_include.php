@@ -23,7 +23,8 @@ if ($profile_method == "input") {
             'inline'     => TRUE,
             'error_text' => $locale['uf_blacklist_error'],
             'multiple'   => TRUE,
-            'ext_tip'    => $locale['uf_blacklist_message']
+            'ext_tip'    => $locale['uf_blacklist_message'],
+            'max_select' => FALSE
         ] + $options;
     $user_fields = form_user_select('user_blacklist', $locale['uf_blacklist'], $field_value, $options);
 }
