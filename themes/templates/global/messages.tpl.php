@@ -54,7 +54,7 @@ if (!function_exists('display_inbox')) {
             if (!isset($_GET['msg_send']) && (!empty($info['actions_form']) || isset($_GET['msg_read']))) {
                 echo '<div class="m-b-20">';
                     if (isset($_GET['msg_read'])) {
-                        echo '<a class="btn btn-default m-r-20" href="'.$info['button']['back']['link'].'" title="'.$info['button']['back']['title'].'"><i class="fa fa-long-arrow-alt-left"></i></a>';
+                        echo '<a class="btn btn-sm btn-default m-r-20" href="'.$info['button']['back']['link'].'" title="'.$info['button']['back']['title'].'"><i class="fa fa-long-arrow-alt-left"></i></a>';
                     }
 
                     echo '<div class="display-inline-block">';

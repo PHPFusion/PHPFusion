@@ -533,9 +533,9 @@ class PrivateMessages {
         if (isset($_GET['msg_read'])) {
             $this->info['actions_form'] = [
                 'openform'  => openform('actionform', 'post', FORM_REQUEST).form_hidden('selectedPM', '', (int)$_GET['msg_read']),
-                'unlockbtn' => form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['icon' => 'fa fa-unlock']),
-                'lockbtn'   => form_button('archive_pm', $this->locale['412'], 'archive_pm', ['icon' => 'fa fa-lock']),
-                'deletebtn' => form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger']),
+                'unlockbtn' => form_button('unarchive_pm', $this->locale['413'], 'unarchive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-unlock']),
+                'lockbtn'   => form_button('archive_pm', $this->locale['412'], 'archive_pm', ['class' => 'btn-sm btn-default', 'icon' => 'fa fa-lock']),
+                'deletebtn' => form_button('delete_pm', $this->locale['416'], 'delete_pm', ['icon' => 'fa fa-trash-o', 'class' => 'btn-danger btn-sm']),
                 'closeform' => closeform()
             ];
         } else {
