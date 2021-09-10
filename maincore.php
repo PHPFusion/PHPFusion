@@ -891,42 +891,65 @@ function censorwords($text) {
     return $text;
 }
 
-if ($settings['mime_check'] == "1") {
-    // Checking file types of the uploaded file with known mime types list to prevent uploading unwanted files
+if ($settings['mime_check'] == 1) {
     if (isset($_FILES) && count($_FILES)) {
         require_once INCLUDES."mimetypes_include.php";
         $mime_types = (array)mimeTypes();
         foreach ($_FILES as $each) {
-            if (isset($each['name']) && strlen($each['tmp_name'])) {
-                $file_info = pathinfo($each['name']);
-                $extension = $file_info['extension'];
-                if (array_key_exists($extension, $mime_types)) {
-                    //An extension may have more than one mime type
-                    if (is_array($mime_types[$extension])) {
-                        //We should check each extension one by one
-                        $valid_mimetype = FALSE;
-                        foreach ($mime_types[$extension] as $each_mimetype) {
-                            //If we have a match, we set the value to true and break the loop
-                            if ($each_mimetype == $each['type']) {
-                                $valid_mimetype = TRUE;
-                                break;
+            if (isset($each['name']) && !empty($each['name']) && !empty($each['tmp_name'])) {
+                if (is_array($each['name'])) {
+                    for ($i = 0; $i < count($each['name']); $i++) {
+                        $file_info = pathinfo($each['name'][$i]);
+                        if (!empty($file_info['extension'])) {
+                            $extension = strtolower($file_info['extension']);
+                            if (isset($mime_types[$extension])) {
+                                if (is_array($mime_types[$extension])) {
+                                    $valid_mimetype = FALSE;
+                                    foreach ($mime_types[$extension] as $each_mimetype) {
+                                        if ($each_mimetype == $each['type'][$i]) {
+                                            $valid_mimetype = TRUE;
+                                            break;
+                                        }
+                                    }
+                                    if (!$valid_mimetype) {
+                                        die('Prevented an unwanted file upload attempt - 1! Unknown MIME Type '.$each['type'][$i]);
+                                    }
+                                    unset($valid_mimetype);
+                                } else {
+                                    if ($mime_types[$extension] !== $each['type'][$i]) {
+                                        die('Prevented an unwanted file upload attempt - 2! Unknown MIME Type '.$each['type'][$i]);
+                                    }
+                                }
                             }
-                        }
-
-                        if (!$valid_mimetype) {
-                            die('Prevented an unwanted file upload attempt!');
-                        }
-                        unset($valid_mimetype);
-                    } else {
-                        if ($mime_types[$extension] != $each['type']) {
-                            die('Prevented an unwanted file upload attempt!');
+                            unset($file_info, $extension);
                         }
                     }
-                } /*else { //Let's disable this for now
-                //almost impossible with provided array, but we throw an error anyways
-                die('Unknown file type');
-            }*/
-                unset($file_info, $extension);
+                } else {
+                    $file_info = pathinfo($each['name']);
+                    if (!empty($file_info['extension'])) {
+                        $extension = strtolower($file_info['extension']);
+                        if (isset($mime_types[$extension])) {
+                            if (is_array($mime_types[$extension])) {
+                                $valid_mimetype = FALSE;
+                                foreach ($mime_types[$extension] as $each_mimetype) {
+                                    if ($each_mimetype == $each['type']) {
+                                        $valid_mimetype = TRUE;
+                                        break;
+                                    }
+                                }
+                                if (!$valid_mimetype) {
+                                    die('Prevented an unwanted file upload attempt - 3! Unknown MIME Type '.$each['type']);
+                                }
+                                unset($valid_mimetype);
+                            } else {
+                                if ($mime_types[$extension] !== $each['type']) {
+                                    die('Prevented an unwanted file upload attempt - 4! Unknown MIME Type '.$each['type']);
+                                }
+                            }
+                        }
+                        unset($file_info, $extension);
+                    }
+                }
             }
         }
         unset($mime_types);
