@@ -85,19 +85,21 @@ if (!function_exists('render_photo_album')) {
             echo $info['page_nav'];
         }
 
-        echo '<div class="row equal-height">';
-        foreach ($info['item'] as $data) {
-            echo '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 gallery-album-item">';
-                echo '<div class="panel panel-default">';
-                    echo $data['image'];
+        if (!empty($info['item'])) {
+            echo '<div class="row equal-height">';
+            foreach ($info['item'] as $data) {
+                echo '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 gallery-album-item">';
+                    echo '<div class="panel panel-default">';
+                        echo $data['image'];
 
-                    echo '<div class="panel-body text-center">';
-                        echo '<a href="'.$data['photo_link']['link'].'"><h4 class="m-t-0 m-b-5">'.$data['photo_title'].'</h4></a>';
+                        echo '<div class="panel-body text-center">';
+                            echo '<a href="'.$data['photo_link']['link'].'"><h4 class="m-t-0 m-b-5">'.$data['photo_title'].'</h4></a>';
+                        echo '</div>';
                     echo '</div>';
                 echo '</div>';
+            }
             echo '</div>';
         }
-        echo '</div>';
 
         if (isset($info['page_nav'])) {
             echo $info['page_nav'];
