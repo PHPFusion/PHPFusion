@@ -33,7 +33,7 @@ if (!function_exists('render_search')) {
         ".$info['search_button']."
         </div>
         <div class='row search'>
-        
+
         <div class='col-xs-12 col-sm-6'>
             <div class='well p-20'>
             <p><strong>".$locale['405']."</strong></p>
@@ -47,7 +47,7 @@ if (!function_exists('render_search')) {
             </table>
             </div>
         </div>
-        
+
         <div class='col-xs-12 col-sm-6'>
             <div class='well p-20'>
                 <div class='row'>
@@ -60,7 +60,7 @@ if (!function_exists('render_search')) {
                     </div>
                 </div>
             </div>
-            
+
             <div class='well p-20'>
             <div class='row'>
                 <div class='col-xs-12 col-sm-3'>".$locale['440']."</div>
@@ -71,7 +71,7 @@ if (!function_exists('render_search')) {
                 </div>
                 </div>
             </div>
-            
+
             <div class='well p-20'>
             <div class='row'>
                 <div class='col-xs-12 col-sm-3'>".$locale['460']."</div>

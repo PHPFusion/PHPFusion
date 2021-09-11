@@ -560,13 +560,13 @@ if (!function_exists('download_file')) {
  */
 function fusion_table($table_id, array $options = []) {
     $locale = fusion_get_locale();
-    
+
     $table_id = str_replace(["-", " "], "_", $table_id);
-    
+
     $js_event_function = "";
     $filters = "";
     $js_filter_function = "";
-    
+
     $default_options = [
         'remote_file'         => '',
         'page_length'         => 0, // result length 0 for default 10
@@ -600,9 +600,9 @@ function fusion_table($table_id, array $options = []) {
         // custom jsscript append
         'js_script'           => '',
     ];
-    
+
     $options += $default_options;
-    
+
     // Map for file inclusion
     $plugin_registers = [
         'BOOTSTRAP4' => [
@@ -632,42 +632,42 @@ function fusion_table($table_id, array $options = []) {
             ]
         ]
     ];
-    
+
     if ($options['page_length'] && isnum($options['page_length'])) {
         $options['datatable_config']['pageLength'] = (int)$options['page_length'];
     }
-    
+
     // Build configurations
     $config = "";
     if (!empty($options["order"])) {
         $config .= "'order' : [ ".json_encode($options["order"])." ],";
     }
-    
+
     if ($options['hide_search_input'] === TRUE) {
         $config .= "'dom': '<\"top\">rt<\"bottom\"><\"clear\">',";
     }
-    
+
     if ($options['row_reorder'] === TRUE) {
-        
+
         fusion_load_script(INCLUDES.'jquery/jquery-ui/jquery-ui.min.js');
         fusion_load_script(INCLUDES.'jquery/jquery-ui/jquery-ui.css', 'css');
-        
+
         $options['pagination'] = FALSE;
-        
+
         $config .= "
         'info':false,
         'aaSorting': [[1, 'asc']],
         ";
-        
+
         $options['js_script'] .= "
-        
+
         let fixHelper = function(e, ui) {
             ui.children().each(function() {
                 $(this).width($(this).width());
             });
             return ui;
         };
-        
+
          $('#".$table_id." tbody').sortable({
             helper: fixHelper,
             placeholder: 'state-highlight',
@@ -675,13 +675,13 @@ function fusion_table($table_id, array $options = []) {
             scroll:true,
             axis: 'y',
             update: function(event, ui) {
-            
+
                 let tableElem = $(this).children('tr');
                 let order_array = [];
                 tableElem.each(function () {
                     order_array.push($(this).data('id'));
                 });
-                
+
                 let formData = new FormData();
                 formData.append('fusion_token', '".fusion_get_token($table_id."_token", 10)."');
                 formData.append('form_id', '".$table_id."_token');
@@ -689,7 +689,7 @@ function fusion_table($table_id, array $options = []) {
                 $(this).find('.num').each(function (i) {
                     $(this).text(i + 1);
                 });
-                
+
                 fetch('".$options['row_reorder_url']."', {
                     method: 'POST',
                     mode: 'same-origin',
@@ -707,15 +707,15 @@ function fusion_table($table_id, array $options = []) {
                 }).catch(function (error) {
                     add_notice('danger', '".$options['row_reorder_failed']."');
                 });
-                
+
             }
         }).disableSelection();";
-        
+
         //        add_to_jquery("
         //
         //        // Sorting
         //        $('#test tbody > tr').sortable({
-        
+
         //            update: function (e, ui) {
         //
         //
@@ -724,12 +724,12 @@ function fusion_table($table_id, array $options = []) {
         //");
         ////alert(locale.error_preview + '\n' + locale.error_preview_text);
     }
-    
+
     if ($options['pagination'] === FALSE) {
         $config .= "'paging' : false,";
     }
-    
-    
+
+
     $config .= "'language': {
         'processing': '".$locale['processing_locale']."',
         'lengthMenu': '".$locale['menu_locale']."',
@@ -744,7 +744,7 @@ function fusion_table($table_id, array $options = []) {
             'previous': '".$locale['previous']."',
         },
     },";
-    
+
     // Javascript Init
     $js_config_script = "
     {
@@ -755,10 +755,10 @@ function fusion_table($table_id, array $options = []) {
         'autoWidth' : true,
         $config
     }";
-    
+
     // Ajax handling script
     if ($options['remote_file']) {
-    
+
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
@@ -786,7 +786,7 @@ function fusion_table($table_id, array $options = []) {
                 addnotice("danger", "Table columns could not be loaded automatically.");
             }
         }
-    
+
         $js_config_script = "
         {
             'responsive' :".($options["responsive"] ? "true" : "false").",
@@ -804,10 +804,10 @@ function fusion_table($table_id, array $options = []) {
             $config
             'columns' : ".json_encode($options['columns'])."
         }";
-    
+
         $fields_doms = [];
         if (!empty($options["ajax_filters"])) {
-    
+
             foreach ($options["ajax_filters"] as $field_id) {
                 $fields_doms[] = "#".$field_id;
                 $filters .= "data.".$field_id."= $('#".$field_id."').val();";
@@ -817,10 +817,10 @@ function fusion_table($table_id, array $options = []) {
             ".$table_id."Table.draw();
             });";
         }
-    
+
         $js_config_script = str_replace("<data_filters>", $js_filter_function, $js_config_script);
     }
-    
+
     // Enable column resizing
     if ($options['col_resize']) {
         $_plugin_folder = INCLUDES.'jquery/datatables/extensions/ColResize/';
@@ -830,9 +830,9 @@ function fusion_table($table_id, array $options = []) {
                 'js'  => [$_plugin_folder.'js/datatables.colresize.min.js']
             ]
         ];
-    
+
         $plugin_registers = array_merge_recursive($files, $plugin_registers);
-    
+
         $options['js_script'] .= 'new $.fn.dataTable.ColResize('.$table_id.'Table, {
             isEnabled: true,
             hoverClass: \'dt-colresizable-hover\',
@@ -845,7 +845,7 @@ function fusion_table($table_id, array $options = []) {
             getMinWidthOf: function($thNode) {}
         });';
     }
-    
+
     // Enable column reordering
     if ($options['col_reorder']) {
         $_plugin_folder = INCLUDES.'jquery/datatables/extensions/ColReorder/';
@@ -868,7 +868,7 @@ function fusion_table($table_id, array $options = []) {
         $plugin_registers = array_merge_recursive($plugin_registers, $files);
         $options['js_script'] .= 'new $.fn.dataTable.ColReorder('.$table_id.'Table, {} );';
     }
-    
+
     // Enable responsive design
     if ($options['responsive']) {
         $_plugin_folder = INCLUDES.'jquery/datatables/extensions/Responsive/';
@@ -886,12 +886,12 @@ function fusion_table($table_id, array $options = []) {
                 'js'  => [$_plugin_folder.'js/dataTables.responsive.min.js', $_plugin_folder.'js/dataTables.responsive.min.js'],
             ],
         ];
-    
+
         $plugin_registers = array_merge_recursive($plugin_registers, $files);
-    
+
         $options['js_script'] .= 'new $.fn.dataTable.Responsive('.$table_id.'Table);';
     }
-    
+
     // Fixed header
     if ($options['fixed_header']) {
         $_plugin_folder = INCLUDES.'jquery/datatables/extensions/FixedHeader/';
@@ -912,11 +912,11 @@ function fusion_table($table_id, array $options = []) {
         $plugin_registers = array_merge_recursive($plugin_registers, $files);
         $options['js_script'] .= 'new $.fn.dataTable.FixedHeader('.$table_id.'Table);';
     }
-    
+
     // Load file into cache and auto include them
-    
+
     if ($template = fusion_theme_framework()) {
-        
+
         if (isset($plugin_registers[$template])) {
             if (isset($plugin_registers[$template]['css'])) {
                 foreach ($plugin_registers[$template]['css'] as $css_file) {
@@ -924,7 +924,7 @@ function fusion_table($table_id, array $options = []) {
                 }
             }
             if (isset($plugin_registers[$template]['js'])) {
-    
+
                 foreach ($plugin_registers[$template]['js'] as $js_file) {
                     fusion_load_script($js_file);
                 }
