@@ -32,4 +32,4 @@ $locale['BBCA_445'] = "BB Code failed to be updated";
 
 $locale['BBCA_500'] = "Add Separator";
 $locale['BBCA_501'] = "Separator";
-$locale['BBCA_502'] = "Separator for grouping BBcode nuttons";
+$locale['BBCA_502'] = "Separator for grouping BBcode buttons";
