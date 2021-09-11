@@ -27,3 +27,5 @@ $locale['BBCA_430'] = "BB Code has been moved Up.";
 $locale['BBCA_431'] = "BB Code has been moved Down.";
 $locale['BBCA_432'] = "BB Code has been Enabled.";
 $locale['BBCA_433'] = "BB Code has been Disabled.";
+$locale['BBCA_444'] = "BB Code has been updated";
+$locale['BBCA_445'] = "BB Code failed to be updated";
