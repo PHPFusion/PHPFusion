@@ -26,6 +26,7 @@ if (iADMIN) {
         'update-checker'      => 'update/update_checker.php',
         'update-core'         => 'update/update_core.php',
         'available-languages' => 'update/available_languages.php',
+        'bbcodes-order'       => 'bbcodes-order.php',
     ];
 
     if ($api = get('api')) {
