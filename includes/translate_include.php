@@ -16,6 +16,39 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Locale;
+
+/**
+ * Get locales.
+ *
+ * @param string       $key          The key of one locale
+ * @param array|string $include_file The full path of the file which to be included.
+ *
+ * @return string|array Associative array of locales or one locale by key.
+ */
+function fusion_get_locale($key = NULL, $include_file = '') {
+    $locale = Locale::getInstance();
+    if ($include_file) {
+        $locale::setLocale($include_file);
+    }
+
+    return $locale->getLocale($key);
+}
+
+/**
+ * Get the locale file name for infusions
+ *
+ * @param string $locale_file
+ * @param string $locale_folder
+ * @param bool   $localeset_folder
+ * @param string $default_lang
+ *
+ * @return string
+ */
+function fusion_get_inf_locale_path($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English') {
+    return Locale::getInstance()->getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder, $default_lang);
+}
+
 /**
  * Returns a grammatical number word.
  *
@@ -26,7 +59,7 @@
  * @return string
  */
 function format_word($count, $words, $options = []) {
-    return PHPFusion\Locale::formatWord($count, $words, $options);
+    return Locale::formatWord($count, $words, $options);
 }
 
 /**
@@ -37,7 +70,7 @@ function format_word($count, $words, $options = []) {
  * @return array|string
  */
 function translate_lang_names($language) {
-    return PHPFusion\Locale::translateLangNames($language);
+    return Locale::translateLangNames($language);
 }
 
 /**
@@ -48,7 +81,7 @@ function translate_lang_names($language) {
  * @return string
  */
 function translate_country_names($country) {
-    return PHPFusion\Locale::translateCountryNames($country);
+    return Locale::translateCountryNames($country);
 }
 
 /**

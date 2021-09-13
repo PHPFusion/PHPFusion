@@ -968,7 +968,7 @@ function format_code($code) {
  *
  * @return string
  */
-function format_num($value = 0, $decimals = NULL, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+function format_num($value, $decimals = NULL, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
     $array = [
         13 => $acryonym ? "t" : "trillion",
         10 => $acryonym ? "b" : "billion",
@@ -1190,7 +1190,7 @@ function getuserlevel($userlevel) {
 }
 
 /**
- *Get a user status by the numeric code of status.
+ * Get a user status by the numeric code of status.
  *
  * @param int $userstatus Status code 0 - 8.
  *
@@ -1255,7 +1255,7 @@ function pageaccess($rights, $debug = FALSE) {
 }
 
 /**
- * Check if user is assigned to the specified user group.
+ * Check if user is assigned to the specified user group(s).
  *
  * @param int    $group The group number you want to check for the user.
  * @param string $delim Delimiter.
@@ -1295,9 +1295,9 @@ function checkgroup($group, $delim = ',') {
 }
 
 /**
- * Check if user is assigned to the specified user group and has the required user level.
+ * Check if user is assigned to the specified user group(s) and has the required user level.
  *
- * @param int    $group       The group number you want to check for the user.
+ * @param int    $group       The group number(s) you want to check for the user.
  * @param int    $user_level  User level.
  * @param string $user_groups Assigned groups to the user.
  * @param string $delim       Delimiter.
@@ -1400,7 +1400,7 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
  *
  * @param array $remove Array of groups you want to exclude from output.
  *
- * @return array  Array of all access levels and user groups.
+ * @return array Array of all access levels and user groups.
  */
 function fusion_get_groups($remove = []) {
     $visibility_opts = [];
@@ -1461,7 +1461,7 @@ function groupaccess($field, $delim = ',') {
 }
 
 /**
- * Get the data of the access level or user group
+ * Get the data of the access level or user group.
  *
  * @param int $group_id The ID of the group.
  *
@@ -1683,9 +1683,9 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 /**
  * Rowstart count.
  *
- * @param int $total
- * @param int $count
- * @param int $range
+ * @param int $count The number of entries displayed on one page.
+ * @param int $total The total entries which should be displayed.
+ * @param int $range The number of page buttons displayed and the range of them.
  *
  * @return float
  */
@@ -1948,37 +1948,6 @@ function fusion_get_settings($key = NULL) {
 }
 
 /**
- * Get locales.
- *
- * @param string       $key          The key of one locale
- * @param array|string $include_file The full path of the file which to be included.
- *
- * @return string|array Associative array of locales or one locale by key.
- */
-function fusion_get_locale($key = NULL, $include_file = '') {
-    $locale = \PHPFusion\Locale::getInstance();
-    if ($include_file) {
-        $locale::setLocale($include_file);
-    }
-
-    return $locale->getLocale($key);
-}
-
-/**
- * Get the locale file name for infusions
- *
- * @param string $locale_file
- * @param string $locale_folder
- * @param bool   $localeset_folder
- * @param string $default_lang
- *
- * @return string
- */
-function fusion_get_inf_locale_path($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English') {
-    return \PHPFusion\Locale::getInstance()->getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder, $default_lang);
-}
-
-/**
  * Fetch username by ID.
  *
  * @param int $user_id User ID.
@@ -2179,7 +2148,7 @@ function fusion_get_enabled_languages() {
  *
  * @return array
  */
-function fusion_get_detected_language() {
+function fusion_get_detected_languages() {
     static $detected_languages = NULL;
     if ($detected_languages === NULL) {
         $all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
@@ -2332,7 +2301,7 @@ function fusion_rename($origin, $target) {
 /**
  * cURL method to get any contents for Apache that does not support SSL for remote paths.
  *
- * @param $url
+ * @param string $url
  *
  * @return bool|string
  */
@@ -2504,12 +2473,12 @@ function strleft($s1, $s2) {
 /**
  * Adds a whitespace if value is present.
  *
- * @param $value
+ * @param string $value
  *
  * @return string
  */
 function whitespace($value) {
-    if ($value) {
+    if (!empty($value)) {
         return " ".$value;
     }
     return "";
@@ -2559,9 +2528,9 @@ function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FA
 }
 
 /**
- * Turn on/off maintenance mode
+ * Turn on/off maintenance mode.
  *
- * @param bool $maintenance Turn On/Off
+ * @param bool $maintenance Turn On/Off.
  *
  * @return bool
  */
