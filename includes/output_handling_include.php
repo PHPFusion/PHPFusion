@@ -119,17 +119,17 @@ function handle_output($output) {
 /**
  * Add javascript source code to the output
  *
- * @param string $tag
+ * @param string $code
  */
-function add_to_jquery($tag = "") {
-    OutputHandler::addToJQuery($tag);
+function add_to_jquery($code = "") {
+    OutputHandler::addToJQuery($code);
 }
 
 /**
  * Add css code to the output
  *
- * @param string $tag
+ * @param string $css
  */
-function add_to_css($tag = "") {
-    OutputHandler::addToCss($tag);
+function add_to_css($css = "") {
+    OutputHandler::addToCss($css);
 }
