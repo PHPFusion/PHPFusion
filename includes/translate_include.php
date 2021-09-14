@@ -69,7 +69,7 @@ function format_word($count, $words, $options = []) {
  *
  * @return array|string
  */
-function translate_lang_names($language) {
+function translate_lang_names($language = NULL) {
     return Locale::translateLangNames($language);
 }
 
