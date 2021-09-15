@@ -71,15 +71,15 @@ function fusion_remove_hook($name, $function = '', $que = 10) {
  * @return mixed
  */
 function fusion_apply_hook($name) {
-    
+
     $function_args = func_get_args();
-    
+
     return call_user_func_array([
         Hooks::get_instance($name),
         'apply_hook'
     ],
         $function_args);
-    
+
     //return \PHPFusion\Hooks::get_instances($name)->apply_hook($name, isset($function_args[1]) ? $function_args[1] : NULL);
 }
 
