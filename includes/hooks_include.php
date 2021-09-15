@@ -43,8 +43,7 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
  * @return bool
  */
 function fusion_check_hook($name, $function) {
-    $hook = Hooks::get_instance($name)->get_hook($name, $function);
-    if (!empty($hook)) {
+    if ($hook = Hooks::get_instances($name)->get_hook($name, $function)) {
         return TRUE;
     }
     return FALSE;
@@ -71,15 +70,15 @@ function fusion_remove_hook($name, $function = '', $que = 10) {
  * @return mixed
  */
 function fusion_apply_hook($name) {
-
+    
     $function_args = func_get_args();
-
+    
     return call_user_func_array([
         Hooks::get_instance($name),
         'apply_hook'
     ],
         $function_args);
-
+    
     //return \PHPFusion\Hooks::get_instances($name)->apply_hook($name, isset($function_args[1]) ? $function_args[1] : NULL);
 }
 
