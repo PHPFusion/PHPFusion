@@ -25,7 +25,7 @@ add_breadcrumb(['link' => ADMIN.'smileys.php'.fusion_get_aidlink(), "title" => $
 
 opentable($locale['SMLY_403']);
 $allowed_sections = ["smiley_form", "smiley_list"];
-$sections = in_array(get('section'), $allowed_sections) ? get('section') : $allowed_sections[0];
+$sections = in_array(get('section'), $allowed_sections) ? get('section') : $allowed_sections[1];
 $edit = (check_get('action') && get('action') == 'edit' && check_get('smiley_id'));
 
 $tabs['title'][] = $locale['SMLY_400'];
