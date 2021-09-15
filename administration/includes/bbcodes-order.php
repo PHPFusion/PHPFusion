@@ -23,9 +23,9 @@ defined("IN_FUSION") || exit;
 function update_bbcodes_order() {
     require_once INCLUDES.'ajax_include.php';
     header_content_type('json');
-    
+
     if (iADMIN && checkrights("BB")) {
-        
+
         if (fusion_safe()) {
             if ($bbcodes_order = post("order")) {
                 $bbcodes_order = explode(",", $bbcodes_order);
@@ -34,7 +34,7 @@ function update_bbcodes_order() {
                     dbquery("UPDATE ".DB_BBCODES." SET bbcode_order=:order WHERE bbcode_id=:bbcodeid", [':order' => $order, ':bbcodeid' => $bbcode_id]);
                     $order++;
                 }
-                
+
                 echo json_encode(["status" => 200]);
             }
         } else {

@@ -38,7 +38,7 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
  * Checks if there is a hook by the $name and $function specified registered into the hook instance.
  *
  * @param string $name     The name of the hook, this is your identifier.
- * @param string $function The callback function to run when the filter runs.
+ * @param string $function It checks if function in that hook exists.
  *
  * @return bool
  */

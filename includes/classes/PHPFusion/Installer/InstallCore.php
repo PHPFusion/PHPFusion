@@ -153,7 +153,7 @@ class InstallCore extends Infusions {
             define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
             define("LOCALESET", LANGUAGE."/");
             self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
-            self::$locale_files = fusion_get_detected_language();
+            self::$locale_files = fusion_get_detected_languages();
 
             self::detectSystemUpgrade();
 
