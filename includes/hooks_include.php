@@ -19,7 +19,7 @@
 use PHPFusion\Hooks;
 
 /**
- * Add a hook.
+ * Add a hook
  *
  * @param string $name          The name of the hook, this is your identifier.
  * @param string $function      The callback function to run when the filter runs.
@@ -43,14 +43,15 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
  * @return bool
  */
 function fusion_check_hook($name, $function) {
-    if ($hook = Hooks::get_instances($name)->get_hook($name, $function)) {
+    $hook = Hooks::get_instance($name)->get_hook($name, $function);
+    if (!empty($hook)) {
         return TRUE;
     }
     return FALSE;
 }
 
 /**
- * Remove hook.
+ * Remove hook
  *
  * @param string $name     The name of the hook, this is your identifier.
  * @param string $function The callback function to run when the filter runs.
@@ -63,7 +64,7 @@ function fusion_remove_hook($name, $function = '', $que = 10) {
 }
 
 /**
- * Run the hooks without any output.
+ * Run the hooks without any output
  *
  * @param $name
  *
