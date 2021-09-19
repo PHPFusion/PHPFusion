@@ -55,7 +55,7 @@ class Shoutbox {
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
 
         // Just use this. You do not want "s_action" and "shoutbox_id"
-        $this->postLink = clean_request("", ["s_action", "shout_id"], FALSE);
+        $this->postLink = clean_request("", ["s_action", "shout_id"], TRUE);
 
         switch (get('s_action')) {
             case 'delete':
@@ -168,26 +168,26 @@ class Shoutbox {
             }
         }
 
-        if (isset($_POST[$shout_group_n]) or isset($_POST['shout_box'])) {
-            $shout_group = !empty($_POST['shout_box']) ? (isset($_POST['shout_hidden']) ? form_sanitizer($_POST['shout_hidden'], 0, "shout_hidden") : 0) : $shout_group;
+        if (isset($_POST[$shout_group_n]) or check_post('shout_box')) {
+            $shout_group = check_post('shout_box') ? (check_post('shout_hidden') ? sanitizer('shout_hidden', 0, "shout_hidden") : 0) : $shout_group;
 
             if (iGUEST && self::$sb_settings['guest_shouts']) {
                 // Process Captchas
                 $_CAPTCHA_IS_VALID = FALSE;
                 include INCLUDES."captchas/".fusion_get_settings('captcha')."/captcha_check.php";
-                $sb_name = form_sanitizer($_POST['shout_name'], '', 'shout_name');
+                $sb_name = sanitizer('shout_name', '', 'shout_name');
                 if (!$_CAPTCHA_IS_VALID) {
                     fusion_stop(self::$locale['SB_warning_validation_code']);
                     redirect(clean_request("section=shoutbox", ["", "aid"]));
                 }
             }
-
+            print_p($_POST);
             $this->data = [
-                'shout_id'       => form_sanitizer($_POST['shout_id'], 0, "shout_id"),
-                'shout_name'     => !empty($sb_name) ? $sb_name : fusion_get_userdata("user_id"),
-                'shout_message'  => form_sanitizer($_POST['shout_message'], '', 'shout_message'),
+                'shout_id'       => sanitizer('shout_id', 0, "shout_id"),
+                'shout_name'     => (!empty($sb_name) ? $sb_name : (check_post('shout_name') ? sanitizer('shout_name', '', 'shout_name') : fusion_get_userdata("user_id"))),
+                'shout_message'  => sanitizer('shout_message', '', 'shout_message'),
                 'shout_hidden'   => $shout_group,
-                'shout_language' => form_sanitizer($_POST['shout_language'], LANGUAGE, "shout_language")
+                'shout_language' => sanitizer(['shout_language'], LANGUAGE, "shout_language")
             ];
 
             if (empty($this->data['shout_id'])) {
@@ -198,6 +198,7 @@ class Shoutbox {
                     'shout_hidden'    => $shout_group
                 ];
             }
+            print_p($this->data['shout_id']);
 
             require_once INCLUDES."flood_include.php";
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
@@ -215,9 +216,9 @@ class Shoutbox {
 
         if (isset($_POST['sb_settings'])) {
             $inputArray = [
-                'visible_shouts' => form_sanitizer($_POST['visible_shouts'], 5, "visible_shouts"),
-                'guest_shouts'   => form_sanitizer($_POST['guest_shouts'], 0, "guest_shouts"),
-                'hidden_shouts'  => form_sanitizer($_POST['hidden_shouts'], 0, "hidden_shouts")
+                'visible_shouts' => sanitizer('visible_shouts', 5, "visible_shouts"),
+                'guest_shouts'   => sanitizer('guest_shouts', 0, "guest_shouts"),
+                'hidden_shouts'  => sanitizer('hidden_shouts', 0, "hidden_shouts")
             ];
 
             if (fusion_safe()) {
@@ -290,11 +291,12 @@ class Shoutbox {
         }
 
         $html = '';
-
+        print_p($this->data);
         if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             $html .= "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
             $html .= openform($form_name, 'post', $this->postLink);
+            $html .= form_hidden('shout_name', '', $this->data['shout_name']);
             $html .= form_hidden('shout_id', '', $this->data['shout_id']);
             $html .= form_hidden('shout_hidden', '', $this->data['shout_hidden']);
             $html .= form_textarea('shout_message', self::$locale['SB_message'], $this->data['shout_message'], [
