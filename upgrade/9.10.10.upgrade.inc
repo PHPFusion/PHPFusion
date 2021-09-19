@@ -28,6 +28,8 @@ foreach ($update_settings_tbl as $key => $value) {
     }
 }
 
+$inf_deldbrow[] = DB_PERMALINK_METHOD." WHERE pattern_target='home.php'";
+
 /**
  * Delete all unused files
  */

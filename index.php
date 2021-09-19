@@ -39,7 +39,11 @@ if ($settings['site_seo'] && !get('aid')) {
                     if ($filepath == 'index.php') {
                         redirect(BASEDIR.$settings['opening_page'], FALSE, FALSE, 301);
                     } else {
-                        require_once $filepath;
+                        if (file_exists($filepath)) {
+                            require_once $filepath;
+                        } else {
+                            redirect(BASEDIR.'index.php');
+                        }
                     }
                 } else {
                     if (server('REQUEST_URI') == $settings['site_path'].$settings['opening_page']
