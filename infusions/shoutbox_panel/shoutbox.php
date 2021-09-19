@@ -181,7 +181,6 @@ class Shoutbox {
                     redirect(clean_request("section=shoutbox", ["", "aid"]));
                 }
             }
-            print_p($_POST);
             $this->data = [
                 'shout_id'       => sanitizer('shout_id', 0, "shout_id"),
                 'shout_name'     => (!empty($sb_name) ? $sb_name : (check_post('shout_name') ? sanitizer('shout_name', '', 'shout_name') : fusion_get_userdata("user_id"))),
@@ -198,7 +197,6 @@ class Shoutbox {
                     'shout_hidden'    => $shout_group
                 ];
             }
-            print_p($this->data['shout_id']);
 
             require_once INCLUDES."flood_include.php";
             if (!flood_control("shout_datestamp", DB_SHOUTBOX, "shout_name='".$this->data['shout_name']."'")) {
@@ -291,7 +289,6 @@ class Shoutbox {
         }
 
         $html = '';
-        print_p($this->data);
         if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             $html .= "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
