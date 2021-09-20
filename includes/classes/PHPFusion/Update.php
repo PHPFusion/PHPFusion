@@ -328,10 +328,11 @@ class Update extends Installer\Infusions {
     /**
      * Copy files
      *
-     * @param $source
-     * @param $target
+     * @param string $source
+     * @param string $target
+     * @param array  $ignore
      */
-    private function copyFiles($source, $target) {
+    private function copyFiles($source, $target, $ignore = []) {
         $this->setMessage($this->locale['U_011']);
 
         $directoryIterator = new \RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS);
@@ -343,7 +344,9 @@ class Update extends Installer\Infusions {
                     mkdir($dir);
                 }
             } else {
-                copy($item, $target.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
+                if (!in_array($item->getFilename(), $ignore)) {
+                    copy($item, $target.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
+                }
             }
         }
     }
@@ -519,7 +522,7 @@ class Update extends Installer\Infusions {
             }
 
             if (is_dir($this->temp_dir.'files/')) {
-                $this->copyFiles($this->temp_dir.'files/', $this->install_dir);
+                $this->copyFiles($this->temp_dir.'files/', $this->install_dir, ['robots.txt']);
             }
 
             if (!unlink($update_zip_file)) {
