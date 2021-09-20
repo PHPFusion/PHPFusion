@@ -18,14 +18,19 @@
 defined('IN_FUSION') || exit;
 
 if (!function_exists("img_bbcode_callback")) {
-    function img_bbcode_callback($matches) {
-        if (substr($matches[3], -1, 1) != "/") {
-            $url = $matches[1].str_replace(["?", "&amp;", "&", "="], "", $matches[3]).$matches[4];
-            return "<a class='forum-img-wrapper' href='".$url."' target='_blabk'><img src='".$url."' alt='".$matches[3].$matches[4]."' style='border:0px' class='img-responsive forum-img' referrerpolicy='no-referrer'></a>";
+    function img_bbcode_callback($m) {
+        if (substr($m[5], -1, 1) != "/") {
+            $url = $m[3].str_replace(["?", "&amp;", "&", "="], "", $m[5]).$m[6];
+            $html = '<div class="forum-img-wrapper">';
+            $html .= '<img src="'.$url.'" alt="'.$m[5].$m[6].'" class="img-responsive forum-img" referrerpolicy="no-referrer">';
+            $html .= !empty($m['title']) ? '<span class="image-description">'.$m['title'].'</span>' : '';
+            $html .= '</div>';
+
+            return $html;
         } else {
-            return $matches[0];
+            return $m[0];
         }
     }
 }
 
-$text = preg_replace_callback("#\[img\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|svg|webp|JPG|JPEG|GIF|PNG|SVG|WEBP))\[/img\]#si", "img_bbcode_callback", $text);
+$text = preg_replace_callback("#\[img(=(?P<title>.*?))?\]((http|ftp|https|ftps)://|/)(.*?)(\.(jpg|jpeg|gif|png|svg|webp|JPG|JPEG|GIF|PNG|SVG|WEBP))\[/img\]#si", "img_bbcode_callback", $text);

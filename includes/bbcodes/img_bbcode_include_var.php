@@ -20,5 +20,5 @@ defined('IN_FUSION') || exit;
 $__BBCODE__[] = [
     "description" => $locale['bb_img_description'],
     "value"       => "img", "bbcode_start" => "[img]", "bbcode_end" => "[/img]",
-    "usage"       => "[img]".$locale['bb_img_usage']."[/img]"
+    "usage"       => "[img(=Text)]".$locale['bb_img_usage']."[/img]"
 ];
