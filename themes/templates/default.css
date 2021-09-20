@@ -887,6 +887,7 @@ table {
 /* Admin Panel Icon */
 .icon-wrapper img {
     max-width: 48px;
+    max-height: 48px;
     margin: 15px auto 5px;
 }
 
