@@ -729,16 +729,7 @@ function fusion_table($table_id, array $options = []) {
         $config .= "'paging' : false,";
     }
     
-    $config .= "'initComplete': function() {
-            var hoverable_elem = $('div[data-toggle=\"table-tr-hover\"]');
-            hoverable_elem.hide();
-            hoverable_elem.closest('tr').on('mouseenter', function(e) {
-                $(this).find('div[data-toggle=\"table-tr-hover\"]').show();
-            }).on('mouseleave', function(e) {
-                $(this).find('div[data-toggle=\"table-tr-hover\"]').hide();
-            });
-         },
-        'language': {
+    $config .= "'language': {
         'processing': '".$locale['processing_locale']."',
         'lengthMenu': '".$locale['menu_locale']."',
         'zeroRecords': '".$locale['zero_locale']."',
@@ -752,7 +743,7 @@ function fusion_table($table_id, array $options = []) {
             'previous': '".$locale['previous']."',
         },
     },";
-
+    
     // Javascript Init
     $js_config_script = "
     {
@@ -763,10 +754,20 @@ function fusion_table($table_id, array $options = []) {
         'autoWidth' : true,
         $config
     }";
-
+    
+    $options['js_script'] .= $table_id.'Table.on("draw.dt", function() {
+        var hoverable_elem = $("div[data-toggle=\"table-tr-hover\"]");
+        hoverable_elem.hide();
+        hoverable_elem.closest("tr").on("mouseenter", function(e) {
+            $(this).find("div[data-toggle=\"table-tr-hover\"]").show();
+        }).on("mouseleave", function(e) {
+            $(this).find("div[data-toggle=\"table-tr-hover\"]").hide();
+        });
+    });';
+    
     // Ajax handling script
     if ($options['remote_file']) {
-
+        
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
