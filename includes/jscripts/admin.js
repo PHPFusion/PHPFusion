@@ -129,7 +129,7 @@ let slAdmin = {
                     $(this).text(i + 1);
                 });
 
-                $.post(document.location.origin + '/administration/includes/?api=sitelinks-order', param, function (ev) {
+                $.post(document.location.origin + '/administration/includes/?api=sitelinks-order', param, function (response) {
                     if (response.status === 200) {
                         alert(locale.SL_0016);
                     }
