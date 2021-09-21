@@ -111,44 +111,33 @@ let slAdmin = {
             axis: 'y',
             update: function (e, ui) {
 
-                let tableElem = $(this).children('tr');
-                let order_array = [];
+                let tableElem = $(this).children('tr'),
+                    order_array = [];
+
                 tableElem.each(function () {
                     order_array.push($(this).attr('id'));
                 });
 
-                let formData = new FormData();
-
-                formData.append('fusion_token', token);
-                formData.append('form_id', 'sitelinks_order');
-                formData.append('order', order_array);
+                let order_array_string = order_array.join(','),
+                    param = {
+                        'fusion_token': token,
+                        'form_id': 'sitelinks_order',
+                        'order': order_array_string,
+                    }
 
                 $(this).find('.num').each(function (i) {
                     $(this).text(i + 1);
                 });
 
-                fetch(document.location.origin + '/administration/includes/?api=sitelinks-order', {
-                    method: 'POST',
-                    mode: 'same-origin',
-                    cache: 'force-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    referrerPolicy: 'origin',
-                    body: formData
-                }).then(function (response) {
-                        console.log(response);
-                        if (response.status === 200) {
-                            alert(locale.SL_0016);
-                        }
+                $.post(document.location.origin + '/administration/includes/?api=sitelinks-order', param, function (ev) {
+                    if (response.status === 200) {
+                        alert(locale.SL_0016);
                     }
-                ).catch(function (error) {
-                    console.log(error);
+                }).fail(function (ev) {
                     alert(locale.error_preview + '\n' + locale.error_preview_text);
                 });
+
             }
         });
     }
 }
-
-
