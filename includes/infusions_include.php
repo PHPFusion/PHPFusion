@@ -724,11 +724,11 @@ function fusion_table($table_id, array $options = []) {
         //");
         ////alert(locale.error_preview + '\n' + locale.error_preview_text);
     }
-    
+
     if ($options['pagination'] === FALSE) {
         $config .= "'paging' : false,";
     }
-    
+
     $config .= "'language': {
         'processing': '".$locale['processing_locale']."',
         'lengthMenu': '".$locale['menu_locale']."',
@@ -743,7 +743,7 @@ function fusion_table($table_id, array $options = []) {
             'previous': '".$locale['previous']."',
         },
     },";
-    
+
     // Javascript Init
     $js_config_script = "
     {
@@ -754,7 +754,7 @@ function fusion_table($table_id, array $options = []) {
         'autoWidth' : true,
         $config
     }";
-    
+
     $options['js_script'] .= $table_id.'Table.on("draw.dt", function() {
         var hoverable_elem = $("div[data-toggle=\"table-tr-hover\"]");
         hoverable_elem.hide();
@@ -764,10 +764,10 @@ function fusion_table($table_id, array $options = []) {
             $(this).find("div[data-toggle=\"table-tr-hover\"]").hide();
         });
     });';
-    
+
     // Ajax handling script
     if ($options['remote_file']) {
-        
+
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
             $file_output = fusion_get_contents($options['remote_file']);
             if (!empty($file_output)) {
