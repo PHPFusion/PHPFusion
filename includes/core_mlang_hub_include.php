@@ -35,10 +35,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE page_id=:id
             ", [':id' => check_get('page_id') ? get('page_id') : $cp_matches[1]]));
 
-            $lang = explode(',', $data['page_language']);
+            if (!empty($data['page_language'])) {
+                $lang = explode(',', $data['page_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/articles.php/i', server('PHP_SELF')) && multilang_table('AR')) {
@@ -51,10 +53,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE article_id=:id
             ", [':id' => check_get('article_id') ? get('article_id') : $a_matches[1]]));
 
-            $lang = explode(',', $data['article_language']);
+            if (!empty($data['article_language'])) {
+                $lang = explode(',', $data['article_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
 
@@ -64,10 +68,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE article_cat_id=:id
             ", [':id' => [':id' => check_get('cat_id') ? get('cat_id') : $a_matches[1]]]));
 
-            $lang = explode(',', $data['article_cat_language']);
+            if (!empty($data['article_cat_language'])) {
+                $lang = explode(',', $data['article_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/blog.php/i', server('PHP_SELF')) && multilang_table('BL')) {
@@ -80,10 +86,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE blog_id=:id
             ", [':id' => check_get('readmore') ? get('readmore') : $b_matches[1]]));
 
-            $lang = explode(',', $data['blog_language']);
+            if (!empty($data['blog_language'])) {
+                $lang = explode(',', $data['blog_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
 
@@ -93,10 +101,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE blog_cat_id=:id
             ", [':id' => check_get('cat_id') ? get('cat_id') : $bc_matches[1]]));
 
-            $lang = explode(',', $data['blog_cat_language']);
+            if (!empty($data['blog_cat_language'])) {
+                $lang = explode(',', $data['blog_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/downloads.php/i', server('PHP_SELF')) && multilang_table('DL')) {
@@ -111,10 +121,12 @@ if (!defined('ADMIN_PANEL')) {
                 GROUP BY dl.download_id
             ", [':id' => check_get('download_id') ? get('download_id') : $d_matches[1]]));
 
-            $lang = explode(',', $data['download_cat_language']);
+            if (!empty($data['download_cat_language'])) {
+                $lang = explode(',', $data['download_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
 
@@ -124,10 +136,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE download_cat_id=:id
             ", [':id' => check_get('cat_id') ? get('cat_id') : $dc_matches[1]]));
 
-            $lang = explode(',', $data['download_cat_language']);
+            if (!empty($data['download_cat_language'])) {
+                $lang = explode(',', $data['download_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/faq.php/i', server('PHP_SELF')) && multilang_table('FQ')) {
@@ -139,10 +153,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE faq_id=:id
             ", [':id' => check_get('cat_id') ? get('cat_id') : $f_matches[1]]));
 
-            $lang = explode(',', $data['faq_language']);
+            if (!empty($data['faq_language'])) {
+                $lang = explode(',', $data['faq_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/viewthread.php/i', server('PHP_SELF')) && multilang_table('FO')) {
@@ -156,10 +172,12 @@ if (!defined('ADMIN_PANEL')) {
                 GROUP BY t.thread_id
             ", [':id' => check_get('thread_id') ? get('thread_id') : $f_matches[1]]));
 
-            $lang = explode(',', $data['forum_language']);
+            if (!empty($data['forum_language'])) {
+                $lang = explode(',', $data['forum_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/index.php/i', server('PHP_SELF')) && (check_get('viewforum') && check_get('forum_id')) && multilang_table('FO')) {
@@ -168,10 +186,12 @@ if (!defined('ADMIN_PANEL')) {
             WHERE forum_id=:id
         ", [':id' => get('forum_id')]));
 
-        $lang = explode(',', $data['forum_language']);
+        if (!empty($data['forum_language'])) {
+            $lang = explode(',', $data['forum_language']);
 
-        if (!in_array($current_user_language, $lang)) {
-            define_site_language($lang[0]);
+            if (!in_array($current_user_language, $lang)) {
+                define_site_language($lang[0]);
+            }
         }
     } else if (preg_match('/gallery.php/i', server('PHP_SELF')) && multilang_table('PG')) {
         preg_match('|/gallery/photo/([0-9]+)/|', server('REQUEST_URI'), $g_matches);
@@ -185,10 +205,12 @@ if (!defined('ADMIN_PANEL')) {
                 GROUP BY ph.photo_id
             ", [':id' => check_get('photo_id') ? get('photo_id') : $g_matches[1]]));
 
-            $lang = explode(',', $data['album_language']);
+            if (!empty($data['album_language'])) {
+                $lang = explode(',', $data['album_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
 
@@ -198,10 +220,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE album_id=:id
             ", [':id' => check_get('album_id') ? get('album_id') : $a_matches[1]]));
 
-            $lang = explode(',', $data['album_language']);
+            if (!empty($data['album_language'])) {
+                $lang = explode(',', $data['album_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/news.php/i', server('PHP_SELF')) && multilang_table('NS')) {
@@ -214,10 +238,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE news_id=:id
             ", [':id' => check_get('readmore') ? get('readmore') : $n_matches[1]]));
 
-            $lang = explode(',', $data['news_language']);
+            if (!empty($data['news_language'])) {
+                $lang = explode(',', $data['news_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
 
@@ -227,10 +253,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE news_cat_id=:id
             ", [':id' => check_get('cat_id') ? get('cat_id') : $nc_matches[1]]));
 
-            $lang = explode(',', $data['news_cat_language']);
+            if (!empty($data['news_cat_language'])) {
+                $lang = explode(',', $data['news_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     } else if (preg_match('/weblinks.php/i', server('PHP_SELF')) && multilang_table('WL')) {
@@ -242,10 +270,12 @@ if (!defined('ADMIN_PANEL')) {
                 WHERE weblink_cat_id=:id
             ", [':id' => check_get('cat_id') ? get('cat_id') : $w_matches[1]]));
 
-            $lang = explode(',', $data['weblink_cat_language']);
+            if (!empty($data['weblink_cat_language'])) {
+                $lang = explode(',', $data['weblink_cat_language']);
 
-            if (!in_array($current_user_language, $lang)) {
-                define_site_language($lang[0]);
+                if (!in_array($current_user_language, $lang)) {
+                    define_site_language($lang[0]);
+                }
             }
         }
     }
