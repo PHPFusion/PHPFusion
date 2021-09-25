@@ -42,7 +42,7 @@ class HomePage {
                     $data['norecord'] = '';
                     if (!empty($data['data'])) {
                         foreach ($data['data'] as $item_key => $item) {
-                            $item['content'] = str_replace('../../images', IMAGES, $item['content']);
+                            $data['data'][$item_key]['content'] = str_replace('../../images', IMAGES, $item['content']);
                             $profile = profile_link($item['user_id'], $item['user_name'], $item['user_status']);
                             $cat = '<a href="'.$item['category_link'].'">'.$item['cat_name'].'</a>';
                             $date = showdate('shortdate', $item['datestamp']);
