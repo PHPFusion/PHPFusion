@@ -55,7 +55,7 @@ class Shoutbox {
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
 
         // Just use this. You do not want "s_action" and "shoutbox_id"
-        $this->postLink = clean_request("", ["s_action", "shout_id", "aid"], TRUE);
+        $this->postLink = clean_request("", ["s_action", "shout_id", "aid"], defined('ADMIN_PANEL') ? TRUE : FALSE);
 
         switch (get('s_action')) {
             case 'delete':
@@ -78,7 +78,7 @@ class Shoutbox {
                 if (self::verifyShout($id)) {
                     $result = dbquery("SELECT shout_id, shout_name, shout_message, shout_datestamp, shout_ip, shout_ip_type, shout_hidden, shout_language
                         FROM ".DB_SHOUTBOX."
-                        WHERE shout_id = :shoutid".(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : ""), [':shoutid' => (int)$id]
+                        WHERE shout_id = :shoutid".(multilang_table("SB") ? " AND ".in_group('shout_language', LANGUAGE) : ""), [':shoutid' => $id]
                     );
 
                     if (dbrows($result) > 0) {
@@ -110,13 +110,13 @@ class Shoutbox {
             if (is_array($id)) {
                 foreach ($id as $key => $right) {
                     if (self::verifyShout($key)) {
-                        dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id = :shoutid", [':shoutid' => (int)$key]);
+                        dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id = :shoutid", [':shoutid' => $key]);
                         $i++;
                     }
                 }
             } else {
                 if (self::verifyShout($id)) {
-                    dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id = :shoutid", [':shoutid' => (int)$id]);
+                    dbquery("DELETE FROM ".DB_SHOUTBOX." WHERE shout_id = :shoutid", [':shoutid' => $id]);
                 }
             }
 
