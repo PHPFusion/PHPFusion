@@ -79,7 +79,7 @@ if (defined('NEWS_EXISTS')) {
 
         if (fusion_get_settings('comments_enabled') == 1) {
             $comments_query = "(SELECT COUNT(c1.comment_id) FROM ".DB_COMMENTS." c1
-                WHERE c1.comment_item_id = ns.news_id AND c1.comment_type = 'NS') AS comments_count,";
+                WHERE c1.comment_item_id = ns.news_id AND c1.comment_type = 'N') AS comments_count,";
         }
 
         if (fusion_get_settings('ratings_enabled') == 1) {
