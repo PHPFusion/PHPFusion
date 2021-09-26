@@ -352,7 +352,7 @@ class Shoutbox {
                 $html .= "</ul>";
                 $html .= "</div>";
             } else {
-                $html .= form_button('shout_box', empty($_GET['shout_id']) ? self::$locale['send_message'] : self::$locale['SB_update_shout'], empty($_GET['blacklist_id']) ? self::$locale['SB_save_shout'] : self::$locale['SB_update_shout'], ['class' => 'btn-primary btn-sm btn-block']);
+                $html .= form_button('shout_box', (empty($_GET['shout_id']) ? self::$locale['send_message'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), (empty($_GET['shout_id']) ? self::$locale['send_message'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), ['class' => 'btn-primary btn-sm btn-block']);
             }
 
             $html .= closeform();
