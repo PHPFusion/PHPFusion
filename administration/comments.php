@@ -190,7 +190,7 @@ function comments_listing() {
         LEFT JOIN ".DB_USERS." AS u ON c.comment_name=u.user_id
         WHERE c.comment_type=:ctype
         ".(check_get('comment_item_id') && get('comment_item_id', FILTER_SANITIZE_NUMBER_INT) ? "AND c.comment_item_id=".get('comment_item_id')." " : '')."
-        ORDER BY c.comment_datestamp ASC LIMIT $rowstart, $limit
+        ORDER BY c.comment_datestamp DESC LIMIT $rowstart, $limit
     ", [
         ':ctype' => $ctype
     ]);
