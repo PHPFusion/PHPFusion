@@ -59,6 +59,8 @@ if (!function_exists('render_gallery')) {
 
 if (!function_exists('render_photo_album')) {
     function render_photo_album($info) {
+        $locale = fusion_get_locale();
+
         opentable($info['album_title']);
         echo '<div class="gallery-item">';
         echo render_breadcrumbs();
@@ -99,6 +101,8 @@ if (!function_exists('render_photo_album')) {
                 echo '</div>';
             }
             echo '</div>';
+        } else {
+            echo '<div class="well m-t-20 m-b-20 text-center">'.$locale['gallery_425'].'</div>';
         }
 
         if (isset($info['page_nav'])) {
