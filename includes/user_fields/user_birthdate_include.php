@@ -22,7 +22,7 @@ if ($profile_method == "input") {
     if (isset($field_value) && $field_value != "1900-01-01") {
         $user_birthDate = date('Y-m-d', strtotime($field_value));
     } else {
-        $user_birthDate = date('Y-m-d', strtotime('today'));
+        $user_birthDate = '';
     }
     $options += [
         'inline'          => TRUE,
@@ -42,11 +42,6 @@ if ($profile_method == "input") {
         $user_fields = [
             'title' => $locale['uf_birthdate'],
             'value' => showdate($locale['uf_birthdate_date'], $lastday)
-        ];
-    } else {
-        $user_fields = [
-            'title' => $locale['uf_birthdate'],
-            'value' => $locale['na']
         ];
     }
 }
