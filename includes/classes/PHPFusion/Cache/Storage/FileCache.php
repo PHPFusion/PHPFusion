@@ -93,7 +93,7 @@ class FileCache implements ICache {
             $file_data = file_get_contents($file);
             $cache_data = json_decode($file_data, TRUE);
 
-            if (!empty($cache_data['expire']) && $cache_data['expire'] !== NULL) {
+            if (!empty($cache_data['expire'])) {
                 $file_time = 0;
 
                 if (file_exists($file)) {
