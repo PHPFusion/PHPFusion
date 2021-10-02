@@ -55,7 +55,7 @@ class Shoutbox {
         $_GET['s_action'] = isset($_GET['s_action']) ? $_GET['s_action'] : '';
 
         // Just use this. You do not want "s_action" and "shoutbox_id"
-        $this->postLink = clean_request("", ["s_action", "shout_id", "aid"], defined('ADMIN_PANEL') ? TRUE : FALSE);
+        $this->postLink = clean_request("", ["s_action", "shout_id", "aid"], defined('ADMIN_PANEL'));
 
         switch (get('s_action')) {
             case 'delete':
@@ -124,7 +124,7 @@ class Shoutbox {
         }
         defined('ADMIN_PANEL') ?
             redirect(clean_request("section=shoutbox", ["", "aid"])) :
-            redirect(redirect($this->postLink));
+            redirect($this->postLink);
     }
 
     static function verifyShout($id) {
@@ -352,7 +352,7 @@ class Shoutbox {
             } else {
                 $html .= form_button('shout_box', (empty(get('shout_id')) ? self::$locale['SB_save_shout'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), (empty(get('shout_id')) ? self::$locale['send_message'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), ['class' => 'btn-primary btn-sm btn-block']);
 
-           }
+            }
 
             $html .= closeform();
         }
@@ -371,7 +371,9 @@ class Shoutbox {
         echo form_checkbox('hidden_shouts', self::$locale['SB_hidden_shouts'], self::$sb_settings['hidden_shouts'], ['toggle' => TRUE]);
         echo form_select('user_access[]', self::$locale['SB_visbility'], self::$sb_settings['user_access'], [
             'options'     => fusion_get_groups(),
-            'placeholder' =>  self::$locale['choose']
+            'placeholder' => self::$locale['choose'],
+            'multiple'    => TRUE,
+            'inline'      => TRUE
         ]);
         echo form_button('sb_settings', self::$locale['save'], self::$locale['save'], ['class' => 'btn-success']);
         closeside();
@@ -549,7 +551,7 @@ class Shoutbox {
         }
 
         if ($archive == TRUE) {
-        	$sdata['pagenav'] = $total_rows > $db_rows ? makepagenav($rows, self::$arch_limit, $total_rows, self::$arch_limit, FUSION_SELF.'?rows', FALSE) : '';
+            $sdata['pagenav'] = $total_rows > $db_rows ? makepagenav($rows, self::$arch_limit, $total_rows, self::$arch_limit, FUSION_SELF.'?rows', FALSE) : '';
         }
 
         if ($total_rows > self::$sb_settings['visible_shouts']) {
