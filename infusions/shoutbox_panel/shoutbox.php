@@ -216,7 +216,8 @@ class Shoutbox {
             $inputArray = [
                 'visible_shouts' => sanitizer('visible_shouts', 5, 'visible_shouts'),
                 'guest_shouts'   => check_post('guest_shouts') ? 1 : 0,
-                'hidden_shouts'  => sanitizer(['hidden_shouts'], '', 'hidden_shouts')
+                'hidden_shouts'  => check_post('hidden_shouts') ? 1 : 0,
+                'user_access'    => sanitizer(['user_access'], '', 'user_access')
             ];
 
             if (fusion_safe()) {
@@ -286,7 +287,7 @@ class Shoutbox {
         }
         $html = '';
 
-        if (iGUEST && !self::$sb_settings['guest_shouts'] && !checkgroup(self::$sb_settings['hidden_shouts'])) {
+        if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts']) && !checkgroup(self::$sb_settings['user_access'])) {
             $html .= "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
             $html .= openform($form_name, 'post', $this->postLink);
@@ -332,7 +333,7 @@ class Shoutbox {
                 $html .= form_hidden('shout_language', '', $this->data['shout_language']);
             }
 
-            if (iMEMBER && checkgroup(self::$sb_settings['hidden_shouts'])) {
+            if (iMEMBER && self::$sb_settings['hidden_shouts']) {
                 $html .= "<div class='btn-group btn-group-sm dropup'>
                 ".form_button('shout_box', (empty(get('shout_id')) ? self::$locale['SB_save_shout'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), (empty(get('shout_id')) ? self::$locale['send_message'] : (get('s_action') == 'reply' ? self::$locale['SB_reply'] : self::$locale['SB_update_shout'])), ['class' => 'btn-primary'])."
                 <button id='ddsg' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>";
@@ -367,9 +368,10 @@ class Shoutbox {
         openside('');
         echo form_text('visible_shouts', self::$locale['SB_visible_shouts'], self::$sb_settings['visible_shouts'], ['required' => TRUE, 'inline' => TRUE, 'inner_width' => '100px', "type" => "number"]);
         echo form_checkbox('guest_shouts', self::$locale['SB_guest_shouts'], self::$sb_settings['guest_shouts'], ['toggle' => TRUE]);
-        echo form_select('hidden_shouts[]', self::$locale['SB_hidden_shouts'], self::$sb_settings['hidden_shouts'], [
+        echo form_checkbox('hidden_shouts', self::$locale['SB_hidden_shouts'], self::$sb_settings['hidden_shouts'], ['toggle' => TRUE]);
+        echo form_select('user_access[]', self::$locale['SB_visbility'], self::$sb_settings['user_access'], [
             'options'     => fusion_get_groups(),
-            'placeholder' => $locale['choose']
+            'placeholder' =>  self::$locale['choose']
         ]);
         echo form_button('sb_settings', self::$locale['save'], self::$locale['save'], ['class' => 'btn-success']);
         closeside();

@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", SHOUTBOX_LOCALE);
 // Infusion general information
 $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
-$inf_version = "1.1.0";
+$inf_version = "1.1.1";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -50,7 +50,8 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 $settings = [
     'visible_shouts' => 5,
     'guest_shouts'   => 0,
-    'hidden_shouts'  => 0
+    'hidden_shouts'  => 0,
+    'user_access'    => 0
 ];
 
 foreach ($settings as $name => $value) {
