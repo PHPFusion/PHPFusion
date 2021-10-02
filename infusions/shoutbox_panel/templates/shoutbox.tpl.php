@@ -55,7 +55,7 @@ if (!function_exists('render_shoutbox')) {
                             echo '<span class="m-l-5">#'.$item['shout_id'].'</span>';
                         echo '</div>';
 
-                        echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
+                        echo '<div class="shoutbox-message">'.$item['message'].'</div>';
                     echo '</div>';
                 }
                 echo '</div>';
