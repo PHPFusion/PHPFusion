@@ -39,7 +39,7 @@ class HomePage {
         if (!empty($modules) && !defined('DISABLE_HOME_MODULES')) {
             foreach ($modules as $module) {
                 foreach ($module as $key => $data) {
-                    $data['norecord'] = '';
+                    $data['norecord'] = !empty($data['norecord']) ? $data['norecord'] : '';
                     if (!empty($data['data'])) {
                         foreach ($data['data'] as $item_key => $item) {
                             $data['data'][$item_key]['content'] = str_replace('../../images', IMAGES, $item['content']);
