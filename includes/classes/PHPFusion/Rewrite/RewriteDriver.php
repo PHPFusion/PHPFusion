@@ -621,11 +621,10 @@ abstract class RewriteDriver {
         * we could mb_string or iconv it, but we have the normalize function this is manual override for specific case scenarios.
         */
 
-        $search = ["\"", "&#039;", "\\", "\'", "<", ">", "~", "!", "@", "$", "%", "^", "*", ";", ",", "[", "]", "{", "}"];
+        $search = ["\"", "&#039;", "\\", "\'", "<", ">", "~", "!", "@", "$", "%", "^", "*", ";", ",", "[", "]", "{", "}", ".", "/", "|"];
         $string = str_replace($search, "", $string);
         $string = str_replace("&amp;", "&", $string); // Must Support &
         $string = str_replace(" - ", "-", $string);
-        $string = str_replace(".", "", $string);
         $string = preg_replace("/[\s]+/i", $delimiter, $string); // Replace All <space> by Delimiter
         $string = trim($string, "-");
         $string = strtolower($string);
