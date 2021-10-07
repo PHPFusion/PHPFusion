@@ -1485,11 +1485,12 @@ function getgroupdata($group_id) {
  * @return string SQL condition. It can return an empty condition if the user_blacklist field is not installed!
  */
 function blacklist($field) {
-    $userdata = fusion_get_userdata('user_id');
-    $blacklist = [];
     if (column_exists('users', 'user_blacklist')) {
-        if (!empty($userdata['user_id'])) {
-            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $userdata['user_id']));
+        $user_id = fusion_get_userdata('user_id');
+        $blacklist = [];
+
+        if (!empty($user_id)) {
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $user_id));
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
                     if ($data['user_level'] > USER_LEVEL_ADMIN) {
