@@ -1486,34 +1486,26 @@ function getgroupdata($group_id) {
  */
 function blacklist($field) {
     if (column_exists('users', 'user_blacklist')) {
-        if (!empty(fusion_get_userdata('user_blacklist')) && iMEMBER) {
-            return $field." NOT IN (".fusion_get_userdata('user_blacklist').")";
-        } else {
-            return '1=1';
-        }
-
-        /*$user_id = fusion_get_userdata('user_id');
+        $user_id = fusion_get_userdata('user_id');
         $blacklist = [];
-
         if (!empty($user_id)) {
             $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $user_id));
             if (dbrows($result) > 0) {
                 while ($data = dbarray($result)) {
-                    if ($data['user_level'] > USER_LEVEL_ADMIN) {
-                        $blacklist[] = $data['user_id']; // all users to filter
-                    }
+                    $blacklist[] = $data['user_id'];
                 }
             }
         }
+
         $i = 0;
         $sql = '';
         foreach ($blacklist as $id) {
             $sql .= ($i > 0) ? "AND $field !='$id'" : "($field !='$id'";
             $i++;
         }
-        $sql .= $sql ? ")" : ' 1=1 ';
+        $sql .= $sql ? ")" : '1=1';
 
-        return "$sql";*/
+        return $sql;
     } else {
         return '';
     }
@@ -1527,7 +1519,20 @@ function blacklist($field) {
  * @return bool True if the user is blacklisted.
  */
 function user_blacklisted($user_id) {
-    return column_exists('users', 'user_blacklist') && in_array($user_id, explode(',', fusion_get_userdata('user_blacklist')));
+    if (column_exists('users', 'user_blacklist')) {
+        $blacklist = explode(',', fusion_get_userdata('user_blacklist'));
+
+        if (!empty($blacklist)) {
+            foreach ($blacklist as $id) {
+                if ($id == $user_id) {
+                    return TRUE;
+                }
+            }
+        }
+
+    }
+
+    return FALSE;
 }
 
 /**
