@@ -21,7 +21,7 @@ class Shoutbox {
     private static $instance = NULL;
     private static $locale = [];
     private static $limit = 4;
-    private static $arch_limit = 5;
+    private static $arch_limit = 10;
     private $postLink;
     private $token_limit = 3600;
     private $data = [
@@ -400,7 +400,7 @@ class Shoutbox {
     private function shoutsAdminListing() {
         $total_rows = dbcount("(shout_id)", DB_SHOUTBOX, (multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "").groupaccess('shout_hidden'));
         $rowstart = get_rowstart("rowstart", $total_rows);
-        $result = $this->selectDb($rowstart, self::$limit);
+        $result = $this->selectDb($rowstart, self::$limit, TRUE);
         $rows = dbrows($result);
         echo '<div class="m-t-10 m-b-10">';
         echo "<div class='display-inline'><span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span></div>\n";
@@ -465,13 +465,13 @@ class Shoutbox {
         }
     }
 
-    public function selectDb($rows, $min) {
+    public function selectDb($rows, $min, $admin = FALSE) {
         return dbquery("SELECT s.shout_id, s.shout_name, s.shout_message, s.shout_datestamp, s.shout_language, s.shout_ip, s.shout_hidden,
             u.user_id, u.user_name, u.user_avatar, u.user_status, u.user_lastvisit
             FROM ".DB_SHOUTBOX." AS s
             LEFT JOIN ".DB_USERS." AS u ON s.shout_name=u.user_id
             WHERE ".(multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "")."
-            ".groupaccess('s.shout_hidden')."
+            ".groupaccess('s.shout_hidden').($admin == FALSE ? ' AND '.blacklist('u.user_id') : '')."
             ORDER BY shout_datestamp DESC
             LIMIT ".(int)$rows.", ".$min
         );
