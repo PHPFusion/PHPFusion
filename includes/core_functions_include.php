@@ -1486,7 +1486,13 @@ function getgroupdata($group_id) {
  */
 function blacklist($field) {
     if (column_exists('users', 'user_blacklist')) {
-        $user_id = fusion_get_userdata('user_id');
+        if (!empty(fusion_get_userdata('user_blacklist')) && iMEMBER) {
+            return $field." NOT IN (".fusion_get_userdata('user_blacklist').")";
+        } else {
+            return '1=1';
+        }
+
+        /*$user_id = fusion_get_userdata('user_id');
         $blacklist = [];
 
         if (!empty($user_id)) {
@@ -1507,9 +1513,9 @@ function blacklist($field) {
         }
         $sql .= $sql ? ")" : ' 1=1 ';
 
-        return "$sql";
+        return "$sql";*/
     } else {
-        return "";
+        return '';
     }
 }
 
