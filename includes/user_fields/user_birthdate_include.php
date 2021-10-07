@@ -22,7 +22,7 @@ if ($profile_method == "input") {
     if (isset($field_value) && $field_value != "1900-01-01") {
         $user_birthDate = date('Y-m-d', strtotime($field_value));
     } else {
-        $user_birthDate = '';
+        $user_birthDate = '1900-01-01';
     }
     $options += [
         'inline'          => TRUE,
