@@ -38,16 +38,18 @@ if (!function_exists('render_shoutbox')) {
                             }
                         echo '</div>';
 
-                        echo '<div class="pull-right btn-group btn-group-xs">';
-                            if (!empty($item['reply_link'])) {
-                                echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
-                            }
+                        if (!user_blacklisted($item['user_id'])) {
+                            echo '<div class="pull-right btn-group btn-group-xs">';
+                                if (!empty($item['reply_link'])) {
+                                    echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
+                                }
 
-                            if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
-                                echo '<a class="btn btn-default" href="'.$item['edit_link'].'" title="'.$item['edit_title'].'"><i class="fas fa-edit"></i></a>';
-                                echo '<a class="btn btn-default" href="'.$item['delete_link'].'" title="'.$item['delete_title'].'"><i class="fas fa-trash"></i></a>';
-                            }
-                        echo '</div>';
+                                if (!empty($item['edit_link']) && !empty($item['delete_link'])) {
+                                    echo '<a class="btn btn-default" href="'.$item['edit_link'].'" title="'.$item['edit_title'].'"><i class="fas fa-edit"></i></a>';
+                                    echo '<a class="btn btn-default" href="'.$item['delete_link'].'" title="'.$item['delete_title'].'"><i class="fas fa-trash"></i></a>';
+                                }
+                            echo '</div>';
+                        }
 
                         echo '<div class="clearfix">';
                             echo '<strong class="display-block">'.(!empty($item['user_id']) ? $item['profile_link'] : $item['shout_name']).'</strong>';
@@ -55,7 +57,11 @@ if (!function_exists('render_shoutbox')) {
                             echo '<span class="m-l-5">#'.$item['shout_id'].'</span>';
                         echo '</div>';
 
-                        echo '<div class="shoutbox-message">'.$item['message'].'</div>';
+                        if (!user_blacklisted($item['user_id'])) {
+                            echo '<div class="shoutbox-message">'.$item['message'].'</div>';
+                        } else {
+                            echo '<div class="shoutbox-message blocked">'.$locale['SB_blocked_user'].'</div>';
+                        }
                     echo '</div>';
                 }
                 echo '</div>';

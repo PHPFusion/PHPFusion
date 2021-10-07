@@ -36,3 +36,4 @@ $locale['SB_visible_shouts'] = "Visible shouts";
 $locale['SB_warning_shout'] = "Delete this shout?";
 $locale['SB_warning_shouts'] = "Delete shouts?";
 $locale['SB_warning_validation_code'] = "You must enter correct validation code";
+$locale['SB_blocked_user'] = "The message is hidden because you have blocked this user.";
