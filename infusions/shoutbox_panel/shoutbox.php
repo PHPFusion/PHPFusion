@@ -63,13 +63,13 @@ class Shoutbox {
                 self::deleteShout($id);
                 break;
             case 'delete_select':
-                if (empty(post('shoutid'))) {
+                if (empty(post(['shoutid']))) {
                     fusion_stop(self::$locale["SB_noentries"]);
                     redirect(clean_request("", ["section=shoutbox", "aid"]));
                 }
 
-                if (check_post('shoutid')) {
-                    self::deleteShout(post('shoutid'));
+                if (check_post(['shoutid'])) {
+                    self::deleteShout(post(['shoutid']));
                 }
                 break;
             case 'edit':
