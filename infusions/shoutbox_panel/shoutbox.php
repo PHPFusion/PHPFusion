@@ -471,7 +471,7 @@ class Shoutbox {
             FROM ".DB_SHOUTBOX." AS s
             LEFT JOIN ".DB_USERS." AS u ON s.shout_name=u.user_id
             WHERE ".(multilang_table("SB") ? in_group('shout_language', LANGUAGE)." AND " : "")."
-            ".groupaccess('s.shout_hidden').($admin == FALSE ? ' AND '.blacklist('u.user_id') : '')."
+            ".groupaccess('s.shout_hidden').($admin == FALSE ? (!empty(blacklist('u.user_id')) ? ' AND '.blacklist('u.user_id') : '') : '')."
             ORDER BY shout_datestamp DESC
             LIMIT ".(int)$rows.", ".$min
         );
