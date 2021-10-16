@@ -173,11 +173,13 @@ if (!function_exists("mysql_field_name")) {
         return db_fetchfieldname($result, $field_offset);
     }
 }
+
 if (!function_exists("mysql_free_result")) {
     function mysql_free_result($result) {
         return mysqli_free_result($result);
     }
 }
+
 if (!function_exists("mysql_escape_string")) {
     function mysql_escape_string($query) {
         global $db_connect;
@@ -185,6 +187,7 @@ if (!function_exists("mysql_escape_string")) {
         return $result;
     }
 }
+
 if (!function_exists("mysql_real_escape_string")) {
     function mysql_real_escape_string($query) {
         global $db_connect;
@@ -192,21 +195,25 @@ if (!function_exists("mysql_real_escape_string")) {
         return $result;
     }
 }
+
 if (!function_exists("mysql_query")) {
     function mysql_query($query) {
         return dbquery($query);
     }
 }
+
 if (!function_exists("mysql_num_rows")) {
     function mysql_num_rows($result) {
         return dbrows($result);
     }
 }
+
 if (!function_exists("mysql_insert_id")) {
     function mysql_insert_id() {
         return db_lastid();
     }
 }
+
 if (!function_exists("mysql_connect")) {
     function mysql_connect($db_host, $db_user, $db_pass) {
         global $db_name;
@@ -217,9 +224,16 @@ if (!function_exists("mysql_connect")) {
         return TRUE;
     }
 }
+
 if (!function_exists("mysql_close")) {
     function mysql_close($dummy = "") {
         dbclose();
         return TRUE;
+    }
+}
+
+if (!function_exists("mysql_fetch_assoc")) {
+    function mysql_fetch_assoc($result) {
+        return mysqli_fetch_assoc($result);
     }
 }
