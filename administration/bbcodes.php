@@ -186,7 +186,7 @@ function bbcode_list() {
     sort($available_bbcodes);
     if (dbrows($result)) {
 
-        echo '<a class="btn btn-default" href="'.clean_request('new=sep', ['new'], FALSE).'">'.$locale['BBCA_500'].'</a>';
+        //echo '<a class="btn btn-default" href="'.clean_request('new=sep', ['new'], FALSE).'">'.$locale['BBCA_500'].'</a>';
 
         echo '<h4>'.$locale['BBCA_402'].'</h4>';
         $fusion_table_id = fusion_table('bbcode', [
