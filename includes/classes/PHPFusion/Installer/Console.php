@@ -135,7 +135,7 @@ class Console extends InstallCore {
 
         $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
         $html .= "{%content%}";
-        $fusion_jquery_tags = OutputHandler::$jqueryTags;
+        $fusion_jquery_tags = OutputHandler::$jqueryCode;
         if (!empty($fusion_jquery_tags)) {
             $html .= "<script>$(function() {
             let container = $('.block-container');

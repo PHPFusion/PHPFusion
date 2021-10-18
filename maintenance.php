@@ -138,7 +138,7 @@ echo "<body class='maintenance-page'>";
 display_maintenance($info);
 
 echo \PHPFusion\OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryTags;
+$fusion_jquery_tags = PHPFusion\OutputHandler::$jqueryCode;
 if (!empty($fusion_jquery_tags)) {
     $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
     echo "<script>$(function(){".$minifier->minify()."});</script>\n";

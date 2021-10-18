@@ -35,13 +35,13 @@ class OutputHandler {
      *
      * @var string
      */
-    public static $jqueryTags = "";
+    public static $jqueryCode = "";
     /**
      * Additional css
      *
      * @var string
      */
-    public static $cssTags = "";
+    public static $cssCode = "";
     /**
      * The title in the "title" tag
      *
@@ -96,8 +96,8 @@ class OutputHandler {
      * @param string $addition
      */
     public static function addToMeta($name, $addition = "") {
-        $settings = \fusion_get_settings();
         if (empty(self::$pageMeta)) {
+            $settings = fusion_get_settings();
             self::$pageMeta = [
                 'description' => $settings['description'],
                 'keywords'    => $settings['keywords']
@@ -114,7 +114,7 @@ class OutputHandler {
      * @param string $tag
      */
     public static function addToHead($tag = "") {
-        if (!\stristr(self::$pageHeadTags, $tag)) {
+        if (!stristr(self::$pageHeadTags, $tag)) {
             self::$pageHeadTags .= $tag."\n";
         }
     }
@@ -127,6 +127,28 @@ class OutputHandler {
     public static function addToFooter($tag = "") {
         if (!stristr(self::$pageFooterTags, $tag)) {
             self::$pageFooterTags .= $tag."\n";
+        }
+    }
+
+    /**
+     * Add javascript source code to the output
+     *
+     * @param string $code
+     */
+    public static function addToJQuery($code = "") {
+        if (!stristr(self::$jqueryCode, $code)) {
+            self::$jqueryCode .= $code;
+        }
+    }
+
+    /**
+     * Add css code to the output
+     *
+     * @param string $code
+     */
+    public static function addToCss($code = "") {
+        if (!stristr(self::$cssCode, $code)) {
+            self::$cssCode .= $code;
         }
     }
 
@@ -152,24 +174,6 @@ class OutputHandler {
         if (is_callable($callback)) {
             self::$outputHandlers[] = $callback;
         }
-    }
-
-    /**
-     * Add javascript source code to the output
-     *
-     * @param string $tag
-     */
-    public static function addToJQuery($tag = "") {
-        self::$jqueryTags .= $tag;
-    }
-
-    /**
-     * Add css code to the output
-     *
-     * @param string $tag
-     */
-    public static function addToCss($tag = "") {
-        self::$cssTags .= $tag;
     }
 
     /**
@@ -201,12 +205,12 @@ class OutputHandler {
             $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
         }
 
-        if (!empty(self::$cssTags)) {
+        if (!empty(self::$cssCode)) {
             if ($settings['devmode'] == 0) {
-                $minifier = new Minify\CSS(self::$cssTags);
+                $minifier = new Minify\CSS(self::$cssCode);
                 $css = $minifier->minify();
             } else {
-                $css = self::$cssTags;
+                $css = self::$cssCode;
             }
 
             $output = preg_replace("#</head>#", "<style>".$css."</style></head>", $output, 1);
