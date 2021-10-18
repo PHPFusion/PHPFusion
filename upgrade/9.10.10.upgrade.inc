@@ -34,7 +34,9 @@ $inf_deldbrow[] = DB_PERMALINK_METHOD." WHERE pattern_target='home.php'";
  * Delete all unused files
  */
 $deleted_files = [
-    INCLUDES.'user_fields/user_blacklist.ajax.php'
+    INCLUDES.'user_fields/user_blacklist.ajax.php',
+    DYNAMICS.'assets/colorpick/bs3',
+    DYNAMICS.'assets/colorpick/bs4',
 ];
 
 foreach ($deleted_files as $file) {
