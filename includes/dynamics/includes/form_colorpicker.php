@@ -30,13 +30,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
 
     $input_value = clean_input_value($input_value);
 
-    if (defined('BOOTSTRAP4')) {
-        fusion_load_script(DYNAMICS.'assets/colorpick/bs4/css/bootstrap-colorpicker.min.css', 'css');
-        fusion_load_script(DYNAMICS.'assets/colorpick/bs4/js/bootstrap-colorpicker.min.js');
-    } else {
-        fusion_load_script(DYNAMICS.'assets/colorpick/bs3/css/bootstrap-colorpicker.min.css', 'css');
-        fusion_load_script(DYNAMICS.'assets/colorpick/bs3/js/bootstrap-colorpicker.min.js');
-    }
+    fusion_load_script(DYNAMICS.'assets/colorpick/jscolor.min.js');
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
     $input_name = stripinput($input_name);
@@ -53,8 +47,7 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'error_text'  => $locale['error_input_default'],
         'safemode'    => FALSE,
         'icon'        => "",
-        "tip"         => "",
-        'format'      => 'hex', //options = the color format - hex | rgb | rgba.
+        'tip'         => "",
     ];
     $options += $default_options;
     if (!$options['width']) {
@@ -74,16 +67,12 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         }
     }
 
-    $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']." '>\n";
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
     $html .= $label ? "<label class='control-label ".($options['inline'] ? 'col-xs-12 col-sm-3 col-md-3 col-lg-3' : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
     ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
     </label>\n" : '';
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<div id='$input_id' ".($options['width'] ? "style='width: ".$options['width']."'" : '')." class='input-group colorpicker-component bscp colorpicker-element m-b-10' data-color='$input_value' data-color-format='".$options['format']."'>";
-    $html .= "<input type='text' name='$input_name' class='form-control ".$options['class']."' id='".$input_id."' value='$input_value' data-color-format='".$options['format']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."".($options['deactivate'] ? " readonly" : "").">";
-    $html .= "<span class='input-group-addon input-group-append'>";
-    $html .= "<i class='input-group-text colorpicker-input-addon' style='background: rgba(255,255,255,1);'></i>";
-    $html .= "</span></div>";
+    $html .= "<input type='text' data-jscolor='{}' name='$input_name' class='form-control ".$options['class']."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." id='".$input_id."' value='$input_value'".($options['placeholder'] ? " placeholder='".$options['placeholder']."'" : '')."".($options['deactivate'] ? " readonly" : "").">";
     $html .= $options['inline'] && $label ? "</div>\n" : "";
     $html .= "</div>\n";
 
@@ -96,7 +85,6 @@ function form_colorpicker($input_name, $label = '', $input_value = '', array $op
         'safemode'   => $options['safemode'],
         'error_text' => $options['error_text']
     ]);
-    add_to_jquery("$('#$input_id').colorpicker({format: '".$options['format']."' ".(defined('BOOTSTRAP4') ? ", fallbackColor: '#000'" : '')." });");
 
     return $html;
 }
