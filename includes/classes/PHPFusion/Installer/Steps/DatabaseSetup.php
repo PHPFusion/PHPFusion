@@ -44,7 +44,7 @@ class DatabaseSetup extends InstallCore {
     private function dispatchTables() {
         $debug_process = FALSE;
         $debug_batching = FALSE;
-        $log_file = TRUE;
+        $log_file = FALSE; // set true for debugging
         $content = '';
 
         if (check_post("step")) {
