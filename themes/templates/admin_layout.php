@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\OutputHandler;
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
 $settings = fusion_get_settings();
 header("Content-Type: text/html; charset=".$locale['charset']."");
@@ -133,10 +136,11 @@ if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOO
 }
 echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
 // Output lines added with add_to_footer()
-global $fusion_page_footer_tags;
-echo $fusion_page_footer_tags;
+echo OutputHandler::$pageFooterTags;
 
 // Output lines added with add_to_jquery()
+$fusion_jquery_tags = OutputHandler::$jqueryCode;
+
 if (!empty($fusion_jquery_tags)) {
     if ($settings['devmode'] == 0) {
         $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);

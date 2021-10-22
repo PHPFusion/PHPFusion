@@ -18,7 +18,6 @@
 
 use Defender\Token;
 use PHPFusion\Authenticate;
-use PHPFusion\OutputHandler;
 
 if (preg_match("/maincore.php/i", $_SERVER['PHP_SELF'])) {
     die();
@@ -295,10 +294,6 @@ Authenticate::setVisitorCounter();
 Authenticate::setAdminLogin();
 
 $fusion_dynamics = Dynamics::getInstance();
-$fusion_page_head_tags = &OutputHandler::$pageHeadTags;
-$fusion_page_footer_tags = &OutputHandler::$pageFooterTags;
-$fusion_jquery_tags = &OutputHandler::$jqueryCode;
-$fusion_css_tags = &OutputHandler::$cssCode;
 
 // Set theme
 $_session_theme = session_get(COOKIE_PREFIX.'theme');

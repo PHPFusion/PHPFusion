@@ -30,10 +30,6 @@ define("CONTENT", ob_get_clean()); //ob_start() called in header.php
 
 require_once __DIR__.'/cron.php';
 
-if (!isset($fusion_jquery_tags)) {
-    $fusion_jquery_tags = '';
-}
-
 // Load layout
 if (defined('ADMIN_PANEL')) {
     require_once __DIR__.'/admin_layout.php';
