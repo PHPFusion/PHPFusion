@@ -114,15 +114,17 @@ echo form_select('thousands_separator', $locale['612'], $settings['thousands_sep
 ]);
 closeside();
 
-openside('');
+/*openside('');
 echo form_select('license', $locale['613'], $settings['license'], [
     'options' => [
-        'agpl' =>  'AGPL',
-        'epal' =>  'EPAL'
+        'agpl' => 'AGPL',
+        'epal' => 'EPAL',
+        'crl'  => 'CRL',
+        'ccl'  => 'CCL'
     ],
     'width'   => '100%'
 ]);
-closeside();
+closeside();*/
 
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
