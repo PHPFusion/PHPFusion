@@ -287,7 +287,7 @@ class Shoutbox {
         }
         $html = '';
 
-        if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts']) && !checkgroup(self::$sb_settings['user_access'])) {
+        if (iGUEST && !self::$sb_settings['guest_shouts'] && empty(self::$sb_settings['hidden_shouts'])) {
             $html .= "<div class='text-center'>".self::$locale['SB_login_req']."</div>\n";
         } else {
             $html .= openform($form_name, 'post', $this->postLink);
