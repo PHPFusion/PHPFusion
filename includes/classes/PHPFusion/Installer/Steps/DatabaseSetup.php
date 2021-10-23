@@ -272,7 +272,7 @@ class DatabaseSetup extends InstallCore {
                     require_once(INCLUDES.'htaccess_include.php');
                     Installer\write_config(self::$connection);
 
-                    if (!isset($_GET['upgrade'])) {
+                    if (!isset($_GET['upgrade']) || !is_file(BASEDIR.'.htaccess')) {
                         write_htaccess();
                     }
 
