@@ -58,7 +58,7 @@ if (!function_exists('render_shoutbox')) {
                         echo '</div>';
 
                         if (!user_blacklisted($item['user_id'])) {
-                            echo '<div class="shoutbox-message">'.$item['message'].'</div>';
+                            echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
                         } else {
                             echo '<div class="shoutbox-message blocked">'.$locale['SB_blocked_user'].'</div>';
                         }
