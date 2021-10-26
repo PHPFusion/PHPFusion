@@ -2584,3 +2584,22 @@ function in_array_r($needle, $haystack, $strict = FALSE) {
 
     return FALSE;
 }
+
+/**
+ * Check if current page is set as homepage.
+ *
+ * @return bool
+ */
+function is_homepage() {
+    $settings = fusion_get_settings();
+
+    if ($settings['site_seo']) {
+        $params = http_build_query(\PHPFusion\Rewrite\Router::getRouterInstance()->getFileParams());
+        $path = \PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath();
+        $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
+    } else {
+        $file_path = '/'.PERMALINK_CURRENT_PATH;
+    }
+
+    return $settings['opening_page'] == 'index.php' && $file_path == '/' || $file_path == '/'.$settings['opening_page'];
+}
