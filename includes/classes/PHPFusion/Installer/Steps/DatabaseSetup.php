@@ -62,14 +62,6 @@ class DatabaseSetup extends InstallCore {
                 'secret_key_salt' => self::createRandomPrefix(32),
                 'secret_key'      => self::createRandomPrefix(32)
             ];
-            /*
-             * Do not allow -
-             */
-            foreach (self::$connection as $key => $value) {
-                if ($key !== 'db_host') {
-                    self::$connection[$key] = str_replace('-', '_', $value);
-                }
-            }
 
             // Force underscores for these two values
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
