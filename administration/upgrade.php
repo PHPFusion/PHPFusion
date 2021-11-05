@@ -40,6 +40,8 @@ if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
 }
 echo '</div>';
 
+echo '<h3 class="strong m-b-20">'.sprintf($locale['U_019'], $settings['version']).'</h3>';
+
 $update_result = $update->checkUpdate();
 
 if ($update_result === FALSE) {

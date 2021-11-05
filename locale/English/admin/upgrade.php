@@ -18,3 +18,4 @@ $locale['U_015'] = "The update could not be installed. Please try again later or
 $locale['U_016'] = "Update translations";
 $locale['U_017'] = "The translations have been successfully updated.";
 $locale['U_018'] = "Downloading %s language pack."; // %s will be replaced with language name
+$locale['U_019'] = "Current version: %s";
