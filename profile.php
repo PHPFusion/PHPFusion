@@ -21,7 +21,8 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
 $settings = fusion_get_settings();
 if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     require_once THEMES."templates/global/profile.tpl.php";
-    if (!iMEMBER && $settings['hide_userprofiles'] == 1) {
+
+    if (!iMEMBER && $settings['hide_userprofiles'] == 1 || user_blacklisted($_GET['lookup'])) {
         redirect(BASEDIR."index.php");
     }
     $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";

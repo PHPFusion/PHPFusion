@@ -884,7 +884,7 @@ class PrivateMessages {
      */
     private function setSendForm() {
 
-        $this->data['msg_send'] = isset($_GET['msg_send']) ? $_GET['msg_send'] : 0;
+        $this->data['msg_send'] = isset($_GET['msg_send']) && !user_blacklisted($_GET['msg_send']) ? $_GET['msg_send'] : 0;
 
         if (iADMIN) {
             $input_header = "<div class='clearfix text-right'><a class='pointer' id='mass_send'><i class='fa fa-user-circle-o m-r-5'></i>".$this->locale['434']."</a></div>";

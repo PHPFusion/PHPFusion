@@ -38,7 +38,7 @@ if (!function_exists('render_shoutbox')) {
                             }
                         echo '</div>';
 
-                        if (!user_blacklisted($item['user_id'])) {
+                        if (!user_blacklisted($item['user_id'], TRUE)) {
                             echo '<div class="pull-right btn-group btn-group-xs">';
                                 if (!empty($item['reply_link'])) {
                                     echo '<a class="btn btn-default" href="'.$item['reply_link'].'" title="'.$item['reply_title'].'"><i class="fas fa-reply"></i></a>';
@@ -57,10 +57,10 @@ if (!function_exists('render_shoutbox')) {
                             echo '<span class="m-l-5">#'.$item['shout_id'].'</span>';
                         echo '</div>';
 
-                        if (!user_blacklisted($item['user_id'])) {
-                            echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
-                        } else {
+                        if (user_blacklisted($item['user_id'], TRUE)) {
                             echo '<div class="shoutbox-message blocked">'.$locale['SB_blocked_user'].'</div>';
+                        } else {
+                            echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
                         }
                     echo '</div>';
                 }

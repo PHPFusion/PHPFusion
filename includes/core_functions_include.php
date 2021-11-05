@@ -1487,49 +1487,56 @@ function getgroupdata($group_id) {
 function blacklist($field) {
     if (column_exists('users', 'user_blacklist')) {
         $user_id = fusion_get_userdata('user_id');
-        $blacklist = [];
         if (!empty($user_id)) {
             $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $user_id));
             if (dbrows($result) > 0) {
+                $i = 0;
+                $sql = '';
+
                 while ($data = dbarray($result)) {
-                    $blacklist[] = $data['user_id'];
+                    $sql .= ($i > 0) ? "AND $field !='".$data['user_id']."'" : "($field !='".$data['user_id']."'";
+                    $i++;
                 }
+                $sql .= $sql ? ")" : '1=1';
+
+                return $sql;
             }
         }
-
-        $i = 0;
-        $sql = '';
-        foreach ($blacklist as $id) {
-            $sql .= ($i > 0) ? "AND $field !='$id'" : "($field !='$id'";
-            $i++;
-        }
-        $sql .= $sql ? ")" : '1=1';
-
-        return $sql;
-    } else {
-        return '';
     }
+
+    return '';
 }
 
 /**
  * Check if user was blacklisted by a member.
  *
- * @param int $user_id User ID.
+ * @param int  $user_id User ID.
+ * @param bool $me      Set true to hide blocked user's content on your account.
  *
  * @return bool True if the user is blacklisted.
  */
-function user_blacklisted($user_id) {
+function user_blacklisted($user_id, $me = FALSE) {
     if (column_exists('users', 'user_blacklist')) {
-        $blacklist = explode(',', fusion_get_userdata('user_blacklist'));
-
-        if (!empty($blacklist)) {
-            foreach ($blacklist as $id) {
-                if ($id == $user_id) {
-                    return TRUE;
+        $my_id = fusion_get_userdata('user_id');
+        if ($me) {
+            $blacklist = explode(',', fusion_get_userdata('user_blacklist'));
+            if (!empty($blacklist)) {
+                foreach ($blacklist as $id) {
+                    if ($id == $user_id) {
+                        return TRUE;
+                    }
+                }
+            }
+        } else {
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $my_id));
+            if (dbrows($result) > 0) {
+                while ($data = dbarray($result)) {
+                    if ($user_id == $data['user_id']) {
+                        return TRUE;
+                    }
                 }
             }
         }
-
     }
 
     return FALSE;
