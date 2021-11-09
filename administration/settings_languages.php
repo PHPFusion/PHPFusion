@@ -45,7 +45,7 @@ if (dbrows($inf_result) > 0) {
             if (!empty($inf_mlt['title']) && !empty($inf_mlt['rights'])) {
                 dbquery("UPDATE ".DB_LANGUAGE_TABLES." SET mlt_title='".$inf_mlt['title']."' WHERE mlt_rights='".$inf_mlt['rights']."'");
             } else {
-                //$defender->stop();
+                //fusion_stop();
                 addnotice("danger",
                     "Error due to incomplete locale translations in infusions folder ".$cdata['inf_folder'].". This infusion does not have the localized title and change is aborted. Please translate setup.php.");
             }

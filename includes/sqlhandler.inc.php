@@ -711,8 +711,6 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         return FALSE;
     }
 
-    $defender = Defender::getInstance();
-
     $cresult = dbquery("SHOW COLUMNS FROM $table");
     $columns = [];
     $pkcolumns = [];
@@ -787,7 +785,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         $result = dbquery($sql, $params);
         if (!$options['keep_session']) {
             //print_p('field session unset during '.$sql);
-            $defender::unset_field_session();
+            Defender::getInstance()->unset_field_session();
         }
     }
     if ($result === FALSE) {

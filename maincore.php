@@ -69,14 +69,6 @@ if (!empty($settings['error_logging_enabled']) && $settings['error_logging_enabl
     error_reporting(0);
 }
 
-// Request Variables
-$_get_lang = get("lang");
-$_get_logout = get("logout");
-$_check_post_login = check_post("login");
-$_check_post_username = check_post("user_name");
-$_check_post_pass = check_post("user_pass");
-$_check_post_remember = check_post("remember_me");
-
 // Settings dependent functions
 date_default_timezone_set('UTC');
 ini_set('session.gc_probability', 1);
@@ -118,7 +110,6 @@ if (empty($settings)) {
 
 header('X-Powered-By: PHPFusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
 
-//ob_start("ob_gzhandler"); // Uncomment this line and comment the one below to enable output compression.
 ob_start();
 
 // Sanitise $_SERVER globals
@@ -149,11 +140,6 @@ if (substr_count($_SERVER['REQUEST_URI'], '//')) {
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
 define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-
-// Variables initializing
-$mysql_queries_count = 0;
-$mysql_queries_time = [];
-$locale = [];
 
 // Calculate ROOT path for Permalinks
 $current_path = html_entity_decode($_SERVER['REQUEST_URI']);
@@ -205,13 +191,13 @@ define("START_PAGE", substr(preg_replace(
  * Login / Logout / Revalidate
  */
 $userdata = [];
-if ($_check_post_login && $_check_post_username && $_check_post_pass) {
+if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
     if (fusion_safe()) {
-        $auth = new Authenticate(post("user_name"), post("user_pass"), $_check_post_remember);
+        $auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
         $userdata = $auth->getUserData();
         redirect(FUSION_REQUEST);
     }
-} else if ($_get_logout === "yes") {
+} else if (get('logout') === 'yes') {
     $userdata = Authenticate::logOut();
     $request = clean_request('', ['logout'], FALSE);
     redirect($request);
@@ -240,8 +226,8 @@ $language_opts = fusion_get_enabled_languages();
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if ($_get_lang && file_exists(LOCALE.$_get_lang."/global.php") && in_array($_get_lang, $enabled_languages)) {
-    $current_user_language = stripinput($_get_lang);
+if (check_get('lang') && file_exists(LOCALE.get('lang')."/global.php") && in_array(get('lang'), $enabled_languages)) {
+    $current_user_language = stripinput(get('lang'));
     set_language($current_user_language);
 } else {
     if (count($enabled_languages) > 1) {
@@ -249,24 +235,25 @@ if ($_get_lang && file_exists(LOCALE.$_get_lang."/global.php") && in_array($_get
     }
 }
 
-if (!defined('LANGUAGE'))
+if (!defined('LANGUAGE')) {
     define('LANGUAGE', $current_user_language);
-if (!defined('LOCALESET'))
+}
+if (!defined('LOCALESET')) {
     define('LOCALESET', $current_user_language.'/');
+}
 
+$locale = [];
 \PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
 $setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : fusion_get_locale('setlocale');
-/*$win = explode('_', $setlocale);
-setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);*/
-setlocale(LC_ALL, $setlocale.'.UTF-8');
+$win = explode('_', $setlocale);
+setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);
+//setlocale(LC_ALL, $setlocale.'.UTF-8');
 
 // IP address functions
 include INCLUDES."ip_handling_include.php";
 
 // Error Handling
 require_once INCLUDES."error_handling_include.php";
-
-$defender = Defender::getInstance();
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new Token();
@@ -293,8 +280,6 @@ Authenticate::setVisitorCounter();
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-$fusion_dynamics = Dynamics::getInstance();
-
 // Set theme
 $_session_theme = session_get(COOKIE_PREFIX.'theme');
 $theme_session = $_session_theme && theme_exists($_session_theme) ? $_session_theme : FALSE;
@@ -317,8 +302,4 @@ if (cdrows($result)) {
     }
 }
 
-/**
- * Reduction of 0.04 seconds in performance.
- * We can use manually include the configuration if needed.
- */
 PHPFusion\Installer\Infusions::loadConfiguration();
