@@ -280,7 +280,8 @@ Authenticate::setVisitorCounter();
 // Set admin login procedures
 Authenticate::setAdminLogin();
 
-$fusion_dynamics = Dynamics::getInstance();
+Dynamics::getInstance();
+
 // Set theme
 $_session_theme = session_get(COOKIE_PREFIX.'theme');
 $theme_session = $_session_theme && theme_exists($_session_theme) ? $_session_theme : FALSE;
