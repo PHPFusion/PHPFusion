@@ -28,7 +28,6 @@ use PHPFusion\Database\DatabaseFactory;
 class Errors {
     private static $instances = [];
     private static $locale = [];
-    public $no_notice = 0;
     public $compressed = 0;
     private $error_status;
     private $posted_error_id;
@@ -206,7 +205,7 @@ class Errors {
         $html .= "</td>\n";
         $html .= "</tr>\n";
         /* Toggle Info */
-        $error_message = strtr(htmlspecialchars_decode(stripslashes($data['error_message'])), ['#' => '<br/>#']);
+        $error_message = strtr(stripslashes($data['error_message']), ['#' => '<br/>#']);
         $html .= "<tr class='collapse' id='err_rmd-".$data['error_id']."'><td colspan='4' class='hiddenRow no-border'>\n";
         $html .= "<p><strong>".$locale['ERROR_454']."</strong> : ".$this->getErrorTypes($data['error_level'])."</p>";
         $html .= "<div class='alert alert-info'>".$error_message."</div>\n";
@@ -295,8 +294,6 @@ class Errors {
             add_to_jquery("$('#error_status_sel').bind('change', function(e){this.form.submit();});");
 
             echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $tab_active); ?>
-            <h2 class="m-t-0"><?php echo htmlspecialchars_decode(stripslashes($data['error_message'])); ?></h2>
-
             <div class='display-inline text-lighter'>
                 <strong><?php echo $locale['ERROR_419'] ?></strong>: <?php echo self::getMaxFolders($data['error_file'], 3); ?>
                 <label class='label label-success'><?php echo $locale['ERROR_415']." ".number_format($data['error_line']); ?></label>
@@ -547,7 +544,9 @@ class Errors {
         $source_code = explode("\n", str_replace(["\r\n", "\r"], "\n", $source_code));
         $line_count = $starting_line;
         $formatted_code = "";
-        $error_message = "<div class='panel panel-default m-10'><div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div><div class='panel-body strong required'>".strtr(htmlspecialchars_decode(stripslashes($error_message['text'])), ['#' => '<br/>#'])."</div>\n";
+        $error_message = "<div class='panel panel-default m-10'>
+        <div class='panel-heading'><i class='fa fa-bug'></i> Line ".$error_line." -- ".timer($error_message['time'])."</div>
+        <div class='panel-body'>".strtr(stripslashes($error_message['text']), ['#' => '<br/>#'])."</div>";
         foreach ($source_code as $code_line) {
             $code_line = $this->codeWrap($code_line, 145);
             $line_class = ($line_count == $error_line ? "err_tbl-error-line" : "err_tbl1");
