@@ -57,10 +57,10 @@ if (!function_exists('render_shoutbox')) {
                             echo '<span class="m-l-5">#'.$item['shout_id'].'</span>';
                         echo '</div>';
 
-                        if (user_blacklisted($item['user_id'], TRUE)) {
+                        if (user_blacklisted($item['user_id'], TRUE)) { // this is here on purpose, theme devs can customize this
                             echo '<div class="shoutbox-message blocked">'.$locale['SB_blocked_user'].'</div>';
                         } else {
-                            echo '<div class="shoutbox-message word-break">'.$item['message'].'</div>';
+                            echo '<div class="shoutbox-message" style="hyphens:auto;overflow-wrap:break-word;">'.$item['message'].'</div>';
                         }
                     echo '</div>';
                 }
