@@ -322,7 +322,7 @@ class Shoutbox {
                 }
             }
 
-            if ((count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
+            if (iADMIN && (count(fusion_get_enabled_languages()) > 1) && multilang_table("SB")) {
                 $html .= form_select('shout_language[]', self::$locale['global_ML100'], $this->data['shout_language'], [
                     "inner_width" => "100%",
                     'required'    => TRUE,
@@ -479,7 +479,7 @@ class Shoutbox {
 
     public function displayShouts($archive = FALSE) {
 
-        if (checkgroup(self::$sb_settings['hidden_shouts'])) {
+        if (checkgroup(self::$sb_settings['user_access'])) {
             $sdata = $this->getShoutboxData($archive);
             $info = [
                 'form'       => self::sbForm($archive ? 'sbarchive' : 'sbform'),
