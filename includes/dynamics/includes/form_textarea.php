@@ -75,7 +75,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'tip'                 => '',
         'ext_tip'             => '',
         'input_bbcode'        => '',
-        'wordcount'           => FALSE,
+        'wordcount'           => FALSE, // it is a character counter, not a word counter
         'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
         'tinymce_theme'       => 'silver', // silver|mobile
         'tinymce_skin'        => 'oxide', // oxide|oxide-dark
@@ -457,15 +457,15 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if (($options['type'] == "html" || $options['type'] == "bbcode") && $options['wordcount'] === TRUE) {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
-        $html .= "<div class='overflow-hide'><i><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></i></div>";
+        $html .= "<div class='overflow-hide'><i><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span> / ".$options['maxlength']."</small></i></div>";
         add_to_jquery("
         if ($('#".$options['input_id']."').length) {
-            var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
+            var init_str = $('#".$options['input_id']."').val().length;
             $('#".$options['input_id']."-wordcount').text(init_str);
         }
         $('#".$options['input_id']."').on('input propertychange paste', function() {
-        var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-        $('#".$options['input_id']."-wordcount').text(str);
+            var str = $(this).val().length;
+            $('#".$options['input_id']."-wordcount').text(str);
         });
         ");
         $html .= "</div>\n<!---panel-footer-->";
