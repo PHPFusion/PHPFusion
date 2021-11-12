@@ -229,7 +229,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                         'save table directionality template paste ".($options['inline_editing'] ? " save " : "")."'
                     ],
                     image_list: $tinymce_list,
-                    ".(!empty($options['tinymce_css'] ? "content_css: '".$options['tinymce_css']."'," : ''))." 
+                    ".(!empty($options['tinymce_css'] ? "content_css: '".$options['tinymce_css']."'," : ''))."
                     toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext searchreplace code',
                     toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
                     toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
@@ -457,7 +457,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if (($options['type'] == "html" || $options['type'] == "bbcode") && $options['wordcount'] === TRUE) {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
-        $html .= "<div class='overflow-hide'><i><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span> / ".$options['maxlength']."</small></i></div>";
+        $html .= "<div class='overflow-hide'><i><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span>".(!empty($options['maxlength']) ? " / ".$options['maxlength'] : '')."</small></i></div>";
         add_to_jquery("
         if ($('#".$options['input_id']."').length) {
             var init_str = $('#".$options['input_id']."').val().length;
