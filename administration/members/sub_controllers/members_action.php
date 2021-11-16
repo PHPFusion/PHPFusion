@@ -171,16 +171,18 @@ class Members_Action extends Members_Admin {
         $form = '';
         $users_list = '';
 
-        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
-        $result = dbquery($query);
-        if (dbrows($result)) {
-            while ($u_data = dbarray($result)) {
-                if ($this->user_check(
-                    $u_data['user_status'],
-                    $this->action_map[$this->action]['check_value'],
-                    $this->action_map[$this->action]['check_operator'])
-                ) {
-                    $this->users[$u_data['user_id']] = $u_data;
+        if (!empty($this->action)) {
+            $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
+            $result = dbquery($query);
+            if (dbrows($result)) {
+                while ($u_data = dbarray($result)) {
+                    if ($this->user_check(
+                        $u_data['user_status'],
+                        $this->action_map[$this->action]['check_value'],
+                        $this->action_map[$this->action]['check_operator'])
+                    ) {
+                        $this->users[$u_data['user_id']] = $u_data;
+                    }
                 }
             }
         }

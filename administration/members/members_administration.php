@@ -310,7 +310,9 @@ class Members_Admin {
                     $_REQUEST['lookup'] = [$_REQUEST['lookup']];
                 }
                 $user_action->set_userID((array)(isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : $_REQUEST['lookup']));
-                $user_action->set_action((string)$_REQUEST['action']);
+                if (isset($_REQUEST['action'])) {
+                    $user_action->set_action((string)$_REQUEST['action']);
+                }
                 $user_action->execute();
             }
 
