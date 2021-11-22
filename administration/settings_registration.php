@@ -52,6 +52,24 @@ if (check_post('savesettings')) {
     }
 }
 
+if (check_post('delete_gw_tmp')) {
+    if (is_file(INCLUDES.'gateway/flood/ctrl')) {
+        unlink(INCLUDES.'gateway/flood/ctrl');
+    }
+
+    $path = INCLUDES.'gateway/flood/lock/';
+    $tmp_files = makefilelist(INCLUDES.'gateway/flood/lock/', 'index.php');
+
+    foreach ($tmp_files as $file) {
+        if (is_file($path.$file)) {
+            @unlink($path.$file);
+        }
+    }
+
+    addnotice('success', $locale['gateway_002']);
+    redirect(FUSION_REQUEST);
+}
+
 opentable($locale['register_settings']);
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='well'>".$locale['register_description']."</div>\n";
@@ -106,6 +124,9 @@ echo form_select('gateway_method', $locale['security_011'], $settings['gateway_m
     'width'       => '100%',
     'inner_width' => '100%'
 ]);
+
+echo form_button('delete_gw_tmp', $locale['gateway_001'], 'delete_gw_tmp', ['class' => 'btn-danger', 'icon' => 'fas fa-trash']);
+
 closeside();
 
 echo "</div>\n</div>\n";

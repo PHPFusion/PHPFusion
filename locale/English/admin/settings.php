@@ -178,6 +178,9 @@ $locale['699b'] = "Both";
 $locale['699e'] = "Email";
 $locale['699f'] = "Check uploaded files for MIME type?";
 
+$locale['gateway_001'] = "Delete tmp files";
+$locale['gateway_002'] = "Gateway tmp files have been deleted.";
+
 // Private Message Settings
 $locale['700'] = "Private Messages";
 $locale['701'] = "Inbox limit:";
