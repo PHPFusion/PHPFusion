@@ -386,21 +386,26 @@ function purge_album_image($albumData) {
 function purge_photo_image($photoData) {
     $photo_path = return_photo_paths($photoData);
     $parts = pathinfo($photo_path['photo_filename']);
-    $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
-    $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
 
-    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1)) {
-        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1);
-    } else if (file_exists(file_exists(IMAGES_G.$wm_file1))) {
-        unlink(file_exists(IMAGES_G.$wm_file1));
-    }
+    if (!empty($parts['extension'])) {
+        // photos with watermark
 
-    sleep(0.3);
+        $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+        $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
 
-    if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2)) {
-        unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2);
-    } else if (file_exists(file_exists(IMAGES_G.$wm_file2))) {
-        unlink(file_exists(IMAGES_G.$wm_file2));
+        if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1)) {
+            unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file1);
+        } else if (file_exists(file_exists(IMAGES_G.$wm_file1))) {
+            unlink(file_exists(IMAGES_G.$wm_file1));
+        }
+
+        sleep(0.3);
+
+        if (file_exists(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2)) {
+            unlink(IMAGES_G.'album_'.$photoData['album_id'].'/'.$wm_file2);
+        } else if (file_exists(file_exists(IMAGES_G.$wm_file2))) {
+            unlink(file_exists(IMAGES_G.$wm_file2));
+        }
     }
 
     sleep(0.3);

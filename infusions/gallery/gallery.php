@@ -116,18 +116,20 @@ if (isset($_GET['photo_id']) && isnum($_GET['photo_id'])) {
         if ($gallery_settings['photo_watermark']) {
             if ($gallery_settings['photo_watermark_save']) {
                 $parts = pathinfo($photo_path['photo_filename']);
-                $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
-                $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
-                if (!file_exists(IMAGES_G.$wm_file1) || !file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1)) {
-                    if ($data['photo_thumb1']) {
-                        $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
+                if (!empty($parts['extension'])) {
+                    $wm_file1 = $parts['filename']."_w1.".$parts['extension'];
+                    $wm_file2 = $parts['filename']."_w2.".$parts['extension'];
+                    if (!file_exists(IMAGES_G.$wm_file1) || !file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1)) {
+                        if ($data['photo_thumb1']) {
+                            $info['photo_thumb1'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id'];
+                        }
+                        $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&full";
+                    } else {
+                        if ($data['photo_thumb1']) {
+                            $info['photo_thumb1'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1;
+                        }
+                        $info['photo_filename'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2;
                     }
-                    $info['photo_filename'] = INFUSIONS."gallery/photo.php?photo_id=".$_GET['photo_id']."&full";
-                } else {
-                    if ($data['photo_thumb1']) {
-                        $info['photo_thumb1'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file1 : IMAGES_G.$wm_file1;
-                    }
-                    $info['photo_filename'] = file_exists(IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2) ? IMAGES_G.'album_'.$data['album_id'].'/'.$wm_file2 : IMAGES_G.$wm_file2;
                 }
             } else {
                 if ($data['photo_thumb1']) {
