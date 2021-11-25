@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 1.1.0.upgrade.inc
+| Filename: 1.1.2.upgrade.inc
 | Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,11 +15,21 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$inf_version = '1.1.0';
+$inf_version = '1.1.2';
 
-if (!column_exists(DB_SHOUTBOX, 'shout_language')) {
-    $column_add = DB_SHOUTBOX." ADD shout_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER shout_ip_type";
-    dbquery("ALTER TABLE ".$column_add);
+$drop_settings = [
+    'hidden_shouts'
+];
+foreach ($drop_settings as $value) {
+    $inf_deldbrow[] = DB_SETTINGS_INF." WHERE settings_name='$value' AND settings_inf='shoutbox_panel'";
 }
 
-$inf_updatedbrow[] = DB_ADMIN." SET admin_image='../infusions/shoutbox_panel/shouts.svg', admin_page='5' WHERE admin_link='../infusions/shoutbox_panel/shoutbox_admin.php'";
+$dropcol_aaray = [
+    'shout_hidden'
+];
+
+foreach ($dropcol_aaray as $key) {
+    if (column_exists(DB_SHOUTBOX, $key, FALSE)) {
+        $inf_dropcol[] = ['table' => DB_SHOUTBOX, 'column' => $key];
+    }
+}

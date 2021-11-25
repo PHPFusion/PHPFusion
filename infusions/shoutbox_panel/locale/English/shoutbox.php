@@ -9,7 +9,6 @@ $locale['SB_desc'] = "Shoutbox panel";
 $locale['SB_edit_shout'] = "Edit shout";
 $locale['SB_entries'] = "Currently displaying %d of %d total Shout entries.";
 $locale['SB_flood'] = "Flooding! Please wait %s seconds before you write the next message.";
-$locale['SB_hidden_shouts'] = "Enable visibility mode?";
 $locale['SB_guest_shouts'] = "Allow guests to shout?";
 $locale['SB_lang'] = "Language";
 $locale['SB_login_req'] = "You must login to post a message.";

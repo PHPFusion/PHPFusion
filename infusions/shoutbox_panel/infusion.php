@@ -22,7 +22,7 @@ $locale = fusion_get_locale("", SHOUTBOX_LOCALE);
 // Infusion general information
 $inf_title = $locale['SB_title'];
 $inf_description = $locale['SB_desc'];
-$inf_version = "1.1.1";
+$inf_version = "1.1.2";
 $inf_developer = "PHP Fusion Development Team";
 $inf_email = "info@phpfusion.com";
 $inf_weburl = "https://phpfusion.com";
@@ -37,7 +37,6 @@ $inf_newtable[] = DB_SHOUTBOX." (
     shout_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     shout_ip VARCHAR(45) NOT NULL DEFAULT '',
     shout_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-    shout_hidden TINYINT(4) NOT NULL DEFAULT '0',
     shout_language VARCHAR(50) NOT NULL DEFAULT '".LANGUAGE."',
     PRIMARY KEY (shout_id),
     KEY shout_datestamp (shout_datestamp)
@@ -50,7 +49,6 @@ $inf_insertdbrow[] = DB_PANELS." (panel_name, panel_filename, panel_content, pan
 $settings = [
     'visible_shouts' => 5,
     'guest_shouts'   => 0,
-    'hidden_shouts'  => 0,
     'user_access'    => 0
 ];
 
