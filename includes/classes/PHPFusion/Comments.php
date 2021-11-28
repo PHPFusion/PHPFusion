@@ -711,7 +711,7 @@ class Comments {
             }
             $fusion_query = array_diff_key($fusion_query, array_flip(["comment_reply"]));
             $prefix = $fusion_query ? '?' : '';
-            self::$clink[$clink] = $url['path'].$prefix.http_build_query($fusion_query, NULL);
+            self::$clink[$clink] = $url['path'].$prefix.http_build_query($fusion_query);
         }
 
         return (string)self::$clink[$clink];

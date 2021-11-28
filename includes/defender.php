@@ -413,7 +413,7 @@ class Defender {
      * @return string
      */
     public function filterPostArray($key) {
-        $flag = NULL;
+        $flag = FILTER_FLAG_NONE;
         $input_key = $key;
         if (is_array($key)) {
             // always use key 0 for filter var
@@ -747,7 +747,7 @@ function check_post($key) {
  *
  * @return mixed
  */
-function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
+function get($key = NULL, $type = FILTER_DEFAULT, $flags = FILTER_FLAG_NONE) {
 
     if (is_array($key)) {
         // always use key 0 for filter var
@@ -801,7 +801,7 @@ function get($key = NULL, $type = FILTER_DEFAULT, $flags = NULL) {
  *
  * @return mixed
  */
-function post($key, $type = FILTER_DEFAULT, $flags = NULL) {
+function post($key, $type = FILTER_DEFAULT, $flags = FILTER_FLAG_NONE) {
     if (is_array($key)) {
         // always use key 0 for filter var
         $post_key = $key[0];

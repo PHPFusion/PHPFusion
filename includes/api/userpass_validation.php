@@ -21,7 +21,7 @@ defined('IN_FUSION') || exit;
  * Validate password strength
  */
 function xuserpass_validation() {
-    $userpass = (string)filter_input(INPUT_GET, 'pass', FILTER_SANITIZE_STRING);
+    $userpass = (string)filter_input(INPUT_GET, 'pass', FILTER_UNSAFE_RAW);
     $result = [];
     if (!empty($userpass)) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');

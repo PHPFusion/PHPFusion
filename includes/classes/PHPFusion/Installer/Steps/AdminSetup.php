@@ -235,7 +235,7 @@ class AdminSetup extends InstallCore {
         $timezones_json = json_decode($json_file, TRUE);
         $timezone_array = [];
         foreach ($timezones_json as $zone => $zone_city) {
-            $date = new \DateTime(NULL, new \DateTimeZone($zone));
+            $date = new \DateTime('now', new \DateTimeZone($zone));
             $offset = $date->getOffset() / 3600;
             $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
         }

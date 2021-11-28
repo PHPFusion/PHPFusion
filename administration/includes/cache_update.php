@@ -32,9 +32,9 @@ function ajax_cache_update() {
         && isset($_REQUEST['item_id']) && isnum($_REQUEST['item_id'])
     ) {
 
-        $form_id = filter_var($_REQUEST['form_id'], FILTER_SANITIZE_STRING);
-        $form_type = filter_var($_REQUEST['form_type'], FILTER_SANITIZE_STRING);
-        $item_id = filter_var($_REQUEST['item_id'], FILTER_SANITIZE_STRING);
+        $form_id = filter_var($_REQUEST['form_id'], FILTER_UNSAFE_RAW);
+        $form_type = filter_var($_REQUEST['form_type'], FILTER_UNSAFE_RAW);
+        $item_id = filter_var($_REQUEST['item_id'], FILTER_UNSAFE_RAW);
 
         if (iADMIN && fusion_get_aidlink() == $_REQUEST['aidlink']) {
             if ($_REQUEST['callback'] == 'set_cache') {

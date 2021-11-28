@@ -143,7 +143,7 @@ function comments_listing() {
     $locale = fusion_get_locale();
 
     $comment_types = \PHPFusion\Admins::getInstance()->getCommentType();
-    $ctype = in_array(get('ctype', FILTER_SANITIZE_STRING), array_keys($comment_types)) ? get('ctype', FILTER_SANITIZE_STRING) : key($comment_types);
+    $ctype = in_array(get('ctype', FILTER_UNSAFE_RAW), array_keys($comment_types)) ? get('ctype', FILTER_UNSAFE_RAW) : key($comment_types);
 
     if (check_get('action') && get('action') == 'delete' && get('comment_id', FILTER_SANITIZE_NUMBER_INT)) {
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_id=:comment_id", [':comment_id' => get('comment_id')]);

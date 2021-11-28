@@ -34,11 +34,11 @@ class ImagesAdministration {
         self::$locale = fusion_get_locale();
         self::$settings = fusion_get_settings();
 
-        $this->data['afolder'] = check_get('ifolder') && get('ifolder', FILTER_SANITIZE_STRING) ? $this->getImgFolders()[get('ifolder')]['path'] : IMAGES;
+        $this->data['afolder'] = check_get('ifolder') && get('ifolder', FILTER_UNSAFE_RAW) ? $this->getImgFolders()[get('ifolder')]['path'] : IMAGES;
 
         switch (get('action')) {
             case 'delete':
-                unlink($this->data['afolder'].get('view', FILTER_SANITIZE_STRING));
+                unlink($this->data['afolder'].get('view', FILTER_UNSAFE_RAW));
                 addnotice('success', self::$locale['401']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
@@ -90,7 +90,7 @@ class ImagesAdministration {
     private function imageList() {
         $aidlink = fusion_get_aidlink();
 
-        $ifolder = check_get('ifolder') && get('ifolder', FILTER_SANITIZE_STRING) ? get('ifolder') : 'images';
+        $ifolder = check_get('ifolder') && get('ifolder', FILTER_UNSAFE_RAW) ? get('ifolder') : 'images';
 
         echo "<div class='text-center m-b-15'>";
         echo "<div class='btn-group'>\n";
@@ -129,7 +129,7 @@ class ImagesAdministration {
     }
 
     private function addImageForm() {
-        $ifolder = check_get('ifolder') && get('ifolder', FILTER_SANITIZE_STRING) ? get('ifolder') : 'images';
+        $ifolder = check_get('ifolder') && get('ifolder', FILTER_UNSAFE_RAW) ? get('ifolder') : 'images';
 
         if (check_post('uploadimage')) {
             if (fusion_safe()) {

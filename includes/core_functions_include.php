@@ -318,11 +318,14 @@ function cleanurl($url) {
  * @return array|string The given string decoded as non HTML text.
  */
 function stripinput($text) {
-    if (!is_array($text)) {
+    if (!is_array($text) && !is_null($text)) {
         return str_replace('\\', '&#092;', htmlspecialchars(stripslashes(trim($text)), ENT_QUOTES));
     }
-    foreach ($text as $i => $item) {
-        $text[$i] = stripinput($item);
+
+    if (is_array($text) && !is_null($text)) {
+        foreach ($text as $i => $item) {
+            $text[$i] = stripinput($item);
+        }
     }
 
     return $text;
@@ -1058,7 +1061,7 @@ function highlight_words($words, $subject) {
  * @return string|array Sanitized and safe string.
  */
 function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
-    if (is_array($text)) {
+    if (is_array($text) || is_null($text)) {
         return $text;
     }
 
@@ -1867,17 +1870,36 @@ function showdate($format, $val, $options = []) {
         $offset = (int)$val + $offset;
         if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
             $format = fusion_get_settings($format);
-            return strftime($format, $offset);
+            return format_date($format, $offset);
         }
 
-        return strftime($format, $offset);
+        return format_date($format, $offset);
 
     }
 
     $format = fusion_get_settings($format);
     $offset = time() + $offset;
 
-    return strftime($format, $offset);
+    return format_date($format, $offset);
+}
+
+/**
+ * Format date - replacement for strftime()
+ *
+ * @param string $format Dateformat
+ * @param int    $time   Timestamp
+ *
+ * @return string
+ */
+function format_date($format, $time) {
+    $format = str_replace(
+        ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'],
+        ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'A', 'a', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'],
+        $format
+    );
+
+    $date = DateTimeImmutable::createFromFormat('U', $time);
+    return $date->format($format);
 }
 
 /**

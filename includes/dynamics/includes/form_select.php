@@ -703,7 +703,7 @@ function user_search($users, $delimiter) {
  *
  * @return string
  */
-function form_select_tree($input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = FALSE, $data = FALSE) {
+function form_select_tree($input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = [], $data = FALSE) {
     $html = '';
     $locale = fusion_get_locale();
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));

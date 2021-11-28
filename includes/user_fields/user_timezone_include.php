@@ -23,7 +23,7 @@ if ($profile_method == "input") {
     $timezones_json = json_decode($json_file, TRUE);
     $timezone_array = [];
     foreach ($timezones_json as $zone => $zone_city) {
-        $date = new DateTime(NULL, new DateTimeZone($zone));
+        $date = new DateTime('now', new DateTimeZone($zone));
         $offset = $date->getOffset() / 3600;
         $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
     }
@@ -36,7 +36,7 @@ if ($profile_method == "input") {
     // Display in profile
 } else if ($profile_method == "display") {
     if (!empty($field_value)) {
-        $date = new DateTime(NULL, new DateTimeZone($field_value));
+        $date = new DateTime('now', new DateTimeZone($field_value));
         $offset = $date->getOffset() / 3600;
         $field_value = 'GMT'.($offset < 0 ? $offset : '+'.$offset);
 

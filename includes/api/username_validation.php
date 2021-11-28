@@ -20,7 +20,7 @@ defined('IN_FUSION') || exit;
  * Username validation
  */
 function xusername_validation() {
-    $username = (string)filter_input(INPUT_GET, 'name', FILTER_SANITIZE_STRING);
+    $username = (string)filter_input(INPUT_GET, 'name', FILTER_UNSAFE_RAW);
     $result = [];
     if (!empty($username)) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'user_fields.php');
