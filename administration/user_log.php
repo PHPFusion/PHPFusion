@@ -71,9 +71,9 @@ if (isset($_POST) && !empty($_POST)) {
 }
 
 // End $_GET Vars
-if (check_post('log_id')) {
-    if (check_post('table_action') && check_post('log_id')) {
-        $input = (check_post('log_id')) ? explode(",", sanitizer('log_id', "", "log_id")) : "";
+if (check_post(['log_id'])) {
+    if (check_post('table_action') && check_post(['log_id'])) {
+        $input = post(['log_id']) ? explode(",", sanitizer(['log_id'], "", "log_id")) : [];
         if (!empty($input)) {
             foreach ($input as $log_id) {
                 dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:logid", [':logid' => $log_id]);
