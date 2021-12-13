@@ -59,23 +59,14 @@ function dbquery($query, $print = FALSE) {
  * @param string $table      Table name
  * @param string $conditions conditions after "where"
  *
- * @return boolean
- * @global int   $mysql_queries_count
- * @global array $mysql_queries_time
- *
+ * @return int
  */
 function dbcount($field, $table, $conditions = "") {
     $cond = ($conditions ? " WHERE ".$conditions : "");
     $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
-    try {
-        $statement = dbconnection()->prepare($sql);
-        $statement->execute();
-        return $statement->fetchColumn();
-    } catch (PDOException $e) {
-        trigger_error($e->getMessage(), E_USER_ERROR);
-        echo $e;
-        return FALSE;
-    }
+    $statement = dbquery($sql);
+
+    return $statement ? $statement->fetchColumn() : FALSE;
 }
 
 /**
