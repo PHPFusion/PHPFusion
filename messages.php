@@ -238,8 +238,8 @@ if (isset($_POST['send_message'])) {
     if (!$error) {
         $cdata = dbarray(dbquery("SELECT COUNT(message_id) AS outbox_count, MIN(message_id) AS last_message FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' AND message_folder='1' GROUP BY message_to"));
         if ($my_settings['pm_save_sent']) {
-            $cdata['outbox_count'] = !empty($cdata['outbox_count']) ? $cdata['outbox_count'] : 0;
-            if ($msg_settings['pm_sentbox'] != "0" && ($cdata['outbox_count'] + 1) > $msg_settings['pm_sentbox']) {
+            $outbox_count = !empty($cdata['outbox_count']) ? $cdata['outbox_count'] : 0;
+            if ($msg_settings['pm_sentbox'] != "0" && ($outbox_count + 1) > $msg_settings['pm_sentbox']) {
                 $result = dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_id='".$cdata['last_message']."' AND message_to='".$userdata['user_id']."'");
             }
             if (isset($_POST['chk_sendtoall']) && isnum($_POST['msg_to_group'])) {
@@ -280,11 +280,12 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
     $bdata = dbarray(dbquery("SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
 		COUNT(IF(message_folder=1, 1, null)) outbox_total, COUNT(IF(message_folder=2, 1, null)) archive_total
 		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"));
-    $bdata['inbox_total'] = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
-    $bdata['outbox_total'] = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
-    $bdata['archive_total'] = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
+
+    $inbox_total = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
+    $outbox_total = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
+    $archive_total = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
     if ($_GET['folder'] == "inbox") {
-        $total_rows = $bdata['inbox_total'];
+        $total_rows = $inbox_total;
         $result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
@@ -292,7 +293,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 			WHERE message_to='".$userdata['user_id']."' AND message_folder='0'
 			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
     } else if ($_GET['folder'] == "outbox") {
-        $total_rows = $bdata['outbox_total'];
+        $total_rows = $outbox_total;
         $result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
@@ -300,7 +301,7 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
 			WHERE message_to='".$userdata['user_id']."' AND message_folder='1'
 			ORDER BY message_datestamp DESC LIMIT ".$_GET['rowstart'].",20");
     } else if ($_GET['folder'] == "archive") {
-        $total_rows = $bdata['archive_total'];
+        $total_rows = $archive_total;
         $result = dbquery("SELECT m.message_id, m.message_subject, m.message_read, m.message_datestamp,
 			u.user_id, u.user_name, u.user_status
 			FROM ".DB_MESSAGES." m
@@ -316,9 +317,9 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
         echo "<form name='pm_form' method='post' action='".BASEDIR."messages.php?folder=".$_GET['folder']."'>\n";
     echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
     echo "<tr>\n<td align='left' width='100%' class='tbl'><a href='".BASEDIR."messages.php?msg_send=0'>".$locale['401']."</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=inbox'>".$locale['402']." [".$inbox_total."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=outbox'>".$locale['403']." [".$outbox_total."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=archive'>".$locale['404']." [".$archive_total."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
     echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "options" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=options'>".$locale['425']."</a></td>\n";
     echo "</tr>\n</table>\n";
     if ($total_rows) {
@@ -379,18 +380,18 @@ if (!isset($_GET['msg_send']) && !isset($_GET['msg_read']) && $_GET['folder'] !=
     $bdata = dbarray(dbquery("SELECT COUNT(IF(message_folder=0, 1, null)) inbox_total,
 		COUNT(IF(message_folder=1, 1, null)) outbox_total, COUNT(IF(message_folder=2, 1, null)) archive_total
 		FROM ".DB_MESSAGES." WHERE message_to='".$userdata['user_id']."' GROUP BY message_to"));
-    $bdata['inbox_total'] = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
-    $bdata['outbox_total'] = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
-    $bdata['archive_total'] = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
+    $inbox_total = isset($bdata['inbox_total']) ? $bdata['inbox_total'] : "0";
+    $outbox_total = isset($bdata['outbox_total']) ? $bdata['outbox_total'] : "0";
+    $archive_total = isset($bdata['archive_total']) ? $bdata['archive_total'] : "0";
     $folders = ["inbox"   => $locale['402'], "outbox" => $locale['403'], "archive" => $locale['404'],
                 "options" => $locale['425']];
     add_to_title($locale['global_201'].$folders[$_GET['folder']]);
     opentable($locale['400']);
     echo "<table cellpadding='0' cellspacing='0' width='100%'>\n";
     echo "<tr>\n<td align='left' width='100%' class='tbl'><a href='".BASEDIR."messages.php?msg_send=0'>".$locale['401']."</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=inbox'>".$locale['402']." [".$bdata['inbox_total']."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=outbox'>".$locale['403']." [".$bdata['outbox_total']."/".($msg_settings['pm_sentbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
-    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=archive'>".$locale['404']." [".$bdata['archive_total']."/".($msg_settings['pm_savebox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "inbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=inbox'>".$locale['402']." [".$inbox_total."/".($msg_settings['pm_inbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "outbox" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=outbox'>".$locale['403']." [".$outbox_total."/".($msg_settings['pm_sentbox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
+    echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "archive" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=archive'>".$locale['404']." [".$archive_total."/".($msg_settings['pm_savebox'] != 0 ? $msg_settings['pm_inbox'] : "&infin;")."]</a></td>\n";
     echo "<td width='1%' class='tbl' style='white-space:nowrap;font-weight:".($_GET['folder'] == "options" ? "bold" : "normal")."'><a href='".BASEDIR."messages.php?folder=options'>".$locale['425']."</a></td>\n";
     echo "</tr>\n</table>\n";
     echo "<div style='margin:4px;'></div>\n";
