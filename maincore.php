@@ -569,12 +569,22 @@ function trimlink($text, $length) {
     return $text;
 }
 
-// Validate numeric input
-function isnum($value) {
-    if (!is_array($value)) {
-        return (preg_match("/^[0-9]+$/", $value));
+/**
+ * Validate numeric input.
+ *
+ * @param mixed $value    The value to be checked.
+ * @param bool  $decimal  Decimals.
+ * @param bool  $negative Negative numbers.
+ *
+ * @return bool True if the value is a number.
+ */
+function isnum($value, $decimal = FALSE, $negative = FALSE) {
+    if ($negative == TRUE) {
+        return is_numeric($value);
     } else {
-        return FALSE;
+        $float = $decimal ? '(.{0,1})[0-9]*' : '';
+
+        return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
     }
 }
 
@@ -591,8 +601,8 @@ function preg_check($expression, $value) {
 function cache_smileys() {
     global $smiley_cache;
     $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
+    $smiley_cache = [];
     if (dbrows($result)) {
-        $smiley_cache = [];
         while ($data = dbarray($result)) {
             $smiley_cache[] = [
                 "smiley_code"  => $data['smiley_code'],
@@ -600,9 +610,9 @@ function cache_smileys() {
                 "smiley_text"  => $data['smiley_text']
             ];
         }
-    } else {
-        $smiley_cache = [];
     }
+
+    return $smiley_cache;
 }
 
 // Parse smiley bbcode
@@ -647,14 +657,13 @@ function displaysmileys($textarea, $form = "inputform") {
 function cache_bbcode() {
     global $bbcode_cache;
     $result = dbquery("SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order ASC");
+    $bbcode_cache = [];
     if (dbrows($result)) {
-        $bbcode_cache = [];
         while ($data = dbarray($result)) {
             $bbcode_cache[] = $data['bbcode_name'];
         }
-    } else {
-        $bbcode_cache = [];
     }
+    return $bbcode_cache;
 }
 
 // Parse bbcode
@@ -785,10 +794,10 @@ function highlight_words($word, $subject) {
  * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
  * @param bool    $strip_scripts
  *
- * @return string
+ * @return string|array
  */
 function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
-    if (is_array($text)) {
+    if (is_array($text) && !is_null($text)) {
         return $text;
     }
 
@@ -1034,14 +1043,13 @@ function checkgroup($group) {
 function cache_groups() {
     global $groups_cache;
     $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id ASC");
+    $groups_cache = [];
     if (dbrows($result)) {
-        $groups_cache = [];
         while ($data = dbarray($result)) {
             $groups_cache[] = $data;
         }
-    } else {
-        $groups_cache = [];
     }
+    return $groups_cache;
 }
 
 // Compile access levels & user group array
@@ -1056,11 +1064,10 @@ function getusergroups() {
     if (!$groups_cache) {
         cache_groups();
     }
-    if (is_array($groups_cache) && count($groups_cache)) {
+    if (is_array($groups_cache) && count($groups_cache))
         foreach ($groups_cache as $group) {
-            array_push($groups_array, [$group['group_id'], $group['group_name']]);
+            $groups_array[] = [$group['group_id'], $group['group_name']];
         }
-    }
     return $groups_array;
 }
 
@@ -1221,10 +1228,30 @@ function showdate($format, $val) {
         $offset = $settings['timeoffset'] + $settings['serveroffset'];
     }
     if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-        return strftime($settings[$format], $val + ($offset * 3600));
+        return format_date($settings[$format], $val + ($offset * 3600));
     } else {
-        return strftime($format, $val + ($offset * 3600));
+        return format_date($format, $val + ($offset * 3600));
     }
+}
+
+/**
+ * Format date - replacement for strftime()
+ *
+ * @param string $format Dateformat
+ * @param int    $time   Timestamp
+ *
+ * @return string
+ */
+function format_date($format, $time) {
+    $format = str_replace(
+        ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'],
+        ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'A', 'a', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'],
+        $format
+    );
+
+    $date = DateTimeImmutable::createFromFormat('U', $time);
+
+    return $date->format($format);
 }
 
 // Translate bytes into kB, MB, GB or TB by CrappoMan, lelebart fix
@@ -1402,10 +1429,10 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html .= "</div>\n";
     $root_prefix = fusion_get_settings("site_seo") == 1 ? fusion_get_settings('siteurl')."includes/" : INCLUDES;
     $root_img = fusion_get_settings("site_seo") == 1 && !defined('ADMIN_PANEL') ? fusion_get_settings('siteurl') : '';
-    $path = $options['file'] ? $options['file'] : $root_prefix."jscripts/select2/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
+    $path = !empty($options['file']) ? $options['file'] : $root_prefix."jscripts/select2/users.json.php".($options['allow_self'] ? "?allow_self=true" : "");
 
     if (!empty($input_value)) {
-        $encoded = $options['file'] ? $options['file'] : user_search($input_value);
+        $encoded = !empty($options['file']) ? $options['file'] : user_search($input_value);
     } else {
         $encoded = json_encode([]);
     }
@@ -1462,7 +1489,7 @@ function user_search($user_id) {
     if (dbrows($result) > 0) {
         while ($udata = dbarray($result)) {
             $user_id = $udata['user_id'];
-            $user_avatar = ($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
+            $user_avatar = !empty($udata['user_avatar']) ? $udata['user_avatar'] : "noavatar50.png";
             $user_name = $udata['user_name'];
             $user_level = getuserlevel($udata['user_level']);
             $user_opts[] = [
@@ -1547,7 +1574,7 @@ function infusion_exists($infusion_folder) {
             }
         }
     }
-    return (boolean)(isset($infusions_installed[$infusion_folder]));
+    return isset($infusions_installed[$infusion_folder]);
 }
 
 function db_exists($table) {
@@ -1642,28 +1669,38 @@ function rrmdir($dir) {
 }
 
 /**
- * Get HTTP response code
+ * Get HTTP response code.
  *
- * @param $url
+ * @param string $url URL.
  *
  * @return false|string
  */
 function get_http_response_code($url) {
-    stream_context_set_default([
-        'ssl' => [
-            'verify_peer'      => FALSE,
-            'verify_peer_name' => FALSE
-        ],
-    ]);
+    if (function_exists('curl_init')) {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_exec($handle);
+        $http_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
 
-    $headers = @get_headers($url);
-    return substr($headers[0], 9, 3);
+        return $http_code;
+    } else {
+        stream_context_set_default([
+            'ssl' => [
+                'verify_peer'      => FALSE,
+                'verify_peer_name' => FALSE
+            ],
+        ]);
+
+        $headers = @get_headers($url);
+        return substr($headers[0], 9, 3);
+    }
 }
 
 /**
- * cURL method to get any contents for Apache that does not support SSL for remote paths
+ * cURL method to get any contents for Apache that does not support SSL for remote paths.
  *
- * @param $url
+ * @param string $url
  *
  * @return bool|string
  */
