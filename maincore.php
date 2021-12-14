@@ -797,7 +797,7 @@ function highlight_words($word, $subject) {
  * @return string|array
  */
 function descript($text, $striptags = TRUE, $strip_scripts = TRUE) {
-    if (is_array($text) && !is_null($text)) {
+    if (is_array($text) || is_null($text)) {
         return $text;
     }
 
