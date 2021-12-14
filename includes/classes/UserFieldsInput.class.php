@@ -708,7 +708,7 @@ class UserFieldsInput {
                 if ($i == 0) {
                     $sql = "INSERT INTO ".DB_USER_LOG." (userlog_user_id, userlog_field, userlog_value_new, userlog_value_old, userlog_timestamp) VALUES ";
                 }
-                $sql .= ($i > 0 ? ", " : "")."('".$this->userData[$field]."', '".$field."', '".$value."', '".$this->userData[$field]."', '".time()."')";
+                $sql .= ($i > 0 ? ", " : "")."(".$this->userData['user_id'].", '".$field."', '".$value."', '".$this->userData[$field]."', ".time().")";
                 $i++;
             }
         }

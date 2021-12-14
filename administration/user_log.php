@@ -74,12 +74,12 @@ if (isset($_GET) && !empty($_GET)) {
 if (isset($_POST['delete']) && isnum($_POST['delete'])) {
     $time = time() - $_POST['delete'] * 24 * 60 * 60;
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<".$time);
-    echo "<div id='close-message'><div class='admin-message'>".sprintf($locale['118'], $_POST['delete'])."</div></div>\n";
+    echo "<div id='close-message'><div class='admin-message alert alert-info'>".sprintf($locale['118'], $_POST['delete'])."</div></div>\n";
 }
 
 if (isset($_GET['delete']) && isnum($_GET['delete'])) {
     $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id='".$_GET['delete']."'");
-    echo "<div id='close-message'><div class='admin-message'>".$locale['119']."</div></div>\n";
+    echo "<div id='close-message'><div class='admin-message alert alert-info'>".$locale['119']."</div></div>\n";
 }
 
 function orderbyOptions($select) {
