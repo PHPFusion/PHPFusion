@@ -95,7 +95,7 @@ if (isset($_GET['action']) && $_GET['action'] == "refresh") {
                 $c_data = dbarray($c_query);
                 $field_cat_db = $c_data['field_cat_db'] ? DB_PREFIX.$c_data['field_cat_db'] : DB_USERS;
             }
-            if (!$user_field_dbinfo || $result = dbquery("ALTER TABLE ".$field_cat_db." ADD ".$user_field_dbname." ".$user_field_dbinfo)
+            if (!$user_field_dbinfo || $result = dbquery("ALTER TABLE ".(!empty($field_cat_db) ? $field_cat_db : DB_USERS)." ADD ".$user_field_dbname." ".$user_field_dbinfo)
             ) {
                 $result = dbquery("INSERT INTO ".DB_USER_FIELDS." (
                         field_name, field_cat, field_required, field_log, field_registration, field_order
