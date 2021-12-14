@@ -58,9 +58,9 @@ class Errors {
     public function __construct() {
 
         self::$locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/errors.php', LOCALE.LOCALESET.'errors.php']);
-        $this->error_status = (int)descript(post('error_status', FILTER_VALIDATE_INT));
-        $this->posted_error_id = (int)descript(post('error_id', FILTER_VALIDATE_INT));
-        $this->delete_status = (int)descript(post('delete_status', FILTER_VALIDATE_INT));
+        $this->error_status = check_post('error_status') ? (int)descript(post('error_status', FILTER_VALIDATE_INT)) : 0;
+        $this->posted_error_id = check_post('error_id') ? (int)descript(post('error_id', FILTER_VALIDATE_INT)) : 0;
+        $this->delete_status = check_post('delete_status') ? (int)descript(post('delete_status', FILTER_VALIDATE_INT)) : 0;
         $this->rowstart = (int)get('rowstart', FILTER_VALIDATE_INT);
         $this->error_id = (int)get('error_id', FILTER_VALIDATE_INT);
 

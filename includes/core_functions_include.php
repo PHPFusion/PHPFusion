@@ -1521,7 +1521,7 @@ function blacklist($field) {
 function user_blacklisted($user_id, $me = FALSE) {
     if (column_exists('users', 'user_blacklist')) {
         $my_id = fusion_get_userdata('user_id');
-        if ($me) {
+        if ($me && !empty(fusion_get_userdata('user_blacklist'))) {
             $blacklist = explode(',', fusion_get_userdata('user_blacklist'));
             if (!empty($blacklist)) {
                 foreach ($blacklist as $id) {
