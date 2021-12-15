@@ -41,8 +41,8 @@ class PageView extends PageController {
                 $row_htmlId = (!empty($row_prop['page_grid_html_id']) ? $row_prop['page_grid_html_id'] : "row-".$row_id);
                 $row_htmlClass = ($row_prop['page_grid_class'] ? " ".$row_prop['page_grid_class'] : "");
                 if ($row_prop['page_content'] or $row_prop['page_options']) {
-                    $html .= "<div id='$row_htmlId' class='row'$row_htmlClass>\n";
                     $html .= ($row_prop['page_grid_container'] ? "<div class='container'>\n" : "");
+                    $html .= "<div id='$row_htmlId' class='row'$row_htmlClass>\n";
                     foreach ($columns as $colData) {
                         if ($colData['page_content_id']) {
                             $span = self::calculateSpan($colData['page_grid_column_count']);
