@@ -243,7 +243,7 @@ function mg_user_menu() {
 function opentable($title = FALSE, $class = '') {
     echo '<div class="opentable">';
     echo $title ? '<div class="title">'.$title.'</div>' : '';
-    echo '<div class="'.$class.'">';
+    echo '<div'.(!empty($class) ? ' class="'.$class.'"' : '').'>';
 }
 
 function closetable() {
