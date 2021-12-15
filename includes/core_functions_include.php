@@ -2397,7 +2397,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
         // do not inspect this file
         $return_file = $file;
         // inspect only on min file
-        $m_min_file = str_replace(fusion_get_settings('siteurl'), BASEDIR, $min_file);
+        $m_min_file = str_replace((!empty(fusion_get_settings('siteurl')) ? fusion_get_settings('siteurl') : get_current_url()), BASEDIR, $min_file);
         if (is_file($m_min_file)) { // fixes https:// on local server
             $return_file = $m_min_file;
         } else if (is_file($min_file)) { // checks local server
