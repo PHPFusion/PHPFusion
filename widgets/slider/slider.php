@@ -21,6 +21,8 @@
  * Display driver of carousel widget
  */
 class carouselWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+    }
 
     private static $sliderData = [];
     private static $sliderOptions = [];

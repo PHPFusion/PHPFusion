@@ -18,7 +18,7 @@
 
 class panelWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    public function display_info($colData) {
+    public function displayInfo($colData) {
         $panelData = \Defender::unserialize($colData['page_content']);
 
         return fusion_get_locale('PW_0222', WIDGETS."panel/locale/".LANGUAGE.".php").": ".$panelData['panel_include'];

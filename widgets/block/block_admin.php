@@ -115,8 +115,9 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
 
     public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', ['class' => 'btn-primary']);
-        echo form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', ['class' => 'btn-success']);
+        $html = form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', ['class' => 'btn-primary']);
+        $html .= form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }

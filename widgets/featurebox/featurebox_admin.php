@@ -262,8 +262,9 @@ class featureboxWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine 
 
     public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['FBW_0228'], 'widget', ['class' => 'btn-primary']);
-        echo form_button('save_and_close_widget', $widget_locale['FBW_0229'], 'widget', ['class' => 'btn-success']);
+        $html = form_button('save_widget', $widget_locale['FBW_0228'], 'widget', ['class' => 'btn-primary']);
+        $html .= form_button('save_and_close_widget', $widget_locale['FBW_0229'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }

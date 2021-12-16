@@ -75,7 +75,7 @@ interface WidgetAdminInterface {
      * 'widget' will pair with validateInput() function to return against 'page_content' column
      * 'settings' will pair with validateSettings() function to return against 'page_options' column
      *
-     * @return mixed
+     * @return string
      */
     public function displayFormButton();
 }

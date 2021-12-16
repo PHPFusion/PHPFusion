@@ -495,10 +495,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                 break;
         }
 
-        echo form_button('save_widget', self::$slider_locale['SLDW_0600'], $input_value, ['class' => 'btn-primary']);
+        $html = form_button('save_widget', self::$slider_locale['SLDW_0600'], $input_value, ['class' => 'btn-primary']);
         if (self::$new_slider === FALSE) {
-            echo form_button('save_and_close_widget', self::$slider_locale['SLDW_0601'], $input_value, ['class' => 'btn-success']);
+            $html .= form_button('save_and_close_widget', self::$slider_locale['SLDW_0601'], $input_value, ['class' => 'btn-success']);
         }
-
+        return $html;
     }
 }

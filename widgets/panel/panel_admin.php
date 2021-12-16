@@ -82,8 +82,9 @@ class panelWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
 
     public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/panel/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['PW_0220'], 'widget', ['class' => 'btn-primary']);
-        echo form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', ['class' => 'btn-success']);
+        $html = form_button('save_widget', $widget_locale['PW_0220'], 'widget', ['class' => 'btn-primary']);
+        $html .= form_button('save_and_close_widget', $widget_locale['PW_0221'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }

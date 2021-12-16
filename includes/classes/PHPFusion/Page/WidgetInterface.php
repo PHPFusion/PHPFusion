@@ -18,6 +18,14 @@
 namespace PHPFusion\Page;
 
 interface WidgetInterface {
+    /**
+     * Widget description
+     *
+     * @param $colData - the data input for the driver for your consideration
+     *
+     * @return string
+     */
+    public function displayInfo($colData);
 
     /**
      * Widget display driver which returns a html string

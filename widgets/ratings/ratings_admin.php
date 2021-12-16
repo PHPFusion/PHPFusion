@@ -45,6 +45,7 @@ class ratingsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imp
     }
 
     public function displayFormButton() {
+        return '';
     }
 
     public function displayFormInput() {

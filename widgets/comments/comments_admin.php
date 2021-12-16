@@ -45,6 +45,7 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
     }
 
     public function displayFormButton() {
+        return '';
     }
 
     public function displayFormInput() {

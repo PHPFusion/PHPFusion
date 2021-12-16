@@ -20,6 +20,8 @@
  * Class commentsWidget
  */
 class commentsWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+    }
 
     public function displayWidget($columnData) {
         ob_start();

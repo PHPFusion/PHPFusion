@@ -68,7 +68,7 @@ class PageModel {
         'page_content_id'    => 0,
         'page_content_type'  => 'content',
         'page_content'       => '',
-        'page_content_order' => 1,
+        'page_content_order' => 0,
         'page_options'       => ''
     ];
     private static $pageInstance = NULL;

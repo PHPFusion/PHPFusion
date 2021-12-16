@@ -17,6 +17,10 @@
 +--------------------------------------------------------*/
 
 class fileWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+        $data = \Defender::unserialize($colData['page_content']);
+        return $data['file_url'];
+    }
 
     public function displayWidget($columnData) {
         $fileData = \Defender::unserialize($columnData['page_content']);

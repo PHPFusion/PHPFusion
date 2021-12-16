@@ -141,10 +141,10 @@ class ComposeEngine extends PageAdmin {
                     </div>
                     <div class='pull-right'>
                         <?php if ($gridData['page_grid_html_id']) : ?>
-                            <span class='label label-success'>HTML: #<?php echo $gridData['page_grid_html_id'] ?></span>
+                            <span class='label label-success'>HTML: #<?php echo $gridData['page_grid_html_id']; ?></span>
                         <?php endif; ?>
                         <?php if ($gridData['page_grid_class']) : ?>
-                            <span class='label label-warning'>CSS: .<?php echo $gridData['page_grid_class'] ?></span>
+                            <span class='label label-warning'>CSS: .<?php echo str_replace(' ', ' .', $gridData['page_grid_class']); ?></span>
                         <?php endif; ?>
                     </div>
                     <div class='btn-group btn-group-sm m-b-10'>
@@ -174,10 +174,9 @@ class ComposeEngine extends PageAdmin {
                         // current column count is 1
                         $column_count = $_hasContent ? count($columns) : 0;
                         for ($i = $gridData['page_grid_column_count']; $i > $column_count; $i--) {
-                            $style = "border:1px dashed #ccc; min-height:60px; content:''";
                             ?>
                             <div class='<?php echo self::calculateSpan($gridData['page_grid_column_count']) ?>'>
-                                <div style='<?php echo $style ?>'></div>
+                                <div style='border:1px dashed #ccc;height:60px;'></div>
                             </div>
                             <?php
                         }
@@ -254,15 +253,14 @@ class ComposeEngine extends PageAdmin {
             'page_grid_id'           => form_sanitizer($_POST['page_grid_id'], '0', 'page_grid_id'),
             'page_id'                => self::$data['page_id'],
             'page_grid_column_count' => form_sanitizer($_POST['page_grid_column_count'], 1, 'page_grid_column_count'),
-            'page_grid_html_id'      => form_sanitizer($_POST['page_grid_html_id'], 0, 'page_grid_html_id'),
-            'page_grid_container'    => form_sanitizer($_POST['page_grid_container'], 0, 'page_grid_container'),
+            'page_grid_html_id'      => form_sanitizer($_POST['page_grid_html_id'], '', 'page_grid_html_id'),
+            'page_grid_container'    => form_sanitizer($_POST['page_grid_container'], '', 'page_grid_container'),
             'page_grid_class'        => form_sanitizer($_POST['page_grid_class'], '', 'page_grid_class'),
             'page_grid_order'        => form_sanitizer($_POST['page_grid_order'], 0, 'page_grid_order')
         ];
 
         if (empty(self::$rowData['page_grid_order'])) {
-            self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT COUNT(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => self::$data['page_id']]),
-                    0) + 1;
+            self::$rowData['page_grid_order'] = dbresult(dbquery("SELECT MAX(page_grid_id) FROM ".DB_CUSTOM_PAGES_GRID." WHERE page_id=:pageid", [':pageid' => self::$data['page_id']]), 0) + 1;
         }
     }
 
@@ -493,11 +491,8 @@ class ComposeEngine extends PageAdmin {
             }
 
             $object_button = form_button('save_widget', self::$locale['page_0355'], 'save_widget', ['class' => 'btn btn-primary']);
-            if (method_exists($object, 'displayFormButton')) {
-                ob_start();
-                $object->displayFormButton();
-                $object_button = ob_get_contents();
-                ob_end_clean();
+            if (method_exists($object, 'displayFormButton') && !empty($object->displayFormButton())) {
+                $object_button = $object->displayFormButton();
             }
 
             ob_start();
@@ -519,10 +514,7 @@ class ComposeEngine extends PageAdmin {
             ]); ?>
 
             <?php
-            echo modalfooter($object_button."<a class='btn btn-default' href='".clean_request('',
-                    self::$composer_exclude,
-                    FALSE)."'>".self::$locale['cancel']."</a>
-            ");
+            echo modalfooter($object_button."<a class='btn btn-default' href='".clean_request('', self::$composer_exclude, FALSE)."'>".self::$locale['cancel']."</a>");
             echo closeform();
             echo closemodal();
             add_to_footer(ob_get_contents());
@@ -604,14 +596,14 @@ class ComposeEngine extends PageAdmin {
                                     echo self::$locale['page_0441'];
                                     echo "</h5>\n";
                                 } else {
-                                    echo ucfirst($colData['page_content_type'])."</h5>\n<i class='text-lighter'>";
+                                    echo ucfirst($colData['page_content_type'])."</h5><span class='text-lighter'>";
                                     $current_widget = self::$widgets[$colData['page_widget']]['display_instance'];
-                                    if (method_exists($current_widget, 'display_info')) {
-                                        echo $current_widget->display_info($colData);
+                                    if (method_exists($current_widget, 'displayInfo') && !empty($current_widget->displayInfo($colData))) {
+                                        echo $current_widget->displayInfo($colData);
                                     } else {
                                         echo fusion_get_locale('na');
                                     }
-                                    echo "</i>\n";
+                                    echo "</span>";
                                 }
                                 ?>
                         </div>

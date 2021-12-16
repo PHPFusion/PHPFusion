@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 
 class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+    }
 
     public function displayWidget($columnData) {
         $blockData = \Defender::unserialize($columnData['page_content']);
@@ -33,5 +35,4 @@ class blockWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\W
         <?php
         return ob_get_clean();
     }
-
 }

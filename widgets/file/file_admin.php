@@ -41,7 +41,7 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
     public function validateInput() {
 
         self::$widget_data = [
-            'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
+            //'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
             'file_url'   => form_sanitizer($_POST['file_url'], '', 'file_url'),
         ];
         if (fusion_safe()) {
@@ -65,14 +65,15 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
         if (!empty(self::$colData['page_content'])) {
             self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
-        echo form_text('file_title', $widget_locale['f0100'], self::$widget_data['file_title'], ['inline' => TRUE, 'required' => TRUE]);
+        //echo form_text('file_title', $widget_locale['f0100'], self::$widget_data['file_title'], ['inline' => TRUE, 'required' => TRUE]);
         echo form_text('file_url', $widget_locale['f0102'], self::$widget_data['file_url'], ['inline' => TRUE, 'required' => TRUE]);
     }
 
     public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/file/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['f0103'], 'widget', ['class' => 'btn-primary']);
-        echo form_button('save_and_close_widget', $widget_locale['f0104'], 'widget', ['class' => 'btn-success']);
+        //$html = form_button('save_widget', $widget_locale['f0103'], 'widget', ['class' => 'btn-primary']);
+        $html = form_button('save_and_close_widget', $widget_locale['f0104'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }
