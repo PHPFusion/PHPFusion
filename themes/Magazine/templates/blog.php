@@ -289,5 +289,5 @@ function display_blog_item($info) {
                 closeside();
             }
         echo '</div>';
-    echo '</div>';
+    echo '</div></div>';
 }
