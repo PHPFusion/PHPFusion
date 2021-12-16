@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: language_panel.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Author: Joakim Falk (Falk)
 +--------------------------------------------------------+
 | This program is released as free software under the

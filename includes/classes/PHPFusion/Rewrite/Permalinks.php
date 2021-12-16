@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: Permalinks.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+

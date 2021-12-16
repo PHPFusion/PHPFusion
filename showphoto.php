@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: showphoto.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Co-Author: Robert Gaudyn (Wooya)
 +--------------------------------------------------------+
 | This program is released as free software under the

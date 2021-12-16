@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: submit.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Co-Author: Daywalker
 +--------------------------------------------------------+
 | This program is released as free software under the

@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: RewriteDriver.php
-| Author: Core Development Team (coredevs@phpfusion.com)
+| Author: Core Development Team
 | Co-Author: Ankur Thakur
 | Co-Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
