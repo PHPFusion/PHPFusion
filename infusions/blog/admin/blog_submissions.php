@@ -159,22 +159,24 @@ if (isset($_GET['submit_id']) && isnum($_GET['submit_id'])) {
                     $blog_extended = str_replace("src='".str_replace("../", "", IMAGES_B), "src='".IMAGES_B, stripslashes($_POST['blog_extended']));
                 }
                 $callback_data = [
-                    "blog_subject"    => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
-                    "blog_cat"        => isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : 0,
-                    "blog_language"   => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language'),
-                    "blog_blog"       => form_sanitizer($blog_blog, "", "blog_blog"),
-                    "blog_extended"   => form_sanitizer($blog_extended, "", "blog_extended"),
-                    "blog_keywords"   => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
-                    "blog_start"      => (isset($_POST['blog_start']) && $_POST['blog_start']) ? $_POST['blog_start'] : '',
-                    "blog_end"        => (isset($_POST['blog_end']) && $_POST['blog_end']) ? $_POST['blog_end'] : '',
-                    "blog_visibility" => isnum($_POST['blog_visibility']) ? $_POST['blog_visibility'] : "0",
-                    "blog_draft"      => isset($_POST['blog_draft']),
-                    "blog_sticky"     => isset($_POST['blog_sticky']),
-                    "blog_datestamp"  => $callback_data['blog_datestamp'], // pull from db.
-                    "blog_ialign"     => isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : '',
-                    "blog_image"      => isset($_POST['blog_image']) ? $_POST['blog_image'] : '',
-                    "blog_image_t1"   => isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "",
-                    "blog_image_t2"   => isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "",
+                    "blog_subject"        => form_sanitizer($_POST['blog_subject'], '', 'blog_subject'),
+                    "blog_cat"            => isnum($_POST['blog_cat']) ? $_POST['blog_cat'] : 0,
+                    "blog_language"       => form_sanitizer($_POST['blog_language'], LANGUAGE, 'blog_language'),
+                    "blog_blog"           => form_sanitizer($blog_blog, "", "blog_blog"),
+                    "blog_extended"       => form_sanitizer($blog_extended, "", "blog_extended"),
+                    "blog_keywords"       => form_sanitizer($_POST['blog_keywords'], '', 'blog_keywords'),
+                    "blog_start"          => (isset($_POST['blog_start']) && $_POST['blog_start']) ? $_POST['blog_start'] : '',
+                    "blog_end"            => (isset($_POST['blog_end']) && $_POST['blog_end']) ? $_POST['blog_end'] : '',
+                    "blog_visibility"     => isnum($_POST['blog_visibility']) ? $_POST['blog_visibility'] : "0",
+                    "blog_draft"          => isset($_POST['blog_draft']),
+                    "blog_sticky"         => isset($_POST['blog_sticky']),
+                    "blog_datestamp"      => $callback_data['blog_datestamp'], // pull from db.
+                    "blog_ialign"         => isset($_POST['blog_ialign']) ? $_POST['blog_ialign'] : '',
+                    "blog_image"          => isset($_POST['blog_image']) ? $_POST['blog_image'] : '',
+                    "blog_image_t1"       => isset($_POST['blog_image_t1']) ? $_POST['blog_image_t1'] : "",
+                    "blog_image_t2"       => isset($_POST['blog_image_t2']) ? $_POST['blog_image_t2'] : "",
+                    'blog_allow_comments' => 1,
+                    'blog_allow_ratings'  => 1
                 ];
                 $callback_data['blog_breaks'] = "";
                 if (isset($_POST['blog_breaks'])) {
