@@ -351,6 +351,7 @@ a:focus {
     margin: 5px auto;
     max-width: 45px;
     max-height: 45px;
+    min-height: 45px;
 }
 
 .mce-fullscreen {
