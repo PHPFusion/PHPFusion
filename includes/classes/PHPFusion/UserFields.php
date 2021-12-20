@@ -448,8 +448,8 @@ class UserFields extends QuantumFields {
 
         include INCLUDES."captchas/".fusion_get_settings("captcha")."/captcha_display.php";
 
-        $html = "<div class='form-group m-t-20'>";
-        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0'>".$locale['u190']." <span class='required'>*</span></label>";
+        $html = "<div class='form-group row'>";
+        $html .= "<label for='captcha_code' class='control-label col-xs-12 col-sm-3 col-md-3 col-lg-3'>".$locale['u190']." <span class='required'>*</span></label>";
         $html .= "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>";
 
         $html .= display_captcha([
