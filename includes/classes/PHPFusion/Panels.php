@@ -112,23 +112,24 @@ class Panels {
      * @param $panel_access
      * @param $panel_order
      */
-    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access, $panel_order = 0) {
-
-        self::$panels_cache[$panel_side][] = [
-            'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
-            'panel_content'     => $panel_content,
-            'panel_side'        => $panel_side,
-            'panel_filename'    => '',
-            'panel_type'        => 'custom',
-            'panel_access'      => $panel_access,
-            'panel_status'      => 1,
-            'panel_display'     => 1,
-            'panel_url_list'    => '',
-            'panel_restriction' => 3,
-            'panel_languages'   => implode('.', fusion_get_enabled_languages()),
-            'panel_order'       => $panel_order,
-            'panel_php_exe'     => 0
-        ];
+    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access = USER_LEVEL_PUBLIC, $panel_order = 0) {
+        if (checkgroup($panel_access)) {
+            self::$panels_cache[$panel_side][] = [
+                'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
+                'panel_content'     => $panel_content,
+                'panel_side'        => $panel_side,
+                'panel_filename'    => '',
+                'panel_type'        => 'custom',
+                'panel_access'      => $panel_access,
+                'panel_status'      => 1,
+                'panel_display'     => 1,
+                'panel_url_list'    => '',
+                'panel_restriction' => 3,
+                'panel_languages'   => implode('.', fusion_get_enabled_languages()),
+                'panel_order'       => $panel_order,
+                'panel_php_exe'     => 0
+            ];
+        }
     }
 
     /**
