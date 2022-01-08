@@ -16,7 +16,9 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once "../maincore.php";
-$current_version = '8.00.110';
+
+$current_version = '800110';
+
 if (!checkrights("U") || !defined("iAUTH") || !isset($_GET['aid']) || $_GET['aid'] != iAUTH) {
     redirect("../index.php");
 }
@@ -51,6 +53,7 @@ opentable($locale['400']);
 echo "<div style='text-align:center' class='text-center' ><br />\n";
 
 if (str_replace(".", "", $settings['version']) < $current_version) {
+
     echo "<form name='upgradeform' method='post' action='".FUSION_SELF.$aidlink."'>\n";
     $content = "";
     if ($settings['maintenance'] == 0) {
