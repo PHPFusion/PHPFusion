@@ -41,7 +41,7 @@ function render_page() {
         'container_fluid'  => TRUE,
         'show_header'      => '<a class="navbar-brand" href="'.BASEDIR.$settings['opening_page'].'"><img src="'.BASEDIR.$settings['sitebanner'].'" alt="'.$settings['sitename'].'" class="img-responsive"/></a>',
         'grouping'         => TRUE,
-        'links_per_page'   => $settings['links_per_page'],
+        'links_per_page'   => 10,
         'html_pre_content' => mg_user_menu()
     ];
 
