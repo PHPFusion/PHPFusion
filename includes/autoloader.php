@@ -92,18 +92,18 @@ spl_autoload_register(function ($className) {
  * @param int $max_level
  *
  * @return string|null The relative path of the base directory
- * or NULL if config.php was not found
+ * or empty string if config.php was not found
  */
 function fusion_get_config($max_level = 7) {
-    static $config_path = NULL;
-    if ($config_path === NULL) {
+    static $config_path = '';
+    if ($config_path === '') {
         $basedir = "";
         $i = 0;
         while ($i <= $max_level and !file_exists($basedir."config.php")) {
             $basedir .= "../";
             $i++;
         }
-        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
+        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : '';
     }
 
     return $config_path;
