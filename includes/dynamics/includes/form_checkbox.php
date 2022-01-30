@@ -39,7 +39,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         'class'          => '',
         'type'           => 'checkbox',
         'toggle'         => FALSE,
-        'toggle_text'    => [$locale['no'], $locale['yes']],
         'options'        => [],
         'options_value'  => [],
         'delimiter'      => ',',

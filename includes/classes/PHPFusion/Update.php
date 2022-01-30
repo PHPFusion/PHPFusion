@@ -613,7 +613,7 @@ class Update extends Installer\Infusions {
 
             if (!empty($version) && version_compare($version, $settings['version'], '>')) {
                 $text = sprintf($this->locale['new_update_avalaible'], $version);
-                $text .= ' <a class="btn btn-primary btn-sm m-l-10" href="'.ADMIN.'upgrade.php'.fusion_get_aidlink().'">'.$this->locale['update_now'].'</a>';
+                $text .= ' <a class="btn btn-primary btn-sm m-l-10" href="'.$settings['siteurl'].'administration/upgrade.php'.fusion_get_aidlink().'">'.$this->locale['update_now'].'</a>';
 
                 $result = ['result' => $text];
             } else {

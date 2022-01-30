@@ -19,11 +19,6 @@ defined('IN_FUSION') || exit;
 
 // Display user field input
 if ($profile_method == "input") {
-    if (isset($field_value) && $field_value != "1900-01-01") {
-        $user_birthDate = date('Y-m-d', strtotime($field_value));
-    } else {
-        $user_birthDate = '1900-01-01';
-    }
     $options += [
         'inline'          => TRUE,
         'type'            => 'date',
@@ -32,11 +27,11 @@ if ($profile_method == "input") {
         'date_format_js'  => 'YYYY-M-DD',
         'date_format_php' => 'Y-m-d',
     ];
-    $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $user_birthDate, $options);
+    $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $field_value, $options);
 
     // Display in profile
 } else if ($profile_method == "display") {
-    if ($field_value != "1900-01-01" && $field_value != '1970-1-01') {
+    if ($field_value != '1900-01-01' || $field_value != '1970-1-01') {
         $user_birthDate = explode("-", $field_value);
         $lastday = mktime(0, 0, 0, $user_birthDate[1], $user_birthDate[2], $user_birthDate[0]);
         $user_fields = [

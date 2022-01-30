@@ -1554,7 +1554,6 @@ class QuantumFields extends SqlHandler {
                 break;
             case 'toggle':
                 $options['toggle'] = 1;
-                $options['toggle_text'] = [$this->locale['off'], $this->locale['on']];
                 if ($method == 'input') {
                     return form_checkbox($data['field_name'], $field_label, $field_value, $options);
                 } else if ($method == 'display' && $field_value) {
