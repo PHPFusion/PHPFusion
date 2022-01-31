@@ -167,7 +167,6 @@ class Introduction extends InstallCore {
         }
 
         if (check_post("uninstall")) {
-            require_once CLASSES.'PHPFusion/Installer/Lib/Core.tables.php'; // See below previous comment
             $coretables = \PHPFusion\Installer\Lib\CoreTables::get_core_tables(self::$localeset);
             $i = 0;
             foreach (array_keys($coretables) as $table) {

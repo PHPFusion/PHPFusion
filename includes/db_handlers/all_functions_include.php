@@ -221,7 +221,7 @@ function dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port = 3306, $hal
  *
  * @return AbstractDatabaseDriver
  */
-function custom_dbconnet($db_host, $db_user, $db_pass, $db_name, $db_port, $dbid) {
+function custom_dbconnect($db_host, $db_user, $db_pass, $db_name, $db_port, $dbid) {
     PHPFusion\Database\DatabaseFactory::registerConfiguration($dbid, [
         'host'     => $db_host,
         'user'     => $db_user,
