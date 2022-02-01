@@ -15,7 +15,7 @@ $locale['009'] = "Finish";
 
 // Step 1
 $locale['010'] = "Please select the required locale (language):";
-$locale['011'] = "Download more locales from <a href='https://phpfusion.com/infusions/downloads/downloads.php?cat_id=29' target='_blank'><strong>PHPFusion Official Support Site</strong></a>";
+$locale['011'] = "Download more locales from <a href='https://phpfusion.com/translations/?version=8' target='_blank'><strong>PHPFusion Official Support Site</strong></a>";
 $locale['012'] = "In order to use PHPFusion, you need to check and agree to the terms of PHPFusion.";
 $locale['013'] = " I have read and agreed to the PHPFusion <a href='https://phpfusion.com/licensing/?agpl' target='_blank'>Terms and Conditions of Use</a>";
 
