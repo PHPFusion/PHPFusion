@@ -121,9 +121,8 @@ class Shoutbox {
 
             addnotice('success', self::$locale['SB_shout_deleted']);
         }
-        defined('ADMIN_PANEL') ?
-            redirect(clean_request("section=shoutbox", ["", "aid"])) :
-            redirect($this->postLink);
+
+        redirect(defined('ADMIN_PANEL') ? clean_request("section=shoutbox", ["", "aid"]) : $this->postLink);
     }
 
     static function verifyShout($id) {
@@ -148,7 +147,7 @@ class Shoutbox {
             $hash = explode(".", $decrypted_hash);
             if (count($hash) === 3) {
                 list($shout_token_id, $user_token_id, $time_token) = $hash;
-                if (($userdata["user_lastvisit"] + $this->token_limit) >= $time_token && $userdata["user_id"] === $user_token_id) {
+                if (($userdata["user_lastvisit"] + $this->token_limit) >= $time_token && $userdata["user_id"] === (int)$user_token_id) {
                     return (int)$shout_token_id;
                 }
             }
