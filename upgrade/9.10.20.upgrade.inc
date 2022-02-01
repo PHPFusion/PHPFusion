@@ -27,20 +27,3 @@ foreach ($update_settings_tbl as $key => $value) {
         $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
-
-
-/**
- * Delete all unused files
- */
-/*$deleted_files = [
-];
-
-foreach ($deleted_files as $file) {
-    if (is_file($file)) {
-        @unlink($file);
-    } else {
-        if (is_dir($file)) {
-            rrmdir($file);
-        }
-    }
-}*/
