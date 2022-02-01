@@ -971,7 +971,7 @@ function format_code($code) {
  *
  * @return string
  */
-function format_num($value, $decimals = NULL, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
     $array = [
         13 => $acryonym ? "t" : "trillion",
         10 => $acryonym ? "b" : "billion",

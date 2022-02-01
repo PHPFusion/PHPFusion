@@ -201,11 +201,8 @@ class Sitelinks extends \PHPFusion\SiteLinks {
             $settings = [
                 "links_grouping" => (post("links_grouping", FILTER_VALIDATE_INT) ? "1" : "0"),
                 'link_bbcode'    => (post("link_bbcode", FILTER_VALIDATE_INT) ? "1" : "0"),
-                "links_per_page" => sanitizer('links_per_page', "0", 'links_per_page'),
+                "links_per_page" => sanitizer('links_per_page', 0, 'links_per_page'),
             ];
-            if (!$settings["link_bbcode"]) {
-                $settings["links_per_page"] = 8;
-            }
 
             if (fusion_safe()) {
                 foreach ($settings as $key => $value) {
