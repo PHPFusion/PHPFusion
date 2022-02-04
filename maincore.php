@@ -560,12 +560,13 @@ function phpentities($text) {
 
 // Trim a line of text to a preferred length
 function trimlink($text, $length) {
-    $dec = ["&", "\"", "'", "\\", '\"', "\'", "<", ">"];
-    $enc = ["&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;"];
-    $text = str_replace($enc, $dec, $text);
-    if (strlen($text) > $length)
-        $text = substr($text, 0, ($length - 3))."...";
-    $text = str_replace($dec, $enc, $text);
+    if (strlen($text) > $length) {
+        if (function_exists('mb_substr')) {
+            $text = mb_substr($text, 0, ($length - 3), 'UTF-8')."...";
+        } else {
+            $text = substr($text, 0, ($length - 3))."...";
+        }
+    }
     return $text;
 }
 
