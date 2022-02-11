@@ -33,8 +33,6 @@ function render_page() {
     $settings = fusion_get_settings();
     $theme_settings = get_theme_settings('Magazine');
 
-    add_to_head('<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic">');
-
     $menu_options = [
         'id'               => 'main-menu',
         'nav_class'        => 'nav navbar-nav navbar-right primary',
