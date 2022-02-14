@@ -94,6 +94,10 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
         $input_value = [];
         foreach (array_keys($options['options']) as $key) {
             $input_value[$key] = isset($option_value[$key]) ? (!empty($options['options_value'][$key]) ? $options['options_value'][$key] : 1) : 0;
+            // Fixes when input value is 0, and there are a key 0 in the options, this will select it.
+            if (empty($option_value) && empty($key)) {
+                $input_value[$key] = 1;
+            }
         }
 
         // Provided that input value keys are 0, and type is not checkbox, we default to select the first one.
