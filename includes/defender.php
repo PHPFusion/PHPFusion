@@ -320,8 +320,19 @@ class Defender {
      *
      * @return false|string
      */
-    private static function pkcs7_unpad($data) {
-        return substr($data, 0, -ord($data[strlen($data) - 1]));
+    private static function pkcs7_unpad($value) {
+
+        $pad = ord($value[strlen($value) - 1]);
+
+        if ($pad > strlen($value)) {
+            return false;
+        }
+
+        if (strspn($value, chr($pad), strlen($value) - $pad) != $pad) {
+            return false;
+        }
+
+        return substr($value, 0, -1 * $pad);
     }
 
     /**
