@@ -17,6 +17,11 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+$regex = [
+    "%rowstart%" => "([0-9]+)",
+];
+
 $pattern = [
-    "shoutbox-archive" => "infusions/shoutbox_panel/shoutbox_archive.php"
+    "shoutbox-archive/rowstart/%rowstart%" => "infusions/shoutbox_panel/shoutbox_archive.php?rows=%rowstart%",
+    "shoutbox-archive"                     => "infusions/shoutbox_panel/shoutbox_archive.php"
 ];

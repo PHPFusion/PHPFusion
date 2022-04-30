@@ -513,7 +513,7 @@ class Shoutbox {
         }
 
         if ($archive == TRUE) {
-            $sdata['pagenav'] = $total_rows > $db_rows ? makepagenav($rows, self::$arch_limit, $total_rows, self::$arch_limit, FUSION_SELF.'?rows', FALSE) : '';
+            $sdata['pagenav'] = $total_rows > $db_rows ? makepagenav($rows, self::$arch_limit, $total_rows, self::$arch_limit, INFUSIONS.'shoutbox_panel/shoutbox_archive.php?', 'rows') : '';
         }
 
         if ($total_rows > self::$sb_settings['visible_shouts']) {
