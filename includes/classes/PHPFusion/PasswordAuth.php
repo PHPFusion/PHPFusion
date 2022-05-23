@@ -135,7 +135,7 @@ class PasswordAuth {
         }
 
         if ($special_char) {
-            $pass_regex .= '(?=.*?[@!#$%&\[\]()=\-_\\\\\/?+*.,;^*])';
+            $pass_regex .= '(?=.*?[@!#$%&\[\]()=\-_\\\\\/?+*.,:;^*])';
         }
 
         return '^'.$pass_regex.'.{'.$minimum_length.',64}$';
