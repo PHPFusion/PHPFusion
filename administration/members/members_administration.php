@@ -100,6 +100,7 @@ class Members_Admin {
             'inactive'              => $base_url.'&amp;ref=inactive',
             'resend'                => $base_url.'&amp;ref=resend&amp;lookup=',
             'activate'              => $base_url.'&amp;ref=activate&amp;lookup=',
+            'reactivate'            => $base_url.'&amp;ref=reactivate&amp;lookup=',
         ];
 
         self::$user_id = (check_get('lookup') && dbcount('(user_id)', DB_USERS, 'user_id=:user_id', [':user_id' => get('lookup')]) ? get('lookup') : 0);
@@ -298,6 +299,12 @@ class Members_Admin {
                 case 'activate':
                     if (get("lookup") && get("code")) {
                         Members_Profile::activate_user();
+                    } else {
+                        redirect(FUSION_SELF.$aidlink);
+                    }
+                case 'reactivate':
+                    if (get("lookup")) {
+                        Members_Profile::reactivate_user();
                     } else {
                         redirect(FUSION_SELF.$aidlink);
                     }

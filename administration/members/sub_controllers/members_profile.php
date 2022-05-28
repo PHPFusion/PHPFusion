@@ -275,6 +275,19 @@ class Members_Profile extends Members_Admin {
         redirect(clean_request('', ['ref', 'lookup', 'code'], FALSE));
     }
 
+    public static function reactivate_user() {
+        $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id=:user_id", [':user_id' => get('lookup')]);
+
+        $data = dbarray($result);
+        $data['user_status'] = 0;
+        $data['user_lastvisit'] = 0;
+        $data['user_actiontime'] = 0;
+        dbquery_insert(DB_USERS, $data, 'update');
+
+        addnotice('success', self::$locale['ME_469']);
+        redirect(clean_request('', ['ref', 'lookup'], FALSE));
+    }
+
     public static function resend_email() {
         if (check_get('lookup') && !isnum(get('lookup'))) {
             $dbquery = dbquery("SELECT * FROM ".DB_NEW_USERS."

@@ -226,7 +226,7 @@ class Members_Display extends Members_Admin {
             }
         }
 
-        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status ".($cookie_selected ? ', '.$cookie_selected : '')."
+        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_status".($cookie_selected ? ', '.$cookie_selected : '')."
                   FROM ".DB_USERS.$status_cond.$search_cond." LIMIT $rowstart, $limit";
 
         $result = dbquery($query, $query_bind);
@@ -247,7 +247,7 @@ class Members_Display extends Members_Admin {
                     switch ($data_key) {
                         case 'user_joined':
                         case 'user_lastvisit':
-                            $data[$data_key] = showdate('shortdate', $data[$data_key]);
+                            $data[$data_key] = !empty($data[$data_key]) ? showdate('shortdate', $data[$data_key]) : '-';
                             break;
                         case 'user_groups':
                             if (!empty($data[$data_key])) {
@@ -277,6 +277,10 @@ class Members_Display extends Members_Admin {
                 $login_as_link = "";
                 if ($data['user_status'] != 2 && fusion_get_userdata("user_level") <= $data["user_level"] && fusion_get_userdata("user_id") != $data["user_id"]) {
                     $login_as_link = " - <a href='".self::$status_uri['login_as'].$data['user_id']."'>".self::$locale["ME_508"]."</a>";
+                }
+
+                if ($data['user_status'] == 2 && fusion_get_userdata("user_id") != $data["user_id"]) {
+                    $login_as_link = " - <a href='".self::$status_uri['reactivate'].$data['user_id']."'>".self::$locale["ME_507"]."</a>";
                 }
 
                 $list[$data['user_id']]['user_actions'] = ($data['user_level'] > USER_LEVEL_SUPER_ADMIN ? "<a href='".self::$status_uri['edit'].$data['user_id']."'>".self::$locale['edit']."</a> - <a href='".self::$status_uri['delete'].$data['user_id']."'>".self::$locale['delete']."</a> -" : "")." <a href='".self::$status_uri['view'].$data['user_id']."'>".self::$locale['view']."</a>".$login_as_link;
