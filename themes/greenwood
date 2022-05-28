@@ -1,0 +1,257 @@
+<?php
+/*------------------------------------------------------+
+| PHP-Fusion Content Management System                  |
+| Copyright (C) 2002 - 2010 Nick Jones                  |
+| http://www.php-fusion.co.uk/                          |
++-------------------------------------------------------+
+| This program is released as free software under the   |
+| Affero GPL license. You can redistribute it and/or    |
+| addonify it under the terms of this license which you |
+| can read by viewing the included agpl.txt or online   |
+| at www.gnu.org/licenses/agpl.html. Removal of this    |
+| copyright header is strictly prohibited without       |
+| written permission from the original author(s).       |
++------------------------------------------------------*/
+/*------------------------------------------------------+
+|            Földeák for PHP-Fusion v9.3               |
++-------------------------------------------------------+
+| Filename: theme.php                                   |
+| author: Foldeak/Rakonczai Árpád                 |
+| Homepage: http://www.foldeakitc.hu/                    |
++-------------------------------------------------------+
+| This theme is released under the terms and conditions |
+| of the GNU Affero GPL v3.                             |
++------------------------------------------------------*/
+if (!defined("IN_FUSION")) { die("Access Denied"); }
+require_once INCLUDES."theme_functions_include.php";
+require_once THEME."functions.php";
+
+define("THEME_BULLET", "");
+define("THEME_WIDTH", "1200px;");
+
+
+define('BOOTSTRAP', TRUE);
+define('ENTYPO', TRUE);
+
+
+
+
+define('BOOTSTRAP', TRUE);
+define('FONTAWESOME', TRUE);
+define('SOCIAL_SHARE', TRUE); // Set FALSE to turn Off, used only in News
+
+// Uncomment and edit, if you want show social networks in right top
+/*define('ATOMX_SOCIAL_NETWORKS', [
+    'https://www.facebook.com/PHPFusion' => 'fa fa-facebook',
+    'https://github.com/PHPFusion' => 'fa fa-github',
+]);*/
+
+
+function render_page($license=false) {
+	
+	global $settings, $locale, $main_style, $userdata, $aidlink;
+	
+	echo "<div class='outer'><div id='top-header'>\n";
+
+//Header
+	echo "<tr style='width:50%;' align='center'>\n";
+
+echo "<div style='float:left;padding-bottom:100px;'><td>".showsubdate()."</td></div>";
+
+echo "<td>\n";
+
+	if (iMEMBER) {
+		echo "<a href='".BASEDIR."edit_profile.php'>".$locale['global_120']."</a>\n";
+		echo "&middot; <a href='".BASEDIR."messages.php'>".$locale['global_121']."</a>\n";
+		echo "&middot; <a href='".BASEDIR."members.php'>".$locale['global_122']."</a>\n";
+		if (iADMIN && (iUSER_RIGHTS != "" || iUSER_RIGHTS != "C")) {
+			echo "&middot; <a href='".ADMIN."index.php".$aidlink."'>".$locale['global_123']."</a>\n";
+		}
+		echo "&middot; <a href='".BASEDIR."index.php?logout=yes'>".$locale['global_124']."</a>\n";
+	} else {
+		echo "<a href='".BASEDIR."login.php'>".$locale['global_100']."</a>\n";
+		if ($settings['enable_registration']) {
+			echo "&middot; <a href='".BASEDIR."register.php'>".$locale['global_105']."</a>\n";
+		}
+	}
+	echo "</div></tr></td>\n";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	echo "<div id='header' class='clearfix'>\n";
+	echo "<div style='margin:35px 10px 0 10px'></div>\n";
+	echo "<div style='position:relative;'><a href='".BASEDIR."index.php'><img src='".THEME."images/foldeak20.png' border='0' alt=''  style='position:absolute;top:-30px;left:10px;' /></a>
+</div>";
+	
+
+
+
+	echo "</div>\n";
+
+
+
+
+
+	
+
+
+
+
+
+	
+	
+echo "<div id='sub-header' class='clearfix'>\n";
+
+
+	echo "<div id='nav-bar'>";
+	echo navigation();
+	echo "</div>\n";
+	echo "</div><div class='clearfix'></div>";
+
+
+
+//Content
+
+	
+	echo "<div id='container' class='clearfix $main_style'>\n";
+	if (UP) { echo "<div id='side-border-up'>".AU_CENTER."</div>\n"; }
+
+		
+
+if (LEFT) { echo "<div id='side-border-left'>".LEFT."</div>\n"; }
+	if (RIGHT) { echo "<div id='side-border-right'>".RIGHT."</div>\n"; }
+
+	echo "<div id='main-content'><div id='main-container'>".U_CENTER.CONTENT.L_CENTER."</div></div>\n";
+	echo "</div>\n";
+
+if (DOWN) { echo "<div id='side-border-down'>".BL_CENTER."</div>\n"; }
+
+	echo "<div ></div>\n";
+
+
+
+
+
+
+
+	
+	echo "<div id='footer'>\n";
+	echo "<div class='center'>".(!$license ? showcopyright()."<br />" : "")."\n";
+	echo "<div class='center'>".(!$license ? showcounter()."<br />" : "")."\n";
+	
+	
+	echo "<div class='center' style='text-align:right;width:50%'>".stripslashes($settings['footer'])."</div>\n";
+	echo "<div class='clear'><br /><br /></div>\n";
+	
+	echo "<div class='clear'></div>\n";
+	echo "<div style='position:relative;'><img src='".THEME."images/facefoldeak.png' border='0' alt='' title='https://www.facebook.com/foldeakiTC/' style='position:absolute;top:-90px;right:70px;width:80px' /></a>
+</div>";
+
+	echo "</div></div>\n";
+}
+
+
+
+
+
+
+
+
+
+function render_news($subject, $news, $info) {
+global $settings;
+
+	echo "<table cellpadding='0' cellspacing='0' width='100%'>\n<tr>\n";
+	echo "<td class='box box-caption' onclick=\"location='".BASEDIR."news.php?readmore=".$info['news_id']."'\" style='cursor:pointer;'>".$subject."</td>\n";
+	echo "</tr>\n</table>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' class='spacer'>\n<tr>\n";
+	echo "<td class='main-body'><div style='float:left;width:100%;'>".$info['cat_image'].$news."</div><div class='clear'></div><div style='float:right;font-size:9px;'>".newsposter($info)."</div></td>\n";
+	echo "</tr>\n<tr>\n";
+	echo "<td align='center' class='news-footer'>\n";
+	echo "<div style='float:left;margin-top:3px;'>";
+	echo newsopts($info," &middot;" ).itemoptions("N",$info['news_id']);
+	echo " &middot; </div>";
+	echo "</td>\n";
+	echo "</tr>\n";
+	echo "<tr><td style='height:2px;background-color:#ff0024;'></td>\n";
+	echo "</tr>\n</table>\n";
+
+}
+
+function render_article($subject, $article, $info) {
+global $settings;
+
+	echo "<table width='100%' cellpadding='0' cellspacing='0'>\n<tr>\n";
+	echo "<td class='box box-caption'>".$subject."</td>\n";
+	echo "</tr>\n</table>\n";
+	echo "<table width='100%' cellpadding='0' cellspacing='0' class='spacer'>\n<tr>\n";
+	echo "<td class='main-body'><div style='float:left;width:100%;'>".($info['article_breaks'] == "y" ? nl2br($article) : $article)."</div><div class='clear'></div><div style='float:right;font-size:9px;'>".articleposter($info)."</div></td>\n";
+	echo "</tr>\n<tr>\n";
+	echo "<td align='center' class='news-footer'>\n";
+	echo "<div style='float:left;margin-top:3px;'>";
+	echo articleopts($info," &middot; ").itemoptions("A",$info['article_id']);
+	echo " &middot; </div>";
+	echo "</td>\n</tr>\n";
+	echo "<tr><td style='height:2px;background-color:#00bbc3;'></td>\n";
+	echo "</tr>\n</table>\n";
+}
+
+function opentable($title) {
+
+	echo "<div class='main-border'>\n";
+	echo "<div class='main-caption'>".$title."</div>\n";
+	echo "<div class='main-body'>\n";
+
+}
+
+function closetable() {
+
+	echo "</div>\n</div>\n";
+
+}
+
+function openside($title, $collapse = false, $state = "on") {
+	
+	global $panel_collapse; $panel_collapse = $collapse;
+
+
+	echo "<div class='side-border'>\n";
+	if ($collapse == true) {
+		$boxname = str_replace(" ", "", $title);
+		echo "<div class='side-caption' style='float:right;margin-top:6px;'>".panelbutton($state,$boxname)."</div>\n";
+	}
+	echo "<div class='side-caption'>".$title."</div>\n";
+	echo "<div class='side-body floatfix'>\n";
+	if ($collapse == true) { echo panelstate($state, $boxname); }
+
+}
+
+function closeside($collapse = false) {
+
+	global $panel_collapse;
+
+	if ($panel_collapse == true) { echo "</div>\n"; }
+	echo "</div>\n</div>\n";
+	echo "<br />";
+}
+?>
