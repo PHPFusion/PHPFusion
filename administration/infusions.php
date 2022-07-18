@@ -67,9 +67,15 @@ if ($infs) {
     echo "</div>\n</div>\n";
 
     foreach ($infs as $i => $inf) {
-        $adminpanel = !empty($inf['mlt_adminpanel'][LANGUAGE][0]) ? $inf['mlt_adminpanel'][LANGUAGE][0] : $inf['adminpanel'][0];
 
-        echo openform('infuseform', 'post', FUSION_SELF.fusion_get_aidlink());
+        $adminpanel = !empty($inf['mlt_adminpanel'][LANGUAGE][0]) ? $inf['mlt_adminpanel'][LANGUAGE][0] : ($inf['adminpanel'][0] ?? [
+                'panel'  => $inf['folder'],
+                'rights' => $inf['rights']
+            ]);
+
+        $title = $inf['status'] > 0 ? '<a href="'.INFUSIONS.$inf['folder'].'/'.$adminpanel['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>' : $inf['title'];
+
+        echo openform('infuseform', 'POST');
         echo "<div class='list-group-item'>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-4 col-sm-3 col-md-2 col-lg-2'>\n";
@@ -85,15 +91,12 @@ if ($infs) {
         echo "</div>\n";
         echo "<div class='col-xs-8 col-sm-7 col-md-5 col-lg-3'>\n";
         echo "<div class='hidden-xs pull-left m-r-10'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
-
-        $title = $inf['status'] > 0 ? '<a href="'.INFUSIONS.$inf['folder'].'/'.$adminpanel['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>' : $inf['title'];
         echo "<div class='overflow-hide'><strong>".$title."</strong><br/>".$inf['description']."</div>";
         echo "</div>";
         echo "<div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h5 class='m-0'>".($inf['status'] > 0 ? "<span class='label label-success'>".$locale['415']."</span>" : "<span class='label label-default'>".$locale['414']."</span>")."</h5></div>\n";
         echo "<div class='hidden-xs hidden-sm col-md-1 col-lg-1'><span class='badge'>".$adminpanel['rights']."</span></div>\n";
         echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
         echo "<div class='hidden-xs hidden-sm col-md-12 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
-
         echo "</div></div>";
     }
 } else {
