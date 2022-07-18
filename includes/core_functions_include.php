@@ -1099,7 +1099,7 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
         '/(&#x*[0-9A-F]+);*/iu'                                                                                                                                                                         => '$1;',
         // Remove any attribute starting with "on" or xml name space
         //'#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>',
-        '#(<[^>]+?[\x00-\x20"\'])((?:on|xmlns)+[=\w\d()]*+)#iu'                                                                                                                                         => '$1>',
+        '#(<[^>]+?[\x00-\x20"\'\\])((?:on|xmlns)+[=\w\d()]*+)#iu'                                                                                                                                       => '$1>',
         // javascript: and VB script: protocols
         '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu' => '$1=$2nojavascript...',
         '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu'                                        => '$1=$2novbscript...',
