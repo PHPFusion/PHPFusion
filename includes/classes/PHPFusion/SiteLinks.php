@@ -387,9 +387,13 @@ class SiteLinks {
 
         // Change hierarchy data when grouping is activated
         if (self::getMenuParam('grouping')) {
+
             $callback_data = (array)self::getMenuParam('callback_data');
-            if (isset($callback_data[0])) {
+
+            if (!empty($callback_data[0])) {
+
                 if (count($callback_data[0]) > self::getMenuParam('links_per_page')) {
+
                     $more_index = 9 * 10000000;
                     $base_data = $callback_data[0];
                     $data[$more_index] = array_slice($base_data, self::getMenuParam('links_per_page'), 9, TRUE);
@@ -494,8 +498,8 @@ class SiteLinks {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         $language_switch = fusion_get_language_switch();
                         $current_language = $language_switch[LANGUAGE];
-                        $language_opts = "<li class='nav-item dropdown'>";
-                        $language_opts .= "<a id='ddlangs".$id."' href='#' class='nav-link dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
+                        $language_opts = "<li class='nav-item dropdown' role='presentation'>";
+                        $language_opts .= "<a id='ddlangs".$id."' href='#' class='nav-link dropdown-toggle pointer' role='menuitem' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".translate_lang_names(LANGUAGE)."'><img class='m-r-5' src='".$current_language['language_icon_s']."' alt='".translate_lang_names(LANGUAGE)."'/> <span class='".self::getMenuParam('caret_icon')."'></span></a>";
                         $language_opts .= "<ul class='dropdown-menu dropdown-menu-right' aria-labelledby='ddlangs".$id."' role='menu'>\n";
                         if (!empty($language_switch)) {
                             foreach ($language_switch as $langData) {
@@ -512,8 +516,8 @@ class SiteLinks {
                 }
 
                 if (self::getMenuParam('searchbar') == TRUE) {
-                    $searchbar = "<li class='nav-item dropdown'>";
-                    $searchbar .= "<a id='ddsearch".$id."' href='#' class='nav-link dropdown-toggle pointer' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
+                    $searchbar = "<li class='nav-item dropdown' role='presentation'>";
+                    $searchbar .= "<a id='ddsearch".$id."' href='#' class='nav-link dropdown-toggle pointer' role='menuitem' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' title='".fusion_get_locale('search')."'><i class='".self::getMenuParam('search_icon')."'></i></a>";
                     $searchbar .= "<ul aria-labelledby='ddsearch".$id."' class='dropdown-menu dropdown-menu-right p-l-15 p-r-15 p-t-15' role='menu' style='min-width: 300px;'>\n";
                     $searchbar .= "<li class='text-left'>";
                     $searchbar .= openform('searchform', 'post', FUSION_ROOT.BASEDIR.'search.php?stype=all',
@@ -804,7 +808,7 @@ class SiteLinks {
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
                         $link_class = " class='".$link_data['link_class']." dropdown-toggle'";
-                        $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
+                        $l_1 = " id='ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' role='presentation'";
                         $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='".self::getMenuParam('caret_icon')."'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
@@ -814,21 +818,21 @@ class SiteLinks {
 
                     $li_class = array_filter($li_class);
 
-                    $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '').">".self::getMenuParam('seperator');
+                    $res .= "<li".(!empty($li_class) ? " class='".implode(" ", $li_class)."'" : '')." role='presentation'>".self::getMenuParam('seperator');
 
-                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class.">" : "");
+                    $res .= ($itemlink ? "<a".$l_1.$itemlink.$link_target.$link_class." role='menuitem'>" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>" : "");
                     $res .= $link_data['link_name']." ".$l_2;
                     $res .= ($itemlink ? "</a>" : '');
                     if ($has_child) {
                         $res .= "\n<ul id='menu-".$link_data['link_id']."' aria-labelledby='ddlink".$link_data['link_id']."' class='dropdown-menu'>\n";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
-                            $res .= "<li".(!$itemlink ? " class='no-link'" : '').">\n".self::getMenuParam('seperator');
+                            $res .= "<li".(!$itemlink ? " class='no-link'" : '')." role='presentation'>\n".self::getMenuParam('seperator');
                             $link_class = strtr($link_class, [
                                 'nav-link'        => 'dropdown-item',
                                 'dropdown-toggle' => ''
                             ]);
-                            $res .= ($itemlink ? "<a ".$itemlink.$link_target.$link_class.">\n" : '');
+                            $res .= ($itemlink ? "<a ".$itemlink.$link_target.$link_class." role='menuitem'>\n" : '');
                             $res .= (!empty($link_data['link_icon']) ? "<i class='".$link_data['link_icon']." m-r-5'></i>\n" : "");
                             $res .= $link_data['link_name'];
                             $res .= ($itemlink ? "\n</a>\n" : '');
@@ -839,7 +843,7 @@ class SiteLinks {
                     }
                     $res .= "</li>\n";
                 } else {
-                    $res .= "<li class='divider'></li>\n";
+                    $res .= "<li class='divider' role='separator'></li>\n";
                 }
                 $i++;
             }
