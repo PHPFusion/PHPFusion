@@ -1331,7 +1331,7 @@ class QuantumFields extends SqlHandler {
             'encrypt'              => FALSE, // encrypt field names
             'show_title'           => $method == "input", // display field label
             'deactivate'           => FALSE, // disable fields
-            'inline'               => $options['inline'], // sets the field inline
+            'inline'               => FALSE, // sets the field inline
             'error_text'           => $data['field_error'], // sets the field error text
             'required'             => (bool)$data['field_required'], // input must be filled when validate
             'placeholder'          => $data['field_default'], // helper text in field value
