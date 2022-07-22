@@ -457,6 +457,7 @@ $locale['close'] = "Close";
 $locale['nopreview'] = "There is nothing to Preview";
 $locale['mark_as'] = "Mark As";
 $locale['preview'] = "Preview";
+$locale['unpreview'] = "Hide Preview";
 $locale['custom'] = "Custom";
 $locale['submit'] = "Submit";
 $locale['submissions'] = "Submissions";

@@ -22,7 +22,8 @@ if (iADMIN) {
         "description"  => $locale['bb_hide_description'],
         "value"        => "hide",
         "bbcode_start" => "[hide]", "bbcode_end" => "[/hide]",
-        "usage"        => "[hide]".$locale['bb_hide_usage']."[/hide]"
+        "usage"        => "[hide]".$locale['bb_hide_usage']."[/hide]",
+        'svg'          => '<i class="fas fa-eye-slash"></i>'
     ];
 } else {
     $__BBCODE_NOT_QUOTABLE__[] = "hide";

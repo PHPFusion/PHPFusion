@@ -27,5 +27,6 @@ $__BBCODE__[] = [
     "includejscript" => "color_bbcode_include_js.js",
     "calljscript"    => "ColorMap('".$textarea_name."', '".$inputform_name."');",
     "html_end"       => "</div>",
-    'dropdown'       => TRUE
+    'dropdown'       => TRUE,
+    'svg'            => '<i class="fa fa-tint fa-lg"></i>'
 ];

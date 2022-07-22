@@ -18,7 +18,10 @@
 defined('IN_FUSION') || exit;
 
 $__BBCODE__[] = [
-    "description" => $locale['bb_u_description'],
-    "value"       => "u", "bbcode_start" => "[u]", "bbcode_end" => "[/u]",
-    "usage"       => "[u]".$locale['bb_u_usage']."[/u]"
+    "description"  => $locale['bb_u_description'],
+    "value"        => "u",
+    "bbcode_start" => "[u]",
+    "bbcode_end"   => "[/u]",
+    "usage"        => "[u]".$locale['bb_u_usage']."[/u]",
+    "svg"          => "<i class='fa fa-underline'></i>",
 ];

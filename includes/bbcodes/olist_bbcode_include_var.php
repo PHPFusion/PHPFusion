@@ -23,11 +23,14 @@ $__BBCODE__[] = [
     'usage'          => "[olist=(1|a|A|i|I)]".$locale['bb_olist_usage']."[/olist]",
     'onclick'        => "return false",
     'id'             => 'bbcode_olist_'.$textarea_name,
-    'html_middle'    => "<input type='button' value='1' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=1]', '[/olist]', '".$inputform_name."');return false;\"/>
-                         <input type='button' value='a' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=a]', '[/olist]', '".$inputform_name."');return false;\"/>
-                         <input type='button' value='A' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=A]', '[/olist]', '".$inputform_name."');return false;\"/>
-                         <input type='button' value='i' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=i]', '[/olist]', '".$inputform_name."');return false;\"/>
-                         <input type='button' value='I' class='button btn btn-link btn-block btn-xs' onclick=\"addText('".$textarea_name."', '[olist=I]', '[/olist]', '".$inputform_name."');return false;\"/>",
+    'dropdown_items' => [
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[olist=1]', '[/olist]', '".$inputform_name."');return false;\"><span>1. - ".$locale['bb_olist_0100']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[olist=a]', '[/olist]', '".$inputform_name."');return false;\"><span>a. - ".$locale['bb_olist_0101']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[olist=A]', '[/olist]', '".$inputform_name."');return false;\"><span>A. - ".$locale['bb_olist_0102']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[olist=i]', '[/olist]', '".$inputform_name."');return false;\"><span>i. - ".$locale['bb_olist_0103']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[olist=I]', '[/olist]', '".$inputform_name."');return false;\"><span>I. - ".$locale['bb_olist_0104']."</span></a>",
+    ],
     'dropdown'       => TRUE,
-    'dropdown_style' => 'min-width: 50px;'
+    'dropdown_style' => 'min-width: 50px;',
+    'svg'            => '<i class="fas fa-list-ol fa-lg"></i>'
 ];

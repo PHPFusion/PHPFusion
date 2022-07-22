@@ -20,5 +20,6 @@ defined('IN_FUSION') || exit;
 $__BBCODE__[] = [
     "description" => $locale["bb_youtube_description"],
     "value"       => "youtube", "bbcode_start" => "[youtube]", "bbcode_end" => "[/youtube]",
-    "usage"       => "[youtube]".$locale["bb_youtube_usage"]."[/youtube]"
+    "usage"       => "[youtube]".$locale["bb_youtube_usage"]."[/youtube]",
+    'svg'         => '<i class="fab fa-youtube"></i>'
 ];

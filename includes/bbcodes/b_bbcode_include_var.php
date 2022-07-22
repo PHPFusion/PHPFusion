@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
@@ -18,7 +19,10 @@
 defined('IN_FUSION') || exit;
 
 $__BBCODE__[] = [
-    "description" => $locale["bb_b_description"],
-    "value"       => "b", "bbcode_start" => "[b]", "bbcode_end" => "[/b]",
-    "usage"       => "[b]".$locale["bb_b_usage"]."[/b]"
+    "description"  => $locale["bb_b_description"],
+    "value"        => "b",
+    "bbcode_start" => "[b]",
+    "bbcode_end"   => "[/b]",
+    "usage"        => "[b]".$locale["bb_b_usage"]."[/b]",
+    "svg"          => '<i class="fa fa-bold fa-lg"></i>'
 ];

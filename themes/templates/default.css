@@ -1483,3 +1483,68 @@ Responsive Admin for all Admin Themes.
         grid-template-columns: 1fr;
     }
 }
+
+/**Bbcodes */
+.panel.panel-txtarea > .panel-heading > .nav-wrapper.editor-wrapper {
+    width: 100%;
+    display: inline-block;
+}
+
+.panel.panel-default.panel-txtarea .bbcode_input > div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.panel.panel-default.panel-txtarea .bbcode_input .bbcode {
+    background: 0;
+    border: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: none;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 1px 0 0;
+    outline: 0;
+    gap: 5px;
+    padding: 5px;
+    min-width: 33px;
+}
+
+.panel.panel-default.panel-txtarea .bbcode_input .bbcode .bbcode-icon-wrap {
+    background: 0;
+    border: 0;
+    box-shadow: none;
+    float: none;
+    margin: 0;
+    max-width: none;
+    outline: 0;
+    padding: 0;
+    position: static;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+}
+
+.panel.panel-default.panel-txtarea .bbcode_input .bbcode-popup img {
+    width: 38px;
+    height: auto;
+    margin: 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+    padding: 8px;
+}

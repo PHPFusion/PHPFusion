@@ -345,12 +345,17 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         if ($options['bbcode']) {
             $options['type'] = 'bbcode';
+
+            fusion_load_script(INCLUDES.'jscripts/bbcode.js');
+
         } else if ($options['html']) {
             $options['type'] = 'html';
         }
 
         if ($options['autosize'] || defined('AUTOSIZE')) {
-            add_to_footer("<script src='".DYNAMICS."assets/autosize/autosize.min.js'></script>");
+
+            fusion_load_script(DYNAMICS.'assets/autosize/autosize.js');
+
             add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
@@ -375,33 +380,35 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row' : '').$error_class.$options['class']."'".($options['width'] ? " style='width: ".$options['width']." !important;'" : '').">\n";
     $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9' : '')."'>\n" : '';
-    $tab_active = 0;
-    $tab_title = [];
+    // $tab_active = 0;
+    // $tab_title = [];
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
+
+        $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='fa fa-eye m-r-10'></i><span class='preview-text'>".$locale['preview']."</span></span></button>";
+
         $tab_title['title'][] = $locale['preview'];
         $tab_title['id'][] = "prw-".$options['input_id'];
         $tab_title['icon'][] = '';
         $tab_title['title'][] = $locale['texts'];
         $tab_title['id'][] = "txt-".$options['input_id'];
         $tab_title['icon'][] = '';
+
         $tab_active = tab_active($tab_title, 1);
     }
 
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0;'" : '').">\n
     <div class='panel-heading clearfix'>\n" : '';
-
-    if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
-        $html .= openeditortab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
-    }
+    $html .= "<div class='nav-wrapper editor-wrapper'>\n";
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div class='bbcode_input' style='line-height:0;'>\n";
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
-        $html .= $options['preview'] ? "</div>\n" : "";
+
+        $html .= ($preview_button ?? '').($options['preview'] ? "</div>\n" : "");
     } else if ($options['type'] == "html" && $options['form_name']) {
         $html .= "<div class='html-buttons'>\n";
         $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
-        $html .= $options['preview'] ? "</div>\n" : "";
+        $html .= ($preview_button ?? '').$options['preview'] ? "</div>\n" : "";
     }
 
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n</div>\n<div class='panel-body p-0'>\n" : '';
@@ -423,35 +430,54 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= $locale['global_003'];
         $html .= closetabbody();
         $html .= "</div>\n";
-        add_to_jquery("
-            // preview syntax
-            var form = $('#".$options['form_name']."');
-            $('#tab-prw-".$options['input_id']."').bind('click',function(){
-            var text = $('#".$options['input_id']."').val();
-            var format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."';
-            var data = {
-                ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
-                'text' : text,
-                'editor' : format,
-                'url' : '".$_SERVER['REQUEST_URI']."',
-                'form_id' : 'prw-".$options['form_name']."',
-                'fusion_token' : '".fusion_get_token("prw-".$options['form_name'], 30)."'
-            };
-            var sendData = form.serialize() + '&' + $.param(data);
-            $.ajax({
-                url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
-                type: 'POST',
-                dataType: 'html',
-                data : sendData,
-                success: function(result) {
-                    //console.log(result);
-                    $('#prw-".$options['input_id']."').html(result);
+        add_to_jquery("        
+        $(document).on('click', '[data-action=\"preview\"]', function(e) { 
+
+            e.preventDefault();        
+
+            let preview_tab = $('#prw-".$options['input_id']."'), et = $('#txt-".$options['input_id']."'), placeholder = $(this).find('.preview-text');
+            
+            if ( et.is(':visible') ) {
+
+                $(this).addClass('active');
+
+                placeholder.text('".$locale['unpreview']."');      
+                          
+                let text = $('#".$options['input_id']."').val(),
+                format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."',            
+                data = {
+                    ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
+                    'text' : text,
+                    'editor' : format,
+                    'url' : '".$_SERVER['REQUEST_URI']."',
+                    'form_id' : 'prw-".$options['form_name']."',
+                    'fusion_token' : '".fusion_get_token("prw-".$options['form_name'], 30)."'
                 },
-                error: function(result) {
-                    alert('".$locale['error_preview']."' + '\\n".$locale['error_preview_text']."');
-                }
+                sendData = $(this).closest('form').serialize() + '&' + $.param(data);
+            
+                $.ajax({
+                    url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
+                    type: 'POST',
+                    dataType: 'html',
+                    data : sendData,
+                    success: function(result) {
+                        console.log(result);
+                        preview_tab.html(result).addClass('in active');
+                        et.removeClass('in active');      
+                      
+                    },
+                    error: function(result) {
+                        alert('".$locale['error_preview']."' + '\\n".$locale['error_preview_text']."');
+                    }
                 });
-            });
+                
+            } else {
+                $(this).removeClass('active');
+                placeholder.text('".$locale['preview']."');   
+                preview_tab.removeClass('in active');
+                et.addClass('in active');                                                            
+            }                        
+        });           
         ");
     }
 
@@ -505,25 +531,27 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     return $html;
 }
 
-function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-    $link_mode = !empty($link) ? $link : 0;
-    $html = "<div class='nav-wrapper $class'>\n";
-    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
-    if (!empty($tab_title['title'])) {
-        foreach ($tab_title['title'] as $arr => $v) {
-            $v_title = str_replace("-", " ", $v);
-            $tab_id = $tab_title['id'][$arr];
-            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
-            if ($link_mode) {
-                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>" : "<li>";
-            } else {
-                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>" : "<li>";
-            }
-            $html .= "<a class='btn btn-default btn-sm m-l-5 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>";
-            $html .= "</li>";
-        }
-    }
-    $html .= "</ul>";
-    return $html;
-}
+//function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
+//
+//    $link_mode = !empty($link) ? $link : 0;
+//    $html = "<div class='nav-wrapper $class'>\n";
+//    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
+//    if (!empty($tab_title['title'])) {
+//        foreach ($tab_title['title'] as $arr => $v) {
+//            $v_title = str_replace("-", " ", $v);
+//            $tab_id = $tab_title['id'][$arr];
+//            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
+//            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
+//            if ($link_mode) {
+//                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>" : "<li>";
+//            } else {
+//                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>" : "<li>";
+//            }
+//            $html .= "<a class='btn btn-default btn-sm m-l-5 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>";
+//            $html .= "</li>";
+//        }
+//    }
+//    $html .= "</ul>";
+//
+//    return $html;
+//}

@@ -20,5 +20,6 @@ defined('IN_FUSION') || exit;
 $__BBCODE__[] = [
     "description" => $locale['bb_left_description'],
     "value"       => "left", "bbcode_start" => "[left]", "bbcode_end" => "[/left]",
-    "usage"       => "[left]".$locale['bb_left_usage']."[/left]"
+    "usage"       => "[left]".$locale['bb_left_usage']."[/left]",
+    'svg'         => '<i class="fas fa-align-left fa-lg"></i>'
 ];
