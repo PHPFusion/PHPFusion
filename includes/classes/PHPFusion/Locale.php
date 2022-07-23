@@ -94,7 +94,7 @@ class Locale {
      * @return array|mixed|string
      */
     public function getLocale($key = NULL) {
-        return empty($key) ? self::$locale : (isset(self::$locale[$key]) ? self::$locale[$key] : '');
+        return empty($key) ? self::$locale : (self::$locale[$key] ?? '');
     }
 
     /**
