@@ -26,10 +26,11 @@
  */
 function form_textarea($input_name, $label = '', $input_value = '', array $options = []) {
 
-    $locale = fusion_get_locale('', [
-        LOCALE.LOCALESET."admin/html_buttons.php",
-        LOCALE.LOCALESET."error.php"
-    ]);
+    $locale = fusion_get_locale('',
+        [
+            LOCALE.LOCALESET."admin/html_buttons.php",
+            LOCALE.LOCALESET."error.php"
+        ]);
 
     require_once INCLUDES."bbcode_include.php";
     require_once INCLUDES."html_buttons_include.php";
@@ -347,15 +348,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
             $options['type'] = 'bbcode';
 
             fusion_load_script(INCLUDES.'jscripts/bbcode.js');
-
         } else if ($options['html']) {
             $options['type'] = 'html';
         }
 
         if ($options['autosize'] || defined('AUTOSIZE')) {
-
             fusion_load_script(DYNAMICS.'assets/autosize/autosize.js');
-
+            // add_to_footer("<script src='" . DYNAMICS . "assets/autosize/autosize.min.js'></script>");
             add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
@@ -384,7 +383,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     // $tab_title = [];
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
 
-        $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='fa fa-eye m-r-10'></i><span class='preview-text'>".$locale['preview']."</span></span></button>";
+        $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='far fa-eye m-r-10'></i><span class='preview-text'>".$locale['preview']."</span></span></button>";
 
         $tab_title['title'][] = $locale['preview'];
         $tab_title['id'][] = "prw-".$options['input_id'];
@@ -392,13 +391,16 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tab_title['title'][] = $locale['texts'];
         $tab_title['id'][] = "txt-".$options['input_id'];
         $tab_title['icon'][] = '';
-
         $tab_active = tab_active($tab_title, 1);
     }
 
-    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0;'" : '').">\n
-    <div class='panel-heading clearfix'>\n" : '';
-    $html .= "<div class='nav-wrapper editor-wrapper'>\n";
+    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0;'" : '').">\n<div class='panel-heading clearfix'>\n" : '';
+    if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
+
+        $html .= "<div class='nav-wrapper editor-wrapper'>\n";
+
+        // $html .= openeditortab($tab_title, $tab_active, $options['input_id'] . "-link", "", "editor-wrapper");
+    }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
         $html .= "<div class='bbcode_input' style='line-height:0;'>\n";
@@ -432,16 +434,14 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= "</div>\n";
         add_to_jquery("        
         $(document).on('click', '[data-action=\"preview\"]', function(e) { 
-
             e.preventDefault();        
-
-            let preview_tab = $('#prw-".$options['input_id']."'), et = $('#txt-".$options['input_id']."'), placeholder = $(this).find('.preview-text');
+            let preview_tab = $('#prw-".$options['input_id']."'),
+            editor_tab = $('#txt-".$options['input_id']."'),
+            placeholder = $(this).find('.preview-text');
             
-            if ( et.is(':visible') ) {
-
+            if ( editor_tab.is(':visible') ) {
                 $(this).addClass('active');
-
-                placeholder.text('".$locale['unpreview']."');      
+                placeholder.text('Hide Preview');      
                           
                 let text = $('#".$options['input_id']."').val(),
                 format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."',            
@@ -463,7 +463,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     success: function(result) {
                         console.log(result);
                         preview_tab.html(result).addClass('in active');
-                        et.removeClass('in active');      
+                        editor_tab.removeClass('in active');      
                       
                     },
                     error: function(result) {
@@ -473,9 +473,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 
             } else {
                 $(this).removeClass('active');
-                placeholder.text('".$locale['preview']."');   
+                placeholder.text('Preview');   
                 preview_tab.removeClass('in active');
-                et.addClass('in active');                                                            
+                editor_tab.addClass('in active');                                                            
             }                        
         });           
         ");
@@ -496,10 +496,13 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         ");
         $html .= "</div>\n<!---panel-footer-->";
     }
+
     if ((!$options['type'] == "bbcode" && !$options['type'] == "html")) {
         $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
     }
+
     $html .= $options['inline'] ? "</div>\n" : '';
+
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
             $html .= "</div>\n";
@@ -514,6 +517,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
     $html .= "</div>\n";
 
     \Defender::add_field_session([
@@ -531,27 +535,27 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     return $html;
 }
 
-//function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-//
-//    $link_mode = !empty($link) ? $link : 0;
-//    $html = "<div class='nav-wrapper $class'>\n";
-//    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
-//    if (!empty($tab_title['title'])) {
-//        foreach ($tab_title['title'] as $arr => $v) {
-//            $v_title = str_replace("-", " ", $v);
-//            $tab_id = $tab_title['id'][$arr];
-//            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-//            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
-//            if ($link_mode) {
-//                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>" : "<li>";
-//            } else {
-//                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>" : "<li>";
-//            }
-//            $html .= "<a class='btn btn-default btn-sm m-l-5 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>";
-//            $html .= "</li>";
-//        }
-//    }
-//    $html .= "</ul>";
-//
-//    return $html;
-//}
+function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
+
+    $link_mode = !empty($link) ? $link : 0;
+    $html = "<div class='nav-wrapper $class'>\n";
+    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
+    if (!empty($tab_title['title'])) {
+        foreach ($tab_title['title'] as $arr => $v) {
+            $v_title = str_replace("-", " ", $v);
+            $tab_id = $tab_title['id'][$arr];
+            $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
+            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
+            if ($link_mode) {
+                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>" : "<li>";
+            } else {
+                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>" : "<li>";
+            }
+            $html .= "<a class='btn btn-default btn-sm m-l-5 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>";
+            $html .= "</li>";
+        }
+    }
+    $html .= "</ul>";
+
+    return $html;
+}
