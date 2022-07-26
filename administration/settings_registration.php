@@ -80,7 +80,7 @@ echo form_checkbox('enable_terms', $locale['558'], $settings['enable_terms'], [
     'toggle' => TRUE
 ]);
 if ($is_multilang == TRUE) {
-    echo \PHPFusion\QuantumFields::quantumMultilocaleFields('license_agreement', $locale['559'], $settings['license_agreement'], [
+    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('license_agreement', $locale['559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'input_id'  => 'enable_license_agreement',
         'autosize'  => (bool)fusion_get_settings('tinymce_enabled'),

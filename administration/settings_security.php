@@ -152,7 +152,7 @@ echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings
 closeside();
 openside('');
 if ($is_multilang == TRUE) {
-    echo \PHPFusion\QuantumFields::quantumMultilocaleFields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
         'html'      => !fusion_get_settings('tinymce_enabled'),

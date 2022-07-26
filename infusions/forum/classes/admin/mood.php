@@ -17,7 +17,7 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Admin;
 
-use PHPFusion\QuantumFields;
+use PHPFusion\Quantum\QuantumHelper;
 
 class ForumAdminMood extends ForumAdminInterface {
     /**
@@ -106,10 +106,10 @@ class ForumAdminMood extends ForumAdminInterface {
         echo openform("mood_form", "POST", $form_action).
             form_hidden('mood_id', '', $this->data['mood_id']).
 
-            QuantumFields::quantumMultilocaleFields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
+            QuantumHelper::quantumMultilocaleFields('mood_name', self::$locale['forum_094'], $this->data['mood_name'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_096']]).
 
-            QuantumFields::quantumMultilocaleFields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
+            QuantumHelper::quantumMultilocaleFields('mood_description', self::$locale['forum_095'], $this->data['mood_description'],
                 ['required' => TRUE, 'inline' => TRUE, 'placeholder' => self::$locale['forum_097'], 'ext_tip' => self::$locale['forum_098']]).
 
             form_text('mood_icon', self::$locale['forum_099'], $this->data['mood_icon'],
