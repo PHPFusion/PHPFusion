@@ -346,8 +346,6 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
         if ($options['bbcode']) {
             $options['type'] = 'bbcode';
-
-            fusion_load_script(INCLUDES.'jscripts/bbcode.js');
         } else if ($options['html']) {
             $options['type'] = 'html';
         }
