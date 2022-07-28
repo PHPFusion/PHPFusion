@@ -344,6 +344,10 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     } else {
 
+        if ($options['type'] == 'bbcode' || $options['bbcode']) {
+            fusion_load_script(INCLUDES.'jscripts/bbcode.js');
+        }
+
         if ($options['bbcode']) {
             $options['type'] = 'bbcode';
         } else if ($options['html']) {
@@ -430,19 +434,19 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= $locale['global_003'];
         $html .= closetabbody();
         $html .= "</div>\n";
-        add_to_jquery("        
-        $(document).on('click', '[data-action=\"preview\"]', function(e) { 
-            e.preventDefault();        
+        add_to_jquery("
+        $(document).on('click', '[data-action=\"preview\"]', function(e) {
+            e.preventDefault();
             let preview_tab = $('#prw-".$options['input_id']."'),
             editor_tab = $('#txt-".$options['input_id']."'),
             placeholder = $(this).find('.preview-text');
-            
+
             if ( editor_tab.is(':visible') ) {
                 $(this).addClass('active');
-                placeholder.text('Hide Preview');      
-                          
+                placeholder.text('Hide Preview');
+
                 let text = $('#".$options['input_id']."').val(),
-                format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."',            
+                format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."',
                 data = {
                     ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
                     'text' : text,
@@ -452,7 +456,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     'fusion_token' : '".fusion_get_token("prw-".$options['form_name'], 30)."'
                 },
                 sendData = $(this).closest('form').serialize() + '&' + $.param(data);
-            
+
                 $.ajax({
                     url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
                     type: 'POST',
@@ -461,21 +465,21 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                     success: function(result) {
                         console.log(result);
                         preview_tab.html(result).addClass('in active');
-                        editor_tab.removeClass('in active');      
-                      
+                        editor_tab.removeClass('in active');
+
                     },
                     error: function(result) {
                         alert('".$locale['error_preview']."' + '\\n".$locale['error_preview_text']."');
                     }
                 });
-                
+
             } else {
                 $(this).removeClass('active');
-                placeholder.text('Preview');   
+                placeholder.text('Preview');
                 preview_tab.removeClass('in active');
-                editor_tab.addClass('in active');                                                            
-            }                        
-        });           
+                editor_tab.addClass('in active');
+            }
+        });
         ");
     }
 

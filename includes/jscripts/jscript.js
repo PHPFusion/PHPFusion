@@ -124,21 +124,6 @@ function addText(textarea, text1, text2, formname) {
 }
 
 /**
- * Executes PHPFusion BBcode Editor Action
- */
-let bbcode_smileys = function () {
-    $(document).on("click", "[data-action='bbcode_smileys']", function (e) {
-        e.preventDefault();
-        let bbcode = $(this).data('smiley'),
-            editor = $(this).closest('.panel-txtarea').find('textarea');
-        if (editor.length === 1) {
-            let curPos = editor[0].selectionStart, curVal = $(editor).val();
-            $(editor).val(curVal.slice(0, curPos) + bbcode + curVal.slice(curPos));
-        }
-    });
-}
-
-/**
  * insertText
  *
  * @param f
@@ -379,8 +364,7 @@ function setChecked(frmName, chkName, val) {
  * Run time execution
  */
 function onload_events() {
-    resize_forum_imgs();
-    bbcode_smileys();
+    resize_forum_imgs()
 }
 
 window.onload = onload_events;
