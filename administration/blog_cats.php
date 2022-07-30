@@ -89,7 +89,7 @@ if ((isset($_GET['action']) && $_GET['action'] == "delete") && (isset($_GET['cat
     $formaction = FUSION_SELF.$aidlink;
     $openTable = $locale['401'];
 }
-$image_files = makefilelist(IMAGES_NC, ".|..|index.php", TRUE);
+$image_files = makefilelist(IMAGES_BC, ".|..|index.php", TRUE);
 $image_list = makefileopts($image_files, $cat_image);
 
 if (isset($error) && isnum($error)) {
