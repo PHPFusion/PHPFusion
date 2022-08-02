@@ -700,7 +700,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         'debug'        => FALSE, // If true, do nothing, just show the SQL.
         'primary_key'  => '', // Name of primary key column. If it is empty, column will detect automatically.
         'no_unique'    => FALSE, // If true, primary key column will be not removed from $inputdata.
-        'keep_session' => FALSE // If true, defender will not unset field sessions.
+        'keep_session' => TRUE // If true, defender will not unset field sessions.
     ];
 
     if (!fusion_safe()) {
@@ -711,24 +711,33 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         return FALSE;
     }
 
-    $cresult = dbquery("SHOW COLUMNS FROM $table");
-    $columns = [];
-    $pkcolumns = [];
-    while ($cdata = dbarray($cresult)) {
-        $columns[] = $cdata['Field'];
-        if ($cdata['Key'] === 'PRI') {
-            $pkcolumns[$cdata['Field']] = $cdata['Field'];
+    static $columns = [];
+    static $pkcolumns = [];
+
+    if (!isset($columns[$table])) {
+
+        $cresult = dbquery("SHOW COLUMNS FROM $table");
+        while ($cdata = dbarray($cresult)) {
+            $columns[$table][] = $cdata['Field'];
+            if ($cdata['Key'] === 'PRI') {
+                $pkcolumns[$table][$cdata['Field']] = $cdata['Field'];
+            }
         }
     }
+
     if ($options['primary_key']) {
         $options['primary_key'] = (array)$options['primary_key'];
-        $pkcolumns = array_combine($options['primary_key'], $options['primary_key']);
+        $pkcolumns[$table] = array_combine($options['primary_key'], $options['primary_key']);
     }
+
     $sanitized_input = [];
-    $data = array_intersect_key($inputdata, array_flip($columns));
-    $pkvalues = array_intersect_key($data, $pkcolumns);
+
+    $data = array_intersect_key($inputdata, array_flip($columns[$table]));
+
+    $pkvalues = array_intersect_key($data, $pkcolumns[$table]);
+
     if (!$options['no_unique'] and $mode !== 'save') {
-        foreach ($pkcolumns as $c) {
+        foreach ($pkcolumns[$table] as $c) {
             unset($data[$c]);
         }
     }
@@ -775,6 +784,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
         '{values}' => implode(', ', $sanitized_input),
         '{where}'  => $where ? "WHERE ".$where : ''
     ]);
+
     $result = NULL;
     if ($options['debug']) {
         print_p($where);
@@ -784,16 +794,14 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
     } else {
         $result = dbquery($sql, $params);
         if (!$options['keep_session']) {
-            //print_p('field session unset during '.$sql);
             Defender::getInstance()->unset_field_session();
         }
     }
     if ($result === FALSE) {
-        // Because dblastid() can return the id of the last record of the error log.
         return FALSE;
     }
 
-    return ($mode === 'save') ? dblastid() : 0;
+    return (int)($mode === 'save') ? dblastid() : 0;
 }
 
 /**
