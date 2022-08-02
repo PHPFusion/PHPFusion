@@ -317,8 +317,6 @@ function form_select($input_name, $label, $input_value, $options = []) {
                         $opt_html .= form_select_build_optgroup($value['children'], $input_value, $options);
                         $opt_html .= "</optgroup>\n";
 
-                        print_P($opt_html);
-
                         $html .= $opt_html;
                     } else {
                         $html .= $item;
