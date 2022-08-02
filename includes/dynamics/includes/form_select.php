@@ -276,17 +276,20 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
                 // where options is more than one value, pass to data attributes.
                 $data_attributes = '';
-                if (count($value) > 1) {
+                if (!empty($value) && is_array($value)) {
+
                     $data_options = [];
                     foreach ($value as $datakey => $dataval) {
-                        $data_options[] = "data-$datakey='$dataval'";
+                        // This probably is incorrect and need to be revised. Need documentation link on this to fix.
+                        $data_options[] = "data-$datakey='".(is_array($dataval) ? implode(',', $dataval) : $dataval)."'";
                     }
+
                     $data_attributes = " ".implode(' ', $data_options)." ";
                 }
 
                 $select = "";
                 $chain = (isset($options['chain_index'][$arr]) ? " class='".$options['chain_index'][$arr]."' " : "");
-                $text_value = isset($value['text']) ? $value['text'] : $value;
+                $text_value = $value['text'] ?? $value;
                 // if you have data attributes, you must have text key
                 if (!empty($text_value) && !is_array($text_value)) {
                     if ($options['keyflip']) { // flip mode = store array values
@@ -295,7 +298,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts);
                         $hide = $disabled && $options['hide_disabled'];
-                        $item = (!$hide ? "<option".$data_attributes."value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+                        $item = (!$hide ? "<option".$data_attributes." value='$text_value'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
 
                     } else {
                         if ($input_value !== '') {
@@ -304,14 +307,19 @@ function form_select($input_name, $label, $input_value, $options = []) {
                         }
                         $disabled = $disable_opts && in_array($arr, $disable_opts);
                         $hide = $disabled && $options['hide_disabled'];
-                        $item = (!$hide ? "<option".$data_attributes."value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value)." ".($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '')."</option>\n" : "");
+                        $item = (!$hide ? "<option".$data_attributes." value='$arr'".$chain.$select.($disabled ? 'disabled' : '').">".html_entity_decode($text_value).($options['show_current'] && $input_value == $text_value ? ' (Current Item)' : '')."</option>\n" : "");
                         //$item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                     }
                     if (isset($value['children'])) {
-                        $html .= "<optgroup label='".$value['text']."'>\n";
-                        $html .= $item;
-                        $html .= form_select_build_optgroup($value['children'], $input_value, $options);
-                        $html .= "</optgroup>\n";
+
+                        $opt_html = "<optgroup label='".$value['text']."'>\n";
+                        $opt_html .= $item;
+                        $opt_html .= form_select_build_optgroup($value['children'], $input_value, $options);
+                        $opt_html .= "</optgroup>\n";
+
+                        print_P($opt_html);
+
+                        $html .= $opt_html;
                     } else {
                         $html .= $item;
                     }
@@ -823,7 +831,6 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
             // value is the array
             //$hide = $disable_branch && $value == $self_id ? 1 : 0;
             $name = $data[$value][$name_col];
-            //print_p($data[$value]);
 
             $name = PHPFusion\QuantumFields::parseLabel($name);
             $select = ($input_value !== "" && ($input_value == $value)) ? 'selected' : '';
