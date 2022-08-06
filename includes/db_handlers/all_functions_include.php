@@ -101,6 +101,29 @@ register_shutdown_function(function () {
 });
 
 /**
+ * Get the column names of a table
+ *
+ * @param $table
+ *
+ * @return array
+ */
+function dbkeys($table) {
+    static $col_names = [];
+
+    if (empty($col_names[$table])) {
+        $res = dbquery("SHOW COLUMNS FROM $table");
+        $col_names = [];
+        while ($rows = dbarray($res)) {
+            $col_names[$table][] = $rows['Field'];
+        }
+    }
+
+    return (array)$col_names[$table] ? array_map(function ($k) {
+        return '';
+    }, array_flip($col_names[$table])) : [];
+}
+
+/**
  * Send a database query
  *
  * @param string $query SQL
