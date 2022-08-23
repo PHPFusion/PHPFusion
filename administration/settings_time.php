@@ -22,7 +22,7 @@ pageaccess('S2');
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['admins_time_settings']]);
 
 if (check_post('savesettings')) {
     $inputData = [
@@ -42,7 +42,7 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addnotice("success", $locale['900']);
+        addnotice("success", $locale['admins_900']);
         redirect(FUSION_REQUEST);
     }
 }
@@ -64,58 +64,66 @@ foreach ($locale['dateformats'] as $dateformat) {
     $date_opts[$dateformat] = showdate($dateformat, time());
 }
 unset($dateformat);
-opentable($locale['time_settings']);
-echo "<div class='well'>".$locale['time_description']."</div>\n";
+opentable($locale['admins_time_settings']);
+echo "<div class='well'>".$locale['admins_time_description']."</div>\n";
 
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n";
-
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
+
 openside('');
-echo '<span class="strong">'.$locale['458'].' ('.$locale['464'].')</span>';
+echo '<span class="strong">'.$locale['admins_458'].' ('.$locale['admins_464'].')</span>';
 echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['timeoffset']]).'</span>';
 closeside();
 
 openside('');
-echo form_select('timeoffset', $locale['464'], $settings['timeoffset'], ['options' => $timezone_array]);
+echo form_select('timeoffset', $locale['admins_464'], $settings['timeoffset'], [
+    'options' => $timezone_array, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
 closeside();
 
 openside('');
-echo form_select('week_start', $locale['465'], $settings['week_start'], ['options' => $weekdayslist]);
+echo form_select('week_start', $locale['admins_465'], $settings['week_start'], [
+    'options' => $weekdayslist, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
 closeside();
 echo "</div>\n";
 
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('shortdate_select', $locale['451'], $settings['shortdate'], [
+echo form_select('shortdate_select', $locale['admins_451'], $settings['shortdate'], [
     'options'     => $date_opts,
-    'placeholder' => $locale['455']
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
 ]);
-echo form_text('shortdate', '', $settings['shortdate']);
+echo form_text('shortdate', '', $settings['shortdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
 closeside();
 
 openside('');
-echo form_select('longdate_select', $locale['452'], $settings['longdate'], [
+echo form_select('longdate_select', $locale['admins_452'], $settings['longdate'], [
     'options'     => $date_opts,
-    'placeholder' => $locale['455']
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
 ]);
-echo form_text('longdate', '', $settings['longdate']);
+echo form_text('longdate', '', $settings['longdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
 closeside();
 
 openside('');
-echo form_select('forumdate_select', $locale['453'], $settings['forumdate'], [
+echo form_select('forumdate_select', $locale['admins_453'], $settings['forumdate'], [
     'options'     => $date_opts,
-    'placeholder' => $locale['455']
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
 ]);
-echo form_text('forumdate', '', $settings['forumdate']);
+echo form_text('forumdate', '', $settings['forumdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
 closeside();
 
 openside('');
-echo form_select('newsdate_select', $locale['457'], $settings['newsdate'], [
+echo form_select('newsdate_select', $locale['admins_457'], $settings['newsdate'], [
     'options'     => $date_opts,
-    'placeholder' => $locale['455']
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
 ]);
-echo form_text('newsdate', '', $settings['newsdate']);
+echo form_text('newsdate', '', $settings['newsdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
 closeside();
 
 echo "</div>\n";
@@ -127,7 +135,7 @@ $("[id*=\'_select\']").change(function () {
 ');
 
 echo "</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
 require_once THEMES.'templates/footer.php';

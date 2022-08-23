@@ -22,7 +22,7 @@ pageaccess('S12');
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['security_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_security.php'.fusion_get_aidlink(), 'title' => $locale['admins_security_settings']]);
 
 $available_captchas = [];
 if ($temp = opendir(INCLUDES."captchas/")) {
@@ -43,7 +43,7 @@ if (check_post('clear_cache')) {
         // Where system has been disabled and instance could not be found, invoke manually.
         dbquery("DELETE FROM ".DB_SESSIONS);
     }
-    addnotice('success', $locale['security_007']);
+    addnotice('success', $locale['admins_security_007']);
     redirect(FUSION_REQUEST);
 }
 
@@ -96,80 +96,77 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
     } else {
-        addnotice('danger', $locale['901']);
-        addnotice('danger', $locale['696']);
-        addnotice('danger', $locale['900']);
+        addnotice('danger', $locale['admins_901']);
+        addnotice('danger', $locale['admins_696']);
+        addnotice('danger', $locale['admins_900']);
     }
 
     redirect(FUSION_REQUEST);
 }
 
-opentable($locale['683']);
-echo "<div class='well'>".$locale['security_description']."</div>\n";
-echo openform('settingsform', 'post', FUSION_REQUEST);
+opentable($locale['admins_683']);
+echo "<div class='well'>".$locale['admins_security_description']."</div>\n";
+echo openform('settingsform', 'post');
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
-
 // This opens roadmaps to load balancers.
 openside('');
 echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
-echo "<strong>".$locale['security_001']."</strong><br/>".$locale['security_002'];
+echo "<strong>".$locale['admins_security_001']."</strong><br/>".$locale['admins_security_002'];
 echo "</div><div class='col-xs-12 col-sm-9'>\n";
-echo form_btngroup('database_sessions', $locale['security_003'], $settings['database_sessions'], [
+echo form_btngroup('database_sessions', $locale['admins_security_003'], $settings['database_sessions'], [
     'options' => [
-        1 => $locale['security_004'],
-        0 => $locale['security_005']
+        1 => $locale['admins_security_004'],
+        0 => $locale['admins_security_005']
     ],
     'class'   => 'btn-default m-b-0'
 ]);
-echo form_button('clear_cache', $locale['security_006'], 'clear_cache', ['class' => 'btn-default m-b-20']);
+echo form_button('clear_cache', $locale['admins_security_006'], 'clear_cache', ['class' => 'btn-default m-b-20']);
 echo "</div></div>";
 
 echo "<div class='row'><div class='col-xs-12 col-sm-3'>\n";
-echo "<strong>".$locale['security_008']."</strong><br/>".$locale['security_009'];
+echo "<strong>".$locale['admins_security_008']."</strong><br/>".$locale['admins_security_009'];
 echo "</div><div class='col-xs-12 col-sm-9'>\n";
 echo form_btngroup('form_tokens', '', $settings['form_tokens'], ['options' => range(0, 10)]);
 echo "</div></div>";
 closeside();
 openside('');
-$level_array = [
-    USER_LEVEL_ADMIN       => $locale['676'],
-    USER_LEVEL_SUPER_ADMIN => $locale['677'],
-    USER_LEVEL_MEMBER      => $locale['678']
-];
-echo form_select('maintenance_level', $locale['675'], $settings['maintenance_level'], [
-    'options' => $level_array,
+echo form_select('maintenance_level', $locale['admins_675'], $settings['maintenance_level'], [
+    'options' => [
+        USER_LEVEL_ADMIN       => $locale['admins_676'],
+        USER_LEVEL_SUPER_ADMIN => $locale['admins_677'],
+        USER_LEVEL_MEMBER      => $locale['admins_678']
+    ],
     'inline'  => TRUE,
     'width'   => '100%'
 ]);
 
-echo form_checkbox('maintenance', $locale['657'], $settings['maintenance'], [
+echo form_checkbox('maintenance', $locale['admins_657'], $settings['maintenance'], [
     'toggle' => TRUE
 ]);
-echo form_textarea('maintenance_message', $locale['658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled'), 'form_name' => 'settingsform']);
+echo form_textarea('maintenance_message', $locale['admins_658'], stripslashes($settings['maintenance_message']), ['autosize' => TRUE, 'html' => !fusion_get_settings('tinymce_enabled'), 'form_name' => 'settingsform']);
 closeside();
 openside('');
 if ($is_multilang == TRUE) {
-    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('privacy_policy', $locale['admins_820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
         'html'      => !fusion_get_settings('tinymce_enabled'),
         'function'  => 'form_textarea'
     ]);
 } else {
-    echo form_textarea('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+    echo form_textarea('privacy_policy', $locale['admins_820'], $settings['privacy_policy'], [
         'autosize'  => 1,
         'form_name' => 'settingsform',
         'html'      => !fusion_get_settings('tinymce_enabled')
     ]);
 }
 closeside();
-
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_select('captcha', $locale['693'], $settings['captcha'], [
+echo form_select('captcha', $locale['admins_693'], $settings['captcha'], [
     'options' => $available_captchas,
     'class'   => 'm-b-0'
 ]);
@@ -235,40 +232,40 @@ echo '</div>';
 
 echo "</div>\n";
 
-echo form_checkbox('display_validation', $locale['553'], $settings['display_validation'], [
+echo form_checkbox('display_validation', $locale['admins_553'], $settings['display_validation'], [
     'toggle' => TRUE,
     'class'  => 'm-t-10'
 ]);
 closeside();
 
 openside('');
-echo form_checkbox('mime_check', $locale['699f'], $settings['mime_check'], [
+echo form_checkbox('mime_check', $locale['admins_699f'], $settings['mime_check'], [
     'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_text('flood_interval', $locale['660'], $settings['flood_interval'], [
+echo form_text('flood_interval', $locale['admins_660'], $settings['flood_interval'], [
     'type'        => 'number',
     'inner_width' => '150px',
     'max_length'  => 2
 ]);
-echo form_checkbox('flood_autoban', $locale['680'], $settings['flood_autoban'], [
+echo form_checkbox('flood_autoban', $locale['admins_680'], $settings['flood_autoban'], [
     'toggle' => TRUE
 ]);
 closeside();
 openside('');
-echo form_checkbox('bad_words_enabled', $locale['659'], $settings['bad_words_enabled'], [
+echo form_checkbox('bad_words_enabled', $locale['admins_659'], $settings['bad_words_enabled'], [
     'toggle' => TRUE
 ]);
-echo form_text('bad_word_replace', $locale['654'], $settings['bad_word_replace']);
-echo form_textarea('bad_words', $locale['651'], $settings['bad_words'], [
-    'placeholder' => $locale['652'],
+echo form_text('bad_word_replace', $locale['admins_654'], $settings['bad_word_replace']);
+echo form_textarea('bad_words', $locale['admins_651'], $settings['bad_words'], [
+    'placeholder' => $locale['admins_652'],
     'autosize'    => TRUE
 ]);
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
 

@@ -1235,7 +1235,7 @@ function getuserlevel($userlevel) {
         USER_LEVEL_SUPER_ADMIN => $locale['user3']
     ];
 
-    return isset($userlevels[$userlevel]) ? $userlevels[$userlevel] : NULL;
+    return $userlevels[$userlevel] ?? NULL;
 }
 
 /**
@@ -1687,10 +1687,10 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
     if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
-        $tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
+        $tpl_global = "<nav class='pagination'><div class='pagination-row'>%s</div><div class='pagination-nav'><div class='btn-group'>\n%s</div></div></nav>\n";
         $tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
         $tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
-        $tpl_divider = "</div>\n<div class='btn-group'>";
+        $tpl_divider = "</div>\n<span>...</span>\n<div class='btn-group'>";
         $tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
         $tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
@@ -1720,6 +1720,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     }
     $idx_back = $rowstart - $count;
     $idx_next = $rowstart + $count;
+
     if ($button == TRUE) {
         if ($idx_next >= $total) {
             return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
@@ -1727,8 +1728,23 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
             return sprintf($tpl_button, $idx_next, $link.$getname, $idx_next, $locale['load_more']);
         }
     }
+
     $cur_page = ceil(($rowstart + 1) / $count);
-    $res = "";
+    $idx_fst = max($cur_page - $range, 1);
+    $idx_lst = min($cur_page + $range, $pg_cnt);
+
+    if ($range == 0) {
+        $idx_fst = 1;
+        $idx_lst = $pg_cnt;
+    }
+
+    $res = '';
+
+    if ($cur_page != $idx_fst) {
+        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, '<i class="fas fa-angle-left m-r-5"></i> '.$locale['first']);
+        $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, '<i class="fas fa-angle-double-left m-r-5"></i>'.$locale['previous']);
+    }
+
     if ($idx_back >= 0) {
         if ($cur_page > ($range + 1)) {
             $res .= sprintf($tpl_firstpage, $link.$getname);
@@ -1737,12 +1753,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
             }
         }
     }
-    $idx_fst = max($cur_page - $range, 1);
-    $idx_lst = min($cur_page + $range, $pg_cnt);
-    if ($range == 0) {
-        $idx_fst = 1;
-        $idx_lst = $pg_cnt;
-    }
+
     for ($i = $idx_fst; $i <= $idx_lst; $i++) {
         $offset_page = ($i - 1) * $count;
         if ($i == $cur_page) {
@@ -1751,16 +1762,33 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
             $res .= sprintf($tpl_page, $offset_page, $link.$getname, $offset_page, $i);
         }
     }
+
     if ($idx_next < $total) {
         if ($cur_page < ($pg_cnt - $range)) {
             if ($cur_page != ($pg_cnt - $range - 1)) {
                 $res .= $tpl_divider;
             }
+
             $res .= sprintf($tpl_lastpage, ($pg_cnt - 1) * $count, $link.$getname, ($pg_cnt - 1) * $count, $pg_cnt);
         }
     }
 
-    return sprintf($tpl_global, "<small class='m-r-10'><span>".$locale['global_092']."</span> ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+    if ($cur_page != $idx_lst) {
+        $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].'<i class="fas fa-angle-double-right m-l-5"></i>');
+        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].'<i class="fas fa-angle-right m-l-5"></i>');
+    }
+    // if there is a request, we can redirect
+    if (check_post($getname.'_pg')) {
+        if ($val = sanitizer($getname.'_pg', '', $getname.'_pg')) {
+            redirect(clean_request($getname.'='.($val * $count - $count), [$getname], FALSE));
+        } else {
+            redirect(clean_request('', [$getname], FALSE));
+        }
+    }
+
+    $cur_page_field = openform(generate_strong_password(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']).form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']).closeform();
+
+    return sprintf($tpl_global, "<span>".$locale['global_092']."</span> ".$cur_page_field." ".$locale['global_093']." ".$pg_cnt, $res);
 }
 
 /**
@@ -2057,7 +2085,7 @@ function fusion_get_settings($key = NULL) {
         }
     }
 
-    return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
+    return $key === NULL ? $settings : ($settings[$key] ?? NULL);
 }
 
 /**
@@ -2383,7 +2411,7 @@ function write_file($file, $data, $flags = NULL) {
  */
 function calculate_byte($total_bit) {
 
-    $calc_opts = fusion_get_locale('1020', LOCALE.LOCALESET."admin/settings.php");
+    $calc_opts = fusion_get_locale('admins_1020', LOCALE.LOCALESET."admin/settings.php");
     foreach ($calc_opts as $byte => $val) {
         if ($total_bit / $byte <= 999) {
             return (int)$byte;

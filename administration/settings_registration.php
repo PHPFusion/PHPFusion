@@ -22,7 +22,7 @@ pageaccess('S4');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 $settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['register_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_registration.php'.fusion_get_aidlink(), 'title' => $locale['admins_register_settings']]);
 
 $is_multilang = count(fusion_get_enabled_languages()) > 1;
 
@@ -47,7 +47,7 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
         redirect(FUSION_REQUEST);
     }
 }
@@ -70,17 +70,17 @@ if (check_post('delete_gw_tmp')) {
     redirect(FUSION_REQUEST);
 }
 
-opentable($locale['register_settings']);
+opentable($locale['admins_register_settings']);
 echo openform('settingsform', 'post', FUSION_REQUEST);
-echo "<div class='well'>".$locale['register_description']."</div>\n";
+echo "<div class='well'>".$locale['admins_register_description']."</div>\n";
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_checkbox('enable_terms', $locale['558'], $settings['enable_terms'], [
+echo form_checkbox('enable_terms', $locale['admins_558'], $settings['enable_terms'], [
     'toggle' => TRUE
 ]);
 if ($is_multilang == TRUE) {
-    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('license_agreement', $locale['559'], $settings['license_agreement'], [
+    echo \PHPFusion\Quantum\QuantumHelper::quantumMultilocaleFields('license_agreement', $locale['admins_559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'input_id'  => 'enable_license_agreement',
         'autosize'  => (bool)fusion_get_settings('tinymce_enabled'),
@@ -88,7 +88,7 @@ if ($is_multilang == TRUE) {
         'function'  => 'form_textarea'
     ]);
 } else {
-    echo form_textarea('license_agreement', $locale['559'], $settings['license_agreement'], [
+    echo form_textarea('license_agreement', $locale['admins_559'], $settings['license_agreement'], [
         'form_name' => 'settingsform',
         'autosize'  => (bool)fusion_get_settings('tinymce_enabled'),
         'html'      => !fusion_get_settings('tinymce_enabled')
@@ -97,40 +97,45 @@ if ($is_multilang == TRUE) {
 closeside();
 echo "</div><div class='col-xs-12 col-sm-4'>\n";
 openside('');
-echo form_checkbox('enable_registration', $locale['551'], $settings['enable_registration'], [
+echo form_checkbox('enable_registration', $locale['admins_551'], $settings['enable_registration'], [
     'toggle' => TRUE
 ]);
-echo form_checkbox('email_verification', $locale['552'], $settings['email_verification'], [
+echo form_checkbox('email_verification', $locale['admins_552'], $settings['email_verification'], [
     'toggle' => TRUE
 ]);
-echo form_checkbox('admin_activation', $locale['557'], $settings['admin_activation'], [
+echo form_checkbox('admin_activation', $locale['admins_557'], $settings['admin_activation'], [
     'toggle' => TRUE
 ]);
-$opts = ['0' => $locale['global_101'], '1' => $locale['699e'], '2' => $locale['699b']];
-echo form_select('login_method', $locale['699'], $settings['login_method'], ['options' => $opts]);
 
+echo form_select('login_method', $locale['admins_699'], $settings['login_method'], [
+    'options' => [
+        '0' => $locale['global_101'],
+        '1' => $locale['admins_699e'],
+        '2' => $locale['admins_699b']
+    ]
+]);
 closeside();
-
 openside('');
-echo form_checkbox('gateway', $locale['security_010'], $settings['gateway'], [
+echo form_checkbox('gateway', $locale['admins_security_010'], $settings['gateway'], [
     'toggle' => TRUE
 ]);
-echo form_select('gateway_method', $locale['security_011'], $settings['gateway_method'], [
+echo form_select('gateway_method', $locale['admins_security_011'], $settings['gateway_method'], [
     'options'     => [
-        0 => $locale['security_012'],
-        1 => $locale['security_013'],
-        2 => $locale['security_014']
+        0 => $locale['admins_security_012'],
+        1 => $locale['admins_security_013'],
+        2 => $locale['admins_security_014']
     ],
     'width'       => '100%',
-    'inner_width' => '100%'
+    'inner_width' => '100%',
+    'inline'      => FALSE,
 ]);
 
-echo form_button('delete_gw_tmp', $locale['gateway_001'], 'delete_gw_tmp', ['class' => 'btn-danger', 'icon' => 'fas fa-trash']);
+echo form_button('delete_gw_tmp', $locale['admins_gateway_001'], 'delete_gw_tmp', ['class' => 'btn-danger', 'icon' => 'fas fa-trash']);
 
 closeside();
 
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
 require_once THEMES.'templates/footer.php';

@@ -54,7 +54,7 @@ if (dbrows($inf_result) > 0) {
     }
 }
 
-add_breadcrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['682ML']]);
+add_breadcrumb(['link' => ADMIN."settings_languages.php".fusion_get_aidlink(), 'title' => $locale['admins_682ML']]);
 
 if (check_post('savesettings')) {
     $inputData = [
@@ -68,8 +68,7 @@ if (check_post('savesettings')) {
 
     // format both to .
     if (empty($inputData['enabled_languages'])) {
-        fusion_stop();
-        addnotice("danger", "You need to enable at least one language");
+        fusion_stop("You need to enable at least one language");
     }
 
     if (fusion_safe()) {
@@ -323,37 +322,37 @@ if (check_post('savesettings')) {
         $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
         $locale += fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
 
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
         redirect(FUSION_SELF.$aidlink);
 
     } else {
-        addnotice('success', $locale['901']);
+        addnotice('success', $locale['admins_901']);
     }
 }
 
-opentable($locale['682ML']);
-echo "<div class='well'>".$locale['language_description']."</div>";
-echo openform('settingsform', 'post', FUSION_SELF.$aidlink);
+opentable($locale['admins_682ML']);
+echo "<div class='well'>".$locale['admins_language_description']."</div>";
+echo openform('settingsform', 'post');
 echo form_hidden('old_localeset', '', fusion_get_settings("locale"));
 echo form_hidden('old_enabled_languages', '', fusion_get_settings("enabled_languages"));
-echo form_select('localeset', $locale['417'], fusion_get_settings("locale"), [
+echo form_select('localeset', $locale['admins_417'], fusion_get_settings("locale"), [
     'options' => fusion_get_enabled_languages(),
     "inline"  => TRUE
 ]);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
-echo "<strong>".$locale['684ML']."</strong>\n";
+echo "<strong>".$locale['admins_684ML']."</strong>\n";
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-3'>\n";
 echo form_lang_checkbox();
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
-echo "<div class='alert alert-info'>".$locale['685ML']."</div>";
+echo "<div class='alert alert-info'>".$locale['admins_685ML']."</div>";
 echo "</div>\n";
 echo "</div>\n";
 echo "<div class='row m-t-20 m-b-20'>\n";
 echo "<div class='col-xs-12 col-sm-3 m-b-10'>\n";
-echo "<strong>".$locale['668ML']."</strong><br />".$locale['669ML'];
+echo "<strong>".$locale['admins_668ML']."</strong><br />".$locale['admins_669ML'];
 echo "</div>\n";
 echo "<div class='col-xs-12 col-sm-6'>\n";
 $result = dbquery("SELECT * FROM ".DB_LANGUAGE_TABLES."");
@@ -367,26 +366,23 @@ while ($data = dbarray($result)) {
 }
 echo "</div>\n";
 echo "</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 
 
 if (check_post('download_lang')) {
     $update = new PHPFusion\Update();
     $update->downloadLanguage(post('lang_pack'));
-
-    addnotice('success', sprintf($locale['670a'], post('lang_pack')));
+    addnotice('success', sprintf($locale['admins_670a'], post('lang_pack')));
     redirect(FUSION_REQUEST);
 }
 
-echo openform('dllangs', 'post', FUSION_REQUEST, ['class' => 'm-t-15']);
+echo openform('dllangs', 'post', FORM_REQUEST, ['class' => 'm-t-15']);
 openside();
-
-echo form_language_select('lang_pack', $locale['670b'], '', [
+echo form_language_select('lang_pack', $locale['admins_670b'], '', [
     'inline' => TRUE
 ]);
-
-echo form_button('download_lang', $locale['670c'], 'download_lang');
+echo form_button('download_lang', $locale['admins_670c'], 'download_lang');
 closeside();
 echo closeform();
 

@@ -22,7 +22,7 @@ pageaccess('S6');
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/settings.php");
 $settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['misc_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title' => $locale['admins_misc_settings']]);
 
 if (check_post('savesettings')) {
     $inputData = [
@@ -56,60 +56,60 @@ if (check_post('savesettings')) {
             ]);
         }
 
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
         redirect(FUSION_REQUEST);
     }
 }
 
-opentable($locale['misc_settings']);
-echo "<div class='well'>".$locale['misc_description']."</div>";
-echo openform('settingsform', 'post', FUSION_REQUEST);
+opentable($locale['admins_misc_settings']);
+echo "<div class='well'>".$locale['admins_misc_description']."</div>";
+echo openform('settingsform', 'POST');
 $choice_arr = [1 => $locale['yes'], 0 => $locale['no']];
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_text('smtp_host', $locale['664'], $settings['smtp_host'], [
+echo form_text('smtp_host', $locale['admins_664'], $settings['smtp_host'], [
     'max_length' => 200,
     'inline'     => TRUE
 ]);
-echo form_text('smtp_port', $locale['674'], $settings['smtp_port'], [
+echo form_text('smtp_port', $locale['admins_674'], $settings['smtp_port'], [
     'max_length' => 10,
     'inline'     => TRUE
 ]);
-echo form_select('smtp_auth', $locale['698'], $settings['smtp_auth'], [
+echo form_select('smtp_auth', $locale['admins_698'], $settings['smtp_auth'], [
     'options' => $choice_arr,
     'inline'  => TRUE,
-    'ext_tip' => $locale['665']
+    'ext_tip' => $locale['admins_665']
 ]);
-echo form_text('smtp_username', $locale['666'], $settings['smtp_username'], [
+echo form_text('smtp_username', $locale['admins_666'], $settings['smtp_username'], [
     'max_length' => 100,
     'inline'     => TRUE
 ]);
-echo form_text('smtp_password', $locale['667'], $settings['smtp_password'], [
+echo form_text('smtp_password', $locale['admins_667'], $settings['smtp_password'], [
     'max_length' => 100,
     'inline'     => TRUE
 ]);
 closeside();
 openside('');
-$opts = ['0' => $locale['no'], '1' => $locale['689'], '2' => $locale['690']];
-echo form_checkbox('rendertime_enabled', $locale['688'], $settings['rendertime_enabled'], [
-    'options' => $opts,
+echo form_checkbox('rendertime_enabled', $locale['admins_688'], $settings['rendertime_enabled'], [
+    'options' => ['0' => $locale['no'], '1' => $locale['admins_689'], '2' => $locale['admins_690']],
     'inline'  => TRUE,
     'type'    => 'radio'
 ]);
 closeside();
-
 openside('');
-$options = [
-    '.' => '.',
-    ',' => ','
-];
-echo form_select('number_delimiter', $locale['611'], $settings['number_delimiter'], [
-    'options' => $options,
+echo form_select('number_delimiter', $locale['admins_611'], $settings['number_delimiter'], [
+    'options' => [
+        '.' => '.',
+        ',' => ','
+    ],
     'width'   => '100%'
 ]);
-echo form_select('thousands_separator', $locale['612'], $settings['thousands_separator'], [
-    'options' => $options,
+echo form_select('thousands_separator', $locale['admins_612'], $settings['thousands_separator'], [
+    'options' => [
+        '.' => '.',
+        ',' => ','
+    ],
     'width'   => '100%'
 ]);
 closeside();
@@ -128,50 +128,47 @@ closeside();*/
 
 echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_checkbox('tinymce_enabled', $locale['662'], $settings['tinymce_enabled'], [
+echo form_checkbox('tinymce_enabled', $locale['admins_662'], $settings['tinymce_enabled'], [
     'toggle' => TRUE
 ]);
 closeside();
 openside('');
-$gd_opts = ['gd1' => $locale['607'], 'gd2' => $locale['608']];
-echo form_select('thumb_compression', $locale['606'], $settings['thumb_compression'], [
-    'options' => $gd_opts,
+echo form_select('thumb_compression', $locale['admins_606'], $settings['thumb_compression'], [
+    'options' => ['gd1' => $locale['admins_607'], 'gd2' => $locale['admins_608']],
     'width'   => '100%'
 ]);
 closeside();
-
 openside('');
-echo form_checkbox('visitorcounter_enabled', $locale['679'], $settings['visitorcounter_enabled'], [
+echo form_checkbox('visitorcounter_enabled', $locale['admins_679'], $settings['visitorcounter_enabled'], [
     'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_checkbox('ratings_enabled', $locale['672'], $settings['ratings_enabled'], [
+echo form_checkbox('ratings_enabled', $locale['admins_672'], $settings['ratings_enabled'], [
+    'toggle' => TRUE
+]);
+closeside();
+openside('');
+echo form_checkbox('index_url_bbcode', $locale['admins_1031'], $settings['index_url_bbcode'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('index_url_userweb', $locale['admins_1032'], $settings['index_url_userweb'], [
+    'toggle' => TRUE
+]);
+echo form_checkbox('create_og_tags', $locale['admins_1030'], $settings['create_og_tags'], [
     'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_checkbox('index_url_bbcode', $locale['1031'], $settings['index_url_bbcode'], [
+echo form_checkbox('error_logging_enabled', $locale['admins_security_015'], $settings['error_logging_enabled'], [
     'toggle' => TRUE
 ]);
-echo form_checkbox('index_url_userweb', $locale['1032'], $settings['index_url_userweb'], [
-    'toggle' => TRUE
-]);
-echo form_checkbox('create_og_tags', $locale['1030'], $settings['create_og_tags'], [
-    'toggle' => TRUE
-]);
-closeside();
-
-openside('');
-echo form_checkbox('error_logging_enabled', $locale['security_015'], $settings['error_logging_enabled'], [
-    'toggle' => TRUE
-]);
-echo form_select('error_logging_method', $locale['security_016'], $settings['error_logging_method'], [
+echo form_select('error_logging_method', $locale['admins_security_016'], $settings['error_logging_method'], [
     'options'     => [
-        'file'     => $locale['security_017'],
-        'database' => $locale['security_018']
+        'file'     => $locale['admins_security_017'],
+        'database' => $locale['admins_security_018']
     ],
     'width'       => '100%',
     'inner_width' => '100%'
@@ -179,19 +176,19 @@ echo form_select('error_logging_method', $locale['security_016'], $settings['err
 closeside();
 
 openside('');
-echo form_checkbox('devmode', $locale['609'], $settings['devmode'], [
+echo form_checkbox('devmode', $locale['admins_609'], $settings['devmode'], [
     'toggle' => TRUE
 ]);
 closeside();
 
 openside('');
-echo form_checkbox('update_checker', $locale['610'], $settings['update_checker'], [
+echo form_checkbox('update_checker', $locale['admins_610'], $settings['update_checker'], [
     'toggle' => TRUE
 ]);
 closeside();
 
 echo "</div>\n</div>";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success']);
 echo closeform();
 closetable();
 require_once THEMES.'templates/footer.php';

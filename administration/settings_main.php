@@ -20,8 +20,211 @@ require_once THEMES.'templates/admin_header.php';
 pageaccess('S1');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+$settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['main_settings']]);
+add_breadcrumb(['link' => ADMIN.'settings_main.php'.fusion_get_aidlink(), 'title' => $locale['admins_main_settings']]);
+
+// Saving settings
+if (check_post('savesettings')) {
+    $inputData = [
+        'siteintro'      => sanitizer('siteintro', '', 'siteintro'),
+        'sitename'       => sanitizer('sitename', '', 'sitename'),
+        'sitebanner'     => sanitizer('sitebanner', '', 'sitebanner'),
+        'siteemail'      => sanitizer('siteemail', '', 'siteemail'),
+        'siteusername'   => sanitizer('siteusername', '', 'siteusername'),
+        'footer'         => sanitizer('footer', '', 'footer'),
+        'site_protocol'  => sanitizer('site_protocol', '', 'site_protocol'),
+        'site_host'      => sanitizer('site_host', '', 'site_host'),
+        'site_path'      => sanitizer('site_path', '', 'site_path'),
+        'site_port'      => sanitizer('site_port', '', 'site_port'),
+        'description'    => sanitizer('description', '', 'description'),
+        'keywords'       => sanitizer('keywords', '', 'keywords'),
+        'opening_page'   => sanitizer('opening_page', '', 'opening_page'),
+        'default_search' => sanitizer('default_search', '', 'default_search'),
+        'domain_server'  => sanitizer('domain_server', '', 'domain_server')
+    ];
+
+    if (strpos($inputData['site_host'], "/") !== FALSE) {
+        $inputData['site_host'] = explode("/", $inputData['site_host'], 2);
+        if ($inputData['site_host'][1] != "") {
+            $inputData['site_path'] = "/".$inputData['site_host'][1];
+        }
+        $inputData['site_host'] = $inputData['site_host'][0];
+    }
+
+    $inputData['siteurl'] = $inputData['site_protocol']."://".$inputData['site_host'].($inputData['site_port'] ? ":".$inputData['site_port'] : "").$inputData['site_path'];
+
+    if (!empty($inputData['domain_server'])) {
+        $inputData['domain_server'] = str_replace(PHP_EOL, '|', $inputData['domain_server']);
+    }
+
+    if (fusion_safe()) {
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
+        }
+
+        addnotice("success", $locale['admins_900']);
+        redirect(FUSION_REQUEST);
+    }
+}
+
+opentable($locale['admins_main_settings']);
+echo "<div class='well'>".$locale['admins_main_description']."</div>";
+
+$tabs['title'][] = $locale['admins_446'];
+$tabs['id'][] = 'general';
+$tabs['icon'][] = '';
+$tabs['title'][] = $locale['admins_447'];
+$tabs['id'][] = 'url';
+$tabs['icon'][] = '';
+
+$tab_active = tab_active($tabs, 0);
+echo openform('settingsform', 'post', FUSION_REQUEST);
+echo opentab($tabs, $tab_active, 'settingstabs');
+
+echo opentabbody($tabs['title'][0], 'general', $tab_active);
+echo form_text('sitename', $locale['admins_402'], $settings['sitename'], [
+    'inline'     => TRUE,
+    'max_length' => 255,
+    'required'   => TRUE,
+    'error_text' => $locale['error_value']
+]);
+echo form_text('siteemail', $locale['admins_405'], $settings['siteemail'], [
+    'inline'     => TRUE,
+    'required'   => TRUE,
+    'max_length' => 128,
+    'type'       => 'email'
+]);
+echo form_text('siteusername', $locale['admins_406'], $settings['siteusername'], [
+    'required'   => TRUE,
+    'inline'     => TRUE,
+    'max_length' => 32,
+    'error_text' => $locale['error_value']
+]);
+echo form_textarea('siteintro', $locale['admins_407'], stripslashes($settings['siteintro']), [
+    'type'      => 'html',
+    'autosize'  => TRUE,
+    'inline'    => TRUE,
+    'form_name' => 'settingsform'
+]);
+echo form_textarea('footer', $locale['admins_412'], stripslashes($settings['footer']), [
+    'autosize'  => TRUE,
+    'type'      => 'html',
+    'inline'    => TRUE,
+    'form_name' => 'settingsform'
+]);
+echo form_textarea('description', $locale['admins_409'], $settings['description'], [
+    'autosize' => TRUE,
+    'inline'   => TRUE
+]);
+echo form_textarea('keywords', $locale['admins_410'], $settings['keywords'], [
+    'autosize' => TRUE,
+    'ext_tip'  => $locale['admins_411'],
+    'inline'   => TRUE
+]);
+echo form_select('default_search', $locale['admins_419'], $settings['default_search'], [
+    'options'        => get_default_search_opts(),
+    'callback_check' => 'validate_default_search',
+    'inline'         => TRUE
+]);
+echo form_text('sitebanner', $locale['admins_404'], $settings['sitebanner'], [
+    'required'   => TRUE,
+    'error_text' => $locale['error_value'],
+    'inline'     => TRUE
+]);
+echo closetabbody();
+
+echo opentabbody($tabs['title'][1], 'url', $tab_active);
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+echo "<strong>".$locale['admins_401a']."</strong><br/><i>".$locale['admins_401b']."</i>";
+echo "<div class='spacer-xs'>\n";
+echo "<i class='fa fa-external-link m-r-10'></i>";
+echo "<span id='display_protocol'>".$settings['site_protocol']."</span>://";
+echo "<span id='display_host'>".$settings['site_host']."</span>";
+echo "<span id='display_port'>".($settings['site_port'] ? ":".$settings['site_port'] : "")."</span>";
+echo "<span id='display_path'>".$settings['site_path']."</span>";
+echo "</div>\n";
+echo "</div>\n<div class='col-xs-12 col-sm-8'>\n";
+echo form_select('site_protocol', $locale['admins_426'], $settings['site_protocol'], [
+    'inline'     => TRUE,
+    'regex'      => 'http(s)?',
+    'error_text' => $locale['error_value'],
+    'options'    => [
+        'http'             => 'http://',
+        'https'            => 'https://',
+        'invalid_protocol' => $locale['admins_445']
+    ]
+]);
+echo form_text('site_host', $locale['admins_427'], $settings['site_host'], [
+    'required'   => TRUE,
+    'inline'     => TRUE,
+    'max_length' => 255,
+    'error_text' => $locale['error_value']
+]);
+echo form_text('site_path', $locale['admins_429'], $settings['site_path'], [
+    'required'   => TRUE,
+    'inline'     => TRUE,
+    'regex'      => '\/([a-z0-9-_]+\/)*?',
+    'max_length' => 255
+]);
+echo form_text('site_port', $locale['admins_430'], $settings['site_port'], [
+    'inline'         => TRUE,
+    'required'       => FALSE,
+    'placeholder'    => 80,
+    'max_length'     => 5,
+    'type'           => 'number',
+    'inner_width'    => '150px',
+    'error_text'     => $locale['admins_430_error'],
+    'callback_check' => 'validate_site_port',
+    'ext_tip'        => $locale['admins_430_desc']
+]);
+echo form_text('opening_page', $locale['admins_413'], $settings['opening_page'], [
+    'required'   => TRUE,
+    'max_length' => 100,
+    'error_text' => $locale['error_value'],
+    'inline'     => TRUE,
+]);
+echo "</div>\n</div>\n";
+// Domain names
+echo "<div class='row'>\n";
+echo "<div class='col-xs-12 col-sm-4'>\n";
+echo "<strong>".$locale['admins_444']."</strong><br/><i>".nl2br($locale['admins_444a'])."</i>";
+echo "</div>\n<div class='col-xs-12 col-sm-8'>\n";
+$domain_server = str_replace('|', PHP_EOL, $settings['domain_server']);
+echo form_textarea('domain_server', $locale['admins_444b'], $domain_server, ['autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
+echo "</div>\n</div>\n";
+echo closetabbody();
+
+echo closetab();
+
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
+echo closeform();
+closetable();
+
+add_to_jquery("
+    $('#site_protocol').change(function() {
+        $('#display_protocol').text($(this).val());
+    });
+    $('#site_host').keyup(function() {
+        $('#display_host').text($(this).val());
+    });
+    $('#site_path').keyup(function() {
+        $('#display_path').text($(this).val());
+    });
+    $('#site_port').keyup(function() {
+        var value_port = ':'+ $(this).val();
+        if (value_port == ':' || value_port == ':0' || value_port == ':90' || value_port == ':443') {
+            var value_port = '';
+        }
+        $('#display_port').text(value_port);
+    });
+");
+require_once THEMES.'templates/footer.php';
+
 /**
  * Get the default search options
  * with file exists validation of the PHPFusion Search SDK files.
@@ -35,7 +238,7 @@ function get_default_search_opts() {
 
     if (empty($search_opts)) {
         $search_opts += [
-            'all' => $locale['419a'],
+            'all' => $locale['admins_419a'],
         ];
 
         if ($handle = opendir(INCLUDES."search/")) {
@@ -113,206 +316,3 @@ function validate_default_search($value) {
 function validate_site_port($value) {
     return ((isnum($value) || empty($value)) && in_array($value, [0, 80, 443]) or $value < 65001);
 }
-
-$settings = fusion_get_settings();
-
-// Saving settings
-if (check_post('savesettings')) {
-    $inputData = [
-        'siteintro'      => sanitizer('siteintro', '', 'siteintro'),
-        'sitename'       => sanitizer('sitename', '', 'sitename'),
-        'sitebanner'     => sanitizer('sitebanner', '', 'sitebanner'),
-        'siteemail'      => sanitizer('siteemail', '', 'siteemail'),
-        'siteusername'   => sanitizer('siteusername', '', 'siteusername'),
-        'footer'         => sanitizer('footer', '', 'footer'),
-        'site_protocol'  => sanitizer('site_protocol', '', 'site_protocol'),
-        'site_host'      => sanitizer('site_host', '', 'site_host'),
-        'site_path'      => sanitizer('site_path', '', 'site_path'),
-        'site_port'      => sanitizer('site_port', '', 'site_port'),
-        'description'    => sanitizer('description', '', 'description'),
-        'keywords'       => sanitizer('keywords', '', 'keywords'),
-        'opening_page'   => sanitizer('opening_page', '', 'opening_page'),
-        'default_search' => sanitizer('default_search', '', 'default_search'),
-        'domain_server'  => sanitizer('domain_server', '', 'domain_server')
-    ];
-
-    if (strpos($inputData['site_host'], "/") !== FALSE) {
-        $inputData['site_host'] = explode("/", $inputData['site_host'], 2);
-        if ($inputData['site_host'][1] != "") {
-            $inputData['site_path'] = "/".$inputData['site_host'][1];
-        }
-        $inputData['site_host'] = $inputData['site_host'][0];
-    }
-
-    $inputData['siteurl'] = $inputData['site_protocol']."://".$inputData['site_host'].($inputData['site_port'] ? ":".$inputData['site_port'] : "").$inputData['site_path'];
-
-    if (!empty($inputData['domain_server'])) {
-        $inputData['domain_server'] = str_replace(PHP_EOL, '|', $inputData['domain_server']);
-    }
-
-    if (fusion_safe()) {
-        foreach ($inputData as $settings_name => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
-                ':settings_value' => $settings_value,
-                ':settings_name'  => $settings_name
-            ]);
-        }
-
-        addnotice("success", $locale['900']);
-        redirect(FUSION_REQUEST);
-    }
-}
-
-opentable($locale['main_settings']);
-echo "<div class='well'>".$locale['main_description']."</div>";
-
-$tabs['title'][] = $locale['446'];
-$tabs['id'][] = 'general';
-$tabs['icon'][] = '';
-$tabs['title'][] = $locale['447'];
-$tabs['id'][] = 'url';
-$tabs['icon'][] = '';
-
-$tab_active = tab_active($tabs, 0);
-echo openform('settingsform', 'post', FUSION_REQUEST);
-echo opentab($tabs, $tab_active, 'settingstabs');
-
-echo opentabbody($tabs['title'][0], 'general', $tab_active);
-echo form_text('sitename', $locale['402'], $settings['sitename'], [
-    'inline'     => TRUE,
-    'max_length' => 255,
-    'required'   => TRUE,
-    'error_text' => $locale['error_value']
-]);
-echo form_text('siteemail', $locale['405'], $settings['siteemail'], [
-    'inline'     => TRUE,
-    'required'   => TRUE,
-    'max_length' => 128,
-    'type'       => 'email'
-]);
-echo form_text('siteusername', $locale['406'], $settings['siteusername'], [
-    'required'   => TRUE,
-    'inline'     => TRUE,
-    'max_length' => 32,
-    'error_text' => $locale['error_value']
-]);
-echo form_textarea('siteintro', $locale['407'], stripslashes($settings['siteintro']), [
-    'type'      => 'html',
-    'autosize'  => TRUE,
-    'inline'    => TRUE,
-    'form_name' => 'settingsform'
-]);
-echo form_textarea('footer', $locale['412'], stripslashes($settings['footer']), [
-    'autosize'  => TRUE,
-    'type'      => 'html',
-    'inline'    => TRUE,
-    'form_name' => 'settingsform'
-]);
-echo form_textarea('description', $locale['409'], $settings['description'], [
-    'autosize' => TRUE,
-    'inline'   => TRUE
-]);
-echo form_textarea('keywords', $locale['410'], $settings['keywords'], [
-    'autosize' => TRUE,
-    'ext_tip'  => $locale['411'],
-    'inline'   => TRUE
-]);
-echo form_select('default_search', $locale['419'], $settings['default_search'], [
-    'options'        => get_default_search_opts(),
-    'callback_check' => 'validate_default_search',
-    'inline'         => TRUE
-]);
-echo form_text('sitebanner', $locale['404'], $settings['sitebanner'], [
-    'required'   => TRUE,
-    'error_text' => $locale['error_value'],
-    'inline'     => TRUE
-]);
-echo closetabbody();
-
-echo opentabbody($tabs['title'][1], 'url', $tab_active);
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
-echo "<strong>".$locale['401a']."</strong><br/><i>".$locale['401b']."</i>";
-echo "<div class='spacer-xs'>\n";
-echo "<i class='fa fa-external-link m-r-10'></i>";
-echo "<span id='display_protocol'>".$settings['site_protocol']."</span>://";
-echo "<span id='display_host'>".$settings['site_host']."</span>";
-echo "<span id='display_port'>".($settings['site_port'] ? ":".$settings['site_port'] : "")."</span>";
-echo "<span id='display_path'>".$settings['site_path']."</span>";
-echo "</div>\n";
-echo "</div>\n<div class='col-xs-12 col-sm-8'>\n";
-echo form_select('site_protocol', $locale['426'], $settings['site_protocol'], [
-    'inline'     => TRUE,
-    'regex'      => 'http(s)?',
-    'error_text' => $locale['error_value'],
-    'options'    => [
-        'http'             => 'http://',
-        'https'            => 'https://',
-        'invalid_protocol' => $locale['445']
-    ]
-]);
-echo form_text('site_host', $locale['427'], $settings['site_host'], [
-    'required'   => TRUE,
-    'inline'     => TRUE,
-    'max_length' => 255,
-    'error_text' => $locale['error_value']
-]);
-echo form_text('site_path', $locale['429'], $settings['site_path'], [
-    'required'   => TRUE,
-    'inline'     => TRUE,
-    'regex'      => '\/([a-z0-9-_]+\/)*?',
-    'max_length' => 255
-]);
-echo form_text('site_port', $locale['430'], $settings['site_port'], [
-    'inline'         => TRUE,
-    'required'       => FALSE,
-    'placeholder'    => 80,
-    'max_length'     => 5,
-    'type'           => 'number',
-    'inner_width'    => '150px',
-    'error_text'     => $locale['430_error'],
-    'callback_check' => 'validate_site_port',
-    'ext_tip'        => $locale['430_desc']
-]);
-echo form_text('opening_page', $locale['413'], $settings['opening_page'], [
-    'required'   => TRUE,
-    'max_length' => 100,
-    'error_text' => $locale['error_value'],
-    'inline'     => TRUE,
-]);
-echo "</div>\n</div>\n";
-// Domain names
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-4'>\n";
-echo "<strong>".$locale['444']."</strong><br/><i>".nl2br($locale['444a'])."</i>";
-echo "</div>\n<div class='col-xs-12 col-sm-8'>\n";
-$domain_server = str_replace('|', PHP_EOL, $settings['domain_server']);
-echo form_textarea('domain_server', $locale['444b'], $domain_server, ['autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
-echo "</div>\n</div>\n";
-echo closetabbody();
-
-echo closetab();
-
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
-echo closeform();
-closetable();
-
-add_to_jquery("
-    $('#site_protocol').change(function() {
-        $('#display_protocol').text($(this).val());
-    });
-    $('#site_host').keyup(function() {
-        $('#display_host').text($(this).val());
-    });
-    $('#site_path').keyup(function() {
-        $('#display_path').text($(this).val());
-    });
-    $('#site_port').keyup(function() {
-        var value_port = ':'+ $(this).val();
-        if (value_port == ':' || value_port == ':0' || value_port == ':90' || value_port == ':443') {
-            var value_port = '';
-        }
-        $('#display_port').text(value_port);
-    });
-");
-require_once THEMES.'templates/footer.php';
