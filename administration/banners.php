@@ -22,7 +22,7 @@ pageaccess('SB');
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
 $settings = fusion_get_settings();
 
-add_breadcrumb(['link' => ADMIN.'banners.php'.fusion_get_aidlink(), 'title' => $locale['850']]);
+add_breadcrumb(['link' => ADMIN.'banners.php'.fusion_get_aidlink(), 'title' => $locale['admins_850']]);
 
 $settings_main = [
     'sitebanner1' => $settings['sitebanner1'],
@@ -36,13 +36,13 @@ if (check_post('save_banners') || check_post('preview_banners')) {
     ];
 
     if (check_post('preview_banners') && fusion_safe()) {
-        $modal = openmodal('banners_preview', $locale['855']);
-        $modal .= fusion_get_function('openside', $locale['851']);
+        $modal = openmodal('banners_preview', $locale['admins_855']);
+        $modal .= fusion_get_function('openside', $locale['admins_851']);
         if (!empty($settings_main['sitebanner1'])) {
             $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
         }
         $modal .= fusion_get_function('closeside', '');
-        $modal .= fusion_get_function('openside', $locale['852']);
+        $modal .= fusion_get_function('openside', $locale['admins_852']);
         if (!empty($settings_main['sitebanner2'])) {
             $modal .= parse_text($settings_main['sitebanner1'], ['parse_smileys' => FALSE, 'parse_bbcode' => FALSE]);
         }
@@ -53,7 +53,7 @@ if (check_post('save_banners') || check_post('preview_banners')) {
         if (fusion_safe()) {
             foreach ($settings_main as $settings_key => $settings_value) {
                 dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_value, ':name' => $settings_key]);
-                addnotice('success', $locale['900']);
+                addnotice('success', $locale['admins_900']);
             }
 
             redirect(FUSION_REQUEST);
@@ -61,20 +61,20 @@ if (check_post('save_banners') || check_post('preview_banners')) {
     }
 }
 
-opentable($locale['850']);
+opentable($locale['admins_850']);
 echo openform('banner_form', 'post', FUSION_REQUEST);
-echo form_textarea('sitebanner1', $locale['851'], $settings_main['sitebanner1'], [
+echo form_textarea('sitebanner1', $locale['admins_851'], $settings_main['sitebanner1'], [
     'type'      => 'html',
     'form_name' => 'banner_form',
     'inline'    => FALSE
 ]);
-echo form_textarea('sitebanner2', $locale['852'], $settings_main['sitebanner2'], [
+echo form_textarea('sitebanner2', $locale['admins_852'], $settings_main['sitebanner2'], [
     'type'      => 'html',
     'form_name' => 'banner_form',
     'inline'    => FALSE
 ]);
-echo form_button('preview_banners', $locale['855'], $locale['855'], ['class' => 'btn-default m-r-10']);
-echo form_button('save_banners', $locale['854'], $locale['854'], ['class' => 'btn-success']);
+echo form_button('preview_banners', $locale['admins_855'], $locale['admins_855'], ['class' => 'btn-default m-r-10']);
+echo form_button('save_banners', $locale['admins_854'], $locale['admins_854'], ['class' => 'btn-success']);
 
 echo closeform();
 closetable();
