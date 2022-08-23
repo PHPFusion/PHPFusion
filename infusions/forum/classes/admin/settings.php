@@ -212,7 +212,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well'>
-            <strong><?php echo self::$locale['admin_forum_description'] ?></strong>
+            <strong><?php echo self::$locale['admins_forum_description'] ?></strong>
         </div>
         <?php
 
