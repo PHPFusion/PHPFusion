@@ -89,14 +89,14 @@ class PanelsAdministration {
                     $data = dbarray(dbquery("SELECT panel_side, panel_order FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'"));
                     dbquery("DELETE FROM ".DB_PANELS." WHERE panel_id='".get('panel_id')."'");
                     dbquery("UPDATE ".DB_PANELS." SET panel_order=panel_order-1 WHERE panel_side='".intval($data['panel_side'])."' AND panel_order>='".intval($data['panel_order'])."'");
-                    addnotice('success', self::$locale['489']);
+                    addnotice('success', self::$locale['PANEL_489']);
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
                 break;
             default:
                 $this->formaction = FUSION_SELF.$aidlink."&section=panelform";
         }
-        add_breadcrumb(['link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['600']]);
+        add_breadcrumb(['link' => ADMIN.'panels.php'.$aidlink, 'title' => self::$locale['PANEL_600']]);
     }
 
     /**
@@ -106,16 +106,16 @@ class PanelsAdministration {
      */
     private static function getPanelGrid() {
         return [
-            1  => self::$locale['420'],
-            2  => self::$locale['421'],
-            3  => self::$locale['425'],
-            4  => self::$locale['422'],
-            5  => self::$locale['426'],
-            6  => self::$locale['427'],
-            7  => self::$locale['428a'],
-            8  => self::$locale['428b'],
-            9  => self::$locale['428c'],
-            10 => self::$locale['428d']
+            1  => self::$locale['PANEL_420'],
+            2  => self::$locale['PANEL_421'],
+            3  => self::$locale['PANEL_425'],
+            4  => self::$locale['PANEL_422'],
+            5  => self::$locale['PANEL_426'],
+            6  => self::$locale['PANEL_427'],
+            7  => self::$locale['PANEL_428a'],
+            8  => self::$locale['PANEL_428b'],
+            9  => self::$locale['PANEL_428c'],
+            10 => self::$locale['PANEL_428d']
         ];
     }
 
@@ -150,7 +150,7 @@ class PanelsAdministration {
             $result = dbcount("(panel_id)", DB_PANELS, "panel_name='".$this->data['panel_name']."' AND panel_id !='".$this->data['panel_id']."'");
             if ($result) {
                 fusion_stop();
-                addnotice('danger', self::$locale['471']);
+                addnotice('danger', self::$locale['PANEL_471']);
             }
             $this->data['panel_filename'] = sanitizer('panel_filename', '', 'panel_filename');
             // panel content formatting
@@ -159,9 +159,9 @@ class PanelsAdministration {
                 $this->data['panel_type'] = "php";
                 $this->data['panel_content'] = addslashes(post('panel_content'));
                 if (!$this->data['panel_content']) {
-                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"".$locale['469a']."\";\n"."closetable();";
+                    $this->data['panel_content'] = "opentable(\"name\");\n"."echo \"".$locale['PANEL_469a']."\";\n"."closetable();";
                     if ($this->data['panel_side'] == 1 || $this->data['panel_side'] == 4) {
-                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"".$locale['469a']."\";\n"."closeside();";
+                        $this->data['panel_content'] = "openside(\"name\");\n"."echo \"".$locale['PANEL_469a']."\";\n"."closeside();";
                     }
                 }
             } else {
@@ -187,7 +187,7 @@ class PanelsAdministration {
                     $this->data['panel_display'] = ($this->data['panel_side'] != 1 && $this->data['panel_side'] != 4) ? 1 : 0;
                 } else {
                     fusion_stop();
-                    addnotice('danger', self::$locale['475']);
+                    addnotice('danger', self::$locale['PANEL_475']);
                 }
             }
 
@@ -200,7 +200,7 @@ class PanelsAdministration {
                 if ($this->data['panel_id'] && self::verifyPanel($this->data['panel_id'])) {
                     // Panel Update
                     dbquery_insert(DB_PANELS, $this->data, 'update');
-                    addnotice('success', self::$locale['482']);
+                    addnotice('success', self::$locale['PANEL_482']);
                 } else {
                     // Panel Save
                     $result = dbquery("SELECT panel_order FROM ".DB_PANELS." WHERE panel_side='".intval($this->data['panel_side'])."' ORDER BY panel_order DESC LIMIT 1");
@@ -211,7 +211,7 @@ class PanelsAdministration {
                         $this->data['panel_order'] = 1;
                     }
                     dbquery_insert(DB_PANELS, $this->data, 'save');
-                    addnotice('success', self::$locale['485']);
+                    addnotice('success', self::$locale['PANEL_485']);
                 }
             }
 
@@ -238,13 +238,13 @@ class PanelsAdministration {
     }
 
     public function displayAdmin() {
-        opentable(self::$locale['600']);
+        opentable(self::$locale['PANEL_600']);
         $edit = check_get('action') && get('action') == 'edit' ? $this->verifyPanel(get('panel_id')) : 0;
 
-        $tabs['title'][] = self::$locale['407'];
+        $tabs['title'][] = self::$locale['PANEL_407'];
         $tabs['id'][] = 'listpanel';
         $tabs['icon'][] = '';
-        $tabs['title'][] = $edit ? self::$locale['409'] : self::$locale['408'];
+        $tabs['title'][] = $edit ? self::$locale['PANEL_409'] : self::$locale['PANEL_408'];
         $tabs['id'][] = 'panelform';
         $tabs['icon'][] = '';
         $tabs['title'][] = fusion_get_locale('448', LOCALE.LOCALESET.'admin/settings.php');
@@ -301,7 +301,7 @@ class PanelsAdministration {
             }
         }
 
-        echo "<div class='m-b-20'>".$locale['463']."<br>
+        echo "<div class='m-b-20'>".$locale['PANEL_463']."<br>
         /index.php<br>
         /infusions/news*<br>
         /infusions/news/news.php<br>
@@ -310,35 +310,35 @@ class PanelsAdministration {
         </div>\n";
 
         echo openform('settingsform', 'post', FUSION_REQUEST);
-        echo form_textarea('exclude_aupper', $locale['426'], $settings['exclude_aupper'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_aupper', $locale['PANEL_426'], $settings['exclude_aupper'], ['autosize' => TRUE]);
         echo '<div class="row">';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_left', $locale['420'], $settings['exclude_left'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_left', $locale['PANEL_420'], $settings['exclude_left'], ['autosize' => TRUE]);
         echo '</div>';
         echo '<div class="col-xs-12 col-sm-6">';
-        echo form_textarea('exclude_upper', $locale['421'], $settings['exclude_upper'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_upper', $locale['PANEL_421'], $settings['exclude_upper'], ['autosize' => TRUE]);
         echo '<div class="hidden-xs hidden-sm well text-center">'.fusion_get_locale('page_0441', LOCALE.LOCALESET.'admin/custom_pages.php').'</div>';
-        echo form_textarea('exclude_lower', $locale['425'], $settings['exclude_lower'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_lower', $locale['PANEL_425'], $settings['exclude_lower'], ['autosize' => TRUE]);
         echo '</div>';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_right', $locale['422'], $settings['exclude_right'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_right', $locale['PANEL_422'], $settings['exclude_right'], ['autosize' => TRUE]);
         echo '</div>';
         echo '</div>';
 
-        echo form_textarea('exclude_blower', $locale['427'], $settings['exclude_blower'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_blower', $locale['PANEL_427'], $settings['exclude_blower'], ['autosize' => TRUE]);
 
         echo '<div class="row">';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_user1', $locale['428a'], $settings['exclude_user1'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_user1', $locale['PANEL_428a'], $settings['exclude_user1'], ['autosize' => TRUE]);
         echo '</div>';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_user2', $locale['428b'], $settings['exclude_user2'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_user2', $locale['PANEL_428b'], $settings['exclude_user2'], ['autosize' => TRUE]);
         echo '</div>';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_user3', $locale['428c'], $settings['exclude_user3'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_user3', $locale['PANEL_428c'], $settings['exclude_user3'], ['autosize' => TRUE]);
         echo '</div>';
         echo '<div class="col-xs-12 col-sm-3">';
-        echo form_textarea('exclude_user4', $locale['428d'], $settings['exclude_user4'], ['autosize' => TRUE]);
+        echo form_textarea('exclude_user4', $locale['PANEL_428d'], $settings['exclude_user4'], ['autosize' => TRUE]);
         echo '</div>';
         echo '</div>';
         echo form_button('savesettings', $locale['save_settings'], $locale['save_settings'], ['class' => 'btn-primary']);
@@ -376,10 +376,10 @@ class PanelsAdministration {
                     var ul = $(this),
                         order = ul.sortable('serialize'),
                         pdata = ul.attr('data-side');
-                        if (pdata == 1) { var psidetext = '".self::$locale['420']."'; }
-                        if (pdata == 2) { var psidetext = '".self::$locale['421']."'; }
-                        if (pdata == 3) { var psidetext = '".self::$locale['425']."'; }
-                        if (pdata == 4) { var psidetext = '".self::$locale['422']."'; }
+                        if (pdata == 1) { var psidetext = '".self::$locale['PANEL_420']."'; }
+                        if (pdata == 2) { var psidetext = '".self::$locale['PANEL_421']."'; }
+                        if (pdata == 3) { var psidetext = '".self::$locale['PANEL_425']."'; }
+                        if (pdata == 4) { var psidetext = '".self::$locale['PANEL_422']."'; }
                     ul.find('.pside').each(function() {
                         $(this).text(psidetext);
                     });
@@ -388,7 +388,7 @@ class PanelsAdministration {
             });
         ");
         echo "<div id='info'></div>\n";
-        echo "<div class='well text-center'>".self::$locale['410']."</div>\n";
+        echo "<div class='well text-center'>".self::$locale['PANEL_410']."</div>\n";
         echo "<div class='row'>\n";
         echo "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>\n";
         echo self::panelReactor(5);
@@ -396,7 +396,7 @@ class PanelsAdministration {
         echo self::panelReactor(1);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>\n";
         echo self::panelReactor(2);
-        echo "<div class='well text-center strong text-dark'>".self::$locale['606']."</div>\n";
+        echo "<div class='well text-center strong text-dark'>".self::$locale['PANEL_606']."</div>\n";
         echo self::panelReactor(3);
         echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-3 col-lg-3'>\n";
         echo self::panelReactor(4);
@@ -414,8 +414,8 @@ class PanelsAdministration {
 
         //Unused Panels in the directory
         $panel_list = self::panelsList();
-        $string = format_word(count($panel_list), self::$locale['604']);
-        $title = self::$locale['602'].": ".$string;
+        $string = format_word(count($panel_list), self::$locale['PANEL_604']);
+        $title = self::$locale['PANEL_602'].": ".$string;
         echo "<div class='panel panel-default'>\n";
         echo "<div class='panel-heading'>".$title."</div>\n";
         echo "<div class='panel-body text-dark'>\n";
@@ -424,7 +424,7 @@ class PanelsAdministration {
             echo "<div style='float:left;'>".$panel."</div>\n";
             echo "<div style='float:right; width:250px;'>";
             echo "</div>\n";
-            echo "<div style='float:right; width:10%;'>".self::$locale['607']."</div>\n";
+            echo "<div style='float:right; width:10%;'>".self::$locale['PANEL_607']."</div>\n";
             echo "<div style='clear:both;'></div>\n";
         }
         echo "</div>\n</div>\n";
@@ -452,7 +452,7 @@ class PanelsAdministration {
         if (isset($this->panel_data[$side])) {
             foreach ($this->panel_data[$side] as $data) {
                 $row_color = ($k % 2 == 0 ? "tbl1" : "tbl2");
-                $type = $data['panel_type'] == "file" ? self::$locale['423'] : self::$locale['424'];
+                $type = $data['panel_type'] == "file" ? self::$locale['PANEL_423'] : self::$locale['PANEL_424'];
                 $html .= "<li id='listItem_".$data['panel_id']."' style='border:1px solid #ddd;' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : '')."'>\n";
                 $html .= "<div class='handle'>\n";
                 $html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
@@ -467,11 +467,11 @@ class PanelsAdministration {
                 $html .= "<li class='divider'></li>\n";
                 $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&section=panelform&action=edit&panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".self::$locale['edit']."</a>\n</li>\n";
                 if ($data['panel_status'] == 0) {
-                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=1&panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".self::$locale['435']."</a>\n</li>\n";
+                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=1&panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".self::$locale['PANEL_435']."</a>\n</li>\n";
                 } else {
-                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=0&panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".self::$locale['436']."</a>\n</li>\n";
+                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=0&panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".self::$locale['PANEL_436']."</a>\n</li>\n";
                 }
-                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=delete&panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".self::$locale['delete']."</a>\n</li>\n";
+                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=delete&panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['PANEL_440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".self::$locale['delete']."</a>\n</li>\n";
                 $html .= "</ul>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";
@@ -562,7 +562,7 @@ class PanelsAdministration {
 
         echo "<div class='m-b-10'>\n";
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-5', 'input_id' => 'btn1']);
-        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'm-r-5 btn-success', 'input_id' => 'btn3']);
+        echo form_button('panel_save', self::$locale['PANEL_461'], self::$locale['PANEL_460'], ['class' => 'm-r-5 btn-success', 'input_id' => 'btn3']);
         echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default', 'input_id' => 'btn2']);
         echo "</div>\n";
 
@@ -571,16 +571,16 @@ class PanelsAdministration {
         echo "<div class='col-xs-12 col-sm-8'>\n";
         openside('');
         echo form_hidden('panel_id', '', $this->data['panel_id']);
-        echo form_text('panel_name', self::$locale['452'], $this->data['panel_name'], [
+        echo form_text('panel_name', self::$locale['PANEL_452'], $this->data['panel_name'], [
             'inline'   => TRUE,
             'required' => TRUE
         ]);
-        echo form_select('panel_filename', self::$locale['453'], $this->data['panel_filename'], [
+        echo form_select('panel_filename', self::$locale['PANEL_453'], $this->data['panel_filename'], [
             'options' => self::getPanelOpts(),
             'inline'  => TRUE
         ]);
         $grid_opts = self::getPanelGrid();
-        echo form_select('panel_side', self::$locale['457'], $this->data['panel_side'], [
+        echo form_select('panel_side', self::$locale['PANEL_457'], $this->data['panel_side'], [
             'options' => $grid_opts,
             'inline'  => TRUE
         ]);
@@ -592,21 +592,21 @@ class PanelsAdministration {
             if ($(this).val() == '3' || $(this).val() == '2') { $('#panel_url_list-grp').hide(); } else { $('#panel_url_list-grp').show(); }
         });
         ");
-        echo form_select('panel_restriction', self::$locale['468'], $this->data['panel_restriction'], [
+        echo form_select('panel_restriction', self::$locale['PANEL_468'], $this->data['panel_restriction'], [
             'options' => [
-                3 => self::$locale['459'], // Display panel on all pages
-                2 => self::$locale['467'], // Display on Opening Page only
-                1 => self::$locale['464'], // Exclude on these pages only
-                0 => self::$locale['465'], // Include on these pages only
+                3 => self::$locale['PANEL_459'], // Display panel on all pages
+                2 => self::$locale['PANEL_467'], // Display on Opening Page only
+                1 => self::$locale['PANEL_464'], // Exclude on these pages only
+                0 => self::$locale['PANEL_465'], // Include on these pages only
             ],
             'inline'  => TRUE
         ]);
         echo "<div id='panel_url_list-grp'>\n";
-        echo form_textarea('panel_url_list', self::$locale['462'], $this->data['panel_url_list'], [
+        echo form_textarea('panel_url_list', self::$locale['PANEL_462'], $this->data['panel_url_list'], [
             'inline' => FALSE,
             //'required' => TRUE
         ]);
-        echo "<div class='text-smaller'>".self::$locale['463']."<br>
+        echo "<div class='text-smaller'>".self::$locale['PANEL_463']."<br>
         /index.php<br>
         /infusions/news*<br>
         /infusions/news/news.php<br>
@@ -626,7 +626,7 @@ class PanelsAdministration {
         ");
 
         echo "<div id='pgrp'>\n";
-        echo form_textarea('panel_content', self::$locale['455'], $this->data['panel_content'], [
+        echo form_textarea('panel_content', self::$locale['PANEL_455'], $this->data['panel_content'], [
             'html'      => TRUE,
             'form_name' => 'panel_form',
             'autosize'  => TRUE,
@@ -637,10 +637,10 @@ class PanelsAdministration {
 
         echo "</div>\n<div class='col-xs-12 col-sm-4'>\n";
         openside('');
-        echo form_select('panel_access', self::$locale['458'], $this->data['panel_access'], ['options' => self::getAccessOpts()]);
+        echo form_select('panel_access', self::$locale['PANEL_458'], $this->data['panel_access'], ['options' => self::getAccessOpts()]);
         closeside();
         openside('');
-        echo "<label class='label-control m-b-10'>".self::$locale['466']."</label>\n";
+        echo "<label class='label-control m-b-10'>".self::$locale['PANEL_466']."</label>\n";
 
         $languages = !empty($this->data['panel_languages']) && stristr($this->data['panel_languages'], ".") ? explode('.',
             $this->data['panel_languages']) : $this->data['panel_languages'];
@@ -672,7 +672,7 @@ class PanelsAdministration {
         echo "</div>\n";
         echo "</div>\n";
         echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'], ['class' => 'btn-default m-r-5']);
-        echo form_button('panel_save', self::$locale['461'], self::$locale['460'], ['class' => 'm-r-5 btn-success']);
+        echo form_button('panel_save', self::$locale['PANEL_461'], self::$locale['PANEL_461'], ['class' => 'm-r-5 btn-success']);
         echo form_button('panel_preview', self::$locale['preview'], self::$locale['preview'], ['class' => 'btn-default']);
         echo closeform();
 

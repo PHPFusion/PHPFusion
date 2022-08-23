@@ -23,9 +23,9 @@ $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/image_uploads.php');
 
 add_to_title($locale['100']);
 
-add_breadcrumb(['link' => ADMIN.'file_manager.php'.fusion_get_aidlink(), 'title' => $locale['100']]);
+add_breadcrumb(['link' => ADMIN.'file_manager.php'.fusion_get_aidlink(), 'title' => $locale['IMGUP_100']]);
 
-opentable($locale['100']);
+opentable($locale['IMGUP_100']);
 add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.js"></script>');
 add_to_head('<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.css">');
 add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');

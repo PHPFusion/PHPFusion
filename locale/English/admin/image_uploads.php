@@ -1,31 +1,30 @@
 <?php
-$locale['100'] = "Fusion File Manager";
-
+$locale['IMGUP_100'] = "Fusion File Manager";
 // Delete Image
-$locale['400'] = "Delete Image";
-$locale['401'] = "Image Deleted";
-$locale['402'] = "Return to Images Admin";
-$locale['403'] = "Return to Admin Index";
+$locale['IMGUP_400'] = "Delete Image";
+$locale['IMGUP_401'] = "Image Deleted";
+$locale['IMGUP_402'] = "Return to Images Admin";
+$locale['IMGUP_403'] = "Return to Admin Index";
 // Upload Image
-$locale['420'] = "Upload Image";
-$locale['421'] = "Filename:";
-$locale['422'] = "Main Images";
-$locale['423'] = "Article Images";
-$locale['424'] = "News Images";
-$locale['425'] = "Max. file size %s / Allowed file types .jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp";
-$locale['426'] = "Image Uploaded";
-$locale['427'] = "News Cats Images";
-$locale['428'] = "Blog Images";
-$locale['429'] = "Blog Cats Images";
+$locale['IMGUP_420'] = "Upload Image";
+$locale['IMGUP_421'] = "Filename:";
+$locale['IMGUP_422'] = "Main Images";
+$locale['IMGUP_423'] = "Article Images";
+$locale['IMGUP_424'] = "News Images";
+$locale['IMGUP_425'] = "Max. file size %s / Allowed file types .jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp";
+$locale['IMGUP_426'] = "Image Uploaded";
+$locale['IMGUP_427'] = "News Cats Images";
+$locale['IMGUP_428'] = "Blog Images";
+$locale['IMGUP_429'] = "Blog Cats Images";
 // View Image
-$locale['440'] = "View Image";
-$locale['441'] = "Unknown file format, cannot display image.";
-$locale['442'] = "Delete this image";
+$locale['IMGUP_440'] = "View Image";
+$locale['IMGUP_441'] = "Unknown file format, cannot display image.";
+$locale['IMGUP_442'] = "Delete this image";
 // Image Management
-$locale['460'] = "Images";
-$locale['461'] = "View";
-$locale['463'] = "This folder is empty";
-$locale['464'] = "Update image list for TinyMCE editor";
-$locale['465'] = "Image list updated";
+$locale['IMGUP_460'] = "Images";
+$locale['IMGUP_461'] = "View";
+$locale['IMGUP_463'] = "This folder is empty";
+$locale['IMGUP_464'] = "Update image list for TinyMCE editor";
+$locale['IMGUP_465'] = "Image list updated";
 // Popup Error/Warning Messages
-$locale['470'] = "Delete this image?";
+$locale['IMGUP_470'] = "Delete this image?";

@@ -250,7 +250,7 @@ class Infusions {
                                         if ($error) {
                                             // Reports visually which method has error.
                                             fusion_stop($callback_method);
-                                            addnotice('danger', self::$locale['403']);
+                                            addnotice('danger', self::$locale['INF_403']);
 
                                             return $error;
                                         }
@@ -281,7 +281,7 @@ class Infusions {
                     }
 
                     if ($error) {
-                        addnotice('danger', self::$locale['403']);
+                        addnotice('danger', self::$locale['INF_403']);
 
                         return $error;
                     }
@@ -291,7 +291,7 @@ class Infusions {
                     if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='".self::$inf['folder']."'")) {
                         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder='".self::$inf['folder']."'");
                     }
-                    addnotice("success", sprintf(self::$locale['423'], self::$inf['title']));
+                    addnotice("success", sprintf(self::$locale['INF_423'], self::$inf['title']));
                     dbquery("INSERT INTO ".DB_INFUSIONS." (inf_title, inf_folder, inf_version) VALUES ('".self::$inf['title']."', '".self::$inf['folder']."', '".self::$inf['version']."')");
                 }
             }
@@ -589,7 +589,7 @@ class Infusions {
         dbquery("DELETE FROM ".DB_INFUSIONS." WHERE inf_folder=:folder", [
             ':folder' => $infData['inf_folder']
         ]);
-        addnotice("success", sprintf(self::$locale['424'], $inf['title']));
+        addnotice("success", sprintf(self::$locale['INF_424'], $inf['title']));
         redirect(FUSION_REQUEST);
     }
 
