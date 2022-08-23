@@ -1786,7 +1786,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
         }
     }
 
-    $cur_page_field = openform(generate_strong_password(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']).form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']).closeform();
+    $cur_page_field = openform(random_string(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']).form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']).closeform();
 
     return sprintf($tpl_global, "<span>".$locale['global_092']."</span> ".$cur_page_field." ".$locale['global_093']." ".$pg_cnt, $res);
 }
