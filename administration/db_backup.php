@@ -21,17 +21,17 @@ pageaccess('DB');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/db-backup.php');
 
-add_breadcrumb(['link' => ADMIN.'db_backup.php'.fusion_get_aidlink(), 'title' => $locale['450']]);
+add_breadcrumb(['link' => ADMIN.'db_backup.php'.fusion_get_aidlink(), 'title' => $locale['BACK_450']]);
 
-$tabs['title'][] = $locale['450'];
+$tabs['title'][] = $locale['BACK_450'];
 $tabs['id'][] = 'backup_db';
 
-$tabs['title'][] = $locale['480'];
+$tabs['title'][] = $locale['BACK_480'];
 $tabs['id'][] = 'restore_db';
 
 $sections = check_get('section') && in_array(get('section'), $tabs['id']) ? get('section') : $tabs['id'][0];
 
-opentable($locale['450']);
+opentable($locale['BACK_450']);
 echo opentab($tabs, $sections, 'database_tab', TRUE, 'nav-tabs', 'section', ['action', 'section']);
 switch ($sections) {
     case 'backup_db':
@@ -158,25 +158,25 @@ function backup_form() {
     echo "<div class='row'>";
 
     echo '<div class="col-xs-12 col-sm-6">';
-    openside($locale['451']);
-    echo '<div class="m-b-5"><strong>'.$locale['414'].'</strong> '.$db_name.'</div>';
-    echo '<div class="m-b-5"><strong>'.$locale['415'].'</strong> '.$db_prefix.'</div>';
-    echo '<div class="m-b-5"><strong>'.$locale['452'].'</strong> '.parsebytesize(get_database_size()).' ('.get_table_count().' '.$locale['419'].')</div>';
-    echo '<div class="m-b-5"><strong>'.$locale['453'].'</strong> '.parsebytesize(get_database_size($db_prefix)).' ('.get_table_count($db_prefix).' '.$locale['419'].')</div>';
+    openside($locale['BACK_451']);
+    echo '<div class="m-b-5"><strong>'.$locale['BACK_414'].'</strong> '.$db_name.'</div>';
+    echo '<div class="m-b-5"><strong>'.$locale['BACK_415'].'</strong> '.$db_prefix.'</div>';
+    echo '<div class="m-b-5"><strong>'.$locale['BACK_452'].'</strong> '.parsebytesize(get_database_size()).' ('.get_table_count().' '.$locale['BACK_419'].')</div>';
+    echo '<div class="m-b-5"><strong>'.$locale['BACK_453'].'</strong> '.parsebytesize(get_database_size($db_prefix)).' ('.get_table_count($db_prefix).' '.$locale['BACK_419'].')</div>';
     closeside();
 
-    openside($locale['454']);
-    echo form_text('backup_filename', $locale['431'], "backup_".stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", [
+    openside($locale['BACK_454']);
+    echo form_text('backup_filename', $locale['BACK_431'], "backup_".stripsiteinput(fusion_get_settings('sitename'))."_".date('Y-m-d-Hi')."", [
         'required'   => TRUE,
-        'error_text' => $locale['481b']
+        'error_text' => $locale['BACK_481b']
     ]);
 
     $opts = [];
     if (function_exists("gzencode")) {
-        $opts['.gz'] = ".sql.gz ".$locale['456'];
+        $opts['.gz'] = ".sql.gz ".$locale['BACK_456'];
     }
     $opts['.sql'] = ".sql";
-    echo form_select('backup_type', $locale['455'], '', [
+    echo form_select('backup_type', $locale['BACK_455'], '', [
         'options'     => $opts,
         'placeholder' => $locale['choose']
     ]);
@@ -185,7 +185,7 @@ function backup_form() {
     echo '</div>';
 
     echo '<div class="col-xs-12 col-sm-6">';
-    openside($locale['457']);
+    openside($locale['BACK_457']);
 
     $table_opt_list = "";
     $result = dbquery("SHOW tables");
@@ -209,18 +209,18 @@ function backup_form() {
 
     echo "<select name='db_tables[]' id='tablelist' size='20' style='width:100%' class='form-control textbox' multiple='multiple'>".$table_opt_list."</select>\n";
 
-    echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$locale['435']."</strong>\n";
+    echo "<div class='text-center m-t-10' style='text-align:center'><strong>".$locale['BACK_435']."</strong>\n";
     echo "<div class='btn-group'>\n";
-    echo "<a class='btn btn-default' href='#' id='backupSelectCore'>".$locale['458']."</a>\n";
-    echo "<a class='btn btn-default' href='#' id='backupSelectAll'>".$locale['436']."</a>\n";
-    echo "<a class='btn btn-default' href='#' id='backupSelectNone'>".$locale['437']."</a>\n";
+    echo "<a class='btn btn-default' href='#' id='backupSelectCore'>".$locale['BACK_458']."</a>\n";
+    echo "<a class='btn btn-default' href='#' id='backupSelectAll'>".$locale['BACK_436']."</a>\n";
+    echo "<a class='btn btn-default' href='#' id='backupSelectNone'>".$locale['BACK_437']."</a>\n";
     echo "</div>";
     echo "</div>";
     closeside();
     echo '</div>';
 
     echo "</div>"; // .row
-    echo form_button('btn_create_backup', $locale['459'], $locale['459'], ['class' => 'btn-primary m-t-10']);
+    echo form_button('btn_create_backup', $locale['BACK_459'], $locale['BACK_459'], ['class' => 'btn-primary m-t-10']);
     echo closeform();
 }
 
@@ -279,13 +279,13 @@ function restore_form() {
                     }
                 }
             }
-            addnotice('success', $locale['404']);
+            addnotice('success', $locale['BACK_404']);
             redirect(FUSION_SELF.fusion_get_aidlink());
         } else {
             echo openform("frm_info", "post", clean_request('section=restore_db', ['action', 'section'], FALSE));
-            echo "<h4>".$locale['400']."</h4>\n";
-            echo $locale['401']."<br /><br />".$locale['402'];
-            echo form_button('btn_cancel', $locale['403'], $locale['403'], ['class' => 'btn-default spacer-xs']);
+            echo "<h4>".$locale['BACK_400']."</h4>\n";
+            echo $locale['BACK_401']."<br /><br />".$locale['BACK_402'];
+            echo form_button('btn_cancel', $locale['BACK_403'], $locale['BACK_403'], ['class' => 'btn-default spacer-xs']);
             echo closeform();
         }
     } else if (check_get('action') && get('action') == "restore") {
@@ -355,42 +355,42 @@ function restore_form() {
             $('#populateSelectNone').on('click', function () {populateSelectNone()});
         ");
 
-        echo "<h4>".$locale['400']."</h4>";
+        echo "<h4>".$locale['BACK_400']."</h4>";
 
-        openside($locale['430']);
+        openside($locale['BACK_430']);
         echo openform('confirm_restore_frm', 'post', FUSION_REQUEST, ['max_tokens' => 30]);
 
-        echo '<div class="m-b-5"><strong>'.$locale['431'].'</strong> '.$backup_name.'</div>';
-        echo '<div class="m-b-5"><strong>'.$locale['414'].'</strong> '.$info_dbname.'</div>';
-        echo '<div class="m-b-5"><strong>'.$locale['432'].'</strong> '.$info_date.'</div>';
+        echo '<div class="m-b-5"><strong>'.$locale['BACK_431'].'</strong> '.$backup_name.'</div>';
+        echo '<div class="m-b-5"><strong>'.$locale['BACK_414'].'</strong> '.$info_dbname.'</div>';
+        echo '<div class="m-b-5"><strong>'.$locale['BACK_432'].'</strong> '.$info_date.'</div>';
 
-        echo form_text('restore_tblpre', $locale['415'], $info_tblpref, ['required' => TRUE]);
+        echo form_text('restore_tblpre', $locale['BACK_415'], $info_tblpref, ['required' => TRUE]);
         echo form_hidden('backup_file', '', $file);
 
         echo '<div class="row">';
         echo '<div class="col-xs-12 col-sm-6">';
-        echo "<label for='list_tbl'>".$locale['433']."</label>";
+        echo "<label for='list_tbl'>".$locale['BACK_433']."</label>";
         echo "<select name='list_tbl[]' id='list_tbl' size='".$maxrows."' class='form-control display-block textbox' style='width:100%;' multiple='multiple'>".$table_opt_list."</select>";
         echo "<div class='btn-group m-t-10' style='text-align:center'>\n";
-        echo "<a class='btn btn-default' href='#' id='tableSelectAll'>".$locale['436']."</a>";
-        echo "<a class='btn btn-default' href='#' id='tableSelectNone'>".$locale['437']."</a>";
+        echo "<a class='btn btn-default' href='#' id='tableSelectAll'>".$locale['BACK_436']."</a>";
+        echo "<a class='btn btn-default' href='#' id='tableSelectNone'>".$locale['BACK_437']."</a>";
         echo "</div>";
         echo '</div>';
 
         echo '<div class="col-xs-12 col-sm-6">';
 
-        echo "<label for='list_ins'>".$locale['434']."</label>\n";
+        echo "<label for='list_ins'>".$locale['BACK_434']."</label>\n";
         echo "<select name='list_ins[]' id='list_ins' size='".$maxrows."' class='form-control display-block textbox' style='width:100%;' multiple='multiple'>".$insert_opt_list."</select>";
         echo "<div class='btn-group m-t-10' style='text-align:center;'>";
-        echo "<a class='btn btn-default' href='#' id='populateSelectAll'>".$locale['436']."</a>";
-        echo "<a class='btn btn-default' href='#' id='populateSelectNone'>".$locale['437']."</a>";
+        echo "<a class='btn btn-default' href='#' id='populateSelectAll'>".$locale['BACK_436']."</a>";
+        echo "<a class='btn btn-default' href='#' id='populateSelectNone'>".$locale['BACK_437']."</a>";
         echo "</div>";
 
         echo '</div>';
         echo '</div>';
 
         echo '<div class="m-t-10">';
-        echo form_button('btn_do_restore', $locale['438'], $locale['438'], ['class' => 'btn-primary m-r-10']);
+        echo form_button('btn_do_restore', $locale['BACK_438'], $locale['BACK_438'], ['class' => 'btn-primary m-r-10']);
         echo form_button('btn_cancel', $locale['cancel'], $locale['cancel'], ['class' => 'btn-default']);
         echo '</div>';
         echo closeform();
@@ -400,16 +400,16 @@ function restore_form() {
         $file_types = function_exists('gzencode') ? ",.gz" : "";
         echo openform('restoreform', 'post', clean_request('section=restore_db&action=restore', ['action', 'section'], FALSE), ['enctype' => TRUE]);
 
-        echo form_fileinput("upload_backup_file", $locale['431'], "", [
+        echo form_fileinput("upload_backup_file", $locale['BACK_431'], "", [
             'inline'      => FALSE,
             'type'        => 'object',
             'valid_ext'   => '.sql'.$file_types,
             'template'    => 'modern',
-            'ext_tip'     => $locale['440'].' .sql'.$file_types,
+            'ext_tip'     => $locale['BACK_440'].' .sql'.$file_types,
             'upload_path' => ADMIN.'db_backups/'
         ]);
 
-        echo form_button('restore', $locale['438'], $locale['438'], ['class' => 'btn-primary spacer-sm',]);
+        echo form_button('restore', $locale['BACK_438'], $locale['BACK_438'], ['class' => 'btn-primary spacer-sm',]);
         echo closeform();
     }
 }
