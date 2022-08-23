@@ -52,10 +52,10 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addnotice('success', $locale['900']);
+                addnotice('success', $locale['admins_900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addnotice('danger', $locale['901']);
+                addnotice('danger', $locale['admins_901']);
                 $weblink_settings = $inputArray;
             }
         }
@@ -87,7 +87,7 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
             ]
         ]);
 
-        echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }

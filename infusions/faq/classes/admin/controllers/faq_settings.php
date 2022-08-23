@@ -60,11 +60,11 @@ class FaqSettingsAdmin extends FaqAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addnotice('success', $this->locale['900']);
+                addnotice('success', $this->locale['admins_900']);
                 redirect(FUSION_REQUEST);
             }
 
-            addnotice('danger', $this->locale['901']);
+            addnotice('danger', $this->locale['admins_901']);
             self::$faq_settings = $inputArray;
         }
     }
@@ -83,7 +83,7 @@ class FaqSettingsAdmin extends FaqAdminModel {
                 'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
                 'multiple' => TRUE,
             ]).
-            form_button('savesettings', $this->locale['750'], $this->locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']).
+            form_button('savesettings', $this->locale['admins_750'], $this->locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']).
             closeform();
     }
 }

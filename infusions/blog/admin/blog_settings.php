@@ -45,24 +45,24 @@ if (isset($_POST['savesettings'])) {
             ];
             dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
         }
-        addnotice("success", $locale['900']);
+        addnotice("success", $locale['admins_900']);
         redirect(FUSION_REQUEST);
     } else {
-        addnotice('danger', $locale['901']);
+        addnotice('danger', $locale['admins_901']);
     }
 }
 $opts = ['0' => $locale['blog_952'], '1' => $locale['blog_953']];
 $cat_opts = ['0' => $locale['blog_959'], '1' => $locale['blog_960']];
 $thumb_opts = ['0' => $locale['blog_955'], '1' => $locale['blog_956']];
-$calc_opts = $locale['1020'];
+$calc_opts = $locale['admins_1020'];
 $calc_c = calculate_byte($blog_settings['blog_photo_max_b']);
 $calc_b = $blog_settings['blog_photo_max_b'] / $calc_c;
 
-echo "<div class='well'>".$locale['blog_description']."</div>";
+echo "<div class='well'>".$locale['admins_blog_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside('');
-echo form_text('blog_pagination', $locale['669b'], $blog_settings['blog_pagination'], [
+echo form_text('blog_pagination', $locale['admins_669b'], $blog_settings['blog_pagination'], [
     'inline' => TRUE, 'max_length' => 4, 'inner_width' => '150px', 'width' => '150px', 'type' => 'number'
 ]);
 
@@ -76,7 +76,7 @@ echo "<div class='row'>
         ".form_text('blog_thumb_h', '', $blog_settings['blog_thumb_h'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['admins_604'].")</small>
     </div>
 </div>";
 
@@ -104,7 +104,7 @@ echo "<div class='row'>
         ".form_text('blog_photo_max_h', '', $blog_settings['blog_photo_max_h'], [
         'class' => 'pull-left', 'max_length' => 4, 'type' => 'number', 'width' => '150px'
     ])."
-        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['604'].")</small>
+        <small class='mid-opacity text-uppercase pull-left m-t-10 m-l-5'>(".$locale['admins_604'].")</small>
     </div>
 </div>";
 
@@ -162,5 +162,5 @@ echo form_select('blog_file_types', $locale['blog_961'], $blog_settings['blog_fi
     ]);
 closeside();
 echo "</div></div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();

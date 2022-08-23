@@ -49,14 +49,14 @@ if (isset($_POST['savesettings'])) {
         addnotice('success', $locale['900']);
     } else {
         // send message your settings was not safe.
-        addnotice('danger', $locale['901']);
-        addnotice('danger', $locale['696']);
-        addnotice('danger', $locale['900']);
+        addnotice('danger', $locale['admins_901']);
+        addnotice('danger', $locale['admins_696']);
+        addnotice('danger', $locale['admins_900']);
     }
     redirect(FUSION_SELF.$aidlink."&amp;section=download_settings");
 }
 
-$calc_opts = $locale['1020'];
+$calc_opts = $locale['admins_1020'];
 $calc_c = calculate_byte($dl_settings['download_max_b']);
 $calc_b = $dl_settings['download_max_b'] / $calc_c;
 $calc_cc = calculate_byte($dl_settings['download_screen_max_b']);
@@ -68,7 +68,7 @@ foreach ($mime as $m => $Mime) {
     $ext = ".$m";
     $mime_opts[$ext] = $ext;
 }
-echo "<div class='well'>".$locale['download_description']."</div>";
+echo "<div class='well'>".$locale['admins_download_description']."</div>";
 echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n<div class='col-xs-12 col-sm-8'>\n";
 openside("");
@@ -207,7 +207,7 @@ echo form_select('download_types[]', $locale['download_932'], $dl_settings['down
 
 closeside();
 echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
 echo closeform();
 
 add_to_jquery("

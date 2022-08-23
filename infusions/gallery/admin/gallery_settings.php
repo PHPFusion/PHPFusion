@@ -80,16 +80,16 @@ if (isset($_POST['delete_watermarks'])) {
                 ];
                 dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
             }
-            addnotice('success', $locale['900']);
+            addnotice('success', $locale['admins_900']);
             redirect(FUSION_REQUEST);
         } else {
-            addnotice('danger', $locale['901']);
+            addnotice('danger', $locale['admins_901']);
         }
     }
 }
 
 $choice_opts = ['1' => $locale['yes'], '0' => $locale['no']];
-$calc_opts = $locale['1020'];
+$calc_opts = $locale['admins_1020'];
 $calc_c = calculate_byte($gll_settings['photo_max_b']);
 $calc_b = $gll_settings['photo_max_b'] / $calc_c;
 

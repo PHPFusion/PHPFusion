@@ -145,7 +145,7 @@ if (check_post('savesettings')) {
     if (fusion_safe()) {
         require_once(INCLUDES.'htaccess_include.php');
         write_htaccess();
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
     }
     redirect(clean_request('section=pls', [], FALSE));
 }
@@ -324,7 +324,7 @@ $sections = in_array(get('section'), $allowed_sections) ? get('section') : $allo
 
 switch ($sections) {
     case "pl":
-        add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['400']]);
+        add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_400']]);
         break;
     case "pls":
         add_breadcrumb(['link' => ADMIN.'permalink.php'.$aidlink, 'title' => $locale['PL_401a']]);
@@ -429,7 +429,7 @@ switch ($sections) {
                         echo "<td>\n<div class='spacer-xs'><p>".$description."</p><span>v$version</span> <span>".$locale['by']." $author</span></div></td>\n";
                         echo "</tr>\n";
                     } else {
-                        echo "<tr><td colspan='2'><strong>".$locale['PL_411'].":</strong> ".sprintf($locale['412'], $data['rewrite_name'])."</td>\n</tr>";
+                        echo "<tr><td colspan='2'><strong>".$locale['PL_411'].":</strong> ".sprintf($locale['PL_412'], $data['rewrite_name'])."</td>\n</tr>";
                     }
                 }
                 echo "</tbody>\n</table>\n</div>";
@@ -441,10 +441,10 @@ switch ($sections) {
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
         echo "<div class='well'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
-        echo form_checkbox('site_seo', $locale['438'], $settings_seo['site_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
-        echo form_checkbox('normalize_seo', $locale['439'], $settings_seo['normalize_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
-        echo form_checkbox('debug_seo', $locale['440'], $settings_seo['debug_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
-        echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success']);
+        echo form_checkbox('site_seo', $locale['admins_438'], $settings_seo['site_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
+        echo form_checkbox('normalize_seo', $locale['admins_439'], $settings_seo['normalize_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
+        echo form_checkbox('debug_seo', $locale['admins_440'], $settings_seo['debug_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success']);
         echo closeform();
         break;
 }

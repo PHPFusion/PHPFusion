@@ -247,7 +247,7 @@ class PanelsAdministration {
         $tabs['title'][] = $edit ? self::$locale['PANEL_409'] : self::$locale['PANEL_408'];
         $tabs['id'][] = 'panelform';
         $tabs['icon'][] = '';
-        $tabs['title'][] = fusion_get_locale('448', LOCALE.LOCALESET.'admin/settings.php');
+        $tabs['title'][] = fusion_get_locale('admins_448', LOCALE.LOCALESET.'admin/settings.php');
         $tabs['id'][] = 'settings';
         $tabs['icon'][] = '';
 
@@ -665,8 +665,8 @@ class PanelsAdministration {
         }
         closeside();
         openside('');
-        echo alert(fusion_get_locale('695', LOCALE.LOCALESET.'admin/settings.php'));
-        echo form_checkbox('panel_php_exe', fusion_get_locale('694', LOCALE.LOCALESET.'admin/settings.php'), $this->data['panel_php_exe'], ['toggle' => TRUE]);
+        echo alert(fusion_get_locale('admins_695', LOCALE.LOCALESET.'admin/settings.php'));
+        echo form_checkbox('panel_php_exe', fusion_get_locale('admins_694', LOCALE.LOCALESET.'admin/settings.php'), $this->data['panel_php_exe'], ['toggle' => TRUE]);
 
         closeside();
         echo "</div>\n";

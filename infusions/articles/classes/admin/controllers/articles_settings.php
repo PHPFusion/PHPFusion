@@ -81,7 +81,7 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
             'inline'  => TRUE,
             'options' => [$locale['no'], $locale['yes']]
         ]);
-        echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }

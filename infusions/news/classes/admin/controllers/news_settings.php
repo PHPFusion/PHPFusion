@@ -36,7 +36,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         $locale = self::getNewsAdminLocale();
         $news_settings = self::getNewsSettings();
 
-        add_breadcrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['news_settings']]);
+        add_breadcrumb(['link' => ADMIN."settings_news.php".fusion_get_aidlink(), 'title' => $locale['admins_news_settings']]);
         if (isset($_POST['savesettings'])) {
             $inputArray = [
                 "news_allow_submission"       => form_sanitizer($_POST['news_allow_submission'], 0, "news_allow_submission"),
@@ -64,20 +64,20 @@ class NewsSettingsAdmin extends NewsAdminModel {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addnotice("success", $locale['900']);
+                addnotice("success", $locale['admins_900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addnotice('danger', $locale['901']);
+                addnotice('danger', $locale['admins_901']);
             }
         }
         $opts = ['0' => $locale['news_0201'], '1' => $locale['news_953']];
         $cat_opts = ['0' => $locale['news_959'], '1' => $locale['news_0301']];
         $thumb_opts = ['0' => $locale['news_955'], '1' => $locale['news_956']];
-        $calc_opts = $locale['1020'];
+        $calc_opts = $locale['admins_1020'];
         $calc_c = calculate_byte($news_settings['news_photo_max_b']);
         $calc_b = $news_settings['news_photo_max_b'] / $calc_c;
 
-        echo "<div class='well'>".$locale['news_description']."</div>";
+        echo "<div class='well'>".$locale['admins_news_description']."</div>";
 
         echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-12 col-md-8'>\n";
@@ -86,7 +86,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         echo "<div class='row'>\n<div class='col-xs-12 col-sm-3'>\n";
         echo "<h4 class='m-0'>".$locale['news_0707']."</h4><i>".$locale['news_0708']."</i>\n<br/><br/>";
         echo "</div><div class='col-xs-12 col-sm-9'>\n";
-        echo form_text('news_pagination', $locale['669c'], $news_settings['news_pagination'], [
+        echo form_text('news_pagination', $locale['admins_669c'], $news_settings['news_pagination'], [
             'inline'      => TRUE,
             'max_length'  => 4,
             'width'       => '150px',
@@ -242,7 +242,7 @@ class NewsSettingsAdmin extends NewsAdminModel {
         closeside();
 
         echo "</div></div>\n";
-        echo form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-hdd-o']);
         echo closeform();
     }
 }
