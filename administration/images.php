@@ -21,7 +21,7 @@ pageaccess('IM');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/image_uploads.php');
 
-add_breadcrumb(['link' => ADMIN.'images.php'.fusion_get_aidlink(), 'title' => $locale['460']]);
+add_breadcrumb(['link' => ADMIN.'images.php'.fusion_get_aidlink(), 'title' => $locale['IMGUP_460']]);
 
 require_once INCLUDES.'infusions_include.php';
 
@@ -43,7 +43,7 @@ class ImagesAdministration {
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
             case 'update':
-                addnotice('success', self::$locale['465']);
+                addnotice('success', self::$locale['IMGUP_465']);
                 redirect(clean_request("", ["section", "action", "view"], FALSE));
                 break;
             default:
@@ -56,17 +56,17 @@ class ImagesAdministration {
     }
 
     public function displayAdmin() {
-        opentable(self::$locale['460']);
+        opentable(self::$locale['IMGUP_460']);
 
         if (check_get('section') && get('section') == 'back') {
             redirect(clean_request("", ["section", "action", "view"], FALSE));
         }
 
-        $tabs['title'][] = self::$locale['460'];
+        $tabs['title'][] = self::$locale['IMGUP_460'];
         $tabs['id'][] = 'list';
         $tabs['icon'][] = 'fa fa-picture-o';
 
-        $tabs['title'][] = self::$locale['420'];
+        $tabs['title'][] = self::$locale['IMGUP_420'];
         $tabs['id'][] = 'upload';
         $tabs['icon'][] = 'fa fa-plus';
 
@@ -115,16 +115,16 @@ class ImagesAdministration {
                 echo '<img class="img-responsive center-y" style="max-height:100%;" src="'.$this->data['afolder'].$img_name.'" alt="'.$img_name.'">';
                 echo '</div>';
                 echo '<div class="text-overflow-hide" title="'.$img_name.'">'.$img_name.'</div>';
-                echo "<a class='text-danger' href='".$delete_link."' onclick=\"return confirm('".self::$locale['470']."');\">".self::$locale['delete']."</a>";
+                echo "<a class='text-danger' href='".$delete_link."' onclick=\"return confirm('".self::$locale['IMGUP_470']."');\">".self::$locale['delete']."</a>";
                 echo '</div>';
             }
             echo '</div>';
 
             if (self::$settings['tinymce_enabled'] == 1) {
-                echo "<div class='text-center well'><a href='".clean_request("action=update", ["action"], FALSE)."'>".self::$locale['464']."</a></div>\n";
+                echo "<div class='text-center well'><a href='".clean_request("action=update", ["action"], FALSE)."'>".self::$locale['IMGUP_464']."</a></div>\n";
             }
         } else {
-            echo "<div class='well text-center'>".self::$locale['463']."</div>\n";
+            echo "<div class='well text-center'>".self::$locale['IMGUP_463']."</div>\n";
         }
     }
 
@@ -138,7 +138,7 @@ class ImagesAdministration {
 
                     if (!empty($upload) && $upload['error'] == 0) {
                         if (fusion_safe()) {
-                            addnotice('success', self::$locale['420']);
+                            addnotice('success', self::$locale['IMGUP_420']);
                             redirect(clean_request("", ["section"], FALSE));
                         }
                     }
@@ -147,7 +147,7 @@ class ImagesAdministration {
         }
 
         echo openform('uploadform', 'post', FUSION_REQUEST, ['enctype' => TRUE]);
-        echo form_fileinput("myfile", self::$locale['421'], "", [
+        echo form_fileinput("myfile", self::$locale['IMGUP_421'], "", [
             'upload_path' => $this->data['afolder'],
             'type'        => 'image',
             'valid_ext'   => '.jpg,.jpeg,.png,.gif,.bmp,.svg,.tiff,.webp',
@@ -157,9 +157,9 @@ class ImagesAdministration {
             'required'    => TRUE
         ]);
 
-        echo "<div class='small m-b-10'>".sprintf(self::$locale['425'], parsebytesize($this->getImgFolders()[$ifolder]['fileinp']['max_byte']))."</div>\n";
+        echo "<div class='small m-b-10'>".sprintf(self::$locale['IMGUP_425'], parsebytesize($this->getImgFolders()[$ifolder]['fileinp']['max_byte']))."</div>\n";
 
-        echo form_button('uploadimage', self::$locale['420'], self::$locale['420'], ['class' => 'btn-primary']);
+        echo form_button('uploadimage', self::$locale['IMGUP_420'], self::$locale['IMGUP_420'], ['class' => 'btn-primary']);
         echo closeform();
     }
 
@@ -177,7 +177,7 @@ class ImagesAdministration {
 
         $folders = [
             "images" => [
-                'locale'  => self::$locale['422'],
+                'locale'  => self::$locale['IMGUP_422'],
                 'path'    => IMAGES,
                 'count'   => TRUE,
                 'fileinp' => $maxed_out_settings,
@@ -187,7 +187,7 @@ class ImagesAdministration {
         if (defined('ARTICLES_EXISTS')) {
             $folders += [
                 "imagesa" => [
-                    'locale'  => self::$locale['423'],
+                    'locale'  => self::$locale['IMGUP_423'],
                     'path'    => IMAGES_A,
                     'count'   => defined('ARTICLES_EXISTS'),
                     'fileinp' => $maxed_out_settings,
@@ -198,7 +198,7 @@ class ImagesAdministration {
         if (defined('NEWS_EXISTS')) {
             $folders += [
                 "imagesn"  => [
-                    'locale'  => self::$locale['424'],
+                    'locale'  => self::$locale['IMGUP_424'],
                     'path'    => IMAGES_N,
                     'count'   => defined('NEWS_EXISTS'),
                     'fileinp' => [
@@ -208,7 +208,7 @@ class ImagesAdministration {
                     ],
                 ],
                 "imagesnc" => [
-                    'locale'  => self::$locale['427'],
+                    'locale'  => self::$locale['IMGUP_427'],
                     'path'    => IMAGES_NC,
                     'count'   => defined('NEWS_EXISTS'),
                     'fileinp' => [
@@ -223,7 +223,7 @@ class ImagesAdministration {
         if (defined('BLOG_EXISTS')) {
             $folders += [
                 "imagesb"  => [
-                    'locale'  => self::$locale['428'],
+                    'locale'  => self::$locale['IMGUP_428'],
                     'path'    => IMAGES_B,
                     'count'   => defined('BLOG_EXISTS'),
                     'fileinp' => [
@@ -233,7 +233,7 @@ class ImagesAdministration {
                     ],
                 ],
                 "imagesbc" => [
-                    'locale'  => self::$locale['429'],
+                    'locale'  => self::$locale['IMGUP_429'],
                     'path'    => IMAGES_BC,
                     'count'   => defined('BLOG_EXISTS'),
                     'fileinp' => [
