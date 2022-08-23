@@ -85,7 +85,7 @@ class InfusionsSetup extends InstallCore {
                     define("LOCALESET", $settings['locale']."/");
                 }
 
-                add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
+                add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['INF_412']."');});");
 
                 $inf_core = Infusions::getInstance();
                 $inf_core::loadConfiguration();
@@ -110,11 +110,11 @@ class InfusionsSetup extends InstallCore {
                     $content .= "<div class='list-group'>\n";
                     $content .= "<div class='list-group-item hidden-xs'>\n";
                     $content .= "<div class='row'>\n";
-                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['419']."</strong></div>\n";
-                    $content .= "<div class='hidden-xs col-sm-6 col-md-4 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
-                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['418']."</strong></div>\n";
-                    $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-                    $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3'>\n<strong>".$locale['421']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['INF_419']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs col-sm-6 col-md-4 col-lg-4'>\n<strong>".$locale['INF_400']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['INF_418']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['INF_420']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3'>\n<strong>".$locale['INF_421']."</strong></div>\n";
                     $content .= "</div>\n</div>\n";
 
                     sort($infs);
@@ -124,25 +124,25 @@ class InfusionsSetup extends InstallCore {
                         $content .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2'>\n";
                         if ($inf['status'] > 0) {
                             if ($inf['status'] > 1) {
-                                $content .= form_button('infuse', $locale['416'], $inf['folder'],
+                                $content .= form_button('infuse', $locale['INF_416'], $inf['folder'],
                                     ['class' => 'btn-info m-t-5 btn-sm infuse', 'icon' => 'fa fa-cube']);
                             } else {
-                                $content .= form_button('defuse', $locale['411'], $inf['folder'],
+                                $content .= form_button('defuse', $locale['INF_411'], $inf['folder'],
                                     ['class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'fa fa-trash']);
                             }
                         } else {
-                            $content .= form_button('infuse', $locale['401'], $inf['folder'],
+                            $content .= form_button('infuse', $locale['INF_401'], $inf['folder'],
                                 ['class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'fa fa-magnet']);
                         }
                         $content .= "</div>\n";
                         $content .= "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";
-                        $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
+                        $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['INF_415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['INF_414']."</label></h5>")."</div>\n";
                         $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
-                        $content .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-3'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
+                        $content .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-3'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['INF_410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['INF_409']."</a>" : '')."</div>\n";
                         $content .= "</div>\n</div>\n";
                     }
                 } else {
-                    $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
+                    $content .= "<br /><p class='text-center'>".$locale['INF_417']."</p>\n";
                 }
                 $content .= "</div>\n</div>\n";
                 self::$step = [
