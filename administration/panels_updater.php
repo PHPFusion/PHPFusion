@@ -31,5 +31,5 @@ if (check_get(['listItem']) && get(['listItem'])) {
     }
 
     header("Content-Type: text/html; charset=".$locale['charset']."\n");
-    echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['488']."</div></div>";
+    echo "<div id='close-message'><div class='admin-message alert alert-info m-t-10'>".$locale['PANEL_488']."</div></div>";
 }
