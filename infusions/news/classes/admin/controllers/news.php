@@ -985,15 +985,7 @@ class NewsAdmin extends NewsAdminModel {
         <hr/>
         <?php echo openform("news_table", "post", FUSION_REQUEST); ?>
         <?php echo form_hidden("table_action"); ?>
-
         <div class="display-block">
-            <?php if ($max_rows > $news_rows) : ?>
-                <div class="display-inline-block pull-right">
-                    <?php
-                    echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
-                    ?>
-                </div>
-            <?php endif; ?>
             <div class="display-inline-block m-l-10">
                 <?php echo form_select('news_display', self::$locale['show'], $limit,
                     [
@@ -1011,7 +1003,6 @@ class NewsAdmin extends NewsAdminModel {
                 ); ?>
             </div>
         </div>
-
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -1073,16 +1064,15 @@ class NewsAdmin extends NewsAdminModel {
                 </tbody>
             </table>
         </div>
-
-        <?php if ($max_rows > $news_rows) : ?>
+        <?php
+        echo closeform();
+        if ($max_rows > $news_rows) : ?>
             <div class="display-inline-block">
                 <?php
                 echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
                 ?>
             </div>
-        <?php endif; ?>
-        <?php
-        echo closeform();
+        <?php endif;
     }
 
     /**

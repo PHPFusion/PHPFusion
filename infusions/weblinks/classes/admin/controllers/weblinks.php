@@ -463,24 +463,14 @@ class WeblinksAdmin extends WeblinksAdminModel {
 
         echo openform('weblink_table', 'post', FUSION_REQUEST);
         echo form_hidden('table_action'); ?>
-
-        <!-- Display Items -->
-        <div class="display-block">
-            <div class="display-inline-block m-l-10">
-                <?php
-                echo form_select('weblink_display', $this->locale['WLS_0132'], $limit, [
-                    'width'   => '100px',
-                    'options' => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100]
-                ]);
-                ?>
-            </div>
-            <?php if ($max_rows > $weblink_rows) : ?>
-                <div class="display-inline-block pull-right">
-                    <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&weblink_display=$limit&amp;") ?>
-                </div>
-            <?php endif; ?>
+        <div class="display-inline-block m-l-10">
+            <?php
+            echo form_select('weblink_display', $this->locale['WLS_0132'], $limit, [
+                'width'   => '100px',
+                'options' => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100]
+            ]);
+            ?>
         </div>
-
         <!-- Display Table -->
         <div class="table-responsive">
             <table id="links-table" class="table table-striped">
@@ -550,15 +540,16 @@ class WeblinksAdmin extends WeblinksAdminModel {
                 </tbody>
             </table>
         </div>
-
-        <?php if ($max_rows > $weblink_rows) : ?>
-            <div class="display-inline-block">
-                <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&weblink_display=$limit&amp;") ?>
-            </div>
-        <?php endif; ?>
+        <?php echo closeform(); ?>
+        <!-- Display Items -->
+        <div class="display-block">
+            <?php if ($max_rows > $weblink_rows) : ?>
+                <div class="display-inline-block pull-right">
+                    <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&weblink_display=$limit&amp;") ?>
+                </div>
+            <?php endif; ?>
+        </div>
         <?php
-        echo closeform();
-
         // jQuery
         add_to_jquery("
             // Toggle Filters
