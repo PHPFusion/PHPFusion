@@ -695,7 +695,7 @@ class ForumAdminView extends ForumAdminInterface {
                 case 'fs':
                     add_breadcrumb([
                         'link'  => ADMIN.'settings_forum.php'.$aidlink,
-                        'title' => self::$locale['forum_settings']
+                        'title' => self::$locale['admins_forum_settings']
                     ]);
                     break;
                 default :
