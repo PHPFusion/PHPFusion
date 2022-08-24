@@ -693,26 +693,25 @@ class ArticlesAdmin extends ArticlesAdminModel {
                 </tbody>
             </table>
         </div>
-
         <!-- Display Items -->
         <div class="display-block">
-            <label class="control-label display-inline-block m-r-10" for="s2id_autogen6"><?php echo $this->locale['article_0132']; ?></label>
-            <div class="display-inline-block"><?php
-                echo form_select('article_display', '', $limit, [
-                    'options' => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100]
-                ]);
-                ?>
+            <div class="display-inline-block m-t-20">
+                <label class="control-label display-inline-block m-r-10" for="s2id_autogen6"><?php echo $this->locale['article_0132']; ?></label>
+                <div class="display-inline-block"><?php
+                    echo form_select('article_display', '', $limit, [
+                        'options' => [5 => 5, 10 => 10, 16 => 16, 25 => 25, 50 => 50, 100 => 100]
+                    ]);
+                    ?>
+                </div>
             </div>
+            <?php if ($max_rows > $article_rows) : ?>
+                <div class="display-inline-block pull-right">
+                    <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&article_display=$limit&amp;") ?>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
         echo closeform();
-
-        if ($max_rows > $article_rows) : ?>
-            <div class="display-inline-block pull-right">
-                <?php echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&article_display=$limit&amp;") ?>
-            </div>
-        <?php endif;
-
         // jQuery
         add_to_jquery("
             // Toggle Filters
