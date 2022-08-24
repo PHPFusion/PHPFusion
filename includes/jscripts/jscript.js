@@ -496,6 +496,26 @@ let showhide = function () {
     });
 }
 
+/**
+ * Performs same as clean_request method
+ * @param adds
+ * @param filterArray
+ * @param keep
+ * @returns {string}
+ */
+let cleanRequest = function (adds, filterArray = [], keep = false) {
+    let params = new URLSearchParams(window.location.href);
+    if (filterArray.length) {
+        $.each(filterArray, function (i, ckey) {
+            if (params.has(ckey) && keep === false) {
+                params.delete(ckey);
+            }
+        });
+    }
+
+    return params.toString() + '&' + adds;
+};
+
 
 let BASEDIR = document.location.origin + site_path;
 let INFUSIONS = document.location.origin + "/infusions/";

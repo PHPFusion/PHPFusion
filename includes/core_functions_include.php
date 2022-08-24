@@ -1777,16 +1777,21 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
         $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].'<i class="fas fa-angle-double-right m-l-5"></i>');
         $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].'<i class="fas fa-angle-right m-l-5"></i>');
     }
-    // if there is a request, we can redirect
-    if (check_post($getname.'_pg')) {
-        if ($val = sanitizer($getname.'_pg', '', $getname.'_pg')) {
-            redirect(clean_request($getname.'='.($val * $count - $count), [$getname], FALSE));
-        } else {
-            redirect(clean_request('', [$getname], FALSE));
-        }
-    }
 
-    $cur_page_field = openform(random_string(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']).form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']).closeform();
+    // Upon pressing enter key, redirect
+    add_to_jquery("
+    $('#".$getname."_pg').on('keydown', function(e) {
+        if (e.keyCode === 13) {
+            let v = $(this).val();                
+            if ($.isNumeric(v)) {                               
+               document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
+            }            
+        }
+    });
+    ");
+
+
+    $cur_page_field = form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']);
 
     return sprintf($tpl_global, "<span>".$locale['global_092']."</span> ".$cur_page_field." ".$locale['global_093']." ".$pg_cnt, $res);
 }
