@@ -16,7 +16,7 @@ Accessing the backend through a supported browser.
 
 Minimum requirements for PHPFusion 9
 
-- PHP 7.0 or greater
+- PHP 7.2.5 or greater
 - MySQL version 5.6 or greater or MariaDB version 10.1 or greater
 - HTTP server, we recommend Apache 2.4 or greater
 - mod_rewrite or equivalent for SEO
