@@ -367,7 +367,7 @@ class Shoutbox {
         $rows = dbrows($result);
         echo '<div class="m-t-10 m-b-10">';
         echo "<div class='display-inline'><span class='pull-right m-t-10'>".sprintf(self::$locale['SB_entries'], $rows, $total_rows)."</span></div>\n";
-        echo ($total_rows > $rows) ? '<div>'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&").'</div>' : "";
+        echo ($total_rows > $rows) ? '<div>'.makepagenav($rowstart, self::$limit, $total_rows, 3, clean_request("", ["aid", "section"])."&").'</div>' : "";
         echo '</div>';
 
         if ($rows > 0) {
@@ -387,7 +387,7 @@ class Shoutbox {
                 echo "<div class='list-group-item clearfix'>\n";
                 echo '<div class="row">';
                 echo '<div class="col-sm-3">';
-                echo display_avatar($data, '30px', '', !empty($item['user_id']), 'img-rounded pull-left m-r-10');
+                echo display_avatar($data, '30px', '', !empty($data['user_id']), 'img-rounded pull-left m-r-10');
                 echo "<div class='overflow-hide m-r-20'>";
                 echo !empty($data['user_id']) ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $data['shout_name'];
                 echo $online;
@@ -421,7 +421,7 @@ class Shoutbox {
             echo form_button('sb_admins', self::$locale['SB_selected_shout'], self::$locale['SB_selected_shout'], ['class' => 'btn-danger', 'icon' => 'fa fa-trash']);
             echo closeform();
 
-            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, self::$limit, clean_request("", ["aid", "section"])."&").'</div>' : "";
+            echo ($total_rows > $rows) ? '<div class="text-center">'.makepagenav($rowstart, self::$limit, $total_rows, 3, clean_request("", ["aid", "section"])."&").'</div>' : "";
         } else {
             echo "<div class='text-center m-t-10'>".self::$locale['SB_no_msgs']."</div>\n";
         }
