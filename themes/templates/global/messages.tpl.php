@@ -101,7 +101,7 @@ if (!function_exists('display_inbox')) {
                         echo $info['actions_form']['closeform'];
                     echo '</div>';
 
-                    echo !empty($info['pagenav']) ? '<div class="display-inline-block pull-right">'.$info['pagenav'].'</div>' : '';
+                    echo !empty($info['pagenav']) ? '<div class="text-right m-t-10 m-b-10">'.$info['pagenav'].'</div>' : '';
                 echo '</div>';
             }
 
