@@ -1261,13 +1261,12 @@ function getuserstatus($userstatus) {
  */
 function checkrights($rights) {
     if (iSUPERADMIN) {
-    return TRUE;
-    }
-    if (iADMIN && in_array($rights, explode(".", iUSER_RIGHTS))) {
         return TRUE;
-    } 
+    } else if (iADMIN && in_array($rights, explode(".", iUSER_RIGHTS))) {
+        return TRUE;
+    }
     return FALSE;
-    
+
 }
 
 /**
@@ -1462,14 +1461,14 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
  * @return array Array of all access levels and user groups.
  */
 function fusion_get_groups($remove = []) {
-
     $visibility_opts = [];
-    $groups = array_diff_key(getusergroups(), array_flip($remove));
-    foreach ($groups as $group) {
+
+    foreach (getusergroups() as $group) {
         $visibility_opts[$group[0]] = $group[1];
     }
+    $groups = array_diff_key($visibility_opts, array_flip($remove));
 
-    return $visibility_opts;
+    return $groups;
 }
 
 /**
@@ -1784,10 +1783,10 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     add_to_jquery("
     $('#".$getname."_pg').on('keydown', function(e) {
         if (e.keyCode === 13) {
-            let v = $(this).val();                
-            if ($.isNumeric(v)) {                               
+            let v = $(this).val();
+            if ($.isNumeric(v)) {
                document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
-            }            
+            }
         }
     });
     ");
