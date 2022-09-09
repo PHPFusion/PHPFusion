@@ -1260,12 +1260,14 @@ function getuserstatus($userstatus) {
  * @return bool True if the user is an Administrator with rights defined in $rights.
  */
 function checkrights($rights) {
-
+    if (iSUPERADMIN) {
+    return TRUE;
+    }
     if (iADMIN && in_array($rights, explode(".", iUSER_RIGHTS))) {
         return TRUE;
-    } else {
-        return FALSE;
-    }
+    } 
+    return FALSE;
+    
 }
 
 /**
