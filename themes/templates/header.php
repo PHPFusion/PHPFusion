@@ -45,6 +45,8 @@ require_once THEME."theme.php";
 
 require_once INCLUDES."theme_functions_include.php";
 
+require_once INCLUDES."twig_includes.php";
+
 // for compatibility
 if (!defined('THEME_BULLET')) {
     define('THEME_BULLET', '&middot;');

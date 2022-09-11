@@ -40,6 +40,8 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
 
 require_once INCLUDES."theme_functions_include.php";
 
+require_once INCLUDES."twig_includes.php";
+
 // for compatibility
 if (!defined('THEME_BULLET')) {
     define('THEME_BULLET', '&middot;');
