@@ -14,6 +14,6 @@ fusion_error_log.log
 /includes/header_includes.php
 /includes/footer_includes.php
 /includes/gateway/flood/
-/includes/vendor/
+#/includes/vendor/
 /installer_*.log
 .maintenance
