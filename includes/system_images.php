@@ -45,6 +45,30 @@ function set_image($name, $path) {
 }
 
 /**
+ *  Get the icon or <i> tag
+ *
+ * @param        $icon
+ * @param string $class
+ * @param string $tooltip
+ *
+ * @return string
+ */
+function get_icon($icon, string $class = "", $tooltip = "") {
+    return ImageRepo::getIcon($icon, $class, $tooltip);
+}
+
+/**
+ * Sets a class for an icon
+ *
+ * @param $name
+ * @param $value
+ */
+function set_icon($name, $value) {
+    ImageRepo::setIcon($name, $value);
+}
+
+
+/**
  * Replace a part in each image path.
  *
  * @param string $source Source path.
