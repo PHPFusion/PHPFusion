@@ -20,6 +20,7 @@ use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale();
 $settings = fusion_get_settings();
+define("BOOTSTRAP_ENABLED", (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE) || (defined('BOOTSTRAP5') && BOOTSTRAP5 == TRUE));
 
 if (!headers_sent()) {
     header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -50,25 +51,35 @@ if (count($languages) > 1) {
     echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
 }
 
-if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
-    if (defined('BOOTSTRAP4')) {
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
 
-        $custom_bs = file_exists(THEME.'custom_bootstrap/custom_bootstrap.min.css') ? THEME.'custom_bootstrap/custom_bootstrap.min.css' : THEME.'custom_bootstrap/custom_bootstrap.css';
-        if (file_exists($custom_bs)) {
-            echo '<link rel="stylesheet" href="'.$custom_bs.'">';
+if (BOOTSTRAP_ENABLED) {
+    // Will optimize later with strings
+    $custom_file = file_exists(THEME.'custom_bootstrap/custom_bootstrap.min.css') ? THEME.'custom_bootstrap/custom_bootstrap.min.css' : THEME.'custom_bootstrap/custom_bootstrap.css';
+    if (defined('BOOTSTRAP5')) {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
+        if (file_exists($custom_file)) {
+            echo '<link rel="stylesheet" href="'.$custom_file.'">';
+        } else {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap5/css/bootstrap.min.css">';
+        }
+        if ($locale['text-direction'] == 'rtl') {
+            echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap5/css/bootstrap-rtl.min.css">';
+        }
+        // need a submenu..
+        //echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap5/css/bootstrap-submenu.min.css">';
+    } else if (defined('BOOTSTRAP4')) {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
+        if (file_exists($custom_file)) {
+            echo '<link rel="stylesheet" href="'.$custom_file.'">';
         } else {
             echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap.min.css">';
         }
-
         echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap4/css/bootstrap-submenu.min.css">';
     } else {
         echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
         echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-
-        $custom_bs = file_exists(THEME.'custom_bootstrap/custom_bootstrap.min.css') ? THEME.'custom_bootstrap/custom_bootstrap.min.css' : THEME.'custom_bootstrap/custom_bootstrap.css';
-        if (file_exists($custom_bs)) {
-            echo '<link rel="stylesheet" href="'.$custom_bs.'">';
+        if (file_exists($custom_file)) {
+            echo '<link rel="stylesheet" href="'.$custom_file.'">';
         } else {
             echo '<link rel="stylesheet" href="'.INCLUDES.'bootstrap/bootstrap3/css/bootstrap.min.css">';
         }
@@ -171,8 +182,11 @@ if (function_exists("render_page")) {
 }
 
 // Load Bootstrap javascript
-if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
-    if (defined('BOOTSTRAP4')) {
+if (BOOTSTRAP_ENABLED) {
+    if (defined('BOOTSTRAP5')) {
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap5/js/bootstrap.bundle.min.js"></script>';
+        //echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
+    } else if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
     } else {
@@ -180,13 +194,13 @@ if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOO
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap-submenu.min.js"></script>';
     }
 }
+
 echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
 $jquery_tags = '';
-
-if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
+if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE && !defined('BOOTSTRAP5')) {
     $jquery_tags .= "$('[data-submenu]').submenupicker();";
     // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
     $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
