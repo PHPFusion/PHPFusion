@@ -77,8 +77,12 @@ if (defined('ENTYPO') && ENTYPO == TRUE) {
 }
 
 if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'/>\n";
+    if (is_file(INCLUDES."fonts/font-awesome-5/css/all.min.css")) {
+        echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
+    }
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-6/css/all.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-6/css/v5-font-face.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-6/css/v4-shims.min.css'>\n";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
