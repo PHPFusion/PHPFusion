@@ -21,7 +21,7 @@ pageaccess('FM');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/image_uploads.php');
 
-add_to_title($locale['100']);
+add_to_title($locale['IMGUP_100']);
 
 add_breadcrumb(['link' => ADMIN.'file_manager.php'.fusion_get_aidlink(), 'title' => $locale['IMGUP_100']]);
 
