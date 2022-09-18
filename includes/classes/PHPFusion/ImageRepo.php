@@ -53,88 +53,94 @@ class ImageRepo {
      * @var string[]
      */
     private static $glyphicons = [
-        'plus'              => 'fa-regular fa-plus',
-        'minus'             => 'fa-regular fa-minus',
-        'up'                => 'fa-regular fa-up',
-        'down'              => 'fa-regular fa-down',
-        'left'              => 'fa-regular fa-left',
-        'right'             => 'fa-regular fa-right',
-        'caret-up'          => 'fa-regular fa-caret-up',
-        'caret-down'        => 'fa-regular fa-caret-down',
-        'caret-left'        => 'fa-regular fa-caret-left',
-        'caret-right'       => 'fa-regular fa-caret-right',
-        'apply'             => 'fa-regular fa-check',
-        'cancel'            => 'fa-regular fa-ban',
-        'reset'             => 'fa-regular fa-rotate-left',
-        'reply'             => 'fa-regular fa-reply',
-        'forward'           => 'fa-regular fa-share-from-square',
-        'first'             => 'fa-regular fa-angle-left',
-        'last'              => 'fa-regular fa-angle-right',
-        'next'              => 'fa-regular fa-angle-double-right',
-        'previous'          => 'fa-regular fa-angle-double-left',
-        'edit'              => 'fa-regular fa-edit',
-        'delete'            => 'fa-regular fa-trash',
-        'view'              => 'fa-regular fa-eye',
-        'more'              => 'fa-regular fa-ellipsis-v',
-        'filter'            => 'fa-regular fa-filters',
-        'asc'               => 'fa-regular fa-sort-up',
-        'desc'              => 'fa-regular fa-sort-down',
-        'move'              => 'fa-regular fa-up-down-left-right',
-        'maximize'          => 'fa-regular fa-maximize',
-        'minimize'          => 'fa-regular fa-down-left-and-up-right-to-center',
-        'user'              => 'fa-regular fa-user',
-        'admin'             => 'fa-regular fa-user-secret',
-        'user-profile'      => 'fa-regular id-badge',
-        'user-groups'       => 'fa-regular fa-users-rectangle',
-        'user-active'       => 'fa-regular fa-user-check',
-        'user-joined'       => 'fa-regular fa-calendar-circle-user',
-        'user-banned'       => 'fa-regular fa-user-xmark',
-        'user-inactive'     => 'fa-regular fa-user-clock',
-        'forum-post'        => 'fa-regular fa-messages',
-        'forum-spam'        => 'fa-regular fa-message-xmark',
-        'forum-sticky'      => 'fa-regular fa-message-arrow-up',
-        'forum-question'    => 'fa-regular fa-message-question',
-        'forum-answer'      => 'fa-regular fa-message-check',
-        'forum-quote'       => 'fa-regular fa-message-quote',
-        'forum-attachments' => 'fa-regular fa-message-image',
-        'forum-warning'     => 'fa-regular fa-message-exclamation',
-        'forum-reputation'  => 'fa-regular fa-hundred-points',
-        'forum-upvoted'     => 'fa-regular fa-message-arrow-up',
-        'forum-downvoted'   => 'fa-regular fa-message-arrow-down',
-        'vote'              => 'fa-regular fa-check-to-slot',
-        'unvote'            => 'fa-regular fa-xmark-to-slot',
-        'note'              => 'fa-regular fa-note-sticky',
-        'auto-bot'          => 'fa-regular fa-message-bot',
-        'comments'          => 'fa-regular fa-comments',
-        'comment'           => 'fa-regular fa-comment',
-        'poll'              => 'fa-regular fa-square-poll-vertical',
-        'games'             => 'fa-regular fa-dice',
-        'print'             => 'fa-regular fa-print',
-        'items'             => 'fa-regular fa-box-heart',
-        'security'          => 'fa-regular fa-shield-cross',
-        'infusion'          => 'fa-regular fa-magnet',
-        'collection'        => 'fa-regular fa-gift',
-        'coins'             => 'fa-regular fa-sack',
-        'location'          => 'fa-regular fa-location-dot',
-        'code'              => 'fa-regular fa-brackets-curly',
-        'success'           => 'fa-regular fa-badge-check',
-        'warning'           => 'fa-regular fa-triangle-exclamation',
-        'danger'            => 'fa-regular fa-light-emergency-on',
-        'donation'          => 'fa-regular fa-hands-holding-dollar',
-        'import'            => 'fa-regular fa-up-to-line',
-        'export'            => 'fa-regular fa-down-from-line',
-        'time'              => 'fa-regular fa-fa-clock',
-        'duration'          => 'fa-regular fa-clock-rotate-left',
-        'locked'            => 'fa-regular fa-lock',
-        'unlocked'          => 'fa-regular fa-lock-open',
-        'login'             => 'fa-regular fa-right-to-bracket',
-        'logout'            => 'fa-regular fa-right-from-bracket',
-        'tech-support'      => 'fa-regular fa-headset',
-        'maintenance'       => 'fa-regular fa-helmet-safety',
-        'site-links'        => 'fa-regular fa-sitemap',
-        'bug'               => 'fa-regular fa-bug',
-        'contact'           => 'fa-regular fa-square-phone',
-        'covid'             => 'fa-regular fa-virus-covid',
+        'plus'              => 'fa-solid fa-plus',
+        'minus'             => 'fa-solid fa-minus',
+        'up'                => 'fa-solid fa-arrow-up',
+        'down'              => 'fa-solid fa-arrow-down',
+        'left'              => 'fa-solid fa-arrow-left',
+        'right'             => 'fa-solid fa-arrow-right',
+        'caret-up'          => 'fa-solid fa-caret-up',
+        'caret-down'        => 'fa-solid fa-caret-down',
+        'caret-left'        => 'fa-solid fa-caret-left',
+        'caret-right'       => 'fa-solid fa-caret-right',
+        'angle-up'          => 'fa-solid fa-angle-up',
+        'angle-down'        => 'fa-solid fa-angle-down',
+        'angle-left'        => 'fa-solid fa-angle-left',
+        'angle-right'       => 'fa-solid fa-angle-right',
+        'apply'             => 'fa-solid fa-check',
+        'cancel'            => 'fa-solid fa-ban',
+        'reset'             => 'fa-solid fa-rotate-left',
+        'reply'             => 'fa-solid fa-reply',
+        'forward'           => 'fa-solid fa-share-from-square',
+        'first'             => 'fa-solid fa-angle-left',
+        'last'              => 'fa-solid fa-angle-right',
+        'next'              => 'fa-solid fa-angle-double-right',
+        'previous'          => 'fa-solid fa-angle-double-left',
+        'edit'              => 'fa-solid fa-edit',
+        'delete'            => 'fa-solid fa-trash',
+        'view'              => 'fa-solid fa-eye',
+        'more'              => 'fa-solid fa-ellipsis-v',
+        'filter'            => 'fa-solid fa-filters',
+        'asc'               => 'fa-solid fa-sort-up',
+        'desc'              => 'fa-solid fa-sort-down',
+        'move'              => 'fa-solid fa-up-down-left-right',
+        'maximize'          => 'fa-solid fa-maximize',
+        'minimize'          => 'fa-solid fa-down-left-and-up-right-to-center',
+        'user'              => 'fa-solid fa-user',
+        'admin'             => 'fa-solid fa-user-secret',
+        'profile'           => 'fa-solid fa-id-badge',
+        'user-groups'       => 'fa-solid fa-users-rectangle',
+        'user-active'       => 'fa-solid fa-user-check',
+        'user-joined'       => 'fa-solid fa-calendar-circle-user',
+        'user-banned'       => 'fa-solid fa-user-xmark',
+        'user-inactive'     => 'fa-solid fa-user-clock',
+        'forum-post'        => 'fa-solid fa-messages',
+        'forum-spam'        => 'fa-solid fa-message-xmark',
+        'forum-sticky'      => 'fa-solid fa-message-arrow-up',
+        'forum-question'    => 'fa-solid fa-message-question',
+        'forum-answer'      => 'fa-solid fa-message-check',
+        'forum-quote'       => 'fa-solid fa-message-quote',
+        'forum-attachments' => 'fa-solid fa-message-image',
+        'forum-warning'     => 'fa-solid fa-message-exclamation',
+        'forum-reputation'  => 'fa-solid fa-hundred-points',
+        'forum-upvoted'     => 'fa-solid fa-message-arrow-up',
+        'forum-downvoted'   => 'fa-solid fa-message-arrow-down',
+        'vote'              => 'fa-solid fa-check-to-slot',
+        'unvote'            => 'fa-solid fa-xmark-to-slot',
+        'note'              => 'fa-solid fa-note-sticky',
+        'auto-bot'          => 'fa-solid fa-message-bot',
+        'comments'          => 'fa-solid fa-comments',
+        'comment'           => 'fa-solid fa-comment',
+        'poll'              => 'fa-solid fa-square-poll-vertical',
+        'games'             => 'fa-solid fa-dice',
+        'print'             => 'fa-solid fa-print',
+        'bill'              => 'fa-solid fa-file-invoice',
+        'items'             => 'fa-solid fa-box-heart',
+        'security'          => 'fa-solid fa-shield-cross',
+        'infusion'          => 'fa-solid fa-magnet',
+        'collection'        => 'fa-solid fa-gift',
+        'coins'             => 'fa-solid fa-sack',
+        'location'          => 'fa-solid fa-location-dot',
+        'code'              => 'fa-solid fa-brackets-curly',
+        'success'           => 'fa-solid fa-badge-check',
+        'warning'           => 'fa-solid fa-triangle-exclamation',
+        'danger'            => 'fa-solid fa-light-emergency-on',
+        'donation'          => 'fa-solid fa-hands-holding-dollar',
+        'import'            => 'fa-solid fa-up-to-line',
+        'export'            => 'fa-solid fa-down-from-line',
+        'time'              => 'fa-solid fa-fa-clock',
+        'duration'          => 'fa-solid fa-clock-rotate-left',
+        'locked'            => 'fa-solid fa-lock',
+        'unlocked'          => 'fa-solid fa-lock-open',
+        'login'             => 'fa-solid fa-right-to-bracket',
+        'logout'            => 'fa-solid fa-right-from-bracket',
+        'tech-support'      => 'fa-solid fa-headset',
+        'maintenance'       => 'fa-solid fa-helmet-safety',
+        'site-links'        => 'fa-solid fa-sitemap',
+        'bug'               => 'fa-solid fa-bug',
+        'contact'           => 'fa-solid fa-square-phone',
+        'covid'             => 'fa-solid fa-virus-covid',
+        'settings'          => 'fa-solid fa-screwdriver-wrench'
     ];
 
     /**
@@ -250,6 +256,24 @@ class ImageRepo {
     }
 
     /**
+     * Get all registered icons
+     *
+     * @return string[]
+     */
+    public static function getIconList() {
+        return self::$glyphicons;
+    }
+
+    /**
+     * Get all registered images
+     *
+     * @return string[]
+     */
+    public static function getImageList() {
+        return self::$image_paths;
+    }
+
+    /**
      * Get the imagepath or the html "img" tag
      *
      * @param string $image The name of the image.
@@ -283,7 +307,7 @@ class ImageRepo {
      * @return string
      */
     public static function getIcon(string $name, string $class = "", string $tooltip = "") {
-        $icon = (self::$glyphicons[$name]) ?? '';
+        $icon = (self::$glyphicons[$name]) ?? $name;
         $tooltip = $tooltip ? 'data-toggle="tooltip" title="'.$tooltip.'"' : '';
 
         return '<i class="'.$icon.whitespace($class).'" '.$tooltip.'></i>';
