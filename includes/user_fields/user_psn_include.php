@@ -25,16 +25,11 @@ if ($profile_method == "input") {
             'inline'           => TRUE,
             'error_text'       => $locale['uf_psn_error'],
             'regex_error_text' => $locale['uf_psn_error_1'],
-            'placeholder'      => $locale['uf_psn_desc'],
+            'placeholder'      => $locale['uf_psn_placeholder'],
             'label_icon'       => $icon
         ] + $options;
 
-    $user_fields = form_text('user_psn', $locale['uf_psn'], $field_value, [
-        'inline'      => TRUE,
-        'placeholder' => $locale['uf_psn_placeholder'],
-        'error_text'  => $locale['uf_psn_error'],
-        'label_icon'  => $icon,
-    ]);
+    $user_fields = form_text('user_psn', $locale['uf_psn'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
     $link = '';

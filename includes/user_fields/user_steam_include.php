@@ -25,16 +25,11 @@ if ($profile_method == "input") {
             'inline'           => TRUE,
             'error_text'       => $locale['uf_steam_error'],
             'regex_error_text' => $locale['uf_steam_error_1'],
-            'placeholder'      => $locale['uf_steam_desc'],
+            'placeholder'      => $locale['uf_steam_placeholder'],
             'label_icon'       => $icon
         ] + $options;
 
-    $user_fields = form_text('user_steam', $locale['uf_steam'], $field_value, [
-        'inline'      => TRUE,
-        'placeholder' => $locale['uf_steam_placeholder'],
-        'error_text'  => $locale['uf_steam_error'],
-        'label_icon'  => $icon,
-    ]);
+    $user_fields = form_text('user_steam', $locale['uf_steam'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
     $link = '';
