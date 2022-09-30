@@ -188,5 +188,5 @@ function member_nav($second = "", $third = "") {
  * @return string
  */
 function member_url($step, $user_id) {
-    return FUSION_SELF.fusion_get_aidlink()."&=ref=".$step.($user_id ? "&lookup=$user_id" : "");
+    return FUSION_SELF.fusion_get_aidlink()."&ref=".$step.($user_id ? "&lookup=$user_id" : "");
 }
