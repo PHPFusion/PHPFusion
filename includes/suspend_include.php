@@ -43,23 +43,18 @@ function getsuspension($type, $action = FALSE) {
  */
 function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRUE) {
     $userdata = fusion_get_userdata();
-    dbquery("INSERT INTO ".DB_SUSPENDS." (
-            suspended_user,
-            suspending_admin,
-            suspend_ip,
-            suspend_ip_type,
-            suspend_date,
-            suspend_reason,
-            suspend_type
-        ) VALUES (
-            '$user_id',
-            '".(!$system ? $userdata['user_id'] : 0)."',
-            '".(!$system ? USER_IP : 0)."',
-            '".(!$system ? USER_IP_TYPE : 0)."',
-            '".($time ? time() : 0)."',
-            '$reason',
-            '$type'
-        )");
+    $savesuspend = [
+        'suspend_id'       => '',
+        'suspended_user'   => $user_id,
+        'suspending_admin' => (!$system ? $userdata['user_id'] : 0),
+        'suspend_ip'       => (!$system ? USER_IP : 0),
+        'suspend_ip_type'  => (!$system ? USER_IP_TYPE : 0),
+        'suspend_date'     => ($time ? time() : 0),
+        'suspend_reason'   => $reason,
+        'suspend_type'     => $type
+    ];
+
+    dbquery_insert(DB_SUSPENDS, $savesuspend, 'save');
 }
 
 /**
@@ -73,18 +68,18 @@ function suspend_log($user_id, $type, $reason = "", $system = FALSE, $time = TRU
 function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
     $userdata = fusion_get_userdata();
 
-    $result = dbquery("SELECT suspend_id FROM ".DB_SUSPENDS." WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0' LIMIT 1");
+    $result = dbquery("SELECT suspend_id FROM ".DB_SUSPENDS." WHERE suspended_user=:userid AND suspend_type=:suspendtype AND reinstate_date=:reinstatedate LIMIT 1", [':userid' => $user_id, ':suspendtype' => $type, ':reinstatedate' => 0]);
     if (!dbrows($result)) {
         suspend_log($user_id, $type, "", TRUE, FALSE);
     }
 
     dbquery("UPDATE ".DB_SUSPENDS." SET
         reinstating_admin='".(!$system ? $userdata['user_id'] : 0)."',
-        reinstate_reason='$reason',
+        reinstate_reason='".$reason."',
         reinstate_date='".time()."',
         reinstate_ip='".(!$system ? USER_IP : 0)."',
         reinstate_ip_type='".(!$system ? USER_IP_TYPE : 0)."'
-        WHERE suspended_user='$user_id' AND suspend_type='$type' AND reinstate_date='0'
+        WHERE suspended_user='".$user_id."' AND suspend_type='".$type."' AND reinstate_date='0'
     ");
 }
 
@@ -99,18 +94,18 @@ function unsuspend_log($user_id, $type, $reason = "", $system = FALSE) {
 function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0) {
     $locale = fusion_get_locale("", LOCALE.LOCALESET."admin/members_include.php");
 
-    $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='$type'" : "");
+    $db_type = ($type != "all" && isnum($type) ? " AND suspend_type='".$type."'" : "");
 
     $result = dbquery("SELECT sp.suspend_id, sp.suspend_ip, sp.suspend_ip_type, sp.suspend_date, sp.suspend_reason,
         sp.suspend_type, sp.reinstate_date, sp.reinstate_reason, sp.reinstate_ip, sp.reinstate_ip_type,
         a.user_name AS admin_name, b.user_name AS admin_name_b
-        FROM ".DB_SUSPENDS." sp
-        LEFT JOIN ".DB_USERS." a ON sp.suspending_admin=a.user_id
-        LEFT JOIN ".DB_USERS." b ON sp.reinstating_admin=b.user_id
-        WHERE suspended_user='$user_id'$db_type
-        ORDER BY suspend_date DESC".($limit > 0 ? " LIMIT $limit" : ""));
+        FROM ".DB_SUSPENDS." AS sp
+        LEFT JOIN ".DB_USERS." AS a ON sp.suspending_admin=a.user_id
+        LEFT JOIN ".DB_USERS." AS b ON sp.reinstating_admin=b.user_id
+        WHERE suspended_user=:userid$db_type
+        ORDER BY suspend_date DESC".($limit > 0 ? " LIMIT $limit" : ""), [':userid' => $user_id]);
     $rows = dbrows($result);
-    $udata = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='$user_id' LIMIT 1"));
+    $udata = dbarray(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id=:userid LIMIT 1", [':userid' => $user_id]));
 
     if ($type == "all") {
         opentable(sprintf($locale['susp100'], $udata['user_name']));
@@ -120,40 +115,35 @@ function display_suspend_log($user_id, $type = "all", $rowstart = 0, $limit = 0)
     }
 
     if ($rows) {
-        echo "<table class='table table-responsive table-striped table-hover'>\n<tr>\n";
-        /*if ($type == "all") {
-            $description = sprintf($locale['susp101'], $udata['user_name']);
-        } else {
-            $description = sprintf(str_replace(['[STRONG]', '[/STRONG]'], ['<strong>', '</strong>'], $locale['susp102']), getsuspension($type), $udata['user_name']);
-        }*/
-        echo "<td class='tbl2' width='30'>".$locale['susp103']."</td>\n";
-        echo "<td class='tbl2' width='120'>".$locale['susp104']."</td>\n";
-        echo "<td class='tbl2' width='250'>".$locale['susp105']."</td>\n";
-        echo "<td class='tbl2' width='150'>".$locale['susp106']."</td>\n";
-        echo "</tr>\n";
+        echo "<div class='row'>";
+        echo "<div class='col-xs-12 col-sm-1 content'>".$locale['susp103']."</div>";
+        echo "<div class='col-xs-12 col-sm-2 content'>".$locale['susp104']."</div>";
+        echo "<div class='col-xs-12 col-sm-6 content'>".$locale['susp105']."</div>";
+        echo "<div class='col-xs-12 col-sm-3 content'>".$locale['susp106']."</div>";
+        echo "</div>";
         while ($data = dbarray($result)) {
 
             $suspension = ($data['suspend_type'] != 2 ? getsuspension($data['suspend_type']) : $locale['susp111']);
             $reason = ($data['suspend_reason'] ? ": ".$data['suspend_reason'] : "");
             $admin = ($data['admin_name'] ? $data['admin_name']." (".$locale['susp108'].": ".$data['suspend_ip'].")" : $locale['susp109']);
-            echo "<tr><td>#".$data['suspend_id']."</td>\n";
-            echo "<td>".showdate('forumdate', $data['suspend_date'])."</td>\n";
-            echo "<td><strong>".$suspension."</strong>".$reason."</td>\n";
-            echo "<td>".$admin."</td>\n";
-            echo "</tr>\n<tr>\n";
+            echo "<div class='row'><div class='item'>";
+            echo "<div class='col-xs-12 col-sm-1'>#".$data['suspend_id']."</div>";
+            echo "<div class='col-xs-12 col-sm-2'>".showdate('forumdate', $data['suspend_date'])."</div>";
+            echo "<div class='col-xs-12 col-sm-6'><strong>".$suspension."</strong>".$reason."</div>";
+            echo "<div class='col-xs-12 col-sm-3'>".$admin."</div>";
+            echo "</div></div>";
+
             if ($data['reinstate_date']) {
                 $r_reason = ($data['reinstate_reason'] ? ": ".$data['reinstate_reason'] : "");
                 $admin = ($data['admin_name_b'] ? $data['admin_name_b']." (".$locale['susp112'].$data['reinstate_ip'].")" : $locale['susp109']);
-                echo "<td>&nbsp;</td>\n";
-                echo "<td>".showdate('forumdate', $data['reinstate_date'])."</td>\n";
-                echo "<td>".$locale['susp113'].$r_reason."</td>\n";
-                echo "<td>".$admin."</td>\n";
-                echo "</tr>\n<tr>\n";
+                echo "<div class='row m-b-10'>";
+                echo "<div class='col-xs-12 col-sm-1'>&nbsp;</div>";
+                echo "<div class='col-xs-12 col-sm-2'>".showdate('forumdate', $data['reinstate_date'])."</div>";
+                echo "<div class='col-xs-12 col-sm-6'>".$locale['susp113'].$r_reason."</div>";
+                echo "<div class='col-xs-12 col-sm-3'>".$admin."</div>";
+                echo "</div>";
             }
-            echo "<td colspan='4'><hr /></td>\n";
-            echo "</tr>\n";
         }
-        echo "</table>\n";
     } else {
         echo "<div class='well text-center'>".$locale['susp110']."</div>\n";
     }
