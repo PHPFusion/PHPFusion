@@ -239,6 +239,14 @@ echo form_checkbox('display_validation', $locale['admins_553'], $settings['displ
 closeside();
 
 openside('');
+echo form_text('blaclist_site', $locale['admins_security_019'], $settings['blaclist_site'], [
+    'type'        => 'url',
+    'regex'       => 'http(s)?\:\/\/(.*?)',
+    'placeholder' => $locale['admins_security_020']
+]);
+closeside();
+
+openside('');
 echo form_checkbox('mime_check', $locale['admins_699f'], $settings['mime_check'], [
     'toggle' => TRUE
 ]);

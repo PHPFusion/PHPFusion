@@ -94,5 +94,7 @@ function is_blacklisted() {
 }
 
 if (is_blacklisted()) {
-    redirect("http://www.google.com/"); // TODO: add setting for this
+    $settings = fusion_get_settings();
+    $link = (empty($settings['blaclist_site']) ? "http://www.google.com/" : (!preg_match("@^http(s)?\:\/\/@i", $settings['blaclist_site']) ? "http://".$settings['blaclist_site'] : $settings['blaclist_site']));
+    redirect($link);
 }
