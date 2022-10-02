@@ -523,6 +523,10 @@ class CoreSettings {
                     'settings_name'  => 'license',
                     'settings_value' => 'agpl'
                 ],
+                [
+                    'settings_name'  => 'blaclist_site',
+                    'settings_value' => 'http://www.google.com/'
+                ],
             ]
         ];
         $table_settings['mlt_tables'] = [
