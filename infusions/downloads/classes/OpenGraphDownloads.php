@@ -26,7 +26,7 @@ class OpenGraphDownloads extends OpenGraph {
         if (dbrows($result)) {
             $data = dbarray($result);
             $info['title'] = $data['download_title'].' - '.$settings['sitename'];
-            $info['description'] = $data['download_description_short'] ? fusion_first_words(strip_tags(html_entity_decode($data['download_description_short'])), 50) : $settings['description'];
+            $info['description'] = !empty($data['download_description_short']) ? fusion_first_words(strip_tags(html_entity_decode($data['download_description_short'])), 50) : $settings['description'];
             $info['url'] = $settings['siteurl'].'infusions/downloads/downloads.php?download_id='.$download_id;
             $info['keywords'] = !empty($data['download_keywords']) ? $data['download_keywords'] : $settings['keywords'];
             $info['type'] = 'article';
