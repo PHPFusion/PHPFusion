@@ -208,7 +208,7 @@ function admin_reset_form() {
         }
     }
 
-    echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&section=adminreset_form");
+    echo openform('admin_reset', 'POST', FUSION_SELF.fusion_get_aidlink()."&section=adminreset_form");
     echo form_select('reset_admin', $locale['apw_400'], '', [
         'required'    => TRUE,
         'options'     => $admin_list,
@@ -218,7 +218,7 @@ function admin_reset_form() {
     ]);
 
     echo form_textarea('reset_message', $locale['apw_404'], '', ['inline' => TRUE, 'required' => TRUE, 'autosize' => TRUE]);
-    echo form_checkbox("reset_login", $locale['apw_405'], '', ["inline" => TRUE]);
+    echo form_checkbox('reset_login', $locale['apw_405'], '', ['inline' => TRUE]);
     echo form_button('reset_admins', $locale['apw_406'], $locale['apw_406'], ['class' => 'btn-primary']);
     echo closeform();
 }
@@ -226,37 +226,35 @@ function admin_reset_form() {
 function admin_reset_listing() {
     $locale = fusion_get_locale();
 
-    if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['reset_id'])) {
-        $id = $_GET['reset_id'];
-        if (isnum($id) && dbcount("(reset_id)", DB_ADMIN_RESETLOG, "reset_id='".intval($id)."'")) {
-            dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id='".intval($id)."'");
+    if (check_get('action') && get('action') == 'delete' && check_get('reset_id')) {
+        $id = get('reset_id');
+        if (isnum($id) && dbcount("(reset_id)", DB_ADMIN_RESETLOG, "reset_id=:resetid", [':resetid' => (int)$id])) {
+            dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => (int)$id]);
             addnotice('success', $locale['apw_429']);
             redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
     }
 
-    if (isset($_POST['reset_id'])) {
-        if (isset($_POST['reset_id'])) {
-            $input = (isset($_POST['reset_id'])) ? explode(",", form_sanitizer($_POST['reset_id'], "", "reset_id")) : "";
-            if (!empty($input)) {
-                foreach ($input as $reset_id) {
-                    dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => $reset_id]);
-                }
+    if (check_post('reset_id')) {
+        $input = explode(",", sanitizer('reset_id', "", "reset_id"));
+        if (!empty($input)) {
+            foreach ($input as $reset_id) {
+                dbquery("DELETE FROM ".DB_ADMIN_RESETLOG." WHERE reset_id=:resetid", [':resetid' => $reset_id]);
             }
-            addnotice('success', $locale['apw_429']);
-            redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
         }
+        addnotice('success', $locale['apw_429']);
+        redirect(clean_request('', ['section', 'action', 'reset_id'], FALSE));
     }
 
     $result = dbquery("SELECT arl.*, u1.user_status, u1.user_name, u1.user_id, u2.user_name as user_name_reset, u2.user_id as user_id_reset, u2.user_status as user_status_reset
-        FROM ".DB_ADMIN_RESETLOG." arl
-        LEFT JOIN ".DB_USERS." u1 ON arl.reset_admin_id=u1.user_id
-        LEFT JOIN ".DB_USERS." u2 ON arl.reset_admins=u2.user_id
+        FROM ".DB_ADMIN_RESETLOG." AS arl
+        LEFT JOIN ".DB_USERS." AS u1 ON arl.reset_admin_id=u1.user_id
+        LEFT JOIN ".DB_USERS." AS u2 ON arl.reset_admins=u2.user_id
         ORDER BY arl.reset_timestamp DESC
     ");
 
     if (dbrows($result) > 0) {
-        echo openform('reset_table', 'post', FUSION_REQUEST);
+        echo openform('reset_table', 'POST', FUSION_REQUEST);
         echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
         echo "<thead><tr>\n";
         echo "<th>&nbsp;</th>\n";
@@ -281,7 +279,7 @@ function admin_reset_listing() {
             echo "<td>".$reset_passwords."</td>\n";
             echo "<td>".$sucess." ".$locale['apw_422']." ".($sucess + $failed)."</td>\n";
             echo "<td>".(!empty($info['reset_reason']) ? $info['reset_reason'] : $locale['apw_423'])."</td>\n";
-            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
+            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash m-r-10'></i>".$locale['delete']."</a></td>\n";
             echo "</tr>\n";
             add_to_jquery('$("#reset-id-'.$info['reset_id'].'").click(function() {
                 if ($(this).prop("checked")) {
@@ -296,7 +294,7 @@ function admin_reset_listing() {
         echo "</table>\n</div>";
         echo "<div class='clearfix display-block'>\n";
         echo "<div class='display-inline-block pull-left m-r-20'>".form_checkbox('check_all', $locale['apw_430'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</div>";
-        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o'></i> ".$locale['delete']."</a></div>";
+        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o m-r-10'></i>".$locale['delete']."</a></div>";
         echo "</div>\n";
         echo closeform();
         add_to_jquery("
