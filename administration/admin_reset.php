@@ -208,7 +208,7 @@ function admin_reset_form() {
         }
     }
 
-    echo openform('admin_reset', 'POST', FUSION_SELF.fusion_get_aidlink()."&section=adminreset_form");
+    echo openform('admin_reset', 'post', FUSION_SELF.fusion_get_aidlink()."&section=adminreset_form");
     echo form_select('reset_admin', $locale['apw_400'], '', [
         'required'    => TRUE,
         'options'     => $admin_list,
@@ -254,7 +254,7 @@ function admin_reset_listing() {
     ");
 
     if (dbrows($result) > 0) {
-        echo openform('reset_table', 'POST', FUSION_REQUEST);
+        echo openform('reset_table', 'post', FUSION_REQUEST);
         echo "<div class='table-responsive'><table id='reset-table' class='table table-hover table-striped'>\n";
         echo "<thead><tr>\n";
         echo "<th>&nbsp;</th>\n";
