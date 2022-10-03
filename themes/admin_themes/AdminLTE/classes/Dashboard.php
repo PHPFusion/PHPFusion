@@ -294,15 +294,14 @@ class Dashboard {
     }
 
     private function adminIcons() {
-        global $admin_icons;
-
+        global $admin_icons, $infusions_count;
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
         $admin_title = str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['200']);
         $admin_title = !empty($locale['200a']) ? $locale['200a'] : $admin_title;
 
         $html = fusion_get_function('opentable', $admin_title);
-        if (count($admin_icons['data']) > 0) {
+        if (count($admin_icons['data']) > 0 && $infusions_count > 0) {
             $html .= '<div class="row">';
             foreach ($admin_icons['data'] as $data) {
                 $html .= '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
