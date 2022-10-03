@@ -302,18 +302,20 @@ class Dashboard {
         $admin_title = !empty($locale['200a']) ? $locale['200a'] : $admin_title;
 
         $html = fusion_get_function('opentable', $admin_title);
-        $html .= '<div class="row">';
         if (count($admin_icons['data']) > 0) {
+            $html .= '<div class="row">';
             foreach ($admin_icons['data'] as $data) {
                 $html .= '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
-                    $html .= '<a class="btn btn-app" href="'.$data['admin_link'].$aidlink.'">';
-                        $html .= '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>';
-                        $html .= '<span>'.$data['admin_title'].'</span>';
+                    $html .= !empty($data['admin_link']) ? '<a class="btn btn-app" href="'.$data['admin_link'].$aidlink.'">' : '';
+                        $html .= !empty($data['admin_rights']) ? '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>' : '';
+                        $html .= !empty($data['admin_title']) ? '<span>'.$data['admin_title'].'</span>' : '';
                     $html .= '</a>';
                 $html .= '</div>';
             }
+            $html .= '</div>';
+        } else {
+            $html .= '<div class="well text-center">'.$locale['284'].'</div>';
         }
-        $html .= '</div>';
         $html .= fusion_get_function('closetable');
 
         return $html;

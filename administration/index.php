@@ -260,7 +260,7 @@ if (!empty(\PHPFusion\Admins::getInstance()->getSubmitData())) {
 if (check_get('pagenum') && get('pagenum', FILTER_SANITIZE_NUMBER_INT)) {
     $pages = \PHPFusion\Admins::getInstance()->getAdminPages(get('pagenum'));
     $admin_icons = [
-        'data' => $pages,
+        'data' => !empty($pages[0]) ? $pages : [],
         'rows' => count($pages)
     ];
 }
