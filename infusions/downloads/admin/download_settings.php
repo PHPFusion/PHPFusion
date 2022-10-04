@@ -46,7 +46,7 @@ if (isset($_POST['savesettings'])) {
                 dbquery_insert(DB_SETTINGS_INF, $Array, 'update', ["primary_key" => "settings_name"]);
             }
         }
-        addnotice('success', $locale['900']);
+        addnotice('success', $locale['admins_900']);
     } else {
         // send message your settings was not safe.
         addnotice('danger', $locale['admins_901']);
