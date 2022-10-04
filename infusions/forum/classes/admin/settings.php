@@ -379,7 +379,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well'>
-            <strong><?php echo self::$locale['forum_description'] ?></strong>
+            <strong><?php echo self::$locale['admins_forum_description'] ?></strong>
         </div>
         <?php
 
@@ -416,7 +416,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     </div>
                 </div>";
 
-                $calc_opts = self::$locale['1020'];
+                $calc_opts = self::$locale['admins_1020'];
                 $calc_c = calculate_byte($forum_settings['forum_attachmax']);
                 $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
                 require_once INCLUDES."mimetypes_include.php";
