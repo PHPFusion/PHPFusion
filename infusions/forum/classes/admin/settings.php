@@ -82,7 +82,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     $result = dbquery("UPDATE ".DB_SETTINGS_INF." SET settings_value=:current_uf WHERE settings_name='forum_enabled_userfields' AND settings_inf='forum'", [':current_uf' => $current_uf]);
                 }
                 if (dbrows($result)) {
-                    addnotice('success', self::$locale['900']);
+                    addnotice('success', self::$locale['admins_900']);
                     redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs&ref=ufields');
                 }
             }
@@ -199,10 +199,10 @@ class ForumAdminSettings extends ForumAdminInterface {
                         ':settings_name'  => $settings_name
                     ]);
                 }
-                addnotice('success', self::$locale['900']);
+                addnotice('success', self::$locale['admins_900']);
                 redirect(FUSION_SELF.fusion_get_aidlink().'&section=fs');
             } else {
-                addnotice("danger", self::$locale['901']);
+                addnotice("danger", self::$locale['admins_901']);
             }
 
         }
@@ -365,10 +365,10 @@ class ForumAdminSettings extends ForumAdminInterface {
                     ];
                     dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", ["primary_key" => "settings_name"]);
                 }
-                addnotice('success', self::$locale['900']);
+                addnotice('success', self::$locale['admins_900']);
                 redirect(clean_request('section=fs&ref=post', ['ref'], FALSE));
             } else {
-                addnotice("danger", self::$locale['901']);
+                addnotice("danger", self::$locale['admins_901']);
             }
 
         }
@@ -379,7 +379,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well'>
-            <strong><?php echo self::$locale['admins_forum_description'] ?></strong>
+            <strong><?php echo self::$locale['forum_description'] ?></strong>
         </div>
         <?php
 
