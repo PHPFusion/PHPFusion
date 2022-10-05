@@ -617,9 +617,7 @@ class UserFieldsInput {
      * @return bool
      */
     public function saveUpdate() {
-
         $locale = fusion_get_locale();
-
         $settings = fusion_get_settings();
 
         $this->_method = "validate_update";
@@ -666,78 +664,75 @@ class UserFieldsInput {
 
         // hidden input tamper check - user_hash must not be changed.
         // id request spoofing request
-        if (!(iADMIN && checkrights('M')) ||
-            ($this->userData['user_password'] != sanitizer("user_hash", "", "user_hash")) ||
-            ($this->data['user_id'] != fusion_get_userdata('user_id'))) {
+        if ((iADMIN && checkrights('M')) ||
+            //($this->userData['user_password'] == sanitizer("user_hash", "", "user_hash")) || // Please feedback if needed.
+            ($this->data['user_id'] == fusion_get_userdata('user_id'))) {
+
+            if (fusion_safe()) {
+
+                if ($is_core_page) {
+                    // Logs Username change
+                    if ($this->_userName !== $this->userData['user_name']) {
+                        save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
+                    }
+                    // Logs Email change
+                    if ($this->_userEmail !== $this->userData['user_email']) {
+                        save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
+                    }
+                }
+
+                // Logs Field changes
+                $quantum->logUserAction(DB_USERS, "user_id");
+
+                // Update Table
+                dbquery_insert(DB_USERS, $this->data, 'update', ['keep_session' => TRUE]);
+
+                $this->_completeMessage = $locale['u163'];
+
+                if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
+                    // inform user that password has changed. and tell him your new password
+                    include INCLUDES."sendmail_include.php";
+                    addnotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
+
+                    $input = [
+                        "mailname" => $this->userData['user_name'],
+                        "email"    => $this->userData['user_email'],
+                        "subject"  => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
+                        "message"  => str_replace(
+                            [
+                                "[SITENAME]",
+                                "[SITEUSERNAME]",
+                                "USER_NAME",
+                                "[PASSWORD]"
+                            ],
+                            [
+                                $settings['sitename'],
+                                $settings['siteusername'],
+                                $this->userData['user_name'],
+                                $this->_newUserPassword,
+                            ],
+                            $locale['global_457']
+                        )
+                    ];
+
+                    if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
+                        $input['message'])
+                    ) {
+                        addnotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
+                    }
+
+                    //redirect(FUSION_REQUEST);
+                    return FALSE;
+                }
+
+                addnotice('success', $locale['u169']);
+
+                return TRUE;
+            }
+
+        } else {
             fusion_stop($locale['error_request']);
-
-            return FALSE;
         }
-
-        // check for password match
-        if (fusion_safe()) {
-
-            if ($is_core_page) {
-                // Logs Username change
-                if ($this->_userName !== $this->userData['user_name']) {
-                    save_user_log($this->userData['user_id'], "user_name", $this->_userName, $this->userData['user_name']);
-                }
-                // Logs Email change
-                if ($this->_userEmail !== $this->userData['user_email']) {
-                    save_user_log($this->userData['user_id'], "user_email", $this->_userEmail, $this->userData['user_email']);
-                }
-            }
-
-            // Logs Field changes
-            $quantum->logUserAction(DB_USERS, "user_id");
-
-            // Update Table
-            dbquery_insert(DB_USERS, $this->data, 'update', ['keep_session' => TRUE]);
-
-            $this->_completeMessage = $locale['u163'];
-
-            if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
-                // inform user that password has changed. and tell him your new password
-                include INCLUDES."sendmail_include.php";
-                addnotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
-
-                $input = [
-                    "mailname" => $this->userData['user_name'],
-                    "email"    => $this->userData['user_email'],
-                    "subject"  => str_replace("[SITENAME]", $settings['sitename'], $locale['global_456']),
-                    "message"  => str_replace(
-                        [
-                            "[SITENAME]",
-                            "[SITEUSERNAME]",
-                            "USER_NAME",
-                            "[PASSWORD]"
-                        ],
-                        [
-                            $settings['sitename'],
-                            $settings['siteusername'],
-                            $this->userData['user_name'],
-                            $this->_newUserPassword,
-                        ],
-                        $locale['global_457']
-                    )
-                ];
-
-                if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
-                    $input['message'])
-                ) {
-                    addnotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
-                }
-
-                redirect(FUSION_REQUEST);
-
-                return FALSE;
-            }
-
-            addnotice('success', $locale['u169']);
-
-            return TRUE;
-        }
-
         return FALSE;
     }
 
