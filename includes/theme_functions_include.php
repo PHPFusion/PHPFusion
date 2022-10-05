@@ -117,7 +117,7 @@ function showbenchmark($show_sql_performance = FALSE, $performance_threshold = '
         $modal .= parse_text($modal_body, [
             'parse_smileys' => FALSE,
             'descript'      => FALSE,
-            'parse_usres'   => FALSE
+            'parse_users'   => FALSE
         ]);
         $modal .= modalfooter("<h4><strong>Total Time Expended in ALL SQL Queries: ".$time." seconds</strong></h4>");
         $modal .= closemodal();
@@ -160,18 +160,17 @@ function showmemoryusage() {
  *
  * @return string
  */
-function showcopyright($class = "", $nobreak = FALSE) {
+function showcopyright($class = "", $nobreak = FALSE, $epal = FALSE) {
     $link_class = $class ? " class='$class' " : "";
 
-    $copyright = "Powered by <a href='https://phpfusion.com' ".$link_class."target='_blank'>PHPFusion</a>. Copyright &copy; ".date("Y")." PHP Fusion Inc. ";
-    $copyright .= $nobreak ? "&nbsp;" : "<br />\n";
+    $info = "Powered by <a href='https://phpfusion.com' ".$link_class."target='_blank'>PHPFusion</a>. Copyright &copy; ".date("Y")." PHP Fusion Inc. ";
+    $info .= $nobreak ? "&nbsp;" : "<br />\n";
     $license = "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.";
-
-    /*if (fusion_get_settings('license') == 'epal') {
+    if ($epal == TRUE) {
         $license = "Published without warranties under <a href='https://www.phpfusion.com/licensing/?epal' ".$link_class." target='_blank'>EPAL</a>.";
-    }*/
+    }
 
-    return $copyright.$license;
+    return $info.$license;
 }
 
 /**
@@ -257,17 +256,21 @@ if (!function_exists('get_theme_settings')) {
 
 /**
  * JavaScript that makes HTML table sortable.
+ * https://mottie.github.io/tablesorter/docs/#Getting-Started
  *
  * @param string $table_id Table ID
  *
  * @return string
  */
-function fusion_sort_table($table_id) {
-    if (!defined('TABLE_SORTER')) {
-        define('TABLE_SORTER', TRUE);
-        add_to_footer("<script type='text/javascript' src='".INCLUDES."jquery/tablesorter/jquery.tablesorter.min.js'></script>\n");
-    }
-    add_to_jquery("$('#".$table_id."').tablesorter();");
+function fusion_sort_table($table_id, $options = []) {
+
+    $default_options = [];
+    $options += $default_options;
+
+    fusion_load_script(INCLUDES.'jquery/tablesorter/theme.bootstrap_4.css', 'css');
+    fusion_load_script(INCLUDES.'jquery/tablesorter/jquery.tablesorter.js');
+
+    add_to_jquery("$('#".$table_id."').tablesorter(".json_encode($options).");");
 
     return "tablesorter";
 }
@@ -724,12 +727,13 @@ if (!function_exists('display_avatar')) {
 
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $link = $userdata['user_id'] !== 0 ? $link : FALSE;
-        $class = ($class) ? "class='$class'" : '';
 
         $hasAvatar = $userdata['user_avatar'] && file_exists(IMAGES."avatars/".$userdata['user_avatar']) && $userdata['user_status'] != '5' && $userdata['user_status'] != '6';
         $name = !empty($userdata['user_name']) ? $userdata['user_name'] : 'Guest';
 
         $imgTpl = '<img class="avatar img-responsive '.$img_class.'" alt="'.$name.'" data-pin-nopin="true" style="display:inline; width:'.$size.'; max-height:'.$size.'" src="%s">';
+        $imgTpl = '<div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar '.($class ?? '').'" data-bs-original-title="'.$userdata['user_name'].'">'.$imgTpl.'</div>';
+
         if ($hasAvatar) {
             $img = sprintf($imgTpl, IMAGES."avatars/".$userdata['user_avatar']);
         } else {
@@ -748,7 +752,7 @@ if (!function_exists('display_avatar')) {
                 }
 
                 $size_int = (int)filter_var($size, FILTER_SANITIZE_NUMBER_INT);
-                $img = '<div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.($size_int - 5).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div>';
+                $img = '<div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" class="avatar '.($class ?? '').'" data-bs-original-title="'.$userdata['user_name'].'"><div class="display-inline-block va avatar '.$img_class.'" style="width:'.$size.';max-height:'.$size.';"><svg viewBox="0 0 '.$size_int.' '.$size_int.'" preserveAspectRatio="xMidYMid meet"><rect fill="#'.$color.'" stroke-width="0" y="0" x="0" width="'.$size.'" height="'.$size.'"/><text class="m-t-5" font-size="'.(floor($size_int * .50)).'" fill="#'.$font_color.'" x="50%" y="50%" text-anchor="middle" dy="0.325em">'.$first_char.'</text></svg></div></div>';
             }
         }
 
@@ -795,7 +799,7 @@ function string_to_color_code($text) {
  *
  * @param string $hex HEX color code.
  *
- * @return float
+ * @return float|int
  */
 function get_color_brightness($hex) {
     $hex = str_replace('#', '', $hex);
@@ -916,12 +920,21 @@ if (!function_exists('timer')) {
     /**
      * Show time ago from timestamp.
      *
-     * @param int $time Timestamp or if empty it use time().
+     * @param null   $time Timestamp or if empty it use time().
+     * @param bool   $short_format
+     * @param string $add_text
      *
-     * @return string
+     * @return string|null
      */
-    function timer($time = NULL) {
+    function timer($time = NULL, bool $short_format = TRUE, string $add_text = ''): ?string {
+
         $locale = fusion_get_locale();
+        $timezone_offset = fusion_get_settings("serveroffset");
+        if (iMEMBER) {
+            $user_offset = fusion_get_userdata("user_timezone");
+            $timezone_offset = ($user_offset ?: $timezone_offset);
+        }
+
         if (!$time) {
             $time = time();
         }
@@ -934,8 +947,14 @@ if (!function_exists('timer')) {
         $day = 24 * $hour;
         $month = days_current_month() * $day;
         $year = (date("L", $time) > 0) ? 366 * $day : 365 * $day;
+
+        $time_obj = (new DateTime())->setTimestamp($time);
+        $time_obj->setTimezone(new DateTimeZone($timezone_offset));
+
         if ($calculated < 1) {
-            return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $time)."'>".$locale['just_now']."</abbr>\n";
+            //return "<span class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $time)."'>now</span>";
+            ////<time datetime="2021-10-25T07:32:08Z" title="10/25/2021 07:32  AM" data-short="3 hr">3 hours ago</time>
+            return '<time datetime="'.($time_obj->format('Y-n-j').'T'.$time_obj->format('G:i:s')).'Z">'.$locale['now'].'</time>';
         }
 
         $timer = [
@@ -947,18 +966,32 @@ if (!function_exists('timer')) {
             $second => $locale['timer_second']
         ];
 
+        if ($short_format) {
+
+            $timer = [
+                $year   => 'y',
+                $month  => 'm',
+                $day    => 'd',
+                $hour   => 'h',
+                $minute => 'min',
+                $second => 'sec',
+            ];
+        }
+
         foreach ($timer as $arr => $unit) {
             $calc = $calculated / $arr;
             if ($calc >= 1) {
                 $answer = round($calc);
                 $string = format_word($answer, $unit, ['add_count' => FALSE]);
-                $text = strtr($locale['timer'], [
-                    '[DAYS]'   => $answer." ".$string,
-                    '[AGO]'    => $locale['ago'],
-                    '[ANSWER]' => $answer,
-                    '[STRING]' => $string
-                ]);
-                return "<abbr class='atooltip' data-toggle='tooltip' data-placement='top' title='".showdate('longdate', $time)."'>".$text."</abbr>";
+                $text = strtr($locale['timer'],
+                    [
+                        '[DAYS]'   => $answer." ".$string,
+                        '[AGO]'    => $add_text,
+                        '[ANSWER]' => $answer,
+                        '[STRING]' => $string
+                    ]);
+
+                return '<time datetime="'.($time_obj->format('Y-n-j').'T'.$time_obj->format('G:i:s')).'Z">'.$text.'</time>';
             }
         }
 
@@ -1028,6 +1061,53 @@ if (!function_exists('countdown')) {
 
         return NULL;
     }
+}
+/**
+ * @param $item
+ * @param $menu_items
+ *
+ * @return false|string
+ */
+function show_dropdown(array $item, array $menu_items) {
+    $item += [
+        'class'      => 'btn-default',
+        'title'      => '',
+        "icon"       => "",
+        'menu_class' => '',
+    ];
+    // translate in utils
+    ob_start();
+    ?>
+    <div class="dropdown">
+        <button class="btn<?php echo whitespace($item['class']) ?> dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <?php if ($item["icon"]) :
+                echo get_icon($item["icon"], "fa-fw mr-1");
+            endif ?>
+            <?php echo $item['title'] ?>
+        </button>
+        <ul class="dropdown-menu<?php echo whitespace($item['menu_class']) ?>">
+            <?php $menu_items = array_filter($menu_items) ?>
+            <?php foreach ($menu_items as $c_items) : ?>
+                <?php $c_items += [
+                    'li_class'   => '',
+                    'link_class' => '',
+                    'link'       => '',
+                    'title'      => '',
+                ];
+                if ($c_items["link"] == "===" || $c_items["link"] == "---") : ?>
+                    <li class="divider"></li>
+                <?php else: ?>
+
+                    <li<?php echo whitespace($c_items['li_class'] ? 'class="'.$c_items['li_class'].'"' : '') ?>>
+                        <a class="dropdown-item<?php echo whitespace($c_items['link_class'] ?? '') ?>" href="<?php echo $c_items['link'] ?>"><?php echo $c_items['title'] ?></a>
+                    </li>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php
+    return ob_get_clean();
 }
 
 if (!function_exists('opencollapse')
@@ -1362,7 +1442,6 @@ if (!function_exists('tab_active')
         return $tab[$id];
     }
 
-
     /**
      * Current active tab selector.
      *
@@ -1477,17 +1556,21 @@ if (!function_exists('display_ratings')) {
      */
     function display_ratings($total_sum, $total_votes, $link = NULL, $class = NULL, $mode = 1) {
         $locale = fusion_get_locale();
-        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."'>" : '';
+
+        // @todo: expand display ratings
+        // add in -  <meta itemprop="worstRating" content = "1"/>
+        // add in - <span itemprop="bestRating">5</span>
+        $start_link = $link ? "<a itemprop='url' class='comments-item ".$class."' href='".$link."'>" : '';
         $end_link = $link ? "</a>\n" : '';
         $average = $total_votes > 0 ? number_format($total_sum / $total_votes, 2) : 0;
-        $str = $mode == 1 ? $average.$locale['global_094'].format_word($total_votes, $locale['fmt_rating']) : "$average/$total_votes";
+        $str = $mode == 1 ? "<span itemprop='ratingValue'>".$average."</span>".$locale['global_094']."<span itemprop='reviewCount'>".format_word($total_votes, $locale['fmt_rating'])."</span>" : "$average/$total_votes";
         if ($total_votes > 0) {
             $answer = $start_link."<i title='".$locale['ratings']."' class='fa fa-star-o m-l-0'></i>".$str.$end_link;
         } else {
             $answer = $start_link."<i title='".sprintf($locale['global_089a'], $locale['global_077'])."' class='fa fa-star-o high-opacity m-l-0'></i> ".$str.$end_link;
         }
 
-        return $answer;
+        return "<span itemprop='aggregateRating' itemscope itemtype='https://schema.org/AggregateRating'>".$answer."</span>";
     }
 }
 
@@ -1504,16 +1587,18 @@ if (!function_exists('display_comments')) {
      */
     function display_comments($total_sum, $link = NULL, $class = NULL, $mode = 1) {
         $locale = fusion_get_locale();
-        $start_link = $link ? "<a class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
+        $start_link = $link ? "<a itemprop='url' class='comments-item ".$class."' href='".$link."' {%title%} >" : '';
         $end_link = $link ? "</a>\n" : '';
-        $str = $mode == 1 ? format_word($total_sum, $locale['fmt_comment']) : $total_sum;
+        $str = "<span itemprop='commentCount'>\n";
+        $str .= $mode == 1 ? format_word($total_sum, $locale['fmt_comment']) : $total_sum;
+        $str .= "</span>\n";
         if ($total_sum > 0) {
             $start_link = strtr($start_link, ['{%title%}' => "title='".$locale['global_073']."'"]);
         } else {
             $start_link = strtr($start_link, ['{%title%}' => "title='".sprintf($locale['global_089'], $locale['global_077'])."'"]);
         }
 
-        return $start_link.$str.$end_link;
+        return "<span itemscope itemtype='https://schema.org/Comment'>\n".$start_link.$str.$end_link."</span>\n";
     }
 }
 
@@ -1740,7 +1825,7 @@ if (!function_exists('render_user_tags')) {
  * @return string
  */
 function fusion_theme_framework() {
-    $level = ['BOOTSTRAP6', 'BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
+    $level = ['BOOTSTRAP5', 'BOOTSTRAP4', 'BOOTSTRAP'];
     foreach ($level as $framework) {
         if (defined($framework)) {
             return $framework;
