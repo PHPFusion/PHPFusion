@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Installer\Lib;
 
+use PHPFusion\Installer\InstallCore;
+
 class CoreSettings {
     /**
      * @param string $table_name
@@ -35,498 +37,138 @@ class CoreSettings {
 
         $table_settings['settings'] = [
             'insert' => [
-                [
-                    'settings_name'  => 'sitename',
-                    'settings_value' => $locale['setup_1215'],
-                ],
-                [
-                    'settings_name'  => 'siteurl',
-                    'settings_value' => $siteurl
-                ],
-                [
-                    'settings_name'  => 'site_protocol',
-                    'settings_value' => $url['scheme']
-                ],
-                [
-                    'settings_name'  => 'site_host',
-                    'settings_value' => $url['host'],
-                ],
-                [
-                    'settings_name'  => 'site_port',
-                    'settings_value' => (isset($url['port']) ? $url['port'] : ''),
-                ],
-                [
-                    'settings_name'  => 'site_path',
-                    'settings_value' => (isset($url['path']) ? $url['path'] : ''),
-                ],
-                [
-                    'settings_name'  => 'site_seo',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'domain_server',
-                    'settings_value' => '',
-                ],
-                [
-                    'settings_name'  => 'sitebanner',
-                    'settings_value' => 'images/phpfusion-logo-d.svg'
-                ],
-                [
-                    'settings_name'  => 'sitebanner1',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'sitebanner2',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'siteemail',
-                    'settings_value' => ''
-                ],//fill in
-                [
-                    'settings_name'  => 'siteusername',
-                    'settings_value' => ''
-                ],// fill in
-                [
-                    'settings_name'  => 'siteintro',
-                    'settings_value' => "<div style=\'text-align:center\'>".$locale['setup_3650']."</div>"
-                ],
-                [
-                    'settings_name'  => 'description',
-                    'settings_value' => $locale['setup_1216']
-                ],
-                [
-                    'settings_name'  => 'keywords',
-                    'settings_value' => 'PHPFusion, CMS, Hosting, Domain, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'
-                ],
-                [
-                    'settings_name'  => 'footer',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'opening_page',
-                    'settings_value' => 'index.php'
-                ],
-                [
-                    'settings_name'  => 'locale',
-                    'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
-                ],
-                [
-                    'settings_name'  => 'enabled_languages',
-                    'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
-                ],
-                [
-                    'settings_name'  => 'theme',
-                    'settings_value' => 'Magazine'
-                ],
-                [
-                    'settings_name'  => 'admin_theme',
-                    'settings_value' => 'AdminLTE'
-                ],
-                [
-                    'settings_name'  => 'default_search',
-                    'settings_value' => 'all'
-                ],
-                [
-                    'settings_name'  => 'exclude_left',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_upper',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_lower',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_aupper',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_blower',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_right',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_user1',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_user2',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_user3',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'exclude_user4',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'shortdate',
-                    'settings_value' => '%d.%m.%y',
-                ],
-                [
-                    'settings_name'  => 'longdate',
-                    'settings_value' => '%B %d %Y %H:%M:%S',
-                ],
-                [
-                    'settings_name'  => 'forumdate',
-                    'settings_value' => '%d-%m-%Y %H:%M',
-                ],
-                [
-                    'settings_name'  => 'newsdate',
-                    'settings_value' => '%B %d %Y'
-                ],
-                [
-                    'settings_name'  => 'timeoffset',
-                    'settings_value' => 'Europe/London'
-                ],
-                [
-                    'settings_name'  => 'week_start',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'enable_registration',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'email_verification',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'admin_activation',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'display_validation',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'enable_deactivation',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'deactivation_period',
-                    'settings_value' => 365
-                ],
-                [
-                    'settings_name'  => 'deactivation_response',
-                    'settings_value' => 14
-                ],
-                [
-                    'settings_name'  => 'enable_terms',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'license_agreement',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'license_lastupdate',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'thumb_compression',
-                    'settings_value' => 'gd2'
-                ],
-                [
-                    'settings_name'  => 'tinymce_enabled',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'smtp_host',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'smtp_port',
-                    'settings_value' => 25
-                ],
-                [
-                    'settings_name'  => 'smtp_username',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'smtp_password',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'bad_words_enabled',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'bad_words',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'bad_word_replace',
-                    'settings_value' => '****'
-                ],
-                [
-                    'settings_name'  => 'login_method',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'guestposts',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'comments_enabled',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'ratings_enabled',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'hide_userprofiles',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'userthemes',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'flood_interval',
-                    'settings_value' => 15
-                ],
-                [
-                    'settings_name'  => 'counter',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'version',
-                    'settings_value' => \PHPFusion\Installer\InstallCore::BUILD_VERSION
-                ],
-                [
-                    'settings_name'  => 'maintenance',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'maintenance_message',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'links_per_page',
-                    'settings_value' => 8
-                ],
-                [
-                    'settings_name'  => 'links_grouping',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'link_grouping',
-                    'settings_value' => 8
-                ],
-                [
-                    'settings_name'  => 'link_bbcode',
-                    'settings_value' => '0',
-                ],
-                [
-                    'settings_name'  => 'comments_per_page',
-                    'settings_value' => 10
-                ],
-                [
-                    'settings_name'  => 'comments_sorting',
-                    'settings_value' => 'ASC'
-                ],
-                [
-                    'settings_name'  => 'comments_avatar',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'avatar_width',
-                    'settings_value' => 500
-                ],
-                [
-                    'settings_name'  => 'avatar_height',
-                    'settings_value' => 500
-                ],
-                [
-                    'settings_name'  => 'avatar_filesize',
-                    'settings_value' => 1048576
-                ],
-                [
-                    'settings_name'  => 'avatar_ratio',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'cronjob_day',
-                    'settings_value' => time()
-                ],
-                [
-                    'settings_name'  => 'cronjob_hour',
-                    'settings_value' => time()
-                ],
-                [
-                    'settings_name'  => 'flood_autoban',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'visitorcounter_enabled',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'rendertime_enabled',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'maintenance_level',
-                    'settings_value' => USER_LEVEL_ADMIN
-                ],
-                [
-                    'settings_name'  => 'deactivation_action',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'captcha',
-                    'settings_value' => 'securimage3'
-                ],
-                [
-                    'settings_name'  => 'password_algorithm',
-                    'settings_value' => 'sha256'
-                ],
-                [
-                    'settings_name'  => 'username_change',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'recaptcha_public',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'recaptcha_private',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'recaptcha_theme',
-                    'settings_value' => 'light'
-                ],
-                [
-                    'settings_name'  => 'recaptcha_type',
-                    'settings_value' => 'text'
-                ],
-                [
-                    'settings_name'  => 'recaptcha_score',
-                    'settings_value' => '0.5'
-                ],
-                [
-                    'settings_name'  => 'multiple_logins',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'smtp_auth',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'mime_check',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'normalize_seo',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'debug_seo',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'privacy_policy',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'create_og_tags',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'index_url_bbcode',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'index_url_userweb',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'pm_inbox_limit',
-                    'settings_value' => 20
-                ],
-                [
-                    'settings_name'  => 'pm_outbox_limit',
-                    'settings_value' => 20
-                ],
-                [
-                    'settings_name'  => 'pm_archive_limit',
-                    'settings_value' => 20
-                ],
-                [
-                    'settings_name'  => 'pm_email_notify',
-                    'settings_value' => 2
-                ],
-                [
-                    'settings_name'  => 'pm_save_sent',
-                    'settings_value' => 2
-                ],
-                [
-                    'settings_name'  => 'username_ban',
-                    'settings_value' => ''
-                ],
-                [
-                    'settings_name'  => 'database_sessions',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'form_tokens',
-                    'settings_value' => 5
-                ],
-                [
-                    'settings_name'  => 'gateway',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'gateway_method',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'devmode',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'update_checker',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'update_last_checked',
-                    'settings_value' => time()
-                ],
-                [
-                    'settings_name'  => 'number_delimiter',
-                    'settings_value' => '.'
-                ],
-                [
-                    'settings_name'  => 'thousands_separator',
-                    'settings_value' => ','
-                ],
-                [
-                    'settings_name'  => 'error_logging_enabled',
-                    'settings_value' => 1
-                ],
-                [
-                    'settings_name'  => 'error_logging_method',
-                    'settings_value' => 'database'
-                ],
-                [
-                    'settings_name'  => 'license',
-                    'settings_value' => 'agpl'
-                ],
-                [
-                    'settings_name'  => 'blaclist_site',
-                    'settings_value' => 'http://www.google.com/'
-                ],
+                ['settings_name' => 'sitename', 'settings_value' => $locale['setup_1215'],],
+                ['settings_name' => 'siteurl', 'settings_value' => $siteurl],
+                ['settings_name' => 'site_protocol', 'settings_value' => $url['scheme']],
+                ['settings_name' => 'site_host', 'settings_value' => $url['host'],],
+                ['settings_name' => 'site_port', 'settings_value' => ($url['port'] ?? ''),],
+                ['settings_name' => 'site_path', 'settings_value' => ($url['path'] ?? ''),],
+                ['settings_name' => 'site_seo', 'settings_value' => 0],
+                ['settings_name' => 'domain_server', 'settings_value' => '',],
+                ['settings_name' => 'sitebanner', 'settings_value' => 'images/phpfusion-logo-d.svg'],
+                ['settings_name' => 'sitebanner1', 'settings_value' => ''],
+                ['settings_name' => 'sitebanner2', 'settings_value' => ''],
+                ['settings_name' => 'siteemail', 'settings_value' => ''],//fill in
+                ['settings_name' => 'siteusername', 'settings_value' => ''],// fill in
+                ['settings_name' => 'siteintro', 'settings_value' => "<div style=\'text-align:center\'>".$locale['setup_3650']."</div>"],
+                ['settings_name' => 'description', 'settings_value' => $locale['setup_1216']],
+                ['settings_name' => 'keywords', 'settings_value' => 'PHPFusion, CMS, Community, Hosting, Domain, Portal, Open Source, AGPL, PHP, MySQL, HTML, CSS, JS'],
+                ['settings_name' => 'footer', 'settings_value' => ''],
+                ['settings_name' => 'opening_page', 'settings_value' => 'index.php'],
+                ['settings_name' => 'locale', 'settings_value' => $_GET['localeset'] ?? 'English'],
+                ['settings_name' => 'enabled_languages', 'settings_value' => $_GET['localeset'] ?? 'English'],
+                ['settings_name' => 'theme', 'settings_value' => 'Magazine'],
+                ['settings_name' => 'admin_theme', 'settings_value' => 'AdminLTE'],
+                ['settings_name' => 'default_search', 'settings_value' => 'all'],
+                ['settings_name' => 'exclude_left', 'settings_value' => ''],
+                ['settings_name' => 'exclude_upper', 'settings_value' => ''],
+                ['settings_name' => 'exclude_lower', 'settings_value' => ''],
+                ['settings_name' => 'exclude_aupper', 'settings_value' => ''],
+                ['settings_name' => 'exclude_blower', 'settings_value' => ''],
+                ['settings_name' => 'exclude_right', 'settings_value' => ''],
+                ['settings_name' => 'exclude_user1', 'settings_value' => ''],
+                ['settings_name' => 'exclude_user2', 'settings_value' => ''],
+                ['settings_name' => 'exclude_user3', 'settings_value' => ''],
+                ['settings_name' => 'exclude_user4', 'settings_value' => ''],
+                ['settings_name' => 'shortdate', 'settings_value' => '%d.%m.%y',],
+                ['settings_name' => 'longdate', 'settings_value' => '%B %d %Y %H:%M:%S',],
+                ['settings_name' => 'forumdate', 'settings_value' => '%d-%m-%Y %H:%M',],
+                ['settings_name' => 'newsdate', 'settings_value' => '%B %d %Y'],
+                ['settings_name' => 'timeoffset', 'settings_value' => 'Europe/London'],
+                ['settings_name' => 'week_start', 'settings_value' => 0],
+                ['settings_name' => 'enable_registration', 'settings_value' => 1],
+                ['settings_name' => 'email_verification', 'settings_value' => 1],
+                ['settings_name' => 'admin_activation', 'settings_value' => 0],
+                ['settings_name' => 'display_validation', 'settings_value' => 0],
+                ['settings_name' => 'enable_deactivation', 'settings_value' => 0],
+                ['settings_name' => 'deactivation_period', 'settings_value' => 365],
+                ['settings_name' => 'deactivation_response', 'settings_value' => 14],
+                ['settings_name' => 'enable_terms', 'settings_value' => 0],
+                ['settings_name' => 'license_agreement', 'settings_value' => ''],
+                ['settings_name' => 'license_lastupdate', 'settings_value' => 0],
+                ['settings_name' => 'thumb_compression', 'settings_value' => 'gd2'],
+                ['settings_name' => 'tinymce_enabled', 'settings_value' => 0],
+                ['settings_name' => 'smtp_host', 'settings_value' => ''],
+                ['settings_name' => 'smtp_port', 'settings_value' => 25],
+                ['settings_name' => 'smtp_username', 'settings_value' => ''],
+                ['settings_name' => 'smtp_password', 'settings_value' => ''],
+                ['settings_name' => 'bad_words_enabled', 'settings_value' => 1],
+                ['settings_name' => 'bad_words', 'settings_value' => ''],
+                ['settings_name' => 'bad_word_replace', 'settings_value' => '****'],
+                ['settings_name' => 'login_method', 'settings_value' => 0],
+                ['settings_name' => 'guestposts', 'settings_value' => 0],
+                ['settings_name' => 'comments_enabled', 'settings_value' => 1],
+                ['settings_name' => 'ratings_enabled', 'settings_value' => 1],
+                ['settings_name' => 'hide_userprofiles', 'settings_value' => 0],
+                ['settings_name' => 'userthemes', 'settings_value' => 0],
+                ['settings_name' => 'flood_interval', 'settings_value' => 15],
+                ['settings_name' => 'counter', 'settings_value' => 0],
+                ['settings_name' => 'version', 'settings_value' => InstallCore::BUILD_VERSION],
+                ['settings_name' => 'maintenance', 'settings_value' => 0],
+                ['settings_name' => 'maintenance_message', 'settings_value' => ''],
+                ['settings_name' => 'links_per_page', 'settings_value' => 8],
+                ['settings_name' => 'links_grouping', 'settings_value' => 0],
+                ['settings_name' => 'link_grouping', 'settings_value' => 8],
+                ['settings_name' => 'link_bbcode', 'settings_value' => '0',],
+                ['settings_name' => 'comments_per_page', 'settings_value' => 10],
+                ['settings_name' => 'comments_sorting', 'settings_value' => 'ASC'],
+                ['settings_name' => 'comments_avatar', 'settings_value' => 1],
+                ['settings_name' => 'avatar_width', 'settings_value' => 500],
+                ['settings_name' => 'avatar_height', 'settings_value' => 500],
+                ['settings_name' => 'avatar_filesize', 'settings_value' => 1048576],
+                ['settings_name' => 'avatar_ratio', 'settings_value' => 0],
+                ['settings_name' => 'cronjob_day', 'settings_value' => time()],
+                ['settings_name' => 'cronjob_hour', 'settings_value' => time()],
+                ['settings_name' => 'flood_autoban', 'settings_value' => 1],
+                ['settings_name' => 'visitorcounter_enabled', 'settings_value' => 1],
+                ['settings_name' => 'rendertime_enabled', 'settings_value' => 0],
+                ['settings_name' => 'maintenance_level', 'settings_value' => USER_LEVEL_ADMIN],
+                ['settings_name' => 'deactivation_action', 'settings_value' => 0],
+                ['settings_name' => 'captcha', 'settings_value' => 'securimage3'],
+                ['settings_name' => 'password_algorithm', 'settings_value' => 'sha256'],
+                ['settings_name' => 'username_change', 'settings_value' => 1],
+                ['settings_name' => 'recaptcha_public', 'settings_value' => ''],
+                ['settings_name' => 'recaptcha_private', 'settings_value' => ''],
+                ['settings_name' => 'recaptcha_theme', 'settings_value' => 'light'],
+                ['settings_name' => 'recaptcha_type', 'settings_value' => 'text'],
+                ['settings_name' => 'recaptcha_score', 'settings_value' => '0.5'],
+                ['settings_name' => 'multiple_logins', 'settings_value' => 0],
+                ['settings_name' => 'smtp_auth', 'settings_value' => 0],
+                ['settings_name' => 'mime_check', 'settings_value' => 1],
+                ['settings_name' => 'normalize_seo', 'settings_value' => 0],
+                ['settings_name' => 'debug_seo', 'settings_value' => 0],
+                ['settings_name' => 'privacy_policy', 'settings_value' => ''],
+                ['settings_name' => 'create_og_tags', 'settings_value' => 1],
+                ['settings_name' => 'index_url_bbcode', 'settings_value' => 1],
+                ['settings_name' => 'index_url_userweb', 'settings_value' => 1],
+                ['settings_name' => 'pm_inbox_limit', 'settings_value' => 20],
+                ['settings_name' => 'pm_outbox_limit', 'settings_value' => 20],
+                ['settings_name' => 'pm_archive_limit', 'settings_value' => 20],
+                ['settings_name' => 'pm_email_notify', 'settings_value' => 2],
+                ['settings_name' => 'pm_save_sent', 'settings_value' => 2],
+                ['settings_name' => 'username_ban', 'settings_value' => ''],
+                ['settings_name' => 'database_sessions', 'settings_value' => 0],
+                ['settings_name' => 'form_tokens', 'settings_value' => 5],
+                ['settings_name' => 'gateway', 'settings_value' => 1],
+                ['settings_name' => 'gateway_method', 'settings_value' => 1],
+                ['settings_name' => 'devmode', 'settings_value' => 0],
+                ['settings_name' => 'update_checker', 'settings_value' => 1],
+                ['settings_name' => 'update_last_checked', 'settings_value' => time()],
+                ['settings_name' => 'number_delimiter', 'settings_value' => '.'],
+                ['settings_name' => 'thousands_separator', 'settings_value' => ','],
+                ['settings_name' => 'error_logging_enabled', 'settings_value' => 1],
+                ['settings_name' => 'error_logging_method', 'settings_value' => 'database'],
+                ['settings_name' => 'auth_login_enabled', 'settings_value' => '1'],
+                ['settings_name' => 'auth_login_expiry', 'settings_value' => '300'],
+                ['settings_name' => 'auth_login_length', 'settings_value' => '6'],
+                ['settings_name' => 'auth_login_attempts', 'settings_value' => '3'],
+                ['settings_name' => 'privacy_lastupdate', 'settings_value' => '0'],
+                ['settings_name' => 'login_session_expiry', 'settings_value' => '43200'],
+                ['settings_name' => 'login_session_ext_expiry', 'settings_value' => '86400'],
+                ['settings_name' => 'admin_session_expiry', 'settings_value' => '43200'],
+                ['settings_name' => 'admin_session_ext_expiry', 'settings_value' => '86400'],
+                ['settings_name' => 'license', 'settings_value' => 'agpl'],
+                ['settings_name' => 'license_key', 'settings_value' => ''],
             ]
         ];
         $table_settings['mlt_tables'] = [
@@ -1249,10 +891,138 @@ class CoreSettings {
                     'template_sender_name'  => '',
                     'template_sender_email' => '',
                     'template_language'     => $localeset
-                ]
+                ],
+                [
+                    'template_key'          => 'L_2FA', // login group-2fa
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_2fa_name'],
+                    'template_subject'      => $locale['email_2fa_subject'],
+                    'template_content'      => $locale['email_2fa_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Created by admin
+                [
+                    'template_key'          => 'U_CREATE',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_create_name'],
+                    'template_subject'      => $locale['email_create_subject'],
+                    'template_content'      => $locale['email_create_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // User registration verification
+                [
+                    'template_key'          => 'U_VERIFY',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_verify_name'],
+                    'template_subject'      => $locale['email_verify_subject'],
+                    'template_content'      => $locale['email_verify_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Confirmation account activated by user - post verification
+                [
+                    'template_key'          => 'U_ACTIVE',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_activate_name'],
+                    'template_subject'      => $locale['email_activate_subject'],
+                    'template_content'      => $locale['email_activate_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Recover password email notification
+                [
+                    'template_key'          => 'U_LOSTP',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_pass_name'],
+                    'template_subject'      => $locale['email_pass_subject'],
+                    'template_content'      => $locale['email_pass_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Send password email notification
+                [
+                    'template_key'          => 'U_SENDP',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_pass_name'],
+                    'template_subject'      => $locale['email_pass_subject'],
+                    'template_content'      => $locale['email_pass_notify'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Email change request confirmation
+                [
+                    'template_key'          => 'U_EMAIL',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_change_name'],
+                    'template_subject'      => $locale['email_change_subject'],
+                    'template_content'      => $locale['email_change_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                // Password change request confirmation
+                [
+                    'template_key'          => 'U_PASS',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_passchange_name'],
+                    'template_subject'      => $locale['email_passchange_subject'],
+                    'template_content'      => $locale['email_passchange_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                [
+                    'template_key'          => 'U_SECBAN',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_secban_name'],
+                    'template_subject'      => $locale['email_secban_subject'],
+                    'template_content'      => $locale['email_secban_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                [
+                    'template_key'          => 'U_REACTIVATED',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_reactivated_name'],
+                    'template_subject'      => $locale['email_reactivated_subject'],
+                    'template_content'      => $locale['email_reactivated_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
+                [
+                    'template_key'          => 'U_UNSUSPEND',
+                    'template_format'       => 'html',
+                    'template_active'       => '0',
+                    'template_name'         => $locale['email_unsuspend_name'],
+                    'template_subject'      => $locale['email_unsuspend_subject'],
+                    'template_content'      => $locale['email_unsuspend_message'],
+                    'template_sender_name'  => '',
+                    'template_sender_email' => '',
+                    'template_language'     => $localeset
+                ],
             ]
         ];
 
-        return isset($table_settings[$table_name]) ? $table_settings[$table_name] : NULL;
+        return $table_settings[$table_name] ?? NULL;
     }
 }

@@ -687,7 +687,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 20,
                 'default' => ''
-            ], //template_key VARCHAR(10) NOT NULL,
+            ], //template_key VARCHAR(20) NOT NULL,
             'template_format'       => [
                 'type'    => 'VARCHAR',
                 'length'  => 10,
@@ -1336,7 +1336,13 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ] //group_icon VARCHAR(100) NOT NULL,
+            ],
+            'group_user_count'  => [
+                'type'     => 'MEDIUMINT',
+                'length'   => 11,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ],
         ];
         $table_package['user_log'] = [
             'userlog_id'        => [
@@ -1529,6 +1535,23 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 170,
                 'default' => ''
+            ],
+            'user_2fa'             => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => 0,
+            ],
+            'user_2fa_pin'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 10,
+                'default' => "",
+            ],
+            'user_2fa_actiontime'  => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => 0,
             ],
             'user_theme'           => [
                 'type'    => 'VARCHAR',
