@@ -1185,7 +1185,7 @@ if (!function_exists('tab_active')
         private $cookie_prefix = 'tab_js';
         private $cookie_name = '';
         private $link_mode = FALSE;
-        private $wrapper;
+        private $wrapper = TRUE;
 
         /**
          * Current active tab selector.
@@ -1288,7 +1288,7 @@ if (!function_exists('tab_active')
          *
          * @return string
          */
-        public function openTab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_get = []) {
+        public function openTabx($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_get = []) {
             $this->cookie_name = $this->cookie_prefix.'-'.$id;
             $this->link_mode = $link;
 
@@ -1355,6 +1355,152 @@ if (!function_exists('tab_active')
             return $html;
         }
 
+
+        /**
+         * Render tab links.
+         *
+         * @param array  $tab_title          Multidimension array consisting of keys title, id, icon.
+         * @param string $link_active_arrkey tab_active() function or the $_GET request to match the $tabs['id'].
+         * @param string $id                 Unique ID.
+         * @param bool   $link               False for jquery, true for php (will reload page).
+         * @param string $class              CSS class for the nav.
+         * @param string $getname            Set getname and turn tabs into the link that listens to getname.
+         * @param array  $cleanup_get        The request key that needs to be deleted.
+         *
+         * Example:
+         * $tabs['title'][] = "Tab 1";
+         * $tabs['id'][] = "tab1";
+         * $tabs['title'][] = "Tab 2";
+         * $tabs['id'][] = "tab2";
+         * $tab_active = tab_active($tabs, 0);
+         *
+         * Jquery:
+         * echo opentab($tabs, $tab_active, 'myTab', FALSE, 'nav-pills', 'ref', ['action', 'subaction']);
+         *
+         * PHP:
+         * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['action', 'subaction']);
+         * echo opentab($tabs, $_GET['ref'], 'myTab', TRUE, 'nav-pills', 'ref', ['*']); // clear all
+         *
+         * @return string
+         */
+        public function openTab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = 'section', array $cleanup_get = []) {
+            $this->cookie_name = $this->cookie_prefix.'-'.$id;
+            $this->link_mode = $link;
+
+            $getArray = [$getname];
+            if (!empty($cleanup_get)) {
+                $getArray = array_merge_recursive($cleanup_get, $getArray);
+            }
+
+            if (empty($link) && $this->remember) {
+                if (isset($_COOKIE[$this->cookie_name])) {
+                    $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
+                }
+            }
+
+            $info = [
+                'part'      => 'header',
+                'id'        => $id,
+                'class'     => (!empty($class) ? $class : 'nav-tabs'),
+                'link_mode' => $link,
+                'wrapper'   => $this->wrapper,
+            ];
+
+            foreach ($tab_title['title'] as $arr => $v) {
+
+                $info['tab'][$arr] = [
+                    'id'       => $tab_title['id'][$arr],
+                    'title'    => $v,
+                    'icon'     => (isset($tab_title['icon'][$arr]) ? get_icon($tab_title['icon'][$arr]) : ""),
+                    'url'      => '#',
+                    'active'   => FALSE,
+                    'dropdown' => (isset($tab_title["dropdown"][$arr])) ? array_filter($tab_title["dropdown"][$arr]) : [], // item array must contain 'link', 'title' key,
+                ];
+
+                $v_title = $v;
+                $tab_id = $tab_title['id'][$arr];
+                $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
+                $link_url = '#';
+
+                if ($link) {
+
+                    $info["tab"][$arr]["active"] = ($link_active_arrkey == $tab_id);
+
+                    if (isset($tab_title["link"][$arr])) { // new link array key
+
+                        $link_url = $tab_title["link"][$arr];
+                        $info["tab"][$arr]["active"] = $tab_title["active"][$arr] ?? $info["tab"][$arr]["active"];
+
+                    } else {
+
+                        $link_url = $link.(stristr($link, '?') ? '&' : '?').$getname."=".$tab_id; // keep all request except GET array
+
+                        $keep_filtered = FALSE;
+                        if (in_array("*", $cleanup_get)) {
+                            $getArray = [];
+                            $keep_filtered = TRUE;
+                        }
+
+                        $link_url = clean_request($getname.'='.$tab_id.(check_get('aid') ? "&aid=".get('aid') : ""), $getArray, $keep_filtered);
+
+                        // check with id and set active.
+                        $info["tab"][$arr]["active"] = ($link_active_arrkey == $tab_id);
+                    }
+
+                    $info["tab"][$arr]["link"] = $link_url;
+
+                } else {
+                    $info["tab"][$arr]["active"] = $link_active_arrkey == $tab_id;
+                }
+            }
+
+            if ($link === FALSE) {
+                // Fix when the tab is in link_mode but is placed within <form>
+                add_to_jquery("
+                $('#".$id." > li > button').on('click', function(e) {e.preventDefault();});
+                ");
+            }
+
+            if (empty($link) && $this->remember) {
+
+                fusion_load_script(INCLUDES.'jscripts/js.cookie.js');
+
+                if (defined("BOOTSTRAP5")) {
+                    add_to_jquery("
+                    let ".$id."tabEvent = function() {
+                        $('#".$id." > li').on('click', function(e) {
+                            e.preventDefault();
+                            var cookieName = '".$this->cookie_name."';
+                            var cookieValue = $(this).find(\"button[role='tab']\").attr('id');
+                            Cookies.set(cookieName, cookieValue);
+                            $(this).closest('.nav').find('button').removeClass('active'); 
+                            $(this).find('button').addClass('active');
+                        });
+                        var cookieName = 'tab_js-".$id."';                    
+                        if (Cookies.get(cookieName)) {
+                            $('#".$id."').find('#'+Cookies.get(cookieName)).click();
+                        }                    
+                    };
+                    ".$id."tabEvent();
+                    ");
+                } else if (defined("BOOTSTRAP")) {
+                    add_to_jquery("
+                    $('#".$id." > li').on('click', function() {
+                        var cookieName = '".$this->cookie_name."';
+                        var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
+                        Cookies.set(cookieName, cookieValue);                    
+                    });
+                    var cookieName = 'tab_js-".$id."';
+                    if (Cookies.get(cookieName)) {
+                        $('#".$id."').find('#'+Cookies.get(cookieName)).click();
+                    }
+                    ");
+                }
+            }
+
+            return fusion_render(TEMPLATES.'html/utils/', 'tabs.twig', $info, TRUE);
+        }
+
         /**
          * Creates tab body.
          *
@@ -1365,26 +1511,19 @@ if (!function_exists('tab_active')
          * @return string
          */
         public function openTabBody($id, $link_active_arrkey = NULL, $key = 'section') {
-            $bootstrap = defined('BOOTSTRAP4') ? ' show' : '';
-
-            if (isset($_GET[$key]) && $this->link_mode) {
-                if ($link_active_arrkey == $id) {
-                    $status = 'in active'.$bootstrap;
-                } else {
-                    $status = '';
-                }
-            } else {
-                if (!$this->link_mode) {
-                    if ($this->remember) {
-                        if (isset($_COOKIE[$this->cookie_name])) {
-                            $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
-                        }
+            if (!$this->link_mode) {
+                if ($this->remember) {
+                    if (isset($_COOKIE[$this->cookie_name])) {
+                        $link_active_arrkey = str_replace('tab-', '', $_COOKIE[$this->cookie_name]);
                     }
                 }
-                $status = ($link_active_arrkey == $id ? " in active".$bootstrap : '');
-
             }
-            return "<div class='tab-pane fade".$status."' id='".$id."'>\n";
+
+            return fusion_render(TEMPLATES.'html/utils/', 'tabs.twig', [
+                'id'     => $id,
+                'part'   => 'openbody',
+                'active' => ($link_active_arrkey == $id)
+            ], TRUE);
         }
 
         /**
@@ -1393,7 +1532,9 @@ if (!function_exists('tab_active')
          * @return string
          */
         public function closeTabBody() {
-            return "</div>\n";
+            return fusion_render(TEMPLATES.'html/utils/', 'tabs.twig', [
+                'part' => 'closebody',
+            ], TRUE);
         }
 
         /**
@@ -1405,25 +1546,21 @@ if (!function_exists('tab_active')
          */
         public function closeTab($options = []) {
             $locale = fusion_get_locale();
-            $default_options = [
+            $options += [
                 "tab_nav" => FALSE,
+                "wrapper" => $this->wrapper,
             ];
-            $options += $default_options;
+
             if ($options['tab_nav'] == TRUE) {
-                $nextBtn = "<a class='btn btn-warning btnNext pull-right' >".$locale['next']."</a>";
-                $prevBtn = "<a class='btn btn-warning btnPrevious m-r-10'>".$locale['previous']."</a>";
-                OutputHandler::addToJQuery("
-                $('.btnNext').click(function(){
-                  $('.nav-tabs > .active').next('li').find('a').trigger('click');
-                });
-                $('.btnPrevious').click(function(){
-                  $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-                });
-            ");
-                echo "<div class='clearfix'>\n".$prevBtn.$nextBtn."</div>\n";
+                add_to_jquery("
+                $('.btnNext').click(function(){ $('.nav-tabs > .active').next('li').find('a').trigger('click'); });
+                $('.btnPrevious').click(function(){ $('.nav-tabs > .active').prev('li').find('a').trigger('click'); });
+                ");
             }
 
-            return "</div>\n</div>\n";
+            return fusion_render(TEMPLATES.'html/utils/', 'tabs.twig', [
+                    'part' => 'footer',
+                ] + $options, TRUE);
         }
     }
 
