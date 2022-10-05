@@ -3417,12 +3417,14 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 }
 
 #main-menu .navbar-brand {
-    padding: 5px;
+    display: flex;
     height: 80px;
+    padding: 0 3rem;
 }
 
 #main-menu .navbar-brand > img {
-    height: 70px;
+    height: 58px;
+    align-self: center;
 }
 
 #main-menu .navbar-toggle {
