@@ -660,7 +660,7 @@ function cache_smileys() {
  */
 function parsesmileys($message) {
 
-    if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
+    if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php])#si", $message)) {
         foreach (cache_smileys() as $smiley) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
             $smiley_image = get_image("smiley_".$smiley['smiley_text']);
@@ -705,7 +705,7 @@ function displaysmileys($textarea, $form = "inputform") {
  * @return string Tooltip with info.
  */
 function fusion_parse_user($user_name, $tooltip = '') {
-    return preg_replace_callback("/\@([A-Za-z0-9\-_!\.]+)/", function ($user_name) use ($tooltip) {
+    return preg_replace_callback("/@([A-Za-z0-9\-_!.]+)/", function ($user_name) use ($tooltip) {
         $user = $user_name[1];
         $result = dbquery("SELECT *
             FROM ".DB_USERS."
@@ -888,7 +888,7 @@ function parseubb($text, $selected = "", $descript = TRUE) {
  */
 function hide_email($email, $title = "", $subject = "") {
 
-    if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
+    if (preg_match("/^[-0-9A-Z_.]{1,50}@([-0-9A-Z_.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
         $enc_email = '';
         $parts = explode("@", $email);
         $email = $parts[0].'@'.$parts[1];
@@ -1207,12 +1207,13 @@ function verify_image($file) {
  * @return string Censored text.
  */
 function censorwords($text) {
-
     $settings = fusion_get_settings();
 
     if ($settings['bad_words_enabled'] && !empty($settings['bad_words'])) {
-        $words = preg_quote(trim($settings['bad_words']), "/");
-        $words = preg_replace("/\\s+/", "|", $words);
+        //$words = preg_quote(trim($settings['bad_words']), "/");
+        //$words = preg_replace("/\\s+/", "|", $words);
+        $words = str_replace("\r", "", $settings["bad_words"]);
+        $words = str_replace("\n", "|", $words);
         $text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
     }
 
@@ -1397,13 +1398,12 @@ function checkusergroup($group, $user_level, $user_groups, $delim = ',') {
  * @return array Array of all user groups.
  */
 function cache_groups() {
-
     static $groups_cache = NULL;
     if ($groups_cache === NULL) {
         $groups_cache = [];
         $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id");
         while ($data = dbarray($result)) {
-            $groups_cache[] = $data;
+            $groups_cache[$data["group_id"]] = $data;
         }
     }
 
@@ -1427,7 +1427,8 @@ function getusergroups() {
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
         $group_icon = !empty($group['group_icon']) ? $group['group_icon'] : '';
-        array_push($groups_array, [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon]);
+        $group_user_count = format_word($group['group_user_count'], $locale['fmt_user']);
+        $groups_array[$group_id] = [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon, $group_user_count];
     }
 
     return $groups_array;
@@ -1462,13 +1463,13 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
  */
 function fusion_get_groups($remove = []) {
     $visibility_opts = [];
+    $groups = array_diff_key(getusergroups(), array_flip($remove));
 
-    foreach (getusergroups() as $group) {
+    foreach ($groups as $group) {
         $visibility_opts[$group[0]] = $group[1];
     }
-    $groups = array_diff_key($visibility_opts, array_flip($remove));
 
-    return $groups;
+    return $visibility_opts;
 }
 
 /**
@@ -1689,11 +1690,11 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
        With this fix (used $settings instead fusion_get_settings) function will work.*/
     if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
         $tpl_global = "<nav class='pagination'><div class='pagination-row'>%s</div><div class='pagination-nav'><div class='btn-group'>\n%s</div></div></nav>\n";
-        $tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
-        $tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+        $tpl_currpage = "<a class='btn btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
+        $tpl_page = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_divider = "</div>\n<span>...</span>\n<div class='btn-group'>";
-        $tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
-        $tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
+        $tpl_firstpage = "<a class='btn btn-default' data-value='0' href='%s=0'>1</a>\n";
+        $tpl_lastpage = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
     } else {
         $tpl_global = "<div class='pagenav'>%s\n%s</div>\n";
@@ -1742,8 +1743,8 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     $res = '';
 
     if ($cur_page != $idx_fst) {
-        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, '<i class="fas fa-angle-left m-r-5"></i> '.$locale['first']);
-        $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, '<i class="fas fa-angle-double-left m-r-5"></i>'.$locale['previous']);
+        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, get_icon('first').$locale['first']);
+        $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, get_icon('previous').$locale['previous']);
     }
 
     if ($idx_back >= 0) {
@@ -1775,24 +1776,21 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     }
 
     if ($cur_page != $idx_lst) {
-        $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].'<i class="fas fa-angle-double-right m-l-5"></i>');
-        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].'<i class="fas fa-angle-right m-l-5"></i>');
+
+        $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].get_icon('next'));
+        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].get_icon('last'));
     }
 
-    // Upon pressing enter key, redirect
-    add_to_jquery("
-    $('#".$getname."_pg').on('keydown', function(e) {
-        if (e.keyCode === 13) {
-            let v = $(this).val();
-            if ($.isNumeric(v)) {
-               document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
-            }
+    // if there is a request, we can redirect
+    if (check_post($getname.'_pg')) {
+        if ($val = sanitizer($getname.'_pg', '', $getname.'_pg')) {
+            redirect(clean_request($getname.'='.($val * $count - $count), [$getname], FALSE));
+        } else {
+            redirect(clean_request('', [$getname], FALSE));
         }
-    });
-    ");
+    }
 
-
-    $cur_page_field = form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']);
+    $cur_page_field = openform(generate_strong_password(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']).form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']).closeform();
 
     return sprintf($tpl_global, "<span>".$locale['global_092']."</span> ".$cur_page_field." ".$locale['global_093']." ".$pg_cnt, $res);
 }
@@ -2152,7 +2150,7 @@ function fusion_get_user($user_id, $key = NULL) {
         return NULL;
     }
 
-    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : NULL);
+    return $key === NULL ? $user[$user_id] : ($user[$user_id][$key] ?? NULL);
 }
 
 /**
@@ -2210,6 +2208,24 @@ function define_site_language($lang) {
 }
 
 /**
+ * Get the language package shortcode within global.php file
+ *
+ * @param $language_pack - // representation of folder name
+ *
+ * @return mixed
+ */
+function get_language_code($language_pack) {
+    $locale = [];
+    try {
+        include LOCALE.$language_pack.'/global.php';
+        return $locale['short_lang_name'] ?? $language_pack;
+    } catch (Exception $e) {
+        debug_print_backtrace();
+        die('Stopping process');
+    }
+}
+
+/**
  * Set the requested language.
  *
  * @param string $lang The name of the language.
@@ -2245,7 +2261,7 @@ function set_language($lang) {
  */
 function valid_language($lang, $file_check = FALSE) {
 
-    $enabled_languages = fusion_get_enabled_languages();
+    $enabled_languages = fusion_get_enabled_languages(TRUE);
     if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) &&
         ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
     ) {
@@ -2253,6 +2269,18 @@ function valid_language($lang, $file_check = FALSE) {
     } else {
         return FALSE;
     }
+}
+
+/**
+ * Check language folder name and file
+ *
+ * @param $lang
+ *
+ * @return bool
+ */
+function check_language($lang) {
+    return preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && is_file(LOCALE.$lang."/global.php");
+
 }
 
 /**
@@ -2284,20 +2312,17 @@ function fusion_get_language_switch() {
  *
  * @return array
  */
-function fusion_get_enabled_languages() {
+function fusion_get_enabled_languages($skip_translate = FALSE) {
 
     $settings = fusion_get_settings();
-    static $enabled_languages = NULL;
+    $enabled_languages = [];
 
-    if ($enabled_languages === NULL) {
-        if (isset($settings['enabled_languages'])) {
-            $values = explode('.', $settings['enabled_languages']);
-            foreach ($values as $language_name) {
-                $enabled_languages[$language_name] = translate_lang_names($language_name);
-            }
+    if (isset($settings['enabled_languages'])) {
+        $values = explode('.', $settings['enabled_languages']);
+        foreach ($values as $language_name) {
+            $enabled_languages[$language_name] = $skip_translate ? $language_name : translate_lang_names($language_name, TRUE);
         }
     }
-
     return $enabled_languages;
 }
 
@@ -2409,6 +2434,28 @@ function write_file($file, $data, $flags = NULL) {
 }
 
 /**
+ * Return the time in seconds
+ *
+ * @param $value
+ * @param $denominator
+ *
+ * @return float|int|mixed
+ */
+function calculate_time($value, $denominator) {
+    $multiplier = [
+        's' => 1,
+        'm' => 60,
+        'h' => 3600,
+        'j' => 86400,
+    ];
+    if (isnum($value) && isset($multiplier[$denominator])) {
+        return $value * $multiplier[$denominator];
+    }
+    return $value;
+}
+
+
+/**
  * Returns nearest data unit.
  *
  * @param int $total_bit Number of bytes.
@@ -2416,7 +2463,6 @@ function write_file($file, $data, $flags = NULL) {
  * @return int
  */
 function calculate_byte($total_bit) {
-
     $calc_opts = fusion_get_locale('admins_1020', LOCALE.LOCALESET."admin/settings.php");
     foreach ($calc_opts as $byte => $val) {
         if ($total_bit / $byte <= 999) {
@@ -2425,6 +2471,31 @@ function calculate_byte($total_bit) {
     }
 
     return 1048576;
+}
+
+/**
+ * Convert B, KB, MB, GB, TB, PB to bytes
+ *
+ * @param $value
+ *
+ * @return array|float|int|string|string[]|null
+ */
+function parse_byte($value) {
+    $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    $number = substr($value, 0, -2);
+    $suffix = strtoupper(substr($value, -2));
+
+    //B or no suffix
+    if (is_numeric(substr($suffix, 0, 1))) {
+        return preg_replace('/[^\d]/', '', $value);
+    }
+
+    $exponent = array_flip($units)[$suffix] ?? NULL;
+    if ($exponent === NULL) {
+        return NULL;
+    }
+
+    return $number * (1024 ** $exponent);
 }
 
 /**

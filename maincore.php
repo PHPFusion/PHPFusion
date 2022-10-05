@@ -194,6 +194,12 @@ $userdata = [];
 if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
     if (fusion_safe()) {
         $auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
+        if ($auth->authRedirection()) {
+            // auth mode for security pin
+            // on second refresh, the validateAuthUser will kick in and log user out if session not loaded.
+            redirect(BASEDIR."login.php?auth=security_pin");
+            // we have once chance to do a OTP.
+        }
         $userdata = $auth->getUserData();
         redirect(FUSION_REQUEST);
     }
@@ -222,7 +228,7 @@ if (iMEMBER && valid_language($userdata['user_language'])) {
     $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
     $current_user_language = (!empty($langData['user_language']) ? $langData['user_language'] : fusion_get_settings('locale'));
 }
-$language_opts = fusion_get_enabled_languages();
+$language_opts = fusion_get_enabled_languages(TRUE);
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid

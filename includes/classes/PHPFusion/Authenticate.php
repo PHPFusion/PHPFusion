@@ -47,6 +47,7 @@ class Authenticate {
         "user_groups" => "",
         "user_theme"  => "Default"
     ];
+    private $two_factor_redirect = FALSE;
 
     /**
      * Authenticate constructor.
@@ -104,9 +105,15 @@ class Authenticate {
                 }
 
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
+
                     Authenticate::setUserCookie($user['user_id'], $user['user_salt'], $user['user_algo'], $remember);
-                    Authenticate::storeUserSession($passAuth, $user["user_id"]);
-                    $this->user_data = $user;
+
+                    if ($settings['auth_login_enabled'] == 1 && $user['user_auth'] == 1) {
+                        $this->two_factor_redirect = TRUE;
+                    } else {
+                        Authenticate::storeUserSession($passAuth, $user["user_id"]);
+                        $this->user_data = $user;
+                    }
                 } else {
                     require_once INCLUDES."suspend_include.php";
                     require_once INCLUDES."sendmail_include.php";
@@ -391,11 +398,59 @@ class Authenticate {
                     $result = dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".(isnum($userID) ? $userID : 0)."' AND user_status='0' AND user_actiontime='0' LIMIT 1");
                     if (dbrows($result) == 1) {
                         $user = dbarray($result);
+                        $secure_auth = get("auth");
 
-                        if (!$user["user_session"]) {
-                            // here we need to add a notice
-                            addnotice("danger", fusion_get_locale('global_183', $locale_file));
+                        if (empty($user["user_session"])) {
+                            if (FUSION_SELF == "login.php" && $secure_auth == 'security_pin') {
+                                if ($pin = post("pin")) {
+                                    $login_count = self::getValidationCount();
+
+                                    if ($user["user_auth_actiontime"] > time()) {
+                                        // if get it correct
+                                        if ($pin == $user["user_auth_pin"]) {
+                                            // then validate the idiot.
+                                            $key = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $user['user_salt']);
+                                            $hash = hash_hmac($user['user_algo'], $userID.$cookieExpiration, $key);
+                                            if ($cookieHash == $hash) {
+                                                // set the user session.
+                                                dbquery("UPDATE ".DB_USERS." SET user_session=:session WHERE user_id=:uid", [':uid' => $userID, ':session' => $user['user_salt'].".".$user['user_password']]);
+                                                // we need to do a new redirection for log in.
+                                                addnotice('success', 'OTP is successfully verified. You are now logged in.', fusion_get_settings('opening_page'));
+                                                redirect(BASEDIR.fusion_get_settings('opening_page'));
+
+                                            } else {
+                                                // Cookie has been tampered with!
+                                                return self::logOut();
+                                            }
+                                        }
+
+                                        if ($login_count) {
+                                            addnotice('danger', "Invalid Authentication Code. You have ".$login_count." attempts left.");
+                                        } else {
+                                            // logout and clear cookie.
+                                            self::logOut();
+                                            redirect(BASEDIR."login.php?error=6");
+                                        }
+                                    } else {
+                                        self::logOut();
+                                        redirect(BASEDIR."login.php?error=5");
+                                    }
+
+                                } else if (!$user["user_auth_pin"] && !check_get("auth_email")) {
+                                    // return sendmail signal
+                                    redirect(BASEDIR."login.php?auth=security_pin&auth_email=pin");
+                                }
+                            } else if (FUSION_SELF == 'login.php' && $secure_auth == 'restart') {
+                                self::logOut();
+                                redirect(BASEDIR."login.php");
+                            } else {
+                                self::logOut();
+                                redirect(BASEDIR."login.php?error=7");
+                            }
+                            // If session exist.
+                        } else if (FUSION_SELF == 'login.php' && $secure_auth == 'restart') {
                             self::logOut();
+                            redirect(BASEDIR."login.php");
                         }
 
                         // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
@@ -441,6 +496,24 @@ class Authenticate {
         }
     }
 
+    private static function getValidationCount() {
+        $settings = fusion_get_settings();
+        if (!isset($_SESSION['2fa_attempts'])) {
+            $login_count = $settings['auth_login_attempts'] - 1;
+            if ($login_count > 1) {
+                $login_count = 1;
+            }
+            $_SESSION['2fa_attempts'] = $login_count;
+
+            return $login_count;
+        } else if ($_SESSION['2fa_attempts'] > 0) {
+            $_SESSION['2fa_attempts'] = $_SESSION['2fa_attempts'] - 1;
+            return $_SESSION['2fa_attempts'];
+        }
+
+        return 0;
+    }
+
     /**
      * Log out
      *
@@ -452,14 +525,16 @@ class Authenticate {
             $cookieDataArr = explode(".", $_COOKIE[COOKIE_USER]);
             if (count($cookieDataArr) == 3) {
                 list($userID, $cookieExpiration, $cookieHash) = $cookieDataArr;
+                //unset($_SESSION['2fa_attempts']);
+                //unset($_SESSION['auth_email_send']);
+                dbquery("UPDATE ".DB_USERS." SET user_auth_pin='', user_auth_actiontime='' WHERE user_id=:uid", [':uid' => $userID]);
                 $session_token = fusion_get_user($userID, "user_session");
                 // if cookie has expired, we need to reset immediately
                 if (!empty($session_token)) {
                     $session_token = explode(".", $session_token);
                     if (count($session_token) === 2) {
                         //$sql = "UPDATE ".DB_USERS." SET user_salt='".$session_token[0]."', user_password='".$session_token[1]."', user_session='' WHERE user_id=$userID";
-                        $sql = "UPDATE ".DB_USERS." SET user_session='' WHERE user_id=$userID";
-                        dbquery($sql);
+                        dbquery("UPDATE ".DB_USERS." SET user_session='' WHERE user_id=$userID");
                     }
                 }
             }
@@ -492,6 +567,67 @@ class Authenticate {
             "user_groups" => "",
             "user_theme"  => fusion_get_settings("theme")
         ];
+    }
+
+    public static function validateUserPasscode() {
+
+        if (iMEMBER && (get("auth_email") == "pin" || (check_post("resend_otp")))) {
+            $user = fusion_get_userdata();
+            $settings = fusion_get_settings();
+            $locale = fusion_get_locale('', [LOCALE.LOCALESET.'admin/members_email.php']);
+            require_once INCLUDES.'sendmail_include.php';
+
+            if (check_post('resend_otp') && $user['user_auth_actiontime'] >= time()
+                && isset($_SESSION['new_otp_time']) && $_SESSION['new_otp_time'] <= time()) {
+
+                $_SESSION['new_otp_time'] = time() + 30;
+
+                fusion_sendmail('L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], [
+                    'replace' => [
+                        '[OTP]' => $user['user_auth_pin']
+                    ]
+                ]);
+
+                addnotice("success", "We have resent the One Time Passcode to your registered email address");
+
+            } else if ($user["user_auth_actiontime"] <= time()) {
+
+                $_SESSION['new_otp_time'] = time() + 30;
+
+                $random_pin = Authenticate::generateOTP($settings['auth_login_length']);
+
+                $auth_actiontime = time() + $settings['auth_login_expiry'];
+
+                dbquery("UPDATE ".DB_USERS." SET user_auth_pin=:pin, user_auth_actiontime=:time WHERE user_id=:uid", [":pin" => $random_pin, ":time" => $auth_actiontime, ':uid' => $user['user_id']]);
+
+                fusion_sendmail('L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], [
+                    'replace' => [
+                        '[OTP]' => $random_pin
+                    ]
+                ]);
+                addnotice("success", "We have sent a One Time Passcode to your registered email address for the authentication");
+
+            } else {
+                // this one is to extend the validity of the shit.
+                addnotice("danger", "You cannot request for another OTP until the time has expired");
+            }
+
+            redirect(BASEDIR.'login.php?auth=security_pin');
+        }
+
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function generateOTP($keyLength) {
+        // Set a blank variable to store the key in
+        $key = "";
+        for ($x = 1; $x <= $keyLength; $x++) {
+            // Set each digit
+            $key .= random_int(0, 9);
+        }
+        return $key;
     }
 
     /**
@@ -546,6 +682,10 @@ class Authenticate {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=settings_value+1 WHERE settings_name='counter'");
             fusion_set_cookie(COOKIE_PREFIX."visited", "yes", time() + 31536000, "/", "", FALSE, FALSE, 'lax');
         }
+    }
+
+    public function authRedirection() {
+        return $this->two_factor_redirect;
     }
 
     /**

@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Admins;
+
 defined('IN_FUSION') || exit;
 
 const ADMIN_PANEL = TRUE;
@@ -38,6 +41,8 @@ if (preg_match("/^([a-z0-9_-]){2,50}$/i", $settings['admin_theme']) && file_exis
     die('WARNING: Invalid Admin Panel Theme'); // TODO: improve this
 }
 
+require_once INCLUDES."deprecated.php";
+
 require_once INCLUDES."theme_functions_include.php";
 
 require_once INCLUDES."twig_includes.php";
@@ -58,8 +63,8 @@ if (iMEMBER) {
     );
 }
 
-\PHPFusion\Admins::getInstance()->setAdminPages();
-\PHPFusion\Admins::getInstance()->setAdminBreadcrumbs();
+Admins::getInstance()->setAdminPages();
+Admins::getInstance()->setAdminBreadcrumbs();
 
 ob_start();
 

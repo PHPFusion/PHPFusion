@@ -11,7 +11,8 @@
     }
   ],
   "require": {
-    "twig/twig": "^3.0"
+    "twig/twig": "^3.0",
+    "ext-curl": "*"
   },
   "config": {
     "vendor-dir": "includes/vendor",

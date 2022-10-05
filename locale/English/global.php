@@ -18,18 +18,25 @@ $locale['weekdays'] = "Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday"
 // Timers
 $locale['year'] = "year";
 $locale['year_a'] = "years";
+$locale['year_s'] = "yr(s)"; // also symbol assignable for plural
 $locale['month'] = "month";
 $locale['month_a'] = "months";
+$locale['month_s'] = "mth(s)";
 $locale['week'] = "week";
 $locale['week_a'] = "weeks";
+$locale['week_s'] = "wk(s)";
 $locale['day'] = "day";
 $locale['day_a'] = "days";
+$locale['day_s'] = "day(s)";
 $locale['hour'] = "hour";
 $locale['hour_a'] = "hours";
+$locale['hour_s'] = "hr(s)";
 $locale['minute'] = "minute";
 $locale['minute_a'] = "minutes";
+$locale['minute_s'] = "min(s)";
 $locale['second'] = "second";
 $locale['second_a'] = "seconds";
+$locale['second_s'] = "sec(s)";
 $locale['just_now'] = "just now";
 $locale['now'] = 'now';
 $locale['ago'] = "ago";
@@ -181,6 +188,15 @@ $locale['global_106'] = "[LINK]Forgot Password?[/LINK]";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";
 $locale['global_109'] = "Sign Up";
+$locale['global_110'] = "Enter Password";
+$locale['global_111'] = "Confirm Password";
+// OTP
+$locale['global_115'] = "Two Step Verification";
+$locale['global_116'] = "We sent a verification code to your email.<br/>Enter the code from the email in the field below.";
+$locale['global_117'] = "Type in your %s digit security code";
+$locale['global_118'] = "Didn't get the code?";
+$locale['global_119'] = "Resend Code";
+
 // Member User Menu
 $locale['global_120'] = "Customize your Profile Page";
 $locale['global_121'] = "Private Messages";
@@ -315,10 +331,11 @@ $locale['global_454'] = "Account reactivated at [SITENAME]";
 $locale['global_455'] = "Hello USER_NAME,<br/>
 Last time you logged in your account was reactivated at [SITEURL] and your account is no longer marked as inactive.<br/>
 Regards,<br/>[SITEUSERNAME]";
-$locale['global_456'] = "New password notification for [SITENAME]";
-$locale['global_457'] = "Hi USER_NAME,
-<br/>A new password has been set for your account at [SITENAME]. Please find the enclosed new login details:<br/>
-Username: USER_NAME<br/>Password: [PASSWORD]<br/>Regards,<br/>[SITEUSERNAME]";
+
+//$locale['global_456'] = "New password notification for [SITENAME]";
+//$locale['global_457'] = "Hi USER_NAME,
+//<br/>A new password has been set for your account at [SITENAME]. Please find the enclosed new login details:<br/>
+//Username: USER_NAME<br/>Password: [PASSWORD]<br/>Regards,<br/>[SITEUSERNAME]";
 $locale['global_458'] = "New password has been set for USER_NAME";
 $locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
 // Function parsebytesize()
@@ -355,6 +372,7 @@ $locale['error'] = "Error!";
 $locale['success'] = "Success!";
 $locale['enable'] = "Enable";
 $locale['disable'] = "Disable";
+$locale['default'] = "Default";
 $locale['can'] = "can";
 $locale['cannot'] = "cannot";
 $locale['no'] = "No";

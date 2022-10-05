@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 require_once __DIR__.'/../maincore.php';
 require_once THEMES.'templates/admin_header.php';
 pageaccess('S6');
@@ -26,26 +27,23 @@ add_breadcrumb(['link' => ADMIN.'settings_misc.php'.fusion_get_aidlink(), 'title
 
 if (check_post('savesettings')) {
     $inputData = [
-        'tinymce_enabled'        => post('tinymce_enabled') ? 1 : 0,
+        'tinymce_enabled'        => check_post('tinymce_enabled') ? 1 : 0,
         'smtp_host'              => sanitizer('smtp_host', '', 'smtp_host'),
         'smtp_port'              => sanitizer('smtp_port', '', 'smtp_port'),
         'smtp_auth'              => check_post('smtp_auth') && !empty(post('smtp_username')) && !empty(post('smtp_password')) ? 1 : 0,
         'smtp_username'          => sanitizer('smtp_username', '', 'smtp_username'),
         'smtp_password'          => sanitizer('smtp_password', '', 'smtp_password'),
         'thumb_compression'      => sanitizer('thumb_compression', '0', 'thumb_compression'),
-        'ratings_enabled'        => post('ratings_enabled') ? 1 : 0,
-        'visitorcounter_enabled' => post('visitorcounter_enabled') ? 1 : 0,
+        'comments_enabled'       => check_post('comments_enabled') ? 1 : 0,
+        'ratings_enabled'        => check_post('ratings_enabled') ? 1 : 0,
+        'visitorcounter_enabled' => check_post('visitorcounter_enabled') ? 1 : 0,
         'rendertime_enabled'     => sanitizer('rendertime_enabled', '0', 'rendertime_enabled'),
-        'index_url_bbcode'       => post('index_url_bbcode') ? 1 : 0,
-        'index_url_userweb'      => post('index_url_userweb') ? 1 : 0,
-        'create_og_tags'         => post('create_og_tags') ? 1 : 0,
-        'devmode'                => post('devmode') ? 1 : 0,
-        'update_checker'         => post('update_checker') ? 1 : 0,
-        'number_delimiter'       => sanitizer('number_delimiter', '.', 'number_delimiter'),
-        'thousands_separator'    => sanitizer('thousands_separator', ',', 'thousands_separator'),
+        'index_url_bbcode'       => check_post('index_url_bbcode') ? 1 : 0,
+        'index_url_userweb'      => check_post('index_url_userweb') ? 1 : 0,
+        'create_og_tags'         => check_post('create_og_tags') ? 1 : 0,
+        'update_checker'         => check_post('update_checker') ? 1 : 0,
         'error_logging_enabled'  => post('error_logging_enabled') ? 1 : 0,
         'error_logging_method'   => sanitizer('error_logging_method', '', 'error_logging_method'),
-        'license'                => sanitizer('license', '', 'license'),
     ];
 
     if (fusion_safe()) {
@@ -62,94 +60,84 @@ if (check_post('savesettings')) {
 }
 
 opentable($locale['admins_misc_settings']);
-echo "<div class='well'>".$locale['admins_misc_description']."</div>";
-echo openform('settingsform', 'POST');
+echo "<div class='mb-5'><h5>".$locale['admins_misc_description']."</h5></div>";
+
+echo openform('settingsFrm', 'POST');
 $choice_arr = [1 => $locale['yes'], 0 => $locale['no']];
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
-openside('');
+
+openside('Server Email Settings');
+echo '<div class="row"><div class="col-xs-12 col-sm-4">';
 echo form_text('smtp_host', $locale['admins_664'], $settings['smtp_host'], [
-    'max_length' => 200,
-    'inline'     => TRUE
+    'max_length'     => 200,
+    'floating_label' => TRUE,
 ]);
+echo '</div><div class="col-xs-12 col-sm-4">';
 echo form_text('smtp_port', $locale['admins_674'], $settings['smtp_port'], [
-    'max_length' => 10,
-    'inline'     => TRUE
+    'max_length'     => 10,
+    'floating_label' => TRUE,
 ]);
+echo '</div><div class="col-xs-12 col-sm-4">';
 echo form_select('smtp_auth', $locale['admins_698'], $settings['smtp_auth'], [
-    'options' => $choice_arr,
-    'inline'  => TRUE,
-    'ext_tip' => $locale['admins_665']
+    'options'        => $choice_arr,
+    'placeholder'    => $locale['admins_698'],
+    'ext_tip'        => $locale['admins_665'],
+    'floating_label' => TRUE,
 ]);
+echo '</div></div>';
+
+echo '<div class="row" id="emailCredential" style="display:'.($settings['smtp_auth'] ? 'block' : 'none').';"><div class="col-xs-12">';
 echo form_text('smtp_username', $locale['admins_666'], $settings['smtp_username'], [
     'max_length' => 100,
-    'inline'     => TRUE
 ]);
 echo form_text('smtp_password', $locale['admins_667'], $settings['smtp_password'], [
     'max_length' => 100,
-    'inline'     => TRUE
 ]);
-closeside();
-openside('');
-echo form_checkbox('rendertime_enabled', $locale['admins_688'], $settings['rendertime_enabled'], [
-    'options' => ['0' => $locale['no'], '1' => $locale['admins_689'], '2' => $locale['admins_690']],
-    'inline'  => TRUE,
-    'type'    => 'radio'
-]);
-closeside();
-openside('');
-echo form_select('number_delimiter', $locale['admins_611'], $settings['number_delimiter'], [
-    'options' => [
-        '.' => '.',
-        ',' => ','
-    ],
-    'width'   => '100%'
-]);
-echo form_select('thousands_separator', $locale['admins_612'], $settings['thousands_separator'], [
-    'options' => [
-        '.' => '.',
-        ',' => ','
-    ],
-    'width'   => '100%'
-]);
+echo '</div></div>';
 closeside();
 
-/*openside('');
-echo form_select('license', $locale['613'], $settings['license'], [
-    'options' => [
-        'agpl' => 'AGPL',
-        'epal' => 'EPAL',
-        'crl'  => 'CRL',
-        'ccl'  => 'CCL'
-    ],
-    'width'   => '100%'
-]);
-closeside();*/
-
-echo "</div>\n<div class='col-xs-12 col-sm-12 col-md-6'>\n";
-openside('');
-echo form_checkbox('tinymce_enabled', $locale['admins_662'], $settings['tinymce_enabled'], [
-    'toggle' => TRUE
-]);
-closeside();
-openside('');
-echo form_select('thumb_compression', $locale['admins_606'], $settings['thumb_compression'], [
-    'options' => ['gd1' => $locale['admins_607'], 'gd2' => $locale['admins_608']],
-    'width'   => '100%'
-]);
-closeside();
-openside('');
+openside('Footer Settings');
 echo form_checkbox('visitorcounter_enabled', $locale['admins_679'], $settings['visitorcounter_enabled'], [
     'toggle' => TRUE
 ]);
+echo form_select('rendertime_enabled', $locale['admins_688'], $settings['rendertime_enabled'], [
+    'inline'      => FALSE,
+    'options'     => ['0' => $locale['no'], '1' => $locale['admins_689'], '2' => $locale['admins_690']],
+    'width'       => '100%',
+    'inner_width' => '100%',
+]);
 closeside();
 
-openside('');
+add_to_jquery("
+$('#smtp_auth').on('change', function(e) {
+    let eec = $('#emailCredential');
+    eec.hide();
+    if ( $(this).val() == 1 ) {     
+        eec.slideDown();         
+    }
+});
+");
+
+openside('Form Settings');
+echo form_checkbox('tinymce_enabled', $locale['admins_662'], $settings['tinymce_enabled'], [
+    'toggle' => TRUE
+]);
+echo form_select('thumb_compression', $locale['admins_606'], $settings['thumb_compression'], [
+    'options'     => ['gd1' => $locale['admins_607'], 'gd2' => $locale['admins_608']],
+    'width'       => '100%',
+    'inner_width' => '100%',
+]);
+closeside();
+
+openside('Ratings and Comments Settings');
 echo form_checkbox('ratings_enabled', $locale['admins_672'], $settings['ratings_enabled'], [
     'toggle' => TRUE
 ]);
+echo form_checkbox('comments_enabled', 'Enabled comments system', $settings['comments_enabled'], [
+    'toggle' => TRUE
+]);
 closeside();
-openside('');
+
+openside('Search and Indexing Settings');
 echo form_checkbox('index_url_bbcode', $locale['admins_1031'], $settings['index_url_bbcode'], [
     'toggle' => TRUE
 ]);
@@ -161,7 +149,7 @@ echo form_checkbox('create_og_tags', $locale['admins_1030'], $settings['create_o
 ]);
 closeside();
 
-openside('');
+openside('Error Logging');
 echo form_checkbox('error_logging_enabled', $locale['admins_security_015'], $settings['error_logging_enabled'], [
     'toggle' => TRUE
 ]);
@@ -176,19 +164,13 @@ echo form_select('error_logging_method', $locale['admins_security_016'], $settin
 closeside();
 
 openside('');
-echo form_checkbox('devmode', $locale['admins_609'], $settings['devmode'], [
-    'toggle' => TRUE
-]);
-closeside();
-
-openside('');
+//To move to System Admin Upgrade
 echo form_checkbox('update_checker', $locale['admins_610'], $settings['update_checker'], [
     'toggle' => TRUE
 ]);
 closeside();
 
-echo "</div>\n</div>";
-echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success']);
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
 require_once THEMES.'templates/footer.php';

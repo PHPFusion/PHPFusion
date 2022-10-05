@@ -15,6 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Rewrite\Permalinks;
+
 defined('IN_FUSION') || exit;
 
 $settings = fusion_get_settings();
@@ -23,7 +26,7 @@ $userdata = fusion_get_userdata();
 // Check if Maintenance is Enabled
 if ($settings['maintenance'] == "1" &&
     ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-    ($settings['maintenance_level'] < $userdata['user_level']))
+        ($settings['maintenance_level'] < $userdata['user_level']))
 ) {
     if ($settings['site_seo']) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
@@ -33,7 +36,7 @@ if ($settings['maintenance'] == "1" &&
 }
 
 if ($settings['site_seo']) {
-    $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
+    $permalink = Permalinks::getPermalinkInstance();
 }
 
 require_once INCLUDES."breadcrumbs.php";
@@ -42,6 +45,8 @@ if (file_exists(INCLUDES."header_includes.php")) {
 }
 
 require_once THEME."theme.php";
+
+require_once INCLUDES."deprecated.php";
 
 require_once INCLUDES."theme_functions_include.php";
 
