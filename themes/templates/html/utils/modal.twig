@@ -26,7 +26,11 @@
                         <h5 class="modal-title">{{ header_content }}</h5>
                     {% endif %}
                     {% if dismiss %}
-                        <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="{{ locale["close"] }}"></button>
+                        {% if constant("BOOTSTRAP5") is defined %}
+                            <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="{{ locale["close"] }}"></button>
+                        {% else %}
+                            <button type="button" class="btn btn-default btn-sm m-l-a" data-dismiss="modal">{{ get_icon("cancel", "m-r-10 fa-fw") }}{{ locale["close"] }}</button>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% endif %}

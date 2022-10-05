@@ -333,11 +333,14 @@ if (!function_exists('openmodal') &&
     function openmodal($id, $title, $options = []) {
         $locale = fusion_get_locale();
         $options += [
-            'class'        => !empty($options['class']) ?: 'modal-lg',
+            'class'        => '',
+            "body_class"   => "",
             'button_id'    => '',
             'button_class' => '',
             'static'       => FALSE,
             'hidden'       => FALSE,  // force a modal to be hidden at default, you will need a jquery trigger $('#your_modal_id').modal('show'); manually
+            'size'         => 2,
+            'screen_size'  => 2,
         ];
 
         $modal_trigger = '';
@@ -346,28 +349,54 @@ if (!function_exists('openmodal') &&
         }
 
         if ($options['static'] && !empty($modal_trigger)) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); e.preventDefault(); });");
+
+            $_js = "$('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); 
+                e.preventDefault();
+                ";
+
+            if (defined("BOOTSTRAP5")) {
+                $_js = "new bootstrap.Modal('#$id-Modal', {backdrop: 'static', keyboard: false}).show();                
+                 e.preventDefault(); 
+                ";
+            }
+
+            $script = "$(document).on('click', '".$modal_trigger."', function(e) { $_js });";
+
         } else if ($options['static'] && empty($options['button_id'])) {
-            OutputHandler::addToJQuery("$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');");
+            // No click, just show right away
+            $script = "$('#".$id."-Modal').modal({	backdrop: 'static',	keyboard: false }).modal('show');";
+            if (defined("BOOTSTRAP5")) {
+                $script = "new bootstrap.Modal('#".$id."-Modal', {	backdrop: 'static',	keyboard: false }).show();";
+            }
+
         } else if ($modal_trigger && empty($options['static'])) {
-            OutputHandler::addToJQuery("$('".$modal_trigger."').bind('click', function(e){ $('#".$id."-Modal').modal('show'); e.preventDefault(); });");
-        } else {
-            if (!$options['hidden']) {
-                OutputHandler::addToJQuery("$('#".$id."-Modal').modal('show');");
+            $_js = "$('#".$id."-Modal').modal('show'); e.preventDefault();";
+            if (defined("BOOTSTRAP5")) {
+                $_js = "new bootstrap.Modal('#".$id."-Modal').show(); e.preventDefault();";
+            }
+
+            $script = "$(document).on('click', '".$modal_trigger."', function(e) { $_js });";
+
+        } else if (!$options['hidden']) {
+            $script = "$('#".$id."-Modal').modal('show');";
+            if (defined("BOOTSTRAP5")) {
+                $script = "new bootstrap.Modal('#".$id."-Modal').show();";
             }
         }
-        $html = "<div class='modal' id='$id-Modal' tabindex='-1' role='dialog' aria-labelledby='$id-ModalLabel' aria-hidden='true'>\n";
-        $html .= "<div class='modal-dialog ".$options['class']."' role='document'>\n";
-        $html .= "<div class='modal-content'>\n";
-        if ($title) {
-            $html .= "<div class='modal-header'>";
-            $html .= "<div class='modal-title pull-left' id='$id-title'>$title</div>\n";
-            $html .= ($options['static'] ? '' : "<button type='button' class='btn btn-default btn-sm pull-right' data-dismiss='modal'><i class='fa fa-times'></i> ".$locale['close']."</button>\n");
-            $html .= "</div>\n";
-        }
-        $html .= "<div class='modal-body'>\n";
 
-        return $html;
+        if (isset($script)) {
+            add_to_jquery($script);
+        }
+
+        $info = [
+            "id"             => $id,
+            "header_content" => $title,
+            "dismiss"        => (bool)!$options["static"],
+            "modal"          => "open",
+            "options"        => $options,
+        ];
+
+        return fusion_render(TEMPLATES."html/utils/", "modal.twig", $info, TRUE);
     }
 
     /**
@@ -379,13 +408,13 @@ if (!function_exists('openmodal') &&
      * @return string
      */
     function modalfooter($content, $dismiss = FALSE) {
-        $html = "</div>\n<div class='modal-footer'>\n";
-        $html .= $content;
-        if ($dismiss) {
-            $html .= "<button type='button' class='btn btn-default pull-right' data-dismiss='modal'>".fusion_get_locale('close')."</button>";
-        }
+        $info = [
+            "footer_content" => $content,
+            "dismiss"        => (bool)$dismiss,
+            "modal"          => "footer",
+        ];
 
-        return $html;
+        return fusion_render(TEMPLATES."html/utils/", "modal.twig", $info, TRUE);
     }
 
     /**
@@ -394,7 +423,8 @@ if (!function_exists('openmodal') &&
      * @return string
      */
     function closemodal() {
-        return "</div>\n</div>\n</div>\n</div>\n";
+        $info["modal"] = "close";
+        return fusion_render(TEMPLATES."html/utils/", "modal.twig", $info, TRUE);
     }
 }
 

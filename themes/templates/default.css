@@ -1502,4 +1502,9 @@ Responsive Admin for all Admin Themes.
   margin-left: 1rem;
   max-width: 50px;
 }
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
 /*# sourceMappingURL=default.css.map */
