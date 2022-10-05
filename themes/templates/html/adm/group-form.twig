@@ -1,0 +1,53 @@
+{% if mode == "group_member" %}
+    {{ openside(title) }}
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            {{ form["open"]|raw }}
+            <h5>{{ locale["GRP_416"] }}</h5>
+            {{ form["input"]|raw }}
+            {{ form["button"]|raw }}
+            {{ form["close"]|raw }}
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <h5>{{ locale["GRP_468"] }}</h5>
+            {% if user_groups %}
+                {% for group in user_groups %}
+                    <div class="well mb-2">
+                        <div class="d-flex justify-content-between flex-sm-row flex-column">
+                            <div class="group-info">
+                                {% if group["users"] %}
+                                    <div class="ps-2 mb-2 position-relative">
+                                        <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
+                                            {% for user in group["users"] %}
+                                                <li>
+                                                    {{ user|raw }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                                <h5>{{ group[1]|raw }}</h5>
+                                <p>{{ group[2]|raw }}</p>
+                            </div>
+
+                            <div class="d-flex flex-column justify-content-between align-content-end">
+                                <div class="d-flex">
+                                    <a href="{{ group["manage_uri"] }}" class="btn btn-primary">{{ locale["edit"] }}</a>
+                                    <a href="{{ group["remove_uri"] }}" class="btn btn-default">{{ locale["delete"] }}</a>
+                                </div>
+                                <div class="text-end">
+                                    <small>{{ group[4] }}</small>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="well text-center">{{ locale["GRP_469"]|raw }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ closeside() }}
+{% endif %}

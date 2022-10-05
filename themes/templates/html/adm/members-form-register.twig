@@ -1,0 +1,78 @@
+{# Tab UI #}
+<!--HTML-->
+<div class="nav-wrapper m-b-0">
+    <ul id="profile-tab" class="nav nav-pills" role="tablist">
+        {% for link_id in tab.id %}
+            {% set title = tab.title %}
+            {% set link = tab.link %}
+            {% set active = '' %}
+            {% if link_id == tab.active %}
+                {% set active = ' active' %}
+            {% endif %}
+            <li class="nav-item{{ active }}">
+                <a class="nav-link" href="{{ link[link_id] }}" role="tab">{{ title[link_id] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% if primary_page %}
+    {{ openside('Profile Details') }}
+    {{ primary_form.open|raw }}
+    <div class="p-20 border-bottom p-b-sm">
+        <div class="display-flex flex-row gap-sm align-center">
+            {{ display_avatar(user_data, '100px', '', FALSE, 'img-rounded img-responsive avatar-preview overflow-hide') }}
+            <div class="button-wrapper">
+                {{ user_avatar|raw }}
+            </div>
+        </div>
+    </div>
+
+    {% if user_field %}
+        {% set border_class = ' border-bottom' %}
+    {% endif %}
+
+    <div class="p-20{{ border_class }}">
+        <div class="row equal-height">
+            <div class="col-xs-12 col-md-6">
+                {{ user_name|raw }}
+            </div>
+            <div class="col-xs-12 col-md-6">
+                {{ user_email|raw }}
+            </div>
+            <div class="col-xs-12 col-md-6">
+                {{ password_new|raw }}
+            </div>
+            <div class="col-xs-12 col-md-6">
+                {{ password_confirm|raw }}
+            </div>
+        </div>
+        <div class="">
+            <p class="spacer-xs"><strong>Password Requirements</strong></p>
+            {{ locale['u147']|raw }}
+        </div>
+    </div>
+    <div class="p-20">
+        {% if user_field %}
+            {% for field in user_field %}
+                <h5 class="spacer-sm">{{ field.title }}</h5>
+                <div class="row equal-height">
+                    {% for input in field.fields %}
+                        {% if input %}
+                            <div class="col-xs-12 col-md-6">
+                                {{ input|raw }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="p-20">
+        <div class="spacer-xs">
+            {{ primary_form.button|raw }}
+        </div>
+    </div>
+    {{ primary_form.close|raw }}
+    {{ closeside() }}
+{% endif %}
+<!--//HTML-->

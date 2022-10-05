@@ -1,0 +1,69 @@
+<section id="fusion-user-profile">
+    <div class="row">
+        <div class="col-xs-12 col-lg-4">
+            {{ openside() }}
+            <div class="p-15">
+                <div class="display-flex flex-column">
+                    {{ display_avatar(user_data, '130px', 'profile-avatar', FALSE, 'img-responsive')|raw }}
+                    <div class="user-info-meta">
+                        <h4>{{ user_data.user_name|raw }}</h4>
+                        <span class="badge badge-default">{{ getuserlevel(user_data.user_level) }}</span>
+                    </div>
+                </div>
+                <div class="display-flex flex-column justify-around spacer-sm">
+                    {% if user_field_stats %}
+                        {% for field in user_field_stats %}
+                            {% if field.value %}
+                                <div class="display-flex flex-row align-start">
+                                    <span class="label label-primary">{{ field.icon|raw }}</span>
+                                    <div><h5>{{ field.value }}</h5><span>{{ field.title }}</span></div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <h5 class="border-bottom">Details</h5>
+                <div class="user-info">
+                    <ul class="block">
+                        {% for field_name, field in core_field %}
+                            {# // Fixes email not showing #}
+                            {% set value = field.value %}
+                            {% if field_name != 'profile_user_avatar' %}
+                                {% if (field_name == 'profile_user_email') and (field.value) %}
+                                    {% set value = user_data.user_email %}
+                                {% endif %}
+                                <li>
+                                    <span class="strong">{{ field.title }}:</span>
+                                    <span>{{ value|raw }}</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% if user_admin %}
+                    <div class="display-flex flex-row">
+                        <a href="{{ user_admin.user_edit_link|raw }}" class="btn btn-primary">{{ user_admin.user_edit_title }}</a>
+                        <a href="{{ user_admin.user_suspend_link|raw }}" class="btn btn-default">{{ user_admin.user_suspend_title }}</a>
+                        <a href="{{ user_admin.user_ban_link|raw }}" class="btn btn-danger">{{ user_admin.user_ban_title }}</a>
+                    </div>
+                {% endif %}
+            </div>
+            {{ closeside() }}
+        </div>
+        <div class="col-xs-12 col-lg-8">
+            <nav class="nav-wrapper">
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item active"><a class="nav-link" href="#" role="tab">aaaa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" role="tab">aaaa</a></li>
+                </ul>
+            </nav>
+            {{ nav }}
+
+            {{ openside('User\'s Projects List') }}
+            <div class="p-20">
+                Some shit all come togeher here.
+            </div>
+            {{ closeside() }}
+        </div>
+    </div>
+</section>

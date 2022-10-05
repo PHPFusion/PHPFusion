@@ -1,0 +1,108 @@
+<!--editprofile_pre_idx-->
+{# Tab UI #}
+<div class="nav-wrapper m-b-0">
+    <ul id="profile-tab" class="nav nav-pills" role="tablist">
+        {% for link_id in tab.id %}
+            {% set title = tab.title %}
+            {% set link = tab.link %}
+            {% set active = '' %}
+            {% if link_id == tab.active %}
+                {% set active = ' active' %}
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link{{ active }}" href="{{ link[link_id] }}" role="tab">{{ title[link_id]|raw }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% if primary_page %}
+
+    {{ openside('Profile Details') }}
+    {{ primary_form.open|raw }}
+    <div class="border-bottom p-b-sm">
+        <div class="display-flex flex-row gap-sm align-center">
+            {{ display_avatar(user_data, '100px', 'avatar-preview overflow-hide', FALSE, 'fluid rounded img-rounded img-responsive') }}
+            <div class="button-wrapper">
+                {{ user_avatar|raw }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            {{ user_name|raw }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ user_email|raw }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ user_hide_email|raw }}
+        </div>
+    </div>
+    <div class="spacer-xs">
+        {{ primary_form['button']|raw }}
+    </div>
+
+    {{ primary_form.close|raw }}
+    {{ closeside() }}
+
+    {# // Password Form #}
+    {{ openside(locale['u132']) }}
+
+    {{ password_form['open']|raw }}
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            {{ new_password|raw }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ confirm_password|raw }}
+        </div>
+        <div class="col-xs-12">
+            {{ password_form['button']|raw }}
+        </div>
+    </div>
+    <div>
+        <p class="spacer-xs"><strong>Password Requirements</strong></p>
+        {{ locale['u147']|raw }}
+    </div>
+    {{ password_form.close|raw }}
+    {{ closeside() }}
+
+    {# 2-factor-authentication #}
+    {{ openside('Two-steps verification') }}
+    <p>Keep your account secure with authentication step. Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</p>
+    {{ auth_form['open']|raw }}
+    <div class="mb-3 display-flex flex-column">
+        <div class="mb-3"><strong>Two factor authentication is not enabled yet</strong></div>
+        <div>{{ auth_form['button']|raw }}</div>
+    </div>
+    {{ auth_form['close']|raw }}
+    {{ closeside() }}
+{% endif %}
+
+{% if user_fields %}
+    {% for field in user_fields %}
+        <!--Start Field-->
+        {{ openside(field.title) }}
+        {{ field.form.open|raw }}
+        <div class="row">
+            {% for input in field.fields %}
+                {% if input['field_input'] %}
+                    {% if input['field_input_type'] == 'textarea' or input['field_input_type'] == 'checkbox' %}
+                        <div class="col-xs-12 col-md-12">{{ input['field_input']|raw }}</div>
+                    {% else %}
+                        <div class="col-xs-12 col-md-6">{{ input['field_input']|raw }}</div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="spacer-xs">
+            {{ field.form.button|raw }}
+        </div>
+        {{ field.form.close|raw }}
+        {{ closeside() }}
+        <!--End Field-->
+    {% endfor %}
+{% endif %}
+<!--editprofile_sub_idx-->

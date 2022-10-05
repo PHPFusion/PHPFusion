@@ -1,0 +1,59 @@
+<p>A group provide access to predefined content and features so that depending on the assigned role given, different access can be granted to what user needs.</p>
+
+{% if groups %}
+    <div class="mt-5">
+        <div class="row equal-height">
+            {% for group in groups %}
+                <div class="col-xs-12 col-sm-6 col-lg-4">
+                    {{ openside() }}
+                    <div class="d-flex">
+                        <div>
+                            <h5 class="font-normal">Total {{ group[4]|raw }}</h5>
+                            <h4 class="mb-0"><a href="{{ group["manage_uri"] }}">{{ group[1]|raw }}</a></h4>
+                            <small><a href="{{ group["edit_uri"]|raw }}">Edit Group</a></small>
+                        </div>
+                        <div class="ms-auto">
+                            {% if group["users"] %}
+                                <ul class="list-unstyled d-flex align-items-center avatar-group mb-0">
+                                    {% for user in group["users"] %}
+                                        <li>
+                                            {{ user|raw }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {{ closeside() }}
+                </div>
+            {% endfor %}
+            <div class="col-xs-12 col-sm-6 col-lg-4">
+                {{ openside() }}
+                <div class="text-md-end">
+                    {{ add_button|raw }}
+                    <div class="mt-3">
+                        {{ locale["GRP_413"] }}
+                    </div>
+                </div>
+                {{ closeside() }}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{{ openside("", "", "table-wrapper") }}
+<table class="table" id="{{ group_table }}">
+    <thead>
+    <tr>
+        <th></th>
+        <th>{{ locale["GRP_446"] }}</th>
+        <th>{{ locale["GRP_447"] }}</th>
+        <th>{{ locale["GRP_420"] }}</th>
+        <th>{{ locale["GRP_453"] }}</th>
+        <th>{{ locale["GRP_437"] }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+{{ closeside() }}

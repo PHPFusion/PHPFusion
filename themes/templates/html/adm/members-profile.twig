@@ -1,0 +1,197 @@
+<section id="fusion-user-profile">
+    <div class="card mb-4">
+        <div class="user-profile-header-banner">
+            <img src="{{ get_image('no-cover')|raw }}" alt="Banner image" class="rounded-top" style="height:250px;object-fit:cover;width:100%;">
+        </div>
+        <div class="d-flex flex-column flex-sm-row text-sm-start text-center mb-4" style="margin-top:-2rem;">
+            <div class="flex-shrink-0 mx-sm-0 mx-auto" style="margin-top:-.5rem;">
+                <div class="rounded d-block h-auto ms-0 ms-sm-4 rounded" style="border:5px solid #fff;">
+                    {{ display_avatar(user_data, '130px', 'profile-avatar', FALSE, 'user-profile-img')|raw }}
+                </div>
+            </div>
+            <div class="flex-grow-1 mt-3 mt-sm-5">
+                <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
+                    <div class="user-profile-info">
+                        <h4>{{ user_data['user_name']|raw }}</h4>
+                        <ul class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2">
+                            <li class="list-inline-item fw-semibold">
+                                <i class="bx bx-pen"></i> {{ getuserlevel(user_data['user_level']) }}
+                            </li>
+                            <li class="list-inline-item fw-semibold">
+                                <i class="bx bx-map"></i>{{ profile['user_lastvisit']['title'] }} {{ profile['user_lastvisit']['value'] }}
+                            </li>
+                            <li class="list-inline-item fw-semibold">
+                                <i class="bx bx-calendar-alt"></i> {{ profile['user_joined']['title'] }} {{ profile['user_joined']['value'] }}
+                            </li>
+                        </ul>
+                    </div>
+                    {% if user_admin or buttons %}
+                        <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-3">
+                            {% if buttons %}
+                                <a class="btn btn-primary" href="{{ buttons.user_pm_link|raw }}">{{ locale.send_message }}</a>
+                            {% endif %}
+                            {% if user_admin %}
+                                <a href="{{ user_admin.user_edit_link|raw }}" class="btn btn-primary">{{ user_admin.user_edit_title }}</a>
+                                <div class="dropdown">
+                                    <a href="" class="dropdown-toggle btn btn-default" data-bs-toggle="dropdown" data-toggle="dropdown">{{ get_icon('more') }}</a>
+                                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-end">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ user_admin.user_susp_link|raw }}">{{ user_admin.user_susp_title }}</a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ user_admin.user_suspend_link|raw }}">{{ user_admin.user_suspend_title }}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ user_admin.user_ban_link|raw }}">{{ user_admin.user_ban_title }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ profile_tab|raw }}
+    {# Profile,  Group, when there is a module in profile, we give extra function to register the hook when reading the files to add the page. #}
+    <div class="row">
+        <div class="col-xs-12 col-lg-4">
+            {{ openside() }}
+            <p class="text-muted text-smaller text-lighter text-uppercase">About</p>
+            <ul class="list-unstyled mb-4 mt-3">
+                <li class="d-flex align-items-center mb-3">
+                    {{ get_icon("user", "fa-fw me-1") }}
+                    <span class="mx-1"><strong>{{ profile["user_name"]["title"] }}:</strong></span>
+                    <span>{{ profile["user_name"]["value"]|raw }}</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    {{ get_icon("apply", "fa-fw me-1") }}
+                    <span class="mx-1"><strong>{{ profile["user_status"]["title"] }}:</strong></span>
+                    <span>{{ profile["user_status"]["value"]|raw }}</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    {{ get_icon("star", "fa-fw me-1") }}
+                    <span class="mx-1"><strong>{{ profile["user_level"]["title"] }}:</strong></span>
+                    <span>{{ profile["user_level"]["value"]|raw }}</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    {{ get_icon("flag", "fa-fw me-1") }}
+                    <span class="mx-1"><strong>{{ profile["user_language"]["title"] }}:</strong></span>
+                    <span>{{ profile["user_language"]["value"]|raw }}</span>
+                </li>
+                <li class="d-flex align-items-center mb-3">
+                    {{ get_icon("location", "fa-fw me-1") }}
+                    <span class="mx-1"><strong>{{ profile["user_ip"]["title"] }}:</strong></span>
+                    <span>{{ profile["user_ip"]["value"]|raw }}</span>
+                </li>
+            </ul>
+            {% if profile["user_fields"] %}
+                {% for field_cat in profile["user_fields"] %}
+                    <p class="text-muted text-smaller text-lighter text-uppercase">{{ field_cat["title"]|raw }}</p>
+                    <ul class="list-unstyled mb-4 mt-3">
+                        {% if field_cat["fields"] %}
+                            {% for field in field_cat["fields"] %}
+                                <li class="d-flex align-items-center flex-wrap mb-3">
+                                    {{ field["icon"]|raw }}
+                                    <span class="mx-1"><strong>{{ field["title"] }}:</strong></span>
+                                    <span>{{ field["value"]|raw }}</span>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                {% endfor %}
+            {% endif %}
+            <div class="m-t-sm">
+                <div class="display-flex flex-wrap justify-around spacer-sm">
+                    {% if user_field_stats %}
+                        {% for field in user_field_stats %}
+                            {% if field['value'] %}
+                                <div class="display-flex flex-row align-center m-r-15">
+                                    <span class="label label-primary rounded m-r-10 icon-inside-sm">{{ field["icon"]|raw }}</span>
+                                    <div class="text-left"><h5 class="m-b-0">{{ field["value"] }}</h5>
+                                        <span>{{ field["title"] }}</span></div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            {{ closeside() }}
+
+            {{ openside(group_title) }}
+            <div class="p-l-20 p-r-20">
+                <div class="m-b-sm">{{ group_val }}</div>
+                {% if group_admin %}
+                    <h5 class="border-bottom p-t-20 p-b-10">{{ group_admin.ug_title }}</h5>
+                    {{ group_admin.ug_openform|raw }}
+                    <div class="m-b-xs">{{ group_admin.ug_dropdown_input|raw }}</div>
+                    {{ group_admin.ug_button|raw }}
+                    <div class="m-b-xs">
+                        {{ group_admin.ug_closeform|raw }}
+                    </div>
+                {% endif %}
+            </div>
+            {{ closeside() }}
+        </div>
+        <div class="col-xs-12 col-lg-8">
+            {% if primary_page %}
+                {% if user_fields %}
+                    <div class="row">
+                        {% for field in user_fields %}
+                            {% set colspan = 12 %}
+                            {% if field['colspan'] and field['colspan'] == 1 %}
+                                {% set colspan=6 %}
+                            {% endif %}
+                            <div class="col-xs-12 col-sm-{{ colspan }}">
+                                {{ openside(field["title"]) }}
+                                {% if field["value"]["list"] %}
+                                    <ul class="list-unstyled mb-4 mt-3">
+                                        {% for list in field["value"]["list"] %}
+                                            <li class="d-flex align-items-center flex-wrap mb-3">
+                                                {{ list["icon"]|raw }}
+                                                {{ list["title"]|raw }}
+                                                {{ list["value"]|raw }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {{ field["value"]|raw }}
+                                {% endif %}
+                                {{ closeside() }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if user_field %}
+                {% for cfield in user_field %}
+                    {% set fields_arr = {} %}
+                    {% for key, val in cfield.fields %}
+                        {% if val %}
+                            {% set fields_arr = fields_arr|merge({(key): val}) %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ openside(cfield.title) }}
+                    {% if fields_arr|length %}
+                        <div class="p-l-20 p-r-20">
+                            <ul class="block">
+                                {% for field in fields_arr %}
+                                    <li class="m-b-xs">
+                                        <span class="strong m-r-10">{{ field.title }}</span><span>{{ field.value|raw }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <div class="p-l-20 p-r-20 m-b-xs">No information available</div>
+                    {% endif %}
+                    {{ closeside() }}
+                {% endfor %}
+            {% else %}
+                <div class="well">{{ locale.uf_108 }}</div>
+            {% endif %}
+        </div>
+    </div>
+</section>

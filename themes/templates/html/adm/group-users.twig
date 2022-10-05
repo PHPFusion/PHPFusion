@@ -1,0 +1,42 @@
+<p>Manage group members by adding or removing them from the group.</p>
+{{ openside(locale["GRP_460"] ~ ': '~ title, '', 'table-wrapper', 'border-bottom') }}
+{{ form["open"]|raw }}
+
+<table class="table" id="{{ group_table }}">
+    <thead>
+    <tr>
+        <th></th>
+        <th>
+            {{ locale["GRP_446"] }}
+        </th>
+        <th>
+            {{ locale["GRP_447"] }}
+        </th>
+        <th>
+            {{ locale["GRP_453"] }}
+        </th>
+        <th>
+            {{ locale["GRP_437"] }}
+        </th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{# Use with Debug script #}
+{# <p><b>Selected rows data:</b></p> #}
+{# <pre id="example-console-rows"></pre> #}
+{# <p><b>Form data as submitted to the server:</b></p> #}
+{# <pre id="example-console-form"></pre> #}
+{{ tablebreak() }}
+<div class="row n-row pt-0">
+    <div class="col-xs-12 col-sm-6">
+        {{ form["cancel"]|raw }}
+        {{ form["recount"]|raw }}
+    </div>
+    <div class="col-xs-12 col-sm-6 text-lg-end">
+        {{ form["button"]|raw }}
+        {{ form["button_all"]|raw }}
+    </div>
+</div>
+{{ form["close"]|raw }}
+{{ closeside() }}

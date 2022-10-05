@@ -1,0 +1,124 @@
+{% macro format_percent(val = "") %}
+    {% if val %}
+        {% set class = "text-muted" %}
+        {% if (val < 0) %}
+            {% set class= "text-danger" %}
+        {% elseif (val > 0) %}
+            {% set class = "text-success" %}
+        {% endif %}
+        <span class="{{ class }}">({{ val|number_format(2) }}%)</span>
+    {% endif %}
+{% endmacro %}
+
+{# New locale required translations required #}
+<div class="row">
+    <div class="col-sm-6 col-lg-3">
+        {{ openside() }}
+        <div class="display-flex flex-row justify-between">
+            <div>
+                <span>Online Sessions</span>
+                <div class="display-flex flex-row align-center gap-10 m-t-15">
+                    <h4 class="m-r-10 m-t-0 m-b-0 text-semi-bold">{{ session_users.now|number_format }}</h4>{{ _self.format_percent(session_users.change) }}
+                </div>
+                <small>Total Users</small>
+            </div>
+            <div>
+                <div class="label-badge label-primary">{{ get_icon("user-groups") }}</div>
+            </div>
+        </div>
+        {{ closeside() }}
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        {{ openside() }}
+        <div class="display-flex flex-row justify-between">
+            <div>
+                <span>New Users</span>
+                <div class="display-flex flex-row align-center gap-10 m-t-15">
+                    <h4 class="m-r-10 m-t-0 m-b-0 text-semi-bold">{{ joined_users.now|number_format }}</h4>{{ _self.format_percent(joined_users) }}
+                </div>
+                <small>Newly Registered</small>
+            </div>
+            <div>
+                <div class="label-badge label-warning">{{ get_icon("user-joined") }}</div>
+            </div>
+        </div>
+        {{ closeside() }}
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        {{ openside() }}
+        <div class="display-flex flex-row justify-between">
+            <div>
+                <span>Active Users</span>
+                <div class="display-flex flex-row align-center gap-10 m-t-15">
+                    <h4 class="m-r-10 m-t-0 m-b-0 text-semi-bold">{{ active_users.now|number_format }}</h4>{{ _self.format_percent(active_users.change) }}
+                </div>
+                <small>Monthly Analytics</small>
+            </div>
+            <div>
+                <div class="label-badge label-success">{{ get_icon("user-active") }}</div>
+            </div>
+        </div>
+        {{ closeside() }}
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        {{ openside() }}
+        <div class="display-flex flex-row justify-between">
+            <div>
+                <span>Banned Users</span>
+                <div class="display-flex flex-row align-center gap-10 m-t-15">
+                    <h4 class="m-r-10 m-t-0 m-b-0 text-semi-bold">{{ banned_users|number_format }}</h4>
+                </div>
+                <small>Total Users</small>
+            </div>
+            <div>
+                <div class="label-badge label-danger">{{ get_icon("user-banned") }}</div>
+            </div>
+        </div>
+        {{ closeside() }}
+    </div>
+</div>
+{{ openform|raw }}
+
+{{ openside( tab_ui["tab_nav"] ,  button["filter"] ~ button["action"], "table-wrapper", "border-bottom") }}
+
+{{ tab_ui["tab_open_1"]|raw }}
+<div class="collapse p-15 w-100 border-bottom" id="filterpanel">
+    <div class="list-group m-b-15 mb-3">
+        <div class="list-group-item">
+            <div><p>{{ locale.ME_560 }}</p>{{ filter_options|raw }} {{ filter_extras|raw }}</div>
+        </div>
+        <div class="list-group-item">
+            <div><p>{{ locale.ME_561 }}</p>{{ filter_status|raw }}</div>
+        </div>
+    </div>
+    {{ filter_apply_button|raw }}
+</div>
+<div id="user_action_bar" class="m-b-10 p-15 display-block border-bottom" style="display:none;">
+    <div class="btn-group">{{ user_actions|raw }}</div>
+</div>
+<table id="{{ user_table }}" class="table">
+    <thead>
+    {{ list_column|raw }}
+    </thead>
+    <tbody></tbody>
+</table>
+<div class="p-r-15 display-flex flex-row justify-end">
+    {{ page_nav|raw }}
+</div>
+{{ tab_ui["tab_close"]|raw }}
+{{ tab_ui["tab_open_2"]|raw }}
+<table id="{{ new_user_table }}" class="table">
+    <thead>
+    <tr>
+        <th>User Name</th>
+        <th>User Joined</th>
+        <th>User Code</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+{{ tab_ui["tab_close"]|raw }}
+{{ closeside() }}
+{{ closeform|raw }}

@@ -1,0 +1,62 @@
+{% if part == "header" %}
+    <ul class="nav {{ class }}" id="{{ id }}" role="tablist">
+        {% if tab["length"] %}
+            {% for tb in tab %}
+                {% set tabActionLink = (tb['link'] ? 'href="'~tb['link']~'"' : 'data-bs-toggle="tab" data-bs-target="#'~ tb['id'] ~'"') %}
+                <li class="nav-item" role="presentation">
+                    {% if tb['dropdown'] %}
+                    <div class="btn-group">
+                        <button type="button" class="nav-link{{ whitespace(tb['active'] ? 'active' : '' ) }} dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ get_icon("caret-down") }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for dp in tb["dropdown"] %}
+                                {% if dp["divider"] %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a class="dropdown-item{{ whitespace(dp["class"]??'') }}" href="{{ (dp["link"]??'#')|raw }}">{{ dp['icon']|raw }}{{ dp["title"]|raw }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% if tb['link'] %}
+                            <a class="nav-link{{ whitespace(tb['active'] ? 'active' : '' ) }}" id="tab-{{ tb['id'] }}" {{ tabActionLink|raw }} role="tab" aria-controls="{{ tb['id'] }}" aria-selected="true" role="tab">{{ tb['icon']|raw }}{{ tb['title']|raw }}</a>
+                        {% else %}
+                            <button class="nav-link{{ whitespace(tb['active'] ? 'active' : '' ) }}" id="tab-{{ tb['id'] }}" {{ tabActionLink|raw }} role="tab" aria-controls="{{ tb['id'] }}" aria-selected="true" role="tab">{{ tb['icon']|raw }}{{ tb['title']|raw }}</button>
+                        {% endif %}
+                        {% if tb['dropdown'] %}
+                    </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+    {# {% if wrapper == true and link_mode == false %} #}
+    {% if wrapper == true %}
+        <!-- Open Tab-->
+        <div class="tab-content" id="{{ id }}Content">
+    {% endif %}
+{% elseif part == 'openbody' %}
+    {% set activeClass = active ? 'in active' : '' %}
+    {# {% if ((constant('BOOTSTRAP5') is defined AND constant("BOOTSTRAP5")== true) or (constant("BOOTSTRAP4") is defined AND constant('BOOTSTRAP4'))) %} #}
+    {% set activeClass = active ? 'show active' : '' %}
+    {# {% endif %} #}
+    <!-- Open Tab Body-->
+<div class="tab-pane fade {{ active ? 'show active' : '' }}" id="{{ id }}" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+{% elseif part == 'closebody' %}
+    <!-- Close Tab Body-->
+    </div>
+{% elseif part == 'footer' and wrapper == true %}
+    {% if tab_nav %}
+        <div class="clearfix">
+            <a class='btn btn-warning btnPrevious m-r-10'>{{ locale['previous'] }}</a>
+            <a class='btn btn-warning btnNext pull-right'>{{ locale['next'] }}</a>
+        </div>
+    {% endif %}
+    <!--Close Tab-->
+    </div>
+{% endif %}

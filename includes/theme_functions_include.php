@@ -16,9 +16,12 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\BreadCrumbs;
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\OutputHandler;
 use PHPFusion\Panels;
+use PHPFusion\QuantumFields;
+use PHPFusion\SiteLinks;
 
 defined('IN_FUSION') || exit;
 
@@ -196,7 +199,7 @@ function showprivacypolicy() {
     if (!empty(fusion_get_settings('privacy_policy'))) {
         $html .= "<a href='".BASEDIR."print.php?type=P' id='privacy_policy'>".fusion_get_locale('global_176')."</a>";
         $modal = openmodal('privacy_policy', fusion_get_locale('global_176'), ['button_id' => 'privacy_policy']);
-        $modal .= parse_text(\PHPFusion\QuantumFields::parseLabel(fusion_get_settings('privacy_policy')));
+        $modal .= parse_text(QuantumFields::parseLabel(fusion_get_settings('privacy_policy')));
         $modal .= closemodal();
         add_to_footer($modal);
     }
@@ -584,7 +587,7 @@ if (!function_exists('showsublinks')) {
             'seperator'    => $sep,
             'navbar_class' => $class,
         ];
-        return \PHPFusion\SiteLinks::setSubLinks($options)->showSubLinks();
+        return SiteLinks::setSubLinks($options)->showSubLinks();
     }
 }
 
@@ -1072,6 +1075,7 @@ if (!function_exists('tab_active')
         private $cookie_prefix = 'tab_js';
         private $cookie_name = '';
         private $link_mode = FALSE;
+        private $wrapper;
 
         /**
          * Current active tab selector.
@@ -1127,6 +1131,15 @@ if (!function_exists('tab_active')
                 }
             }
             return $default_active;
+        }
+
+        /**
+         * Enable wrapper for nav-wrapper
+         *
+         * @param $value
+         */
+        public function setWrapper($value) {
+            $this->wrapper = $value;
         }
 
         /**
@@ -1220,7 +1233,7 @@ if (!function_exists('tab_active')
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
-                    Cookies.set(cookieName, cookieValue);
+                    Cookies.set(cookieName, cookieValue);                    
                 });
                 var cookieName = 'tab_js-".$id."';
                 if (Cookies.get(cookieName)) {
@@ -1305,6 +1318,22 @@ if (!function_exists('tab_active')
     }
 
     /**
+     * Creates a Tab instance
+     *
+     * @param string $id
+     *
+     * @return FusionTabs|mixed
+     */
+    function fusion_tab($id = 'Default') {
+        static $tab;
+        if (empty($tab[$id])) {
+            $tab[$id] = new FusionTabs();
+        }
+        return $tab[$id];
+    }
+
+
+    /**
      * Current active tab selector.
      *
      * @param array  $array          Multidimension array consisting of keys title, id, icon.
@@ -1314,7 +1343,7 @@ if (!function_exists('tab_active')
      * @return string
      */
     function tab_active($array, $default_active, $getname = NULL) {
-        return \FusionTabs::tabActive($array, $default_active, $getname);
+        return FusionTabs::tabActive($array, $default_active, $getname);
     }
 
     /**
@@ -1359,7 +1388,8 @@ if (!function_exists('tab_active')
      * @return string
      */
     function opentab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = NULL, $getname = "section", $cleanup_get = [], $remember = FALSE) {
-        $fusion_tabs = new FusionTabs();
+        $fusion_tabs = fusion_tab();
+
         if ($remember) {
             $fusion_tabs->setRemember(TRUE);
         }
@@ -1379,9 +1409,7 @@ if (!function_exists('tab_active')
      * @return string
      */
     function opentabbody($tab_title, $tab_id, $link_active_arrkey = NULL, $link = FALSE, $key = NULL) {
-        $fusion_tabs = new FusionTabs();
-
-        return $fusion_tabs->openTabBody($tab_id, $link_active_arrkey, $key);
+        return fusion_tab()->openTabBody($tab_id, $link_active_arrkey, $key);
     }
 
     /**
@@ -1390,9 +1418,7 @@ if (!function_exists('tab_active')
      * @return string
      */
     function closetabbody() {
-        $fusion_tabs = new FusionTabs();
-
-        return $fusion_tabs->closeTabBody();
+        return fusion_tab()->closeTabBody();
     }
 
     /**
@@ -1403,9 +1429,7 @@ if (!function_exists('tab_active')
      * @return string
      */
     function closetab($options = []) {
-        $fusion_tabs = new FusionTabs();
-
-        return $fusion_tabs->closeTab($options);
+        return fusion_tab()->closeTab($options);
     }
 }
 
@@ -1615,7 +1639,7 @@ if (!function_exists('render_breadcrumbs')) {
      * @return string
      */
     function render_breadcrumbs($key = 'default') {
-        $breadcrumbs = \PHPFusion\BreadCrumbs::getInstance($key);
+        $breadcrumbs = BreadCrumbs::getInstance($key);
         $html = '<ol class="'.$breadcrumbs->getCssClasses().'">';
         foreach ($breadcrumbs->toArray() as $crumb) {
             $html .= '<li class="breadcrumb-item '.$crumb['class'].($crumb['link'] ? '' : ' active').'">';
