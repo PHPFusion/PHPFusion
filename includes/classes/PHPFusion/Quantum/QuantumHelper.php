@@ -381,7 +381,7 @@ class QuantumHelper {
      *
      * @return string
      */
-    public static function quantumMultilocaleFields(string $input_name, string $title, string $input_value, array $options = []) {
+    public static function quantumMultilocaleFields($input_name, $title, $input_value, array $options = []) {
 
         $locale = fusion_get_locale();
 
