@@ -70,6 +70,9 @@ class ImageRepo {
         'apply'             => 'fa-solid fa-check',
         'cancel'            => 'fa-solid fa-ban',
         'reset'             => 'fa-solid fa-rotate-left',
+        'undo'              => 'fa-solid fa-rotate-left',
+        'back'              => 'fa-solid fa-rotate-left',
+        'redo'              => 'fa-solid fa-rotate-right',
         'reply'             => 'fa-solid fa-reply',
         'forward'           => 'fa-solid fa-share-from-square',
         'first'             => 'fa-solid fa-angle-left',
@@ -122,6 +125,10 @@ class ImageRepo {
         'coins'             => 'fa-solid fa-sack',
         'location'          => 'fa-solid fa-location-dot',
         'code'              => 'fa-solid fa-brackets-curly',
+        'star'              => 'fa-regular fa-star',
+        'half-star'         => 'fa-solid fa-half-star',
+        'flag'              => 'fa-regular fa-flag',
+        'clock'             => 'fa-regular fa-clock',
         'success'           => 'fa-solid fa-badge-check',
         'warning'           => 'fa-solid fa-triangle-exclamation',
         'danger'            => 'fa-solid fa-light-emergency-on',
@@ -140,7 +147,9 @@ class ImageRepo {
         'bug'               => 'fa-solid fa-bug',
         'contact'           => 'fa-solid fa-square-phone',
         'covid'             => 'fa-solid fa-virus-covid',
-        'settings'          => 'fa-solid fa-screwdriver-wrench'
+        'settings'          => 'fa-solid fa-screwdriver-wrench',
+        'download'          => 'fa-solid fa-download',
+        'pen'               => 'fa-solid fa-pen',
     ];
 
     /**
@@ -161,7 +170,11 @@ class ImageRepo {
         if (self::$cached) {
             return;
         }
+
         self::$cached = TRUE;
+
+        $settings = fusion_get_settings();
+
         //<editor-fold desc="imagePaths">
         // You need to + sign it, so setImage will work.
         self::$image_paths += [
@@ -180,9 +193,12 @@ class ImageRepo {
             //K
             //L
             "left"          => IMAGES."icons/left.png",
+            "logo"          => $settings['sitebanner'],
             //M
             //N
             "noavatar"      => IMAGES."avatars/no-avatar.jpg",
+            "no-avatar"     => IMAGES."avatars/no-avatar.jpg",
+            "no-cover"      => IMAGES."covers/no-cover.png",
             //O
             //P
             "panel_on"      => IMAGES."icons/panel_on.gif",
