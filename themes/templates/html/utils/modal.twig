@@ -17,7 +17,7 @@
     {% set centeredClass = "modal-dialog-centered" %}
 {% endif %}
 
-<div class="modal fade {{ whitespace(class) }} show" id="{{ id }}-Modal" tabindex="-1" aria-labelledby="{{ id }}-Modal" aria-modal="true" role="dialog" aria-hidden="{{ dismiss ? 'false' : 'true' }}">
+<div class="modal fade{{ whitespace(class) }}" id="{{ id }}-Modal" tabindex="-1" aria-labelledby="{{ id }}-Modal" aria-modal="true" role="dialog" aria-hidden="{{ dismiss ? 'false' : 'true' }}">
     <div class="modal-dialog{{ whitespace(modalClass[size]) }}{{ whitespace(sizeClass[size]) }}{{ whitespace(centeredClass) }}">
         <div class="modal-content">
             {% if header_content or dismiss %}
