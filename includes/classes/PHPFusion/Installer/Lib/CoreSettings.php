@@ -30,6 +30,7 @@ class CoreSettings {
         $locale = fusion_get_locale();
 
         include BASEDIR."locale/".$localeset."/setup.php";
+        include BASEDIR."locale/".$localeset."/admin/members_email.php";
 
         $siteurl = rtrim(dirname(get_current_url()), '/').'/';
         $siteurl = str_replace('install/', '', $siteurl);

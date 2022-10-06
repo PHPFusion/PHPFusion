@@ -76,6 +76,7 @@ if (check_post('savesettings')) {
         'devmode'                  => post('devmode') ? 1 : 0,
         'login_method'             => sanitizer('login_method', '0', 'login_method'),
         'multiple_logins'          => check_post('multiple_logins') ? 1 : 0,
+        'auth_login_enabled'       => check_post('auth_login_enabled') ? 1 : 0,
         'auth_login_length'        => sanitizer('auth_login_length', '', 'auth_login_length'),
         'auth_login_attempts'      => sanitizer('auth_login_attempts', '', 'auth_login_attempts'),
         'auth_login_expiry'        => calculate_time(sanitizer('auth_login_expiry', '300', 'auth_login_expiry'), sanitizer('auth_login_expiry_c', 's', 'auth_login_expiry_c')),
