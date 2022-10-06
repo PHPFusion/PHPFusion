@@ -1428,7 +1428,7 @@ function getusergroups() {
     foreach ($groups_cache as $group) {
         $group_icon = !empty($group['group_icon']) ? $group['group_icon'] : '';
         $group_user_count = format_word($group['group_user_count'], $locale['fmt_user']);
-        $groups_array[$group_id] = [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon, $group_user_count];
+        $groups_array[] = [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon, $group_user_count];
     }
 
     return $groups_array;
