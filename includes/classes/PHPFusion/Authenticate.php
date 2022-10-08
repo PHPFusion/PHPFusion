@@ -584,7 +584,8 @@ class Authenticate {
 
                 fusion_sendmail('L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], [
                     'replace' => [
-                        '[OTP]' => $user['user_auth_pin']
+                        '[SITENAME]' => $settings['sitename'],
+                        '[OTP]'      => $user['user_auth_pin']
                     ]
                 ]);
 
@@ -602,7 +603,8 @@ class Authenticate {
 
                 fusion_sendmail('L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], [
                     'replace' => [
-                        '[OTP]' => $random_pin
+                        '[SITENAME]' => $settings['sitename'],
+                        '[OTP]'      => $random_pin
                     ]
                 ]);
                 addnotice("success", "We have sent a One Time Passcode to your registered email address for the authentication");
