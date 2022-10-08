@@ -1536,18 +1536,18 @@ class CoreTables {
                 'length'  => 170,
                 'default' => ''
             ],
-            'user_2fa'             => [
+            'user_auth'            => [
                 'type'     => 'TINYINT',
                 'length'   => 1,
                 'unsigned' => TRUE,
                 'default'  => 0,
             ],
-            'user_2fa_pin'         => [
+            'user_auth_pin'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 10,
                 'default' => "",
             ],
-            'user_2fa_actiontime'  => [
+            'user_auth_actiontime' => [
                 'type'     => 'INT',
                 'length'   => 10,
                 'unsigned' => TRUE,
