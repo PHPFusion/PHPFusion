@@ -13,7 +13,7 @@ $locale['email_verify_message'] = "Hello [USER_NAME],<br/>
 Welcome to [SITENAME]. Here are your login details:<br/>
 Username: [USER_NAME]<br/>
 Password: [USER_PASSWORD]<br/>
-Please activate your account via the following link: <a href='[LINK]'>Activate Account</a><br/>
+Please activate your account via the following link: [LINK] Activate Account<br/>
 Regards,<br/>[SITEUSERNAME]";
 
 // Verify New Email in update profile
