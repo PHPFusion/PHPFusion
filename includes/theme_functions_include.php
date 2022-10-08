@@ -353,13 +353,13 @@ if (!function_exists('openmodal') &&
 
         if ($options['static'] && !empty($modal_trigger)) {
 
-            $_js = "$('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show'); 
+            $_js = "$('#".$id."-Modal').modal({backdrop: 'static', keyboard: false}).modal('show');
                 e.preventDefault();
                 ";
 
             if (defined("BOOTSTRAP5")) {
-                $_js = "new bootstrap.Modal('#$id-Modal', {backdrop: 'static', keyboard: false}).show();                
-                 e.preventDefault(); 
+                $_js = "new bootstrap.Modal('#$id-Modal', {backdrop: 'static', keyboard: false}).show();
+                 e.preventDefault();
                 ";
             }
 
@@ -929,7 +929,7 @@ if (!function_exists('timer')) {
     function timer($time = NULL, bool $short_format = TRUE, string $add_text = ''): ?string {
 
         $locale = fusion_get_locale();
-        $timezone_offset = fusion_get_settings("serveroffset");
+        $timezone_offset = fusion_get_settings("timeoffset");
         if (iMEMBER) {
             $user_offset = fusion_get_userdata("user_timezone");
             $timezone_offset = ($user_offset ?: $timezone_offset);
@@ -1343,7 +1343,7 @@ if (!function_exists('tab_active')
                 $('#".$id." > li').on('click', function() {
                     var cookieName = '".$this->cookie_name."';
                     var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
-                    Cookies.set(cookieName, cookieValue);                    
+                    Cookies.set(cookieName, cookieValue);
                 });
                 var cookieName = 'tab_js-".$id."';
                 if (Cookies.get(cookieName)) {
@@ -1473,13 +1473,13 @@ if (!function_exists('tab_active')
                             var cookieName = '".$this->cookie_name."';
                             var cookieValue = $(this).find(\"button[role='tab']\").attr('id');
                             Cookies.set(cookieName, cookieValue);
-                            $(this).closest('.nav').find('button').removeClass('active'); 
+                            $(this).closest('.nav').find('button').removeClass('active');
                             $(this).find('button').addClass('active');
                         });
-                        var cookieName = 'tab_js-".$id."';                    
+                        var cookieName = 'tab_js-".$id."';
                         if (Cookies.get(cookieName)) {
                             $('#".$id."').find('#'+Cookies.get(cookieName)).click();
-                        }                    
+                        }
                     };
                     ".$id."tabEvent();
                     ");
@@ -1488,7 +1488,7 @@ if (!function_exists('tab_active')
                     $('#".$id." > li').on('click', function() {
                         var cookieName = '".$this->cookie_name."';
                         var cookieValue = $(this).find(\"a[role='tab']\").attr('id');
-                        Cookies.set(cookieName, cookieValue);                    
+                        Cookies.set(cookieName, cookieValue);
                     });
                     var cookieName = 'tab_js-".$id."';
                     if (Cookies.get(cookieName)) {
