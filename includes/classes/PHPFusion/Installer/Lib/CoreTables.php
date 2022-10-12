@@ -1116,7 +1116,7 @@ class CoreTables {
             ], //submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'submit_type'      => [
                 'type'   => 'CHAR',
-                'length' => 1,
+                'length' => 4,
             ],// submit_type CHAR(1) NOT NULL,
             'submit_user'      => [
                 'type'     => 'BIGINT',
