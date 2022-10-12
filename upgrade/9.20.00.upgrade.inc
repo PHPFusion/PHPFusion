@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: 9.10.20.upgrade.inc
+| Filename: 9.20.00.upgrade.inc
 | Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,12 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'setup.php');
 $settings = fusion_get_settings();
 
 $update_settings_tbl = [
-    'version'                  => '9.20.00',
+    'version' => '9.20.00'
+];
+
+$insert_settings_tbl = [
+    'blaclist_site'            => "http://www.google.com/",
     // Authentication Settings
     'auth_login_enabled'       => '1',
     'auth_login_expiry'        => 300,  // 5 minutes
@@ -33,7 +36,7 @@ $update_settings_tbl = [
     'admin_session_expiry'     => 43200, // 6 hours
     'admin_session_ext_expiry' => 86400, // 1 day duration
     'license'                  => 'agpl',
-    'license_key'              => '',
+    'license_key'              => ''
 ];
 
 if (!column_exists(DB_USERS, 'user_auth', FALSE)) {
@@ -54,6 +57,15 @@ if (!column_exists(DB_USER_GROUPS, 'group_user_count', FALSE)) {
     }
 }
 
+$change_submit = [
+    'submit_type' => " CHANGE submit_type submit_type CHAR(4) NOT NULL",
+];
+
+foreach ($change_submit as $key => $value) {
+    if (column_exists(DB_SUBMISSIONS, $key, FALSE)) {
+        $inf_altertable[] = DB_SUBMISSIONS.$value;
+    }
+}
 
 // add multilingual 2fa email templates
 $enabled_languages = (function_exists("fusion_get_enabled_languages")) ? array_keys(fusion_get_enabled_languages()) : makefilelist(LOCALE, ".|..", TRUE, "folders");
@@ -85,8 +97,14 @@ if (!empty($enabled_languages)) {
     }
 }
 
-foreach ($update_settings_tbl as $col_name => $col_value) {
-    if (!isset($settings[$col_name])) {
-        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$col_name', '$col_value')";
+foreach ($insert_settings_tbl as $key => $value) {
+    if (!isset($settings[$key])) {
+        $inf_insertdbrow[] = DB_SETTINGS." (settings_name, settings_value) VALUES ('$key', '$value')";
+    }
+}
+
+foreach ($update_settings_tbl as $key => $value) {
+    if (isset($settings[$key])) {
+        $inf_updatedbrow[] = DB_SETTINGS." SET settings_value='$value' WHERE settings_name='$key'";
     }
 }
