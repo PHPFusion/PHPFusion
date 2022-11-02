@@ -48,7 +48,7 @@ if (isset($_POST['sendmessage'])) {
         }
     }
 
-    if (!iADMIN && $settings['display_validation']) {
+    if (!iMEMBER && $settings['display_validation']) {
         $_CAPTCHA_IS_VALID = FALSE;
         include INCLUDES."captchas/".$settings['captcha']."/captcha_check.php"; // Dynamics need to develop Captcha. Before that, use method 2.
         if (!$_CAPTCHA_IS_VALID) {
