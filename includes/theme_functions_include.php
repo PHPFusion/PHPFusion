@@ -1845,10 +1845,10 @@ if (!function_exists('social_media_links')) {
         if (!empty($services) && is_array($services)) {
             foreach ($services as $service) {
                 $html .= strtr($options["template"], [
-                    "{%class%}" => $options["class"],
-                    "{%url%}"   => $service["url"].$url,
-                    "{%name%}"  => $service["name"],
-                    "{%icon%}"  => $service["icon"]
+                    "{%class%}" => esc_attr( $options["class"] ),
+                    "{%url%}"   => esc_url( $service["url"] . urlencode($url) ),
+                    "{%name%}"  => esc_attr( $service["name"] ),
+                    "{%icon%}"  => esc_attr( $service["icon"] )
                 ]);
             }
         }
