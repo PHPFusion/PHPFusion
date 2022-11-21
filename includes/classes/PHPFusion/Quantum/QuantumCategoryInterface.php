@@ -76,7 +76,7 @@ class QuantumCategoryInterface {
 
                     } else {
 
-                        $result = dbquery("SELECT uf.field_cat_id, root.field_cat_db 
+                        $result = dbquery("SELECT uf.field_cat_id, root.field_cat_db
                         FROM ".DB_USER_FIELD_CATS." uf
                         LEFT JOIN ".DB_USER_FIELD_CATS." root ON uf.field_parent = root.field_cat_id
                         WHERE uf.field_cat_id=:cid", [':cid' => $cid]);
@@ -207,7 +207,7 @@ class QuantumCategoryInterface {
                 // Delete the current category
                 dbquery("DELETE FROM ".DB_USER_FIELD_CATS." WHERE field_cat_id=:cid", [':cid' => $cid]);
 
-                add_notice('success', $this->locale['field_0200']);
+                addnotice('success', $this->locale['field_0200']);
                 redirect(FUSION_SELF.$this->aidlink);
 
             } else {
