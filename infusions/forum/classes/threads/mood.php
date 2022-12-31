@@ -64,7 +64,7 @@ class Forum_Mood extends ForumServer {
                 $has_reacted = (bool)$this->moodExists($notify_data['notify_sender'], $notify_data['notify_mood_id'], $notify_data['post_id']);
 
                 if ($mood_exists === TRUE && $has_reacted === FALSE) {
-                    dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save');
+                    dbquery_insert(DB_POST_NOTIFY, $notify_data, 'save', ['primary_key' => 'post_id']);
                     $response = TRUE;
                 }
             }

@@ -25,7 +25,7 @@ $locale = fusion_get_locale('', [
 // Infusion general information
 $inf_title = $locale['forums']['title'];
 $inf_description = $locale['forums']['description'];
-$inf_version = '2.2.1';
+$inf_version = '2.2.0';
 $inf_developer = 'PHP Fusion Development Team';
 $inf_email = 'info@phpfusion.com';
 $inf_weburl = 'https://phpfusion.com';
@@ -231,13 +231,12 @@ $inf_newtable[] = DB_FORUM_MOODS." (
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
 $inf_newtable[] = DB_POST_NOTIFY." (
-    post_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+    post_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_mood_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
     notify_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_sender MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     notify_status tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
-    PRIMARY KEY (post_id),
     KEY notify_datestamp (notify_datestamp)
 ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
 
