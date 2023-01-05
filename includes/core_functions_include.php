@@ -1970,17 +1970,17 @@ function showdate($format, $val, $options = []) {
         if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
             $format = fusion_get_settings($format);
 
-            return format_date($format, $offset);
+            return format_date($format, $offset, $client_dt);
         }
 
-        return format_date($format, $offset);
+        return format_date($format, $offset, $client_dt);
 
     }
 
     $format = fusion_get_settings($format);
     $offset = time() + $offset;
 
-    return format_date($format, $offset);
+    return format_date($format, $offset, $client_dt);
 }
 
 /**
@@ -1991,7 +1991,60 @@ function showdate($format, $val, $options = []) {
  *
  * @return string
  */
-function format_date($format, $time) {
+function format_date($format, $timestamp, $offset) {
+    $locale = fusion_get_locale();
+    $format = str_replace(
+        ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'],
+        ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'a', 'A', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'],
+        $format
+    );
+
+    $format = preg_replace('/(?<!\\\\)r/', DATE_RFC2822, $format);
+    $new_format = '';
+    $format_length = strlen($format);
+    $lcmonth = explode('|', $locale['months']);
+    $lcweek = explode('|', $locale['weekdays']);
+    $lcshort = explode('|', $locale['shortmonths']);
+    $lcmerid = explode('|', $locale['meridiem']);
+    for ($i = 0; $i < $format_length; $i ++) {
+        switch ($format[$i]) {
+            case 'D':
+                $new_format .= addcslashes(substr($lcweek[$offset->format('w')], 0, 2), '\\A..Za..z');
+                break;
+            case 'l':
+                $new_format .= addcslashes($lcweek[$offset->format('w')], '\\A..Za..z');
+                break;
+            case 'F':
+                $new_format .= addcslashes($lcmonth[$offset->format('n')], '\\A..Za..z');
+                break;
+            case 'M':
+                $new_format .= addcslashes($lcshort[$offset->format('n')], '\\A..Za..z');
+                break;
+            case 'a':
+                $mofset = $offset->format('a') == 'am' ? 0 : 1;
+                $new_format .= addcslashes($lcmerid[$mofset], '\\A..Za..z');
+                break;
+            case 'A':
+                $mofset = $offset->format('A') == 'AM' ? 2 : 3;
+                $new_format .= addcslashes($lcmerid[$mofset], '\\A..Za..z');
+                break;
+            case '\\':
+                $new_format .= $format[$i];
+                // If character follows a slash, we add it without translating.
+                if ($i < $format_length) {
+                    $new_format .= $format[++$i];
+                }
+                break;
+            default:
+                $new_format .= $format[$i];
+                break;
+        }
+    }
+    $date = DateTimeImmutable::createFromFormat('U', $timestamp);
+
+    return $date->format($new_format);
+}
+/*function format_date($format, $time) {
     $format = str_replace(
         ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'],
         ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'A', 'a', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'],
@@ -2001,7 +2054,7 @@ function format_date($format, $time) {
     $date = DateTimeImmutable::createFromFormat('U', $time);
 
     return $date->format($format);
-}
+}*/
 
 /**
  * Translate bytes into kB, MB, GB or TB.
