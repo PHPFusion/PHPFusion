@@ -1222,18 +1222,24 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
 // Format the date & time accordingly
 function showdate($format, $val) {
     global $settings, $userdata;
-
+ 
     if (isset($userdata['user_offset'])) {
-        $offset = $userdata['user_offset'] + $settings['serveroffset'];
+       $offset = $userdata['user_offset']+$settings['serveroffset'];
     } else {
-        $offset = $settings['timeoffset'] + $settings['serveroffset'];
+       $offset = $settings['timeoffset']+$settings['serveroffset'];
     }
+  // Correction for Daylight saving Time
+  $dls = 0;
+  if (date('I', $val+($offset*3600)) == 1){
+  $dls = 3600;
+  }
+ 
     if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-        return format_date($settings[$format], $val + ($offset * 3600));
+       return format_date($settings[$format], $val+$dls+($offset*3600));
     } else {
-        return format_date($format, $val + ($offset * 3600));
+       return format_date($format, $val+$dls+($offset*3600));
     }
-}
+ }
 
 /**
  * Format date - replacement for strftime()
