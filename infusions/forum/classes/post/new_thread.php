@@ -285,7 +285,7 @@ class NewThread extends ForumServer {
                                             'notify_user'      => $post_data['post_author'],
                                             'notify_status'    => 1,
                                         ];
-                                        dbquery_insert(DB_FORUM_THREAD_NOTIFY, $notice_array, 'save');
+                                        dbquery_insert(DB_FORUM_THREAD_NOTIFY, $notice_array, 'save', ['primary_key' => 'thread_id']);
                                     }
                                 }
 
