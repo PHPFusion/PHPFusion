@@ -1743,7 +1743,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     $res = '';
 
     if ($cur_page != $idx_fst) {
-        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, get_icon('first').$locale['first']);
+        $res .= sprintf($tpl_page, 0, $link.$getname, 0, get_icon('first').$locale['first']);
         $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, get_icon('previous').$locale['previous']);
     }
 
@@ -1778,7 +1778,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     if ($cur_page != $idx_lst) {
 
         $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].get_icon('next'));
-        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].get_icon('last'));
+        $res .= sprintf($tpl_page, ($pg_cnt - 1) * $count, $link.$getname, ($pg_cnt - 1) * $count, $locale['last'].get_icon('last'));
     }
 
     // if there is a request, we can redirect
