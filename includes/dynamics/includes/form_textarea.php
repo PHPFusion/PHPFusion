@@ -507,8 +507,8 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
-            $html .= "</div>\n";
             $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
+            $html .= "</div>\n";
 
         } else {
             $html .= "</div>\n";
