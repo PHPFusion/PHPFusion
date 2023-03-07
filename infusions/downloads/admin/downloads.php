@@ -206,7 +206,7 @@ if ($dl_settings['download_screenshot']) {
         $file_options = [
             'upload_path'      => IMAGES_D,
             'max_width'        => $dl_settings['download_screen_max_w'],
-            'max_height'       => $dl_settings['download_screen_max_w'],
+            'max_height'       => $dl_settings['download_screen_max_h'],
             'max_byte'         => $dl_settings['download_screen_max_b'],
             'type'             => 'image',
             'delete_original'  => 0,
