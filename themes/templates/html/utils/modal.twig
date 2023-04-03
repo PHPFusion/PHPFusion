@@ -23,7 +23,7 @@
             {% if header_content or dismiss %}
                 <div class="modal-header">
                     {% if header_content %}
-                        <h5 class="modal-title">{{ header_content }}</h5>
+                        <h5 class="modal-title">{{ header_content|raw }}</h5>
                     {% endif %}
                     {% if dismiss %}
                         {% if constant("BOOTSTRAP5") is defined %}
