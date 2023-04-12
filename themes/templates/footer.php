@@ -15,7 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Panels;
 
 defined('IN_FUSION') || exit;
@@ -61,3 +61,6 @@ remove_notice();
 if ((ob_get_length() > 0)) { // length is a number
     ob_end_flush();
 }
+
+// Close connection
+DatabaseFactory::getConnection()->close();
