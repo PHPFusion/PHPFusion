@@ -15,6 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+use PHPFusion\Database\DatabaseFactory;
+
 require_once __DIR__."/../../maincore.php";
 
 /**
@@ -51,7 +53,10 @@ if ($api = get("api")) {
         require $endpoints[$api];
 
         fusion_apply_hook("fusion_filters");
-
+        
+        // Close connection
+        DatabaseFactory::getConnection()->close();
+        
     } else {
         die("End point is faulty");
     }
