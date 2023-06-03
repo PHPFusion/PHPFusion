@@ -46,7 +46,6 @@ $_get_file_id = get("file_id", FILTER_VALIDATE_INT);
 $_get_download_id = get("download_id", FILTER_VALIDATE_INT);
 $_get_author = get("author", FILTER_VALIDATE_INT);
 
-
 add_breadcrumb([
     'link'  => INFUSIONS.'downloads/downloads.php',
     'title' => SiteLinks::getCurrentSiteLinks("infusions/downloads/downloads.php", "link_name")
@@ -144,7 +143,7 @@ switch ($_get_type) {
         $filter_condition = '';
 }
 
-if ($_get_download_id) {
+if (check_get('download_id')) {
     if (validate_download($_get_download_id)) {
 
         $pattern = "SELECT %s(dr.rating_vote) FROM ".DB_RATINGS." AS dr WHERE dr.rating_item_id = d.download_id AND dr.rating_type = 'B'";
