@@ -60,10 +60,10 @@ $result = NULL;
 if ($_get_file_id) {
     $res = 0;
 
-    $result = dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id=$_get_file_id");
+    $result = dbquery("SELECT download_url, download_file, download_cat, download_visibility FROM ".DB_DOWNLOADS." WHERE download_id = :downloadid", [':downloadid' => $_get_file_id]);
     $data = dbarray($result);
     if (dbrows($result) > 0 && checkgroup($data['download_visibility'])) {
-        dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id=$_get_file_id");
+        dbquery("UPDATE ".DB_DOWNLOADS." SET download_count=download_count+1 WHERE download_id = :getfileid", [':getfileid' => $_get_file_id]);
 
         if (!empty($data['download_file']) && file_exists(DOWNLOADS_FILES.$data['download_file'])) {
             $res = 1;
@@ -158,10 +158,10 @@ if (check_get('download_id')) {
             FROM ".DB_DOWNLOADS." AS d
             INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat = dc.download_cat_id
             LEFT JOIN ".DB_USERS." AS du ON d.download_user = du.user_id
-            ".(multilang_table("DL") ? "WHERE ".in_group('dc.download_cat_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('d.download_visibility')." AND
-            d.download_id=$_get_download_id
+            WHERE ".(multilang_table("DL") ? in_group('dc.download_cat_language', LANGUAGE)." AND " : '').groupaccess('d.download_visibility')." AND
+            d.download_id = :downloadid
             GROUP BY d.download_id
-        ");
+        ", [':downloadid' => $_get_download_id]);
 
         $info['download_rows'] = dbrows($result);
 
@@ -253,7 +253,7 @@ if (check_get('download_id')) {
         add_to_title($locale['download_1000']);
         set_meta("name", $locale['download_1000']);
 
-        $res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")."download_cat_id=$_get_cat_id"));
+        $res = dbarray(dbquery("SELECT * FROM ".DB_DOWNLOAD_CATS.(multilang_table('DL') ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")."download_cat_id = :downloadcatid", [':downloadcatid' => $_get_cat_id]));
         if (!empty($res)) {
             $info += $res;
         } else {
@@ -289,7 +289,7 @@ if (check_get('download_id')) {
             $sql_count = sprintf($pattern, 'COUNT');
             $sql_sum = sprintf($pattern, 'SUM');
 
-            $sql = "SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
+            $result = dbquery("SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
                 (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D') AS comments_count,
@@ -297,13 +297,13 @@ if (check_get('download_id')) {
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
                 LEFT JOIN ".DB_USERS." du ON d.download_user=du.user_id
-                ".(multilang_table("DL") ? " WHERE ".in_group('download_cat_language', LANGUAGE)." AND " : " WHERE ")." ".groupaccess('download_visibility')."
-                AND d.download_cat=$_get_cat_id
+                WHERE ".(multilang_table("DL") ? in_group('download_cat_language', LANGUAGE)." AND " : '').groupaccess('download_visibility')."
+                AND d.download_cat = :downloadcat
                 GROUP BY d.download_id
                 ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
-                LIMIT $rowstart,".intval($dl_settings['download_pagination']);
+                LIMIT $rowstart,".intval($dl_settings['download_pagination']), [':downloadcat' => $_get_cat_id]
+            );
 
-            $result = dbquery($sql);
             $info['download_rows'] = dbrows($result);
 
         }
@@ -327,7 +327,7 @@ if (check_get('download_id')) {
             $pattern = "SELECT %s(dr.rating_vote) FROM ".DB_RATINGS." AS dr WHERE dr.rating_item_id = d.download_id AND dr.rating_type = 'D'";
             $sql_count = sprintf($pattern, 'COUNT');
             $sql_sum = sprintf($pattern, 'SUM');
-            $download_query = "SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
+            $result = dbquery("SELECT d.*, dc.*, du.user_id, du.user_name, du.user_status, du.user_avatar , du.user_level, du.user_joined,
                 ($sql_sum) AS sum_rating,
                 ($sql_count) AS count_votes,
                 (SELECT COUNT(dcc.comment_id) FROM ".DB_COMMENTS." AS dcc WHERE dcc.comment_item_id = d.download_id AND dcc.comment_type = 'D') AS comments_count,
@@ -335,13 +335,13 @@ if (check_get('download_id')) {
                 FROM ".DB_DOWNLOADS." AS d
                 INNER JOIN ".DB_DOWNLOAD_CATS." AS dc ON d.download_cat=dc.download_cat_id
                 LEFT JOIN ".DB_USERS." AS du ON d.download_user=du.user_id
-                ".(multilang_table("DL") ? "WHERE ".in_group('dc.download_cat_language', LANGUAGE)." AND" : "WHERE")." ".groupaccess('download_visibility')."
+                WHERE ".(multilang_table("DL") ? in_group('dc.download_cat_language', LANGUAGE)." AND " : '').groupaccess('download_visibility')."
                 ".$condition."
                 GROUP BY d.download_id
                 ORDER BY ".(!empty($filter_condition) ? $filter_condition : "dc.download_cat_sorting")."
-                LIMIT $rowstart,".(int)$dl_settings['download_pagination'];
+                LIMIT $rowstart,".(int)$dl_settings['download_pagination']
+            );
 
-            $result = dbquery($download_query);
             $info['download_rows'] = dbrows($result);
         }
     }
