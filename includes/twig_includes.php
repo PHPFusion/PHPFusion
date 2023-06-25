@@ -192,6 +192,7 @@ function twig_cache_functions() {
         'add_to_css'                   => ['type' => 'outputhandler'],
         'get_settings'                 => ['type' => 'string'],
         'getuserlevel'                 => ['type' => 'string'],
+        'getuserstatus'                => ['type' => 'string'],
         // languages
         'fusion_get_enabled_languages' => ['type' => 'array'],
         'fusion_get_language_switch'   => ['type' => 'array'],
