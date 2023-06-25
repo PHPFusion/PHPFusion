@@ -55,7 +55,7 @@ class UserGroups {
         $data = $dat[$group_id];
         if ($data) {
             $members = [];
-            $members_per_page = 2;
+            $members_per_page = 20;
 
             set_title($data['group_name']);
 
