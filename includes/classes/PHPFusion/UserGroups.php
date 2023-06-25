@@ -27,8 +27,8 @@ class UserGroups {
 
     private $info = [
         'total_rows'    => 0,
-        'rows'          => 0,
-        'group_members' => []
+        'group_members' => [],
+        'group_pagenav' => ''
     ];
 
     /**
@@ -50,32 +50,28 @@ class UserGroups {
      *
      * @return array
      */
-    protected function setGroupInfo($group_id) {
-
-        $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
-
-        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." WHERE group_id='".intval($group_id)."'");
-
-        if (dbrows($result) > 0) {
+    protected function setGroupInfo($group_id = '') {
+        $dat = cache_groups();
+        $data = $dat[$group_id];
+        if ($data) {
             $members = [];
-            $members_per_page = 20;
-            $data = dbarray($result);
+            $members_per_page = 2;
 
             set_title($data['group_name']);
 
             $rows = dbcount("(user_id)", DB_USERS,
                 (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')");
 
-            $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rows ? $_GET['rowstart'] : 0);
+            $rowstart = get_rowstart("rowstart", $rows);
 
-            $members_query = "
-              SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
-              FROM ".DB_USERS." WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")."
-              AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
-              ORDER BY user_level DESC, user_name ASC LIMIT ".intval($_GET['rowstart']).", $members_per_page
-             ";
+            $members_result = dbquery("SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
+                FROM ".DB_USERS."
+                WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")."
+                AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
+                ORDER BY user_level DESC, user_name ASC
+                LIMIT ".intval($rowstart).", $members_per_page
+            ");
 
-            $members_result = dbquery($members_query);
             if (dbrows($members_result) > 0) {
                 while ($mData = dbarray($members_result)) {
                     $members[$mData['user_id']] = $mData;
@@ -84,8 +80,8 @@ class UserGroups {
 
             $this->info = [
                 'total_rows'    => $rows,
-                'rows'          => $members_per_page,
                 'group_members' => $members,
+                'group_pagenav' => makepagenav($rowstart, $members_per_page, $rows, 3, FUSION_SELF."?group_id=".$data['group_id']."&amp;")
             ];
             $this->info += $data;
         } else {
@@ -115,7 +111,6 @@ class UserGroups {
      * Render the global or custom template
      */
     public function showGroup() {
-        require_once THEMES."templates/global/groups.tpl.php";
-        render_user_group($this->info);
+        echo fusion_render(TEMPLATES."html/utils/", "group.twig", $this->info, TRUE);
     }
 }
