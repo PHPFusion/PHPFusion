@@ -172,7 +172,7 @@ class UserFields extends QuantumFields {
 
                 $this->info['user_password'] .= form_text('user_password1', $locale['u134a'], '', [
                         'type'             => 'password',
-                        'autocomplete_off' => 1,
+                        'autocomplete_off' => TRUE,
                         'inline'           => $this->input_inline,
                         'max_length'       => 64,
                         'error_text'       => $locale['u134'].$locale['u143a'],
@@ -183,7 +183,7 @@ class UserFields extends QuantumFields {
 
                 $this->info['user_password'] .= form_text('user_password2', $locale['u134b'], '', [
                         'type'             => 'password',
-                        'autocomplete_off' => 1,
+                        'autocomplete_off' => TRUE,
                         'inline'           => $this->input_inline,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133'],
@@ -195,7 +195,7 @@ class UserFields extends QuantumFields {
 
                 $this->info['user_password'] .= form_text('user_password1', $locale['u135b'], $this->getInputValue('user_password1'), [
                         'type'             => 'password',
-                        'autocomplete_off' => 1,
+                        'autocomplete_off' => TRUE,
                         'inline'           => $this->input_inline,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133'],
@@ -204,7 +204,7 @@ class UserFields extends QuantumFields {
                 );
                 $this->info['user_password'] .= form_text('user_password2', $locale['u135c'], $this->getInputValue('user_password2'), [
                         'type'             => 'password',
-                        'autocomplete_off' => 1,
+                        'autocomplete_off' => TRUE,
                         'inline'           => $this->input_inline,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133']
@@ -212,7 +212,7 @@ class UserFields extends QuantumFields {
                 );
                 $this->info['user_password'] .= form_text('user_password', $locale['u135a'], $this->getInputValue('user_password'), [
                         'type'             => 'password',
-                        'autocomplete_off' => 1,
+                        'autocomplete_off' => TRUE,
                         'inline'           => $this->input_inline,
                         'max_length'       => 64,
                         'error_text'       => $locale['u133']
@@ -252,7 +252,7 @@ class UserFields extends QuantumFields {
                     );
                     $this->info['user_admin_password'] .= form_text('user_admin_password', $locale['u144a'], $this->getInputValue('user_admin_password'), [
                             'type'             => 'password',
-                            'autocomplete_off' => 1,
+                            'autocomplete_off' => TRUE,
                             'inline'           => $this->input_inline,
                             'max_length'       => 64,
                             'error_text'       => $locale['u136']
@@ -272,7 +272,7 @@ class UserFields extends QuantumFields {
                     );
                     $this->info['user_admin_password'] .= form_text('user_admin_password2', $locale['u145'], $this->getInputValue('user_admin_password2'), [
                             'type'             => 'password',
-                            'autocomplete_off' => 1,
+                            'autocomplete_off' => TRUE,
                             'inline'           => $this->input_inline,
                             'max_length'       => 64,
                             'error_text'       => $locale['u136']
@@ -288,7 +288,7 @@ class UserFields extends QuantumFields {
                 $locale['u135a'], '',
                 [
                     'type'             => 'password',
-                    'autocomplete_off' => 1,
+                    'autocomplete_off' => TRUE,
                     'placeholder' => $locale['u100'],
                     'inline'           => TRUE,
                     'max_length'       => 64,
@@ -499,7 +499,7 @@ class UserFields extends QuantumFields {
             $html .= form_text('captcha_code', '', '', [
                 'inline'           => 1,
                 'required'         => 1,
-                'autocomplete_off' => 1,
+                'autocomplete_off' => TRUE,
                 'width'            => '200px',
                 'class'            => 'm-t-15',
                 'placeholder'      => $locale['u191']
