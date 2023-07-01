@@ -244,6 +244,7 @@ class Members_Display extends Members_Admin {
             while ($data = dbarray($result)) {
                 // the key which to be excluded should be unset
                 $key = array_keys($data);
+                $lastvisit = $data['user_lastvisit'];
                 foreach ($key as $data_key) {
                     switch ($data_key) {
                         case 'user_joined':
@@ -290,7 +291,7 @@ class Members_Display extends Members_Admin {
 
                 $list[$data['user_id']]['user_email'] = $data['user_email'];
 
-                $list[$data['user_id']]['user_status'] = getuserstatus($data['user_status']);
+                $list[$data['user_id']]['user_status'] = getuserstatus($data['user_status'], $lastvisit);
             }
         }
 

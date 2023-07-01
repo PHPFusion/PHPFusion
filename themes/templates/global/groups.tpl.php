@@ -48,16 +48,14 @@ if (!function_exists('render_user_group')) {
                 if (count(fusion_get_enabled_languages()) > 1) {
                     echo "<td class='col-xs-1'>".translate_lang_names($mData['user_language'])."</td>\n";
                 }
-                echo "<td class='col-xs-1'>".getuserstatus($mData['user_status'])."</td>\n";
+                echo "<td class='col-xs-1'>".getuserstatus($mData['user_status'], $mData['user_lastvisit'])."</td>\n";
                 echo "</tr>\n";
             }
+            echo "</table>\n</div>";
         } else {
-            echo "<tr>\n";
-            echo "<td colspan='5'>".$locale['u116']."</td>\n";
-            echo "</tr>\n";
+            echo "<div class='well text-center'>".$locale['u116']."</div>";
         }
-        echo "</table>\n</div>";
-        echo $info['total_rows'] > $info['rows'] ? "<div class='pull-right m-r-10'>".makepagenav($_GET['rowstart'], $info['rows'], $info['total_rows'], 3, FUSION_SELF."?group_id=".$info['group_id']."&amp;")."</div>\n" : "";
+        echo $info['group_pagenav'] ? "<div class='pull-right m-r-10'>".$info['group_pagenav']."</div>\n" : "";
         closetable();
     }
 }

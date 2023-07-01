@@ -75,7 +75,7 @@ if (!function_exists('render_members')) {
                     if (count(fusion_get_enabled_languages()) > 1) {
                         echo "<td class='col-xs-2'>".translate_lang_names($members['user_language'])."</td>\n";
                     }
-                    echo "<td class='col-xs-1'>".getuserstatus($members['user_status'])."</td>\n</tr>\n";
+                    echo "<td class='col-xs-1'>".getuserstatus($members['user_status'], $members['user_lastvisit'])."</td>\n</tr>\n";
                 }
             }
             echo "</table>\n</div>";

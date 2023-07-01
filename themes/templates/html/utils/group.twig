@@ -26,7 +26,7 @@
                     <td>{{ profile_link(group_members.user_id, group_members.user_name, group_members.user_status) }}</td>
                     <td class='col-xs-1'>{{ getuserlevel(group_members.user_level) }}</td>
                     <td class='col-xs-1'>{{ translate_lang_names(group_members.user_language) }}</td>
-                    <td class='col-xs-1'>{{ getuserstatus(group_members.user_status) }}</td>
+                    <td class='col-xs-1'>{{ getuserstatus(group_members.user_status, group_members.user_lastvisit) }}</td>
                 </tr>
             {% endfor %}
     </table></div>

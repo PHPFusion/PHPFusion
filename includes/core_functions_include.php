@@ -1243,14 +1243,19 @@ function getuserlevel($userlevel) {
  * Get a user status by the numeric code of status.
  *
  * @param int $userstatus Status code 0 - 8.
+ * @param int $join_timestamp User lastvisit.
  *
  * @return string|null The name of the given user status, null if it does not exist.
  */
-function getuserstatus($userstatus) {
+function getuserstatus($userstatus, $join_timestamp = 0) {
 
     $locale = fusion_get_locale();
 
-    return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
+    if ($join_timestamp) {
+        return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
+    }
+
+    return $locale['status_pending'];
 }
 
 /**

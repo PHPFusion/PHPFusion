@@ -761,7 +761,7 @@ class UserFields extends QuantumFields {
         if (iADMIN && $this->userData['user_status'] > 0) {
             $this->info['core_field']['profile_user_status'] = [
                 'title' => $locale['u055'],
-                'value' => getuserstatus($this->userData['user_status'])
+                'value' => getuserstatus($this->userData['user_status'], $this->userData['user_lastvisit'])
             ];
 
             if ($this->userData['user_status'] == 3) {

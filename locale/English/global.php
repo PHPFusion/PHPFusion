@@ -84,6 +84,7 @@ $locale['status5'] = "Cancelled";
 $locale['status6'] = "Anonymous";
 $locale['status7'] = "Deactivated";
 $locale['status8'] = "Inactive";
+$locale['status_pending'] = "Pending Activation";
 // Forum Moderator Level(s)
 $locale['userf1'] = "Moderator";
 // Navigation
