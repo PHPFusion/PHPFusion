@@ -2656,6 +2656,11 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
         $mtime = 0;
         $file = $file_info['dirname'].'/'.$file_info['basename'];
         $min_file = $file_info['dirname'].'/'.$file_info['filename'].(!stristr($file_info['filename'], '.min') ? '.min.' : '.').$file_info['extension'];
+
+        if(!file_exists($min_file)){
+            $min_file = $file_info['dirname'].'/'.$file_info['filename'].'.'.$file_info['extension'];
+        }
+        
         // do not inspect this file
         $return_file = $file;
         // inspect only on min file
@@ -2696,7 +2701,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
             add_to_footer($html_tag);
 
         } else if ($file_type == "css") {
-            $html_tag = "<link rel='stylesheet' href='$file_path' media='all'>";
+            $html_tag = "<link rel='stylesheet' type='text/css' href='$file_path' media='all'>";
             if ($html === TRUE) {
                 return $html_tag;
             }
