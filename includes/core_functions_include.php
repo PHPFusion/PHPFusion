@@ -2696,7 +2696,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
             add_to_footer($html_tag);
 
         } else if ($file_type == "css") {
-            $html_tag = "<link rel='stylesheet' href='$file_path' media='all'>";
+            $html_tag = "<link rel='stylesheet' href='$file_path' type='text/css' media='all'>";
             if ($html === TRUE) {
                 return $html_tag;
             }
