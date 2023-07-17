@@ -227,7 +227,7 @@ if (check_get('download_id')) {
             if ($data['download_keywords'] !== "") {
                 set_meta("keywords", $data['download_keywords']);
             }
-            $data['download_link'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&download_id=".$data['download_id']."'>".$data['download_title']."</a>";
+            $data['download_link'] = "<a class='text-dark' href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&amp;download_id=".$data['download_id']."'>".$data['download_title']."</a>";
 
             $data['download_show_comments'] = get_download_comments($data);
             $data['download_show_ratings'] = get_download_ratings($data);
@@ -528,7 +528,7 @@ function parse_dl_info($data) {
         'download_anchor'            => "<a name='download_".$data['download_id']."' id='download_".$data['download_id']."'></a>",
         'download_description_short' => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description_short']))))),
         'download_description'       => nl2br(parseubb(parsesmileys(html_entity_decode(stripslashes($data['download_description']))))),
-        'download_link'              => INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&download_id=".$data['download_id'],
+        'download_link'              => INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat_id']."&amp;download_id=".$data['download_id'],
         'download_category_link'     => "<a href='".INFUSIONS."downloads/downloads.php?cat_id=".$data['download_cat']."'>".$data['download_cat_name']."</a>\n",
         'download_readmore_link'     => "<a href='".INFUSIONS."downloads/downloads.php?download_id=".$data['download_id']."'>".$locale['download_1006']."</a>\n",
         'download_title'             => stripslashes($data['download_title']),
