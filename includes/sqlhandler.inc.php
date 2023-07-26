@@ -758,7 +758,7 @@ function dbquery_insert($table, array $inputdata, $mode, $options = []) {
 
     $params = [];
     foreach ($data as $name => $value) {
-        $sanitized_input[] = "$name = :$name";
+        $sanitized_input[] = "$name = ':$name'";
         $params[":$name"] = $value;
     }
 

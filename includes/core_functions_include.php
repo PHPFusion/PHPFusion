@@ -1693,7 +1693,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
-    if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
+    if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE || defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE) {
         $tpl_global = "<nav class='pagination'><div class='pagination-row'>%s</div><div class='pagination-nav'><div class='btn-group'>\n%s</div></div></nav>\n";
         $tpl_currpage = "<a class='btn btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
         $tpl_page = "<a class='btn btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
