@@ -26,7 +26,7 @@ $userdata = fusion_get_userdata();
 // Check if Maintenance is Enabled
 if ($settings['maintenance'] == "1" &&
     ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
-        ($settings['maintenance_level'] < $userdata['user_level']))
+    ($settings['maintenance_level'] < $userdata['user_level']))
 ) {
     if ($settings['site_seo']) {
         redirect(FUSION_ROOT.BASEDIR."maintenance.php");
@@ -50,6 +50,7 @@ require_once INCLUDES."deprecated.php";
 
 require_once INCLUDES."theme_functions_include.php";
 
+//require_once INCLUDES.'plugins_include.php';
 require_once INCLUDES."twig_includes.php";
 
 // for compatibility

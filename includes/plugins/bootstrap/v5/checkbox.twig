@@ -1,0 +1,28 @@
+{% macro _checkboxes(input_name, label, input_value, options, nested = false) %}
+    {% set groupClass = 'form-check' %}
+    {% if options['toggle'] %}
+        {% set role = 'role="switch"' %}
+        {% set groupClass = 'form-switch' %}
+    {% endif %}
+
+    {% if nested == true and options['options_data']|length > 0 %}
+
+        {% if options['inline_options']  == true %}
+            <div class="display-flex flex-row gap-3 m-0">
+        {% endif %}
+
+        {% for key, value in options['options_data'] %}
+            <div class="{{ groupClass }}">
+                <input id="{{ options['input_id'] }}-{{ key }}" name="{{ input_name }}" class="form-check-input" value="{{ key }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate'] or options['deactivate_key'] == key|number_format ? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(input_value[key] == true ? 'checked' : '') }}>
+                <label for="{{ options['input_id'] }}-{{ key }}">{{ value['value']|raw }}</label>
+            </div>
+        {% endfor %}
+
+        {% if options['inline_options']  == true %}
+            </div>
+        {% endif %}
+
+    {% else %}
+        <input id="{{ options['input_id'] }}" name="{{ input_name }}" class="form-check-input" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate']? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(options['value'] == input_value ? 'checked' : '') }}>
+    {% endif %}
+{% endmacro %}

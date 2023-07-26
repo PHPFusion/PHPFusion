@@ -1,0 +1,4 @@
+
+{% macro _textarea(input_name, label, input_value, options) %}
+    <textarea name="{{ input_name }}" style="width:{{ options['inner_width'] }};height:{{ options['height'] }}"{{ whitespace(options['no_resize'] ? 'resize:none': '') }} rows="{{ options['rows'] }}" cols="1" class="form-control textbox{{ whitespace(options['inner_class']??'') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}" {{ whitespace(options['autosize']?'animated-height':'') }}{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }} id="{{ options['input_id'] }}"{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '')|raw }}>{{ input_value|raw }}</textarea>
+{% endmacro %}

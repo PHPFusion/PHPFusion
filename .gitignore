@@ -17,3 +17,4 @@ fusion_error_log.log
 #/includes/vendor/
 /installer_*.log
 .maintenance
+/includes/plugins/twig/cache/

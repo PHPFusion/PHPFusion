@@ -1,0 +1,59 @@
+{% macro opencollapse(id) %}
+{% if constant('BOOTSTRAP5') is defined %}
+<div class="accordion" id="{{ id }}-collapse">
+    {% else %}
+    <div class="panel-group" id="{{ id }}-collapse" role="tablist" aria-multiselectable="true">
+        {% endif %}
+        {% endmacro %}
+
+        {% macro opencollapsebody(title, unique_id, grouping_id, active, wrapper_class, item_class) %}
+        {% if constant('BOOTSTRAP5') is defined %}
+
+        <div class="accordion-item{{ whitespace(wrapper_class) }}">
+            <h2 class="accordion-header" id="{{ unique_id }}">
+                <button class="accordion-button collapsed{{ whitespace(item_class) }}" type="button" data-bs-toggle="collapse" data-bs-target="#{{ unique_id }}-collapse" aria-expanded="{{ active ? 'true' : 'false' }}" aria-controls="{{ unique_id }}-collapse">
+                    {{ title|raw }}
+                </button>
+            </h2>
+            <div id="{{ unique_id }}-collapse" class="accordion-collapse collapse{{ whitespace(active ? 'show' : '') }}" aria-labelledby="{{ unique_id }}-collapse" data-bs-parent="#{{ grouping_id }}-collapse">
+                <div class="accordion-body">
+                    {% else %}
+                    <div class="panel panel-default{{ whitespace(wrapper_class) }}">
+                        <div class="panel-heading" role="tab" id="{{ unique_id }}-collapse-heading">
+                            <h4 class="panel-title">
+                                <a class="{{ item_class }}" role="button" data-toggle="collapse" data-parent="#{{ grouping_id }}-collapse" href="#{{ unique_id }}-collapse" aria-expanded="true" aria-controls="{{ unique_id }}-collapse">
+                                    {{ title|raw }}
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="{{ unique_id }}-collapse" class="panel-collapse collapse{{ whitespace(active == true ? 'in' : '') }}" role="tabpanel" aria-labelledby="{{ unique_id }}-collapse-heading">
+                            <div class="panel-body">
+                                {% endif %}
+                                {% endmacro %}
+
+                                {% macro closecollapsebody() %}
+                                {% if constant('BOOTSTRAP5') is defined %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endmacro %}
+
+        {% macro closecollapse() %}
+    </div>
+    {% endmacro %}
+
+
+    {% if mode == 'open' %}
+        {{ _self.opencollapse(id) }}
+    {% elseif mode == 'openbody' %}
+        {{ _self.opencollapsebody(title, unique_id, grouping_id, active, wrapper_class, item_class) }}
+    {% elseif mode == 'closebody' %}
+        {{ _self.closecollapsebody() }}
+    {% elseif mode == 'close' %}
+        {{ _self.closecollapse() }}
+    {% endif %}
