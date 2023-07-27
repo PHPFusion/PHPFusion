@@ -31,7 +31,7 @@ if (!defined('IN_FUSION')) {
  * Check maintenance mode.
  */
 function check_maintenance_mode() {
-    $file = __DIR__.'/.maintenance';
+    $file = __DIR__ . '/.maintenance';
     if (!file_exists($file)) {
         return;
     }
@@ -48,7 +48,7 @@ function check_maintenance_mode() {
 
 check_maintenance_mode();
 
-require_once __DIR__.'/includes/core_resources_include.php';
+require_once __DIR__ . '/includes/core_resources_include.php';
 
 // Prevent any possible XSS attacks via $_GET.
 if (stripget($_GET)) {
@@ -74,16 +74,16 @@ date_default_timezone_set('UTC');
 ini_set('session.gc_probability', 1);
 ini_set('session.gc_divisor', 100);
 // Session lifetime. After this time stored data will be seen as 'garbage' and cleaned up by the garbage collection process.
-ini_set('session.gc_maxlifetime', 172800); // 48 hours
+ini_set('session.gc_maxlifetime', 172800);  // 48 hours
 // Session cookie lifetime
 ini_set('session.cookie_lifetime', 172800); // 48 hours
 // Prevent document expiry when user hits Back in browser
 session_cache_limiter('private, must-revalidate');
-session_name(COOKIE_PREFIX.'session');
+session_name(COOKIE_PREFIX . 'session');
 // Start DB session.
 if (!empty($settings['database_sessions']) && (!empty($db_host) && !empty($db_user) && !empty($db_name))) {
     // Establish secondary MySQL database connection for session caches
-    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX.'session')->setConfig(
+    $handler = \PHPFusion\Sessions::getInstance(COOKIE_PREFIX . 'session')->setConfig(
         $db_host, $db_user, (!empty($db_pass) ? $db_pass : ''), $db_name, (!empty($db_port) ? $db_port : 3306)
     );
     session_set_save_handler(
@@ -99,16 +99,16 @@ unset($db_host, $db_user, $db_pass);
 @session_start();
 
 if (empty($settings)) {
-    if (file_exists(BASEDIR.'install.php')) {
-        if (file_exists(BASEDIR.'config.php')) {
-            @rename(BASEDIR.'config.php', BASEDIR.'config_backup_'.time().'.php');
+    if (file_exists(BASEDIR . 'install.php')) {
+        if (file_exists(BASEDIR . 'config.php')) {
+            @rename(BASEDIR . 'config.php', BASEDIR . 'config_backup_' . time() . '.php');
         }
-        redirect(BASEDIR.'install.php');
+        redirect(BASEDIR . 'install.php');
     }
     die("Website configurations do not exist, please check your config.php file or run install.php again.");
 }
 
-header('X-Powered-By: PHPFusion'.(isset($settings['version']) ? ' '.$settings['version'] : ''));
+header('X-Powered-By: PHPFusion' . (isset($settings['version']) ? ' ' . $settings['version'] : ''));
 
 ob_start();
 
@@ -128,13 +128,13 @@ if ($settings['site_protocol'] == 'https' && (
     !(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
         isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
     )) {
-    redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+    redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 }
 
 // Redirect to correct path if there are double // in the current uri
 if (substr_count($_SERVER['REQUEST_URI'], '//')) {
     $site_path = preg_replace('/(\/+)/', '/', $_SERVER['REQUEST_URI']);
-    redirect(rtrim($settings['siteurl'], '/').$site_path);
+    redirect(rtrim($settings['siteurl'], '/') . $site_path);
 }
 
 define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
@@ -176,7 +176,7 @@ $base_url_count = substr_count(BASEDIR, "/") + 1;
 $current_page = "";
 while ($base_url_count != 0) {
     $current = $url_count - $base_url_count;
-    $current_page .= "/".$script_url[$current];
+    $current_page .= "/" . $script_url[$current];
     $base_url_count--;
 }
 
@@ -184,32 +184,37 @@ while ($base_url_count != 0) {
 define("TRUE_PHP_SELF", $current_page);
 define("START_PAGE", substr(preg_replace(
     "#(&amp;|\?)(s_action=edit&amp;shout_id=)([0-9]+)#s", "",
-    TRUE_PHP_SELF.(FUSION_QUERY ? "?".FUSION_QUERY : "")
+    TRUE_PHP_SELF . (FUSION_QUERY ? "?" . FUSION_QUERY : "")
 ), 1));
 
 /**
  * Login / Logout / Revalidate
  */
-$userdata = [];
-if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
-    if (fusion_safe()) {
-        $auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
-        if ($auth->authRedirection()) {
-            // auth mode for security pin
-            // on second refresh, the validateAuthUser will kick in and log user out if session not loaded.
-            redirect(BASEDIR."login.php?auth=security_pin");
-            // we have once chance to do a OTP.
+function fusion_set_user() {
+    static $userdata = [];
+    if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
+        if (fusion_safe()) {
+            $auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
+            if ($auth->authRedirection()) {
+                // auth mode for security pin
+                // on second refresh, the validateAuthUser will kick in and log user out if session not loaded.
+                redirect(BASEDIR . "login.php?auth=security_pin");
+                // we have once chance to do a OTP.
+            }
+            $userdata = $auth->getUserData();
+            redirect(FUSION_REQUEST);
         }
-        $userdata = $auth->getUserData();
-        redirect(FUSION_REQUEST);
+    } else if (get('logout') === 'yes') {
+        $userdata = Authenticate::logOut();
+        $request = clean_request('', ['logout'], FALSE);
+        redirect($request);
+    } elseif (empty($userdata['user_id'])) {
+        $userdata = Authenticate::validateAuthUser();
     }
-} else if (get('logout') === 'yes') {
-    $userdata = Authenticate::logOut();
-    $request = clean_request('', ['logout'], FALSE);
-    redirect($request);
-} else {
-    $userdata = Authenticate::validateAuthUser();
+    return $userdata;
 }
+
+$userdata = fusion_set_user();
 
 // User level, Admin Rights & User Group definitions
 define("iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0);
@@ -225,19 +230,19 @@ static $current_user_language = [];
 if (iMEMBER && valid_language($userdata['user_language'])) {
     $current_user_language = $userdata['user_language'];
 } else {
-    $langData = dbarray(dbquery('SELECT * FROM '.DB_LANGUAGE_SESSIONS.' WHERE user_ip=:ip', [':ip' => USER_IP]));
+    $langData = dbarray(dbquery('SELECT * FROM ' . DB_LANGUAGE_SESSIONS . ' WHERE user_ip=:ip', [':ip' => USER_IP]));
     $current_user_language = (!empty($langData['user_language']) ? $langData['user_language'] : fusion_get_settings('locale'));
 }
 $language_opts = fusion_get_enabled_languages(TRUE);
 $enabled_languages = array_keys($language_opts);
 
 // If language change is initiated and if the selected language is valid
-if (check_get('lang') && file_exists(LOCALE.get('lang')."/global.php") && in_array(get('lang'), $enabled_languages)) {
+if (check_get('lang') && file_exists(LOCALE . get('lang') . "/global.php") && in_array(get('lang'), $enabled_languages)) {
     $current_user_language = stripinput(get('lang'));
     set_language($current_user_language);
 } else {
     if (count($enabled_languages) > 1) {
-        require __DIR__.'/includes/core_mlang_hub_include.php';
+        require __DIR__ . '/includes/core_mlang_hub_include.php';
     }
 }
 
@@ -245,21 +250,21 @@ if (!defined('LANGUAGE')) {
     define('LANGUAGE', $current_user_language);
 }
 if (!defined('LOCALESET')) {
-    define('LOCALESET', $current_user_language.'/');
+    define('LOCALESET', $current_user_language . '/');
 }
 
 $locale = [];
-\PHPFusion\Locale::setLocale(LOCALE.LOCALESET.'global.php');
+\PHPFusion\Locale::setLocale(LOCALE . LOCALESET . 'global.php');
 $setlocale = empty(fusion_get_locale('setlocale')) ? 'en_GB' : fusion_get_locale('setlocale');
 $win = explode('_', $setlocale);
-setlocale(LC_ALL, $setlocale.'.UTF-8', $win[0]);
+setlocale(LC_ALL, $setlocale . '.UTF-8', $win[0]);
 //setlocale(LC_ALL, $setlocale.'.UTF-8');
 
 // IP address functions
-include INCLUDES."ip_handling_include.php";
+include INCLUDES . "ip_handling_include.php";
 
 // Error Handling
-require_once INCLUDES."error_handling_include.php";
+require_once INCLUDES . "error_handling_include.php";
 
 if (!defined('FUSION_ALLOW_REMOTE')) {
     new Token();
@@ -270,14 +275,14 @@ Defender\ImageValidation::validateExtensions();
 // Define aidlink
 if (iADMIN) {
     //@todo: to remove this part for non-global approach
-    define("iAUTH", substr(md5($userdata['user_password'].USER_IP), 16, 16));
+    define("iAUTH", substr(md5($userdata['user_password'] . USER_IP), 16, 16));
     $aidlink = fusion_get_aidlink();
     // Generate a session aid every turn
     $token_time = time();
     $algo = fusion_get_settings('password_algorithm');
-    $key = $userdata['user_id'].$token_time.iAUTH.SECRET_KEY;
-    $salt = md5($userdata['user_admin_salt'].SECRET_KEY_SALT);
-    $_SESSION['aid'] = $userdata['user_id'].".".$token_time.".".hash_hmac($algo, $key, $salt);
+    $key = $userdata['user_id'] . $token_time . iAUTH . SECRET_KEY;
+    $salt = md5($userdata['user_admin_salt'] . SECRET_KEY_SALT);
+    $_SESSION['aid'] = $userdata['user_id'] . "." . $token_time . "." . hash_hmac($algo, $key, $salt);
 }
 
 // PHPFusion user cookie functions
@@ -289,23 +294,24 @@ Authenticate::setAdminLogin();
 Dynamics::getInstance();
 
 // Set theme
-$_session_theme = session_get(COOKIE_PREFIX.'theme');
+$_session_theme = session_get(COOKIE_PREFIX . 'theme');
 $theme_session = $_session_theme && theme_exists($_session_theme) ? $_session_theme : FALSE;
 
 if ($_session_theme == fusion_get_settings('theme')) {
-    session_remove(COOKIE_PREFIX.'theme');
+    session_remove(COOKIE_PREFIX . 'theme');
 }
 
 $theme = $theme_session !== FALSE ? $theme_session : (empty($userdata['user_theme']) ? fusion_get_settings('theme') : $userdata['user_theme']);
 set_theme($theme);
 
-$result = cdquery('installed_infusions', "SELECT inf_folder, inf_version FROM ".DB_INFUSIONS);
-if (cdrows($result)) {
-    while ($data = cdarray($result)) {
-        if (file_exists(INFUSIONS.$data['inf_folder'])) {
-            define(strtoupper($data['inf_folder']).'_EXISTS', TRUE);
-            define(strtoupper($data['inf_folder']).'_EXIST', TRUE); // just in case
-            define(strtoupper($data['inf_folder']).'_VERSION', $data['inf_version']);
+// This can be converted into sessions
+$result = dbquery("SELECT inf_folder, inf_version FROM " . DB_INFUSIONS);
+if (dbrows($result)) {
+    while ($data = dbarray($result)) {
+        if (file_exists(INFUSIONS . $data['inf_folder'])) {
+            define(strtoupper($data['inf_folder']) . '_EXISTS', TRUE);
+            define(strtoupper($data['inf_folder']) . '_EXIST', TRUE); // just in case
+            define(strtoupper($data['inf_folder']) . '_VERSION', $data['inf_version']);
         }
     }
 }

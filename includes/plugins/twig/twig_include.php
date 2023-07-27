@@ -110,11 +110,8 @@ function fusion_render(string $dir_path = THEMES.'templates/', string $file_path
     $twig = twig_init($config);
 
     if ($__fn = twig_cache_functions()) {
-
         foreach ($__fn as $function_name => $twig_function) {
-
             if (function_exists($function_name)) {
-
                 /**
                  * @uses schema
                  */

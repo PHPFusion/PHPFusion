@@ -92,14 +92,14 @@
     {% endif %}
 
 
-    <div id="{{ info['id'] }}" class="navbar {{ navbarClass }}" role="navigation">
-        {{ openContainer|raw }}
-        <!--Menu Header Start-->
-        {{ headerContent|raw }}
-        {{ responsiveButton|raw }}
-        {{ info['custom_header']|raw }}
-        <!--Menu Header End-->
-        {{ openNav|raw }}
+<div id="{{ info['id'] }}" class="navbar {{ navbarClass }}" role="navigation">
+{{ openContainer|raw }}
+<!--Menu Header Start-->
+{{ headerContent|raw }}
+{{ responsiveButton|raw }}
+{{ info['custom_header']|raw }}
+<!--Menu Header End-->
+{{ openNav|raw }}
 
         {{ info['html_pre_content']|raw }}
         <div class="navbar-nav primary me-auto mb-2 mb-lg-0{{ whitespace(info['nav_class']) }}">
@@ -156,8 +156,7 @@
 
 {% endmacro %}
 
-
-{% set info = {
+{{ _self.showsublinks({
     'id': id,
     'container': container,
     'container_fluid': container_fluid,
@@ -180,6 +179,4 @@
     'search_uri': search_uri,
     'primary_callback_nav' : primary_callback_nav,
     'secondary_callback_nav' : secondary_callback_nav
-} %}
-
-{{ _self.showsublinks(info) }}
+}) }}

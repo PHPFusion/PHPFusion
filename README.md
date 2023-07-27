@@ -36,3 +36,9 @@ Please read [upgrade guide](https://phpfusion.com/docs/phpfusion-9-documentation
 [Discord](https://discord.gg/nuaAYbV)
 
 <!-- Do not judge the product if you have not tried it ;) -->
+
+
+Important Change Logs:
+---------------
+- Added Twig as Plugins
+- Moved Bootstrap as Plugins, Twig will be required for Bootstrap Plugin to work  
