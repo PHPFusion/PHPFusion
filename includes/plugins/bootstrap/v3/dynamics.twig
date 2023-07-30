@@ -1,0 +1,35 @@
+{% set form_text = ['text', 'number', 'password', 'email', 'price', 'ip'] %}
+
+{% set ct_row_offset = (input_options['inline'] and input_label ? ' row' : '') %}
+{% set ct_icon_class = (input_options['icon'] ? 'has-feedback' : '') %}
+{% set ct_width = (input_options['width'] and input_label|length == 0 ? 'style="width:'~input_options['width']~';"' : '') %}
+
+{% if (input_label) %}
+    {% if input_options['inline'] %}
+        {% set label_class = 'col-xs-12 col-sm-12 col-md-3 col-lg-3' %}
+        {% set inline_start = '<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">' %}
+        {% set inline_end = '</div>' %}
+
+    {% endif %}
+
+    {% set required_mark = (input_options['required'] ? '<span class="required">*</span>' : '') %}
+    {% set ext_tip = (input_options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ input_options['tip'] ~ '"></i>' : '')|raw %}
+    {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="control-label '~label_class~'">'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~'</label>' %}
+{% endif %}
+
+
+<div id="{{ input_options['input_id'] }}-field" class="form-group{{ whitespace(ct_row_offset) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
+
+    {{ (label_dom ~ inline_start)|raw }}
+
+    {% if (input_options['input_type'] in form_text) %}
+
+        {% import 'dynamics/text.twig' as text %}
+
+        {{ text.text_input(input_options) }}
+
+        {# end type check #}
+    {% endif %}
+
+    {{ inline_end|raw }}
+</div>

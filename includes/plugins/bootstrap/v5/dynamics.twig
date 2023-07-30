@@ -1,0 +1,254 @@
+{% set form_text = ['text', 'number', 'password', 'email', 'price', 'ip'] %}
+
+{% macro _hidden(input_name, label, input_value, options) %}
+    <input type="hidden" name="{{ input_name }}" id="{{ options["input_id"] }}" value="{{ input_value|raw }}"{{ whitespace(options['width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') }}>
+{% endmacro %}
+
+{% macro _dropdown(input_name, label, options) %}
+    {% if options['jsonmode'] or options['tags'] %}
+        <div id="{{ options['input_id'] }}-spinner" style="display:none;">
+            <img src="{{ fusion_get_settings("siteurl") }}/images/loader.svg" alt=""></div>
+        {% if options['tags'] == false and options['jsonmode'] == false %}
+            {% set dropdownClass = "form-select" %}
+        {% endif %}
+        <input type="hidden" class="{{ dropdownClass }}{{ whitespace(options['required'] ? 'class="required"':'')|raw }}{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace( options['max_length']) }} name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '') }}>
+    {% else %}
+        <select class="{{ options['select2_disabled'] ? 'form-select' : '' }}{{ whitespace(options['required'] ? 'class="required"':'')|raw }}{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}" {{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}name="{{ input_name }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw }}{{ whitespace(options['onchange'] ? 'onchange='~options['onchange'] : '')|raw }}{{ whitespace(options['data_options'] ? options['data_options']|join(' ') : '')|raw }}{{ whitespace(options['deactivate'] ? 'disabled': '') ~ whitespace(options['multiple'] ? 'multiple' : '') ~ whitespace(options['required'] ? 'required' : '') }} {{ (label ? 'aria-label="'~ label ~'"':'')|raw }}>
+            {{ options['options_html']|raw }}
+        </select>
+    {% endif %}
+    {% if options['required'] %}
+        <input class="required" id="dummy-{{ options['input_id'] }}" type="hidden">
+    {% endif %}
+{% endmacro %}
+
+{% macro _checkboxes(input_name, label, input_value, options, nested = false) %}
+
+    {% set groupClass = 'form-check' %}
+
+    {% if options['toggle'] %}
+        {% set role = 'role="switch"' %}
+        {% set groupClass = 'form-switch' %}
+    {% endif %}
+
+    {% if nested == true and options['options_data']|length > 0 %}
+        {% if options['inline_options']  == true %}
+            <div class="display-flex flex-row gap-3 m-0">
+        {% endif %}
+        {% for key, value in options['options_data'] %}
+
+            <div class="{{ groupClass }}">
+                <input id="{{ options['input_id'] }}-{{ key }}" name="{{ input_name }}" class="form-check-input" value="{{ key }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate'] or options['deactivate_key'] == key|number_format ? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(input_value[key] == true ? 'checked' : '') }}>
+                <label for="{{ options['input_id'] }}-{{ key }}">{{ value['value']|raw }}</label>
+            </div>
+        {% endfor %}
+        {% if options['inline_options']  == true %}
+            </div>
+        {% endif %}
+    {% else %}
+        <input id="{{ options['input_id'] }}" name="{{ input_name }}" class="form-check-input" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate']? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(options['value'] == input_value ? 'checked' : '') }}>
+    {% endif %}
+{% endmacro %}
+
+{% macro _textarea(input_name, label, input_value, options) %}
+    {% if options['bbcode_options'] %}
+        {% set bbcodeClass = 'rounded-0 border border-0' %}
+    {% endif %}
+    <textarea name="{{ input_name }}" style="width:{{ options['inner_width'] }};height:{{ options['height'] }}"{{ whitespace(options['no_resize'] ? 'resize:none': '') }} rows="{{ options['rows'] }}" cols="1" class="form-control textbox{{ whitespace(bbcodeClass) }}{{ whitespace(options['inner_class']??'') }}" {{ whitespace(options['autosize']?'animated-height':'') }}{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }} id="{{ options['input_id'] }}"{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '')|raw }}>{{ input_value|raw }}</textarea>
+{% endmacro %}
+
+{% if constant('BOOTSTRAP5') is defined %}
+
+    {% set formGroupClass = options['inline'] and label and options['floating_label'] == false ? 'row' : 'form-group' %}
+
+    <div id="{{ options['input_id'] }}-field" class="{{ (options['input_type'] == 'checkboxes' and options['options']|length == 0 ? 'form-check': formGroupClass ) }}{{ whitespace(options['input_type']=='checkboxes' and options['options']|length==0 and options['toggle'] ? 'form-switch' : '') }} mb-3{{ whitespace(options['floating_label'] ? 'form-floating': '')~whitespace(options['class'] ?? '') }}">
+
+        {% if ((label and options['floating_label'] == false) or (options['input_type'] == 'checkboxes')) %}
+            {% set required = (options['required'] == true ? '<span class="required"> *</span>' : '') %}
+
+            {% set tip = (options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ options['tip'] ~ '"></i>' : '')|raw %}
+
+            {% if options['input_type'] == 'checkboxes' and options['options']|length == 0 and options['reverse_label'] == true %}
+
+                {{ _self._checkboxes(input_name, label, input_value, options)|raw }}
+            {% endif %}
+
+            {% if label %}
+                <label for="{{ options['input_id'] }}" class="form-label control-label{{ whitespace(options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '') }}">{{ options['label_icon']|raw }}{{ label|raw }}{{ whitespace(required)|raw }}{{ whitespace(tip)|raw }}</label>
+            {% endif %}
+
+            {% if options['input_type'] == 'checkboxes' and options['options']|length == 0 and options['reverse_label'] == false %}
+                {{ _self._checkboxes(input_name, label, input_value, options)|raw }}
+            {% endif %}
+
+        {% endif %}
+
+        {{ (options['inline']  ? '<!---Start inline div ---><div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">' : '')|raw }}
+
+        {% if options['input_type'] == 'checkboxes' %}
+        {% set label = false %}
+        {% set clabel = true %}
+    {% elseif options['input_type'] == 'textarea' %}
+
+        {% if options['bbcode_options'] %}
+        <!--Start BBcode card-->
+        <div class="panel panel-default panel-txtarea card">
+            <div class="card-body border-bottom panel-heading clearfix">
+                <div class="bbcode_input">
+                    {{ options['bbcode_options']['buttons']|raw }}
+                    {{ options['bbcode_options']['preview_button']|raw }}
+                </div>
+            </div>
+            {{ options['bbcode_options']['open_tab_content_edit']|raw }}
+            <div class="form-group form-floating">
+                {% endif %}
+                {% endif %}
+
+                {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_html'] or options['append_html'] or options['prepend_value']) and options['input_type'] in form_text %}
+                <!--Start Input Group-->
+                {% set inputGroup = true %}
+                <div class="input-group{{ whitespace(options['group_size'] ? 'input-group'~ options['group_size'] : '') }}{{ options['floating_label'] == true?' form-floating':'' }}"{{ whitespace(options['width'] ? 'style="width:'~options['width']~'"' : '')|raw }}>
+                    {% endif %}
+
+                    {% if options['input_type'] in form_text %}
+                        {% if (options['prepend_button'] and options['prepend_type'] and options['prepend_form_value'] and options['prepend_class'] and options['prepend_value']) %}
+                            <span class="flex-nowrap"><button id="{{ options['prepend_button_id'] }}" name="{{ options['prepend_button_name'] }}" type="{{ options['prepend_type'] }}" value="{{ options['prepend_form_value'] }}" class="btn {{ options['prepend_size'] ~ whitespace(options['prepend_class']) }}">{{ options['prepend_value']|raw }}</button></span>
+                        {% elseif (options['prepend_value']) %}
+                            <span class="input-group-text" id="{{ options['prepend_id'] }}">{{ options['prepend_value']|raw }}</span>
+                        {% elseif (options['prepend_html']) %}
+                            {# New BS5 inputgroup element #}
+                            {{ options['prepend_html']|raw }}
+                        {% endif %}
+                    {% endif %}
+
+                    {# Validation control - using .is-valid / .is-invalid #}
+                    {% if options['input_type'] in form_text %}
+                        {% if options['max_length'] %}
+                            {% set maxLength = ' maxlength="'~options['max_length']~'"' %}
+                            {% if options['input_type'] == 'number' %}
+                                {# {% set maxLength = maxLength ~ whitespace('oninput="javascript:if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"')|raw %} #}
+                            {% endif %}
+                        {% endif %}
+                        <input type="{{ options['input_type'] }}" data-type="{{ options['input_type'] }}" {{ whitespace(options['data'])|raw }}{{ whitespace( options['min'])|raw }}{{ whitespace(options['max'])|raw }}{{ whitespace(options['step'])|raw }}class="form-control textbox {{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '') }}{{ maxLength|raw }} name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '') }}{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['required'] ? 'required' : '') }}>
+                    {% elseif options['input_type'] == 'textarea' %}
+                        {{ _self._textarea(input_name, label, input_value, options)|raw }}
+                    {% elseif options['input_type'] == 'dropdown' %}
+                        {{ _self._dropdown(input_name, label, options)|raw }}
+                    {% elseif options['input_type'] == 'checkboxes' and options['options']|length > 0 %}
+                        {# Nested Checkboxes with many options #}
+                        {{ _self._checkboxes(input_name, label, input_value, options, true)|raw }}
+                    {% elseif options['input_type'] == 'hidden' %}
+                        {{ _self._hidden(input_name, label, input_value, options, true)|raw }}
+                    {% endif %}
+
+                    {% if options['input_type'] in form_text %}
+                        {% if (options['append_button'] and options['append_type'] and options['append_form_value'] and options['append_class'] and options['append_value']) %}
+                            {% if options['floating_label'] %}
+                                {% set positionAbsolute = " position-absolute right-0" %}
+                            {% endif %}
+                            <span class="flex-nowrap{{ positionAbsolute }} m-r-5"><button id="{{ options['append_button_id'] }}" name="{{ options['append_button_name'] }}" type="{{ options['append_type'] }}" value="{{ options['append_form_value'] }}" class="btn{{ options['append_size'] ~ whitespace(options['append_class']) }}">{{ options['append_value']|raw }}</button></span>
+                        {% elseif (options['append_value']) %}
+                            <span class="input-group-text{{ positionAbsolute }}" id="{{ options['append_id'] }}">{{ options['append_value']|raw }}</span>
+                        {% elseif (options['append_html']) %}
+                            {# New BS5 inputgroup element #}
+                            {{ options['append_html']|raw }}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if label and options['floating_label'] == true and inputGroup == true %}
+                        <label for="{{ options['input_id'] }}" class="form-label z-index-1">{{ options['label_icon']|raw }} {{ label|raw }}{{ (options['required'] ? '<span class="required"> *</span>' : '')|raw }}{{ (options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ options['tip'] ~ '"></i>' : '')|raw }}</label>
+                    {% elseif options['stacked'] %}
+                        <div class="position-absolute bottom-0">{{ options['stacked']|raw }}</div>
+                    {% endif %}
+
+                    {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value'] or options['append_html'] or options['prepend_html']) and options['input_type'] in form_text %}
+                    <!--End Input Group-->
+                </div>
+                {% endif %}
+
+                {% if label and options.floating_label == true and inputGroup == false %}
+                    <label for="{{ options['input_id'] }}" class="form-label">{{ options['label_icon']|raw }} {{ label|raw }}{{ (options['required'] ? '<span class="required"> *</span>' : '')|raw }}{{ (options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ options['tip'] ~ '"></i>' : '')|raw }}</label>
+                {% endif %}
+
+                {% if options['input_type'] == 'textarea' %}
+                {% if options['bbcode_options'] %}
+            </div>
+            {{ options['bbcode_options']['close_tab_content']|raw }}
+            <!--closetabbody-->
+            {% if options['bbcode_options']['open_tab_content_preview'] %}
+                {{ options['bbcode_options']['open_tab_content_preview']|raw }}
+                {{ fusion_get_locale('global_003')|raw }}
+                {{ options['bbcode_options']['close_tab_content']|raw }}
+            {% endif %}
+        </div><!--End BBcode card-->
+        {% endif %}
+
+        {% endif %}
+
+
+        {{ (options['ext_tip'] ? '<span class="tip text-muted">'~options['ext_tip']~'</span>' : '')|raw }}
+        {# This can swapped with invalid-tooltip #}
+        {{ (options['input_error'] ? '<div id="'~options['input_id']~'-help" class="invalid-feedback">'~options['error_text']~'</div>' : '')|raw }}
+        {{ options['password_strength'] == true ? '<div class="m-t-5 pwstrength_viewport_progress"></div>' : '' }}
+
+        {% if (clabel and options['floating_label'] == false) or (clabel and options['input_type'] == 'checkboxes') or (label and options['input_type'] == "dropdown") or (label and options['input_type'] in form_text) %}
+
+            {{ (options['inline']  ? '</div><!---End inline div --->' : '')|raw }}
+        {% endif %}
+    </div>
+{% else %}
+
+    {# Bootstrap 3 #}
+<div id="{{ options['input_id'] }}-field" class="form-group{{ (options['inline'] and label ? ' row' : '') ~ whitespace(options['error_class']) ~ whitespace(options['class']) ~ whitespace(options['icon'] ? 'has-feedback' : '') }}"{{ whitespace(options['width'] and label|length == 0 ? 'style="width:'~options['width']~';"' : '' ) }}>
+
+    {% if label %}
+        <label for="{{ options['input_id'] }}" class="control-label {{ options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '' }}">{{ options['label_icon']|raw ~ label|raw ~ (options['required'] ? '<span class="required"> *</span>' : '')|raw ~ (options['tip'] ? ' <i class="pointer fa fa-question-circle" title="' ~ options['tip'] ~ '"></i>' : '')|raw }}</label>
+        {{ options['inline']  ? '<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">' : '' }}
+    {% endif %}
+
+    {% if ( options['input_type'] in form_text) %}
+
+        {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value']) %}
+            <div class="input-group{{ whitespace(options['group_size'] ? 'input-group'~ options['group_size'] : '') }}"{{ whitespace(options['width'] ? 'style="width:'~options['width']~'"' : '') }}>
+        {% endif %}
+
+        {% if (options['prepend_button'] and options['prepend_type'] and options['prepend_form_value'] and options['prepend_class'] and options['prepend_value']) %}
+            <span class="input-group-btn input-group-prepend"><button id="{{ options['prepend_button_id'] }}" name="{{ options['prepend_button_name'] }}" type="{{ options['prepend_type'] }}" value="{{ options['prepend_form_value'] }}" class="btn {{ options['prepend_size'] ~ whitespace(options['prepend_class']) }}">{{ options['prepend_value']|raw }}</button></span>
+        {% elseif (options['prepend_value']) %}
+            <span class="input-group-addon input-group-prepend" id="{{ options['prepend_id'] }}"><span class='input-group-text'>{{ options['prepend_value']|raw }}</span></span>
+        {% endif %}
+
+        <input type="{{ options['input_type'] }}" data-type="{{ options['input_type'] }}"{{ whitespace(options['data']) }} {{ options['min'] ~ options['max'] ~ options['step'] }}class="form-control textbox {{ whitespace(options['inner_class'] ?? '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '') }}{{ whitespace( options['max_length']) }} name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder='~options['placeholder'] : '') }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '') }}{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['required'] ? 'required' : '') }}>
+
+        {% if (options['append_button'] and options['append_type'] and options['append_form_value'] and options['append_class'] and options['append_value']) %}
+            <span class="input-group-btn input-group-append"><button id="{{ options['append_button_id'] }}" name="{{ options['append_button_name'] }}" type="{{ options['append_type'] }}" value="{{ options['append_form_value'] }}" class="btn {{ options['append_size'] ~ whitespace(options['append_class']) }}">{{ options['append_value']|raw }}</button></span>
+        {% elseif (options['append_value']) %}
+            <span class="input-group-addon input-group-append" id="{{ options['append_id'] }}"><span class='input-group-text'>{{ options['append_value']|raw }}</span></span>
+        {% endif %}
+
+        {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value']) %}
+            </div>
+        {% endif %}
+
+        {{ (options['feedback_icon'] ? '<div class="form-control-feedback" style="top:0;"><i class="'~options['icon']~'"></i></div>' : '')|raw }}
+
+        {{ options['stacked']|raw }}
+
+        {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value']) %}
+            </div>
+        {% endif %}
+
+        {{ (options['ext_tip'] ? '<br><span class="tip">'~options['ext_tip']~'</span>' : '')|raw }}
+
+        {{ (options['input_error'] ? '<div class="input-error'~ whitespace(options['inline'] =='' or options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value'] ? 'display-block' : '' )~'"><div id="'~options['input_id']~'-help" class="label label-danger p-5 display-inline-block">'~options['error_text']~'</div></div>' : '')|raw }}
+
+        {{ options['append_html']|raw }}
+
+        {{ options['password_strength'] == true ? '<div class="m-t-5 pwstrength_viewport_progress"></div>' : '' }}
+
+        {# end type check #}
+    {% endif %}
+
+    {{ options['inline'] and label ? '</div>' : '' }}
+    </div>
+{% endif %}

@@ -35,7 +35,10 @@ function get_bootstrap( $part, $version = '3' ) {
 
         require_once __DIR__ . '/' . $version . '/index.php';
 
-        $framework_paths = ['showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig']];
+        $framework_paths = [
+            'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
+            'text_input'   => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
+        ];
     }
 
     return $framework_paths[$part] ?? '';
@@ -51,6 +54,11 @@ function get_bootstrap( $part, $version = '3' ) {
 function fusion_get_template( $component, $info ) {
 
     if ($path = get_bootstrap( $component )) {
+
+        if ($component == 'text_input' && $info['input_name'] == 'user_name') {
+//            print_p($info, 1);
+        }
+
         return fusion_render( $path['dir'], $path['file'], $info, TRUE );
     }
 

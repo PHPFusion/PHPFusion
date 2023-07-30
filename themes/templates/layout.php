@@ -182,9 +182,9 @@ if (iADMIN) {
     }
 }
 
-if (function_exists( "render_page" )) {
+//if (function_exists( "render_page" )) {
     render_page(); // by here, header and footer already closed
-}
+//}
 
 fusion_apply_hook( 'fusion_footer_include' );
 
@@ -217,7 +217,7 @@ $fusion_jquery_tags = OutputHandler::$jqueryCode;
 if (!empty( $fusion_jquery_tags )) {
     $jquery_tags .= $fusion_jquery_tags;
 
-    if ($settings['devmode'] == 0) {
+    if (!$settings['devmode']) {
         $minifier = new PHPFusion\Minify\JS( $jquery_tags );
         $js = $minifier->minify();
     } else {

@@ -15,26 +15,27 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Panels;
 
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-if (file_exists(INCLUDES."footer_includes.php")) {
-    require_once INCLUDES."footer_includes.php";
+if (file_exists( INCLUDES . "footer_includes.php" )) {
+    require_once INCLUDES . "footer_includes.php";
 }
 
 Panels::getInstance()->getSitePanel();
 
-define("CONTENT", ob_get_clean()); //ob_start() called in header.php
+define( "CONTENT", ob_get_clean() ); //ob_start() called in header.php
 
-require_once __DIR__.'/cron.php';
+require_once __DIR__ . '/cron.php';
 
 // Load layout
-if (defined('ADMIN_PANEL')) {
-    require_once __DIR__.'/admin_layout.php';
+if (defined( 'ADMIN_PANEL' )) {
+    require_once __DIR__ . '/admin_layout.php';
 } else {
-    require_once __DIR__.'/layout.php';
+    require_once __DIR__ . '/layout.php';
 }
 // Catch the output
 $output = ob_get_contents();
@@ -42,16 +43,16 @@ if (ob_get_length() !== FALSE) {
     ob_end_clean();
 }
 // Do the final output manipulation
-$output = handle_output($output);
+$output = handle_output( $output );
 // Search in output and replace normal links with SEF links
-if (!isset($_GET['aid'])) {
-    if (fusion_get_settings('site_seo')) {
-        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting($output);
-        $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput($output);
+if (!isset( $_GET['aid'] )) {
+    if (fusion_get_settings( 'site_seo' )) {
+        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting( $output );
+        $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput( $output );
     }
 }
-if (isset($permalink)) {
-    unset($permalink);
+if (isset( $permalink )) {
+    unset( $permalink );
 }
 // Check all loaded locale files
 //print_p(\PHPFusion\Locale::get_loaded_files());

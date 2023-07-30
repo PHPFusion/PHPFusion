@@ -1,0 +1,41 @@
+{{ opentable(locale.u057, '', 'table-wrapper', 'border-bottom') }}
+    <div class='text-center well'>
+        <h4>
+            {% if group_icon %}
+                <i class="{{ group_icon|raw }}"></i>
+            {% endif %}
+            {% if group_name %}
+                {{ group_name|raw }}
+            {% endif %}
+            {{ format_word(total_rows, locale.fmt_user) }}
+        </h4>
+        <p>{{ group_description|raw }}</p>
+    </div>
+    <div class='table-responsive'><table id='groupTbl' class='table table-hover'>
+        <tr>
+            <th class='col-xs-1'>{{ locale.u062 }}</th>
+            <th class='col-xs-1'>{{ locale.u113 }}</th>
+            <th class='col-xs-1'>{{ locale.u114 }}</th>
+                <th class='col-xs-1'>{{ locale.u115 }}</th>
+            <th class='col-xs-1'>{{ locale.status }}</th>
+        </tr>
+        {% if group_members %}
+            {% for group_members in group_members %}
+                <tr>
+                    <td class='col-xs-1'>{{ display_avatar(group_members, '50px', '', TRUE, 'img-rounded') }}</td>
+                    <td>{{ profile_link(group_members.user_id, group_members.user_name, group_members.user_status) }}</td>
+                    <td class='col-xs-1'>{{ getuserlevel(group_members.user_level) }}</td>
+                    <td class='col-xs-1'>{{ translate_lang_names(group_members.user_language) }}</td>
+                    <td class='col-xs-1'>{{ getuserstatus(group_members.user_status, group_members.user_lastvisit) }}</td>
+                </tr>
+            {% endfor %}
+    </table></div>
+        {% else %}
+            <div class='well text-center'>{{ locale.u116 }}</div>
+        {% endif %}
+    {% if group_pagenav %}
+        <div class='spacer-sm'>
+            <div class='pull-right'>{{ group_pagenav|raw }}</div>
+        </div>
+    {% endif %}
+{{ closetable() }}

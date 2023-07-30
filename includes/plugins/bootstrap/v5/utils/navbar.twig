@@ -1,0 +1,178 @@
+{% macro navItems(link_id = 0, data, secondary_menu = '') %}
+
+    {% if data[link_id]|length >0 %}
+        {% for rows in data[link_id] %}
+            {% if rows.seperator == true %}
+                <li class='divider' role='separator'></li>
+            {% else %}
+                <li{{ whitespace(rows.li_class ? 'class="'~rows.li_class~'"')|raw }} role="presentation">{{ rows.li_separator|raw }}
+                    {% if rows.link_url %}
+
+                    <a{{ whitespace(rows.link_attr)|raw }}>
+                        {% endif %}
+                        {{ rows.link_icon|raw }}{{ rows.link_name|raw }}{{ rows.link_caret|raw }}
+                        {% if rows.link_url %}
+                    </a>
+                    {% endif %}
+
+                    {% if rows.link_child  == true %}
+
+                        {% if constant('BOOTSTRAP5') == true %}
+                            {% set secondaryMenuClass = "dropdown-menu-end" %}
+                            {% set liClass = "class='nav-item'" %}
+                        {% else %}
+                            {% set secondaryMenuClass = "dropdown-menu-right" %}
+                        {% endif %}
+
+                        <ul id="menu-{{ rows.link_id }}" aria-labelledby="ddlink{{ rows['link_id'] }}" class="dropdown-menu{{ whitespace(secondary_menu ? secondaryMenuClass : '') }}">
+                            {# Show self if is a link #}
+                            {% if rows.link_url != '#' %}
+                                <li{{ whitespace(rows.link_url is empty ? 'class="no-link"' : liClass)|raw }} role="presentation">
+                                    {% if rows.link_child_attr %}
+                                    <a {{ rows.link_child_attr|raw }} role="menuitem">
+                                        {% endif %}
+                                        {{ rows.link_icon|raw }}{{ rows.link_name|raw }}
+                                        {% if rows.link_child_attr %}
+                                    </a>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                            {{ _self.navItems(rows.link_id, data)|raw }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+<div id="{{ id }}" class="navbar {{ navbar_class }}" role="navigation">
+    {% if container == true %}
+    <div class="container">
+        {% endif %}
+        {% if container_fluid == true %}
+        <div class="container-fluid">
+            {% endif %}
+
+            {% if show_header  == true %}
+                {% if constant('BOOTSTRAP4') is defined %}
+                    <div class="navbar-header">
+                {% endif %}
+
+                <!--Menu Header Start-->
+                {% if show_banner == true and banner !='' %}
+                    <a class="navbar-brand" href="{{ navbar_link|raw }}">{{ banner|raw }}</a>
+                {% elseif show_header == true and show_header|length == 1 %}
+                    <a class="navbar-brand visible-xs hidden-sm hidden-md hidden-lg" href="{{ navbar_link|raw }}">{{ sitename|raw }}</a>
+                {% else %}
+                    {{ show_header|raw }}
+                {% endif %}
+
+                {% if responsive == true %}
+
+                    {% if constant('BOOTSTRAP5') == true %}
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#{{ id }}_menu" aria-controls="{{ id }}_menu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    {% elseif constant('BOOTSTRAP4') == true %}
+                        {# Bootstrap4 #}
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ id }}_menu" aria-controls="{{ id }}_menu" aria-expanded="false">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    {% else %}
+                        {# Bootstrap 3 #}
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#{{ id }}_menu" aria-expanded="false" aria-controls="#{{ id }}_menu">
+                            <span class="sr-only" aria-label="{{ locale['global_017'] }}">{{ locale['global_017'] }}</span>
+                            <span class="icon-bar top-bar"></span>
+                            <span class="icon-bar middle-bar"></span>
+                            <span class="icon-bar bottom-bar"></span>
+                        </button>
+                    {% endif %}
+                {% endif %}
+                <!--Menu Header End-->
+
+                {% if constant('BOOTSTRAP4') is defined %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {{ custom_header|raw }}
+            {% if responsive == true %}
+            <div class="navbar-collapse collapse" id="{{ id }}_menu">
+                {% endif %}
+                {{ html_pre_content|raw }}
+
+                {% set primaryNavClass = (constant('BOOTSTRAP') is defined and constant('BOOTSTRAP5') == true ? 'class="nav navbar-nav primary"' : 'id="main-menu" class="primary sm sm-simple"') %}
+
+                {% if nav_class %}
+                    {% set primaryNavClass = 'class="'~nav_class~'"' %}
+                {% endif %}
+
+                {% set secondaryNavClass = (constant('BOOTSTRAP') is defined and constant('BOOTSTRAP') == true ? 'class="nav navbar-nav secondary navbar-right"' : 'id="second-menu" class="secondary sm sm-simple"') %}
+                {% if additional_nav_class %}
+                    {% set secondaryNavClass = 'class="'~additional_nav_class~'"' %}
+                {% endif %}
+
+                {# // Show primary links #}
+                <ul{{ whitespace(primaryNavClass|raw)|raw }}>
+                    <!--Menu Item Start-->
+                    {{ _self.navItems(0, primary_callback_nav)|raw }}
+                    <!--Menu Item End-->
+                </ul>
+
+                {{ html_content|raw }}
+
+                {% if language_switcher == true  or searchbar == true or secondary_callback_nav|length > 0 %}
+
+                    {# // Show secondary links #}
+                    <ul{{ whitespace(secondaryNavClass|raw)|raw }}>
+                        <!--Menu Item Start-->
+                        {{ _self.navItems(0, secondary_callback_nav, true)|raw }}
+                        <!--Menu Item End-->
+
+                        {# Language Switcher #}
+                        {% if language_switcher == true %}
+                            {% if fusion_get_enabled_languages()|length > 1 %}
+
+                                {% set langSwitch = fusion_get_language_switch() %}
+                                {# {% set currentLanguage = langSwitch[constant(LANGUAGE)] %} #}
+                                <li class="nav-item dropdown" role="presentation">
+                                    {# translate_lang_names(constant(LANGUAGE)) #}
+                                    {# {{ translate_lang_names(constant(LANGUAGE)) }} #}
+                                    <a id="ddlangs{{ options['id'] }}" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" title="{{ xx }}">
+                                        <img src="{{ currentLanguage['language_icon_s'] }}" alt="xx">
+                                        {{ get_icon('caret') }}
+                                    </a>
+                                    {% if languageSwitch|length >0 %}
+                                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="ddlangs{{ options['id'] }}" role="menu">
+                                            {% for language in languageSwitch %}
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ language['language_link'] }}">
+                                                        <img alt="{{ language['language_name'] }}" class="m-r-5" src="{{ language['language_icon_s'] }}"/>{{ language['language_name'] }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                    {% if searchbar %}
+                        <form class="d-flex" role="search" action="{{ searchbar_uri|raw }}">
+                            {{ search_input }}
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                {{ html_post_content|raw }}
+                {% if responsive == true %}
+            </div>
+            {% endif %}
+
+            {% if container_fluid == true %}
+        </div>
+        {% endif %}
+        {% if container == true %}
+    </div>
+    {% endif %}
+</div>

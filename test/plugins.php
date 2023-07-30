@@ -1,8 +1,8 @@
 <?php
 
 require_once __DIR__ . '/../maincore.php';
-require_once THEMES.'templates/header.php';
+require_once THEMES . 'templates/header.php';
 
-echo showsublinks('', '');
+echo showsublinks( '', '' );
 
-require_once THEMES.'templates/footer.php';
+require_once THEMES . 'templates/footer.php';

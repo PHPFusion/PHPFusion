@@ -1,0 +1,6 @@
+{% macro _textarea(input_name, label, input_value, options) %}
+    {% if options['bbcode_options'] %}
+        {% set bbcodeClass = 'rounded-0 border border-0' %}
+    {% endif %}
+    <textarea name="{{ input_name }}" style="width:{{ options['inner_width'] }};height:{{ options['height'] }}"{{ whitespace(options['no_resize'] ? 'resize:none': '') }} rows="{{ options['rows'] }}" cols="1" class="form-control textbox{{ whitespace(bbcodeClass) }}{{ whitespace(options['inner_class']??'') }}" {{ whitespace(options['autosize']?'animated-height':'') }}{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }} id="{{ options['input_id'] }}"{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '')|raw }}>{{ input_value|raw }}</textarea>
+{% endmacro %}

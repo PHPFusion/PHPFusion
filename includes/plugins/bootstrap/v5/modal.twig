@@ -1,0 +1,52 @@
+{% if modal == "open" %}
+{% set sizeClass = {
+    1 : 'modal-fullscreen-sm-down',
+    2 : '',
+    3 : 'modal-fullscreen-lg-down',
+    4 : 'modal-fullscreen-xl-down',
+    5 : 'modal-fullscreen-xxl-down'
+} %}
+{% set modalClass = {
+    1 : 'modal-sm',
+    2 : '',
+    3 : 'modal-lg',
+    4 : 'modal-xl'
+} %}
+{% set size = options["size"] %}
+{% if options["centered"] %}
+    {% set centeredClass = "modal-dialog-centered" %}
+{% endif %}
+
+<div class="modal fade{{ whitespace(class) }}" id="{{ id }}-Modal" tabindex="-1" aria-labelledby="{{ id }}-Modal" aria-modal="true" role="dialog" aria-hidden="{{ dismiss ? 'false' : 'true' }}">
+    <div class="modal-dialog{{ whitespace(modalClass[size]) }}{{ whitespace(sizeClass[size]) }}{{ whitespace(centeredClass) }}">
+        <div class="modal-content">
+            {% if header_content or dismiss %}
+                <div class="modal-header">
+                    {% if header_content %}
+                        <h5 class="modal-title">{{ header_content|raw }}</h5>
+                    {% endif %}
+                    {% if dismiss %}
+                        {% if constant("BOOTSTRAP5") is defined %}
+                            <button type="button" class="btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="{{ locale["close"] }}"></button>
+                        {% else %}
+                            <button type="button" class="btn btn-default btn-sm m-l-a" data-dismiss="modal">{{ get_icon("cancel", "m-r-10 fa-fw") }}{{ locale["close"] }}</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="modal-body{{ whitespace(options["body_class"]) }}">
+                {% endif %}
+                {% if modal == "footer" %}
+            </div>
+            <div class="modal-footer">
+                {% if dismiss %}
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">{{ locale["close"] }}</button>
+                {% endif %}
+                {{ footer_content|raw }}
+                {% endif %}
+                {% if modal == "close" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
