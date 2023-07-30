@@ -39,12 +39,20 @@ function showrendertime($queries = TRUE) {
     if (fusion_get_settings('rendertime_enabled') == 1 || (fusion_get_settings('rendertime_enabled') == 2 && iADMIN)) {
         $res = showbenchmark();
         $res .= " | ";
+        $res .= ($queries ? ucfirst( $locale['global_173'] ) . ": " . $mysql_queries_count . " | " : '');
+
+        return $res;
+    } elseif (defined('DEVELOPER_MODE')) {
+        $res = showbenchmark();
+        $res .= " | ";
         $res .= ($queries ? ucfirst($locale['global_173']).": ".$mysql_queries_count." | " : '');
 
         return $res;
     } else {
         return "";
     }
+
+
 }
 
 /**

@@ -164,12 +164,13 @@ if (check_get("auth") && iMEMBER) {
 
     $info = [
         'open_form'            => openform('loginPageFrm', 'POST', $settings['opening_page']),
-        'user_name'            => form_text('user_name', $placeholder, '', ['placeholder' => $placeholder, 'floating_label' => TRUE]),
+        'user_name'            => form_text('user_name', $placeholder, '', ['required'=>TRUE, 'placeholder' => $placeholder, 'floating_label' => TRUE]),
         'user_name_label'      => $placeholder,
         'user_pass'            => form_text('user_pass', $locale['global_102'], '', [
             'placeholder'    => $locale['global_102'],
             'type'           => 'password',
             'floating_label' => TRUE,
+            'required' => TRUE,
         ]),
         'remember_me'          => form_checkbox('remember_me', $locale['global_103'], '', [
             'reverse_label' => TRUE,

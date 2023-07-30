@@ -46,7 +46,7 @@ function fusion_get_current_page() {
  *
  * @return array|string Array of currencies or string with one currency.
  */
-function fusion_get_currency($iso = NULL, $description = TRUE) {
+function fusion_get_currency( $iso = NULL, $description = TRUE ) {
 
     $locale = fusion_get_locale( '', LOCALE . LOCALESET . "currency.php" );
 
@@ -73,7 +73,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE) {
  *
  * @return bool False if the theme does not exist and true if it does.
  */
-function theme_exists($theme) {
+function theme_exists( $theme ) {
 
     if ($theme == "Default") {
         $theme = fusion_get_settings( 'theme' );
@@ -87,7 +87,7 @@ function theme_exists($theme) {
  *
  * @param string $theme The theme folder you want to set.
  */
-function set_theme($theme) {
+function set_theme( $theme ) {
 
     $locale = fusion_get_locale();
     if (defined( "THEME" )) {
@@ -130,7 +130,7 @@ function set_theme($theme) {
  *
  * @return bool True if a password is set.
  */
-function set_admin_pass($password) {
+function set_admin_pass( $password ) {
 
     return Authenticate::setAdminCookie( $password );
 }
@@ -142,7 +142,7 @@ function set_admin_pass($password) {
  *
  * @return bool True if the password matches the user's admin password or if the admin's cookie or session is set and is valid.
  */
-function check_admin_pass($password) {
+function check_admin_pass( $password ) {
 
     return Authenticate::validateAuthAdmin( $password );
 }
@@ -155,7 +155,7 @@ function check_admin_pass($password) {
  * @param bool $script True if you want to redirect via javascript.
  * @param int $code HTTP status code to send.
  */
-function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
+function redirect( $location, $delay = FALSE, $script = FALSE, $code = 200 ) {
 
     if (!defined( 'STOP_REDIRECT' )) {
         if (isnum( $delay )) {
@@ -180,7 +180,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
  *
  * @return array|string|string[]|null
  */
-function compress($buffer) {
+function compress( $buffer ) {
     $search = [
         '/\>[^\S ]+/s',
         '/[^\S ]+\</s',
@@ -202,7 +202,7 @@ function compress($buffer) {
  *
  * @return bool Whether header was sent.
  */
-function set_status_header($code = 200) {
+function set_status_header( $code = 200 ) {
 
     if (headers_sent()) {
         return FALSE;
@@ -232,7 +232,7 @@ function set_status_header($code = 200) {
  *
  * @return false|string
  */
-function get_http_response_code($url) {
+function get_http_response_code( $url ) {
 
     if (function_exists( 'curl_init' )) {
         $handle = curl_init( $url );
@@ -258,7 +258,7 @@ function get_http_response_code($url) {
  *
  * @return string $url clean and ready for use XHTML strict and without any dangerous code.
  */
-function cleanurl($url) {
+function cleanurl( $url ) {
 
     $bad_entities = ["&", "\"", "'", '\"', "\'", "<", ">", "", "", "*"];
     $safe_entities = ["&amp;", "", "", "", "", "", "", "", "", ""];
@@ -273,7 +273,7 @@ function cleanurl($url) {
  *
  * @return array|string The given string decoded as non HTML text.
  */
-function stripinput($text) {
+function stripinput( $text ) {
 
     if (!is_array( $text ) && !is_null( $text )) {
         return str_replace( '\\', '&#092;', htmlspecialchars( stripslashes( trim( $text ) ), ENT_QUOTES ) );
@@ -295,7 +295,7 @@ function stripinput($text) {
  *
  * @return bool True if the URL is not secure.
  */
-function stripget($check_url) {
+function stripget( $check_url ) {
 
     if (is_array( $check_url )) {
         foreach ($check_url as $value) {
@@ -320,7 +320,7 @@ function stripget($check_url) {
  *
  * @return string The filename stripped and ready for use.
  */
-function stripfilename($filename) {
+function stripfilename( $filename ) {
 
     $patterns = ['/\s+/' => '_', '/[^a-z0-9_-]|^\W/i' => '', '/([_-])\1+/' => '$1'];
 
@@ -335,7 +335,7 @@ function stripfilename($filename) {
  *
  * @return string Encoded string.
  */
-function phpentities($text) {
+function phpentities( $text ) {
 
     return str_replace( '\\', '&#092;', htmlspecialchars( $text, ENT_QUOTES ) );
 }
@@ -348,7 +348,7 @@ function phpentities($text) {
  *
  * @return string String trimmed to the given length.
  */
-function trimlink($text, $length) {
+function trimlink( $text, $length ) {
 
     if (strlen( $text ) > $length) {
         if (function_exists( 'mb_substr' )) {
@@ -370,7 +370,7 @@ function trimlink($text, $length) {
  *
  * @return string String trimmed to the given length.
  */
-function fusion_first_words($text, $limit, $suffix = '&hellip;') {
+function fusion_first_words( $text, $limit, $suffix = '&hellip;' ) {
 
     $text = preg_replace( '/[\r\n]+/', '', $text );
 
@@ -385,7 +385,7 @@ function fusion_first_words($text, $limit, $suffix = '&hellip;') {
  *
  * @return string Trimmed text.
  */
-function trim_text($str, $length = 300) {
+function trim_text( $str, $length = 300 ) {
 
     for ($i = $length; $i <= strlen( $str ); $i++) {
         $spacetest = substr( "$str", $i, 1 );
@@ -406,7 +406,7 @@ function trim_text($str, $length = 300) {
  *
  * @return string
  */
-function normalize($value) {
+function normalize( $value ) {
 
     $table = [
         '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a', '(' => '', ')' => '', '.' => '', 'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c', 'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i', 'Ï' => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o', 'Ø' => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y', 'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a', 'ā' => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c', 'ć' => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c', 'č' => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e', 'ē' => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e', 'ę' => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g', 'ğ' => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h', 'ĥ' => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i', 'ī' => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i', 'ı' => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k', 'ķ' => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l', 'Ľ' => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l', 'Ń' => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n', 'ŉ' => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o', 'ŏ' => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r', 'ŕ' => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's', 'ś' => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's', 'š' => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't', 'ŧ' => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u', 'ŭ' => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u', 'ų' => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y', 'Ź' => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z', 'ſ' => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u', 'ư' => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o', 'ǒ' => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u', 'ǘ' => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a', 'ǻ' => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e', 'Ё' => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z', 'И' => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n', 'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u', 'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch', 'Ъ' => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja', 'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je', 'ю' => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i', 'Ґ' => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd', 'ה' => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i', 'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n', 'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C', 'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm', 'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't', 'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's', 'ض' => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q', 'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
@@ -423,7 +423,7 @@ function normalize($value) {
  *
  * @return string
  */
-function random_string($length = 6, $letters_only = FALSE) {
+function random_string( $length = 6, $letters_only = FALSE ) {
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     if ($letters_only) {
@@ -447,7 +447,7 @@ function random_string($length = 6, $letters_only = FALSE) {
  *
  * @return bool True if the value is a number.
  */
-function isnum($value, $decimal = FALSE, $negative = FALSE) {
+function isnum( $value, $decimal = FALSE, $negative = FALSE ) {
 
     if ($negative == TRUE) {
         return is_numeric( $value );
@@ -466,7 +466,7 @@ function isnum($value, $decimal = FALSE, $negative = FALSE) {
  *
  * @return bool FALSE when $value is an array
  */
-function preg_check($expression, $value) {
+function preg_check( $expression, $value ) {
 
     return !is_array( $value ) and preg_match( $expression, $value );
 }
@@ -482,7 +482,7 @@ function preg_check($expression, $value) {
  *
  * @return string
  */
-function clean_request($request_addition = '', $filter_array = [], $keep_filtered = TRUE) {
+function clean_request( $request_addition = '', $filter_array = [], $keep_filtered = TRUE ) {
 
     $fusion_query = [];
 
@@ -542,7 +542,7 @@ function cache_smileys() {
  *
  * @return string String with parsed smiley codes as smiley images ready for display.
  */
-function parsesmileys($message) {
+function parsesmileys( $message ) {
 
     if (!preg_match( "#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php])#si", $message )) {
         foreach (cache_smileys() as $smiley) {
@@ -564,7 +564,7 @@ function parsesmileys($message) {
  *
  * @return string  Option for users to insert smileys in a post by displaying the smiley's button.
  */
-function displaysmileys($textarea, $form = "inputform") {
+function displaysmileys( $textarea, $form = "inputform" ) {
 
     $smileys = "";
     $i = 0;
@@ -588,8 +588,8 @@ function displaysmileys($textarea, $form = "inputform") {
  *
  * @return string Tooltip with info.
  */
-function fusion_parse_user($user_name, $tooltip = '') {
-    return preg_replace_callback( "/@([A-Za-z0-9\-_!.]+)/", function ($user_name) use ($tooltip) {
+function fusion_parse_user( $user_name, $tooltip = '' ) {
+    return preg_replace_callback( "/@([A-Za-z0-9\-_!.]+)/", function ( $user_name ) use ( $tooltip ) {
         $user = $user_name[1];
         $result = dbquery( "SELECT *
             FROM " . DB_USERS . "
@@ -633,7 +633,7 @@ function cache_bbcode() {
  *
  * @return string Parsed string.
  */
-function parse_image_dir($data, $prefix_ = "") {
+function parse_image_dir( $data, $prefix_ = "" ) {
 
     $str = str_replace( "../", "", $data );
 
@@ -648,7 +648,7 @@ function parse_image_dir($data, $prefix_ = "") {
  *
  * @return string
  */
-function parse_text($value, $options = []) {
+function parse_text( $value, $options = [] ) {
     $default_options = [
         'parse_smileys'        => TRUE, // Smiley parsing.
         'parse_bbcode'         => TRUE, // BBCode parsing.
@@ -699,7 +699,7 @@ function parse_text($value, $options = []) {
  *
  * @return string Parsed string.
  */
-function parseubb($text, $selected = "", $descript = TRUE) {
+function parseubb( $text, $selected = "", $descript = TRUE ) {
 
     if ($descript) {
         $text = descript( $text, FALSE );
@@ -765,7 +765,7 @@ function parseubb($text, $selected = "", $descript = TRUE) {
  * @return string If browser has JavaScript enabled, email will be displayed correctly,
  *                otherwise, it will be hidden and difficult for a robot to decrypt.
  */
-function hide_email($email, $title = "", $subject = "") {
+function hide_email( $email, $title = "", $subject = "" ) {
 
     if (preg_match( "/^[-0-9A-Z_.]{1,50}@([-0-9A-Z_.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email )) {
         $enc_email = '';
@@ -827,7 +827,7 @@ function hide_email($email, $title = "", $subject = "") {
  *
  * @return string Encoded and formatted code.
  */
-function encode_code($text) {
+function encode_code( $text ) {
 
     preg_match_all( "#<code>(.*?)</code>#is", $text, $codes );
     $replace = [];
@@ -861,7 +861,7 @@ function encode_code($text) {
  *
  * @return string Formatted code.
  */
-function format_code($code) {
+function format_code( $code ) {
 
     $code = htmlentities( $code, ENT_QUOTES, 'UTF-8', FALSE );
 
@@ -882,7 +882,7 @@ function format_code($code) {
  *
  * @return string
  */
-function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+function format_num( $value, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE ) {
 
     $array = [13 => $acryonym ? "t" : "trillion", 10 => $acryonym ? "b" : "billion", 7 => $acryonym ? "m" : "million", 4 => $acryonym ? "k" : "thousand"];
 
@@ -913,7 +913,7 @@ function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ","
  *
  * @return float
  */
-function format_float($value) {
+function format_float( $value ) {
 
     return floatval( preg_replace( '/[^\d.]/', '', $value ) );
 }
@@ -926,7 +926,7 @@ function format_float($value) {
  *
  * @return string Words highlighted in the string.
  */
-function highlight_words($words, $subject) {
+function highlight_words( $words, $subject ) {
 
     for ($i = 0, $l = count( $words ); $i < $l; $i++) {
         $word[$i] = str_replace( ["\\", "+", "*", "?", "[", "^", "]", "$", "(", ")", "{", "}", "=", "!", "<", ">", "|", ":", "#", "-", "_"], "", $words[$i] );
@@ -947,7 +947,7 @@ function highlight_words($words, $subject) {
  *
  * @return string|array Sanitized and safe string.
  */
-function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
+function descript( $text, $strip_tags = TRUE, $strip_scripts = TRUE ) {
 
     if (is_array( $text ) || is_null( $text )) {
         return $text;
@@ -999,7 +999,7 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
  *
  * @return bool True or false, depending on whether the image is safe or not.
  */
-function verify_image($file) {
+function verify_image( $file ) {
 
     $txt = file_get_contents( $file );
     $patterns = ['#\<\?php#i', '#&(quot|lt|gt|nbsp);#i', '#&\#x([0-9a-f]+);#i', '#&\#([0-9]+);#i', "#([a-z]*)=([\`\'\"]*)script:#iU", "#([a-z]*)=([\`\'\"]*)javascript:#iU", "#([a-z]*)=([\'\"]*)vbscript:#iU", "#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", "#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", "#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i"];
@@ -1020,7 +1020,7 @@ function verify_image($file) {
  *
  * @return string Censored text.
  */
-function censorwords($text) {
+function censorwords( $text ) {
     $settings = fusion_get_settings();
 
     if ($settings['bad_words_enabled'] && !empty( $settings['bad_words'] )) {
@@ -1041,7 +1041,7 @@ function censorwords($text) {
  *
  * @return string The name of the given user level, null if it does not exist.
  */
-function getuserlevel($userlevel) {
+function getuserlevel( $userlevel ) {
 
     $locale = fusion_get_locale();
     $userlevels = [USER_LEVEL_MEMBER => $locale['user1'], USER_LEVEL_ADMIN => $locale['user2'], USER_LEVEL_SUPER_ADMIN => $locale['user3']];
@@ -1057,7 +1057,7 @@ function getuserlevel($userlevel) {
  *
  * @return string|null The name of the given user status, null if it does not exist.
  */
-function getuserstatus($userstatus, $join_timestamp = 0) {
+function getuserstatus( $userstatus, $join_timestamp = 0 ) {
 
     $locale = fusion_get_locale();
 
@@ -1075,7 +1075,7 @@ function getuserstatus($userstatus, $join_timestamp = 0) {
  *
  * @return bool True if the user is an Administrator with rights defined in $rights.
  */
-function checkrights($rights) {
+function checkrights( $rights ) {
     if (iSUPERADMIN) {
         return TRUE;
     } else if (iADMIN && in_array( $rights, explode( ".", iUSER_RIGHTS ) )) {
@@ -1091,7 +1091,7 @@ function checkrights($rights) {
  * @param string $rights Rights you want to check for the administrator.
  * @param bool $debug For debugging purposes.
  */
-function pageaccess($rights, $debug = FALSE) {
+function pageaccess( $rights, $debug = FALSE ) {
 
     $error = [];
     if ($debug) {
@@ -1131,7 +1131,7 @@ function pageaccess($rights, $debug = FALSE) {
  *
  * @return bool True if the user is in the group.
  */
-function checkgroup($group, $delim = ',') {
+function checkgroup( $group, $delim = ',' ) {
 
     if (strpos( $group, $delim ) !== FALSE) {
         foreach (explode( $delim, $group ) as $group_) {
@@ -1147,21 +1147,22 @@ function checkgroup($group, $delim = ',') {
                 return TRUE;
             }
         }
-    } else {
-        if (iSUPERADMIN) {
-            return TRUE;
-        } else if (iADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
-            return TRUE;
-        } else if (iMEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
-            return TRUE;
-        } else if (iGUEST && $group == 0) {
-            return TRUE;
-        } else if (iMEMBER && $group && in_array( $group, explode( '.', iUSER_GROUPS ) )) {
-            return TRUE;
-        }
+        return FALSE;
     }
 
-    return NULL;
+    if (iSUPERADMIN) {
+        return TRUE;
+    } else if (iADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
+        return TRUE;
+    } else if (iMEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
+        return TRUE;
+    } else if (iGUEST && $group == 0) {
+        return TRUE;
+    } else if (iMEMBER && $group && in_array( $group, explode( '.', iUSER_GROUPS ) )) {
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 /**
@@ -1174,7 +1175,7 @@ function checkgroup($group, $delim = ',') {
  *
  * @return bool True if the user has access.
  */
-function checkusergroup($group, $user_level, $user_groups, $delim = ',') {
+function checkusergroup( $group, $user_level, $user_groups, $delim = ',' ) {
 
     if (strpos( $group, $delim ) !== FALSE) {
         foreach (explode( $delim, $group ) as $group_) {
@@ -1253,7 +1254,7 @@ function getusergroups() {
  *
  * @return string The name or icon or description of the given group, null if it does not exist.
  */
-function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
+function getgroupname( $group_id, $return_desc = FALSE, $return_icon = FALSE ) {
 
     foreach (getusergroups() as $group) {
         if ($group_id == $group[0]) {
@@ -1271,7 +1272,7 @@ function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
  *
  * @return array Array of all access levels and user groups.
  */
-function fusion_get_groups($remove = []) {
+function fusion_get_groups( $remove = [] ) {
     $visibility_opts = [];
     $groups = array_diff_key( getusergroups(), array_flip( $remove ) );
 
@@ -1289,7 +1290,7 @@ function fusion_get_groups($remove = []) {
  *
  * @return bool True if the user has access.
  */
-function users_groupaccess($group_id) {
+function users_groupaccess( $group_id ) {
 
     if (preg_match( "(^\.$group_id$|\.$group_id\.|\.$group_id$)", fusion_get_userdata( 'user_groups' ) )) {
         return TRUE;
@@ -1306,7 +1307,7 @@ function users_groupaccess($group_id) {
  *
  * @return string The part of WHERE clause, always returns a condition.
  */
-function groupaccess($field, $delim = ',') {
+function groupaccess( $field, $delim = ',' ) {
 
     $res = '';
     if (iGUEST) {
@@ -1339,7 +1340,7 @@ function groupaccess($field, $delim = ',') {
  *
  * @return array
  */
-function getgroupdata($group_id) {
+function getgroupdata( $group_id ) {
 
     foreach (getusergroups() as $group) {
         if ($group_id == $group[0]) {
@@ -1357,7 +1358,7 @@ function getgroupdata($group_id) {
  *
  * @return string SQL condition. It can return an empty condition if the user_blacklist field is not installed!
  */
-function blacklist($field) {
+function blacklist( $field ) {
 
     if (column_exists( 'users', 'user_blacklist' )) {
         $user_id = fusion_get_userdata( 'user_id' );
@@ -1389,7 +1390,7 @@ function blacklist($field) {
  *
  * @return bool True if the user is blacklisted.
  */
-function user_blacklisted($user_id, $me = FALSE) {
+function user_blacklisted( $user_id, $me = FALSE ) {
 
     if (column_exists( 'users', 'user_blacklist' )) {
         $my_id = fusion_get_userdata( 'user_id' );
@@ -1428,7 +1429,7 @@ function user_blacklisted($user_id, $me = FALSE) {
  *
  * @return array Array of all items.
  */
-function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = "") {
+function makefilelist( $folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = "" ) {
 
     $res = [];
 
@@ -1488,7 +1489,7 @@ function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext
  *
  * @return string|bool HTML navigation. False if $count is invalid.
  */
-function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname = "rowstart", $button = FALSE) {
+function makepagenav( $rowstart, $count, $total, $range = 3, $link = "", $getname = "rowstart", $button = FALSE ) {
 
     $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
@@ -1610,7 +1611,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
  *
  * @return float
  */
-function rowstart_count($total, $count, $range = 3) {
+function rowstart_count( $total, $count, $range = 3 ) {
 
     if ($total > $count) {
         $cur_page = ceil( ($total + 1) / $count );
@@ -1637,7 +1638,7 @@ function rowstart_count($total, $count, $range = 3) {
  *
  * @return string
  */
-function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', $http_query = '') {
+function infinite_scroll( $scroll_url, $rowstart, $count, $getname = 'rowstart', $http_query = '' ) {
 
     $locale = fusion_get_locale();
 
@@ -1681,13 +1682,13 @@ function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', 
  * @param string $title_col The name of the category nmae column.
  * @param string $getname The name of the $_GET parameter.
  */
-function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
+function make_page_breadcrumbs( $tree_index, $tree_full, $id_col, $title_col, $getname = "rownav" ) {
 
     $_GET[$getname] = !empty( $_GET[$getname] ) && isnum( $_GET[$getname] ) ? $_GET[$getname] : 0;
 
     // Recursive fatal protection
     if (!function_exists( 'breadcrumb_page_arrays' )) {
-        function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
+        function breadcrumb_page_arrays( $tree_index, $tree_full, $id_col, $title_col, $getname, $id ) {
 
             $crumb = [];
             if (isset( $tree_index[get_parent( $tree_index, $id )] )) {
@@ -1741,7 +1742,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
  * @return string String formatted according to the given format string.
  *                Month and weekday names and other language dependent strings respect the current locale set.
  */
-function showdate($format, $val, $options = []) {
+function showdate( $format, $val, $options = [] ) {
     $userdata = fusion_get_userdata();
 
     if (isset( $options['tz_override'] )) {
@@ -1794,7 +1795,7 @@ function showdate($format, $val, $options = []) {
  *
  * @return string
  */
-function format_date($format, $timestamp) {
+function format_date( $format, $timestamp ) {
     $locale = fusion_get_locale();
     $format = str_replace( ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'], ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'a', 'A', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'], $format );
 
@@ -1867,7 +1868,7 @@ function format_date($format, $timestamp) {
  *
  * @return string
  */
-function parsebytesize($size, $decimals = 2, $dir = FALSE) {
+function parsebytesize( $size, $decimals = 2, $dir = FALSE ) {
 
     $locale = fusion_get_locale();
 
@@ -1902,7 +1903,7 @@ function parsebytesize($size, $decimals = 2, $dir = FALSE) {
  *
  * @return string The value of the variable.
  */
-function print_p($data, $modal = FALSE, $print = TRUE) {
+function print_p( $data, $modal = FALSE, $print = TRUE ) {
 
     ob_start();
     echo htmlspecialchars( print_r( $data, TRUE ), ENT_QUOTES, 'utf-8' );
@@ -1933,7 +1934,7 @@ function print_p($data, $modal = FALSE, $print = TRUE) {
  *
  * @return string[]|string Associative array of settings or one setting by key.
  */
-function fusion_get_settings($key = NULL) {
+function fusion_get_settings( $key = NULL ) {
 
     // It is initialized only once because of 'static'
     static $settings = [];
@@ -1954,7 +1955,7 @@ function fusion_get_settings($key = NULL) {
  *
  * @return string Username.
  */
-function fusion_get_username($user_id) {
+function fusion_get_username( $user_id ) {
     return (dbresult( dbquery( "SELECT user_name FROM " . DB_USERS . " WHERE user_id='" . intval( $user_id ) . "'" ), 0 )) ?? fusion_get_locale( 'na' );
 }
 
@@ -1965,7 +1966,7 @@ function fusion_get_username($user_id) {
  *
  * @return string|array Associative array of all data or one column by key.
  */
-function fusion_get_userdata($key = NULL) {
+function fusion_get_userdata( $key = NULL ) {
     $userdata = fusion_set_user();
 
     if (empty( $userdata )) {
@@ -1984,7 +1985,7 @@ function fusion_get_userdata($key = NULL) {
  *
  * @return string|array Associative array of all data or one column by key.
  */
-function fusion_get_user($user_id, $key = NULL) {
+function fusion_get_user( $user_id, $key = NULL ) {
 
     static $user = [];
     if (!isset( $user[$user_id] ) && isnum( $user_id )) {
@@ -2020,7 +2021,7 @@ function fusion_get_aidlink() {
  *
  * @return string
  */
-function fusion_get_token($form_id, $max_tokens = 5) {
+function fusion_get_token( $form_id, $max_tokens = 5 ) {
 
     return Token::generate_token( $form_id, $max_tokens );
 }
@@ -2033,7 +2034,7 @@ function fusion_get_token($form_id, $max_tokens = 5) {
  *
  * @return array|string Associative array of all data or one column by key.
  */
-function user_pm_settings($user_id, $key = NULL) {
+function user_pm_settings( $user_id, $key = NULL ) {
 
     return PrivateMessages::getPmSettings( $user_id, $key );
 }
@@ -2043,7 +2044,7 @@ function user_pm_settings($user_id, $key = NULL) {
  *
  * @param string $lang The name of the language.
  */
-function define_site_language($lang) {
+function define_site_language( $lang ) {
 
     if (valid_language( $lang )) {
         define( 'LANGUAGE', $lang );
@@ -2058,7 +2059,7 @@ function define_site_language($lang) {
  *
  * @return mixed
  */
-function get_language_code($language_pack) {
+function get_language_code( $language_pack ) {
     $locale = [];
     try {
         include LOCALE . $language_pack . '/global.php';
@@ -2074,7 +2075,7 @@ function get_language_code($language_pack) {
  *
  * @param string $lang The name of the language.
  */
-function set_language($lang) {
+function set_language( $lang ) {
 
     $userdata = fusion_get_userdata();
     if (valid_language( $lang )) {
@@ -2103,7 +2104,7 @@ function set_language($lang) {
  *
  * @return bool
  */
-function valid_language($lang, $file_check = FALSE) {
+function valid_language( $lang, $file_check = FALSE ) {
 
     $enabled_languages = fusion_get_enabled_languages( TRUE );
     if (preg_match( "/^([a-z0-9_-]){2,50}$/i", $lang ) && ($file_check ? file_exists( LOCALE . $lang . "/global.php" ) : isset( $enabled_languages[$lang] ))) {
@@ -2120,7 +2121,7 @@ function valid_language($lang, $file_check = FALSE) {
  *
  * @return bool
  */
-function check_language($lang) {
+function check_language( $lang ) {
     return preg_match( "/^([a-z0-9_-]){2,50}$/i", $lang ) && is_file( LOCALE . $lang . "/global.php" );
 
 }
@@ -2149,7 +2150,7 @@ function fusion_get_language_switch() {
  *
  * @return array
  */
-function fusion_get_enabled_languages($skip_translate = FALSE) {
+function fusion_get_enabled_languages( $skip_translate = FALSE ) {
 
     $settings = fusion_get_settings();
     $enabled_languages = [];
@@ -2216,7 +2217,7 @@ function fusion_detect_installation() {
  * @param string $new_value New value.
  * @param string $old_value Old value.
  */
-function save_user_log($user_id, $column_name, $new_value, $old_value) {
+function save_user_log( $user_id, $column_name, $new_value, $old_value ) {
 
     $data = ["userlog_id" => 0, "userlog_user_id" => $user_id, "userlog_field" => $column_name, "userlog_value_new" => $new_value, "userlog_value_old" => $old_value, "userlog_timestamp" => time(),];
     dbquery_insert( DB_USER_LOG, $data, "save", ["keep_session" => TRUE] );
@@ -2229,7 +2230,7 @@ function save_user_log($user_id, $column_name, $new_value, $old_value) {
  *
  * @return string Minified code.
  */
-function jsminify($code) {
+function jsminify( $code ) {
 
     $minifier = new JS( $code );
 
@@ -2249,7 +2250,7 @@ function jsminify($code) {
  *
  * @return int Number of written bytes
  */
-function write_file($file, $data, $flags = NULL) {
+function write_file( $file, $data, $flags = NULL ) {
 
     if ($flags === NULL) {
         $bytes = file_put_contents( $file, $data );
@@ -2271,7 +2272,7 @@ function write_file($file, $data, $flags = NULL) {
  *
  * @return float|int|mixed
  */
-function calculate_time($value, $denominator) {
+function calculate_time( $value, $denominator ) {
     $multiplier = ['s' => 1, 'm' => 60, 'h' => 3600, 'j' => 86400,];
     if (isnum( $value ) && isset( $multiplier[$denominator] )) {
         return $value * $multiplier[$denominator];
@@ -2287,7 +2288,7 @@ function calculate_time($value, $denominator) {
  *
  * @return int
  */
-function calculate_byte($total_bit) {
+function calculate_byte( $total_bit ) {
     $calc_opts = fusion_get_locale( 'admins_1020', LOCALE . LOCALESET . "admin/settings.php" );
     foreach ($calc_opts as $byte => $val) {
         if ($total_bit / $byte <= 999) {
@@ -2305,7 +2306,7 @@ function calculate_byte($total_bit) {
  *
  * @return array|float|int|string|string[]|null
  */
-function parse_byte($value) {
+function parse_byte( $value ) {
     $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
     $number = substr( $value, 0, -2 );
     $suffix = strtoupper( substr( $value, -2 ) );
@@ -2328,7 +2329,7 @@ function parse_byte($value) {
  *
  * @param string $dir Path to the folder.
  */
-function rrmdir($dir) {
+function rrmdir( $dir ) {
 
     if (is_dir( $dir )) {
         $objects = scandir( $dir );
@@ -2352,7 +2353,7 @@ function rrmdir($dir) {
  * @param string $origin The old name.
  * @param string $target The new name.
  */
-function fusion_rename($origin, $target) {
+function fusion_rename( $origin, $target ) {
 
     if ($origin != "." && $origin != ".." && !is_dir( $origin )) {
         if (TRUE !== @rename( $origin, $target )) {
@@ -2369,7 +2370,7 @@ function fusion_rename($origin, $target) {
  *
  * @return bool|string
  */
-function fusion_get_contents($url) {
+function fusion_get_contents( $url ) {
 
     if (function_exists( 'curl_init' )) {
         $ch = curl_init( $url );
@@ -2393,7 +2394,7 @@ function fusion_get_contents($url) {
  *
  * @return bool
  */
-function is_json($string) {
+function is_json( $string ) {
 
     json_decode( $string );
 
@@ -2411,7 +2412,7 @@ function is_json($string) {
  *
  * @return string|null
  */
-function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE) {
+function fusion_load_script( $file_path, $file_type = "script", $html = FALSE, $cached = TRUE ) {
     static $paths = [];
 
     $file_info = pathinfo( $file_path );
@@ -2497,7 +2498,7 @@ function max_server_upload() {
  *
  * @return int
  */
-function convert_to_bytes($val) {
+function convert_to_bytes( $val ) {
 
     $val = trim( $val );
     $last = strtolower( $val[strlen( $val ) - 1] );
@@ -2539,7 +2540,7 @@ function get_current_url() {
  *
  * @return false|string
  */
-function strleft($s1, $s2) {
+function strleft( $s1, $s2 ) {
 
     return substr( $s1, 0, strpos( $s1, $s2 ) );
 }
@@ -2551,7 +2552,7 @@ function strleft($s1, $s2) {
  *
  * @return string
  */
-function whitespace($value) {
+function whitespace( $value ) {
 
     if (!empty( $value )) {
         return " " . $value;
@@ -2573,7 +2574,7 @@ function whitespace($value) {
  * @param bool $httponly Whether the cookie will be made accessible only through the HTTP protocol.
  * @param string|null $samesite Whether the cookie will be available for cross-site requests. Possible value: none | lax | strict
  */
-function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FALSE, $httponly = FALSE, $samesite = NULL) {
+function fusion_set_cookie( $name, $value, $expires, $path, $domain, $secure = FALSE, $httponly = FALSE, $samesite = NULL ) {
 
     $samesite = in_array( $samesite, ['lax', 'none', 'strict', NULL] ) ? $samesite : NULL;
 
@@ -2605,7 +2606,7 @@ function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FA
  *
  * @return bool
  */
-function maintenance_mode($maintenance = TRUE) {
+function maintenance_mode( $maintenance = TRUE ) {
 
     $file = BASEDIR . '.maintenance';
 
@@ -2638,7 +2639,7 @@ function maintenance_mode($maintenance = TRUE) {
  *
  * @return bool
  */
-function in_array_r($needle, $haystack, $strict = FALSE) {
+function in_array_r( $needle, $haystack, $strict = FALSE ) {
 
     foreach ($haystack as $item) {
         if (($strict ? $item === $needle : $item == $needle) || (is_array( $item ) && in_array_r( $needle, $item, $strict ))) {
