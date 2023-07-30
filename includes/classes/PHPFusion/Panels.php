@@ -248,10 +248,12 @@ class Panels {
         }
 
         $locale = fusion_get_locale();
+        $settings = fusion_get_settings();
 
         // Add admin message
         $admin_mess = "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
         add_to_head($admin_mess);
+
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
 
@@ -268,7 +270,7 @@ class Panels {
                             $url_arr = explode("\r\n", $p_data['panel_url_list']);
                             $url = [];
 
-                            if (fusion_get_settings('site_seo')) {
+                            if ($settings['site_seo']) {
                                 $params = http_build_query(Router::getRouterInstance()->getFileParams());
                                 $path = Router::getRouterInstance()->getFilePath();
                                 $script_url = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
@@ -297,7 +299,7 @@ class Panels {
                                     }
                                     break;
                                 case 2: // Display on Opening Page only
-                                    $opening_page = fusion_get_settings('opening_page');
+                                    $opening_page = $settings['opening_page'];
                                     if ($opening_page == 'index.php' && $script_url == '/' || $script_url == '/'.$opening_page) {
                                         $show_panel = TRUE;
                                     } else if (PERMALINK_CURRENT_PATH === $opening_page) {

@@ -592,7 +592,7 @@ class Errors {
         $locale = self::$locale;
         $aidlink = fusion_get_aidlink();
         $html = '';
-        if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER")) {
+        if (iADMIN && checkrights("ERRO") && (count($this->errors) || count($this->new_errors)) && !defined("NO_DEBUGGER") || defined('DEVELOPER_MODE')) {
             $html .= "<div class='display-block'>";
             $html .= "<i class='fa fa-bug fa-lg'></i></button>\n";
             $html .= str_replace(["[ERROR_LOG_URL]", "[/ERROR_LOG_URL]"],
