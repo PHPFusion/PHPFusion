@@ -657,7 +657,6 @@ class SiteLinks {
             }
         }
 
-        //print_P($rows);
         return $rows ?? [];
     }
 
