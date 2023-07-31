@@ -1,0 +1,8 @@
+{% macro date_input(input_name, input_value, options) %}
+    <div id="{{ options['input_id'] }}_datepicker" data-target-input="nearest" class="input-group date {{ whitespace(options['width'] ? 'style="width:'~options['width']~'"' : '') }}">
+        <input type="text" name="{{ input_name }}" id="{{ options['input_id'] }}" data-target="#{{ options['input_id'] }}-datepicker" value="{{ input_value }}" class="datetimepicker-input form-control textbox"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw ~ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}>
+        <span class="input-group-addon input-group-append{{ whitespace(options['fieldicon_off'] ? 'display-none' : '') }}" data-target="#{{ options["input_id"] }}-datepicker" data-toggle="datetimepicker">
+            <i class="input-group-text fa fa-calendar"></i>
+        </span>
+    </div>
+{% endmacro %}

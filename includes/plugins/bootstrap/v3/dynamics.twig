@@ -35,6 +35,12 @@
         {{ dropdown.dropdown_input(input_name, input_value, input_options) }}
 
         {# end type check #}
+    {% elseif input_options['template_type'] == 'datepicker' %}
+
+        {% import 'dynamics/datepicker.twig' as datepicker %}
+
+        {{ datepicker.date_input(input_name, input_value, input_options) }}
+
     {% endif %}
 
     {{ inline_end|raw }}

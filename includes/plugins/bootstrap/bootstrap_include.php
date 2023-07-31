@@ -55,10 +55,6 @@ function fusion_get_template( $component, $info ) {
 
     if ($path = get_bootstrap( $component )) {
 
-        if ($component == 'text_input' && $info['input_name'] == 'user_name') {
-//            print_p($info, 1);
-        }
-
         return fusion_render( $path['dir'], $path['file'], $info, TRUE );
     }
 
