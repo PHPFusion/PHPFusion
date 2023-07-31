@@ -1149,16 +1149,6 @@ function form_errors( $options ) {
     return [$class, $text];
 }
 
-
-/**
- * Sets field configurations
- *
- * @param $value
- */
-function fusion_set_field_config( $value ) {
-    Defender::getInstance()->add_field_session( $value );
-}
-
 /**
  * Fetches field configurations
  *
@@ -1166,7 +1156,7 @@ function fusion_set_field_config( $value ) {
  *
  * @return array|false|mixed|null
  */
-function get_fusion_field_config( $field_name ) {
+function get_field_config( $field_name ) {
     return Defender::getInstance()->get_current_field_session( $field_name );
 }
 
@@ -1175,7 +1165,7 @@ function get_fusion_field_config( $field_name ) {
  *
  * @param $field_config
  */
-function set_fusion_field_config( $field_config ) {
+function set_field_config( $field_config ) {
     Defender::add_field_session( $field_config );
 }
 

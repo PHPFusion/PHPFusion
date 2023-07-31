@@ -233,7 +233,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
     $options['input_error'] = \Defender::inputHasError( $input_name );
 
     // Add input settings in the SESSION
-    fusion_set_field_config( [
+    set_field_config( [
         'input_name'     => clean_input_name( $input_name ),
         'title'          => clean_input_name( $title ),
         'id'             => $options['input_id'],

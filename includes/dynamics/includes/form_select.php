@@ -452,7 +452,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
     // Generate Defender Tag
 //    $input_name = ($options['multiple']) ? str_replace( "[]", "", $input_name ) : $input_name;
 
-    set_fusion_field_config( [
+    set_field_config( [
         'input_name'     => clean_input_name( $input_name ),
         'title'          => clean_input_name( $title ),
         'id'             => $options['input_id'],

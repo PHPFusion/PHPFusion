@@ -42,13 +42,13 @@
 
 
 {# Text Input #}
-{% macro text_input(options) %}
+{% macro text_input(input_name, input_value, options) %}
 
     {% set input_tags_1 = whitespace(options['data']) ~ whitespace(options['min']) ~ whitespace(options['max']) ~ whitespace(options['step'])
         ~ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '') ~ whitespace( options['max_length'])
     %}
 
-    {% set input_tags_2 =  whitespace(options['placeholder'] ? 'placeholder='~options['placeholder'] : '') ~ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '') ~
+    {% set input_tags_2 =  whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '') ~ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '') ~
         whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '')
     %}
 
@@ -58,7 +58,7 @@
 
     {{ _self.input_prepend(options)|raw }}
 
-     <input type="{{ options['input_type'] }}" data-type="{{ options['input_type'] }}"{{ input_tags_1 }} class="form-control textbox{{ input_inner_class }}" name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ input_tags_2 }}>
+     <input type="{{ options['input_type'] }}" data-type="{{ options['input_type'] }}"{{ input_tags_1|raw }} class="form-control textbox{{ input_inner_class }}" name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ input_tags_2|raw }}>
 
     {{ _self.input_append(options)|raw }}
 

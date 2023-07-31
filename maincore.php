@@ -198,8 +198,10 @@ function fusion_set_user() {
     ];
 //    if (check_post( 'login' ) && check_post( 'user_name' ) && check_post( 'user_pass' )) {
     if (check_post( 'login' )) {
+
         sanitizer( 'user_name', '', 'user_name' );
         sanitizer( 'user_pass', '', 'user_pass' );
+
         if (fusion_safe()) {
             $auth = new Authenticate( post( 'user_name' ), post( 'user_pass' ), check_post( 'remember_me' ) );
             if ($auth->authRedirection()) {
