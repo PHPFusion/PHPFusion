@@ -1121,20 +1121,23 @@ function form_errors( $options ) {
 
     $class = '';
     // Error messages based on settings
-    if ($options['type'] == 'password') {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_password'] : $options['error_text'];
-    } else if ($options['type'] == 'email') {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_email'] : $options['error_text'];
-    } else if ($options['type'] == 'number') {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_number'] : $options['error_text'];
-    } else if ($options['type'] == 'url') {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_url'] : $options['error_text'];
-    } else if ($options['regex']) {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_regex'] : $options['error_text'];
-    } else if ($options['safemode']) {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_safemode'] : $options['error_text'];
-    } else {
-        $text = empty( $options['error_text'] ) ? $locale['error_input_default'] : $options['error_text'];
+    $text = empty( $options['error_text'] ) ? $locale['error_input_default'] : $options['error_text'];
+    if ($options['template_type'] == 'text') {
+        if ($options['type'] == 'password') {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_password'] : $options['error_text'];
+        } else if ($options['type'] == 'email') {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_email'] : $options['error_text'];
+        } else if ($options['type'] == 'number') {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_number'] : $options['error_text'];
+        } else if ($options['type'] == 'url') {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_url'] : $options['error_text'];
+        } else if ($options['regex']) {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_regex'] : $options['error_text'];
+        } else if ($options['safemode']) {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_safemode'] : $options['error_text'];
+        } else {
+            $text = empty( $options['error_text'] ) ? $locale['error_input_default'] : $options['error_text'];
+        }
     }
 
     if (input_has_error( $options['input_name'] )) {

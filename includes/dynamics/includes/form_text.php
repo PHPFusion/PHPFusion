@@ -98,6 +98,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
 
     $valid_types = ['text', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week', 'ip'];
 
+    $options['template_type'] = 'text'; // template identifier
     $options['type'] = in_array( $options['type'], $valid_types ) ? $options['type'] : 'text';
 
     $options += [

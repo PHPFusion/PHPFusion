@@ -22,11 +22,17 @@
 
     {{ (label_dom ~ inline_start)|raw }}
 
-    {% if (input_options['input_type'] in form_text) %}
+    {% if (input_options['template_type'] in form_text) %}
 
         {% import 'dynamics/text.twig' as text %}
 
         {{ text.text_input(input_name, input_value, input_options) }}
+
+    {% elseif input_options['template_type'] == 'dropdown' %}
+
+        {% import 'dynamics/dropdown.twig' as dropdown %}
+
+        {{ dropdown.dropdown_input(input_name, input_value, input_options) }}
 
         {# end type check #}
     {% endif %}
