@@ -104,3 +104,14 @@ function format_sentence(array $words) {
 
     return NULL;
 }
+
+/**
+ * Parsing the correct label language. Requires $value to be serialized value
+ * @todo: remove & refactor QuantumHelper::parseLabel()
+ * @param $str
+ *
+ * @return string
+ */
+function parse_label($str) {
+    return Locale::parseLabel($str);
+}
