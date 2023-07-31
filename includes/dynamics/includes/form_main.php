@@ -91,6 +91,16 @@ function clean_input_name($value) {
 }
 
 /**
+ * @param mixed $value
+ *
+ * @return array|string
+ */
+function clean_input_id($value) {
+    $re = '/\[(.*?)\]/m';
+    return preg_replace($re, '_', $value);
+}
+
+/**
  * @param $value
  *
  * @return array|string

@@ -3,7 +3,8 @@
         {% if options['jsonmode'] or options['tags'] %}
             {# Select2 tags input #}
             <div id="{{ options['input_id'] }}-spinner" style="display:none;">
-                <img src="{{ fusion_get_settings("siteurl") }}/images/loader.svg" alt=""></div>
+                <img src="{{ fusion_get_settings("siteurl") }}/images/loader.svg" alt="">
+            </div>
 
             {% if options['tags'] == false and options['jsonmode'] == false %}
                 {# Select2 multiple input #}

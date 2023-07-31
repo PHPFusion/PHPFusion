@@ -26,4 +26,9 @@ echo form_select('dropdown_1', 'Dropdown 1', '', [
     ]
 ]);
 
+echo form_user_select('dropdown_2', 'Dropdown 2', '', [
+    'required'=>TRUE,
+]);
+
+
 require_once THEMES.'templates/footer.php';

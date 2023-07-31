@@ -74,7 +74,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
 
     $options += [
         'input_name'           => clean_input_name( $input_name ),
-        'input_id'             => $input_name,
+        'input_id'             => clean_input_id( $input_name ),
         'type'                 => 'dropdown',
         'options'              => [],
         'required'             => FALSE,
@@ -120,6 +120,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
         'hide_disabled'        => FALSE,
         'no_root'              => FALSE,
         'show_current'         => FALSE,
+        'current_value'        => 0, // if set then current item will follow this value instead of the inputvalue.
         'db_cache'             => TRUE,
         'data'                 => [],
     ];
@@ -127,9 +128,9 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
     $options['template_type'] = 'dropdown';
 
 
-    if (!function_exists('get_option_label')) {
-        function get_option_label($value) {
-            return $value ? html_entity_decode(parse_label($value)) : '';
+    if (!function_exists( 'get_option_label' )) {
+        function get_option_label( $value ) {
+            return $value ? html_entity_decode( parse_label( $value ) ) : '';
         }
     }
 
@@ -181,10 +182,10 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                             // Build List
                             if (!empty( $options['value_filter']['col'] ) && (!empty( $options['value_filter']['value'] ) || $options['value_filter']['value'] !== NULL)) {
                                 if (isset( $value[$options['value_filter']['col']] ) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
-                                    $list[$key] = $pattern . get_option_label($value[$options['title_col']]);
+                                    $list[$key] = $pattern . get_option_label( $value[$options['title_col']] );
                                 }
                             } else {
-                                $list[$key] = $pattern . get_option_label($value[$options['title_col']]);
+                                $list[$key] = $pattern . get_option_label( $value[$options['title_col']] );
                             }
                             // Build Child
                             if (isset( $data[$key] )) {
@@ -304,16 +305,19 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
 
                 $select = "";
                 $chain = (isset( $options['chain_index'][$arr] ) ? " class='" . $options['chain_index'][$arr] . "' " : "");
-                $text_value = get_option_label($value['text'] ?? $value);
+                $text_value = get_option_label( $value['text'] ?? $value );
                 // if you have data attributes, you must have text key
                 if (!empty( $text_value ) && !is_array( $text_value )) {
+
+                    $current_value = $options['current_value'] ?: $input_value;
+
                     if ($options['keyflip']) { // flip mode = store array values
                         if ($input_value !== '') {
                             $select = ($input_value == $text_value) ? " selected" : "";
                         }
                         $disabled = $disable_opts && in_array( $arr, $disable_opts );
                         $hide = $disabled && $options['hide_disabled'];
-                        $item = (!$hide ? "<option" . $data_attributes . " value='$text_value'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $text_value ) . " " . ($options['show_current'] && $input_value == $text_value ? '(Current Item)' : '') . "</option>\n" : "");
+                        $item = (!$hide ? "<option" . $data_attributes . " value='$text_value'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $text_value ) . " " . ($options['show_current'] && $current_value == $text_value ? '(Current Item)' : '') . "</option>\n" : "");
 
                     } else {
                         if ($input_value !== '') {
@@ -322,9 +326,10 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                         }
                         $disabled = $disable_opts && in_array( $arr, $disable_opts );
                         $hide = $disabled && $options['hide_disabled'];
-                        $item = (!$hide ? "<option" . $data_attributes . " value='$arr'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $text_value ) . ($options['show_current'] && $input_value == $text_value ? ' (Current Item)' : '') . "</option>\n" : "");
+                        $item = (!$hide ? "<option" . $data_attributes . " value='$arr'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $text_value ) . ($options['show_current'] && $current_value == $text_value ? ' (Current Item)' : '') . "</option>\n" : "");
                         //$item = "<option value='$arr'".$chain.$select.">$text_value</option>\n";
                     }
+
                     if (isset( $value['children'] )) {
 
                         $opt_html = "<optgroup label='" . $value['text'] . "'>\n";
@@ -391,6 +396,8 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                 }
             }
 
+            $current_value = $options['current_value'] ?: $input_value;
+
             if ($options['optgroup']) {
 
                 $options['options_html'] .= form_select_build_optgroup( $options['options'], $input_value, $options );
@@ -406,7 +413,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                         $chain = ' class="' . $options['chain_index'][$arr] . '" ';
                     }
 
-                    $v = get_option_label($v);
+                    $v = get_option_label( $v );
 
                     // do a disable for filter_opts item.
                     if ($options['keyflip']) { // flip mode = store array values
@@ -415,7 +422,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                         }
                         $disabled = $disable_opts && in_array( $arr, $disable_opts );
                         $hide = $disabled && $options['hide_disabled'];
-                        $options['options_html'] .= (!$hide ? "<option value='$v'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $v ) . " " . ($options['show_current'] && $input_value == $v ? '(Current Item)' : '') . "</option>\n" : "");
+                        $options['options_html'] .= (!$hide ? "<option value='$v'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $v ) . " " . ($options['show_current'] && $current_value == $v ? '(Current Item)' : '') . "</option>\n" : "");
                     } else {
                         if ($input_value !== '') {
                             //$input_value = stripinput($input_value); // not sure if can turn FALSE to zero not null.
@@ -423,7 +430,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                         }
                         $disabled = $disable_opts && in_array( $arr, $disable_opts );
                         $hide = $disabled && $options['hide_disabled'];
-                        $options['options_html'] .= (!$hide ? "<option value='$arr'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $v ) . " " . ($options['show_current'] && $input_value == $v ? '(Current Item)' : '') . "</option>\n" : "");
+                        $options['options_html'] .= (!$hide ? "<option value='$arr'" . $chain . $select . ($disabled ? 'disabled' : '') . ">" . html_entity_decode( $v ) . " " . ($options['show_current'] && $current_value == $v ? '(Current Item)' : '') . "</option>\n" : "");
                     }
                 }
             }
@@ -431,7 +438,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
     }
 
     set_field_config( [
-        'input_name'     => clean_input_name( $input_name ),
+        'input_name'     => $options['input_name'],
         'title'          => clean_input_name( $title ),
         'id'             => $options['input_id'],
         'type'           => $options['type'],
@@ -531,106 +538,54 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
  * @return string
  */
 function form_user_select( $input_name, $label = "", $input_value = FALSE, array $options = [] ) {
-    $locale = fusion_get_locale();
 
+    $locale = fusion_get_locale();
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
+    $settings = fusion_get_settings();
     $input_value = clean_input_value( $input_value );
 
-    $default_options = [
-        'required'          => FALSE,
-        'regex'             => '',
-        'input_id'          => $input_name,
+    $options += [
+        'input_name'        => clean_input_name( $input_name ),
+        'input_id'          => clean_input_id( $input_name ),
         'placeholder'       => $locale['sel_user'],
-        'deactivate'        => FALSE,
-        'safemode'          => FALSE,
-        'allowclear'        => FALSE,
-        'multiple'          => FALSE,
         'inner_width'       => '250px',
-        'width'             => '',
-        'keyflip'           => FALSE,
-        'tags'              => FALSE,
-        'jsonmode'          => FALSE,
-        'chainable'         => FALSE,
-        'max_select'        => 1,
-        'error_text'        => '',
-        'class'             => '',
-        'stacked'           => '',
-        'inline'            => FALSE,
-        'tip'               => '',
-        'ext_tip'           => '',
-        'delimiter'         => ',',
-        'callback_check'    => '',
         'file'              => '',
         'allow_self'        => FALSE,
         'callback_function' => '',
         'image_path'        => IMAGES . "avatars/",
+        'type'              => 'dropdown',
+        'jsonmode'          => TRUE,
+        'max_select'        => 3,
+        'allowclear'        => TRUE,
     ];
 
-    $options += $default_options;
+    // Compulsory settings
+    $options['select2_disabled'] = TRUE;
+    $options['multiple'] = TRUE;
+    $options['tags'] = TRUE;
 
-    $options['input_id'] = trim( $options['input_id'], "[]" );
+    $length = "minimumInputLength: 1,";
+
+    $root_prefix = $settings['site_seo'] == 1 ? fusion_get_settings( 'siteurl' ) . "includes/" : INCLUDES;
+    $root_img = $settings['site_seo'] == 1 && !defined( 'ADMIN_PANEL' ) ? fusion_get_settings( 'siteurl' ) : '';
+    $path = !empty( $options['file'] ) ? $options['file'] : $root_prefix . "dynamics/assets/users/users.json.php" . ($options['allow_self'] ? "?allow_self=true" : '');
+
+    // json value only.
+    $encoded = json_encode( [] );
+    if (!empty( $input_value )) {
+        $encoded = $options['callback_function'] && is_callable( $options['callback_function'] ) ? $options['callback_function']( $input_value ) : user_search( $input_value, $options['delimiter'] );
+    }
 
     $allowclear = ($options['placeholder'] && $options['multiple'] || $options['allowclear']) ? "allowClear:true," : '';
-    $length = "minimumInputLength: 1,";
-    $error_class = "";
 
-    if (Defender::inputHasError( $input_name )) {
-        $error_class = "has-error ";
-        $new_error_text = Defender::getErrorText( $input_name );
-        if (!empty( $new_error_text )) {
-            $options['error_text'] = $new_error_text;
-        }
-        addnotice( "danger", $options['error_text'] );
-    }
-
-    $html = "<div id='" . $options['input_id'] . "-field' class='form-group " . ($options['inline'] && $label ? 'row ' : '') . $error_class . $options['class'] . "' style='width:" . $options['width'] . "'>\n";
-    $html .= ($label) ? "<label class='control-label " . ($options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '') . "' for='" . $options['input_id'] . "'>" . $label . ($options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '') . " " . ($options['tip'] ? "<i class='pointer fa fa-question-circle' title=" . $options['tip'] . "></i>" : '') . "</label>\n" : '';
-    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
-    $html .= "<input " . ($options['required'] ? "class='req'" : '') . " type='hidden' name='$input_name' id='" . $options['input_id'] . "' data-placeholder='" . $options['placeholder'] . "' style='width:" . $options['inner_width'] . "'" . ($options['deactivate'] ? ' disabled' : '') . "/>\n";
-    if ($options['deactivate']) {
-        $html .= form_hidden( $input_name, '', $input_value, ["input_id" => $options['input_id']] );
-    }
-
-    $html .= $options['stacked'];
-    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>" . $options['ext_tip'] . "</i></div>" : "";
-    $html .= \Defender::inputHasError( $input_name ) && !$options['inline'] ? "<br/>" : "";
-    $html .= \Defender::inputHasError( $input_name ) ? "<div id='" . $options['input_id'] . "-help' class='label label-danger p-5 display-inline-block'>" . $options['error_text'] . "</div>" : "";
-
-    $html .= $options['inline'] && $label ? "</div>\n" : '';
-
-    $html .= "</div>\n";
-
-    $root_prefix = fusion_get_settings( "site_seo" ) == 1 ? fusion_get_settings( 'siteurl' ) . "includes/" : INCLUDES;
-
-    $root_img = fusion_get_settings( "site_seo" ) == 1 && !defined( 'ADMIN_PANEL' ) ? fusion_get_settings( 'siteurl' ) : '';
-
-    $path = !empty( $options['file'] ) ? $options['file'] : $root_prefix . "dynamics/assets/users/users.json.php" . ($options['allow_self'] ? "?allow_self=true" : "");
-
-    if (!empty( $input_value )) {
-        // json mode.
-        $encoded = $options['callback_function'] && is_callable( $options['callback_function'] ) ? $options['callback_function']( $input_value ) : user_search( $input_value, $options['delimiter'] );
-    } else {
-        $encoded = json_encode( [] );
-    }
-
-    Defender::getInstance()->add_field_session( [
-        'input_name' => clean_input_name( $input_name ),
-        'title'      => $title,
-        'id'         => $options['input_id'],
-        'type'       => 'dropdown',
-        'required'   => $options['required'],
-        'safemode'   => $options['safemode'],
-        'error_text' => $options['error_text']
-    ] );
-
-    add_to_jquery( "
-        function avatar(item) {
-            if(!item.id) {return item.text;}
-            var avatar = item.avatar;
-            var level = item.level;
-            return '<table><tr><td style=\"\"><img style=\"height:35px;\" class=\"img-rounded\" src=\"" . $root_img . $options['image_path'] . "' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;line-height:1.2;\"><div><strong>' + item.text + '</strong></div>' + level + '</div></td></tr></table>';
-        }
-        $('#" . $options['input_id'] . "').select2({
+    //set values via JS
+    add_to_jquery( "function avatar(item) {
+        if(!item.id) {return item.text;}
+        var avatar = item.avatar;
+        var level = item.level;
+        return '<table><tr><td style=\"\"><img alt=\"\" style=\"height:35px;\" class=\"img-rounded\" src=\"" . $root_img . $options['image_path'] . "' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div><small>' + level + '</small></div></td></tr></table>';
+    }    
+    $('#" . $options['input_id'] . "').select2({
         $length
         multiple: true,
         " . ($options['max_select'] !== FALSE ? "maximumSelectionSize: " . $options['max_select'] . "," : '') . "
@@ -641,21 +596,17 @@ function form_user_select( $input_name, $label = "", $input_value = FALSE, array
             data: function (term, page) {
                 return {q: term};
             },
-            results: function (data, page) {
-                //console.log(page);
+            results: function (data, page) {                
                 return {results: data};
             }
         },
         formatSelection: avatar,
         escapeMarkup: function(m) { return m; },
         formatResult: avatar,
-        " . $allowclear . "
-        })" . (!empty( $encoded ) ? ".select2('data', $encoded );" : '') . "
-    " );
+         $allowclear 
+    })" . (!empty( $encoded ) ? ".select2('data', $encoded );" : '') );
 
-    load_select2_script();
-
-    return $html;
+    return form_select( $input_name, $label, $input_value, $options );
 }
 
 /* Returns Json Encoded Object used in form_select_user */
@@ -699,15 +650,24 @@ function user_search( $users, $delimiter ) {
  * @param        $id_col - unique id
  * @param        $cat_col - parent id
  *                         ## The rest of the Params are used by the function itself -- no need to handle ##
- * @param bool $self_id - not required
+ * @param bool $self_id - not required -- import this to form_seelct
  * @param bool $id - not required
  * @param bool $level - not required
  * @param bool $index - not required
  * @param bool $data - not required
  *
  * @return string
+ * @deprecated and will be removed
+ * @todo: Select 2 is able to do this now, and this function should be deprecated.
+ *
  */
 function form_select_tree( $input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = [], $data = FALSE ) {
+
+    if (defined('DEVELOPER_MODE')) {
+        // Adds developer notice for community to change implementation
+        set_error(E_NOTICE, 'Deprecation notice: The input '.$input_name.' on this page need to be altered to form_select function which also supports hierarchy and DB. This function will be deprecated and removed by the developer team soon.', FUSION_SELF, '0');
+    }
+
     $html = '';
     $locale = fusion_get_locale();
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
@@ -835,7 +795,7 @@ function form_select_tree( $input_name, $label, $input_value, array $options, $d
             // do a disable for filter_opts item.
             $html .= (!$hide) ? "<option value='$value' " . $select . " " . ($disable_opts && in_array( $value, $disable_opts ) ? 'disabled' : '') . " >$opt_pattern $name " . ($options['show_current'] && $self_id == $value ? '(Current Item)' : '') . "</option>\n" : '';
             if (isset( $index[$value] ) && (!$hide)) {
-                $html .= form_select_tree( $input_name, $label, $input_value, $options, $db, $name_col, $id_col, $cat_col, $self_id, $value, $level + TRUE, $index, $data );
+//                $html .= form_select_tree( $input_name, $label, $input_value, $options, $db, $name_col, $id_col, $cat_col, $self_id, $value, $level + TRUE, $index, $data );
             }
         }
     }
