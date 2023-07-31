@@ -37,7 +37,7 @@ function get_bootstrap( $part, $version = '3' ) {
 
         $framework_paths = [
             'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
-            'text_input'   => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
+            'form_inputs'   => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
         ];
     }
 

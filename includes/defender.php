@@ -1114,7 +1114,7 @@ function input_error_text( $input_name ) {
 /**
  * @param $options
  *
- * @return array
+ * @return array [error_class, error_text]
  */
 function form_errors( $options ) {
     $locale = fusion_get_locale();

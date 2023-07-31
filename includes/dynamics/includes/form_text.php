@@ -292,7 +292,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
 
     ksort( $options );
 
-    return fusion_get_template( 'text_input', [
+    return fusion_get_template( 'form_inputs', [
         "input_name"    => $input_name,
         "input_label"   => $label,
         "input_value"   => $options['priority_value'] ?? $input_value,
