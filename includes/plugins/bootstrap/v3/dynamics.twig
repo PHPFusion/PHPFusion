@@ -47,6 +47,12 @@
 
         {{ colorpicker.color_input(input_name, input_value, input_options) }}
 
+    {% elseif input_options['template_type'] == 'hidden' %}
+
+        {% import 'dynamics/hidden.twig' as hide %}
+
+        {{ hide.hidden_input(input_name, input_value, input_options) }}
+
     {% endif %}
 
     {{ inline_end|raw }}
