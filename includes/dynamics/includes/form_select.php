@@ -65,7 +65,9 @@
 function form_select( $input_name, $label, $input_value, $options = [] ) {
 
     $locale = fusion_get_locale();
+
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
+
     $input_value = clean_input_value( $input_value );
 
     $list = [];
@@ -375,6 +377,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
                     $this_select = ' selected';
                 }
             }
+
             $options['options_html'] .= "<option value='0' " . $this_select . " >" . $options['parent_value'] . "</option>\n";
         }
 
@@ -516,8 +519,6 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
 
     ksort( $options );
 
-    //print_p( $options );
-
     return fusion_get_template( 'form_inputs', [
         "input_name"    => $input_name,
         "input_label"   => $label,
@@ -540,7 +541,6 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
 function form_user_select( $input_name, $label = "", $input_value = FALSE, array $options = [] ) {
 
     $locale = fusion_get_locale();
-    $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
     $settings = fusion_get_settings();
     $input_value = clean_input_value( $input_value );
 
@@ -584,7 +584,8 @@ function form_user_select( $input_name, $label = "", $input_value = FALSE, array
         var avatar = item.avatar;
         var level = item.level;
         return '<table><tr><td style=\"\"><img alt=\"\" style=\"height:35px;\" class=\"img-rounded\" src=\"" . $root_img . $options['image_path'] . "' + avatar + '\"/></td><td style=\"padding-left:10px; padding-right:10px;\"><div><strong>' + item.text + '</strong></div><small>' + level + '</small></div></td></tr></table>';
-    }    
+    }
+
     $('#" . $options['input_id'] . "').select2({
         $length
         multiple: true,
@@ -596,14 +597,14 @@ function form_user_select( $input_name, $label = "", $input_value = FALSE, array
             data: function (term, page) {
                 return {q: term};
             },
-            results: function (data, page) {                
+            results: function (data, page) {
                 return {results: data};
             }
         },
         formatSelection: avatar,
         escapeMarkup: function(m) { return m; },
         formatResult: avatar,
-         $allowclear 
+         $allowclear
     })" . (!empty( $encoded ) ? ".select2('data', $encoded );" : '') );
 
     return form_select( $input_name, $label, $input_value, $options );

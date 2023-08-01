@@ -33,7 +33,8 @@ echo form_user_select('dropdown_2', 'Dropdown 2', '', [
 ]);
 
 // Datepicker
-echo form_datepicker('datepicker', 'Datepicker', '');
+//echo form_datepicker('datepicker', 'Datepicker', '');
 
+echo form_colorpicker('colorpicker', 'Colorpicker', '');
 
 require_once THEMES.'templates/footer.php';

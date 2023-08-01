@@ -1,0 +1,5 @@
+
+{% macro color_input(input_name, input_value, options) %}
+    <input type="text" data-jscolor="{}" name="{{ input_name }}" class="form-control textbox {{ whitespace(options['class']?:'') }}" id='{{ options['input_id'] }}"' value="{{ input_value }}"{{ whitespace(options['inner_width'] ? 'style="width:'~ options['inner_width'] ~';"' : '')|raw ~ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"')|raw ~ whitespace(options['deactivate'] ? 'readonly' : '') }}>
+{% endmacro %}
+

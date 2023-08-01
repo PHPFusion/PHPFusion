@@ -41,6 +41,12 @@
 
         {{ datepicker.date_input(input_name, input_value, input_options) }}
 
+    {% elseif input_options['template_type'] == 'colorpicker' %}
+
+        {% import 'dynamics/color.twig' as colorpicker %}
+
+        {{ colorpicker.color_input(input_name, input_value, input_options) }}
+
     {% endif %}
 
     {{ inline_end|raw }}

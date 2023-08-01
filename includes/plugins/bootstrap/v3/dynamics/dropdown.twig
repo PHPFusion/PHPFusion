@@ -11,10 +11,7 @@
                 {% set dropdownClass = "form-select" %}
             {% endif %}
 
-            <input type="hidden"
-                   class="{{ dropdownClass }}{{ whitespace(options['required'] ? 'class="required"':'')|raw }}{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace( options['max_length']) }}
-                   name="{{ input_name }}" value="{{ input_value }}"
-                   id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '') }}>
+            <input type="hidden" class="{{ dropdownClass }}{{ whitespace(options['required'] ? 'class="required"':'')|raw }}{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace( options['max_length']) }} name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '') }}>
         {% else %}
 
             {# Regular dropdown input #}
