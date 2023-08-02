@@ -92,12 +92,12 @@ function clean_input_name($value) {
 
 /**
  * @param mixed $value
- *
+ * 'input_id[]' becomes 'input_id-', due to foreach has multiple options, and these DOM selectors are needed
  * @return array|string
  */
-function clean_input_id($value) {
+function clean_input_id($value, $replace = '_') {
     $re = '/\[(.*?)\]/m';
-    return preg_replace($re, '_', $value);
+    return preg_replace($re, $replace, $value);
 }
 
 /**

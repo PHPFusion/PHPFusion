@@ -1,27 +1,36 @@
-{% macro _checkboxes(input_name, label, input_value, options, nested = false) %}
+{% macro checkbox_input(input_name, input_label, input_value, options, nested = false) %}
 
-    {% set groupClass = 'form-check' %}
+    {%  if (options['options'] is not empty and options['options']|length > 0) %}
 
-    {% if options['toggle'] %}
-        {% set role = 'role="switch"' %}
-        {% set groupClass = 'form-switch' %}
-    {% endif %}
+        {% for key, value in options['options'] %}
 
-    {% if nested == true and options['options_data']|length > 0 %}
-        {% if options['inline_options']  == true %}
-            <div class="display-flex flex-row gap-3 m-0">
-        {% endif %}
-        {% for key, value in options['options_data'] %}
+            {% set deactivation = (options['deactivate_key'] is defined) and (options['deactivate_key'] is not null) ? true : false %}
 
-            <div class="{{ groupClass }}">
-                <input id="{{ options['input_id'] }}-{{ key }}" name="{{ input_name }}" class="form-check-input" value="{{ key }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate'] or options['deactivate_key'] == key|number_format ? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(input_value[key] == true ? 'checked' : '') }}>
-                <label for="{{ options['input_id'] }}-{{ key }}">{{ value['value']|raw }}</label>
+            {% set checkbox_input_properties = whitespace( deactivation or options['deactivate_key'] == key ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value[key] == true ? 'checked' : '') %}
+
+            {% if deactivation and options['deactivate_key'] == key %}
+                <input type="hidden" name="{{ input_name }}" id="{{ key }}">
+            {% endif %}
+
+            {% set checkbox_input_id = options['input_id'] ~'-'~ key %}
+
+            <div class="{{ (options['type'] == 'radio' ? 'radio' : 'checkbox') ~ whitespace(options['inline_options'] ? 'display-inline-block m-r-5' : '') }}">
+                <label class="control-label m-r-10" for="{{ checkbox_input_id }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~'"' : '') }}>
+                    <input id="{{ checkbox_input_id }}" name="{{ input_name }}" value="{{ key }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties)|raw }}>
+                    {{ value }}
+                </label>
             </div>
+
         {% endfor %}
-        {% if options['inline_options']  == true %}
-            </div>
-        {% endif %}
+
     {% else %}
-        <input id="{{ options['input_id'] }}" name="{{ input_name }}" class="form-check-input" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(role)|raw }}{{ whitespace(options['deactivate']? 'disabled': '') }}{{ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '')|raw }}{{ whitespace(options['value'] == input_value ? 'checked' : '') }}>
+
+        {% set checkbox_input_properties = whitespace( options['deactivate'] ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value[key] == true ? 'checked' : '') %}
+
+        <div class="m-r-10{{ whitespace(input_label is not empty ? 'pull-left' : '') }}">
+            <input id="{{ options['input_id'] }}" class="m-0 va" name="{{ input_name }}" value="{{ input_value }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties) }}'>
+        </div>
+
     {% endif %}
+
 {% endmacro %}
