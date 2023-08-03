@@ -417,8 +417,8 @@ class Locale {
      *
      * @return static
      */
-    public static function getInstance($key = 'default') {
-        if (!isset(self::$instances[$key])) {
+    public static function getInstance( $key = 'default' ) {
+        if (!isset( self::$instances[$key] )) {
             self::$instances[$key] = new static();
         }
 
@@ -434,16 +434,16 @@ class Locale {
      *
      * @param string|array $include_file Can be an array or a string
      */
-    public static function setLocale($include_file) {
-        if (!empty($include_file)) {
-            if (is_array($include_file)) {
+    public static function setLocale( $include_file ) {
+        if (!empty( $include_file )) {
+            if (is_array( $include_file )) {
                 foreach ($include_file as $file) {
-                    if (!isset(self::$locale_file[$file])) {
-                        self::loadLocaleFile($file);
+                    if (!isset( self::$locale_file[$file] )) {
+                        self::loadLocaleFile( $file );
                     }
                 }
-            } else if (!isset(self::$locale_file[$include_file])) {
-                self::loadLocaleFile($include_file);
+            } else if (!isset( self::$locale_file[$include_file] )) {
+                self::loadLocaleFile( $include_file );
             }
         }
     }
@@ -453,10 +453,10 @@ class Locale {
      *
      * @param string $filename
      */
-    public static function loadLocaleFile($filename) {
+    public static function loadLocaleFile( $filename ) {
         $locale = [];
 
-        if (file_exists($filename)) {
+        if (is_file( $filename )) {
             include $filename;
         }
 
@@ -471,7 +471,7 @@ class Locale {
      *
      * @return string
      */
-    public static function translateCountryNames($country) {
+    public static function translateCountryNames( $country ) {
         $translated_countries = [
             "China"           => "中国",
             "Czech Republic"  => "Česko",
@@ -493,7 +493,7 @@ class Locale {
             "Ukraine"         => "Україна",
         ];
 
-        if (!empty($translated_countries[$country])) {
+        if (!empty( $translated_countries[$country] )) {
             return $translated_countries[$country];
         } else {
             return $country;
@@ -509,9 +509,9 @@ class Locale {
         $iso_codes = self::getIso();
         $list = [];
         foreach ($iso_codes as $_isocode => $standard_name) {
-            if ($translated_name = self::translateLangNames($_isocode)) {
+            if ($translated_name = self::translateLangNames( $_isocode )) {
                 if ($translated_name != $standard_name) {
-                    $standard_name = $standard_name.' ('.$translated_name.')';
+                    $standard_name = $standard_name . ' (' . $translated_name . ')';
                 }
             }
             $list[$_isocode] = $standard_name;
@@ -527,14 +527,14 @@ class Locale {
      *
      * @return array|int|string|null
      */
-    public static function getIso($key = NULL, $iso_to_lang = TRUE) {
+    public static function getIso( $key = NULL, $iso_to_lang = TRUE ) {
 
-        $iso_codes = array_flip(self::$language_codes);
+        $iso_codes = array_flip( self::$language_codes );
         if ($iso_to_lang) {
-            return $key === NULL ? self::$language_codes : (isset(self::$language_codes[$key]) ? self::translateLangNames($key) : NULL);
+            return $key === NULL ? self::$language_codes : (isset( self::$language_codes[$key] ) ? self::translateLangNames( $key ) : NULL);
         }
 
-        return $key === NULL ? array_flip($iso_codes) : ($iso_codes[$key] ?? NULL);
+        return $key === NULL ? array_flip( $iso_codes ) : ($iso_codes[$key] ?? NULL);
     }
 
     /**
@@ -545,10 +545,10 @@ class Locale {
      *
      * @param $language_pack - Locale folder
      */
-    public static function getLangName($language_pack) {
-        $key = get_language_code($language_pack);
+    public static function getLangName( $language_pack ) {
+        $key = get_language_code( $language_pack );
         $locale = self::getLanguageLocale();
-        return ($locale[$key] ?? str_replace("_", "", $language_pack));
+        return ($locale[$key] ?? str_replace( "_", "", $language_pack ));
     }
 
     /**
@@ -562,17 +562,17 @@ class Locale {
      *
      * @return array|string
      */
-    public static function translateLangNames($key, $extended = FALSE) {
-        $key = get_language_code($key);
+    public static function translateLangNames( $key, $extended = FALSE ) {
+        $key = get_language_code( $key );
 
         if ($extended == TRUE) {
             $_locale = self::getLanguageLocale();
 
             static $parsed;
-            if (empty($parsed)) { // prevent appending multiple times with each method call
+            if (empty( $parsed )) { // prevent appending multiple times with each method call
                 foreach ($_locale as $short_code => $value) {
-                    if (isset(self::$translated_langs[$short_code])) {
-                        self::$translated_langs[$short_code] = self::$translated_langs[$short_code]." [$value]";
+                    if (isset( self::$translated_langs[$short_code] )) {
+                        self::$translated_langs[$short_code] = self::$translated_langs[$short_code] . " [$value]";
                     }
                 }
                 $parsed = TRUE;
@@ -589,7 +589,7 @@ class Locale {
      */
     private static function getLanguageLocale() {
         $locale = [];
-        include LOCALE.LOCALESET.'language.php';
+        include LOCALE . LOCALESET . 'language.php';
         return $locale;
     }
 
@@ -600,33 +600,33 @@ class Locale {
      *
      * @return string|string[]|null
      */
-    public static function getTranslatedLangs($key = NULL) {
+    public static function getTranslatedLangs( $key = NULL ) {
         return $key === NULL ? self::$translated_langs : (self::$translated_langs[$key] ?? NULL);
     }
 
     /**
-     * @param int    $count
+     * @param int $count
      * @param string $words 'member|members';
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
      * @deprecated use format_word()
      */
-    public static function format_word($count, $words, $options = []) {
-        return self::formatWord($count, $words, $options);
+    public static function format_word( $count, $words, $options = [] ) {
+        return self::formatWord( $count, $words, $options );
     }
 
     /**
      * Returns a grammatical number word.
      *
-     * @param int    $count Number of items.
+     * @param int $count Number of items.
      * @param string $words A string consisting of singular and plural delimited by a | symbol.
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      */
-    public static function formatWord($count, $words, $options = []) {
+    public static function formatWord( $count, $words, $options = [] ) {
         $default_options = [
             'add_count'     => TRUE, // Show number.
             'html'          => FALSE, // Encase result with html_template, {%count%} {%result%} tags are used for placeholders for result replacements.
@@ -636,7 +636,7 @@ class Locale {
 
         $options += $default_options;
 
-        if (empty($count)) {
+        if (empty( $count )) {
             $count = "0";
         }
 
@@ -647,27 +647,27 @@ class Locale {
             case 'German':
             case 'Romanian':
                 $form = $count == 1 ? 0 : 1;
-                $words_array = explode("|", $words);
-                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
+                $words_array = explode( "|", $words );
+                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Czech':
             case 'Slovak':
                 if ($count == 1) {
                     $form = 0;
-                } else if (in_array($count, [2, 3, 4])) {
+                } else if (in_array( $count, [2, 3, 4] )) {
                     $form = 1;
                 } else {
                     $form = 2;
                 }
 
-                $words_array = explode("|", $words);
-                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
+                $words_array = explode( "|", $words );
+                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Russian':
             case 'Ukranian':
                 $fcount = $count % 100;
                 $a = $fcount % 10;
-                $b = floor($fcount / 10);
+                $b = floor( $fcount / 10 );
                 $form = 2;
 
                 if ($b != 1) {
@@ -678,24 +678,24 @@ class Locale {
                     }
                 }
 
-                $words_array = explode("|", $words);
-                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
+                $words_array = explode( "|", $words );
+                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
                 break;
             default: // never plural language - i.e. chinese is here
-                $words_array = explode("|", $words);
+                $words_array = explode( "|", $words );
                 $result = $words_array[0];
         }
 
         if ($options['add_count']) {
-            if ($options['html'] && !empty($options['html_template'])) {
-                return strtr($options['html_template'],
+            if ($options['html'] && !empty( $options['html_template'] )) {
+                return strtr( $options['html_template'],
                     [
                         "{%count%}"  => $count,
                         "{%result%}" => $result
                     ]
                 );
             } else {
-                return $count.' '.$result;
+                return $count . ' ' . $result;
             }
         }
 
@@ -707,8 +707,8 @@ class Locale {
      *
      * @return array|mixed|string
      */
-    public function getLocale($key = NULL) {
-        return empty($key) ? self::$locale : (self::$locale[$key] ?? '');
+    public function getLocale( $key = NULL ) {
+        return empty( $key ) ? self::$locale : (self::$locale[$key] ?? '');
     }
 
     /**
@@ -719,29 +719,29 @@ class Locale {
      *
      * @param string $locale_file
      * @param string $locale_folder
-     * @param bool   $localeset_folder
+     * @param bool $localeset_folder
      * @param string $default_lang
      *
      * @return string
      */
-    public function getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English') {
+    public function getInfLocaleFiles( $locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English' ) {
         // prune the locale folder and ensures the correct forumat is used
-        $locale_folder = rtrim($locale_folder, '/').'/';
-        $locale_set = rtrim(LOCALESET, '/');
+        $locale_folder = rtrim( $locale_folder, '/' ) . '/';
+        $locale_set = rtrim( LOCALESET, '/' );
         // this is when the infusion has multiple locale files, typical solution was to store the files in a localeset folder - /English/
         if ($localeset_folder) {
-            $locale_path = $locale_folder.$default_lang.'/'.$locale_file;
-            if (is_file($locale_folder.LOCALESET.$locale_file)) {
-                $locale_path = $locale_folder.LOCALESET.$locale_file;
+            $locale_path = $locale_folder . $default_lang . '/' . $locale_file;
+            if (is_file( $locale_folder . LOCALESET . $locale_file )) {
+                $locale_path = $locale_folder . LOCALESET . $locale_file;
             }
             return $locale_path;
         }
 
         // when there are no folder, typical solution was to store the files in a single locale folder and have the file named as the language - English.php
 
-        $locale_path = $locale_folder.$default_lang.'.php';
-        if (is_file($locale_folder.$locale_set.'.php')) {
-            $locale_path = $locale_folder.$locale_set.'.php';
+        $locale_path = $locale_folder . $default_lang . '.php';
+        if (is_file( $locale_folder . $locale_set . '.php' )) {
+            $locale_path = $locale_folder . $locale_set . '.php';
         }
 
         return $locale_path;
@@ -755,11 +755,11 @@ class Locale {
      * @return string
      * NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
      */
-    public static function parseLabel($value) {
-        if (self::isSerialized($value)) {
-            $value = unserialize(stripslashes($value)); // if anyone can give me an @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
+    public static function parseLabel( $value ) {
+        if (self::isSerialized( $value )) {
+            $value = unserialize( stripslashes( $value ) ); // if anyone can give me an @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
 
-            return (string)(isset($value[LANGUAGE])) ? $value[LANGUAGE] : '';
+            return (string)(isset( $value[LANGUAGE] )) ? $value[LANGUAGE] : '';
         } else {
             return (string)$value;
         }
@@ -767,15 +767,16 @@ class Locale {
 
     /**
      * Checks whether a string is serialized
-     * @param string    $value
+     *
+     * @param string $value
      * @param bool|null $result
      *
      * @return bool
      */
-    public static function isSerialized($value, &$result = NULL) {
+    public static function isSerialized( $value, &$result = NULL ) {
 
         // A bit of a give away this one
-        if (!is_string($value)) {
+        if (!is_string( $value )) {
             return FALSE;
         }
         // Serialized FALSE, return TRUE. unserialize() returns FALSE on an
@@ -786,9 +787,9 @@ class Locale {
 
             return TRUE;
         }
-        $length = strlen($value);
+        $length = strlen( $value );
         $end = '';
-        if (isset($value[0])) {
+        if (isset( $value[0] )) {
             switch ($value[0]) {
                 case 's':
                     if ('"' !== $value[$length - 2]) {
@@ -832,7 +833,7 @@ class Locale {
             }
         }
 
-        if (($result = unserialize(stripslashes($value))) === FALSE) {
+        if (($result = unserialize( stripslashes( $value ) )) === FALSE) {
             $result = NULL;
 
             return FALSE;

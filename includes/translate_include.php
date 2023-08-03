@@ -36,6 +36,14 @@ function fusion_get_locale($key = NULL, $include_file = '') {
 }
 
 /**
+ * Add a file into the locale cache
+ * @param $locale_file
+ */
+function fusion_set_locale($locale_file) {
+    Locale::getInstance()::setLocale($locale_file);
+}
+
+/**
  * Get the locale file name for infusions
  *
  * @param string $locale_file

@@ -39,91 +39,28 @@ echo form_datepicker( 'datepicker', 'Datepicker', '' );
 
 echo form_colorpicker( 'colorpicker', 'Colorpicker', '' );
 
+// Checkboxes
 echo form_checkbox( 'checkbox_inline', 'Checkbox Inline', '1', ['type' => 'toggle'] );
 
-/**
- * <div id="checkbox_inline-field" class="form-group check-group "><label class="control-label" data-checked="0" for="checkbox_inline"><div
- * class="overflow-hide">Checkbox Inline</div></label><div class="pull-left m-r-10"><input id="checkbox_inline"
- * style="margin:0;vertical-align:middle;" name="checkbox_inline" value="1" type="checkbox"></div></div>
- */
 echo form_checkbox( 'checkbox_inline', 'Checkbox Inline', '' );
 
-?>
-    <!--    <div id="checkbox_options-field" class="form-group check-group "><label class="control-label" data-checked="1" for="checkbox_options">-->
-    <!--            <div class="overflow-hide">Checkbox Options</div>-->
-    <!--        </label>-->
-    <!--        <div class="checkbox"><label class="control-label m-r-10" for="checkbox_options-1"><input id="checkbox_options-1" name="checkbox_options"-->
-    <!--                                                                                                  value="1" type="checkbox">Option 1</label></div>-->
-    <!--        <div class="checkbox"><label class="control-label m-r-10" for="checkbox_options-2"><input id="checkbox_options-2" name="checkbox_options"-->
-    <!--                                                                                                  value="2" type="checkbox">Option 2</label></div>-->
-    <!--        <div class="checkbox"><label class="control-label m-r-10" for="checkbox_options-3"><input id="checkbox_options-3" name="checkbox_options"-->
-    <!--                                                                                                  value="3" type="checkbox">Option 3</label></div>-->
-    <!--    </div>-->
-<?php
-
 echo form_checkbox( 'checkbox_options', 'Checkbox Options', '1', ['options' => [1 => 'Option 1', 2 => 'Option 2', 3 => 'Option 3']] );
-?>
-    <!--    <div id="checkbox_inline_options-field" class="form-group check-group row ">-->
-    <!--        <label class="control-label col-xs-12 col-sm-3 col-md-3 col-lg-3" data-checked="1" for="checkbox_inline_options">-->
-    <!--            <div class="overflow-hide">Checkbox Inline Options</div>-->
-    <!--        </label>-->
-    <!--        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">-->
-    <!--            <div class="checkbox">-->
-    <!--                <label class="control-label m-r-10" for="checkbox_inline_options-1"><input id="checkbox_inline_options-1"-->
-    <!--                                                                                           name="checkbox_inline_options" value="1" type="checkbox">Option-->
-    <!--                    1</label>-->
-    <!--            </div>-->
-    <!--            <div class="checkbox"><label class="control-label m-r-10" for="checkbox_inline_options-2"><input id="checkbox_inline_options-2"-->
-    <!--                                                                                                             name="checkbox_inline_options" value="2"-->
-    <!--                                                                                                             type="checkbox">Option 2</label></div>-->
-    <!--            <div class="checkbox"><label class="control-label m-r-10" for="checkbox_inline_options-3"><input id="checkbox_inline_options-3"-->
-    <!--                                                                                                             name="checkbox_inline_options" value="3"-->
-    <!--                                                                                                             type="checkbox">Option 3</label></div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-<?php
 
 echo form_checkbox( 'checkbox_inline_options', 'Checkbox Inline Options', '2', ['options' => [1 => 'Option 1', 2 => 'Option 2', 3 => 'Option 3'], 'inline' => TRUE] );
 
-?>
-    <!--    <div id="checkbox_radio_options-field" class="form-group check-group "><label class="control-label" data-checked="1" for="checkbox_radio_options">-->
-    <!--            <div class="overflow-hide">Checkbox Radio Options</div>-->
-    <!--        </label>-->
-    <!--        <div class="radio"><label class="control-label m-r-10" for="checkbox_radio_options-1"><input id="checkbox_radio_options-1"-->
-    <!--                                                                                                     name="checkbox_radio_options" value="1"-->
-    <!--                                                                                                     type="radio" checked="">Option 1</label></div>-->
-    <!--        <div class="radio"><label class="control-label m-r-10" for="checkbox_radio_options-2"><input id="checkbox_radio_options-2"-->
-    <!--                                                                                                     name="checkbox_radio_options" value="2"-->
-    <!--                                                                                                     type="radio">Option 2</label></div>-->
-    <!--        <div class="radio"><label class="control-label m-r-10" for="checkbox_radio_options-3"><input id="checkbox_radio_options-3"-->
-    <!--                                                                                                     name="checkbox_radio_options" value="3"-->
-    <!--                                                                                                     type="radio">Option 3</label></div>-->
-    <!--    </div>-->
-<?php
 echo form_checkbox( 'checkbox_radio_options', 'Checkbox Radio Options', '', ['options' => [1 => 'Option 1', 2 => 'Option 2', 3 => 'Option 3'], 'type' => 'radio'] );
 
-?>
-    <!--    <div id="checkbox_inline_radio_options-field" class="form-group check-group row "><label-->
-    <!--                class="control-label col-xs-12 col-sm-3 col-md-3 col-lg-3" data-checked="1" for="checkbox_inline_radio_options">-->
-    <!--            <div class="overflow-hide">Checkbox Radio Options</div>-->
-    <!--        </label>-->
-    <!--        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">-->
-    <!--            <div class="radio"><label class="control-label m-r-10" for="checkbox_inline_radio_options-1"><input id="checkbox_inline_radio_options-1"-->
-    <!--                                                                                                                name="checkbox_inline_radio_options"-->
-    <!--                                                                                                                value="1" type="radio" checked="">Option-->
-    <!--                    1</label></div>-->
-    <!--            <div class="radio"><label class="control-label m-r-10" for="checkbox_inline_radio_options-2"><input id="checkbox_inline_radio_options-2"-->
-    <!--                                                                                                                name="checkbox_inline_radio_options"-->
-    <!--                                                                                                                value="2" type="radio">Option-->
-    <!--                    2</label></div>-->
-    <!--            <div class="radio"><label class="control-label m-r-10" for="checkbox_inline_radio_options-3"><input id="checkbox_inline_radio_options-3"-->
-    <!--                                                                                                                name="checkbox_inline_radio_options"-->
-    <!--                                                                                                                value="3" type="radio">Option-->
-    <!--                    3</label></div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-<?php
 echo form_checkbox( 'checkbox_inline_radio_options', 'Checkbox Radio Options', '', ['options' => [1 => 'Option 1', 2 => 'Option 2', 3 => 'Option 3'], 'type' => 'radio', 'inline' => TRUE] );
+
+// Textarea
+echo form_textarea( 'textarea', 'TinyMCE Textarea', '', ['type' => 'tinymce', 'placeholder' => 'Type something here...'] );
+
+echo '<form name="test_1">';
+echo form_textarea( 'textarea2', 'BBCode Textarea', '', ['type' => 'bbcode', 'placeholder' => 'Type something here...', 'form_name'=>'test_1'] );
+echo form_textarea( 'textarea3', 'HTML Textarea', '', ['type' => 'html', 'placeholder' => 'Type something here...', 'form_name'=>'test_1'] );
+echo '</form>';
+
+echo form_textarea( 'textarea4', 'Textarea', '', ['placeholder' => 'Type something here...'] );
 
 
 require_once THEMES . 'templates/footer.php';

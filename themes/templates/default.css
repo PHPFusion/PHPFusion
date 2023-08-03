@@ -228,6 +228,12 @@ Flex
 .display-flex.gap-lg {
   gap: 1.5rem;
 }
+.display-flex > .justify-start {
+  justify-self: flex-start;
+}
+.display-flex > .justify-end {
+  justify-self: flex-end;
+}
 /** Need to used inside a block type div and height width specify **/
 .center-y {
   position: relative;

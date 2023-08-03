@@ -1952,6 +1952,15 @@ input[type="button"].btn-block {
     width: 100%;
 }
 
+.bbcode-popup.dropdown-menu {
+    padding:8px;
+}
+
+.smiley {
+    height:20px;
+    margin:2px;
+}
+
 .fade {
     opacity: 0;
     -webkit-transition: opacity 0.15s linear;
