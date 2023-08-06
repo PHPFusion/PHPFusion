@@ -25,7 +25,7 @@
     {% endif %}
 
     {% if options['icon'] %}
-        {% set icon = '<i class="'~ options['icon'] ~ '"></i>' %}
+        {% set icon = '<i class="'~ options['icon'] ~ whitespace(options['icon_class']) ~ '"></i>' %}
     {% endif %}
 
     {% set type = (options['type'] == 'submit' ? 'submit' : 'button') %}
@@ -33,7 +33,7 @@
     <button name="{{ input_name }}" type="{{ type }}" id="{{ options['input_id'] }}" title="{{ input_label }}"
             class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" data-value="{{ input_value }}"
              value="{{ input_value }}" {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
-        {{ icon|raw }}{{ whitespace(input_label) }}
+        {{ icon|raw }}{{ whitespace(input_label) |raw}}
     </button>
 
 {% endmacro %}
