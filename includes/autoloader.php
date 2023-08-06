@@ -125,9 +125,9 @@ require_once __DIR__."/output_handling_include.php";
 require_once __DIR__."/notify.php";
 require_once __DIR__."/hooks_include.php";
 
-if (is_file(__DIR__."/vendor/autoload.php")) {
-    require_once __DIR__."/vendor/autoload.php";
-}
+//if (is_file(__DIR__."/vendor/autoload.php")) {
+//    require_once __DIR__."/vendor/autoload.php";
+//}
 
 if (is_file(__DIR__."/custom_includes.php")) {
     require_once __DIR__."/custom_includes.php";

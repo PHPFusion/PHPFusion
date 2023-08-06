@@ -156,7 +156,6 @@ function check_admin_pass( $password ) {
  * @param int $code HTTP status code to send.
  */
 function redirect( $location, $delay = FALSE, $script = FALSE, $code = 200 ) {
-
     if (!defined( 'STOP_REDIRECT' )) {
         if (isnum( $delay )) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=" . $location . "' />";
@@ -1958,6 +1957,44 @@ function fusion_get_settings( $key = NULL ) {
 function fusion_get_username( $user_id ) {
     return (dbresult( dbquery( "SELECT user_name FROM " . DB_USERS . " WHERE user_id='" . intval( $user_id ) . "'" ), 0 )) ?? fusion_get_locale( 'na' );
 }
+
+/**
+ * Login / Logout / Revalidate
+ */
+function fusion_set_user() {
+    static $userdata = [
+        'user_level'  => 0,
+        'user_rights' => '',
+        'user_groups' => '',
+    ];
+//    if (check_post( 'login' ) && check_post( 'user_name' ) && check_post( 'user_pass' )) {
+    if (check_post( 'login' )) {
+
+        sanitizer( 'user_name', '', 'user_name' );
+        sanitizer( 'user_pass', '', 'user_pass' );
+
+        if (fusion_safe()) {
+            $auth = new Authenticate( post( 'user_name' ), post( 'user_pass' ), check_post( 'remember_me' ) );
+            if ($auth->authRedirection()) {
+//             auth mode for security pin
+//             on second refresh, the validateAuthUser will kick in and log user out if session not loaded.
+                redirect( BASEDIR . 'login.php?auth=security_pin' );
+//             we have once chance to do a OTP.
+            }
+            $userdata = $auth->getUserData();
+            redirect( FUSION_REQUEST );
+        }
+    } else if (get( 'logout' ) === 'yes') {
+        $userdata = Authenticate::logOut();
+        $request = clean_request( '', ['logout'], FALSE );
+        redirect( $request );
+    } elseif (empty( $userdata['user_id'] )) {
+        $userdata = Authenticate::validateAuthUser();
+    }
+
+    return $userdata;
+}
+
 
 /**
  * Fetch user data of the currently logged-in user from database.

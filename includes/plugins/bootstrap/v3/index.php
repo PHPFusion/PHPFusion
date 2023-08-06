@@ -25,14 +25,14 @@
 function bootstrap_header( $custom_file = '' ) {
     echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
     echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
-    echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap.min.css">';
+    echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap.min.css" defer>';
     if (file_exists( $custom_file )) {
         echo '<link rel="stylesheet" href="' . $custom_file . '">';
     } else {
-        echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap-submenu.min.css">';
+        echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap-submenu.min.css" defer>';
     }
     if (fusion_get_locale( 'text-direction' ) === 'rtl') {
-        echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap-rtl.min.css">';
+        echo '<link rel="stylesheet" href="' . INCLUDES . 'plugins/bootstrap/v3/css/bootstrap-rtl.min.css" defer>';
     }
 }
 
@@ -40,6 +40,6 @@ function bootstrap_header( $custom_file = '' ) {
  * Bootstrap v3 footer hooks
  */
 function bootstrap_footer() {
-    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v3/js/bootstrap.min.js"></script>';
-    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v3/js/bootstrap-submenu.min.js"></script>';
+    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v3/js/bootstrap.min.js" defer></script>';
+    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v3/js/bootstrap-submenu.min.js" defer></script>';
 }

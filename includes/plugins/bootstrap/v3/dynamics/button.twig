@@ -12,7 +12,7 @@
     <a id="{{ options['input_id'] }}" title="{{ input_label }}"
        class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" href="{{ input_name }}"
        data-value="{{ input_value }}" {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
-        {{ icon|raw ~ whitespace(input_label) }}
+        {{ icon|raw }}{{ whitespace(input_label) }}
     </a>
 
 {% endmacro %}
@@ -30,10 +30,10 @@
 
     {% set type = (options['type'] == 'submit' ? 'submit' : 'button') %}
 
-    <button type="{{ type }}" id="{{ options['input_id'] }}" title="{{ input_label }}"
+    <button name="{{ input_name }}" type="{{ type }}" id="{{ options['input_id'] }}" title="{{ input_label }}"
             class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" data-value="{{ input_value }}"
-            {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
-        {{ icon|raw ~ whitespace(input_label) }}
+             value="{{ input_value }}" {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
+        {{ icon|raw }}{{ whitespace(input_label) }}
     </button>
 
 {% endmacro %}

@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 const BASEDIR = '';
 const IN_FUSION = TRUE;
-require_once __DIR__.'/includes/autoloader.php';
+const BOOTSTRAP = 3;
+require_once __DIR__ . '/includes/autoloader.php';
+require_once INCLUDES . 'plugins_include.php';
+
 // Start the installer
 PHPFusion\Installer\InstallCore::getInstallInstance()->installPhpfusion();

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer;
 
 use PHPFusion\OutputHandler;
@@ -39,7 +40,7 @@ class Console extends InstallCore {
      *
      * @return string
      */
-    public function getView($content) {
+    public function getView( $content ) {
         $steps = [
             '1' => self::$locale['setup_0101'],
             '2' => self::$locale['setup_0102'],
@@ -50,22 +51,22 @@ class Console extends InstallCore {
         ];
 
         $html = '<div class="block-container center-x">';
-        $html .= openform('setupform', 'post', FUSION_SELF.'?localeset='.LANGUAGE);
+        $html .= openform( 'setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE );
         $html .= '<div class="block">';
         $html .= '<div class="row equal-height m-0">';
         $html .= '<div class="col-xs-12 col-sm-3 left-side p-0"><div>';
-        $html .= '<img class="logo img-responsive" src="'.IMAGES.'phpfusion-icon.png" alt="PHPFusion"/>';
+        $html .= '<img class="logo img-responsive" src="' . IMAGES . 'phpfusion-icon.png" alt="PHPFusion"/>';
         $html .= '<h3 class="text-center m-t-0">PHPFusion CMS</h3>';
 
         $html .= '<ul class="menu list-style-none m-t-15">';
         foreach ($steps as $key => $value) {
             if ($key != 4) {
-                $active = intval(INSTALLATION_STEP) == $key;
-                $html .= '<li'.($active ? ' class="active"' : '').'>'.$value.'</li>';
+                $active = intval( INSTALLATION_STEP ) == $key;
+                $html .= '<li' . ($active ? ' class="active"' : '') . '>' . $value . '</li>';
             }
         }
         $html .= '</ul>';
-        $html .= '<div class="text-center build-version">'.self::$locale['setup_0010'].self::BUILD_VERSION.'</div>';
+        $html .= '<div class="text-center build-version">' . self::$locale['setup_0010'] . self::BUILD_VERSION . '</div>';
         $html .= '</div></div>'; // .left-side
 
         $html .= '<div class="col-xs-12 col-sm-9 content p-0"><div>';
@@ -73,7 +74,7 @@ class Console extends InstallCore {
         $html .= $content;
 
         if (self::$localeset) {
-            $html .= form_hidden('localeset', self::$localeset);
+            $html .= form_hidden( 'localeset', self::$localeset );
         }
 
         $html .= '</div>';
@@ -83,14 +84,14 @@ class Console extends InstallCore {
             foreach (self::$step as $button_prop) {
                 $default_class['class'] = 'btn-primary';
                 $button_prop += $default_class;
-                $html .= form_button($button_prop['name'], $button_prop['label'], $button_prop['value'], ['class' => $button_prop['class']]);
+                $html .= form_button( $button_prop['name'], $button_prop['label'], $button_prop['value'], ['class' => $button_prop['class']] );
             }
             $html .= '</div>';
         }
 
         $html .= '</div></div>'; // .content
-        $html .= '</div>'; // .row
-        $html .= '</div>'; // .block
+        $html .= '</div>';       // .row
+        $html .= '</div>';       // .block
         $html .= closeform();
         $html .= '</div>'; // .block-container
 
@@ -103,50 +104,53 @@ class Console extends InstallCore {
      * @return string
      */
     public function getLayout() {
+
         $html = "<!DOCTYPE html>\n";
-        $html .= "<html lang='".self::$locale['setup_0011']."' dir='".self::$locale['setup_0012a']."'>\n";
+        $html .= "<html lang='" . self::$locale['setup_0011'] . "' dir='" . self::$locale['setup_0012a'] . "'>\n";
         $html .= "<head>\n";
-        $html .= "<title>".(isset($_GET['upgrade']) ? self::$locale['setup_0020'] : self::$locale['setup_0000'])."</title>\n";
-        $html .= "<meta charset='".self::$locale['setup_0012']."'>";
-        $html .= '<link rel="shortcut icon" href="'.IMAGES.'favicons/favicon.ico">';
+        $html .= "<title>" . (isset( $_GET['upgrade'] ) ? self::$locale['setup_0020'] : self::$locale['setup_0000']) . "</title>\n";
+        $html .= "<meta charset='" . self::$locale['setup_0012'] . "'>";
+        $html .= '<link rel="shortcut icon" href="' . IMAGES . 'favicons/favicon.ico">';
         $html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n";
         $html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n";
-        $html .= "<script src='".INCLUDES."jquery/jquery.min.js'></script>\n";
-        $html .= "<script src='".INCLUDES."bootstrap/bootstrap3/js/bootstrap.min.js'></script>\n";
-        $html .= "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
-        $html .= "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap3/css/bootstrap.min.css'>\n";
-        if (self::$locale['setup_0012a'] == 'rtl') {
-            $html .= "<link rel='stylesheet' href='".INCLUDES."bootstrap/bootstrap3/css/bootstrap-rtl.min.css'>";
-        }
-        $html .= "<link rel='stylesheet' href='".THEMES."templates/install.min.css?v=".filemtime(THEMES.'templates/install.min.css')."'>\n";
-        $html .= "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
+        $html .= "<script src='" . INCLUDES . "jquery/jquery.min.js'></script>\n";
+        $html .= "<link rel='stylesheet' href='" . THEMES . "templates/default.min.css?v=" . filemtime( THEMES . 'templates/default.min.css' ) . "'>\n";
+        $html .= "<link rel='stylesheet' href='" . THEMES . "templates/install.min.css?v=" . filemtime( THEMES . 'templates/install.min.css' ) . "'>\n";
+        $html .= "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-5/css/all.min.css'>\n";
+
+        fusion_apply_hook( 'fusion_header_include', $custom_file ?? '' );
+
+
         $html .= OutputHandler::$pageHeadTags;
 
-        $core_css_files = fusion_filter_hook("fusion_core_styles");
-        if (is_array($core_css_files)) {
-            $core_css_files = array_filter($core_css_files);
+        $core_css_files = fusion_filter_hook( "fusion_core_styles" );
+        if (is_array( $core_css_files )) {
+            $core_css_files = array_filter( $core_css_files );
             foreach ($core_css_files as $css_file) {
-                if (is_file($css_file)) {
-                    $script = fusion_load_script($css_file, "css", TRUE);
+                if (is_file( $css_file )) {
+                    $script = fusion_load_script( $css_file, "css", TRUE );
                     $html .= $script;
                 }
             }
         }
 
-        $html .= "</head>\n<body".(isset($_GET['upgrade']) ? " class='upgrade'" : '').">\n";
+        $html .= "</head>\n<body" . (isset( $_GET['upgrade'] ) ? " class='upgrade'" : '') . ">\n";
         $html .= "{%content%}";
         $fusion_jquery_tags = OutputHandler::$jqueryCode;
-        if (!empty($fusion_jquery_tags)) {
+        if (!empty( $fusion_jquery_tags )) {
             $html .= "<script>$(function() {
             let container = $('.block-container');
             let diff_height = container.height() - $('body').height();
             if (diff_height > 1) {
             container.css({ 'margin-top' : diff_height+'px', 'margin-bottom' : diff_height/2+'px' });
             }
-            ".$fusion_jquery_tags."
+            " . $fusion_jquery_tags . "
             });\n</script>\n";
         }
         $html .= OutputHandler::$pageFooterTags;
+
+        fusion_filter_hook('fusion_footer_include');
+
         $html .= "</body>\n";
         $html .= "</html>\n";
 

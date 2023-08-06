@@ -175,6 +175,7 @@ class InstallCore extends Infusions {
             $_SESSION['step'] = $_GET['session'];
         }
         if ($step == 'auto') {
+
             if (!defined('INSTALLATION_STEP')) {
                 $_SESSION['step'] = (!isset($_SESSION['step']) ? self::STEP_INTRO : $_SESSION['step']);
                 // current session
