@@ -31,7 +31,7 @@
     {% set type = (options['type'] == 'submit' ? 'submit' : 'button') %}
 
     <button type="{{ type }}" id="{{ options['input_id'] }}" title="{{ input_label }}"
-            class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" data-value="{{ input_value }}"
+            class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" name="{{ input_name }}" data-value="{{ input_value }}"
             {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
         {{ icon|raw ~ whitespace(input_label) }}
     </button>
