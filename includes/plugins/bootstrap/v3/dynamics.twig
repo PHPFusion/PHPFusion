@@ -1,4 +1,12 @@
-{% set form_text = ['text', 'number', 'password', 'email', 'price', 'ip'] %}
+{% if (input_options['type'] == 'link' or input_options['type'] == 'button' or input_options['type'] == 'submit') %}
+
+    {% import 'dynamics/button.twig' as button %}
+
+    {{ button.button_input(input_name, input_label, input_value, input_options) }}
+
+{% else %}
+
+    {% set form_text = ['text', 'number', 'password', 'email', 'price', 'ip'] %}
 
 {% set ct_row_offset = (input_options['inline'] and input_label ? ' row' : '') %}
 
@@ -44,55 +52,54 @@
 
 {% endif %}
 
+    <div id="{{ input_options['input_id'] }}-field" class="form-group{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
 
-<div id="{{ input_options['input_id'] }}-field"
-     class="form-group{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
+        {{ prepend_checkbox_input|raw }}
 
-    {{ prepend_checkbox_input|raw }}
+        {{ (label_dom ~ inline_start)|raw }}
 
-    {{ (label_dom ~ inline_start)|raw }}
+        {{ append_checkbox_input|raw }}
 
-    {{ append_checkbox_input|raw }}
+        {% if (input_options['template_type'] in form_text) %}
 
-    {% if (input_options['template_type'] in form_text) %}
+            {% import 'dynamics/text.twig' as text %}
 
-        {% import 'dynamics/text.twig' as text %}
+            {{ text.text_input(input_name, input_value, input_options) }}
 
-        {{ text.text_input(input_name, input_value, input_options) }}
+        {% elseif input_options['template_type'] == 'dropdown' %}
 
-    {% elseif input_options['template_type'] == 'dropdown' %}
+            {% import 'dynamics/dropdown.twig' as dropdown %}
 
-        {% import 'dynamics/dropdown.twig' as dropdown %}
+            {{ dropdown.dropdown_input(input_name, input_value, input_options) }}
 
-        {{ dropdown.dropdown_input(input_name, input_value, input_options) }}
+            {# end type check #}
+        {% elseif input_options['template_type'] == 'datepicker' %}
 
-        {# end type check #}
-    {% elseif input_options['template_type'] == 'datepicker' %}
+            {% import 'dynamics/datepicker.twig' as datepicker %}
 
-        {% import 'dynamics/datepicker.twig' as datepicker %}
+            {{ datepicker.date_input(input_name, input_value, input_options) }}
 
-        {{ datepicker.date_input(input_name, input_value, input_options) }}
+        {% elseif input_options['template_type'] == 'colorpicker' %}
 
-    {% elseif input_options['template_type'] == 'colorpicker' %}
+            {% import 'dynamics/color.twig' as colorpicker %}
 
-        {% import 'dynamics/color.twig' as colorpicker %}
+            {{ colorpicker.color_input(input_name, input_value, input_options) }}
 
-        {{ colorpicker.color_input(input_name, input_value, input_options) }}
+        {% elseif input_options['template_type'] == 'hidden' %}
 
-    {% elseif input_options['template_type'] == 'hidden' %}
+            {% import 'dynamics/hidden.twig' as hide %}
 
-        {% import 'dynamics/hidden.twig' as hide %}
-
-        {{ hide.hidden_input(input_name, input_value, input_options) }}
+            {{ hide.hidden_input(input_name, input_value, input_options) }}
 
 
-    {% elseif input_options['template_type'] == 'textarea' %}
+        {% elseif input_options['template_type'] == 'textarea' %}
 
-        {% import 'dynamics/textarea.twig' as textarea %}
+            {% import 'dynamics/textarea.twig' as textarea %}
 
-        {{ textarea.textarea_input(input_name, input_value, input_options) }}
+            {{ textarea.textarea_input(input_name, input_value, input_options) }}
 
-    {% endif %}
+        {% endif %}
 
-    {{ inline_end|raw }}
-</div>
+        {{ inline_end|raw }}
+    </div>
+{% endif %}

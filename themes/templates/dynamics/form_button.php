@@ -1,0 +1,9 @@
+<?php
+
+if ($options['type'] == 'link') {
+    $html .= "<a id='" . $options['input_id'] . "' title='" . $options['alt'] . "' class='" . ($options['deactivate'] ? 'disabled ' : '') . "btn " . $options['class'] . " button' href='" . $input_name . "' data-value='" . $input_value . "' " . (!empty( $options_data ) ? implode( ' ', $options_data ) : '') . ($options['deactivate'] ? "disabled='disabled'" : '') . " >" . ($options['icon'] ? "<i class='" . $options['icon'] . " " . $options['icon_class'] . "'></i>" : '') . $title . "</a>";
+} else if ($options['type'] == 'button') {
+    $html .= "<button id='" . $options['input_id'] . "' title='" . $options['alt'] . "' class='" . ($options['deactivate'] ? 'disabled ' : '') . "btn " . $options['class'] . " button' name='" . $input_name . "' value='" . $input_value . "' type='button'" . (!empty( $options_data ) ? implode( ' ', $options_data ) : '') . ($options['deactivate'] ? " disabled='disabled'" : '') . " >" . ($options['icon'] ? "<i class='" . $options['icon'] . " " . $options['icon_class'] . "'></i>" : '') . $title . "</button>\n";
+} else {
+    $html .= "<button id='" . $options['input_id'] . "' title='" . $options['alt'] . "' class='" . ($options['deactivate'] ? 'disabled ' : '') . "btn " . $options['class'] . " button' name='" . $input_name . "' value='" . $input_value . "' type='submit'" . (!empty( $options_data ) ? implode( ' ', $options_data ) : '') . ($options['deactivate'] ? " disabled='disabled'" : '') . " >" . ($options['icon'] ? "<i class='" . $options['icon'] . " " . $options['icon_class'] . "'></i>" : '') . $title . "</button>\n";
+}

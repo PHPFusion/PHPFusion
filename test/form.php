@@ -62,5 +62,6 @@ echo '</form>';
 
 echo form_textarea( 'textarea4', 'Textarea', '', ['placeholder' => 'Type something here...'] );
 
+echo form_button('button', 'Button', 'button');
 
 require_once THEMES . 'templates/footer.php';
