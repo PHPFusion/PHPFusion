@@ -201,7 +201,7 @@ fusion_apply_hook( 'fusion_footer_include' );
 //    }
 //}
 
-echo "<script defer src='" . INCLUDES . "jquery/notify.min.js'></script>\n";
+echo "<script src='" . INCLUDES . "jquery/notify.min.js' defer></script>\n";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
