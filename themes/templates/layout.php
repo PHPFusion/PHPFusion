@@ -23,9 +23,39 @@ $settings = fusion_get_settings();
 define( "BOOTSTRAP_ENABLED", (defined( 'BOOTSTRAP' ) && BOOTSTRAP == TRUE) || (defined( 'BOOTSTRAP4' ) && BOOTSTRAP4 == TRUE) || (defined( 'BOOTSTRAP5' ) && BOOTSTRAP5 == TRUE) );
 
 if (!headers_sent()) {
-    header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
-    header( 'Cache-Control: no-cache' );
-    header( "Content-Type: text/html; charset=" . $locale['charset'] );
+
+    if (iDEVELOPER) {
+
+        header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
+        header( 'Cache-Control: no-cache' );
+
+    } else {
+        // Get last modification time of the current PHP file
+        $file_last_mod_time = filemtime( $_SERVER['SCRIPT_FILENAME'] );
+
+        // Get last modification time of the main content (that user sees)
+        // Hardcoded just as an example
+        $content_last_mod_time = 0;
+        // Combine both to generate a unique ETag for a unique content
+        // Specification says ETag should be specified within double quotes
+        $etag = '"' . $file_last_mod_time . '.' . $content_last_mod_time . '"';
+
+        // Set Cache-Control header
+        header( 'Cache-Control: max-age=86400' );
+        // Set ETag header
+        header( 'ETag: ' . $etag );
+        header( "Content-Type: text/html; charset=" . $locale['charset'] );
+
+        // Check whether browser had sent a HTTP_IF_NONE_MATCH request header
+        if (isset( $_SERVER['HTTP_IF_NONE_MATCH'] )) {
+            // If HTTP_IF_NONE_MATCH is same as the generated ETag => content is the same as browser cache
+            // So send a 304 Not Modified response header and exit
+            if ($_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
+                header( 'HTTP/1.1 304 Not Modified', TRUE, 304 );
+                exit();
+            }
+        }
+    }
 }
 
 echo "<!DOCTYPE html>\n";
@@ -183,7 +213,7 @@ if (iADMIN) {
 }
 
 //if (function_exists( "render_page" )) {
-    render_page(); // by here, header and footer already closed
+render_page(); // by here, header and footer already closed
 //}
 
 fusion_apply_hook( 'fusion_footer_include' );
@@ -217,7 +247,7 @@ $fusion_jquery_tags = OutputHandler::$jqueryCode;
 if (!empty( $fusion_jquery_tags )) {
     $jquery_tags .= $fusion_jquery_tags;
 
-    if (!$settings['devmode'] or !defined('DEVELOPER_MODE')) {
+    if (!$settings['devmode'] or !defined( 'DEVELOPER_MODE' )) {
 
         $minifier = new PHPFusion\Minify\JS( $jquery_tags );
         $js = $minifier->minify();
