@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer;
 
 use Dynamics;
@@ -25,7 +26,7 @@ use PHPFusion\Installer\Steps\AdminSetup;
 use PHPFusion\Installer\Steps\DatabaseSetup;
 use PHPFusion\Installer\Steps\InfusionsSetup;
 
-ini_set('display_errors', 1);
+ini_set( 'display_errors', 1 );
 
 /**
  * Class InstallCore
@@ -125,40 +126,40 @@ class InstallCore extends Infusions {
             self::$setup_instance = new static();
 
             // ALWAYS reset config to config_temp.php
-            if (file_exists(BASEDIR.'config.php')) {
-                @rename(BASEDIR.'config.php', BASEDIR.'config_temp.php');
-                @chmod(BASEDIR.'config_temp.php', 0755);
+            if (file_exists( BASEDIR . 'config.php' )) {
+                @rename( BASEDIR . 'config.php', BASEDIR . 'config_temp.php' );
+                @chmod( BASEDIR . 'config_temp.php', 0755 );
                 maintenance_mode();
             }
 
             session_start();
 
             //require_once BASEDIR.'includes/autoloader.php';
-            require_once DB_HANDLERS."all_functions_include.php";
-            require_once BASEDIR."includes/defender.php";
-            require_once BASEDIR.'includes/dynamics.php';
+            require_once DB_HANDLERS . "all_functions_include.php";
+            require_once BASEDIR . "includes/defender.php";
+            require_once BASEDIR . 'includes/dynamics.php';
 
             Dynamics::getInstance();
 
             self::installerStep();
             self::verifyRequirements();
 
-            define('iMEMBER', FALSE);
-            define("FUSION_QUERY", isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : "");
-            define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
-            define("FUSION_ROOT", '');
-            define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
+            define( 'iMEMBER', FALSE );
+            define( "FUSION_QUERY", isset( $_SERVER['QUERY_STRING'] ) ? $_SERVER['QUERY_STRING'] : "" );
+            define( "FUSION_SELF", basename( $_SERVER['PHP_SELF'] ) );
+            define( "FUSION_ROOT", '' );
+            define( "FUSION_REQUEST", isset( $_SERVER['REQUEST_URI'] ) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] );
 
-            self::$localeset = filter_input(INPUT_GET, 'localeset') ?: (isset($settings['locale']) ? $settings['locale'] : 'English');
-            define('LANGUAGE', is_dir(LOCALE.self::$localeset) ? self::$localeset : 'English');
-            define("LOCALESET", LANGUAGE."/");
-            self::$locale = fusion_get_locale('', [LOCALE.LOCALESET."global.php", LOCALE.LOCALESET."setup.php"]);
+            self::$localeset = filter_input( INPUT_GET, 'localeset' ) ?: (isset( $settings['locale'] ) ? $settings['locale'] : 'English');
+            define( 'LANGUAGE', is_dir( LOCALE . self::$localeset ) ? self::$localeset : 'English' );
+            define( "LOCALESET", LANGUAGE . "/" );
+            self::$locale = fusion_get_locale( '', [LOCALE . LOCALESET . "global.php", LOCALE . LOCALESET . "setup.php"] );
             self::$locale_files = fusion_get_detected_languages();
 
             self::detectSystemUpgrade();
 
             // set timezone for PDO
-            date_default_timezone_set('Europe/London');
+            date_default_timezone_set( 'Europe/London' );
 
         }
 
@@ -170,21 +171,21 @@ class InstallCore extends Infusions {
      *
      * @param string $step
      */
-    protected static function installerStep($step = 'auto') {
-        if (isset($_GET['session'])) {
+    protected static function installerStep( $step = 'auto' ) {
+        if (isset( $_GET['session'] )) {
             $_SESSION['step'] = $_GET['session'];
         }
         if ($step == 'auto') {
 
-            if (!defined('INSTALLATION_STEP')) {
-                $_SESSION['step'] = (!isset($_SESSION['step']) ? self::STEP_INTRO : $_SESSION['step']);
+            if (!defined( 'INSTALLATION_STEP' )) {
+                $_SESSION['step'] = (!isset( $_SESSION['step'] ) ? self::STEP_INTRO : $_SESSION['step']);
                 // current session
-                if (isset($_POST['infuse']) || isset($_POST['defuse'])) {
+                if (isset( $_POST['infuse'] ) || isset( $_POST['defuse'] )) {
                     $_SESSION['step'] = self::STEP_INFUSIONS;
-                } else if (isset($_POST['step'])) {
+                } else if (isset( $_POST['step'] )) {
                     $_SESSION['step'] = $_POST['step'];
                 }
-                define('INSTALLATION_STEP', $_SESSION['step']);
+                define( 'INSTALLATION_STEP', $_SESSION['step'] );
             }
         } else {
             $_SESSION['step'] = $step;
@@ -195,11 +196,11 @@ class InstallCore extends Infusions {
      * Check the server minimum requirements
      */
     private static function verifyRequirements() {
-        if (version_compare(PHP_VERSION, '5.5.9') < 0) {
+        if (version_compare( PHP_VERSION, '5.5.9' ) < 0) {
             print self::$locale['setup_0006'];
             exit;
         }
-        if (function_exists('opcache_get_status') && opcache_get_status()['opcache_enabled'] && !ini_get('opcache.save_comments')) {
+        if (function_exists( 'opcache_get_status' ) && opcache_get_status()['opcache_enabled'] && !ini_get( 'opcache.save_comments' )) {
             print self::$locale['setup_0007'];
             exit();
         }
@@ -213,27 +214,34 @@ class InstallCore extends Infusions {
         // Read the config_temp.php
         self::setEmptyPrefix();
 
-        if (self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php')) {
+        if (self::$connection = self::fusionGetConfig( BASEDIR . 'config_temp.php' )) {
 
-            if (empty(self::$connection['db_driver'])) {
+            if (empty( self::$connection['db_driver'] )) {
                 self::$connection['db_driver'] = FALSE;
             }
 
-            require_once(INCLUDES.'multisite_include.php');
+            require_once(INCLUDES . 'multisite_include.php');
 
             $validation = Requirements::getSystemValidation();
 
-            $version = fusion_get_settings('version');
+            $version = fusion_get_settings( 'version' );
 
-            if (!empty($version)) {
-                if (isset($validation[3])) {
-                    if (version_compare(self::BUILD_VERSION, $version, ">")) {
+            if (!empty( $version )) {
+
+                if (isset( $validation[3] )) {
+
+                    if (version_compare( self::BUILD_VERSION, $version, ">" )) {
+
                         $_GET['upgrade'] = TRUE;
-                        if (!defined('COOKIE_PREFIX') && !empty(self::$connection['COOKIE_PREFIX'])) {
-                            define('COOKIE_PREFIX', self::$connection['COOKIE_PREFIX']);
+
+                        if (!defined( 'COOKIE_PREFIX' ) && !empty( self::$connection['COOKIE_PREFIX'] )) {
+
+                            define( 'COOKIE_PREFIX', self::$connection['COOKIE_PREFIX'] );
                         }
-                        if (!defined('DB_PREFIX') && !empty(self::$connection['DB_PREFIX'])) {
-                            define('DB_PREFIX', self::$connection['DB_PREFIX']);
+
+                        if (!defined( 'DB_PREFIX' ) && !empty( self::$connection['DB_PREFIX'] )) {
+
+                            define( 'DB_PREFIX', self::$connection['DB_PREFIX'] );
                         }
                         //self::set_empty_prefix();
                     }
@@ -258,26 +266,26 @@ class InstallCore extends Infusions {
         ];
 
 
-        if (is_file(BASEDIR.'config_temp.php') && filesize(BASEDIR.'config_temp.php') > 0) { // config_temp might be blank
-            self::$connection = self::fusionGetConfig(BASEDIR."config_temp.php"); // All fields must be not empty
+        if (is_file( BASEDIR . 'config_temp.php' ) && filesize( BASEDIR . 'config_temp.php' ) > 0) { // config_temp might be blank
+            self::$connection = self::fusionGetConfig( BASEDIR . "config_temp.php" );                // All fields must be not empty
         }
 
         self::$connection = self::$connection + $default_init;
 
-        if (empty(self::$connection['db_prefix'])) {
-            self::$connection['db_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        if (empty( self::$connection['db_prefix'] )) {
+            self::$connection['db_prefix'] = 'fusion' . self::createRandomPrefix() . '_';
         }
 
-        if (empty(self::$connection['cookie_prefix'])) {
-            self::$connection['cookie_prefix'] = 'fusion'.self::createRandomPrefix().'_';
+        if (empty( self::$connection['cookie_prefix'] )) {
+            self::$connection['cookie_prefix'] = 'fusion' . self::createRandomPrefix() . '_';
         }
 
-        if (empty(self::$connection['secret_key'])) {
-            self::$connection['secret_key'] = self::createRandomPrefix(32);
+        if (empty( self::$connection['secret_key'] )) {
+            self::$connection['secret_key'] = self::createRandomPrefix( 32 );
         }
 
-        if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
-            self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
+        if (empty( self::$connection['secret_key_salt'] ) && !defined( 'SECRET_KEY_SALT' )) {
+            self::$connection['secret_key_salt'] = self::createRandomPrefix( 32 );
         }
 
 
@@ -288,41 +296,41 @@ class InstallCore extends Infusions {
      *
      * @return array
      */
-    public static function fusionGetConfig($config_path) {
-        if (empty(self::$config) && is_file($config_path) && filesize($config_path) > 0) {
+    public static function fusionGetConfig( $config_path ) {
+        if (empty( self::$config ) && is_file( $config_path ) && filesize( $config_path ) > 0) {
             include $config_path;
             $default_path = [];
-            if (isset($db_host)) {
+            if (isset( $db_host )) {
                 $default_path['db_host'] = $db_host;
             }
-            if (isset($db_port)) {
+            if (isset( $db_port )) {
                 $default_path['db_port'] = $db_port;
             }
-            if (isset($db_user)) {
+            if (isset( $db_user )) {
                 $default_path['db_user'] = $db_user;
             }
-            if (isset($db_pass)) {
+            if (isset( $db_pass )) {
                 $default_path['db_pass'] = $db_pass;
             }
-            if (isset($db_name)) {
+            if (isset( $db_name )) {
                 $default_path['db_name'] = $db_name;
             }
-            if (isset($db_prefix)) {
+            if (isset( $db_prefix )) {
                 $default_path['db_prefix'] = $db_prefix;
             }
-            if (isset($db_driver)) {
+            if (isset( $db_driver )) {
                 $default_path['db_driver'] = $db_driver;
             }
-            if (defined('DB_PREFIX')) {
+            if (defined( 'DB_PREFIX' )) {
                 $default_path['DB_PREFIX'] = DB_PREFIX;
             }
-            if (defined('COOKIE_PREFIX')) {
+            if (defined( 'COOKIE_PREFIX' )) {
                 $default_path['COOKIE_PREFIX'] = COOKIE_PREFIX;
             }
-            if (defined('SECRET_KEY')) {
+            if (defined( 'SECRET_KEY' )) {
                 $default_path['SECRET_KEY'] = SECRET_KEY;
             }
-            if (defined('SECRET_KEY_SALT')) {
+            if (defined( 'SECRET_KEY_SALT' )) {
                 $default_path['SECRET_KEY_SALT'] = SECRET_KEY_SALT;
             }
             self::$config = $default_path;
@@ -336,13 +344,13 @@ class InstallCore extends Infusions {
      *
      * @return string
      */
-    public static function createRandomPrefix($length = 5) {
+    public static function createRandomPrefix( $length = 5 ) {
         $chars = ["abcdefghijklmnpqrstuvwxyz", "123456789"];
-        $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1)];
+        $count = [(strlen( $chars[0] ) - 1), (strlen( $chars[1] ) - 1)];
         $prefix = "";
         for ($i = 0; $i < $length; $i++) {
-            $type = mt_rand(0, 1);
-            $prefix .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
+            $type = mt_rand( 0, 1 );
+            $prefix .= substr( $chars[$type], mt_rand( 0, $count[$type] ), 1 );
         }
 
         return $prefix;
@@ -352,9 +360,12 @@ class InstallCore extends Infusions {
      * Install PHPFusion
      */
     public function installPhpfusion() {
+
         $current_content = $this->getInstallerContent();
-        $content = Console::getConsoleInstance()->getView($current_content);
-        echo strtr(Console::getConsoleInstance()->getLayout(), ['{%content%}' => $content]);
+
+        $content = Console::getConsoleInstance()->getView( $current_content );
+
+        echo strtr( Console::getConsoleInstance()->getLayout(), ['{%content%}' => $content] );
     }
 
     /**
@@ -362,7 +373,7 @@ class InstallCore extends Infusions {
      */
     private function getInstallerContent() {
 
-        OutputHandler::addToJQuery("
+        OutputHandler::addToJQuery( "
             $('form').change(function() {
                 window.onbeforeunload = function() {
                     return true;
@@ -371,23 +382,28 @@ class InstallCore extends Infusions {
                     window.onbeforeunload = null;
                 });
             });
-        ");
+        " );
         // Instead of using INSTALLATION STEP, we let each file control
         switch (INSTALLATION_STEP) {
             case self::STEP_INTRO:
             default:
+                defined( 'COOKIE_PREFIX' ) || define( 'COOKIE_PREFIX', 'installer_' );
                 return Introduction::servePage()->view();
                 break;
             case self::STEP_PERMISSIONS:
+                defined( 'COOKIE_PREFIX' ) || define( 'COOKIE_PREFIX', 'installer_' );
                 return Permissions::servePage()->view();
                 break;
             case self::STEP_DB_SETTINGS_SAVE:
             case self::STEP_DB_SETTINGS_FORM:
+                defined( 'COOKIE_PREFIX' ) || define( 'COOKIE_PREFIX', 'installer_' );
                 return DatabaseSetup::servePage()->view();
                 break;
             case self::STEP_TRANSFER:
             case self::STEP_PRIMARY_ADMIN_SAVE:
             case self::STEP_PRIMARY_ADMIN_FORM:
+                defined( 'COOKIE_PREFIX' ) || define( 'COOKIE_PREFIX', 'installer_' );
+
                 return AdminSetup::servePage()->view();
                 break;
             case self::STEP_INFUSIONS:
@@ -395,13 +411,13 @@ class InstallCore extends Infusions {
                 break;
             case self::STEP_SETUP_COMPLETE:
             case self::STEP_EXIT:
-                if (file_exists(BASEDIR.'config_temp.php')) {
-                    @rename(BASEDIR.'config_temp.php', BASEDIR.'config.php');
-                    @chmod(BASEDIR.'config.php', 0644);
+                if (file_exists( BASEDIR . 'config_temp.php' )) {
+                    @rename( BASEDIR . 'config_temp.php', BASEDIR . 'config.php' );
+                    @chmod( BASEDIR . 'config.php', 0644 );
                 }
-                maintenance_mode(FALSE);
-                unset($_SESSION['step']);
-                redirect(BASEDIR.'index.php');
+                maintenance_mode( FALSE );
+                unset( $_SESSION['step'] );
+                redirect( BASEDIR . 'index.php' );
                 break;
         }
 
@@ -412,7 +428,7 @@ class InstallCore extends Infusions {
      * @return static
      */
     protected static function servePage() {
-        if (empty(self::$document)) {
+        if (empty( self::$document )) {
             self::$document = new static();
         }
 
@@ -424,13 +440,13 @@ class InstallCore extends Infusions {
      * Redirect to step 1 if the database has been intentionally dropped during the installation.
      */
     protected function tableCheck() {
-        if (!empty(self::$connection['db_name'])) {
-            $result = dbquery("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='".self::$connection['db_name']."' AND TABLE_NAME='".DB_USERS."'");
-            if (dbrows($result)) {
+        if (!empty( self::$connection['db_name'] )) {
+            $result = dbquery( "SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema='" . self::$connection['db_name'] . "' AND TABLE_NAME='" . DB_USERS . "'" );
+            if (dbrows( $result )) {
                 return TRUE;
             } else {
                 $_SESSION['step'] = 1;
-                redirect(FUSION_REQUEST);
+                redirect( FUSION_REQUEST );
             }
         }
         return FALSE;

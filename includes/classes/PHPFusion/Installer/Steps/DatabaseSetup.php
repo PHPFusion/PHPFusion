@@ -67,14 +67,22 @@ class DatabaseSetup extends InstallCore {
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
             self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
 
-            if (!defined('DB_PREFIX'))
+            if (!defined('DB_PREFIX')) {
                 define('DB_PREFIX', self::$connection['db_prefix']);
-            if (!defined('COOKIE_PREFIX'))
+            }
+
+            if (!defined('COOKIE_PREFIX')) {
                 define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
-            if (!defined('SECRET_KEY_SALT'))
+            }
+
+            if (!defined('SECRET_KEY_SALT')) {
                 define('SECRET_KEY_SALT', self::createRandomPrefix(32));
-            if (!defined('SECRET_KEY'))
+            }
+
+            if (!defined('SECRET_KEY')) {
                 define('SECRET_KEY', self::createRandomPrefix(32));
+            }
+
 
         } else {
             $db_host = '';

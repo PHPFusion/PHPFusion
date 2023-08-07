@@ -17,7 +17,7 @@
             <div class="{{ (options['type'] == 'radio' ? 'radio' : 'checkbox') ~ whitespace(options['inline_options'] ? 'display-inline-block m-r-5' : '') }}">
                 <label class="control-label m-r-10" for="{{ checkbox_input_id }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~'"' : '') }}>
                     <input id="{{ checkbox_input_id }}" name="{{ input_name }}" value="{{ key }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties)|raw }}>
-                    {{ value }}
+                    {{ value|raw }}
                 </label>
             </div>
 

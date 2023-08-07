@@ -1962,12 +1962,13 @@ function fusion_get_username( $user_id ) {
  * Login / Logout / Revalidate
  */
 function fusion_set_user() {
+
     static $userdata = [
         'user_level'  => 0,
         'user_rights' => '',
         'user_groups' => '',
     ];
-//    if (check_post( 'login' ) && check_post( 'user_name' ) && check_post( 'user_pass' )) {
+
     if (check_post( 'login' )) {
 
         sanitizer( 'user_name', '', 'user_name' );
@@ -1989,6 +1990,7 @@ function fusion_set_user() {
         $request = clean_request( '', ['logout'], FALSE );
         redirect( $request );
     } elseif (empty( $userdata['user_id'] )) {
+
         $userdata = Authenticate::validateAuthUser();
     }
 
@@ -2094,9 +2096,10 @@ function define_site_language( $lang ) {
  *
  * @param $language_pack - // representation of folder name
  *
- * @return mixed
+ * @return string
  */
 function get_language_code( $language_pack ) {
+
     $locale = [];
     try {
         include LOCALE . $language_pack . '/global.php';

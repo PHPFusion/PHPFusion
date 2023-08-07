@@ -120,7 +120,6 @@ class Console extends InstallCore {
 
         fusion_apply_hook( 'fusion_header_include', $custom_file ?? '' );
 
-
         $html .= OutputHandler::$pageHeadTags;
 
         $core_css_files = fusion_filter_hook( "fusion_core_styles" );
