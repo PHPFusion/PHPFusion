@@ -81,7 +81,7 @@ function form_btngroup( $input_name, $label, $input_value = '', array $options =
 
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
 
-    $input_value = clean_input_value( $input_name );
+    $input_value = clean_input_value( $input_value );
 
     $options += [
         'options'        => [$locale['disable'], $locale['enable']],
@@ -108,8 +108,8 @@ function form_btngroup( $input_name, $label, $input_value = '', array $options =
     list( $options['error_class'], $options['error_text'] ) = form_errors( $options );
 
     set_field_config( [
+        'title'          => $title,
         'input_name'     => $options['input_name'],
-        'title'          => trim( $title, '[]' ),
         'id'             => $options['input_id'],
         'type'           => 'dropdown',
         'required'       => $options['required'],
@@ -119,9 +119,8 @@ function form_btngroup( $input_name, $label, $input_value = '', array $options =
         'delimiter'      => $options['delimiter'],
     ] );
 
-
-    add_to_jquery( "
-    $('#" . $options['input_id'] . " button').bind('click', function(e){
+    add_to_jquery( "    
+    $('#" . $options['input_id'] . " button').on('click', function(e){
         $('#" . $options['input_id'] . " button').removeClass('active');
         $(this).toggleClass('active');
         value = $(this).data('value');

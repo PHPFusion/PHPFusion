@@ -17,7 +17,10 @@
 +--------------------------------------------------------*/
 
 /**
+ * Get bootstrap framework file paths
+ *
  * @param $part
+ * @param string $version
  *
  * @return string
  */
@@ -46,6 +49,7 @@ function get_bootstrap( $part, $version = '3' ) {
 }
 
 /**
+ * System template callback function
  * @param $component
  * @param $info
  *
@@ -55,7 +59,7 @@ function fusion_get_template( $component, $info ) {
 
     if ($path = get_bootstrap( $component )) {
 
-        return fusion_render( $path['dir'], $path['file'], $info, iDEVELOPER );
+        return fusion_render( $path['dir'], $path['file'], $info, TRUE );
     }
 
     return 'This template ' . $component . ' is not supported';
@@ -66,6 +70,7 @@ if (defined( 'BOOTSTRAP' )) {
 
     /**
      * Load bootstrap
+     * BOOTSTRAP - version number
      */
     get_bootstrap( 'load', BOOTSTRAP );
 

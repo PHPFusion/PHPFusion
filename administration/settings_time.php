@@ -37,6 +37,7 @@ if (check_post('savesettings')) {
     ];
 
     if (fusion_safe()) {
+
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,
@@ -45,6 +46,7 @@ if (check_post('savesettings')) {
         }
 
         addnotice("success", $locale['admins_900']);
+
         redirect(FUSION_REQUEST);
     }
 }
