@@ -56,12 +56,38 @@ echo form_checkbox( 'checkbox_inline_radio_options', 'Checkbox Radio Options', '
 echo form_textarea( 'textarea', 'TinyMCE Textarea', '', ['type' => 'tinymce', 'placeholder' => 'Type something here...'] );
 
 echo '<form name="test_1">';
-echo form_textarea( 'textarea2', 'BBCode Textarea', '', ['type' => 'bbcode', 'placeholder' => 'Type something here...', 'form_name'=>'test_1'] );
-echo form_textarea( 'textarea3', 'HTML Textarea', '', ['type' => 'html', 'placeholder' => 'Type something here...', 'form_name'=>'test_1'] );
+echo form_textarea( 'textarea2', 'BBCode Textarea', '', ['type' => 'bbcode', 'placeholder' => 'Type something here...', 'form_name' => 'test_1'] );
+
+echo form_textarea( 'textarea3', 'HTML Textarea', '', ['type' => 'html', 'placeholder' => 'Type something here...', 'form_name' => 'test_1'] );
 echo '</form>';
 
 echo form_textarea( 'textarea4', 'Textarea', '', ['placeholder' => 'Type something here...'] );
 
-echo form_button('button', 'Button', 'button');
+// Button groups
+echo form_btngroup( 'button_grp', 'Button group', '2', [
+    'btn_class' => 'btn-default',
+    'options' => [
+        1 => 'One',
+        2 => 'Two',
+        3 => 'Three'
+
+    ]
+] );
+
+echo form_btngroup( 'button_grp_2', 'Button group two', '2', [
+    'btn_class' => 'btn-primary',
+    'options'   => [
+        1 => 'One',
+        2 => 'Two',
+        3 => 'Three'
+
+    ]
+] );
+
+
+echo form_button( 'button', 'Button', 'button' );
+echo form_button( 'button_1', 'Button', 'button', ['class' => 'btn-primary'] );
+echo form_button( 'button_2', 'Button', 'button', ['class' => 'btn-success'] );
+
 
 require_once THEMES . 'templates/footer.php';

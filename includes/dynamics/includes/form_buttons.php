@@ -76,22 +76,24 @@ function form_button( $input_name, $label, $input_value, array $options = [] ) {
  *
  * @return string
  */
-function form_btngroup( $input_name, $label, $input_value, array $options = [] ) {
+function form_btngroup( $input_name, $label, $input_value = '', array $options = [] ) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
-    $input_value = (isset( $input_value ) && (!empty( $input_value ))) ? stripinput( $input_value ) : NULL;
 
-    $default_options = [
+    $input_value = clean_input_value( $input_name );
+
+    $options += [
         'options'        => [$locale['disable'], $locale['enable']],
-        'input_id'       => $input_name,
-        'class'          => "btn-default",
+        'input_name'     => clean_input_name( $input_name ),
+        'input_id'       => clean_input_id( $input_name ),
+        'btn_class'      => 'btn-default', // change from 'class' to 'btn_class'
         'type'           => 'button',
-        'icon'           => "",
+        'icon'           => '',
         'multiple'       => FALSE,
-        'delimiter'      => ",",
+        'delimiter'      => ',',
         'deactivate'     => FALSE,
-        'error_text'     => "",
+        'error_text'     => '',
         'inline'         => FALSE,
         'safemode'       => FALSE,
         'required'       => FALSE,
@@ -99,56 +101,14 @@ function form_btngroup( $input_name, $label, $input_value, array $options = [] )
         'callback_check' => '',
     ];
 
-    $options += $default_options;
+    $options['input_name'] = ($options['multiple']) ? str_replace( "[]", "", $input_name ) : $input_name;
 
-    $error_class = "";
-    if (\Defender::inputHasError( $input_name )) {
-        $error_class = "has-error";
-        if (!empty( $options['error_text'] )) {
-            $new_error_text = \Defender::getErrorText( $input_name );
-            if (!empty( $new_error_text )) {
-                $options['error_text'] = $new_error_text;
-            }
-            addnotice( 'danger', $options['error_text'] );
-        }
-    }
+    $options['template_type'] = 'button_group';
 
-    $html = "<div id='" . $options['input_id'] . "-field' class='form-group " . ($options['inline'] && $label ? 'row ' : '') . $error_class . " clearfix'>\n";
-    $html .= ($label) ? "<label class='control-label " . ($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '') . "' for='" . $options['input_id'] . "'>" . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . "</label>\n" : '';
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>\n" : "";
+    list( $options['error_class'], $options['error_text'] ) = form_errors( $options );
 
-    $html .= "<div class='btn-group' id='" . $options['input_id'] . "'>";
-
-    if (!empty( $options['options'] ) && is_array( $options['options'] )) {
-        $i = 1;
-        $option_count = count( $options['options'] );
-
-        foreach ($options['options'] as $arr => $v) {
-            $child_class = ($option_count == $i ? ' last-child ' : '');
-            $active_class = ($input_value == $arr ? ' active' : '');
-
-            if ($options['type'] == 'submit') {
-                $html .= "<button name='$arr' type='submit' data-value='$arr' value='$arr' class='btn " . $options['class'] . $child_class . $active_class . "'>$v</button>\n";
-            } else {
-                $html .= "<button type='button' data-value='$arr' class='btn " . $options['class'] . $child_class . $active_class . "'>$v</button>\n";
-            }
-
-            $i++;
-        }
-    }
-
-    $html .= "</div>\n";
-    $html .= "<input name='$input_name' type='hidden' id='" . $options['input_id'] . "-text' value='$input_value' />\n";
-
-    $html .= $options['ext_tip'] ? "<br/>\n<div class='m-t-10 tip'><i>" . $options['ext_tip'] . "</i></div>" : "";
-    $html .= \Defender::inputHasError( $input_name ) ? "<div id='" . $options['input_id'] . "-help' class='label label-danger p-5 display-inline-block'>" . $options['error_text'] . "</div>" : "";
-    $html .= ($options['inline'] && $label) ? "</div>\n" : "";
-    $html .= "</div>\n";
-
-    $input_name = ($options['multiple']) ? str_replace( "[]", "", $input_name ) : $input_name;
-
-    \Defender::add_field_session( [
-        'input_name'     => $input_name,
+    set_field_config( [
+        'input_name'     => $options['input_name'],
         'title'          => trim( $title, '[]' ),
         'id'             => $options['input_id'],
         'type'           => 'dropdown',
@@ -158,6 +118,8 @@ function form_btngroup( $input_name, $label, $input_value, array $options = [] )
         'error_text'     => $options['error_text'],
         'delimiter'      => $options['delimiter'],
     ] );
+
+
     add_to_jquery( "
     $('#" . $options['input_id'] . " button').bind('click', function(e){
         $('#" . $options['input_id'] . " button').removeClass('active');
@@ -167,5 +129,14 @@ function form_btngroup( $input_name, $label, $input_value, array $options = [] )
     });
     " );
 
-    return $html;
+    ksort( $options );
+
+    return fusion_get_template( 'form_inputs', [
+        "input_name"    => $input_name,
+        "input_label"   => $label,
+        "input_value"   => $input_value,
+        "input_options" => $options,
+    ] );
+
+
 }

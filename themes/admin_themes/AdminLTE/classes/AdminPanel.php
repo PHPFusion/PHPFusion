@@ -159,7 +159,7 @@ class AdminPanel {
 
         $html = '<li class="dropdown user user-menu">';
             $html .= '<a id="dduser" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                $html .= display_avatar($userdata, '25px', '', FALSE, 'user-image img-circle');
+                $html .= display_avatar($userdata, '25px', 'display-inline', FALSE, 'user-image img-circle');
                 $html .= '<span class="hidden-xs">'.$userdata['user_name'].'</span>';
                 $html .= '<span class="caret"></span>';
             $html .= '</a>';
