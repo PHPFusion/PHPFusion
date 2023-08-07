@@ -123,7 +123,7 @@ if (function_exists( "get_head_tags" )) {
 
 echo render_favicons( defined( 'THEME_ICON' ) ? THEME_ICON : IMAGES . 'favicons/' );
 
-echo "<script src='" . INCLUDES . "jquery/jquery-2.min.js' defer></script>\n";
+echo "<script src='" . INCLUDES . "jquery/jquery-2.min.js'></script>\n";
 echo "<script>var site_path = '" . $settings['site_path'] . "';</script>";
 echo "<script src='" . INCLUDES . "jscripts/jscript.min.js?v=" . filemtime( INCLUDES . 'jscripts/jscript.min.js' ) . "'></script>\n";
 echo "</head>\n";

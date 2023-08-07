@@ -1,4 +1,5 @@
 function update_checker(force = false, before, complete) {
+
     let force_update = force === true ? "&force=true" : "";
 
     $.ajax({
@@ -27,6 +28,7 @@ function execute_ajax(step, before, complete) {
 }
 
 $(function () {
+
     $("#forceupdate").on("click", function (e) {
         e.preventDefault();
         update_checker(true, function () {
@@ -55,4 +57,5 @@ $(function () {
             $("#update-results #update_icon").hide();
         });
     });
+
 });
