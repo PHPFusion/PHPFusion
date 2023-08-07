@@ -190,13 +190,14 @@ define( "START_PAGE", substr( preg_replace(
 $userdata = fusion_set_user();
 
 // User level, Admin Rights & User Group definitions
-define( "iGUEST", $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0 );
-define( "iMEMBER", $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0 );
-define( "iADMIN", $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0 );
-define( "iSUPERADMIN", $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0 );
-define( "iUSER", $userdata['user_level'] );
-define( "iUSER_RIGHTS", $userdata['user_rights'] );
-define( "iUSER_GROUPS", substr( $userdata['user_groups'], 1 ) );
+define( 'iGUEST', $userdata['user_level'] == USER_LEVEL_PUBLIC ? 1 : 0 );
+define( 'iMEMBER', $userdata['user_level'] <= USER_LEVEL_MEMBER ? 1 : 0 );
+define( 'iADMIN', $userdata['user_level'] <= USER_LEVEL_ADMIN ? 1 : 0 );
+define( 'iSUPERADMIN', $userdata['user_level'] == USER_LEVEL_SUPER_ADMIN ? 1 : 0 );
+define( 'iUSER', $userdata['user_level'] );
+define( 'iUSER_RIGHTS', $userdata['user_rights'] );
+define( 'iUSER_GROUPS', substr( $userdata['user_groups'], 1 ) );
+define( 'iDEVELOPER', defined( 'DEVELOPER_MODE' ) && DEVELOPER_MODE && iADMIN );
 
 // Main language detection procedure
 static $current_user_language = [];
