@@ -1,0 +1,183 @@
+{% macro navItems(link_id = 0, data, secondary_menu = '') %}
+
+    {% if data[link_id]|length >0 %}
+        {% for rows in data[link_id] %}
+            {% if rows['seperator'] == true %}
+                <li class='divider' role='separator'></li>
+            {% else %}
+                <li{{ whitespace(rows['li_class'] ? 'class="'~rows['li_class']~'"')|raw }}>{{ rowsp['li_separator']|raw }}
+                    {% if rows['link_url'] %}
+                    <a{{ whitespace(rows['link_attr'])|raw }}>
+                        {% endif %}
+                        {{ rows['link_icon']|raw }}{{ rows['link_name']|raw }}{{ rows['link_caret']|raw }}
+                        {% if rows['link_url'] %}
+                    </a>
+                    {% endif %}
+                    {% if rows.link_child  == true %}
+                        {% set secondaryMenuClass = "dropdown-menu-right" %}
+                        <ul id="menu-{{ rows['link_id'] }}" aria-labelledby="ddlink{{ rows['link_id'] }}"
+                            class="dropdown-menu{{ whitespace(secondary_menu ? secondaryMenuClass : '') }}">
+                            {# Show self if is a link #}
+                            {% if rows['link_url'] != '#' %}
+                                <li{{ whitespace(rows['link_url'] is empty ? 'class="no-link'~whitespace(li_class)~'"' : liClass)|raw }}
+                                        role="presentation">
+                                    {% if rows['link_child_attr'] %}
+                                    <a {{ rows['link_child_attr']|raw }} role="menuitem">
+                                        {% endif %}
+                                        {{ rows['link_icon']|raw }}{{ rows['link_name']|raw }}
+                                        {% if rows['link_child_attr'] %}
+                                    </a>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                            {{ _self.navItems(rows['link_id'], data)|raw }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% endmacro %}
+
+
+{% macro showsublinks(info) %}
+
+    {% set navbarClass = 'navbar navbar-default' %}
+    {% if info['navbar_class'] %}
+        {% set navbarClass = info['navbarClass'] ~ whitespace(info['navbar_class']) %}
+    {% endif %}
+    {% set openContainer = '' %}
+    {% set closeContainer = '' %}
+    {% if info['container'] %}
+        {% set openContainer = '<div class="container">' %}
+        {% set closeContainer = '</div>' %}
+    {% elseif info['container_fluid'] %}
+        {% set openContainer = '<div class="container-fluid">' %}
+        {% set closeContainer = '</div>' %}
+    {% endif %}
+
+    {% set headerContent = '' %}
+    {% set headerClass = 'navbar-brand visible-xs hidden-sm hidden-md hidden-lg' %}
+
+    {% if (info['show_banner'] ) %}
+        {% set headerContent = '<a class="'~headerClass~'" href="'~ info['navbar_link']|raw ~'">'~ info['banner']|raw ~'</a>' %}
+        {% if info['show_header'] %}
+            {% set headerContent = info['show_header'] %}
+            {% if info['show_header']|length == 1 %}
+                {% set headerContent = '<a class="'~headerClass~'" href="'~ info['navbar_link']|raw ~'">'~ info['sitename']|raw ~'</a>' %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% set responsiveButton = '' %}
+    {% set openNav = '' %}
+    {% set closeNav = '' %}
+
+    {% if (info['responsive']) %}
+        {% set responsiveButton = '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#'~ info['id'] ~'_menu" aria-expanded="false" aria-controls="#'~ info['id']~'_menu">
+            <span class="sr-only" aria-label="'~ locale['global_017']~'">'~ locale['global_017'] ~'</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+        </button>' %}
+        {% set openNav = '<div class="collapse navbar-collapse" id="'~ info['id'] ~'_menu">' %}
+        {% set closeNav = '</div>' %}
+    {% endif %}
+
+    {# Primary navclass #}
+    {% set primaryNavClass = 'class="nav navbar-nav"' %}
+    {% if info['nav_class'] %}
+        {% set primaryNavClass = 'class="'~info['nav_class']~'"' %}
+    {% endif %}
+
+    {# Secondary navclass #}
+    {% set secondaryNavClass = 'class="nav navbar-nav secondary navbar-right"' %}
+    {% if additional_nav_class %}
+        {% set secondaryNavClass = 'class="'~additional_nav_class~'"' %}
+    {% endif %}
+
+    <div id="{{ info['id'] }}" class="navbar {{ navbarClass }}" role="navigation">
+        {{ openContainer|raw }}
+        {{ headerContent|raw }}
+        {{ info['custom_header']|raw }}
+        {{ responsiveButton|raw }}
+        {{ openNav|raw }}
+        {{ info['html_pre_content']|raw }}
+
+        <ul{{ whitespace(primaryNavClass)|raw }}>
+            {{ _self.navItems(0, info['primary_callback_nav'])|raw }}
+        </ul>
+        {{ info['html_content']|raw }}
+
+        {% if language_switcher == true or secondary_callback_nav|length > 0 %}
+        <ul{{ whitespace(secondaryNavClass|raw)|raw }}>
+            {{ _self.navItems(0, info['secondary_callback_nav'], true)|raw }}
+            {% if language_switcher == true %}
+                {% set langSwitch = fusion_get_language_switch() %}
+                {% set language = fusion_get_enabled_languages() %}
+                {% if langSwitch|length >1 %}
+                    {% set currentLang =  constant('LANGUAGE') %}
+                    {% set selectedLang = langSwitch[currentLang] %}
+                    <li class="nav-item dropdown" role="presentation">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                           data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            <img src="{{ selectedLang['language_icon_s'] }}"
+                                 alt="{{ selectedLang['language_name'] }}">{{ get_icon('caret') }}
+                        </a>
+                        <ul id="ddLanguage" class="dropdown-menu dropdown-menu-end" aria-labelledby="ddLanguage"
+                            role="menu">
+                            {% for lang in langSwitch %}
+                                <li>
+                                    <a class="dropdown-item" href="{{ lang['language_link'] }}">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" alt="{{ lang['language_name'] }}"
+                                                 src="{{ lang['language_icon_s'] }}">
+                                            {{ lang['language_name'] }}
+                                        </div>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
+            {% endif %}
+            {% if info['searchbar'] %}
+                <form class="navbar-form navbar-right" role="search"
+                      action="{{ info['searchbar_uri']|raw }}">{{ info['search_input']|raw }}</form>
+            {% endif %}
+        {% endif %}
+        {{ info['html_post_content']|raw }}
+        {{ closeNav|raw }}
+        {{ closeContainer|raw }}
+    </div>
+
+{% endmacro %}
+
+{% set options = {
+    'id': id,
+    'container': container,
+    'container_fluid': container_fluid,
+    'show_header': show_header,
+    'responsive' : responsive,
+    'show_banner': show_banner,
+    'custom_header' : custom_header,
+    'nav_class': nav_class,
+    'navbar_class': navbar_class,
+    'html_pre_content' : html_pre_content,
+    'html_content': html_content,
+    'additional_nav_class': additional_nav_class,
+    'language_switcher': language_switcher,
+    'searchbar' : searchbar,
+    'html_post_content': html_post_content,
+    'callback_data' : callback_data,
+    'additional_data': additional_data,
+    'navbar_link' : navbar_link,
+    'search_input': search_input,
+    'search_uri': search_uri,
+    'primary_callback_nav' : primary_callback_nav,
+    'secondary_callback_nav' : secondary_callback_nav
+} %}
+
+{{ _self.showsublinks(options) }}

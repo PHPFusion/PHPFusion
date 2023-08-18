@@ -4,7 +4,7 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: theme.php
+| Filename: bootstrap_include.php
 | Author: Meangczac (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the

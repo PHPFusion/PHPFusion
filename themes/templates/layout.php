@@ -20,7 +20,8 @@ use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale();
 $settings = fusion_get_settings();
-define( "BOOTSTRAP_ENABLED", (defined( 'BOOTSTRAP' ) && BOOTSTRAP == TRUE) || (defined( 'BOOTSTRAP4' ) && BOOTSTRAP4 == TRUE) || (defined( 'BOOTSTRAP5' ) && BOOTSTRAP5 == TRUE) );
+
+//define( "BOOTSTRAP_ENABLED", (defined( 'BOOTSTRAP' ) && BOOTSTRAP == TRUE) || (defined( 'BOOTSTRAP4' ) && BOOTSTRAP4 == TRUE) || (defined( 'BOOTSTRAP5' ) && BOOTSTRAP5 == TRUE) );
 
 if (!headers_sent()) {
 
