@@ -1,0 +1,55 @@
+{% macro link(input_name, input_label, input_value, options) %}
+
+    {% if options['deactivate'] %}
+        {% set deactivate_class = 'disabled' %}
+        {% set disabled_status = 'disabled="disabled"' %}
+    {% endif %}
+
+    {% if options['icon'] %}
+        {% set icon = '<i class="'~ options['icon'] ~ '"></i>' %}
+    {% endif %}
+
+    <a id="{{ options['input_id'] }}" title="{{ input_label }}"
+       class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" href="{{ input_name }}"
+       data-value="{{ input_value }}" {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
+        {{ icon|raw }}{{ whitespace(input_label) }}
+    </a>
+
+{% endmacro %}
+
+{% macro button(input_name, input_label, input_value, options) %}
+
+    {% if options['deactivate'] %}
+        {% set deactivate_class = 'disabled' %}
+        {% set disabled_status = 'disabled="disabled"' %}
+    {% endif %}
+
+    {% if options['icon'] %}
+        {% set icon = '<i class="'~ options['icon'] ~ whitespace(options['icon_class']) ~ '"></i>' %}
+    {% endif %}
+
+    {% set type = (options['type'] == 'submit' ? 'submit' : 'button') %}
+
+    <button name="{{ input_name }}" type="{{ type }}" id="{{ options['input_id'] }}" title="{{ input_label }}"
+            class="{{ options['deactivate'] ? 'disabled ' : '' }}btn {{ options['class'] }} button" data-value="{{ input_value }}"
+             value="{{ input_value }}" {{ (options['options_data'] ? options['options_data']|join(' ') : '') ~ whitespace(disabled_status)|raw }}>
+        {{ icon|raw }}{{ whitespace(input_label) |raw}}
+    </button>
+
+{% endmacro %}
+
+
+{% macro button_input(input_name, input_label, input_value, input_options) %}
+
+    {% if (input_options['type'] == 'link') %}
+
+    {{ _self.link(input_name, input_label, input_value, input_options) }}
+
+    {% else %}
+
+    {{ _self.button(input_name, input_label, input_value, input_options) }}
+
+    {% endif %}
+
+{% endmacro %}
+

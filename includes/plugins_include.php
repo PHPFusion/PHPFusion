@@ -45,7 +45,9 @@ if (!function_exists( 'fusion_get_template' )) {
      * @return false|mixed|string
      */
     function fusion_get_template( $component, $info ) {
+
         $default_path = THEMES . 'templates/utils/';
+
         if ($path = get_fusion_default_template( $component )) {
 
             /** @noinspection PhpIncludeInspection */

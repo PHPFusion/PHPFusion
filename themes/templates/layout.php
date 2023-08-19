@@ -236,8 +236,9 @@ echo "<script src='" . INCLUDES . "jquery/notify.min.js' defer></script>\n";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
+//@todo: This one need to port to BS3 and BS4 folder
 $jquery_tags = '';
-if (defined( 'BOOTSTRAP' ) && BOOTSTRAP == TRUE && !defined( 'BOOTSTRAP5' )) {
+if (defined( 'BOOTSTRAP' ) && BOOTSTRAP < 5) {
     $jquery_tags .= "$('[data-submenu]').submenupicker();";
     // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
     $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";

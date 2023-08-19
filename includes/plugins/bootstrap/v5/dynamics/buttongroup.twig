@@ -1,0 +1,19 @@
+{% macro btngroup_input(input_name, input_value, input_options) %}
+    <div class="display-block">
+        <div class="btn-group" id="{{ input_options['input_id'] }}">
+            {% if input_options['options'] %}
+                {% set i = 1 %}
+                {% set option_count = input_options['options']|length %}
+                {% for arr, v in input_options['options'] %}
+                    {% set child_class = option_count == i ? 'last-child ' : '' %}
+                    {% set active_class = input_value == arr ? ' active' : '' %}
+                    {% set child_type = input_options['type'] == 'submit' ? 'submit' : 'button' %}
+
+                    <button name="{{ input_name }}__{{ arr }}" type="{{ child_type }}" data-value="{{ arr }}" value="{{ arr }}"
+                            class="btn {{ input_options['btn_class'] ~ child_class ~ active_class }}">{{ v|raw }}</button>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <input name="{{ input_name }}" type="hidden" id="{{ input_options['input_id'] }}-text" value="{{ input_value }}">
+    </div>
+{% endmacro %}

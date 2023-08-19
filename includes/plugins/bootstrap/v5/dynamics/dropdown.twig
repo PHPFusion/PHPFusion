@@ -1,0 +1,31 @@
+{% macro dropdown_input(input_name, input_label, options) %}
+    <div class="display-block">
+        {% if options['jsonmode'] or options['tags'] %}
+            {# Select2 tags input #}
+            <div id="{{ options['input_id'] }}-spinner" style="display:none;">
+                <img src="{{ fusion_get_settings("siteurl") }}/images/loader.svg" alt="">
+            </div>
+
+            {% if options['tags'] == false and options['jsonmode'] == false %}
+                {# Select2 multiple input #}
+                {% set dropdownClass = "form-select" %}
+            {% endif %}
+
+            <input type="hidden" class="{{ dropdownClass }}{{ whitespace(options['required'] ? 'class="required"':'')|raw }}{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}"{{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace( options['max_length']) }} name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }}{{ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '') }}>
+        {% else %}
+
+            {% set placeholder = options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '' %}
+
+            {# Regular dropdown input #}
+            <select class="{{ options['select2_disabled'] ? 'form-select' : '' ~ whitespace(options['required'] ? 'required':'') ~ whitespace(options['inner_class'] ?? '') ~ whitespace(options['input_error'] ? 'is-invalid' : '') }}" {{ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}
+                    name="{{ input_name }}"
+                    id="{{ options['input_id'] }}"{{ whitespace(placeholder)|raw ~ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '')|raw ~ whitespace(options['onchange'] ? 'onchange='~options['onchange'] : '')|raw ~ whitespace(options['data_options'] ? options['data_options']|join(' ') : '')|raw ~ whitespace(options['deactivate'] ? 'disabled': '') ~ whitespace(options['multiple'] ? 'multiple' : '') ~ whitespace(options['required'] ? 'required' : '') }} {{ (label ? 'aria-label="'~ label ~'"':'')|raw }}>
+                {{ options['options_html']|raw }}
+            </select>
+
+        {% endif %}
+        {% if options['required'] %}
+            <input class="required" id="dummy-{{ options['input_id'] }}" type="hidden">
+        {% endif %}
+    </div>
+{% endmacro %}

@@ -1,0 +1,78 @@
+{# Input group open #}
+{% macro input_group_open(options) %}
+    {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value']) %}
+        <div class="input-group{{ whitespace(options['group_size'] ? 'input-group'~ options['group_size'] : '') }}">
+    {% endif %}
+{% endmacro %}
+
+    {# Input group close #}
+{% macro input_group_close(options) %}
+    {% if(options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value']) %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro input_prepend(options) %}
+    {% if (options['prepend_button'] and options['prepend_type'] and options['prepend_form_value'] and options['prepend_class'] and options['prepend_value']) %}
+        <span class="input-group-btn input-group-prepend">
+                <button id="{{ options['prepend_button_id'] }}" name="{{ options['prepend_button_name'] }}" type="{{ options['prepend_type'] }}" value="{{ options['prepend_form_value'] }}" class="btn {{ options['prepend_size'] ~ whitespace(options['prepend_class']) }}">
+                    {{ options['prepend_value']|raw }}
+                </button>
+            </span>
+    {% elseif (options['prepend_value']) %}
+        <span class="input-group-addon input-group-prepend" id="{{ options['prepend_id'] }}">
+            <span class='input-group-text'>{{ options['prepend_value']|raw }}</span>
+        </span>
+    {% endif %}
+{% endmacro %}
+
+{% macro input_append(options) %}
+     {% if (options['append_button'] and options['append_type'] and options['append_form_value'] and options['append_class'] and options['append_value']) %}
+         <span class="input-group-btn input-group-append">
+             <button id="{{ options['append_button_id'] }}" name="{{ options['append_button_name'] }}" type="{{ options['append_type'] }}" value="{{ options['append_form_value'] }}" class="btn {{ options['append_size'] ~ whitespace(options['append_class']) }}">
+                {{ options['append_value']|raw }}
+             </button>
+         </span>
+     {% elseif (options['append_value']) %}
+         <span class="input-group-addon input-group-append" id="{{ options['append_id'] }}">
+            <span class='input-group-text'>{{ options['append_value']|raw }}</span>
+        </span>
+     {% endif %}
+{% endmacro %}
+
+
+{# Text Input #}
+{% macro text_input(input_name, input_value, options) %}
+
+    {% set input_tags_1 = whitespace(options['data']) ~ whitespace(options['min']) ~ whitespace(options['max']) ~ whitespace(options['step'])
+        ~ whitespace(options['inner_width'] ? 'style="width:'~options['inner_width']~';"' : '') ~ whitespace( options['max_length'])
+    %}
+
+    {% set input_tags_2 =  whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '') ~ whitespace(options['autocomplete_off'] ? 'autocomplete="off"' : '') ~
+        whitespace(options['deactivate'] ? 'readonly': '') ~ whitespace(options['required'] ? 'required' : '')
+    %}
+
+    {% set input_inner_class = whitespace(options['inner_class'] ?? '')  %}
+
+    {{ _self.input_group_open(options)|raw }}
+
+    {{ _self.input_prepend(options)|raw }}
+
+     <input type="{{ options['input_type'] }}" data-type="{{ options['input_type'] }}"{{ input_tags_1|raw }} class="form-control textbox{{ input_inner_class }}" name="{{ input_name }}" value="{{ input_value }}" id="{{ options['input_id'] }}"{{ input_tags_2|raw }}>
+
+    {{ _self.input_append(options)|raw }}
+
+    {{ (options['feedback_icon'] ? '<div class="form-control-feedback" style="top:0;"><i class="'~options['icon']~'"></i></div>' : '')|raw }}
+
+    {{ _self.input_group_close(options) }}
+
+    {{ options['stacked']|raw }}
+
+    {{ (options['ext_tip'] ? '<br><span class="tip">'~options['ext_tip']~'</span>' : '')|raw }}
+
+    {{ (options['input_error'] ? '<div class="input-error'~ whitespace(options['inline'] =='' or options['append_button'] or options['prepend_button'] or options['append_value'] or options['prepend_value'] ? 'display-block' : '' )~'"><div id="'~options['input_id']~'-help" class="label label-danger p-5 display-inline-block">'~options['error_text']~'</div></div>' : '')|raw }}
+
+    {{ options['append_html']|raw }}
+
+    {{ options['password_strength'] == true ? '<div class="m-t-5 pwstrength_viewport_progress"></div>' : '' }}
+{% endmacro %}

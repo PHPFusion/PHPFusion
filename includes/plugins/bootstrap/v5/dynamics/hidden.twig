@@ -1,0 +1,3 @@
+{% macro hidden_input(input_name, input_value, options) %}
+    <input type="hidden" name="{{ input_name }}" id="{{ options["input_id"] }}" value="{{ input_value|raw }}"{{ whitespace(options['width'] ? 'style="width:'~options['inner_width']~';"' : '')|raw }}{{ whitespace(options['deactivate'] ? 'readonly': '') }}>
+{% endmacro %}

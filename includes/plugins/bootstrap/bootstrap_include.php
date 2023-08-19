@@ -59,7 +59,7 @@ function fusion_get_template( $component, $info ) {
 
     if ($path = get_bootstrap( $component )) {
 
-        return fusion_render( $path['dir'], $path['file'], $info, TRUE );
+        return fusion_render( $path['dir'], $path['file'], $info, iDEVELOPER );
     }
 
     return 'This template ' . $component . ' is not supported';

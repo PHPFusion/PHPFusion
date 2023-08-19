@@ -382,6 +382,7 @@ class SiteLinks {
 
             self::setLinks();
             $locale = fusion_get_locale();
+
             if ($sublocale = (array)self::getMenuParam( 'locale' )) {
                 $locale += $sublocale;
             }
@@ -393,6 +394,7 @@ class SiteLinks {
                 'show_header'            => self::getMenuParam( 'show_header' ),
                 'responsive'             => self::getMenuParam( 'responsive' ),
                 'show_banner'            => self::getMenuParam( 'show_banner' ),
+                'banner'                 => self::getMenuParam( 'banner' ),
                 'custom_header'          => self::getMenuParam( 'custom_header' ),
                 'nav_class'              => self::getMenuParam( 'nav_class' ),
                 'navbar_class'           => self::getMenuParam( 'navbar_class' ),

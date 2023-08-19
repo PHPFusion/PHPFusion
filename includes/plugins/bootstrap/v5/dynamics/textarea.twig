@@ -1,0 +1,65 @@
+{% macro live_textarea(input_name, input_value, options) %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="display-flex">
+                <div class="flex-start">
+                    {{ options['toolbar']|raw }}
+                </div>
+                <div class="flex-end">
+                    {{ options['toolbar_1']|raw }}
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            {{ _self.textarea(input_name, input_value, options) }}
+        </div>
+        <div class="panel-footer">
+            <div class="display-flex">
+                <div class="flex-end">
+                    {{ fusion_get_locale('word_count') }} : <span id="{{ options['input_id'] }}-counter"
+                                                                  class="c-counter">0</span>
+                    {{ options['maxlength'] ? ' / '~options['maxlength'] : '' }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro textarea(input_name, input_value, options) %}
+
+    <textarea name="{{ input_name }}" id="{{ options['input_id'] }}"
+              style="width:{{ options['inner_width'] }};height:{{ options['height'] }};{{ (options['no_resize'] ? ' resize:none;' : '') }}"
+              rows="{{ options['rows'] }}"
+              class="form-control{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['autosize'] ? 'animated-height' : '') }}"
+              placeholder="{{ options['placeholder'] }}"{{ whitespace(options['deactivate'] ? 'readonly' : '')~whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '') }}>
+                {{ input_value }}
+            </textarea>
+
+{% endmacro %}
+
+{% macro textarea_input(input_name, input_value, options) %}
+    {{ options['type'] }}
+
+    {% if (options['html'] or options['type'] == 'html') or (options['bbcode'] or options['type'] == 'bbcode') %}
+
+        {{ _self.live_textarea(input_name, input_value, options) }}
+
+    {% else %}
+
+        {{ _self.textarea(input_name, input_value, options) }}
+
+    {% endif %}
+{% endmacro %}
+
+
+{% macro _textarea(input_name, label, input_value, options) %}
+    {% if options['bbcode_options'] %}
+        {% set bbcodeClass = 'rounded-0 border border-0' %}
+    {% endif %}
+    <textarea name="{{ input_name }}"
+              style="width:{{ options['inner_width'] }};height:{{ options['height'] }}"{{ whitespace(options['no_resize'] ? 'resize:none': '') }} rows="{{ options['rows'] }}"
+              cols="1"
+              class="form-control textbox{{ whitespace(bbcodeClass) }}{{ whitespace(options['inner_class']??'') }}" {{ whitespace(options['autosize']?'animated-height':'') }}{{ whitespace(options['placeholder'] ? 'placeholder="'~options['placeholder']~'"' : '')|raw }} id="{{ options['input_id'] }}"{{ whitespace(options['deactivate'] ? 'readonly': '') }}{{ whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '')|raw }}>{{ input_value|raw }}</textarea>
+
+
+{% endmacro %}

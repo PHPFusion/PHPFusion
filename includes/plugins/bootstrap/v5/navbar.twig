@@ -5,7 +5,7 @@
             {% if rows['seperator'] == true %}
                 <li class='divider' role='separator'></li>
             {% else %}
-                <li{{ whitespace(rows['li_class'] ? 'class="'~rows['li_class']~'"')|raw }}>{{ rowsp['li_separator']|raw }}
+                <li class="nav-item{{ whitespace(rows['li_class'])|raw }}">{{ rowsp['li_separator']|raw }}
                     {% if rows['link_url'] %}
                     <a{{ whitespace(rows['link_attr'])|raw }}>
                         {% endif %}
@@ -61,13 +61,16 @@
     {% set headerClass = 'navbar-brand visible-xs hidden-sm hidden-md hidden-lg' %}
 
     {% if (info['show_banner'] ) %}
+
         {% set headerContent = '<a class="'~headerClass~'" href="'~ info['navbar_link']|raw ~'">'~ info['banner']|raw ~'</a>' %}
+
         {% if info['show_header'] %}
             {% set headerContent = info['show_header'] %}
             {% if info['show_header']|length == 1 %}
                 {% set headerContent = '<a class="'~headerClass~'" href="'~ info['navbar_link']|raw ~'">'~ info['sitename']|raw ~'</a>' %}
             {% endif %}
         {% endif %}
+
     {% endif %}
 
     {% set responsiveButton = '' %}
@@ -75,18 +78,19 @@
     {% set closeNav = '' %}
 
     {% if (info['responsive']) %}
-        {% set responsiveButton = '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#'~ info['id'] ~'_menu" aria-expanded="false" aria-controls="#'~ info['id']~'_menu">
-            <span class="sr-only" aria-label="'~ locale['global_017']~'">'~ locale['global_017'] ~'</span>
-            <span class="icon-bar top-bar"></span>
-            <span class="icon-bar middle-bar"></span>
-            <span class="icon-bar bottom-bar"></span>
+        {% set responsiveButton = '<button type="button" class="navbar-toggler ms-auto icon-md btn btn-light p-0" data-bs-toggle="collapse" data-bs-target="#'~ info['id'] ~'_menu" aria-expanded="false" aria-controls="'~ info['id']~'_menu" aria-label="'~ locale['global_017']~'">
+            <span class="navbar-toggler-animation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
         </button>' %}
         {% set openNav = '<div class="collapse navbar-collapse" id="'~ info['id'] ~'_menu">' %}
         {% set closeNav = '</div>' %}
     {% endif %}
 
     {# Primary navclass #}
-    {% set primaryNavClass = 'class="nav navbar-nav"' %}
+    {% set primaryNavClass = 'class="navbar-nav me-auto mb-2 mb-lg-0"' %}
     {% if info['nav_class'] %}
         {% set primaryNavClass = 'class="'~info['nav_class']~'"' %}
     {% endif %}
@@ -97,20 +101,27 @@
         {% set secondaryNavClass = 'class="'~additional_nav_class~'"' %}
     {% endif %}
 
-    <div id="{{ info['id'] }}" class="navbar {{ navbarClass }}" role="navigation">
+    <nav id="{{ info['id'] }}" class="navbar {{ navbarClass }}" role="navigation">
         {{ openContainer|raw }}
+
         {{ headerContent|raw }}
+
         {{ info['custom_header']|raw }}
+
         {{ responsiveButton|raw }}
+
         {{ openNav|raw }}
+
         {{ info['html_pre_content']|raw }}
 
         <ul{{ whitespace(primaryNavClass)|raw }}>
             {{ _self.navItems(0, info['primary_callback_nav'])|raw }}
         </ul>
+
         {{ info['html_content']|raw }}
 
         {% if language_switcher == true or secondary_callback_nav|length > 0 %}
+
         <ul{{ whitespace(secondaryNavClass|raw)|raw }}>
             {{ _self.navItems(0, info['secondary_callback_nav'], true)|raw }}
             {% if language_switcher == true %}
@@ -120,8 +131,8 @@
                     {% set currentLang =  constant('LANGUAGE') %}
                     {% set selectedLang = langSwitch[currentLang] %}
                     <li class="nav-item dropdown" role="presentation">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
-                           data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"
+                           aria-haspopup="true">
                             <img src="{{ selectedLang['language_icon_s'] }}"
                                  alt="{{ selectedLang['language_name'] }}">{{ get_icon('caret') }}
                         </a>
@@ -151,7 +162,7 @@
         {{ info['html_post_content']|raw }}
         {{ closeNav|raw }}
         {{ closeContainer|raw }}
-    </div>
+    </nav>
 
 {% endmacro %}
 
@@ -162,6 +173,7 @@
     'show_header': show_header,
     'responsive' : responsive,
     'show_banner': show_banner,
+    'banner' : banner,
     'custom_header' : custom_header,
     'nav_class': nav_class,
     'navbar_class': navbar_class,

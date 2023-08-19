@@ -1,0 +1,178 @@
+/*
+ * -------------------------------------------------------+
+ * | PHPFusion Content Management System
+ * | Copyright (C) PHP Fusion Inc
+ * | https://phpfusion.com/
+ * +--------------------------------------------------------+
+ * | Filename: styles.less
+ * | Author:  Meangczac (Chan)
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ */
+
+:root {
+  --color: #676a79;
+  --header-color: #000;
+  --border-color: #00000017;
+  --bg: #eff2f6;
+  --card-header: #fff;
+  --card-radius: .4rem;
+  --inner-radius: calc(0.4rem - 1px);
+}
+
+body {
+  color: var(--color);
+  background: var(--bg);
+  font-size: 16px;
+
+  .navbar-brand {
+    img {
+      max-height: 50px;
+    }
+  }
+
+  .navbar-nav {
+    .nav-link {
+      font-weight: 600;
+    }
+  }
+
+  .input-group {
+    .input-group-text {
+      height: 100%;
+    }
+  }
+
+}
+
+.card {
+  border-radius: var(--card-radius);
+
+  .card-header {
+    background-color: var(--card-header);
+    border-radius: var(--inner-radius) var(--inner-radius) 0 0;
+
+    .card-title {
+      color: var(--header-color);
+      font-weight: 700;
+    }
+  }
+
+  .card-footer {
+    background-color: var(--card-header);
+    border-radius: 0 0 var(--inner-radius) var(--inner-radius);
+  }
+
+}
+
+.social-panel {
+  display: block;
+  overflow: hidden;
+
+  .card-body {
+    padding: 0;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .p-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    .cover {
+      display: block;
+      height: 60px;
+      width: 100%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .avatar {
+      margin-top: -1rem;
+      margin-bottom: .5rem;
+
+      &.img-thumbnail {
+        border: 0;
+      }
+    }
+  }
+
+  .p-body, .p-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h5 {
+      color: var(--header-color);
+      font-weight: 700;
+    }
+  }
+
+  .p-stats {
+    flex-direction: row;
+    justify-content: center;
+
+    & > div {
+      padding: .5rem;
+      font-size: .9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      &.divider {
+        padding: 0;
+        display: inline-block;
+        -ms-flex-item-align: stretch;
+        align-self: stretch;
+        width: 1px;
+        min-height: 1em;
+        background-color: currentcolor;
+        opacity: 0.25;
+      }
+
+      h5 {
+        color: var(--header-color);
+        margin-bottom: .2rem;
+      }
+    }
+  }
+
+  .p-links {
+    margin-top: .1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: .5rem 1rem;
+
+    a {
+      color: var(--header-color);
+      font-weight: 600;
+    }
+  }
+
+  .p-footer {
+    border-top:1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding:.5rem;
+    font-weight: 600;
+  }
+}
