@@ -513,8 +513,8 @@ class Defender {
                      * if certain conditions are met then return TRUE|FALSE and not do any alterations
                      * the value itself
                      */
-                    $callback = isset( $this->field_config['callback_check'] ) ? $this->field_config['callback_check'] : FALSE;
-                    $regex = isset( $this->field_config['regex'] ) ? $this->field_config['regex'] : FALSE;
+                    $callback = $this->field_config['callback_check'] ?? FALSE;
+                    $regex = $this->field_config['regex'] ?? FALSE;
                     $secured = $this->validate();
 
                     // If truly FALSE the check failed

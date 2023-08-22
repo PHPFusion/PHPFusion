@@ -243,7 +243,7 @@ class Authenticate {
     public static function setAdminLogin() {
         $locale = fusion_get_locale();
 
-        if (check_get( "logout" )) {
+        if (check_get( 'admin_logout' )) {
             if (defined( 'COOKIE_ADMIN' ) && isset( $_COOKIE[COOKIE_ADMIN] ) && $_COOKIE[COOKIE_ADMIN] != "") {
                 $cookieDataArr = explode( ".", $_COOKIE[COOKIE_ADMIN] );
                 if (count( $cookieDataArr ) == 3) {

@@ -28,7 +28,7 @@
         {% set checkbox_input_properties = whitespace( options['deactivate'] ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value == options['value'] ? 'checked' : '') %}
 
         <div class="m-r-10{{ whitespace(input_label is not empty ? 'pull-left' : '') }}">
-            <input name="{{ input_name }}" id="{{ options['input_id'] }}" class="m-0 va" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties) }}>
+            <input name="{{ input_name }}" id="{{ options['input_id'] }}" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties) }}>
         </div>
 
     {% endif %}

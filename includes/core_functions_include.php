@@ -1982,13 +1982,15 @@ function fusion_set_user() {
                 redirect( BASEDIR . 'login.php?auth=security_pin' );
 //             we have once chance to do a OTP.
             }
-            $userdata = $auth->getUserData();
-            redirect( FUSION_REQUEST );
+            if ($userdata = $auth->getUserData()) {
+                redirect( $_SERVER['HTTP_REFERER'] ?? BASEDIR . fusion_get_settings( 'opening_page' ) );
+            }
         }
     } else if (get( 'logout' ) === 'yes') {
+
         $userdata = Authenticate::logOut();
-        $request = clean_request( '', ['logout'], FALSE );
-        redirect( $request );
+        redirect(BASEDIR . fusion_get_settings( 'opening_page' ));
+
     } elseif (empty( $userdata['user_id'] )) {
 
         $userdata = Authenticate::validateAuthUser();

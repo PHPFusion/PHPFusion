@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace Defender;
 
 use ReflectionClass;
@@ -59,52 +60,60 @@ abstract class Validation {
         'contact'     => ['contact', 'verify_contact']
     ];
 
-    public static function inputName($value = NULL) {
+    public static function inputName( $value = NULL ) {
         self::$inputName = $value;
     }
 
-    public static function inputConfig($value = NULL) {
+    public static function inputConfig( $value = NULL ) {
         self::$inputConfig = $value;
     }
 
-    public static function inputValue($value = NULL) {
+    public static function inputValue( $value = NULL ) {
         self::$inputValue = $value;
     }
 
-    public static function inputDefault($value = NULL) {
+    public static function inputDefault( $value = NULL ) {
         self::$inputDefault = $value;
     }
 
-    public static function isMultilang($value = NULL) {
+    public static function isMultilang( $value = NULL ) {
         self::$isMultiLang = $value;
     }
 
     public static function getValidated() {
-        if (!isset(self::$validate_instance[self::$inputName])) {
-            if (class_exists(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]))) {
+
+        if (!isset( self::$validate_instance[self::$inputName] )) {
+            if (class_exists( strtoupper( self::$validation_rules_assigned[self::$inputConfig['type']][0] ) )) {
                 try {
-                    $class = new ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                    /**
+                     * @uses Checkbox::verify_checked()
+                     *
+                     */
+                    $class = new ReflectionClass( strtoupper( self::$validation_rules_assigned[self::$inputConfig['type']][0] ) );
                     self::$validate_instance[self::$inputName] = $class->newInstance();
+
                 } catch (ReflectionException $e) {
-                    set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
+                    set_error( E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine() );
                 }
             }
         }
 
-        if (isset(self::$validate_instance[self::$inputName]) && self::$validate_instance[self::$inputName] !== NULL) {
+        if (isset( self::$validate_instance[self::$inputName] ) && self::$validate_instance[self::$inputName] !== NULL) {
+
             $object = self::$validate_instance[self::$inputName];
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
 
-            if (is_callable([$object, $method])) {
+            if (is_callable( [$object, $method] )) {
 
                 return $object->$method();
+
             } else {
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
-                fusion_stop(sprintf($locale['type_unset'], self::$inputName));
+                fusion_stop( sprintf( $locale['type_unset'], self::$inputName ) );
             }
         } else {
             $locale['type_unset'] = '%s: has no validation file'; // to be moved
-            fusion_stop(sprintf($locale['type_unset'], self::$inputName));
+            fusion_stop( sprintf( $locale['type_unset'], self::$inputName ) );
         }
 
         return FALSE;
@@ -112,11 +121,11 @@ abstract class Validation {
 
 }
 
-require_once(__DIR__.'/validation/checkbox.php');
-require_once(__DIR__.'/validation/date.php');
-require_once(__DIR__.'/validation/number.php');
-require_once(__DIR__.'/validation/text.php');
-require_once(__DIR__.'/validation/upload.php');
-require_once(__DIR__.'/validation/uri.php');
-require_once(__DIR__.'/validation/user.php');
-require_once(__DIR__.'/validation/contact.php');
+require_once(__DIR__ . '/validation/checkbox.php');
+require_once(__DIR__ . '/validation/date.php');
+require_once(__DIR__ . '/validation/number.php');
+require_once(__DIR__ . '/validation/text.php');
+require_once(__DIR__ . '/validation/upload.php');
+require_once(__DIR__ . '/validation/uri.php');
+require_once(__DIR__ . '/validation/user.php');
+require_once(__DIR__ . '/validation/contact.php');

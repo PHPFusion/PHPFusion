@@ -25,38 +25,41 @@ $settings = fusion_get_settings();
 
 if (!headers_sent()) {
 
-    if (iDEVELOPER) {
+//    if (iDEVELOPER) {
 
         header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
         header( 'Cache-Control: no-cache' );
 
-    } else {
-        // Get last modification time of the current PHP file
-        $file_last_mod_time = filemtime( $_SERVER['SCRIPT_FILENAME'] );
-
-        // Get last modification time of the main content (that user sees)
-        // Hardcoded just as an example
-        $content_last_mod_time = 0;
-        // Combine both to generate a unique ETag for a unique content
-        // Specification says ETag should be specified within double quotes
-        $etag = '"' . $file_last_mod_time . '.' . $content_last_mod_time . '"';
-
-        // Set Cache-Control header
-        header( 'Cache-Control: max-age=86400' );
-        // Set ETag header
-        header( 'ETag: ' . $etag );
-        header( "Content-Type: text/html; charset=" . $locale['charset'] );
-
-        // Check whether browser had sent a HTTP_IF_NONE_MATCH request header
-        if (isset( $_SERVER['HTTP_IF_NONE_MATCH'] )) {
-            // If HTTP_IF_NONE_MATCH is same as the generated ETag => content is the same as browser cache
-            // So send a 304 Not Modified response header and exit
-            if ($_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
-                header( 'HTTP/1.1 304 Not Modified', TRUE, 304 );
-                exit();
-            }
-        }
-    }
+//    } elseif (!check_get('logout')) {
+//        // Get last modification time of the current PHP file
+//        $file_last_mod_time = filemtime( $_SERVER['SCRIPT_FILENAME'] );
+//
+//        // Get last modification time of the main content (that user sees)
+//        // Hardcoded just as an example
+//        $content_last_mod_time = 0;
+//        // Combine both to generate a unique ETag for a unique content
+//        // Specification says ETag should be specified within double quotes
+//        $etag = '"' . $file_last_mod_time . '.' . $content_last_mod_time . '"';
+//
+//        // Set Cache-Control header
+//        header( 'Cache-Control: max-age=86400' );
+//        // Set ETag header
+//        header( 'ETag: ' . $etag );
+//        header( "Content-Type: text/html; charset=" . $locale['charset'] );
+//
+//        // Check whether browser had sent a HTTP_IF_NONE_MATCH request header
+//        if (isset( $_SERVER['HTTP_IF_NONE_MATCH'] )) {
+//            // If HTTP_IF_NONE_MATCH is same as the generated ETag => content is the same as browser cache
+//            // So send a 304 Not Modified response header and exit
+//            if ($_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
+//                header( 'HTTP/1.1 304 Not Modified', TRUE, 304 );
+//                exit();
+//            }
+//        }
+//    } elseif (check_get('logout')) {
+//        header("Expires: Thu, 19 Nov 1981 08:52:00 GMT");
+//        header("Cache-Control: no-store, no-cache, must-revalidate");
+//    }
 }
 
 echo "<!DOCTYPE html>\n";
