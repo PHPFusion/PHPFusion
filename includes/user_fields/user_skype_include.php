@@ -21,14 +21,12 @@ defined('IN_FUSION') || exit;
 $icon = "<img src='".IMAGES."user_fields/social/skype.svg' title='Skype' alt='Skype'/>";
 if ($profile_method == 'input') {
     $options = [
-            'inline'           => TRUE,
             'max_length'       => 32,
             // TODO: Also accept MS accounts which are email addresses
             'regex'            => '[a-z.0-9]{5,31}',
             'regex_error_text' => $locale['uf_skype_error_1'],
             'error_text'       => $locale['uf_skype_error'],
             'placeholder'      => $locale['uf_skype_id'],
-            'label_icon'       => $icon,
         ] + $options;
     $user_fields = form_text('user_skype', $locale['uf_skype'], $field_value, $options);
     // Display user field input

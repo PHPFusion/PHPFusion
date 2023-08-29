@@ -28,9 +28,11 @@ if ($profile_method == "input") {
         }
         $options += [
             'options'        => $theme_opts,
-            'inline'         => TRUE,
+            'inline'         => (defined('INPUT_INLINE') || 0),
             'callback_check' => 'theme_exists',
-            'error_text'     => $locale['uf_theme_error']
+            'error_text'     => $locale['uf_theme_error'],
+            'inner_width' => '100%',
+            'width' => '100%',
         ];
         $user_fields = form_select('user_theme', $locale['uf_theme'], $field_value, $options);
     }

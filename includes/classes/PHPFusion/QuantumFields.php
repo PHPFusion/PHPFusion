@@ -623,7 +623,7 @@ class QuantumFields extends QuantumFactory {
             'field_default'  => ''
         ];
 
-        $default_options = [
+        $options += [
             'hide_value'           => FALSE, // input value is not shown on fields render
             'encrypt'              => FALSE, // encrypt field names
             'show_title'           => $method == "input", // display field label
@@ -636,8 +636,6 @@ class QuantumFields extends QuantumFactory {
             'plugin_locale_folder' => $this->plugin_locale_folder, // The folder's path where the field's locale files are
             'debug'                => FALSE // Show some information to debug
         ];
-
-        $options += $default_options;
 
         $options = QuantumHelper::resolvePluginFolder( $data, $options );
 
@@ -1499,16 +1497,19 @@ class QuantumFields extends QuantumFactory {
         foreach ($field as $field_data) {
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX . $field_data['field_cat_db'] : $db;
             $col_name = !empty( $field_data['field_cat_index'] ) ? $field_data['field_cat_index'] : $primary_key;
+
             // Find index primary key value
-            $primaryKeyVal = isset( $_POST[$col_name] ) ? form_sanitizer( $_POST[$col_name], $field_data['field_default'], $col_name ) : '';
+            $primaryKeyVal = isset( $_POST[$col_name] ) ? sanitizer( $col_name, $field_data['field_default'], $col_name ) : '';
+
             if (!isset( $output_fields[$target_database][$col_name] )) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
             }
 
-            $output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
+//            $output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
             // Set input as default if posted but blank
-            if (isset( $_POST[$field_data["field_name"]] )) {
-                $output_fields[$target_database][$field_data['field_name']] = form_sanitizer( $_POST[$field_data["field_name"]], $field_data['field_default'], $field_data['field_name'] );
+            if (isset( $_POST[$field_data['field_name']] )) {
+//                if (check_post($field_data['field_name']) { // array support?
+                $output_fields[$target_database][$field_data['field_name']] = sanitizer( $field_data['field_name'], $field_data['field_default'], $field_data['field_name'] );
             }
         }
 

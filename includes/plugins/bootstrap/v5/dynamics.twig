@@ -14,6 +14,8 @@
 
     {% set ct_width = (input_options['width'] and input_label|length == 0 ? 'style="width:'~input_options['width']~';"' : '') %}
 
+    {% set checkbox_tip = '' %}
+
     {# Checkbox extra classes #}
     {% if input_options['template_type'] == 'checkbox' %}
 
@@ -33,6 +35,8 @@
             {% set append_checkbox_input = checkbox_dom %}
         {% endif %}
 
+        {% set checkbox_tip = (input_options['ext_tip'] ? '<p class="small mb-0">'~ input_options['ext_tip']|raw ~'</p>' : '') %}
+
     {% endif %}
 
     {# Input Label #}
@@ -48,7 +52,7 @@
 
         {% set ext_tip = (input_options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ input_options['tip'] ~ '"></i>' : '')|raw %}
 
-        {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="control-label '~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~'</label>' %}
+        {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="form-label '~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~ whitespace(checkbox_tip) ~ '</label>' %}
 
     {% endif %}
 

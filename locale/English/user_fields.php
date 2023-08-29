@@ -3,15 +3,15 @@
 $locale['u040'] = "Date Joined";
 $locale['u041'] = "Last Visit";
 $locale['u042'] = "Not visited";
-$locale['u043'] = "Send Private Message";
+$locale['u043'] = "Send Message";
 $locale['u044'] = "Contact Information";
 $locale['u045'] = "Miscellaneous Information";
-$locale['u046'] = "Options";
+$locale['u046'] = "Additional Information";
 $locale['u047'] = "Statistics";
 $locale['u048'] = "Admin Information";
 $locale['u049'] = "IP Address";
 $locale['u050'] = "Undefined";
-$locale['u051'] = "Hide Email?";
+$locale['u051'] = "Hide Email";
 $locale['u052'] = " Yes ";
 $locale['u053'] = " No";
 $locale['u054'] = "View Suspension Log";
@@ -38,7 +38,10 @@ $locale['u101'] = "Register";
 $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
 $locale['u104'] = "Member Profile";
-$locale['u105'] = "Update Profile";
+$locale['u105'] = "Save changes";
+$locale['u106'] = "The email address will not be shown to others";
+$locale['u107'] = "Hide phone number";
+$locale['u108'] = "The phone number will not be shown to others";
 
 // New UF 1.20
 $locale['uf_100'] = "General Account Settings";
@@ -71,7 +74,7 @@ $locale['u125'] = "The email address is already registered by another user.";
 $locale['u126'] = "Email address can not be left empty.";
 $locale['u127'] = "User Name";
 $locale['u128'] = "Email Address";
-$locale['u129'] = "Basic User Information";
+$locale['u129'] = "Change Passwords";
 // Passwords
 $locale['u130'] = "Admin passwords";
 $locale['u131'] = "Admin password";
@@ -79,7 +82,7 @@ $locale['u132'] = "Login passwords";
 $locale['u133'] = "Login password";
 $locale['u134'] = "New Password";
 $locale['u134a'] = "Set Password";
-$locale['u134b'] = "Repeat Password";
+$locale['u134b'] = "Confirm Password";
 $locale['u135a'] = "Current Password";
 $locale['u135b'] = "Set New Password";
 $locale['u135c'] = "Repeat New Password";
@@ -126,7 +129,7 @@ $locale['u165'] = "Email has been resended.";
 
 $locale['u167'] = "for the following reason(s):";
 $locale['u168'] = "Please Try Again.";
-$locale['u169'] = "Profile updated";
+
 $locale['u170'] = "Registration successful";
 $locale['u171'] = "Your account has been verified.";
 $locale['u172'] = "Member successfully added.";

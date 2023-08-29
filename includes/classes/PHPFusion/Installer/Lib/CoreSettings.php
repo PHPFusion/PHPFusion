@@ -128,6 +128,7 @@ class CoreSettings {
                 ['settings_name' => 'captcha', 'settings_value' => 'securimage3'],
                 ['settings_name' => 'password_algorithm', 'settings_value' => 'sha256'],
                 ['settings_name' => 'username_change', 'settings_value' => 1],
+                ['settings_name' => 'username_display', 'settings_value' => 1],
                 ['settings_name' => 'recaptcha_public', 'settings_value' => ''],
                 ['settings_name' => 'recaptcha_private', 'settings_value' => ''],
                 ['settings_name' => 'recaptcha_theme', 'settings_value' => 'light'],
@@ -168,6 +169,10 @@ class CoreSettings {
                 ['settings_name' => 'login_session_ext_expiry', 'settings_value' => '86400'],
                 ['settings_name' => 'admin_session_expiry', 'settings_value' => '43200'],
                 ['settings_name' => 'admin_session_ext_expiry', 'settings_value' => '86400'],
+                ['settings_name' => 'password_length', 'settings_value' => '8'],
+                ['settings_name' => 'password_char', 'settings_value' => '1'],
+                ['settings_name' => 'password_num', 'settings_value' => '1'],
+                ['settings_name' => 'password_case', 'settings_value' => '1'],
                 ['settings_name' => 'license', 'settings_value' => 'agpl'],
                 ['settings_name' => 'license_key', 'settings_value' => ''],
             ]

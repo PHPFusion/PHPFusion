@@ -447,7 +447,7 @@ class SiteLinks {
                 'secondary_callback_nav' => $this->showMenuLinks( $id, self::getMenuParam( 'additional_data' ) )
             ];
 
-            return fusion_get_template('showsublinks', $info);
+            return fusion_get_template( 'showsublinks', $info );
 
         }
 
@@ -527,28 +527,28 @@ class SiteLinks {
             $i = 0;
 
             $default_link_data = [
-                "link_id"       => 0,
-                "link_name"     => "",
-                "link_cat"      => 0,
-                "link_url"      => "",
-                "link_icon"     => "",
-                "link_class"    => $linkclass,
-                "link_active"   => '',
-                "link_title"    => FALSE, // true to add dropdown-header class to li.
-                "link_disabled" => FALSE, // true to disable link
-                "link_window"   => FALSE,
+                "link_id"         => 0,
+                "link_name"       => "",
+                "link_cat"        => 0,
+                "link_url"        => "",
+                "link_icon"       => "",
+                "link_class"      => $linkclass,
+                "link_item_class" => "",
+                "link_active"     => '',
+                "link_title"      => FALSE, // true to add dropdown-header class to li.
+                "link_disabled"   => FALSE, // true to disable link
+                "link_window"     => FALSE,
             ];
 
             foreach ($data[$id] as $link_id => $link_data) {
 
-                $li_class = [];
-                if (defined( 'BOOTSTRAP_ENABLED' )) {
-                    if (defined( 'BOOTSTRAP5' )) {
-                        $li_class[] = "nav-item";
-                    }
-                }
-
                 $link_data += $default_link_data;
+
+                $li_class = [];
+
+                if (!empty( $link_data['link_item_class'] )) {
+                    $li_class[] = $link_data['link_item_class'];
+                }
 
                 if ($link_data['link_name'] != "---" && $link_data['link_name'] != "===") {
 
@@ -708,7 +708,7 @@ class SiteLinks {
                     if (isset( $data[$link_id] )) {
                         $has_child = TRUE;
                         $link_class = " class='" . $link_data['link_class'] . " dropdown-toggle'";
-                        $l_1 = " id='ddlink" . $link_data['link_id'] . "' data-toggle='dropdown' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false' role='presentation'";
+                        $l_1 = " id='ddlink" . $link_data['link_id'] . "' data-toggle='dropdown' data-bs-toggle='dropdown' data-bs-auto-close='outside' aria-haspopup='true' aria-expanded='false' role='presentation'";
                         $l_1 .= (empty( $id ) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty( $id ) ? "<i class='" . self::getMenuParam( 'caret_icon' ) . "'></i>" : get_icon( 'caret-down' ));
                         $li_class[] = (!empty( $id ) ? "dropdown-submenu" : "dropdown");
@@ -716,6 +716,7 @@ class SiteLinks {
 
                     $li_class = array_filter( $li_class );
                     $cloned_link = $itemlink;
+
                     if (defined( 'BOOTSTRAP5' ) && $has_child) {
                         $cloned_link = $itemlink;
                         $itemlink = " href='#'";
@@ -728,6 +729,7 @@ class SiteLinks {
                         "link_cloned_attr" => isset( $cloned_link ) ? $l_1 . $itemlink . $cloned_link . $link_class : '',
                         "link_id"          => $link_data['link_id'],
                         "link_name"        => $link_data['link_name'],
+                        'link_content'     => $link_data['link_content'] ?? '',
                         "link_href"        => $itemlink,
                         "link_url"         => $link_data['link_url'],
                         "link_icon"        => !empty( $link_data['link_icon'] ) ? '<i class="' . $link_data['link_icon'] . ' m-r-5"></i>' : '',
@@ -745,7 +747,7 @@ class SiteLinks {
                     }
 
                 } else {
-                    $rows[$link_id][$link_data['link_id']] = [
+                    $rows[$id][$link_data['link_id']] = [
                         'separator' => TRUE
                     ];
 
@@ -754,7 +756,6 @@ class SiteLinks {
             }
         }
 
-        //print_P($rows);
         return $rows ?? [];
     }
 
@@ -772,7 +773,9 @@ class SiteLinks {
         $linkRef = [];
         if (isset( $data[$link_id] )) {
             foreach ($data[$link_id] as $link) {
-                $linkRef[$link['link_id']] = $link['link_url'];
+                if (isset($link['link_id']) && isset($link['link_url'])) {
+                    $linkRef[$link['link_id']] = $link['link_url'];
+                }
                 if (isset( $data[$link['link_id']] )) {
                     $linkRef = array_merge_recursive( $linkRef, $this->getSubLinksUrl( $data, $link['link_id'] ) );
                 }

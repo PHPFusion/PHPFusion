@@ -41,6 +41,8 @@ function bootstrap_header( $custom_file = '' ) {
  * Bootstrap v3 footer hooks
  */
 function bootstrap_footer() {
+    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v5/js/dynamics.min.js" defer></script>';
+    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v5/js/popper.min.js" defer></script>';
     echo '<script src="' . INCLUDES . 'plugins/bootstrap/v5/js/bootstrap.bundle.min.js" defer></script>';
 //    echo '<script src="' . INCLUDES . 'plugins/bootstrap/v5/js/bootstrap-submenu.min.js" defer></script>';
 }

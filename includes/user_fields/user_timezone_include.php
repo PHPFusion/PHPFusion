@@ -15,30 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
 // Display user field input
 if ($profile_method == "input") {
-    $json_file = @file_get_contents(INCLUDES.'geomap/timezones.json', FALSE);
-    $timezones_json = json_decode($json_file, TRUE);
+    $json_file = @file_get_contents( INCLUDES . 'geomap/timezones.json', FALSE );
+    $timezones_json = json_decode( $json_file, TRUE );
     $timezone_array = [];
     foreach ($timezones_json as $zone => $zone_city) {
-        $date = new DateTime('now', new DateTimeZone($zone));
+        $date = new DateTime( 'now', new DateTimeZone( $zone ) );
         $offset = $date->getOffset() / 3600;
-        $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
+        $timezone_array[$zone] = '(GMT' . ($offset < 0 ? $offset : '+' . $offset) . ') ' . $zone_city;
     }
 
     $options = [
-            'inline'  => TRUE,
-            'options' => $timezone_array,
+            'options'     => $timezone_array,
+            'inner_width' => '100%',
+            'width'       => '100%'
         ] + $options;
-    $user_fields = form_select('user_timezone', $locale['uf_timezone'], $field_value, $options);
+    $user_fields = form_select( 'user_timezone', $locale['uf_timezone'], $field_value, $options );
     // Display in profile
 } else if ($profile_method == "display") {
-    if (!empty($field_value)) {
-        $date = new DateTime('now', new DateTimeZone($field_value));
+    if (!empty( $field_value )) {
+        $date = new DateTime( 'now', new DateTimeZone( $field_value ) );
         $offset = $date->getOffset() / 3600;
-        $field_value = 'GMT'.($offset < 0 ? $offset : '+'.$offset);
+        $field_value = 'GMT' . ($offset < 0 ? $offset : '+' . $offset);
 
         $user_fields = [
             'title' => $locale['uf_timezone'],

@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer\Lib;
 
 class CoreTables {
@@ -26,7 +27,7 @@ class CoreTables {
      *
      * @return array
      */
-    public static function get_core_tables($localeset) {
+    public static function get_core_tables( $localeset ) {
         /*
          * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
          * rather than maintaining files after files
@@ -1393,6 +1394,24 @@ class CoreTables {
                 'full_text' => TRUE, // FULLTEXT (user_name ASC)
                 'default'   => ''
             ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
+            'user_firstname'       => [
+                'type'    => 'VARCHAR',
+                'length'  => 50,
+                'key'     => 2,
+                'default' => '',
+            ],
+            'user_lastname'        => [
+                'type'    => 'VARCHAR',
+                'length'  => 50,
+                'key'     => 2,
+                'default' => '',
+            ],
+            'user_addname'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 50,
+                'key'     => 2,
+                'default' => '',
+            ],
             'user_algo'            => [
                 'type'    => 'VARCHAR',
                 'length'  => 10,
@@ -1435,6 +1454,17 @@ class CoreTables {
                 'default'  => 1,
                 'unsigned' => TRUE,
             ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            'user_hide_phone'      => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => 1,
+                'unsigned' => TRUE,
+            ],
+            'user_bio'             => [
+                'type'    => 'VARCHAR',
+                'length'  => 255,
+                'default' => '',
+            ],
             'user_timezone'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,

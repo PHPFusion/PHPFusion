@@ -15,59 +15,66 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'/maincore.php';
-require_once THEMES.'templates/header.php';
-$locale = fusion_get_locale('', LOCALE.LOCALESET."user_fields.php");
-include THEMES."templates/global/profile.tpl.php";
+require_once __DIR__ . '/maincore.php';
+
+require_once THEMES . 'templates/header.php';
+
+$locale = fusion_get_locale( '', LOCALE . LOCALESET . "user_fields.php" );
+
+include THEMES . "templates/global/profile.tpl.php";
+//require_once THEMES . 'templates/global/profile.tpl.php';
 
 if (!iMEMBER) {
-    redirect("index.php");
+    redirect( "index.php" );
 }
 
-add_to_title($locale['u102']);
+add_to_title( $locale['u102'] );
 
 $info = [];
 $errors = [];
+$settings = fusion_get_settings();
+$post_name = 'update_profile';
 
-if (check_post('update_profile')) {
+if (check_post( $post_name )) {
 
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->setUserNameChange(fusion_get_settings('username_change')); // accept or not username change.
+    $userInput->username_change = fusion_get_settings( 'username_change' );
     $userInput->verifyNewEmail = TRUE;
+    $userInput->registration = FALSE;
     $userInput->userData = fusion_get_userdata();
 
     if ($userInput->saveUpdate()) {
-
-        redirect(FUSION_REQUEST);
+        redirect( FUSION_REQUEST );
     }
 
-} else if (check_get('code') && fusion_get_settings('email_verification') == 1) {
+} else if (check_get( 'code' ) && $settings['email_verification'] == 1) {
     $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->verifyCode(get('code'));
-    redirect(FUSION_REQUEST);
+    $userInput->verifyCode( get( 'code' ) );
+    redirect( FUSION_REQUEST );
 }
 
-if (fusion_get_settings('email_verification') == 1) {
-    $result = dbquery("SELECT user_email FROM ".DB_EMAIL_VERIFY." WHERE user_id='".fusion_get_userdata('user_id')."'");
-    if (dbrows($result)) {
-        $data = dbarray($result);
-        $info['email_notification'] = sprintf($locale['u200'], $data['user_email'])."\n<br />\n".$locale['u201'];
+if ($settings['email_verification'] == 1) {
+    $result = dbquery( "SELECT user_email FROM " . DB_EMAIL_VERIFY . " WHERE user_id='" . fusion_get_userdata( 'user_id' ) . "'" );
+    if (dbrows( $result )) {
+        $data = dbarray( $result );
+        $info['email_notification'] = sprintf( $locale['u200'], $data['user_email'] ) . "\n<br />\n" . $locale['u201'];
     }
 }
 
 $userFields = new PHPFusion\UserFields();
-$userFields->postName = "update_profile";
+$userFields->postName = $post_name;
 $userFields->postValue = $locale['u105'];
 $userFields->userData = fusion_get_userdata();
-$userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
-$userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
-$userFields->setUserNameChange(fusion_get_settings("username_change"));
+$userFields->plugin_folder = [INCLUDES . "user_fields/", INFUSIONS];
+$userFields->plugin_locale_folder = LOCALE . LOCALESET . "user_fields/";
+$userFields->username_change = $settings['username_change'];// setUserNameChange( fusion_get_settings( "username_change" ) );
 $userFields->registration = FALSE;
+$userFields->inputInline = (!defined( 'INPUT_INLINE' ) || INPUT_INLINE);
 $userFields->displayProfileInput();
 
-if (!defined('EDITPROFILE_JS_CHECK')) {
-    define('EDITPROFILE_JS_CHECK', TRUE);
-    add_to_jquery('
+if (!defined( 'EDITPROFILE_JS_CHECK' )) {
+    define( 'EDITPROFILE_JS_CHECK', TRUE );
+    add_to_jquery( '
         function delayKeyupTimer(callback, ms) {
             let timer = 0;
             return function () {
@@ -84,7 +91,7 @@ if (!defined('EDITPROFILE_JS_CHECK')) {
         let r_userpass1_field = $("#userfieldsform #user_password1-field"); // BS3
         r_userpass1.keyup(delayKeyupTimer(function () {
             $.ajax({
-                url: "'.INCLUDES.'api/?api=userpass-check",
+                url: "' . INCLUDES . 'api/?api=userpass-check",
                 method: "GET",
                 data: $.param({"pass": $(this).val()}),
                 dataType: "json",
@@ -113,7 +120,7 @@ if (!defined('EDITPROFILE_JS_CHECK')) {
         let r_adminpass1_field = $("#userfieldsform #user_admin_password1-field"); // BS3
         r_adminpass1.keyup(delayKeyupTimer(function () {
             $.ajax({
-                url: "'.INCLUDES.'api/?api=userpass-check",
+                url: "' . INCLUDES . 'api/?api=userpass-check",
                 method: "GET",
                 data: $.param({"pass": $(this).val()}),
                 dataType: "json",
@@ -136,7 +143,7 @@ if (!defined('EDITPROFILE_JS_CHECK')) {
                 }
             });
         }, 400));
-    ');
+    ' );
 }
 
-require_once THEMES.'templates/footer.php';
+require_once THEMES . 'templates/footer.php';

@@ -92,6 +92,9 @@ class QuantumHelper {
         return $options;
     }
 
+    /**
+     * @return array
+     */
     public static function getDynamicsType() {
 
         $locale = fusion_get_locale();
@@ -144,6 +147,7 @@ class QuantumHelper {
         $field_label = ($options['show_title'] ? self::parseLabel($data['field_title']) : "");
 
         if ($data['field_type'] == 'file') {
+
             if (!is_array($options['plugin_folder'])) {
 
                 $field_file_path = $options['plugin_folder'].$data['field_name']."_include.php";

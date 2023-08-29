@@ -25,11 +25,14 @@
  * @param bool $input_value The value to be displayed.
  * @param array $options
  *
+ * Password strength meter (https://github.com/ablanco/jquery.pwstrength.bootstrap) - MIT License
+ *
  * @return string
  */
 function form_text( $input_name, $label = "", $input_value = "", array $options = [] ) {
 
     $locale = fusion_get_locale();
+    $settings = fusion_get_settings();
 
     $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
 
@@ -197,27 +200,56 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
     if ($options['password_strength'] === TRUE) {
 
         // locale file
-        if (is_file( LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/" . $locale['password_strength'] . ".js" )) {
-            $path = LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/" . $locale['password_strength'] . ".js";
-        } else {
-            $path = LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/en.js";
+        if (!defined( 'PASSWORD_METER' )) {
+            define( "PASSWORD_METER", TRUE );
+
+            if (is_file( LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/" . $locale['password_strength'] . ".js" )) {
+                $path = LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/" . $locale['password_strength'] . ".js";
+            } else {
+                $path = LOCALE . LOCALESET . "includes/dynamics/assets/password/lang/en.js";
+            }
+            add_to_footer( '<script src="' . $path . '" defer></script>' );
+            add_to_footer( '<script src="' . DYNAMICS . 'assets/password/i18next.js" defer></script>' );
+            add_to_footer( '<script src="' . DYNAMICS . 'assets/password/pwstrength-bootstrap.min.js" defer></script>' );
         }
 
-        fusion_load_script( $path );
-        fusion_load_script( DYNAMICS . 'assets/password/i18next.js' );
-        fusion_load_script( DYNAMICS . 'assets/password/pwstrength-bootstrap.min.js' );
+        /*
+         *                 $adminpassAuth->currentPassCheckLength = $settings['password_length'];
+                $adminpassAuth->currentPassCheckSpecialchar = $settings['password_char'];
+                $adminpassAuth->currentPassCheckNum = $settings['password_num'];;
+                $adminpassAuth->currentPassCheckCase = $settings['password_case'];
+         */
+
+        if (defined('BOOTSTRAP') && isnum(BOOTSTRAP) && BOOTSTRAP < 5) {
+            $ui_rules = 'bootstrap'.BOOTSTRAP.' : true,';
+        }
+
 
         add_to_jquery( "
             i18next.init({
+            
                 lng: '" . $locale['password_strength'] . "',resources: {" . $locale['password_strength'] . ": {translation: pwstrength_locale}}
+                
             }, function () {
+            
                 var options = {};
+                
+                options.common = {
+                    minChar: '".$settings['password_length']."',                    
+                };
+            
                 options.ui = {
-                    " . (!defined( 'BOOTSTRAP4' ) ? 'bootstrap3: true,' : '') . "
+                   ".($ui_rules ?? '')."                                        
                     container: '#" . $options['input_id'] . "-field',
                     showVerdictsInsideProgressBar: true,
                     viewports: {
-                        progress: '.pwstrength_viewport_progress'
+                      progress: '.pwstrength_viewport_progress'
+                    }
+                };
+                options.rules = {
+                    activated: {                    
+                        wordTwoCharacterClasses: true,
+                        wordRepetitions: true
                     }
                 };
 

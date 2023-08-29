@@ -2,10 +2,17 @@
 
     {% if data[link_id]|length >0 %}
         {% for rows in data[link_id] %}
-            {% if rows['seperator'] == true %}
+
+            {% if rows['separator'] %}
+
                 <li class='divider' role='separator'></li>
+
             {% else %}
+
                 <li class="nav-item{{ whitespace(rows['li_class'])|raw }}">{{ rowsp['li_separator']|raw }}
+                    {% if rows['link_content'] %}
+                        {{ rows['link_content']|raw }}
+                    {% endif %}
                     {% if rows['link_url'] %}
                     <a{{ whitespace(rows['link_attr'])|raw }}>
                         {% endif %}
@@ -14,19 +21,21 @@
                     </a>
                     {% endif %}
                     {% if rows.link_child  == true %}
-                        {% set secondaryMenuClass = "dropdown-menu-right" %}
-                        <ul id="menu-{{ rows['link_id'] }}" aria-labelledby="ddlink{{ rows['link_id'] }}"
-                            class="dropdown-menu{{ whitespace(secondary_menu ? secondaryMenuClass : '') }}">
+                        {% set secondaryMenuClass = "dropdown-menu-end dropdown-animation dropdown-menu-size-md shadow-lg border-0" %}
+                        <ul id="menu-{{ rows['link_id'] }}" aria-labelledby="ddlink{{ rows['link_id'] }}" class="dropdown-menu{{ whitespace(secondary_menu ? secondaryMenuClass : '') }}" data-bs-popper="static">
                             {# Show self if is a link #}
                             {% if rows['link_url'] != '#' %}
-                                <li{{ whitespace(rows['link_url'] is empty ? 'class="no-link'~whitespace(li_class)~'"' : liClass)|raw }}
-                                        role="presentation">
-                                    {% if rows['link_child_attr'] %}
-                                    <a {{ rows['link_child_attr']|raw }} role="menuitem">
-                                        {% endif %}
-                                        {{ rows['link_icon']|raw }}{{ rows['link_name']|raw }}
-                                        {% if rows['link_child_attr'] %}
-                                    </a>
+                                <li{{ whitespace(rows['link_url'] is empty ? 'class="no-link nav-item'~whitespace(li_class)~'"' : liClass)|raw }} role="presentation">
+                                    {% if rows['link_content'] %}
+
+                                        {{ rows['link_content']|raw }}
+
+                                    {% elseif rows['link_child_attr'] %}
+                                        <a {{ rows['link_child_attr']|raw }} role="menuitem">
+                                            {% endif %}
+                                            {{ rows['link_icon']|raw }}{{ rows['link_name']|raw }}
+                                            {% if rows['link_child_attr'] %}
+                                        </a>
                                     {% endif %}
                                 </li>
                             {% endif %}
@@ -120,10 +129,12 @@
 
         {{ info['html_content']|raw }}
 
-        {% if language_switcher == true or secondary_callback_nav|length > 0 %}
+        {% if language_switcher == true or secondary_callback_nav|length is not empty %}
 
         <ul{{ whitespace(secondaryNavClass|raw)|raw }}>
+
             {{ _self.navItems(0, info['secondary_callback_nav'], true)|raw }}
+
             {% if language_switcher == true %}
                 {% set langSwitch = fusion_get_language_switch() %}
                 {% set language = fusion_get_enabled_languages() %}
@@ -191,5 +202,6 @@
     'primary_callback_nav' : primary_callback_nav,
     'secondary_callback_nav' : secondary_callback_nav
 } %}
+
 
 {{ _self.showsublinks(options) }}

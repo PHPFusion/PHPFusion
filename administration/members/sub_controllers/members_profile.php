@@ -89,7 +89,7 @@ class Members_Profile extends Members_Admin {
             $userInput->isAdminPanel = TRUE;
             $userInput->skipCurrentPass = TRUE;
             $userInput->saveUpdate();
-            self::$user_data = $userInput->getData(); // data overridden on error.
+            self::$user_data = $userInput->setUserHash(); // data overridden on error.
             unset($userInput);
             if (fusion_safe()) {
                 redirect(FUSION_SELF.fusion_get_aidlink());
@@ -106,7 +106,7 @@ class Members_Profile extends Members_Admin {
         $userFields->skipCurrentPass = TRUE;
         $userFields->userData = self::$user_data;
         $userFields->method = 'input';
-        $userFields->admin_mode = TRUE;
+        $userFields->moderation = TRUE;
         $userFields->displayProfileInput();
     }
 
