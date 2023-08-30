@@ -157,8 +157,12 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
          */
         $bindingJs = "";
         if (!empty( $options['join_from_id'] )) {
-            if (defined( 'BOOTSTRAP4' )) {
-                $bindingJs = "
+            if (defined( 'BOOTSTRAP' )) {
+
+
+
+                if (BOOTSTRAP == 4) {
+                    $bindingJs = "
                     $('#" . $options['join_from_id'] . "_datepicker').on('change.datetimepicker', function (e) {
                         $('#" . $options["input_id"] . "_datepicker').datetimepicker('minDate', e.date);
                     });
@@ -166,6 +170,19 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
                         $('#" . $options['join_from_id'] . "_datepicker').datetimepicker('maxDate', e.date);
                     });
                 ";
+
+                    $dpbuttons = "
+                    buttons: {
+                        showToday: true,
+                        showClear: true,
+                        showClose: true
+                    },
+                    ";
+
+                }
+
+
+
             } else {
                 $bindingJs = "
                     $('#" . $options['join_from_id'] . "_datepicker').on('dp.change', function(e) {
@@ -175,83 +192,81 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
                         $('#" . $options['join_from_id'] . "_datepicker').data('DateTimePicker').maxDate(e.date);
                     });
                 ";
+
+                $dpbuttons = "
+                    showTodayButton: true,
+                    showClear: true,
+                    showClose: true,
+                ";
             }
         }
 
-        if (defined( 'BOOTSTRAP4' )) {
-            $dpbuttons = "
-                buttons: {
-                    showToday: true,
-                    showClear: true,
-                    showClose: true
-                },
-            ";
-        } else {
-            $dpbuttons = "
-                showTodayButton: true,
-                showClear: true,
-                showClose: true,
-            ";
+        if (defined('BOOTSTRAP')) {
+            if (BOOTSTRAP < 5) {
+                add_to_jquery( "
+                moment.updateLocale('" . $locale['datepicker'] . "', {
+                    week: {dow: " . $options['week_start'] . "}
+                });
+        
+                let " . $options["input_id"] . "_datepicker = $('#" . $options["input_id"] . "_datepicker').datetimepicker({
+                    locale: '" . $locale['datepicker'] . "',
+                    " . $dpbuttons . "
+                    allowInputToggle: true,
+                    icons: {
+                        time: 'fa fa-clock',
+                        date: 'fa fa-calendar',
+                        up: 'fa fa-caret-up',
+                        down: 'fa fa-caret-down',
+                        previous: 'fa fa-caret-left',
+                        next: 'fa fa-caret-right',
+                        today: 'fa fa-calendar-day',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-close'
+                    },
+                    tooltips: tooltips_locale,
+                    " . ($options['showTime'] == TRUE ? "sideBySide: true," : "") . "
+                    " . (!empty( $dateFilter ) ? $dateFilter[0] . $dateFilter[1] . "," : "") . "
+                    " . (!empty( $weekendFilter ) ? $weekendFilter[0] . $weekendFilter[1] . "," : "") . "
+                    format: '" . $options['date_format_js'] . "',
+                    " . (!empty( $options['join_from_id'] ) ? "useCurrent: false" : "") . "
+                });
+                " . $bindingJs . "
+                " );
+            }
         }
 
-        add_to_jquery( "
-        moment.updateLocale('" . $locale['datepicker'] . "', {
-            week: {dow: " . $options['week_start'] . "}
-        });
+        if (!defined( 'DATEPICKER' )) {
+            define( 'DATEPICKER', TRUE );
 
-        let " . $options["input_id"] . "_datepicker = $('#" . $options["input_id"] . "_datepicker').datetimepicker({
-            locale: '" . $locale['datepicker'] . "',
-            " . $dpbuttons . "
-            allowInputToggle: true,
-            icons: {
-                time: 'fa fa-clock',
-                date: 'fa fa-calendar',
-                up: 'fa fa-caret-up',
-                down: 'fa fa-caret-down',
-                previous: 'fa fa-caret-left',
-                next: 'fa fa-caret-right',
-                today: 'fa fa-calendar-day',
-                clear: 'fa fa-trash',
-                close: 'fa fa-close'
-            },
-            tooltips: tooltips_locale,
-            " . ($options['showTime'] == TRUE ? "sideBySide: true," : "") . "
-            " . (!empty( $dateFilter ) ? $dateFilter[0] . $dateFilter[1] . "," : "") . "
-            " . (!empty( $weekendFilter ) ? $weekendFilter[0] . $weekendFilter[1] . "," : "") . "
-            format: '" . $options['date_format_js'] . "',
-            " . (!empty( $options['join_from_id'] ) ? "useCurrent: false" : "") . "
-        });
-        " . $bindingJs . "
-        " );
+            if (BOOTSTRAP < 5) {
+                if (is_file( LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/tooltip/" . $locale['datepicker'] . ".js" )) {
+                    $lang = $locale['datepicker'];
+                } else {
+                    $lang = 'en-gb';
+                }
+                add_to_footer( "<script src='" . DYNAMICS . "assets/datepicker/moment.min.js'></script>" );
+                add_to_footer( "<script src='" . LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/tooltip/" . $lang . ".js'></script>" );
+
+                if (BOOTSTRAP == 4) {
+                    $css_path = DYNAMICS . 'assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css';
+                    $js_path = DYNAMICS . "assets/datepicker/bs4/tempusdominus-bootstrap-4.min.js";
+
+                } elseif (BOOTSTRAP == 3) {
+                    $css_path = DYNAMICS . "assets/datepicker/bs3/bootstrap-datetimepicker.min.css";
+                    $js_path = DYNAMICS . "assets/datepicker/bs3/bootstrap-datetimepicker.min.js";
+                }
+
+                add_to_head("<link href='$css_path' rel='stylesheet'>");
+                if (isset($js_path)) {
+                    add_to_footer("<script src='$js_path'></script>");
+                }
+                add_to_footer( "<script src='" . LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/" . $locale['datepicker'] . ".js'></script>" );
+            }
+
+        }
     }
 
-    if (!defined( 'DATEPICKER' )) {
-        define( 'DATEPICKER', TRUE );
 
-        if (is_file( LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/tooltip/" . $locale['datepicker'] . ".js" )) {
-            $lang = $locale['datepicker'];
-        } else {
-            $lang = 'en-gb';
-        }
-
-        add_to_footer( "<script src='" . LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/tooltip/" . $lang . ".js'></script>" );
-
-        if (BOOTSTRAP > 3) {
-            add_to_head( "<link href='" . DYNAMICS . "assets/datepicker/bs4/tempusdominus-bootstrap-4.min.css' rel='stylesheet'>" );
-        } else {
-            add_to_head( "<link href='" . DYNAMICS . "assets/datepicker/bs3/bootstrap-datetimepicker.min.css' rel='stylesheet'>" );
-        }
-
-        add_to_footer( "<script src='" . DYNAMICS . "assets/datepicker/moment.min.js'></script>" );
-
-        if (BOOTSTRAP > 3) {
-            add_to_footer( "<script src='" . DYNAMICS . "assets/datepicker/bs4/tempusdominus-bootstrap-4.min.js'></script>" );
-        } else {
-            add_to_footer( "<script src='" . DYNAMICS . "assets/datepicker/bs3/bootstrap-datetimepicker.min.js'></script>" );
-        }
-
-        add_to_footer( "<script src='" . LOCALE . LOCALESET . "includes/dynamics/assets/datepicker/locale/" . $locale['datepicker'] . ".js'></script>" );
-    }
 
     ksort( $options );
 

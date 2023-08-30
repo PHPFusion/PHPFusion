@@ -26,28 +26,20 @@
 {% endmacro %}
 
 {% macro textarea(input_name, input_value, options) %}
-
     <textarea name="{{ input_name }}" id="{{ options['input_id'] }}"
               style="width:{{ options['inner_width'] }};height:{{ options['height'] }};{{ (options['no_resize'] ? ' resize:none;' : '') }}"
               rows="{{ options['rows'] }}"
               class="form-control{{ whitespace(options['inner_class'] ?? '') ~ whitespace(options['autosize'] ? 'animated-height' : '') }}"
               placeholder="{{ options['placeholder'] }}"{{ whitespace(options['deactivate'] ? 'readonly' : '')~whitespace(options['maxlength'] ? 'maxlength="'~options['maxlength']~'"' : '') }}>
                 {{ input_value }}
-            </textarea>
-
+    </textarea>
 {% endmacro %}
 
 {% macro textarea_input(input_name, input_value, options) %}
-    {{ options['type'] }}
-
     {% if (options['html'] or options['type'] == 'html') or (options['bbcode'] or options['type'] == 'bbcode') %}
-
         {{ _self.live_textarea(input_name, input_value, options) }}
-
     {% else %}
-
         {{ _self.textarea(input_name, input_value, options) }}
-
     {% endif %}
 {% endmacro %}
 

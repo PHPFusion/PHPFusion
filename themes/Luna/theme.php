@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 
 const BOOTSTRAP = 5;
+const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
 
 // Autoload template
 $file_path = THEME . 'templates/' . preg_replace( '(.php)', '.luna.php', $_SERVER['PHP_SELF'] );
@@ -24,6 +25,9 @@ if (file_exists( $file_path )) {
     require_once $file_path;
 }
 
+/**
+ * Theme
+ */
 function render_page() {
 
     $settings = fusion_get_settings();

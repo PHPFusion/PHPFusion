@@ -126,19 +126,15 @@ fusion_apply_hook( 'fusion_header_include', $custom_file ?? '' );
 //        }
 //    }
 //}
-
-if (defined( 'ENTYPO' ) && ENTYPO == TRUE) {
-    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/entypo/entypo.min.css'>\n";
-}
-
-if (defined( 'FONTAWESOME' ) && FONTAWESOME == TRUE) {
-    if (is_file( INCLUDES . "fonts/font-awesome-5/css/all.min.css" )) {
-        echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-5/css/all.min.css'>\n";
-    }
-    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/all.min.css'>\n";
-    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/v5-font-face.min.css'>\n";
-    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/v4-shims.min.css'>\n";
-}
+//
+//if (defined( 'FONTAWESOME' ) && FONTAWESOME == TRUE) {
+//    if (is_file( INCLUDES . "fonts/font-awesome-5/css/all.min.css" )) {
+//        echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-5/css/all.min.css'>\n";
+//    }
+//    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/all.min.css'>\n";
+//    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/v5-font-face.min.css'>\n";
+//    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-6/css/v4-shims.min.css'>\n";
+//}
 
 if (!defined( 'NO_DEFAULT_CSS' )) {
     echo "<link rel='stylesheet' href='" . THEMES . "templates/default.min.css?v=" . filemtime( THEMES . 'templates/default.min.css' ) . "'>\n";
@@ -148,7 +144,7 @@ if (!defined( 'PF_FONT' ) || (defined( 'PF_FONT' ) && PF_FONT == TRUE)) {
     echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/PHPFusion/font.min.css?v2'>\n";
 }
 // Core CSS loading
-$core_css_files = fusion_filter_hook( "fusion_core_styles" );
+$core_css_files = fusion_filter_hook( 'fusion_core_styles' );
 if (is_array( $core_css_files )) {
     $core_css_files = array_filter( $core_css_files );
     foreach ($core_css_files as $css_file) {
@@ -158,7 +154,13 @@ if (is_array( $core_css_files )) {
     }
 }
 // Theme CSS loading
-echo fusion_load_script( THEME . "styles.css", "css", TRUE );
+$_styles_path = THEME.'styles.css';
+if (is_file(THEME.'styles.min.css')) {
+    $_styles_path = THEME.'styles.min.css';
+}
+$filetime = filemtime($_styles_path);
+echo '<link rel="stylesheet" href="'.$_styles_path.'?v='.$filetime.'" defer>';
+
 
 /*if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $user_theme = fusion_get_userdata('user_theme');

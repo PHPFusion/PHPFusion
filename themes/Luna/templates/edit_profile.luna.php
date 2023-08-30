@@ -159,15 +159,9 @@ function display_profile_form( array $info = [] ) {
     echo '<div class="tab-pane fade active show" id="profile-settings-1" role="tabpanel">' . account( $info ) . '</div>';
     echo '</div>';
 
-    // Add core field
-    // Suffix, Firstname, Lastname, Additional name
-    //
-
-
     opentable( '' );
     echo $opentab;
     echo "<!--editprofile_pre_idx--><div id='profile_form' class='spacer-sm'>";
-    echo $info['user_id'];
     echo $info['validate'];
     echo $info['terms'];
     echo "</div><!--editprofile_sub_idx-->";
