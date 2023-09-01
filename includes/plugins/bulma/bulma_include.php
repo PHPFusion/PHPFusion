@@ -24,15 +24,10 @@
  *
  * @return string
  */
-function get_bootstrap( $part, $version = '3' ) {
+function get_bulma( $part, $version = '1' ) {
     static $framework_paths = [];
 
     if (empty( $framework_paths )) {
-        if ($version < 3) {
-            $version = 3;
-        } elseif ($version > 5) {
-            $version = 5;
-        }
 
         $version = 'v' . $version;
 
@@ -48,24 +43,24 @@ function get_bootstrap( $part, $version = '3' ) {
 
 }
 
-if (defined( 'BOOTSTRAP' )) {
+
+if (defined( 'BULMA' )) {
 
     /**
      * Load bootstrap
      * BOOTSTRAP - version number
      */
-    get_bootstrap( 'load', BOOTSTRAP );
+    get_bulma( 'load', BULMA );
 
     /**
      * @uses bootstrap_header()
      */
-    fusion_add_hook( 'fusion_header_include', 'bootstrap_header' );
+    fusion_add_hook( 'fusion_header_include', 'bulma_header' );
 
     /**
      * @uses bootstrap_footer()
      */
-    fusion_add_hook( 'fusion_footer_include', 'bootstrap_footer' );
-
+    fusion_add_hook( 'fusion_footer_include', 'bulma_footer' );
 
     /**
      * System template callback function
@@ -76,12 +71,13 @@ if (defined( 'BOOTSTRAP' )) {
      */
     function fusion_get_template( $component, $info ) {
 
-        if ($path = get_bootstrap( $component )) {
+        if ($path = get_bulma( $component )) {
 
             return fusion_render( $path['dir'], $path['file'], $info, iDEVELOPER );
         }
 
         return 'This template ' . $component . ' is not supported';
     }
+
 }
 

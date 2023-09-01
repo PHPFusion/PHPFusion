@@ -448,7 +448,6 @@ class SiteLinks {
             ];
 
             return fusion_get_template( 'showsublinks', $info );
-
         }
 
         return $res;
@@ -520,6 +519,15 @@ class SiteLinks {
         self::$instances[self::$id]->menu_options[$key] = $value;
     }
 
+    /**
+     * I need a copy of this in template - let's copy it out.
+     * @param $id
+     * @param $data
+     * @param string $linkclass
+     * @param false $dropdown
+     *
+     * @return array
+     */
     private function showMenuLinks( $id, $data, $linkclass = 'nav-link', $dropdown = FALSE ) {
         $res = '';
 
@@ -564,7 +572,7 @@ class SiteLinks {
                         $li_class[] = "disabled";
                     } else {
                         if ($link_data['link_title'] == TRUE) {
-                            $li_class[] = "dropdown-header";
+                            $li_class[] = "dropdown-header"; // this is bootstrap
                         }
                     }
 
@@ -665,6 +673,7 @@ class SiteLinks {
                         }
                     }
 
+
                     $link_data['link_name'] = fusion_get_settings( 'link_bbcode' ) ? parseubb( $link_data['link_name'] ) : $link_data['link_name'];
                     $link_data["link_name"] = html_entity_decode( $link_data["link_name"], ENT_QUOTES );
 
@@ -687,6 +696,7 @@ class SiteLinks {
                     if ($link_is_active) {
                         $li_class[] = "current-link active";
                     }
+
                     $itemlink = '';
                     if (!empty( $link_data['link_url'] )) {
                         $itemlink = " href='" . BASEDIR . $link_data['link_url'] . "' ";
@@ -697,8 +707,8 @@ class SiteLinks {
                             $itemlink = " href='" . $link_data['link_url'] . "' ";
                         }
                     }
-
                     $itemlink = str_replace( '%aidlink%', fusion_get_aidlink(), $itemlink );
+                    $cloned_link = $itemlink;
 
                     $has_child = FALSE;
                     $l_1 = "";
@@ -707,26 +717,25 @@ class SiteLinks {
                     $link_class = (!empty( $link_data['link_class'] ) ? " class='" . $link_data['link_class'] . "'" : '');
                     if (isset( $data[$link_id] )) {
                         $has_child = TRUE;
-                        $link_class = " class='" . $link_data['link_class'] . " dropdown-toggle'";
+                        $link_class = " class='" . $link_data['link_class'] . " dropdown-toggle'"; // has bootstrap elements
+                        // has bootstrap elements
                         $l_1 = " id='ddlink" . $link_data['link_id'] . "' data-toggle='dropdown' data-bs-toggle='dropdown' data-bs-auto-close='outside' aria-haspopup='true' aria-expanded='false' role='presentation'";
+                        // has bootstrap elements
                         $l_1 .= (empty( $id ) && $has_child ? " data-submenu " : "");
+
                         $l_2 = (empty( $id ) ? "<i class='" . self::getMenuParam( 'caret_icon' ) . "'></i>" : get_icon( 'caret-down' ));
+                        // has bootstrap elements
                         $li_class[] = (!empty( $id ) ? "dropdown-submenu" : "dropdown");
+                        $itemlink = " href='#'";
                     }
 
                     $li_class = array_filter( $li_class );
-                    $cloned_link = $itemlink;
-
-                    if (defined( 'BOOTSTRAP5' ) && $has_child) {
-                        $cloned_link = $itemlink;
-                        $itemlink = " href='#'";
-                    }
 
                     $rows[$id][$link_data['link_id']] = [
                         "li_class"         => implode( ' ', $li_class ),
                         "li_separator"     => self::getMenuParam( 'separator' ),
                         "link_attr"        => $itemlink ? $l_1 . $itemlink . $link_target . $link_class : '',
-                        "link_cloned_attr" => isset( $cloned_link ) ? $l_1 . $itemlink . $cloned_link . $link_class : '',
+//                        "link_cloned_attr" => isset( $cloned_link ) ? $l_1 . $itemlink . $cloned_link . $link_class : '',
                         "link_id"          => $link_data['link_id'],
                         "link_name"        => $link_data['link_name'],
                         'link_content'     => $link_data['link_content'] ?? '',
@@ -735,7 +744,7 @@ class SiteLinks {
                         "link_icon"        => !empty( $link_data['link_icon'] ) ? '<i class="' . $link_data['link_icon'] . ' m-r-5"></i>' : '',
                         "link_caret"       => $l_2,
                         "link_child"       => $has_child,
-                        "link_child_attr"  => $itemlink ? strtr( $itemlink . $link_target . $link_class, [
+                        "link_child_attr"  => $itemlink && $has_child ? strtr( $itemlink . $link_target . $link_class, [
                             'nav-link'        => 'dropdown-item',
                             'dropdown-toggle' => '',
                             $itemlink         => $cloned_link,

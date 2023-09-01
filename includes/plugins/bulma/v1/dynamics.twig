@@ -1,0 +1,99 @@
+{% if (input_options['template_type'] == 'button') %}
+
+    Button
+
+{% else %}
+
+    {% set form_text = ['text', 'number', 'password', 'email', 'price', 'ip'] %}
+
+    {% set ct_row_offset = (input_options['inline'] and input_label ? ' row' : '') %}
+
+    {% set ct_icon_class = (input_options['icon'] ? 'has-feedback' : '') %}
+
+    {% set ct_width = (input_options['width'] and input_label|length == 0 ? 'style="width:'~input_options['width']~';"' : '') %}
+
+    {% set checkbox_tip = '' %}
+
+    {# Checkbox extra classes #}
+    {% if input_options['template_type'] == 'checkbox' %}
+
+        {% import 'dynamics/checkbox.twig' as checkers %}
+
+        {% set checkbox_dom = checkers.checkbox_input(input_name, input_label, input_value, input_options) %}
+
+        {% set ct_checkbox_class = (input_options['toggle'] ? 'checkbox-switch ' : '') ~ 'form-group check-group' %}
+
+        {% set checkbox_label ='data-checked="'~ (input_value ? '1' : '0')~'"' %}
+
+        {% set checkbox_style = (input_options['inner_width'] ? 'style="width:'~input_options['inner_width']~';"' : '') %}
+
+        {% if (input_options['reverse_label']) %}
+            {% set prepend_checkbox_input = checkbox_dom %}
+        {% else %}
+            {% set append_checkbox_input = checkbox_dom %}
+        {% endif %}
+
+        {% set checkbox_tip = (input_options['ext_tip'] ? '<p class="small mb-0">'~ input_options['ext_tip']|raw ~'</p>' : '') %}
+
+    {% endif %}
+
+    {# Input Label #}
+    {% if (input_label) %}
+
+        {% if input_options['inline'] %}
+            {% set label_class = 'col-xs-12 col-sm-12 col-md-3 col-lg-3' %}
+            {% set inline_start = '<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 clearfix">' %}
+            {% set inline_end = '</div>' %}
+        {% endif %}
+
+        {% set required_mark = (input_options['required'] ? '<span class="required">*</span>' : '') %}
+
+        {% set ext_tip = (input_options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ input_options['tip'] ~ '"></i>' : '')|raw %}
+
+        {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="form-label '~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~ whitespace(checkbox_tip) ~ '</label>' %}
+
+    {% endif %}
+
+    <div id="{{ input_options['input_id'] }}-field"
+         class="form-group{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
+
+        {{ prepend_checkbox_input|raw }}
+
+        {{ (label_dom ~ inline_start)|raw }}
+
+        {{ append_checkbox_input|raw }}
+
+        {% if (input_options['template_type'] in form_text) %}
+
+            text input
+
+        {% elseif input_options['template_type'] == 'dropdown' %}
+
+            dropdown input
+
+            {# end type check #}
+        {% elseif input_options['template_type'] == 'datepicker' %}
+
+            datepicker input
+
+        {% elseif input_options['template_type'] == 'colorpicker' %}
+
+            color input
+
+        {% elseif input_options['template_type'] == 'hidden' %}
+
+            hidden input
+
+        {% elseif input_options['template_type'] == 'textarea' %}
+
+            textarea input
+
+        {% elseif input_options['template_type'] == 'button_group' %}
+
+            buttongroup input
+
+        {% endif %}
+
+        {{ inline_end|raw }}
+    </div>
+{% endif %}

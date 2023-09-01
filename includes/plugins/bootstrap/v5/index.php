@@ -19,7 +19,7 @@
  */
 
 /**
- * Bootstrap v3 header hooks
+ * Bootstrap v5 header hooks
  * @param string $custom_file
  */
 function bootstrap_header( $custom_file = '' ) {
@@ -38,7 +38,7 @@ function bootstrap_header( $custom_file = '' ) {
 }
 
 /**
- * Bootstrap v3 footer hooks
+ * Bootstrap v5 footer hooks
  */
 function bootstrap_footer() {
     echo '<script src="' . INCLUDES . 'plugins/bootstrap/v5/js/dynamics.min.js" defer></script>';

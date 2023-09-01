@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-const BOOTSTRAP = 5;
+//const BOOTSTRAP = 5;
+const BULMA = 1;
 const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
 
 // Autoload template
@@ -109,10 +110,20 @@ function render_page() {
     echo '</div></main>';
 }
 
-function opentable() {
+function opentable($title = '', $class = '') {
+    echo '<div class="card mb-4' . whitespace( $class ?? '' ) . '">';
+
+    if ($title) {
+        echo '<div class="card-header pb-0 border-0">';
+        echo '<h5 class="card-title mb-0">' . $title . '</h5>';
+        echo '</div>';
+    }
+
+    echo '<div class="card-body">';
 }
 
 function closetable() {
+    echo '</div></div>';
 }
 
 function openside( $title = '', $class = '' ) {
