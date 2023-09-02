@@ -16,14 +16,18 @@
 
     {% set checkbox_tip = '' %}
 
+    {% set group_class = 'form-group' %}
+
     {# Checkbox extra classes #}
     {% if input_options['template_type'] == 'checkbox' %}
 
         {% import 'dynamics/checkbox.twig' as checkers %}
 
+        {% set group_class = 'form-check' %}
+
         {% set checkbox_dom = checkers.checkbox_input(input_name, input_label, input_value, input_options) %}
 
-        {% set ct_checkbox_class = (input_options['toggle'] ? 'checkbox-switch ' : '') ~ 'form-group check-group' %}
+        {% set ct_checkbox_class = (input_options['toggle'] ? 'checkbox-switch ' : '') ~ 'check-group' %}
 
         {% set checkbox_label ='data-checked="'~ (input_value ? '1' : '0')~'"' %}
 
@@ -39,6 +43,7 @@
 
     {% endif %}
 
+
     {# Input Label #}
     {% if (input_label) %}
 
@@ -52,11 +57,18 @@
 
         {% set ext_tip = (input_options['tip'] ? '<i class="pointer fa fa-question-circle" title="' ~ input_options['tip'] ~ '"></i>' : '')|raw %}
 
-        {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="form-label '~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~ whitespace(checkbox_tip) ~ '</label>' %}
+        {% set label_class = 'form-label' %}
+
+        {# only for checkbox without multiple options #}
+        {% if (input_options['template_type'] == 'checkbox' and input_options['options'] is empty) %}
+            {% set label_class = 'form-check-label' %}
+        {% endif %}
+
+        {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="'~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~ whitespace(checkbox_tip) ~ '</label>' %}
 
     {% endif %}
 
-    <div id="{{ input_options['input_id'] }}-field" class="form-group{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
+    <div id="{{ input_options['input_id'] }}-field" class="{{ group_class }}{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
 
         {{ prepend_checkbox_input|raw }}
 

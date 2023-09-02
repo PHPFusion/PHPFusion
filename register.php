@@ -32,7 +32,6 @@ if ($settings['gateway'] == 1) {
     if (empty($_SESSION["validated"])) {
         $_SESSION['validated'] = 'False';
     }
-
     if (isset($_SESSION["validated"]) && $_SESSION['validated'] !== 'True') {
         require_once INCLUDES."gateway/gateway.php";
     }
@@ -85,13 +84,16 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userInput->validation = $settings['display_validation'];
         $userInput->emailVerification = $settings['email_verification'];
         $userInput->adminActivation = $settings['admin_activation'];
-        $userInput->skipCurrentPass = TRUE;
-        $userInput->registration = TRUE;
+        $userInput->moderation = 0;
+        $userInput->skipCurrentPass = 1;
+        $userInput->registration = 1;
+
         $insert = $userInput->saveInsert();
 
-        if ($insert && fusion_safe()) {
+        if (fusion_safe()) {
             redirect($settings['opening_page']);
         }
+
         unset($userInput);
     }
 
@@ -101,12 +103,18 @@ if ((isset($_SESSION["validated"]) && $_SESSION["validated"] == "True") || $sett
         $userFields->postName = "register";
         $userFields->postValue = $locale['u101'];
         $userFields->displayValidation = $settings['display_validation'];
+
         $userFields->displayTerms = $settings['enable_terms'];
+
         $userFields->plugin_folder = [INCLUDES."user_fields/", INFUSIONS];
         $userFields->plugin_locale_folder = LOCALE.LOCALESET."user_fields/";
+
         $userFields->showAdminPass = FALSE;
         $userFields->skipCurrentPass = TRUE;
+
         $userFields->registration = TRUE;
+        $userFields->inputInline = (!defined( 'INPUT_INLINE' ) || INPUT_INLINE);
+
         $userFields->displayProfileInput();
 
         if (!defined('REGISTER_JS_CHECK')) {

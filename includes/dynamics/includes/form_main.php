@@ -30,7 +30,7 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
 
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
 
-    $default_options = [
+    $options += [
         'form_id'    => $form_name,
         'class'      => '', // CSS class properties.
         'enctype'    => FALSE, // Set true for allowing multipart.
@@ -39,8 +39,6 @@ function openform($form_name, $method, $action_url = FORM_REQUEST, array $option
         'on_submit'  => '', // Adds javascript function on form submit.
         'honeypot'   => TRUE, // Enables honeypots to counter botting.
     ];
-
-    $options += $default_options;
 
     if (!$action_url) {
         $action_url = FORM_REQUEST;

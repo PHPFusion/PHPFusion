@@ -127,10 +127,12 @@ function display_profile_form( array $info = [] ) {
             $i = 1;
             foreach ($info['user_field'] as $field) {
                 $html .= fusion_get_function( 'openside', $field['title'] );
-                $html .= openform('lunaCustomFrm'.$i, 'POST');
+                $html .= openform('lunaCustom_'.$i, 'POST', FORM_REQUEST);
                 if (!empty( $field['fields'] )) {
                     foreach ($field['fields'] as $subfield) {
+                        $html .= '<div class="row"><div class="col-xs-12">';
                         $html .= $subfield;
+                        $html .= '</div></div>';
                     }
                 }
                 $html .= '<div class="d-flex flex-row justify-content-end m-t-20">' . $info['button'] . '</div>';

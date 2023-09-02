@@ -1512,4 +1512,11 @@ Responsive Admin for all Admin Themes.
   align-items: center;
   min-height: calc(100% - 1rem);
 }
+.bbcode_input .bbcode-popup {
+  padding: 0.5rem;
+}
+.bbcode_input img.smiley {
+  width: 18px;
+  height: 18px;
+}
 /*# sourceMappingURL=default.css.map */

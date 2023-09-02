@@ -27,9 +27,9 @@ use Defender;
  */
 class UserFieldsInput {
 
-    public $adminActivation = 1;
+    public $adminActivation = FALSE;
 
-    public $emailVerification = 1;
+    public $emailVerification = FALSE;
 
     public $verifyNewEmail = FALSE;
 
@@ -55,15 +55,9 @@ class UserFieldsInput {
     // Passwords
     private $data = [];
 
-    private $_isValidCurrentPassword = FALSE;
-
     private $_newUserPassword = FALSE;
 
-    private $_newUserPassword2 = FALSE;
-
     public $username_change = TRUE;
-
-    private $_themeChanged = FALSE;
 
     public $moderation = 0;
 
@@ -81,32 +75,30 @@ class UserFieldsInput {
         $this->_method = "validate_insert";
 
         $this->data = $this->setEmptyFields();
+        $this->userData = $this->setEmptyFields();
 
-        $this->setUserName();
 
-        $this->setPassword();
 
-        $this->setUserEmail();
+        $userFieldsValidate = new UserFieldsValidate( $this );
+
+        $this->data['user_name'] = $userFieldsValidate->setUserName();
+
+        if ($pass = $userFieldsValidate->setPassword()) {
+            if (count( $pass ) === 3) {
+                list( $this->data['user_algo'], $this->data['user_salt'], $this->data['user_password'] ) = $pass;
+            }
+        }
+
+        $this->data['user_email'] = $userFieldsValidate->setUserEmail();
 
         /**
          * For validation purposes only to show required field errors
          *
          * @todo - look further for optimization
          */
-        $quantum = new QuantumFields();
-        $quantum->setCategoryDb( DB_USER_FIELD_CATS );
-        $quantum->setFieldDb( DB_USER_FIELDS );
-        $quantum->setPluginFolder( INCLUDES . "user_fields/" );
-        $quantum->setPluginLocaleFolder( LOCALE . LOCALESET . "user_fields/" );
-        $quantum->loadFields();
-        $quantum->loadFieldCats();
-        $quantum->setCallbackData( $this->data );
-
-        $fields_input = $quantum->returnFieldsInput( DB_USERS, 'user_id' );
-
-        if (!empty( $fields_input )) {
-            foreach ($fields_input as $fields_array) {
-                $this->data += $fields_array;
+        if ($_input = $this->setCustomUserFields()) {
+            foreach ($_input as $input) {
+                $this->data += $input;
             }
         }
 
@@ -114,49 +106,43 @@ class UserFieldsInput {
             $this->setValidationError();
         }
 
+//        print_p( $this->userData );
+//        print_p( 'Email verify: ' . $this->emailVerification );
+//        print_p( 'Admin verify: ' . $this->adminActivation );
+//        print_p( $this->data );
+
+
         if (fusion_safe()) {
 
             if ($this->emailVerification) {
 
-                $this->setEmailVerification();
+                $this->sendEmailVerification();
 
             } else {
+
+                dbquery_insert( DB_USERS, $this->data, 'save' );
 
                 /**
                  * Create user
                  */
-                dbquery_insert( DB_USERS, $this->data, 'save', ['keep_session' => TRUE] );
                 $this->_completeMessage = $locale['u160'] . " - " . $locale['u161'];
 
                 if ($this->moderation == 1) {
-                    $aidlink = fusion_get_aidlink();
-                    $locale = fusion_get_locale( '', LOCALE . LOCALESET . "admin/members_email.php" );
-                    require_once INCLUDES . "sendmail_include.php";
-                    $subject = str_replace( "[SITENAME]", $settings['sitename'], $locale['email_create_subject'] );
-                    $replace_this = ["[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]"];
-                    $replace_with = [
-                        $this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']
-                    ];
-                    $message = str_replace( $replace_this, $replace_with, $locale['email_create_message'] );
-                    sendemail( $this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'],
-                        $subject, $message );
 
-                    // Administrator complete message
-                    $this->_completeMessage = $locale['u172'];
-                    unset( $aidlink );
+                    $this->sendAdminRegistrationMail();
 
                 } else {
                     // got admin activation and not
                     if ($this->adminActivation) {
+                        // Missing registration data?
                         $this->_completeMessage = $locale['u160'] . " - " . $locale['u162'];
                     }
                 }
-
             }
-            $this->data['new_password'] = $this->getPasswordInput( 'user_password1' );
 
+//            $this->data['new_password'] = $this->getPasswordInput( 'user_password1' );
             if ($this->_completeMessage) {
-                addnotice( "info", $this->_completeMessage, fusion_get_settings( "opening_page" ) );
+                addnotice( 'success', $this->_completeMessage, $settings['opening_page'] );
             }
 
             return TRUE;
@@ -164,6 +150,33 @@ class UserFieldsInput {
 
         return FALSE;
     }
+
+    /**
+     * Send mail when an administrator adds a user from admin panel
+     */
+    function sendAdminRegistrationMail() {
+
+        $settings = fusion_get_settings();
+        $locale = fusion_get_locale( '', LOCALE . LOCALESET . "admin/members_email.php" );
+
+        require_once INCLUDES . "sendmail_include.php";
+
+        $subject = str_replace( "[SITENAME]", $settings['sitename'], $locale['email_create_subject'] );
+
+        $replace_this = ["[USER_NAME]", "[PASSWORD]", "[SITENAME]", "[SITEUSERNAME]"];
+
+        $replace_with = [
+            $this->_userName, $this->_newUserPassword, $settings['sitename'], $settings['siteusername']
+        ];
+
+        $message = str_replace( $replace_this, $replace_with, $locale['email_create_message'] );
+
+        sendemail( $this->data['user_name'], $this->data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message );
+
+        // Administrator complete message
+        $this->_completeMessage = $locale['u172'];
+    }
+
 
     /**
      * Initialise empty fields
@@ -185,6 +198,8 @@ class UserFieldsInput {
             // Compulsory Core Fields
             return [
                 'user_id'         => 0,
+                'user_name'       => '',
+                'user_email'      => '',
                 'user_hide_email' => 1,
                 'user_avatar'     => '',
                 'user_posts'      => 0,
@@ -223,38 +238,93 @@ class UserFieldsInput {
     }
 
     /**
+     * Handle new email verification procedures
+     */
+    public function verifyNewEmail() {
+
+        $settings = fusion_get_settings();
+        $userdata = fusion_get_userdata();
+        $locale = fusion_get_locale();
+
+        require_once INCLUDES . "sendmail_include.php";
+        mt_srand( (double)microtime() * 1000000 );
+
+        $salt = "";
+        for ($i = 0; $i <= 10; $i++) {
+            $salt .= chr( rand( 97, 122 ) );
+        }
+
+        $user_code = md5( $this->_userEmail . $salt );
+
+        $email_verify_link = $settings['siteurl'] . "edit_profile.php?code=" . $user_code;
+
+        $mailbody = str_replace( "[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203'] );
+        $mailbody = str_replace( "[SITENAME]", $settings['sitename'], $mailbody );
+        $mailbody = str_replace( "[SITEUSERNAME]", $settings['siteusername'], $mailbody );
+        $mailbody = str_replace( "[USER_NAME]", $userdata['user_name'], $mailbody );
+
+        $mailSubject = str_replace( "[SITENAME]", $settings['sitename'], $locale['u202'] );
+
+        sendemail( $this->data['user_name'], $this->data['user_email'], $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody );
+
+        addnotice( 'warning', strtr( $locale['u200'], ['(%s)' => $this->_userEmail] ) );
+
+        dbquery( "DELETE FROM " . DB_EMAIL_VERIFY . " WHERE user_id=:uid", [":uid" => (int)$this->data['user_id']] );
+
+        dbquery( "INSERT INTO " . DB_EMAIL_VERIFY . " (user_id, user_code, user_email, user_datestamp) VALUES (':uid', ':code', ':email', ':time')", [
+            ':uid'   => (int)$this->data['user_id'],
+            ':code'  => $user_code,
+            ':email' => $this->data['user_email'],
+            ':time'  => time()
+        ] );
+    }
+
+    /**
      * Handle request for email verification
      * Sends Verification code when you change email
      * Sends Verification code when you register
      */
-    private function setEmailVerification() {
+    private function sendEmailVerification() {
+
         $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+
         require_once INCLUDES . "sendmail_include.php";
-        $userCode = hash_hmac( "sha1", PasswordAuth::getNewPassword(), $this->_userEmail );
-        $activationUrl = $settings['siteurl'] . "register.php?email=" . $this->_userEmail . "&code=" . $userCode;
-        $message = str_replace( "USER_NAME", $this->_userName, $locale['u152'] );
+
+        $userCode = hash_hmac( "sha1", PasswordAuth::getNewPassword(), $this->data['user_email'] );
+        $activationUrl = $settings['siteurl'] . "register.php?email=" . $this->data['user_email'] . "&code=" . $userCode;
+
+        $message = str_replace( "USER_NAME", $this->data['user_name'], $locale['u152'] );
         $message = str_replace( "SITENAME", $settings['sitename'], $message );
         $message = str_replace( "SITEUSERNAME", $settings['siteusername'], $message );
         $message = str_replace( "USER_PASSWORD", $this->_newUserPassword, $message );
         $message = str_replace( "ACTIVATION_LINK", $activationUrl, $message );
+
         $subject = str_replace( "[SITENAME]", $settings['sitename'], $locale['u151'] );
-        if (!sendemail( $this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $subject, $message )) {
+
+        if (!sendemail( $this->data['user_name'], $this->data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message )) {
+
             $message = strtr( $locale['u154'], [
                 '[LINK]'  => "<a href='" . BASEDIR . "contact.php'><strong>",
                 '[/LINK]' => "</strong></a>"
             ] );
+
             addnotice( 'warning', $locale['u153'] . "<br />" . $message, 'all' );
         }
-        $userInfo = base64_encode( serialize( $this->data ) );
-        if (fusion_safe()) {
-            dbquery( "INSERT INTO " . DB_NEW_USERS . "
-					(user_code, user_name, user_email, user_datestamp, user_info)
-					VALUES
-					('" . $userCode . "', '" . $this->data['user_name'] . "', '" . $this->data['user_email'] . "', '" . time() . "', '" . $userInfo . "')
-					" );
 
+        if (fusion_safe()) {
+
+            $email_rows = [
+                'user_code'      => $userCode,
+                'user_name'      => $this->data['user_name'],
+                'user_email'     => $this->data['user_email'],
+                'user_datestamp' => time(),
+                'user_info'      => base64_encode( serialize( $this->data ) )
+            ];
+
+            dbquery_insert( DB_NEW_USERS, $email_rows, 'save', ['primary_key' => 'user_name', 'no_unique' => TRUE] );
         }
+
         $this->_completeMessage = $locale['u150'];
     }
 
@@ -278,15 +348,15 @@ class UserFieldsInput {
              * @uses \PHPFusion\UserFieldsValidate::setUserName()
              * @uses \PHPFusion\UserFieldsValidate::setUserHideEmail()
              */
-            'user_name'            => 'setUserName',
-            'user_firstname'       => 'sanitizer',
-            'user_lastname'        => 'sanitizer',
-            'user_addname'         => 'sanitizer',
-            'user_phone'           => 'sanitizer',
-            'user_email'           => 'setUserEmail',
-            'user_bio'             => 'sanitizer',
+            'user_name'      => 'setUserName',
+            'user_firstname' => 'sanitizer',
+            'user_lastname'  => 'sanitizer',
+            'user_addname'   => 'sanitizer',
+            'user_phone'     => 'sanitizer',
+            'user_email'     => 'setUserEmail',
+            'user_bio'       => 'sanitizer',
         ];
-        print_P( $_POST );
+//        print_P( $_POST );
         foreach ($callback_function as $fieldname => $functions) {
             if (check_post( $fieldname )) {
                 $value = $userFieldsValidate->$functions( $fieldname );
@@ -305,7 +375,7 @@ class UserFieldsInput {
         }
 
         // Set password
-        if (check_post('user_password1')) {
+        if (check_post( 'user_password1' )) {
             if ($pass = $userFieldsValidate->setPassword()) {
                 if (count( $pass ) === 3) {
                     list( $this->data['user_algo'], $this->data['user_salt'], $this->data['user_password'] ) = $pass;
@@ -314,7 +384,7 @@ class UserFieldsInput {
         }
 
         // Set admin password
-        if (check_post('user_admin_password1')) {
+        if (check_post( 'user_admin_password1' )) {
             if ($admin_pass = $userFieldsValidate->setAdminPassword()) {
                 if (count( $admin_pass ) === 3) {
                     list( $this->data['user_admin_algo'], $this->data['user_admin_salt'], $this->data['user_admin_password'] ) = $admin_pass;
@@ -335,8 +405,8 @@ class UserFieldsInput {
             }
         }
 
-        print_p($_input);
-        print_p( $this->data );
+//        print_p($_input);
+//        print_p( $this->data );
 
         // id request spoofing request
         if ((iADMIN && checkrights( 'M' )) ||
@@ -423,7 +493,7 @@ class UserFieldsInput {
         $quantum->setPluginLocaleFolder( LOCALE . LOCALESET . "user_fields/" );
         $quantum->loadFields();
         $quantum->loadFieldCats();
-        $quantum->setCallbackData( $this->userData );
+        $quantum->setCallbackData( $this->data );
 
         return $quantum->returnFieldsInput( DB_USERS, 'user_id' );
     }

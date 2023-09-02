@@ -368,65 +368,63 @@ function form_textarea( $input_name, $label = '', $input_value = '', array $opti
 
     list( $options['error_class'], $options['error_text'] ) = form_errors( $options );
 
-
     if ($options['type'] == 'html' or $options['type'] == 'bbcode') {
 
         // Load editor plugin
         if (!defined('TEXT_EDITOR')) {
             define('TEXT_EDITOR', true);
             add_to_footer('<script src="'.INCLUDES.'jquery/texteditor.min.js"></script>');
-
         }
 
         // Preview buttons
         if ($options['preview']) {
             $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='far fa-eye m-r-10'></i><span class='preview-text'>" . $locale['preview'] . "</span></span></button>";
             add_to_jquery( "
-        $(document).on('click', '[data-action=\"preview\"]', function(e) {
-            e.preventDefault();
-            let preview_tab = $('#prw-" . $options['input_id'] . "'),
-            editor_tab = $('#txt-" . $options['input_id'] . "'),
-            placeholder = $(this).find('.preview-text');
+            $(document).on('click', '[data-action=\"preview\"]', function(e) {
+                e.preventDefault();
+                let preview_tab = $('#prw-" . $options['input_id'] . "'),
+                editor_tab = $('#txt-" . $options['input_id'] . "'),
+                placeholder = $(this).find('.preview-text');
 
-            if ( editor_tab.is(':visible') ) {
-                $(this).addClass('active');
-                placeholder.text('Hide Preview');
-
-                let text = $('#" . $options['input_id'] . "').val(),
-                format = '" . ($options['type'] == "bbcode" ? 'bbcode' : 'html') . "',
-                data = {
-                    " . (defined( 'ADMIN_PANEL' ) ? "'mode': 'admin', " : "") . "
-                    'text' : text,
-                    'editor' : format,
-                    'url' : '" . $_SERVER['REQUEST_URI'] . "',
-                    'form_id' : 'prw-" . $options['form_name'] . "',
-                    'fusion_token' : '" . fusion_get_token( "prw-" . $options['form_name'], 30 ) . "'
-                },
-                sendData = $(this).closest('form').serialize() + '&' + $.param(data);
-
-                $.ajax({
-                    url: '" . FUSION_ROOT . INCLUDES . "dynamics/assets/preview/preview.ajax.php',
-                    type: 'POST',
-                    dataType: 'html',
-                    data : sendData,
-                    success: function(result) {
-                        console.log(result);
-                        preview_tab.html(result).addClass('in active');
-                        editor_tab.removeClass('in active');
-
+                if ( editor_tab.is(':visible') ) {
+                    $(this).addClass('active');
+                    placeholder.text('Hide Preview');
+    
+                    let text = $('#" . $options['input_id'] . "').val(),
+                    format = '" . ($options['type'] == "bbcode" ? 'bbcode' : 'html') . "',
+                    data = {
+                        " . (defined( 'ADMIN_PANEL' ) ? "'mode': 'admin', " : "") . "
+                        'text' : text,
+                        'editor' : format,
+                        'url' : '" . $_SERVER['REQUEST_URI'] . "',
+                        'form_id' : 'prw-" . $options['form_name'] . "',
+                        'fusion_token' : '" . fusion_get_token( "prw-" . $options['form_name'], 30 ) . "'
                     },
-                    error: function(result) {
-                        alert('" . $locale['error_preview'] . "' + '\\n" . $locale['error_preview_text'] . "');
-                    }
-                });
-
-            } else {
-                $(this).removeClass('active');
-                placeholder.text('Preview');
-                preview_tab.removeClass('in active');
-                editor_tab.addClass('in active');
-            }
-        });
+                    sendData = $(this).closest('form').serialize() + '&' + $.param(data);
+    
+                    $.ajax({
+                        url: '" . FUSION_ROOT . INCLUDES . "dynamics/assets/preview/preview.ajax.php',
+                        type: 'POST',
+                        dataType: 'html',
+                        data : sendData,
+                        success: function(result) {
+                            console.log(result);
+                            preview_tab.html(result).addClass('in active');
+                            editor_tab.removeClass('in active');
+    
+                        },
+                        error: function(result) {
+                            alert('" . $locale['error_preview'] . "' + '\\n" . $locale['error_preview_text'] . "');
+                        }
+                    });
+    
+                } else {
+                    $(this).removeClass('active');
+                    placeholder.text('Preview');
+                    preview_tab.removeClass('in active');
+                    editor_tab.addClass('in active');
+                }
+            });
         " );
         }
 

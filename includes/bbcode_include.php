@@ -28,7 +28,7 @@ defined( 'IN_FUSION' ) || exit;
  *
  * @return string
  */
-function display_bbcodes( $width, $textarea_name = "message", $inputform_name = "inputform", $selected = "" ) {
+function display_bbcodes( $width, $textarea_name = "message", $inputform_name = "", $selected = "" ) {
 
     $bbcode_cache = cache_bbcode();
     $sel_bbcodes = '';
@@ -39,7 +39,6 @@ function display_bbcodes( $width, $textarea_name = "message", $inputform_name = 
     $bbcodes = "";
 
     foreach ($bbcode_cache as $bbcode) {
-
         $locale_file = '';
         if (is_file( LOCALE . LOCALESET . "bbcodes/" . $bbcode . ".php" )) {
             $locale_file = LOCALE . LOCALESET . "bbcodes/" . $bbcode . ".php";
@@ -55,9 +54,9 @@ function display_bbcodes( $width, $textarea_name = "message", $inputform_name = 
     foreach ($bbcode_cache as $bbcode) {
         $locale = fusion_get_locale();
         if ($selected && in_array( $bbcode, $sel_bbcodes )) {
-            include(INCLUDES . "bbcodes/" . $bbcode . "_bbcode_include_var.php");
+            include(INCLUDES . 'bbcodes/' . $bbcode . '_bbcode_include_var.php');
         } else if (!$selected) {
-            include(INCLUDES . "bbcodes/" . $bbcode . "_bbcode_include_var.php");
+            include(INCLUDES . 'bbcodes/' . $bbcode . '_bbcode_include_var.php');
         }
     }
 
@@ -92,17 +91,16 @@ function display_bbcodes( $width, $textarea_name = "message", $inputform_name = 
             }
         }
 
-
         // these can become faster
         if (isset( $bbdata['onclick'] ) && $bbdata['onclick'] != "") {
             $onclick = $bbdata['onclick'];
         } else {
+
             $onclick = "insertText('" . $textarea_name . "','" . (!empty( $bbdata['bbcode_start'] ) ? $bbdata['bbcode_start'] : '') . "','" . $inputform_name . "');return false;";
 
             if (isset( $bbdata['bbcode_end'] ) && $bbdata['bbcode_end'] != "") {
-                $onclick = "addText('" . $textarea_name . "','" . $bbdata['bbcode_start'] . "','" . $bbdata['bbcode_end'] . "','" . $inputform_name . "');return false;";
+                $onclick = "addText('" . $textarea_name . "','" . $bbdata['bbcode_start'] . "','" . $bbdata['bbcode_end'] . "');return false;";
             }
-
         }
 
         $onmouseover = "";
@@ -121,7 +119,7 @@ function display_bbcodes( $width, $textarea_name = "message", $inputform_name = 
         $dropdown_caret = '';
         $dropdown_bbcode_end = '';
         if (array_key_exists( 'dropdown', $bbdata ) && $bbdata['dropdown'] == TRUE) {
-            $dropdown = 'data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"';
+            $dropdown = 'data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"';
             $dropdown_caret = '<i class="fas fa-caret-down m-l-5"></i>';
             $bbcodes .= '<div class="dropdown display-inline-block">';
             $dropdown_bbcodes = '</div>';
@@ -140,11 +138,8 @@ function display_bbcodes( $width, $textarea_name = "message", $inputform_name = 
                 1 ) != "!" && isset( $input_content ) ?
                 "<button type='button' class='btn btn-sm btn-default button' " . $id . " onclick=\"" . $onclick . "\" " . $onmouseover . " " . $onmouseout . " title='" . $bbdata['description'] . "' aria-label='" . $bbdata['description'] . "' aria-disabled='false' aria-pressed='false' " . $dropdown . "/>\n" . $input_content . $dropdown_caret . "\n</button>\n<span class='sr-only'>" . $bbdata['description'] . "</span>\n" : "";
         } else {
-            $bbcodes .= substr( $bbdata['value'],
-                0,
-                1 ) != "!" ? "<input " . $type . " class='btn btn-sm btn-default button' " . $id . " onclick=\"" . $onclick . "\" " . $onmouseover . " " . $onmouseout . " title='" . $bbdata['description'] . "' aria-label='" . $bbdata['description'] . "' aria-disabled='false' aria-pressed='false' " . $dropdown . "/>\n<span class='sr-only'>" . $bbdata['description'] . "</span>\n" : "";
+            $bbcodes .= substr( $bbdata['value'],0, 1 ) != "!" ? "<input " . $type . " class='btn btn-sm btn-default button' " . $id . " onclick=\"" . $onclick . "\" " . $onmouseover . " " . $onmouseout . " title='" . $bbdata['description'] . "' aria-label='" . $bbdata['description'] . "' aria-disabled='false' aria-pressed='false' " . $dropdown . "/>\n<span class='sr-only'>" . $bbdata['description'] . "</span>\n" : "";
         }
-
 
         if (isset( $bbdata['dropdown'] ) && $bbdata['dropdown'] == TRUE) {
             $dropdown_tag = "div";

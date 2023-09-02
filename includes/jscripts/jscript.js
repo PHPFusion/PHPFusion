@@ -21,7 +21,7 @@
  */
 function flipBox(boxname) {
     if (document.images["b_" + boxname].src.indexOf("_on") === -1) {
-        var a = document.images["b_" + boxname].src.replace("_off", "_on");
+        let a = document.images["b_" + boxname].src.replace("_off", "_on");
         document.getElementById("box_" + boxname).style.display = "none";
         if (document.getElementById("box_" + boxname + "_diff")) {
             document.getElementById("box_" + boxname + "_diff").style.display = "block"
@@ -29,7 +29,7 @@ function flipBox(boxname) {
         document.images["b_" + boxname].src = a;
         document.cookie = "fusion_box_" + boxname + "= none";
     } else {
-        var a = document.images["b_" + boxname].src.replace("_on", "_off");
+        let a = document.images["b_" + boxname].src.replace("_on", "_off");
         document.getElementById("box_" + boxname).style.display = ""; //removed 'block'
         if (document.getElementById("box_" + boxname + "_diff")) {
             document.getElementById("box_" + boxname + "_diff").style.display = "none"
@@ -47,7 +47,7 @@ function flipBox(boxname) {
  */
 $.fn.trim_text = function () {
     return this.each(function () {
-        var length = $(this).data("trim-text"), newtext, dots;
+        let length = $(this).data("trim-text"), newtext, dots;
 
         dots = "";
         if ($(this).text().length > length) dots = "...";
@@ -62,9 +62,9 @@ $.fn.trim_text = function () {
  * @param hash - ID only
  */
 function scrollTo(hash) {
-    var hashDOM = $('#' + hash);
+    let hashDOM = $('#' + hash);
     if (hashDOM.length) {
-        var scrollNav = hashDOM.offset().top;
+        let scrollNav = hashDOM.offset().top;
         $(document.body).animate({'scrollTop': scrollNav - hashDOM.outerHeight(true)}, 600);
     }
 }
@@ -75,7 +75,7 @@ function scrollTo(hash) {
  * @param target - # or .class element to copy to
  */
 function copyWidth(source, target) {
-    var width = $(source).width();
+    let width = $(source).width();
     $(target).width(width);
 }
 
@@ -98,21 +98,26 @@ function decodeEntities(encodedString) {
  * @param text2
  * @param formname
  */
-function addText(textarea, text1, text2, formname) {
-    textarea = textarea === undefined ? "message" : textarea;
-    formname = formname === undefined ? "inputform" : formname;
+let addText = function (textarea, text1, text2, formname) {
 
-    var element = document.forms[formname].elements[textarea];
+    textarea = textarea === undefined ? "message" : textarea;
+
+    if (formname === undefined) {
+        let txtarea = $('textarea[name="'+textarea+'"]');
+        formname = txtarea.closest("form").attr("name");
+    }
+
+    let element = document.forms[formname].elements[textarea];
 
     element.focus();
+
     if (document.selection) {
-        var c = document.selection.createRange();
+        let c = document.selection.createRange();
         c.text = text1 + c.text + text2;
         return false;
     } else {
         if (element.setSelectionRange) {
-            var b = element.selectionStart,
-                g = element.selectionEnd;
+            let b = element.selectionStart, g = element.selectionEnd;
             element.value = element.value.substring(0, b) + text1 + element.value.substring(b, g) + text2 + element.value.substring(g);
             element.setSelectionRange(b + text1.length, g + text1.length);
             element.focus();
@@ -139,12 +144,12 @@ function insertText(f, h, e) {
         document.selection.createRange().duplicate().text = h
     } else {
         if ((typeof document.forms[e].elements[f].selectionStart) != "undefined") {
-            var a = document.forms[e].elements[f];
-            var g = a.selectionEnd;
-            var d = a.value.length;
-            var c = a.value.substring(0, g);
-            var i = a.value.substring(g, d);
-            var b = a.scrollTop;
+            let a = document.forms[e].elements[f];
+            let g = a.selectionEnd;
+            let d = a.value.length;
+            let c = a.value.substring(0, g);
+            let i = a.value.substring(g, d);
+            let b = a.scrollTop;
             a.value = c + h + i;
             a.selectionStart = c.length + h.length;
             a.selectionEnd = c.length + h.length;
@@ -166,7 +171,7 @@ function show_hide(a) {
 }
 
 /*
-Variations to show_hide, in the form of a sliding action
+letiations to show_hide, in the form of a sliding action
  */
 function slide_hide(a) {
     $('#' + a).slideToggle();
@@ -180,15 +185,15 @@ function slide_hide(a) {
  */
 function getStyle(c, b) {
     if (typeof c == "string") {
-        var a = document.getElementById(c)
+        let a = document.getElementById(c)
     } else {
-        var a = c
+        let a = c
     }
     if (a.getComputedStyle()) {
-        var d = a.getComputedStyle()[b];
+        let d = a.getComputedStyle()[b];
     } else {
         if (window.getComputedStyle) {
-            var d = document.defaultView.getComputedStyle(a, null).getPropertyValue(b)
+            let d = document.defaultView.getComputedStyle(a, null).getPropertyValue(b)
         }
     }
 
@@ -221,10 +226,10 @@ function getposOffset(a, d) {
  */
 function overlay(e, d, a) {
     if (document.getElementById) {
-        var c = document.getElementById(d);
+        let c = document.getElementById(d);
         c.style.display = (c.style.display !== "block") ? "block" : "none";
-        var b = getposOffset(e, "left") + ((typeof a != "undefined" && a.indexOf("right") != -1) ? -(c.offsetWidth - e.offsetWidth) : 0);
-        var f = getposOffset(e, "top") + ((typeof a != "undefined" && a.indexOf("bottom") != -1) ? e.offsetHeight : 0);
+        let b = getposOffset(e, "left") + ((typeof a != "undefined" && a.indexOf("right") != -1) ? -(c.offsetWidth - e.offsetWidth) : 0);
+        let f = getposOffset(e, "top") + ((typeof a != "undefined" && a.indexOf("bottom") != -1) ? e.offsetHeight : 0);
         c.style.left = b + "px";
         c.style.top = f + "px";
         return false
@@ -272,8 +277,8 @@ function OpenWindow(d, c, a, b) {
  * @returns {boolean}
  */
 function resize_forum_imgs() {
-    var f;
-    var e;
+    let f;
+    let e;
     if (self.innerWidth) {
         e = self.innerWidth
     } else {
@@ -298,14 +303,14 @@ function resize_forum_imgs() {
             }
         }
     }
-    for (var c = 0; c < document.images.length; c++) {
-        var b = document.images[c];
+    for (let c = 0; c < document.images.length; c++) {
+        let b = document.images[c];
         if (b.className !== "forum-img") {
             continue
         }
-        var j = b.height;
-        var a = b.width;
-        var d = false;
+        let j = b.height;
+        let a = b.width;
+        let d = false;
         if (a <= j) {
             if (j > f) {
                 b.height = f;
@@ -319,8 +324,8 @@ function resize_forum_imgs() {
                 d = true
             }
         }
-        var h = b.parentNode;
-        var g = h.parentNode;
+        let h = b.parentNode;
+        let g = h.parentNode;
         if (h.className !== "forum-img-wrapper") {
             continue
         }

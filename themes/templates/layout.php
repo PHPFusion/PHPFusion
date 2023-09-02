@@ -140,9 +140,6 @@ if (!defined( 'NO_DEFAULT_CSS' )) {
     echo "<link rel='stylesheet' href='" . THEMES . "templates/default.min.css?v=" . filemtime( THEMES . 'templates/default.min.css' ) . "'>\n";
 }
 
-if (!defined( 'PF_FONT' ) || (defined( 'PF_FONT' ) && PF_FONT == TRUE)) {
-    echo "<link rel='stylesheet' href='" . INCLUDES . "fonts/PHPFusion/font.min.css?v2'>\n";
-}
 // Core CSS loading
 $core_css_files = fusion_filter_hook( 'fusion_core_styles' );
 if (is_array( $core_css_files )) {

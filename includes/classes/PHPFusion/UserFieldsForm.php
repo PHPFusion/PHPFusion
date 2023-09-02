@@ -49,17 +49,37 @@ class UserFieldsForm {
 
         $locale = fusion_get_locale();
 
+        $settings = fusion_get_settings();
+
+        $password_strength[] = sprintf($locale['u147'], (int) $settings['password_length']);
+        if ($settings['password_char'] or $settings['password_num'] or $settings['password_case']) {
+            $strength_test = [];
+            if ($settings['password_case']) {
+                $strength_test[] = $locale['u147b'];
+            }
+            if ($settings['password_num']) {
+                $strength_test[] = $locale['u147c'];
+            }
+            if ($settings['password_char']) {
+                $strength_test[] = $locale['u147d'];
+            }
+            $password_strength[] = sprintf($locale['u147a'], format_sentence($strength_test));
+        }
+        $password_tip = format_sentence($password_strength);
+
+
         if ($this->userFields->registration || $this->userFields->moderation) {
 
             return form_text( 'user_password1', $locale['u134a'], '', [
-                    'type'             => 'password',
-                    'autocomplete_off' => TRUE,
-                    'inline'           => $this->userFields->inputInline,
-                    'max_length'       => 64,
-                    'error_text'       => $locale['u134'] . $locale['u143a'],
-                    'required'         => !$this->userFields->moderation,
-                    'tip'              => $locale['u147'],
-                    'class'            => 'm-b-15'
+                    'type'              => 'password',
+                    'autocomplete_off'  => TRUE,
+                    'inline'            => $this->userFields->inputInline,
+                    'max_length'        => 64,
+                    'error_text'        => $locale['u134'] . $locale['u143a'],
+                    'required'          => !$this->userFields->moderation,
+                    'password_strength' => TRUE,
+                    'ext_tip'           => $password_tip,
+                    'class'             => 'm-b-15'
                 ] ) .
                 form_text( 'user_password2', $locale['u134b'], '', [
                     'type'             => 'password',
@@ -100,6 +120,7 @@ class UserFieldsForm {
             ] )
 
             . form_hidden( 'user_hash', '', $this->userFields->userData['user_password'] );
+
 
     }
 
@@ -292,7 +313,7 @@ class UserFieldsForm {
 
         $locale = fusion_get_locale();
 
-        if ($this->userFields->displayValidation == 1 && !defined( 'ADMIN_PANEL' )) {
+        if ($this->userFields->displayValidation == 1 && $this->userFields->moderation == 0) {
 
             $_CAPTCHA_HIDE_INPUT = FALSE;
 
@@ -331,50 +352,51 @@ class UserFieldsForm {
      * @return string
      */
     public function termInput() {
-
+        $settings = fusion_get_settings();
         $locale = fusion_get_locale();
+
         if ($this->userFields->displayTerms == 1) {
-            $agreement = strtr( $locale['u193'], [
-                    '[LINK]'  => "<a href='" . BASEDIR . "print.php?type=T' id='license_agreement'><strong>",
-                    '[/LINK]' => "</strong></a>"
-                ]
-            );
 
-            $modal = openmodal( 'license_agreement', $locale['u192'], ['button_id' => 'license_agreement'] );
-            $modal .= parse_text( $this->userFields->parseLabel( fusion_get_settings( 'license_agreement' ) ) );
-            $modal_content = '<p class="pull-left">' . $locale['u193a'] . ' ' . ucfirst( showdate( 'shortdate', fusion_get_settings( 'license_lastupdate' ) ) ) . '</p>';
-            $modal_content .= '<button type="button" id="agree" class="btn btn-success" data-dismiss="modal">' . $locale['u193b'] . '</button>';
-            $modal .= modalfooter( $modal_content, TRUE );
-            $modal .= closemodal();
+            $policies[] = '<a href="' . BASEDIR . 'print.php?type=ups" target="_blank" id="license_agreement">' . $locale['u192'] . '</a>';
 
-            add_to_footer( $modal );
+            if ($settings['privacy_policy']) {
+                $policies[] = '<a href="' . BASEDIR . 'print.php?type=pps" target="_blank" id="privacy_policy">' . $locale['u192a'] . '</a>';
+            }
 
-            add_to_jquery( '
-            $("#agree").on("click", function() {
-                $("#register").attr("disabled", false).removeClass("disabled");
-                $("#agreement").attr("checked", true);
+            if ($settings['cookie_policy']) {
+                $policies[] = '<a href="' . BASEDIR . 'print.php?type=cps" target="_blank" id="cookie_policy">' . $locale['u192b'] . '</a>';
+            }
+
+//            $modal = openmodal( 'license_agreement', $locale['u192'], ['button_id' => 'license_agreement'] );
+//            $modal .= parse_text( $this->userFields->parseLabel( fusion_get_settings( 'license_agreement' ) ) );
+//            $modal_content = '<p class="pull-left">' . $locale['u193a'] . ' ' . ucfirst( showdate( 'shortdate', fusion_get_settings( 'license_lastupdate' ) ) ) . '</p>';
+//            $modal_content .= form_button( 'dismiss', $locale['u193b'], 'dimiss', ['data' => ['dismiss' => 'modal'], 'class' => 'btn-success', 'id' => 'agree'] );
+//            $modal .= modalfooter( $modal_content, TRUE );
+//            $modal .= closemodal();
+//            add_to_footer( $modal );
+            /*
+             *             // agree modal
+            var regBtn = $('#register');
+            $('#agree').on('click', function() {
+                $('#register').attr('disabled', false).removeClass('disabled');
+                $('#agreement').attr('checked', true);
             });
-            ' );
-
-            $html = "<div class='form-group clearfix'>";
-            $html .= "<label class='control-label col-xs-12 col-sm-3 p-l-0'>" . $locale['u192'] . "</label>";
-            $html .= "<div class='col-xs-12 col-sm-9'>\n";
-            $html .= form_checkbox( 'agreement', $agreement, '', ["required" => TRUE, "reverse_label" => TRUE] );
-            $html .= "</div>\n</div>\n";
+             */
 
             add_to_jquery( "
-            $('#agreement').bind('click', function() {
-                var regBtn = $('#register');
+            // agree checkbox
+             regBtn.attr('disabled', true).addClass('disabled');            
+            $('#agreement').on('click', function() {                
                 if ($(this).is(':checked')) {
                     regBtn.attr('disabled', false).removeClass('disabled');
                 } else {
-                    regBtn.attr('disabled', true).addClass('disabled');
-                }
-            });
+                    regBtn.attr('disabled', true).addClass('disabled');       
+                }        
             });" );
 
-            return $html;
+            return form_checkbox( 'agreement', sprintf( $locale['u193'], format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
         }
+
         return '';
     }
 
@@ -389,12 +411,13 @@ class UserFieldsForm {
 
 //        $html = (!$this->userFields->skipCurrentPass) ? form_hidden( 'user_hash', '', $this->userFields->userData['user_password'] ) : '';
 
-        return form_hidden( $this->userFields->postName, '', 'submit' ) .
-            form_button( $this->userFields->postName . '_btn', $this->userFields->postValue, 'submit',
-                [
+        return
+            form_hidden( $this->userFields->postName, '', 'submit' ) .
+            form_button( $this->userFields->postName . '_btn', $this->userFields->postValue, 'submit', [
                     "deactivate" => $disabled,
                     "class"      => $this->userFields->options['btn_post_class'] ?? 'btn-primary'
-                ] );
+                ]
+            );
 
     }
 

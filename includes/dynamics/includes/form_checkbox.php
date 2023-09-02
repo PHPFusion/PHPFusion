@@ -116,14 +116,13 @@ function form_checkbox( $input_name, $label = '', $input_value = '0', array $opt
         'delimiter'  => $options['delimiter'],
     ] );
 
-
     ksort( $options );
 
     return fusion_get_template( 'form_inputs', [
-        "input_name"    => $input_name,
-        "input_label"   => $label,
-        "input_value"   => $options['priority_value'] ?? $input_value,
-        "input_options" => $options,
+        'input_name'    => $input_name,
+        'input_label'   => $label,
+        'input_value'   => $options['priority_value'] ?? $input_value,
+        'input_options' => $options,
     ] );
 
 }

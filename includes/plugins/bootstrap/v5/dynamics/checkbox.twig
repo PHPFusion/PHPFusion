@@ -33,9 +33,9 @@
             {% set input_class = 'pull-right' %}
         {% endif %}
 
-        <div class="{{ input_class }}">
-            <input name="{{ input_name }}" id="{{ options['input_id'] }}" class="m-0 va" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties) }}>
-        </div>
+{#        <div class="{{ input_class }}">#}
+            <input name="{{ input_name }}" id="{{ options['input_id'] }}" class="form-check-input" value="{{ options['value'] }}" type="{{ options['type'] }}"{{ whitespace(checkbox_input_properties) }}>
+{#        </div>#}
 
     {% endif %}
 

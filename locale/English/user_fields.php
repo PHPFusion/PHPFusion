@@ -99,7 +99,15 @@ $locale['u144'] = "New admin password";
 $locale['u144a'] = "Current Admin Password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
-$locale['u147'] = "Password must be between 8 and 64 chars long.<br/>Allowed symbols are a-z, 0-9 and @!#$%&/()=-_?+*.,:;";
+
+$locale['u147'] = 'Min. length %d chars';
+$locale['u147a'] = 'must contain %s';
+$locale['u147b'] = 'upper and lower case char';
+$locale['u147c'] = 'a number';
+$locale['u147d'] = 'a special char';
+
+
+
 $locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";
@@ -144,9 +152,14 @@ $locale['u186'] = "Click Browse to upload an image";
 // Captcha and terms
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
-$locale['u192'] = "Terms of Agreement";
-$locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
+
+$locale['u192'] = "User Agreement";
+$locale['u192a'] = "Privacy Policy";
+$locale['u192b'] = "Cookie Policy";
+$locale['u193'] = "By checking this, you agree to the [SITENAME] %s";
+
 $locale['u193a'] = "Updated";
+
 $locale['u193b'] = "I agree";
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";

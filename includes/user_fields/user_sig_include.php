@@ -21,7 +21,7 @@ defined('IN_FUSION') || exit;
 if ($profile_method == "input") {
     require_once INCLUDES."bbcode_include.php";
 
-    $options += ["bbcode" => TRUE, "inline" => TRUE, 'form_name' => 'userfieldsform'];
+    $options += ["bbcode" => TRUE, "inline" => TRUE];
 
     $user_fields = form_textarea('user_sig', $locale['uf_sig'], $field_value, $options);
 

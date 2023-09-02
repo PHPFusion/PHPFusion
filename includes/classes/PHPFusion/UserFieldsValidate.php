@@ -141,6 +141,9 @@ class UserFieldsValidate {
 
         if ($this->_userEmail != $this->userFieldsInput->userData['user_email']) {
 
+            /**
+             * Checks for valid password requirements
+             */
             // Password to change email address
             if ($this->userFieldsInput->moderation && (iADMIN && checkrights( 'M' ))) {
                 // Skips checking password
@@ -158,13 +161,13 @@ class UserFieldsValidate {
                     $passAuth->currentSalt = $this->userFieldsInput->userData['user_salt'];
                     $passAuth->currentPasswordHash = $this->userFieldsInput->userData['user_password'];
 
-                    $passAuth->currentPassCheckLength = 1;          // add settings
-                    $passAuth->currentPassCheckCase = FALSE;        // add settings
-                    $passAuth->currentPassCheckNum = FALSE;         // add settings
-                    $passAuth->currentPassCheckSpecialchar = FALSE; // add settings
+                    $passAuth->currentPassCheckLength = $settings['password_length'];
+                    $passAuth->currentPassCheckSpecialchar = $settings['password_char'];
+                    $passAuth->currentPassCheckNum = $settings['password_num'];;
+                    $passAuth->currentPassCheckCase = $settings['password_case'];
 
                     if ($passAuth->isValidCurrentPassword()) {
-                        $this->_isValidCurrentPassword = 1;
+                        $this->_isValidCurrentPassword = TRUE;
                     } else {
                         fusion_stop( $passAuth->getError() );
                         Defender::setInputError( 'user_email' );
@@ -173,7 +176,6 @@ class UserFieldsValidate {
                 }
             }
 
-            // Require user password for email change
             if ($this->_isValidCurrentPassword || $this->userFieldsInput->_method == 'validate_insert') {
 
                 // Require a valid email account
@@ -190,9 +192,9 @@ class UserFieldsValidate {
 
                     if ($email_active == 0 && $email_inactive == 0) {
 
-                        if ($settings['email_verification'] == 1 && !iSUPERADMIN) {
+                        if ($this->userFieldsInput->emailVerification && !$this->userFieldsInput->_method == 'validate_update' && !iSUPERADMIN) {
 
-                            $this->verifyNewEmail();
+                            $this->userFieldsInput->verifyNewEmail();
 
                         } else {
 
@@ -219,36 +221,6 @@ class UserFieldsValidate {
         return $this->userFieldsInput->userData['user_email'];
     }
 
-    /**
-     * Handle new email verification procedures
-     */
-    private function verifyNewEmail() {
-        $settings = fusion_get_settings();
-        $userdata = fusion_get_userdata();
-        $locale = fusion_get_locale();
-        require_once INCLUDES . "sendmail_include.php";
-        mt_srand( (double)microtime() * 1000000 );
-        $salt = "";
-        for ($i = 0; $i <= 10; $i++) {
-            $salt .= chr( rand( 97, 122 ) );
-        }
-        $user_code = md5( $this->_userEmail . $salt );
-        $email_verify_link = $settings['siteurl'] . "edit_profile.php?code=" . $user_code;
-        $mailbody = str_replace( "[EMAIL_VERIFY_LINK]", $email_verify_link, $locale['u203'] );
-        $mailbody = str_replace( "[SITENAME]", $settings['sitename'], $mailbody );
-        $mailbody = str_replace( "[SITEUSERNAME]", $settings['siteusername'], $mailbody );
-        $mailbody = str_replace( "[USER_NAME]", $userdata['user_name'], $mailbody );
-        $mailSubject = str_replace( "[SITENAME]", $settings['sitename'], $locale['u202'] );
-        sendemail( $this->_userName, $this->_userEmail, $settings['siteusername'], $settings['siteemail'], $mailSubject, $mailbody );
-        addnotice( 'warning', strtr( $locale['u200'], ['(%s)' => $this->_userEmail] ) );
-        dbquery( "DELETE FROM " . DB_EMAIL_VERIFY . " WHERE user_id=:uid", [":uid" => (int)$this->userFieldsInput->userData['user_id']] );
-        dbquery( "INSERT INTO " . DB_EMAIL_VERIFY . " (user_id, user_code, user_email, user_datestamp) VALUES (':uid', ':code', ':email', ':time')", [
-            ':uid'   => (int)$this->userFieldsInput->userData['user_id'],
-            ':code'  => $user_code,
-            ':email' => $this->_userEmail,
-            ':time'  => time()
-        ] );
-    }
 
     /**
      * @param string $field

@@ -16,8 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-//const BOOTSTRAP = 5;
-const BULMA = 1;
+const BOOTSTRAP = 5;
 const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
 
 // Autoload template

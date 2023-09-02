@@ -27,13 +27,19 @@ namespace PHPFusion;
 class UserFields extends QuantumFields {
 
     public $userData = [
-        "user_id"             => '',
-        "user_name"           => '',
-        "user_password"       => '',
-        "user_admin_password" => '',
-        "user_email"          => '',
+        'user_id'             => '',
+        'user_name'           => '',
+        'user_firstname'      => '',
+        'user_lastname'       => '',
+        'user_addname'        => '',
+        'user_phone'          => '',
+        'user_hide_phone'     => 1,
+        'user_bio'            => '',
+        'user_password'       => '',
+        'user_admin_password' => '',
+        'user_email'          => '',
         'user_hide_email'     => 1,
-        "user_language"       => LANGUAGE,
+        'user_language'       => LANGUAGE,
         'user_timezone'       => 'Europe/London'
     ];
 
@@ -123,6 +129,7 @@ class UserFields extends QuantumFields {
      * Display Input Fields
      */
     public function displayProfileInput() {
+        $locale = fusion_get_locale();
 
         $this->method = 'input';
 
@@ -152,73 +159,67 @@ class UserFields extends QuantumFields {
 
         $input = new UserFieldsForm( $this );
 
-        if ((get( "section" ) == 1 || !check_get( "section" ))) {
+        $this->info['user_name'] = $input->usernameInputField();
+        $this->info['user_firstname'] = form_text( 'user_firstname', 'First name', $this->userData['user_firstname'], ['inline' => $this->inputInline] );
+        $this->info['user_lastname'] = form_text( 'user_lastname', 'Last name', $this->userData['user_lastname'], ['inline' => $this->inputInline] );
+        $this->info['user_addname'] = form_text( 'user_addname', 'Additional name', $this->userData['user_addname'], ['inline' => $this->inputInline] );
+        $this->info['user_phone'] = form_text( 'user_phone', 'Phone number', $this->userData['user_phone'], ['inline' => $this->inputInline, 'placeholder' => '(678) 3241521'] );
+        $this->info['user_hide_phone'] = $input->phoneHideInputField();
+        $this->info['user_bio'] = form_textarea( 'user_bio', 'Overview', $this->userData['user_bio'], ['inline' => $this->inputInline, 'wordcount' => TRUE, 'maxlength' => 255] );
+        //$this->info['user_password'] = form_para( $locale['u132'], 'password', 'profile_category_name' );
+        $this->info['user_password'] = $input->passwordInputField();
+        //$this->info['user_admin_password'] = $locale['u131'];
+        $this->info['user_admin_password'] = $input->adminpasswordInputField();
+        $this->info['user_email'] = $input->emailInputField();
+        $this->info['user_hide_email'] = $input->emailHideInputField();
+        $this->info['user_avatar'] = $input->avatarInput();
+        $this->info['validate'] = $input->captchaInput();
+        $this->info['terms'] = $input->termInput();
+        $this->info['button'] = $input->renderButton();
 
-            $this->info['user_name'] = $input->usernameInputField();
-            $this->info['user_firstname'] = form_text( 'user_firstname', 'First name', $this->userData['user_firstname'], ['inline' => $this->inputInline] );
-            $this->info['user_lastname'] = form_text( 'user_lastname', 'Last name', $this->userData['user_lastname'], ['inline' => $this->inputInline] );
-            $this->info['user_addname'] = form_text( 'user_addname', 'Additional name', $this->userData['user_addname'], ['inline' => $this->inputInline] );
-            $this->info['user_phone'] = form_text( 'user_phone', 'Phone number', $this->userData['user_phone'], ['inline' => $this->inputInline, 'placeholder' => '(678) 3241521'] );
-            $this->info['user_hide_phone'] = $input->phoneHideInputField();
-            $this->info['user_bio'] = form_textarea( 'user_bio', 'Overview', $this->userData['user_bio'], ['inline' => $this->inputInline, 'wordcount' => TRUE, 'maxlength' => 255] );
-            //$this->info['user_password'] = form_para( $locale['u132'], 'password', 'profile_category_name' );
-            $this->info['user_password'] = $input->passwordInputField();
-            //$this->info['user_admin_password'] = $locale['u131'];
-            $this->info['user_admin_password'] = $input->adminpasswordInputField();
-            $this->info['user_email'] = $input->emailInputField();
-            $this->info['user_hide_email'] = $input->emailHideInputField();
-            $this->info['user_avatar'] = $input->avatarInput();
-            $this->info['validate'] = $input->captchaInput();
-            $this->info['terms'] = $input->termInput();
-            $this->info['button'] = $input->renderButton();
+        // User Password Verification for Email Change
+        // Make a new form.
+        $footer = openmodal( 'verifyPassword', 'Verify password', ['hidden' => TRUE] )
+            . '<p class="small">Your password is required to proceed. Please enter your current password to update your profile.</p>'
+            . form_text( 'user_verify_password', $locale['u135a'], '', ['required' => TRUE, 'type' => 'password', 'autocomplete_off' => TRUE, 'max_length' => 64, 'error_text' => $locale['u133'], 'placeholder' => $locale['u100'],] )
+            . modalfooter( form_button( 'confirm_password', $locale['save_changes'], 'confirm_password', ['id' => 'updateProfilePass', 'class' => 'btn-primary'] ) )
+            . closemodal();
 
-            $locale = fusion_get_locale();
+        add_to_footer( $footer );
 
-            // User Password Verification for Email Change
+        // Port to edit profile.js
+        add_to_jquery( "            
+        var submitCallModal = function(dom) {
+           var form = dom.closest('form'), hashInput = form.find('input[name=\"user_hash\"]');                                   
+            $('button[name=\"" . $this->postName . "_btn\"]').on('click', function(e) {
+               e.preventDefault();
+               $(this).prop('disabled', true);                                    
+               $('#verifyPassword-Modal').modal('show');
+               $('#user_verify_password').on('input propertychange paste', function() {                        
+                    hashInput.val( $(this).val() );                                                
+               });                 
+               $('button[name=\"confirm_password\"]').on('click', function() {
+                    $('#verifyPassword-Modal').modal('hide');
+                    form[0].submit();
+               });                                                    
+            });                           
+        };
+        
+        var email = $('#user_email').val();            
+        $('#user_email').on('input propertychange paste', function() {
+            var requireModal = false;
+            if ($(this).val() != email) {
+                requireModal = true;
+            } else {
+                requireModal = false;
+            }
+            if (requireModal) {
+                // when postname button is clicked, require the modal.                    
+                submitCallModal($(this));
+            }                                     
+        });           
+        " );
 
-            // Make a new form.
-            $footer = openmodal( 'verifyPassword', 'Verify password', ['hidden' => TRUE] )
-                . '<p class="small">Your password is required to proceed. Please enter your current password to update your profile.</p>'
-                . form_text( 'user_verify_password', $locale['u135a'], '', ['required' => TRUE, 'type' => 'password', 'autocomplete_off' => TRUE, 'max_length' => 64, 'error_text' => $locale['u133'], 'placeholder' => $locale['u100'],] )
-                . modalfooter( form_button( 'confirm_password', $locale['save_changes'], 'confirm_password', ['id' => 'updateProfilePass', 'class' => 'btn-primary'] ) )
-                . closemodal();
-
-            add_to_footer( $footer );
-
-            // Port to edit profile.js
-            add_to_jquery( "            
-            var submitCallModal = function(dom) {
-               var form = dom.closest('form'), hashInput = form.find('input[name=\"user_hash\"]');                                   
-                $('button[name=\"" . $this->postName . "_btn\"]').on('click', function(e) {
-                   e.preventDefault();
-                   $(this).prop('disabled', true);                                    
-                   $('#verifyPassword-Modal').modal('show');
-                   $('#user_verify_password').on('input propertychange paste', function() {                        
-                        hashInput.val( $(this).val() );                                                
-                   });                 
-                   $('button[name=\"confirm_password\"]').on('click', function() {
-                        $('#verifyPassword-Modal').modal('hide');
-                        form[0].submit();
-                   });                                                    
-                });                           
-            };
-            
-            var email = $('#user_email').val();            
-            $('#user_email').on('input propertychange paste', function() {
-                var requireModal = false;
-                if ($(this).val() != email) {
-                    requireModal = true;
-                } else {
-                    requireModal = false;
-                }
-                if (requireModal) {
-                    // when postname button is clicked, require the modal.                    
-                    submitCallModal($(this));
-                }                                     
-            });           
-            " );
-
-        }
 
         $this->info = $this->info + $this->getUserFields();
 
@@ -236,12 +237,10 @@ class UserFields extends QuantumFields {
             }
             $this->info['tab_info'] = $tab_title;
         }
-
         /*
          * Template Output
          */
         $this->registration ? display_register_form( $this->info ) : display_profile_form( $this->info );
-
     }
 
     public function getCustomFields() {

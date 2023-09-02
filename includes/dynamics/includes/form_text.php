@@ -151,6 +151,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
         case "password":
             $input_type = "password";
             if ($options['password_toggle'] == TRUE) {
+
                 if (!defined( 'PWTOGGLE' )) {
                     define( 'PWTOGGLE', TRUE );
                     add_to_footer( "<script>function togglePasswordInput(button_id, field_id) {var button=$('#'+button_id);var input=$('#'+field_id);if(input.attr('type')=='password'){input.attr('type','text');button.text('" . $locale['hide'] . "');}else{input.attr('type','password');button.text('" . $locale['show'] . "');}}</script>" );
@@ -163,12 +164,14 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
                 $options['append_value'] = $locale['show'];
                 $options['append_button_name'] = $options['input_id'] . '_pwdToggle';
                 $options['append_button_id'] = $options['input_id'] . '_pwdToggle';
+
                 add_to_jquery( "
-                    $('#" . $options['input_id'] . "_pwdToggle').bind('click', function(e) {
+                    $('#" . $options['input_id'] . "_pwdToggle').on('click', function(e) {
                         togglePasswordInput('" . $options['input_id'] . "_pwdToggle', '" . $options['input_id'] . "');
                     });
                 " );
             }
+
             break;
         default:
             $input_type = "text";
@@ -226,8 +229,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
 
 
         add_to_jquery( "
-            i18next.init({
-            
+            i18next.init({            
                 lng: '" . $locale['password_strength'] . "',resources: {" . $locale['password_strength'] . ": {translation: pwstrength_locale}}
                 
             }, function () {
