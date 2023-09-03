@@ -722,9 +722,30 @@ class CoreTables {
             ], //template_sender_email VARCHAR(100) NOT NULL,
             'template_language'     => [
                 'type'    => 'VARCHAR',
-                'length'  => 50,
+                'length'  => 30,
                 'default' => $localeset
             ] //template_language VARCHAR(50) NOT NULL,
+        ];
+        $table_package['policies'] = [
+            'policy_name'     => [
+                'type'   => 'VARCHAR',
+                'length' => 200,
+                'key'    => 2,
+            ],
+            'policy_content'  => [
+                'type' => 'TEXT',
+            ],
+            'policy_date'     => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'key'      => 2,
+            ],
+            'policy_language' => [
+                'type'    => 'VARCHAR',
+                'length'  => 30,
+                'default' => $localeset
+            ]
         ];
         $table_package['ratings'] = [
             'rating_id'        => [
@@ -1441,7 +1462,13 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 64,
                 'default' => ''
-            ], //user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
+            ],
+            'user_phone'           => [
+                'type'    => 'VARCHAR',
+                'length'  => 30,
+                'key'     => 2,
+                'default' => ''
+            ],
             'user_email'           => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,

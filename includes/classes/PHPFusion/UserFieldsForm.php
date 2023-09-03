@@ -1,4 +1,21 @@
 <?php
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: UserFieldsForm.php
+| Author: Meangczac (Chan)
+| PHPFusion Lead Developer, PHPFusion Core Developer
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 namespace PHPFusion;
 
@@ -394,7 +411,7 @@ class UserFieldsForm {
                 }        
             });" );
 
-            return form_checkbox( 'agreement', sprintf( $locale['u193'], format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
+            return form_checkbox( 'agreement',  sprintf( strtr($locale['u193'], ['[SITENAME]' => $settings['sitename']]), format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
         }
 
         return '';

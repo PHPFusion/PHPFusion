@@ -155,13 +155,14 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
         /**
          * Bind to and from together
          */
-        $bindingJs = "";
+        $bindingJs = '';
+
         if (!empty( $options['join_from_id'] )) {
+
             if (defined( 'BOOTSTRAP' )) {
 
-
-
                 if (BOOTSTRAP == 4) {
+
                     $bindingJs = "
                     $('#" . $options['join_from_id'] . "_datepicker').on('change.datetimepicker', function (e) {
                         $('#" . $options["input_id"] . "_datepicker').datetimepicker('minDate', e.date);
@@ -202,6 +203,7 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
         }
 
         if (defined('BOOTSTRAP')) {
+
             if (BOOTSTRAP < 5) {
                 add_to_jquery( "
                 moment.updateLocale('" . $locale['datepicker'] . "', {
@@ -210,7 +212,7 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
         
                 let " . $options["input_id"] . "_datepicker = $('#" . $options["input_id"] . "_datepicker').datetimepicker({
                     locale: '" . $locale['datepicker'] . "',
-                    " . $dpbuttons . "
+                    " . ($dpbuttons ?? '' ). "
                     allowInputToggle: true,
                     icons: {
                         time: 'fa fa-clock',
@@ -265,8 +267,6 @@ function form_datepicker( $input_name, $label = '', $input_value = '', array $op
 
         }
     }
-
-
 
     ksort( $options );
 

@@ -493,4 +493,10 @@ a.stretched:after {
 .register #registerFrm .row {
   margin: 0;
 }
+.register #registerFrm #agreement + .form-check-label {
+  font-size: 0.8rem;
+  line-height: 1rem;
+  display: block;
+  margin: 0.5rem 0;
+}
 /*# sourceMappingURL=styles.css.map */

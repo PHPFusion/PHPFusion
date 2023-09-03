@@ -402,6 +402,7 @@ a.stretched:after {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
 }
+
 .form-tip {
   font-size: .8rem;
   line-height: 1rem;
@@ -596,7 +597,18 @@ a.stretched:after {
     }
   }
 
-  #registerFrm .row {
-    margin: 0;
+  #registerFrm {
+    .row {
+      margin: 0;
+    }
+
+    #agreement + .form-check-label {
+      font-size: .8rem;
+      line-height: 1rem;
+      display: block;
+      margin: .5rem 0;
+
+    }
   }
+
 }

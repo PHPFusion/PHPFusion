@@ -106,8 +106,6 @@ $locale['u147b'] = 'upper and lower case char';
 $locale['u147c'] = 'a number';
 $locale['u147d'] = 'a special char';
 
-
-
 $locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";
