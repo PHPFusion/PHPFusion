@@ -18,6 +18,7 @@
  */
 body {
   --color: #676a79;
+  --low-emphasis: #00000088;
   --label-color: #000000bf;
   --input-color: #000000bf;
   --input-border-color: #e1e4e6;
@@ -46,6 +47,9 @@ body main {
 }
 body main > .container {
   min-height: 100%;
+}
+body .bold {
+  font-weight: 500;
 }
 body .navbar-brand img {
   max-height: 50px;
@@ -80,9 +84,6 @@ body .navbar-nav li #menu-notifications.dropdown-menu {
 }
 body .navbar-nav li #menu-notifications.dropdown-menu .card {
   border: 0;
-}
-body .input-group .input-group-text {
-  height: 100%;
 }
 h6,
 .h6,
@@ -327,6 +328,17 @@ a.stretched:after {
 .form-group:not(:first-of-type) .form-label {
   margin: 16px 0 4px 0;
 }
+.form-floating > label.form-label {
+  color: var(--emphasis);
+  font-weight: 400;
+}
+.form-check-label {
+  font-weight: 600;
+}
+.form-check-label p {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
 .form-control {
   display: block;
   width: 100%;
@@ -524,8 +536,9 @@ a.stretched:after {
 .register .card-title p,
 .login .card-title p {
   font-weight: 400;
-  color: var(--color);
+  color: var(--header-color);
   font-size: 1rem;
+  margin-top: 0.5rem;
 }
 .register #registerFrm .row,
 .login #registerFrm .row {
@@ -555,7 +568,8 @@ a.stretched:after {
   flex: 0 1 40px;
   text-align: center;
   margin-top: auto;
-  font-size: 0.85rem;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
 }
 .copyright-bottom a {
   font-weight: 600;
@@ -563,5 +577,9 @@ a.stretched:after {
 .copyright-bottom a:hover,
 .copyright-bottom a:focus {
   text-decoration: underline;
+}
+.copyright-bottom .site-policies a {
+  margin-right: 1rem;
+  color: var(--low-emphasis);
 }
 /*# sourceMappingURL=styles.css.map */

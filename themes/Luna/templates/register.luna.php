@@ -16,6 +16,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
+use PHPFusion\Panels;
+
 const INPUT_INLINE = FALSE;
 
 /**
@@ -25,7 +28,7 @@ const INPUT_INLINE = FALSE;
  * @param $info - the array output that is accessible for your custom requirements
  */
 function display_register_form( array $info = [] ) {
-    \PHPFusion\Panels::getInstance()->hideAll();
+    Panels::getInstance()->hideAll();
     $settings = fusion_get_settings();
     $locale = fusion_get_locale();
 
@@ -55,7 +58,7 @@ function display_register_form( array $info = [] ) {
 
 function display_gateway( $info ) {
 
-    \PHPFusion\Panels::getInstance()->hideAll();
+    Panels::getInstance()->hideAll();
 
     $locale = fusion_get_locale();
 

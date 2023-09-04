@@ -20,6 +20,7 @@
 body {
 
   --color: #676a79;
+  --low-emphasis: #00000088;
   --label-color: #000000bf;
   --input-color: #000000bf; //#29292e;
   --input-border-color: #e1e4e6;
@@ -54,6 +55,9 @@ body {
     }
   }
 
+  .bold {
+    font-weight: 500;
+  }
 
   .navbar-brand {
     img {
@@ -107,10 +111,12 @@ body {
   }
 
   .input-group {
-    .input-group-text {
-      height: 100%;
-    }
+    // floating-label conflicts
+    //.input-group-text {
+    //  height: 100%;
+    //}
   }
+
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
@@ -397,6 +403,20 @@ a.stretched:after {
   }
 }
 
+.form-floating > label.form-label {
+  color: var(--emphasis);
+  font-weight: 400;
+}
+
+.form-check-label {
+  font-weight: 600;
+
+  p {
+    font-weight: 400;
+    font-size: .8rem;
+  }
+}
+
 .form-control {
   display: block;
   width: 100%;
@@ -623,8 +643,9 @@ a.stretched:after {
   .card-title {
     p {
       font-weight: 400;
-      color: var(--color);
+      color: var(--header-color);
       font-size: 1rem;
+      margin-top:.5rem;
     }
   }
 
@@ -667,11 +688,21 @@ a.stretched:after {
   flex: 0 1 40px;
   text-align: center;
   margin-top: auto;
-  font-size:.85rem;
+  margin-bottom: 20px;
+  font-size: .8rem;
+
   a {
     font-weight: 600;
+
     &:hover, &:focus {
       text-decoration: underline;
+    }
+  }
+
+  .site-policies {
+    a {
+      margin-right: 1rem;
+      color: var(--low-emphasis);
     }
   }
 }

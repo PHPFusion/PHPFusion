@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\LegalDocs;
+
 const BOOTSTRAP = 5;
 const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
 
@@ -110,9 +112,30 @@ function render_page() {
 
     echo '</div></main>';
 
-    echo '<div class="copyright-bottom">'.showcopyright().'</div>';
-
+    echo '<div class="copyright-bottom"><div class="container"><div class="site-policies">'.showpolicies().'</div><div class="site-copyright">'.showcopyright().'</div></div></div>';
 }
+
+function showpolicies() {
+
+    fusion_get_locale('', LOCALE.LOCALESET.'policies.php');
+
+    $html = '';
+    $policies = LegalDocs::getInstance()->getPolicies(5);
+
+    if (!empty($policies)) {
+        $count = 1;
+        foreach($policies as $key => $name) {
+            if ($count < 6) {
+                $html .= '<a href="'.BASEDIR.'legal.php?type='.$key.'">'.$name.'</a>';
+            } else {
+                break;
+            }
+        }
+    }
+
+    return $html;
+}
+
 
 function opentable( $title = '', $class = '' ) {
     echo '<div class="card mb-4' . whitespace( $class ?? '' ) . '">';

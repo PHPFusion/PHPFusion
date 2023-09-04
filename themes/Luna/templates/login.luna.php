@@ -14,16 +14,16 @@ function display_login_form( $info ) {
 
     } else {
 
-        define('LUNA_BODY_CLASS', 'login');
+        define( 'LUNA_BODY_CLASS', 'login' );
 
 
         echo "<!--login_pre_idx-->";
-        opentable( $locale['global_100'] . '<p class="small">Stay updated on your professional world</p>' );
+        opentable( $locale['global_100'] . '<p class="small">'.$locale['slogan'].'</p>' );
         echo openform( 'loginFrm', 'POST' ) .
-            $info['user_name'] .
-            $info['user_pass'] .
+            '<div class="mb-3">' . $info['user_name'] . '</div>' .
+            '<div class="mb-3">' . $info['user_pass'] . '</div>' .
             $info['remember_me'] .
-            '<p class="my-3 strong">' . $info['forgot_password_link'] . '</p>' .
+            '<p class="my-3 bold">' . $info['forgot_password_link'] . '</p>' .
             $info['login_button'] .
             closeform();
         // Facebook, Google Auth, etc.
@@ -37,7 +37,7 @@ function display_login_form( $info ) {
         }
         closetable();
         echo "<!--login_sub_idx-->";
-        echo '<p class="lreg-link">'.$info['registration_link'].'</p>';
+        echo '<p class="lreg-link">' . $info['registration_link'] . '</p>';
 
 
     }

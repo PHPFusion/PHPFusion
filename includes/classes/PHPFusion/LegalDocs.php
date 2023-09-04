@@ -74,15 +74,22 @@ class LegalDocs {
     /**
      * @return array
      */
-    public function getPolicies() {
+    public function getPolicies( $return_num ) {
 
-        $locale = fusion_get_locale();
+        $_policies_cnt = count( self::$policies );
+        if ($return_num > $_policies_cnt) {
+            $return_num = $_policies_cnt;
+        }
+        $_policies = array_chunk( self::$policies, $return_num );
+        $_policies = $_policies[0];
+        foreach ($_policies as $key => $callback_func) {
+            $data = call_user_func( $callback_func );
+            if (isset( $data['name'] )) {
+                $policies_cache[$key] = $data['name'];
+            }
+        }
 
-        return [
-            'ups' => $locale['pol_200'],
-            'pps' => $locale['pol_300'],
-            'cps' => $locale['pol_400'],
-        ];
+        return $policies_cache ?? [];
     }
 
 
@@ -101,7 +108,7 @@ class LegalDocs {
 
         } else {
             // no content
-
+            redirect( BASEDIR . 'legal.php?type=ups' );
         }
     }
 
@@ -151,6 +158,7 @@ class LegalDocs {
             return [
                 'title'   => $locale['pol_201'] . ' ' . $settings['sitename'],
                 'meta'    => $settings['sitename'] . ' ' . $locale['pol_200'],
+                'name'    => $locale['pol_200'],
                 'date'    => LegalDocs::getDate( $rows['policy_date'] ),
                 'content' => LegalDocs::getContent( $rows['policy_content'] )
             ];
@@ -178,6 +186,7 @@ class LegalDocs {
             return [
                 'title'   => $locale['pol_301'] . ' ' . $settings['sitename'],
                 'meta'    => $settings['sitename'] . ' ' . $locale['pol_300'],
+                'name'    => $locale['pol_300'],
                 'date'    => LegalDocs::getDate( $rows['policy_date'] ),
                 'content' => LegalDocs::getContent( $rows['policy_content'] )
             ];
@@ -205,6 +214,7 @@ class LegalDocs {
             return [
                 'title'   => $locale['pol_401'] . ' ' . $settings['sitename'],
                 'meta'    => $settings['sitename'] . ' ' . $locale['pol_400'],
+                'name'    => $locale['pol_400'],
                 'date'    => LegalDocs::getDate( $rows['policy_date'] ),
                 'content' => LegalDocs::getContent( $rows['policy_content'] )
             ];
@@ -231,6 +241,7 @@ class LegalDocs {
             return [
                 'title'   => $locale['pol_501'] . ' ' . $settings['sitename'],
                 'meta'    => $settings['sitename'] . ' ' . $locale['pol_500'],
+                'name'    => $locale['pol_500'],
                 'date'    => LegalDocs::getDate( $rows['policy_date'] ),
                 'content' => LegalDocs::getContent( $rows['policy_content'] )
             ];
@@ -257,6 +268,7 @@ class LegalDocs {
             return [
                 'title'   => $locale['pol_601'] . ' ' . $settings['sitename'],
                 'meta'    => $settings['sitename'] . ' ' . $locale['pol_600'],
+                'name'    => $locale['pol_600'],
                 'date'    => LegalDocs::getDate( $rows['policy_date'] ),
                 'content' => LegalDocs::getContent( $rows['policy_content'] )
             ];

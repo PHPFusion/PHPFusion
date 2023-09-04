@@ -18,6 +18,10 @@
 
     {% set group_class = 'form-group' %}
 
+    {% if input_options['floating_label'] and input_options['placeholder'] %}
+        {% set group_class = 'form-floating' %}
+    {% endif %}
+
     {# Checkbox extra classes #}
     {% if input_options['template_type'] == 'checkbox' %}
 
@@ -43,7 +47,6 @@
 
     {% endif %}
 
-
     {# Input Label #}
     {% if (input_label) %}
 
@@ -66,13 +69,19 @@
 
         {% set label_dom = '<label for="'~ input_options['input_id'] ~'" class="'~label_class~'"'~whitespace(checkbox_label)~whitespace(checkbox_style)~'>'~ input_options['label_icon'] ~ input_label ~ whitespace(required_mark) ~ whitespace(ext_tip) ~ whitespace(checkbox_tip) ~ '</label>' %}
 
+        {% set input_options = input_options|merge({'label_dom': label_dom}) %}
+
     {% endif %}
 
     <div id="{{ input_options['input_id'] }}-field" class="{{ group_class }}{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
 
         {{ prepend_checkbox_input|raw }}
 
-        {{ (label_dom ~ inline_start)|raw }}
+        {% if (group_class != 'form-floating') %}
+            {{ label_dom|raw }}
+        {% endif %}
+
+        {{ inline_start|raw }}
 
         {{ append_checkbox_input|raw }}
 
@@ -122,5 +131,6 @@
         {% endif %}
 
         {{ inline_end|raw }}
+
     </div>
 {% endif %}
