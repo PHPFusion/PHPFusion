@@ -103,7 +103,7 @@ class UserFieldsInput {
         }
 
         if ($this->validation == 1) {
-            $this->setValidationError();
+            $this->verifyCaptchas();
         }
 
 //        print_p( $this->userData );
@@ -226,7 +226,7 @@ class UserFieldsInput {
     /**
      * Set validation error
      */
-    private function setValidationError() {
+    private function verifyCaptchas() {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
         $_CAPTCHA_IS_VALID = FALSE;
@@ -395,7 +395,7 @@ class UserFieldsInput {
 //        $this->setUserAvatar();
 
         if ($this->validation) {
-            $this->setValidationError();
+            $this->verifyCaptchas();
         }
 
         // this has got problem, they are all jumbled up.

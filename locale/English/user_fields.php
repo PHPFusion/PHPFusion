@@ -150,14 +150,14 @@ $locale['u186'] = "Click Browse to upload an image";
 // Captcha and terms
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
-
 $locale['u193'] = "By checking this, you agree to the [SITENAME] %s";
 
 $locale['u193a'] = "Updated";
-
 $locale['u193b'] = "I agree";
+
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
+
 // E-mail Change Confirmation
 $locale['u200'] = "A verify email has been sent to your new email address (%s). Please check your email.";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
@@ -173,3 +173,5 @@ $locale['u300'] = "Password should contain at least 1 special character";
 $locale['u301'] = "Password should contain at least 1 uppercase and 1 lowercase character";
 $locale['u302'] = "Password should contain at least 1 number";
 $locale['u303'] = "Password should be at least 8 characters long";
+
+$locale['u400'] = "Already on [SITENAME]?";

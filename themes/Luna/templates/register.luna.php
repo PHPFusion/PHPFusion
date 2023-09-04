@@ -3,7 +3,6 @@
 const INPUT_INLINE = FALSE;
 
 
-
 /**
  * Registration Form Template
  * echo output design in compatible with Version 7.xx theme set.
@@ -12,7 +11,9 @@ const INPUT_INLINE = FALSE;
  */
 function display_register_form( array $info = [] ) {
     \PHPFusion\Panels::getInstance()->hideAll();
+    $settings = fusion_get_settings();
     $locale = fusion_get_locale();
+
     echo '<div class="register">';
     echo "<!--HTML--><h2 class='text-center w-100 mt-4 mb-4'>Infuse your web presence with PHPFusion</h2>";
     opentable( '' );
@@ -29,7 +30,8 @@ function display_register_form( array $info = [] ) {
         $info['user_id'] .
         form_button( 'register', $locale['u101'], 'register', ['class' => 'btn-block btn-lg btn-primary'] ) .
         closeform();
-    echo '</div>';
+//    echo '<div class="hr"><span>or</span></div>';
+    echo '<div class="text-center mt-5">' . strtr( $locale['u400'], ['[SITENAME]' => $settings['sitename']] ) . ' <a href="' . BASEDIR . 'login.php">' . $locale['login'] . '</a>';
     echo "<!--register_sub_idx-->";
     closetable();
     echo "<!--//HTML-->";
