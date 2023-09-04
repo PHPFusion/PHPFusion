@@ -177,18 +177,19 @@ class UserFields extends QuantumFields {
         $this->info['terms'] = $input->termInput();
         $this->info['button'] = $input->renderButton();
 
-        // User Password Verification for Email Change
-        // Make a new form.
-        $footer = openmodal( 'verifyPassword', 'Verify password', ['hidden' => TRUE] )
-            . '<p class="small">Your password is required to proceed. Please enter your current password to update your profile.</p>'
-            . form_text( 'user_verify_password', $locale['u135a'], '', ['required' => TRUE, 'type' => 'password', 'autocomplete_off' => TRUE, 'max_length' => 64, 'error_text' => $locale['u133'], 'placeholder' => $locale['u100'],] )
-            . modalfooter( form_button( 'confirm_password', $locale['save_changes'], 'confirm_password', ['id' => 'updateProfilePass', 'class' => 'btn-primary'] ) )
-            . closemodal();
 
-        add_to_footer( $footer );
+        if ($this->method == 'validate_update') {
+            // User Password Verification for Email Change
+            $footer = openmodal( 'verifyPassword', 'Verify password', ['hidden' => TRUE] )
+                . '<p class="small">Your password is required to proceed. Please enter your current password to update your profile.</p>'
+                . form_text( 'user_verify_password', $locale['u135a'], '', ['required' => TRUE, 'type' => 'password', 'autocomplete_off' => TRUE, 'max_length' => 64, 'error_text' => $locale['u133'], 'placeholder' => $locale['u100'],] )
+                . modalfooter( form_button( 'confirm_password', $locale['save_changes'], 'confirm_password', ['id' => 'updateProfilePass', 'class' => 'btn-primary'] ) )
+                . closemodal();
 
-        // Port to edit profile.js
-        add_to_jquery( "            
+            add_to_footer( $footer );
+
+            // Port to edit profile.js
+            add_to_jquery( "            
         var submitCallModal = function(dom) {
            var form = dom.closest('form'), hashInput = form.find('input[name=\"user_hash\"]');                                   
             $('button[name=\"" . $this->postName . "_btn\"]').on('click', function(e) {
@@ -219,7 +220,7 @@ class UserFields extends QuantumFields {
             }                                     
         });           
         " );
-
+        }
 
         $this->info = $this->info + $this->getUserFields();
 

@@ -69,9 +69,9 @@ $locale['gateway_061'] = "in";
 $locale['gateway_062'] = "Words";
 $locale['gateway_063'] = "Numbers";
 $locale['gateway_064'] = "You must answer the question";
-$locale['gateway_065'] = "Proceed";
+$locale['gateway_065'] = "I'm a human";
 
 $locale['gateway_066'] = "Your answer is incorrect!<br/>Please write all answers in one line. Example: twentysix or nineteen";
 $locale['gateway_067'] = "Try Again!";
 $locale['gateway_068'] = "Please try again later!";
-$locale['gateway_069'] = "Fusion GateWay";
+$locale['gateway_069'] = "Security Check";

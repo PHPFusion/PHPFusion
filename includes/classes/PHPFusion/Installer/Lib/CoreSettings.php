@@ -86,7 +86,7 @@ class CoreSettings {
                 ['settings_name' => 'enable_deactivation', 'settings_value' => 0],
                 ['settings_name' => 'deactivation_period', 'settings_value' => 365],
                 ['settings_name' => 'deactivation_response', 'settings_value' => 14],
-                ['settings_name' => 'enable_terms', 'settings_value' => 0],
+                ['settings_name' => 'enable_terms', 'settings_value' => 1],
                 ['settings_name' => 'thumb_compression', 'settings_value' => 'gd2'],
                 ['settings_name' => 'tinymce_enabled', 'settings_value' => 0],
                 ['settings_name' => 'smtp_host', 'settings_value' => ''],

@@ -369,49 +369,51 @@ class UserFieldsForm {
      * @return string
      */
     public function termInput() {
+
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale();
+        $locale = fusion_get_locale('', [LOCALE.LOCALESET.'policies.php']);
 
         if ($this->userFields->displayTerms == 1) {
 
-            $policies[] = '<a href="' . BASEDIR . 'print.php?type=ups" target="_blank" id="license_agreement">' . $locale['u192'] . '</a>';
+            if ($_policy = LegalDocs::getInstance()->getPolicies()) {
 
-            if ($settings['privacy_policy']) {
-                $policies[] = '<a href="' . BASEDIR . 'print.php?type=pps" target="_blank" id="privacy_policy">' . $locale['u192a'] . '</a>';
+                if (isset($_policy['ups'])) {
+                    $policies[] = '<a href="' . BASEDIR . 'legal.php?type=ups" target="_blank">' . $_policy['ups'] . '</a>';
+                }
+
+                if (isset($_policy['pps'])) {
+                    $policies[] = '<a href="' . BASEDIR . 'legal.php?type=pps" target="_blank">' . $_policy['pps'] . '</a>';
+                }
+
+                if (isset($_policy['cps'])) {
+                    $policies[] = '<a href="' . BASEDIR . 'legal.php?type=cps" target="_blank">' . $_policy['cps'] . '</a>';
+                }
             }
 
-            if ($settings['cookie_policy']) {
-                $policies[] = '<a href="' . BASEDIR . 'print.php?type=cps" target="_blank" id="cookie_policy">' . $locale['u192b'] . '</a>';
+            if (isset($policies)) {
+                add_to_jquery( "     
+                
+                let registerTermsFn = () => {
+                    let btnDOM = $('button[name=\"".$this->userFields->postName."\"]');                                
+                    if (btnDOM.length) {
+                        btnDOM = $(btnDOM[0]);                
+                        btnDOM.attr('disabled', true).addClass('disabled');            
+                        $('#agreement').on('click', function() {                
+                            if ($(this).is(':checked')) {
+                                btnDOM.attr('disabled', false).removeClass('disabled');
+                            } else {
+                                btnDOM.attr('disabled', true).addClass('disabled');       
+                            }        
+                        });
+                    }
+                }
+                
+                registerTermsFn();                                    
+                " );
+
+                return form_checkbox( 'agreement',  sprintf( strtr($locale['u193'], ['[SITENAME]' => $settings['sitename']]), format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
             }
 
-//            $modal = openmodal( 'license_agreement', $locale['u192'], ['button_id' => 'license_agreement'] );
-//            $modal .= parse_text( $this->userFields->parseLabel( fusion_get_settings( 'license_agreement' ) ) );
-//            $modal_content = '<p class="pull-left">' . $locale['u193a'] . ' ' . ucfirst( showdate( 'shortdate', fusion_get_settings( 'license_lastupdate' ) ) ) . '</p>';
-//            $modal_content .= form_button( 'dismiss', $locale['u193b'], 'dimiss', ['data' => ['dismiss' => 'modal'], 'class' => 'btn-success', 'id' => 'agree'] );
-//            $modal .= modalfooter( $modal_content, TRUE );
-//            $modal .= closemodal();
-//            add_to_footer( $modal );
-            /*
-             *             // agree modal
-            var regBtn = $('#register');
-            $('#agree').on('click', function() {
-                $('#register').attr('disabled', false).removeClass('disabled');
-                $('#agreement').attr('checked', true);
-            });
-             */
-
-            add_to_jquery( "
-            // agree checkbox
-             regBtn.attr('disabled', true).addClass('disabled');            
-            $('#agreement').on('click', function() {                
-                if ($(this).is(':checked')) {
-                    regBtn.attr('disabled', false).removeClass('disabled');
-                } else {
-                    regBtn.attr('disabled', true).addClass('disabled');       
-                }        
-            });" );
-
-            return form_checkbox( 'agreement',  sprintf( strtr($locale['u193'], ['[SITENAME]' => $settings['sitename']]), format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
         }
 
         return '';

@@ -72,17 +72,32 @@ class LegalDocs {
     }
 
     /**
+     * @return array
+     */
+    public function getPolicies() {
+
+        $locale = fusion_get_locale();
+
+        return [
+            'ups' => $locale['pol_200'],
+            'pps' => $locale['pol_300'],
+            'cps' => $locale['pol_400'],
+        ];
+    }
+
+
+    /**
      * void
      */
     public function view() {
 
-        require_once THEMES.'templates/global/legaldocs.tpl.php';
+        require_once THEMES . 'templates/global/legaldocs.tpl.php';
 
-        if (!empty(  self::$data )) {
+        if (!empty( self::$data )) {
 
-            add_to_title(  self::$data['title'] );
-            set_meta(  self::$data['meta'] );
-            display_legal_docs(  self::$data['title'],  self::$data['date'],  self::$data['content'] );
+            add_to_title( self::$data['title'] );
+            set_meta( self::$data['meta'] );
+            display_legal_docs( self::$data['title'], self::$data['date'], self::$data['content'] );
 
         } else {
             // no content
@@ -111,8 +126,8 @@ class LegalDocs {
         $value = parse_text( $value, ['parse_smileys' => FALSE, 'add_line_breaks' => TRUE] );
 
         return strtr( $value, [
-            '[SITENAME]' => $settings['sitename'],
-            '[CONTACT]'  => $settings['siteemail'],
+            '[SITENAME]'  => $settings['sitename'],
+            '[CONTACT]'   => $settings['siteemail'],
             '[SITEEMAIL]' => $settings['siteemail'],
         ] );
     }
@@ -249,7 +264,6 @@ class LegalDocs {
 
         return [];
     }
-
 
 
 }

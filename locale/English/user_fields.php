@@ -151,9 +151,6 @@ $locale['u186'] = "Click Browse to upload an image";
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
 
-$locale['u192'] = "User Agreement";
-$locale['u192a'] = "Privacy Policy";
-$locale['u192b'] = "Cookie Policy";
 $locale['u193'] = "By checking this, you agree to the [SITENAME] %s";
 
 $locale['u193a'] = "Updated";

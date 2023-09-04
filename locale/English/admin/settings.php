@@ -178,8 +178,8 @@ $locale['admins_699b'] = "Both";
 $locale['admins_699e'] = "Email";
 $locale['admins_699f'] = "Check uploaded files for MIME type?";
 
-$locale['admins_gateway_001'] = "Delete tmp files";
-$locale['admins_gateway_002'] = "Gateway tmp files have been deleted.";
+$locale['admins_Gateway_001'] = "Delete tmp files";
+$locale['admins_Gateway_002'] = "Gateway tmp files have been deleted.";
 
 // Private Message Settings
 $locale['admins_700'] = "Private Messages";
@@ -285,8 +285,8 @@ $locale['admins_security_006'] = "Clear System Session Cache";
 $locale['admins_security_007'] = "All system sessions has been cleared successfully";
 $locale['admins_security_008'] = "Form Tokens";
 $locale['admins_security_009'] = "Number of issued tokens for each form";
-$locale['admins_security_010'] = "Fusion GateWay";
-$locale['admins_security_011'] = "GateWay Method";
+$locale['admins_security_010'] = "Gateway";
+$locale['admins_security_011'] = "Gateway Method";
 $locale['admins_security_012'] = "Words";
 $locale['admins_security_013'] = "Numbers";
 $locale['admins_security_014'] = "Both";
