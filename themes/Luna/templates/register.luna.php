@@ -32,8 +32,9 @@ function display_register_form( array $info = [] ) {
     $settings = fusion_get_settings();
     $locale = fusion_get_locale();
 
-
-    echo '<!--HTML--><h2 class="text-center w-100 mt-4 mb-4">' . $locale['slogan'] . '</h2>\n';
+    define( 'LUNA_BODY_CLASS', 'register' );
+    
+    echo '<!--HTML--><h2 class="text-center w-100 mt-4 mb-4">' . $locale['slogan'] . '</h2>';
     opentable( '' );
     echo "<!--register_pre_idx-->";
     echo openform( 'registerFrm', 'POST' ) .
@@ -46,7 +47,7 @@ function display_register_form( array $info = [] ) {
         $info['validate'] .
         ($info['terms'] ? '<div class="mt-3 mb-3">' . $info['terms'] . '</div>' : '') .
         $info['user_id'] .
-        form_button( 'register', $locale['u101'], 'register', ['class' => 'btn-block btn-lg btn-primary'] ) .
+        form_button( 'register', $locale['u101'], 'register', ['class' => 'btn-block btn-lg btn-primary mt-3'] ) .
         closeform();
 //    echo '<div class="hr"><span>or</span></div>';
     echo '<div class="text-center mt-5">' . strtr( $locale['u400'], ['[SITENAME]' => $settings['sitename']] ) . ' <a href="' . BASEDIR . 'login.php">' . $locale['login'] . '</a>';

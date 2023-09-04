@@ -48,7 +48,9 @@ class UserFieldsForm {
 
             return form_text( 'user_name', $locale['u127'], $this->userFields->userData['user_name'], [
                 'max_length' => 30,
-                'required'   => 1,
+                'required'   => TRUE,
+                'floating_label' => defined('FLOATING_LABEL'),
+                'placeholder' => defined('FLOATING_LABEL') ? $locale['u127'] : '',
                 'error_text' => $locale['u122'],
                 'inline'     => $this->userFields->inputInline
             ] );
@@ -68,7 +70,7 @@ class UserFieldsForm {
 
         $settings = fusion_get_settings();
 
-        $password_strength[] = sprintf($locale['u147'], (int) $settings['password_length']);
+        $password_strength[] = sprintf( $locale['u147'], (int)$settings['password_length'] );
         if ($settings['password_char'] or $settings['password_num'] or $settings['password_case']) {
             $strength_test = [];
             if ($settings['password_case']) {
@@ -80,9 +82,9 @@ class UserFieldsForm {
             if ($settings['password_char']) {
                 $strength_test[] = $locale['u147d'];
             }
-            $password_strength[] = sprintf($locale['u147a'], format_sentence($strength_test));
+            $password_strength[] = sprintf( $locale['u147a'], format_sentence( $strength_test ) );
         }
-        $password_tip = format_sentence($password_strength);
+        $password_tip = format_sentence( $password_strength );
 
 
         if ($this->userFields->registration || $this->userFields->moderation) {
@@ -229,12 +231,14 @@ class UserFieldsForm {
         }
 
         return form_text( 'user_email', $locale['u128'], $this->userFields->userData['user_email'], [
-            'type'       => 'email',
-            "required"   => TRUE,
-            'inline'     => $this->userFields->inputInline,
-            'max_length' => '100',
-            'error_text' => $locale['u126'],
-            'ext_tip'    => $ext_tip
+            'type'           => 'email',
+            "required"       => TRUE,
+            'inline'         => $this->userFields->inputInline,
+            'floating_label' => defined( 'FLOATING_LABEL' ),
+            'max_length'     => '100',
+            'error_text'     => $locale['u126'],
+            'ext_tip'        => $ext_tip,
+            'placeholder'    => defined('FLOATING_LABEL') ? 'john.doe@mail.com' : '',
         ] );
 
 
@@ -371,30 +375,30 @@ class UserFieldsForm {
     public function termInput() {
 
         $settings = fusion_get_settings();
-        $locale = fusion_get_locale('', [LOCALE.LOCALESET.'policies.php']);
+        $locale = fusion_get_locale( '', [LOCALE . LOCALESET . 'policies.php'] );
 
         if ($this->userFields->displayTerms == 1) {
 
-            if ($_policy = LegalDocs::getInstance()->getPolicies()) {
+            if ($_policy = LegalDocs::getInstance()->getPolicies( 3 )) {
 
-                if (isset($_policy['ups'])) {
+                if (isset( $_policy['ups'] )) {
                     $policies[] = '<a href="' . BASEDIR . 'legal.php?type=ups" target="_blank">' . $_policy['ups'] . '</a>';
                 }
 
-                if (isset($_policy['pps'])) {
+                if (isset( $_policy['pps'] )) {
                     $policies[] = '<a href="' . BASEDIR . 'legal.php?type=pps" target="_blank">' . $_policy['pps'] . '</a>';
                 }
 
-                if (isset($_policy['cps'])) {
+                if (isset( $_policy['cps'] )) {
                     $policies[] = '<a href="' . BASEDIR . 'legal.php?type=cps" target="_blank">' . $_policy['cps'] . '</a>';
                 }
             }
 
-            if (isset($policies)) {
+            if (isset( $policies )) {
                 add_to_jquery( "     
                 
                 let registerTermsFn = () => {
-                    let btnDOM = $('button[name=\"".$this->userFields->postName."\"]');                                
+                    let btnDOM = $('button[name=\"" . $this->userFields->postName . "\"]');                                
                     if (btnDOM.length) {
                         btnDOM = $(btnDOM[0]);                
                         btnDOM.attr('disabled', true).addClass('disabled');            
@@ -411,7 +415,7 @@ class UserFieldsForm {
                 registerTermsFn();                                    
                 " );
 
-                return form_checkbox( 'agreement',  sprintf( strtr($locale['u193'], ['[SITENAME]' => $settings['sitename']]), format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
+                return form_checkbox( 'agreement', sprintf( strtr( $locale['u193'], ['[SITENAME]' => $settings['sitename']] ), format_sentence( $policies ) ), '', ["required" => TRUE, "reverse_label" => TRUE, 'inline' => FALSE] );;
             }
 
         }

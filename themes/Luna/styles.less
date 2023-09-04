@@ -74,7 +74,7 @@ body {
       display: flex;
       align-items: center;
 
-      & > .btn {
+      & > .btn:not(.btn-outline-primary):not(.btn-outline-secondary) {
         width: 40px;
         height: 40px;
         padding: 0;
@@ -304,6 +304,14 @@ a {
     --bs-btn-disabled-border-color: #0f6fec;
   }
 
+  &.btn-outline-primary {
+    border:1px solid var(--primary-color);
+    color: var(--primary-color);
+    &:hover {
+      color: var(--bs-btn-hover-color);
+    }
+  }
+
   &.btn-primary-soft {
     color: #0f6fec;
     background-color: rgba(15, 111, 236, 0.1);
@@ -369,6 +377,18 @@ a {
     }
 
   }
+
+  &.btn-outline-secondary {
+    border:1px solid transparent;
+    background:transparent;
+
+    &:hover {
+      color: var(--header-color);
+      background: rgba(0,0,0,.1);
+      //background: var(--bs-btn-hover-color);
+    }
+  }
+
 
 }
 

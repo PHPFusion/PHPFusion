@@ -49,7 +49,7 @@ function render_page() {
           <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
         </svg>'
         ] ),
-        'additional_data'  => [
+        'additional_data'  => (iMEMBER ? [
             0               => [
                 'pm'            => [
                     'link_id'         => 'pm',
@@ -83,7 +83,26 @@ function render_page() {
             // child items
             'notifications' => notification_menu(),
             'uipheader'     => uip_menu(),
-        ]
+        ] :
+            // Guest
+            [
+                0 => [
+                    'join'   => [
+                        'link_id'         => 'join',
+                        'link_name'       => 'Join now',
+                        'link_class'      => 'btn btn-outline-secondary',
+                        'link_item_class' => 'ms-2',
+                        'link_url'        => BASEDIR . 'register.php',
+                    ],
+                    'signin' => [
+                        'link_id'         => 'signin',
+                        'link_name'       => 'Sign in',
+                        'link_class'      => 'btn btn-outline-primary',
+                        'link_item_class' => 'ms-2',
+                        'link_url'        => BASEDIR . 'login.php',
+                    ]
+                ]
+            ])
     ] );
 
     $side_unit = 3;
@@ -112,21 +131,21 @@ function render_page() {
 
     echo '</div></main>';
 
-    echo '<div class="copyright-bottom"><div class="container"><div class="site-policies">'.showpolicies().'</div><div class="site-copyright">'.showcopyright().'</div></div></div>';
+    echo '<div class="copyright-bottom"><div class="container"><div class="site-policies">' . showpolicies() . '</div><div class="site-copyright">' . showcopyright() . '</div></div></div>';
 }
 
 function showpolicies() {
 
-    fusion_get_locale('', LOCALE.LOCALESET.'policies.php');
+    fusion_get_locale( '', LOCALE . LOCALESET . 'policies.php' );
 
     $html = '';
-    $policies = LegalDocs::getInstance()->getPolicies(5);
+    $policies = LegalDocs::getInstance()->getPolicies( 5 );
 
-    if (!empty($policies)) {
+    if (!empty( $policies )) {
         $count = 1;
-        foreach($policies as $key => $name) {
+        foreach ($policies as $key => $name) {
             if ($count < 6) {
-                $html .= '<a href="'.BASEDIR.'legal.php?type='.$key.'">'.$name.'</a>';
+                $html .= '<a href="' . BASEDIR . 'legal.php?type=' . $key . '">' . $name . '</a>';
             } else {
                 break;
             }
