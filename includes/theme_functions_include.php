@@ -163,22 +163,44 @@ function showmemoryusage() {
 /**
  * Show the PHPFusion copyright.
  *
- * @param string $class The class attribute of the link.
- * @param false $nobreak If true <br> tag will be removed between copyright and license.
+ * @param string $class
+ * @param false $nobreak
  *
  * @return string
  */
-function showcopyright( $class = "", $nobreak = FALSE, $epal = FALSE ) {
-    $link_class = $class ? " class='$class' " : "";
+function showcopyright( $options = [] ) {
 
-    $info = "Powered by <a href='https://phpfusion.com' " . $link_class . "target='_blank'>PHPFusion</a>. Copyright &copy; " . date( "Y" ) . " PHP Fusion Inc. ";
-    $info .= $nobreak ? "&nbsp;" : "<br />\n";
-    $license = "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'" . $link_class . " target='_blank'>GNU Affero GPL</a> v3.";
-    if ($epal == TRUE) {
-        $license = "Published without warranties under <a href='https://www.phpfusion.com/licensing/?epal' " . $link_class . " target='_blank'>EPAL</a>.";
+    static $copyright;
+
+    if ($copyright === NULL && !defined('COPYRIGHT')) {
+
+        if (is_array( $options )) {
+            $options += [
+                'class'   => '', //The class attribute of the link.
+                'nobreak' => FALSE, //If true <br> tag will be removed between copyright and license.
+                'epal'    => FALSE,
+            ];
+        } else {
+
+            // Old API support
+            $options['class'] = '';
+            $options['nobreak'] = TRUE;
+            $options['epal'] = FALSE;
+        }
+
+        $link_class = $options['class'] ? 'options="' . $options['class'] . '"' : '';
+
+        $info = 'Powered by <a href="https://phpfusion.com" ' . $link_class . ' target="_blank">PHPFusion</a>. Copyright &copy; ' . date( "Y" ) . ' PHP Fusion Inc. ';
+        $info .= $options['nobreak'] ? "&nbsp;" : "<br />\n";
+        $license = 'Released as free software without warranties under <a href="https://www.gnu.org/licenses/agpl-3.0.html" ' . $link_class . ' target="_blank">GNU Affero GPL</a> v3.';
+        if ($options['epal']) {
+            $license = 'Published without warranties under <a href="https://www.phpfusion.com/licensing/?epal" ' . $link_class . ' target="_blank">EPAL</a>.';
+        }
+
+        define( 'COPYRIGHT', $info . $license );
     }
 
-    return $info . $license;
+    return COPYRIGHT;
 }
 
 /**
@@ -345,7 +367,7 @@ if (!function_exists( 'openmodal' ) &&
         $locale = fusion_get_locale();
         $options += [
             'class'        => '',
-            'body_class'  => "",
+            'body_class'   => "",
             'button_id'    => '',
             'button_class' => '',
             'static'       => FALSE,

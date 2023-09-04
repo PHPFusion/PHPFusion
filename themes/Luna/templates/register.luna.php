@@ -1,7 +1,22 @@
 <?php
-
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: register.luna.php
+| Author: meangczac (Chan)
+| PHPFusion Lead Developer, PHPFusion Core Developer
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 const INPUT_INLINE = FALSE;
-
 
 /**
  * Registration Form Template
@@ -14,8 +29,8 @@ function display_register_form( array $info = [] ) {
     $settings = fusion_get_settings();
     $locale = fusion_get_locale();
 
-    echo '<div class="register">';
-    echo "<!--HTML--><h2 class='text-center w-100 mt-4 mb-4'>Infuse your web presence with PHPFusion</h2>";
+
+    echo '<!--HTML--><h2 class="text-center w-100 mt-4 mb-4">' . $locale['slogan'] . '</h2>\n';
     opentable( '' );
     echo "<!--register_pre_idx-->";
     echo openform( 'registerFrm', 'POST' ) .
@@ -43,7 +58,7 @@ function display_gateway( $info ) {
     \PHPFusion\Panels::getInstance()->hideAll();
 
     $locale = fusion_get_locale();
-    echo '<div class="register">';
+
     if ($info['showform']) {
 
         echo '<h2 class="text-center w-100 mt-4 mb-4">' . $locale['gateway_069'] . '</h2>';
@@ -66,5 +81,5 @@ function display_gateway( $info ) {
         echo '<input type="button" value="' . $locale['gateway_067'] . '" class="text-center btn btn-info spacer-xs" onclick="location=\'' . BASEDIR . 'register.php\'"/>';
         closetable();
     }
-    echo '</div>';
+
 }

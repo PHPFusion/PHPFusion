@@ -87,6 +87,10 @@ $locale['status8'] = "Inactive";
 $locale['status_pending'] = "Pending Activation";
 // Forum Moderator Level(s)
 $locale['userf1'] = "Moderator";
+
+// Slogan
+$locale['slogan'] = "Infuse your web presence with PHPFusion";
+
 // Navigation
 $locale['global_001'] = "Navigation";
 $locale['global_002'] = "No links defined";
@@ -177,15 +181,15 @@ $locale['global_092'] = "Page ";
 $locale['global_093'] = " of ";
 $locale['global_094'] = " out of ";
 // Guest User Menu
-$locale['global_100'] = "Sign In";
+$locale['global_100'] = "Sign in";
 $locale['global_101'] = "Login ID";
 $locale['global_101a'] = "Enter Username";
 $locale['global_101b'] = "Enter Email";
 $locale['global_101c'] = "Enter Email or Username";
 $locale['global_102'] = "Password";
 $locale['global_103'] = "Stay signed in";
-$locale['global_104'] = "Sign In";
-$locale['global_105'] = "Not a member yet? [LINK]Click here[/LINK] to register.";
+$locale['global_104'] = "Sign in";
+$locale['global_105'] = "Not a member yet? [LINK]Join now[/LINK]";
 $locale['global_106'] = "[LINK]Forgot Password?[/LINK]";
 $locale['global_107'] = "Register";
 $locale['global_108'] = "Lost password";

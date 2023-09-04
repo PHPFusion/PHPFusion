@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: theme.php
-| Author: Meangczac (Chan)
+| Author: meangczac (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -85,13 +85,15 @@ function render_page() {
     ] );
 
     $side_unit = 3;
-    $left = defined( 'LEFT' ) && !empty(LEFT) ? 1 : 0;
-    $right = defined( 'RIGHT' ) && !empty(RIGHT) ? 1 : 0;
+    $left = defined( 'LEFT' ) && !empty( LEFT ) ? 1 : 0;
+    $right = defined( 'RIGHT' ) && !empty( RIGHT ) ? 1 : 0;
     $lg_span = 12 - (($left + $right) * 3);
     $md_span = 8;
 
     echo '</header>';
-    echo '<main><div class="container">';
+
+    echo '<main class="luna' . (defined( 'LUNA_BODY_CLASS' ) ? whitespace( LUNA_BODY_CLASS ) : '') . '">';
+    echo '<div class="container">';
     echo '<div class="row g-4">';
 
     if (defined( 'LEFT' )) {
@@ -107,9 +109,12 @@ function render_page() {
     echo '</div>';
 
     echo '</div></main>';
+
+    echo '<div class="copyright-bottom">'.showcopyright().'</div>';
+
 }
 
-function opentable($title = '', $class = '') {
+function opentable( $title = '', $class = '' ) {
     echo '<div class="card mb-4' . whitespace( $class ?? '' ) . '">';
 
     if ($title) {

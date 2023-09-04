@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: LegalDocs.php
-| Author: Meangczac (Chan)
+| Author: meangczac (Chan)
 | PHPFusion Lead Developer, PHPFusion Core Developer
 +--------------------------------------------------------+
 | This program is released as free software under the

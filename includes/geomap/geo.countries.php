@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: countries.inc.php
-| Author: Frederick MC Chan (meangczac)
+| Author: meangczac (Chan)
 | Community Contributor:
 | Falk (Sweden) + Rest not covered by community,
 | Basti (Germany), Thomas-SVK (Slovakia),

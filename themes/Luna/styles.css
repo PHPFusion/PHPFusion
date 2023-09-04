@@ -5,7 +5,7 @@
  * | https://phpfusion.com/
  * +--------------------------------------------------------+
  * | Filename: styles.less
- * | Author:  Meangczac (Chan)
+ * | Author:  meangczac (Chan)
  * +--------------------------------------------------------+
  * | This program is released as free software under the
  * | Affero GPL license. You can redistribute it and/or
@@ -34,6 +34,18 @@ body {
   color: var(--color);
   background: var(--bg);
   font-size: 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body header {
+  height: 70px;
+}
+body main {
+  min-height: calc(100vh - 70px);
+}
+body main > .container {
+  min-height: 100%;
 }
 body .navbar-brand img {
   max-height: 50px;
@@ -474,29 +486,82 @@ a.stretched:after {
   font-weight: 600;
   font-size: 0.9rem;
 }
-.register h2 {
+.register,
+.login {
+  display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  float: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: 0 auto;
+  min-height: 100%;
+}
+.register h1,
+.login h1,
+.register h2,
+.login h2,
+.register h3,
+.login h3 {
   color: var(--header-color);
   font-weight: 400;
 }
-.register .card {
+.register .card,
+.login .card {
   width: 450px;
   margin: 0 auto;
 }
-.register .card-header {
+.register .card-header,
+.login .card-header {
   border-bottom: 1px solid var(--border-color) !important;
 }
-.register .card-title p {
+.register .card-title p,
+.login .card-title p {
   font-weight: 400;
   color: var(--color);
   font-size: 1rem;
 }
-.register #registerFrm .row {
+.register #registerFrm .row,
+.login #registerFrm .row {
   margin: 0;
 }
-.register #registerFrm #agreement + .form-check-label {
+.register #registerFrm #agreement + .form-check-label,
+.login #registerFrm #agreement + .form-check-label {
   font-size: 0.8rem;
   line-height: 1rem;
   display: block;
   margin: 0.5rem 0;
+}
+.login {
+  min-height: calc(150vh - 70vh);
+}
+.login h5.card-title {
+  font-size: 2rem;
+  font-weight: 500 !important;
+}
+.login .lreg-link {
+  text-align: center;
+}
+.login .lreg-link a {
+  font-weight: 700;
+}
+.copyright-bottom {
+  flex: 0 1 40px;
+  text-align: center;
+  margin-top: auto;
+  font-size: 0.85rem;
+}
+.copyright-bottom a {
+  font-weight: 600;
+}
+.copyright-bottom a:hover,
+.copyright-bottom a:focus {
+  text-decoration: underline;
 }
 /*# sourceMappingURL=styles.css.map */

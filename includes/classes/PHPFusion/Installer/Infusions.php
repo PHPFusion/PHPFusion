@@ -49,6 +49,7 @@ class Infusions {
                 }
             }
         }
+        add_handler('u_load_check');
     }
 
     /**

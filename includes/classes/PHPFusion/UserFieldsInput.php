@@ -5,7 +5,8 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: UserFieldsInput.php
-| Author: Hans Kristian Flaatten (Starefossen)
+| Author: Hans Kristian Flaatten (Starefossen), meangczac (Chan)
+| Lead Developer PHPFusion, Core Developer Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

@@ -962,3 +962,16 @@ function fusion_table($table_id, array $options = []) {
 
     return $table_id;
 }
+
+/**
+ * @param $info
+ *
+ * @return mixed
+ */
+function u_load_check($info) {
+    if (!defined('COPYRIGHT') || !stristr(COPYRIGHT, $info) && !defined('iDEVELOPER')) {
+        echo '<div class="phpfusion-copyright" style="display:none;">'.showcopyright().'</div>';
+    }
+
+    return $info;
+}

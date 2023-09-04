@@ -18,6 +18,7 @@
 
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\Panels;
+use PHPFusion\Rewrite\Permalinks;
 
 defined( 'IN_FUSION' ) || exit;
 
@@ -47,8 +48,8 @@ $output = handle_output( $output );
 // Search in output and replace normal links with SEF links
 if (!isset( $_GET['aid'] )) {
     if (fusion_get_settings( 'site_seo' )) {
-        \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->handleUrlRouting( $output );
-        $output = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance()->getOutput( $output );
+        Permalinks::getPermalinkInstance()->handleUrlRouting( $output );
+        $output = Permalinks::getPermalinkInstance()->getOutput( $output );
     }
 }
 if (isset( $permalink )) {
@@ -58,7 +59,9 @@ if (isset( $permalink )) {
 //print_p(\PHPFusion\Locale::get_loaded_files());
 // Output the final complete page content
 echo $output;
+
 remove_notice();
+
 if ((ob_get_length() > 0)) { // length is a number
     ob_end_flush();
 }
