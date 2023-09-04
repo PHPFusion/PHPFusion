@@ -172,12 +172,12 @@ function showcopyright( $options = [] ) {
 
     static $copyright;
 
-    if ($copyright === NULL && !defined('COPYRIGHT')) {
+    if ($copyright === NULL && !defined( 'COPYRIGHT' )) {
 
         if (is_array( $options )) {
             $options += [
                 'class'   => '', //The class attribute of the link.
-                'nobreak' => FALSE, //If true <br> tag will be removed between copyright and license.
+                'nobreak' => TRUE, //If true <br> tag will be removed between copyright and license.
                 'epal'    => FALSE,
             ];
         } else {
