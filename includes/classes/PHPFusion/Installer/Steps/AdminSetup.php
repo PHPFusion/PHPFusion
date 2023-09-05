@@ -479,7 +479,7 @@ class AdminSetup extends InstallCore {
         return [
             'sitename'          => sanitizer( 'sitename', '', 'sitename' ),
             'siteemail'         => sanitizer( 'siteemail', '', 'siteemail' ),
-            'enabled_languages' => sanitizer( ['enabled_languages'], LOCALESET, 'enabled_languages' ),
+            'enabled_languages' => sanitizer( ['enabled_languages'], LANGUAGE, 'enabled_languages' ),
             'siteusername'      => sanitizer( 'siteusername', '', 'siteusername' ),
             'timeoffset'        => sanitizer( 'timeoffset', '', 'timeoffset' )
         ];
