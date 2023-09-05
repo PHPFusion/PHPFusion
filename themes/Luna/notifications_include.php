@@ -67,15 +67,15 @@ function uip_menu() {
             'link_id'         => 'n2',
             'link_item_class' => 'p0 px-3',
             // Add new method to super-menu rendering
-            'link_content'    => '<div  style="min-width:240px;"><div class="d-flex align-items-center position-relative">
+            'link_content'    => '<div class="uip-menu w-100"><div class="d-flex align-items-center position-relative">
                 <!-- Avatar -->
                 ' . display_avatar( $userdata, '50px', 'rounded-circle me-3', FALSE, 'rounded-circle overflow-hide' ) . '
                 <div>
                 <a class="h6" href="#">Lori Ferguson</a>
-                  <p class="small m-0">Web Developer</p>
+                  <p class="small text-lighter m-0">Web Developer</p>
                 </div>
               </div>
-              <a class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center" href="' . BASEDIR . 'profile.php?lookup=' . $userdata['user_id'] . '">View profile</a>
+              <a class="dropdown-item btn btn-primary-soft my-2 text-center" href="' . BASEDIR . 'profile.php?lookup=' . $userdata['user_id'] . '">View profile</a>
               </div>
               ',
         ],
@@ -96,7 +96,7 @@ function uip_menu() {
             'link_name'       => '<span class="me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-life-preserver" viewBox="0 0 16 16">
                       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm6.43-5.228a7.025 7.025 0 0 1-3.658 3.658l-1.115-2.788a4.015 4.015 0 0 0 1.985-1.985l2.788 1.115zM5.228 14.43a7.025 7.025 0 0 1-3.658-3.658l2.788-1.115a4.015 4.015 0 0 0 1.985 1.985L5.228 14.43zm9.202-9.202-2.788 1.115a4.015 4.015 0 0 0-1.985-1.985l1.115-2.788a7.025 7.025 0 0 1 3.658 3.658zm-8.087-.87a4.015 4.015 0 0 0-1.985 1.985L1.57 5.228A7.025 7.025 0 0 1 5.228 1.57l1.115 2.788zM8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
                     </svg></span>Support',
-            'link_url'        => BASEDIR . 'edit_profile.php',
+            'link_url'        => BASEDIR . 'contact.php',
         ],
         'n5' => [
             'link_id'   => 'n5',
@@ -117,8 +117,7 @@ function uip_menu() {
         ],
         'n8' => [
             'link_id'         => 'n8',
-            'link_item_class' => 'px-3',
-            'link_content'    => '<div class="theme-options theme-icon-active d-flex justify-content-center gap-3 align-items-center p-2 pb-0">
+            'link_content'    => '<div class="theme-options">
 								<span>Mode:</span>
 								<button type="button" class="btn btn-theme-options nav-link text-primary-hover mb-0 active" data-bs-theme-value="light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Light">
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sun fa-fw mode-switch" viewBox="0 0 16 16">
