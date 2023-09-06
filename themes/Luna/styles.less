@@ -527,6 +527,35 @@ a.stretched:after {
   //height: 32px;
 }
 
+.form-check-lg {
+
+  label.form-check-label {
+    font-size: 1.03rem !important;
+    font-weight: 700;
+    color: var(--header-color);
+
+    & > p {
+      color: var(--bs-gray-700) !important;
+      font-size: .8rem !important;
+      margin:0;
+    }
+  }
+}
+
+
+.hr {
+  &::before {
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+    content: "";
+    border-bottom: 1px solid var(--bs-gray-300);
+  }
+}
+
 .checkbox-switch {
 
   --toggle-switch-bg: #eff2f6;
@@ -635,7 +664,7 @@ a.stretched:after {
   .select2-result {
     padding-top: .3rem;
     padding-bottom: .3rem;
-    font-size:.9rem;
+    font-size: .9rem;
   }
 
   .select2-highlighted {
@@ -661,10 +690,78 @@ a.stretched:after {
 
 // Textarea Editor
 .char-counter {
-  font-size:.8rem;
+  font-size: .8rem;
+}
+
+// Collapse
+.accordion {
+
+  h4.accordion-header {
+    button.accordion-button {
+      padding: 1rem 0 0;
+      outline: none !important;
+      box-shadow: none !important;
+
+      &:not(.collapsed) {
+        color: inherit;
+        background-color: #fff;
+        box-shadow: none;
+
+      }
+    }
+
+    .accordion-title {
+      font-weight: 700;
+
+      p {
+        display: block;
+        font-weight: 400;
+        font-size: .8rem;
+      }
+    }
+  }
+
+  .accordion-body {
+    padding: 0;
+
+    .form-check-label {
+      color: var(--color);
+      font-weight: 400;
+    }
+
+    .form-check-lg {
+      label.form-label {
+        font-size: 1.03rem !important;
+        font-weight: 700;
+        color: var(--header-color);
+
+        & > p {
+          color: var(--bs-gray-700) !important;
+          font-size: .8rem !important;
+          margin:0;
+        }
+      }
+    }
+
+  }
 }
 
 
+// Tabs
+.nav-tabs {
+  .nav-link {
+    color: var(--color);
+
+    &:hover {
+      border-color: transparent;
+    }
+
+    &.active {
+      background-color: rgba(var(--bs-primary-rgb), 0.1);
+      color: var(--bs-primary);
+    }
+  }
+}
 
 /* User info panel */
 

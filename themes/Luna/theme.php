@@ -27,6 +27,10 @@ if (file_exists( $file_path )) {
     require_once $file_path;
 }
 
+// Override User Info Panel (Template Override to BS5)
+//require_once __DIR__.'/templates/user_info.tpl.php';
+
+
 /**
  * Theme
  */

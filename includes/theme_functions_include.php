@@ -1155,22 +1155,21 @@ function show_dropdown( array $item, array $menu_items ) {
     return ob_get_clean();
 }
 
-if (!function_exists( 'opencollapse' )
-    && !function_exists( 'opencollapsebody' )
-    && !function_exists( 'closecollapsebody' )
-    && !function_exists( 'closecollapse' )
-) {
+if (!function_exists( 'opencollapse' )) {
     /**
      * Create accordion.
      *
      * @param string $id Unique accordion ID.
-     *
+     * @param string $class Additional css class
      * @return string
      */
-    function opencollapse( $id ) {
-        return '<div class="panel-group" id="' . $id . '-accordion" role="tablist" aria-multiselectable="true">';
+    function opencollapse( $id , $class = '') {
+        return fusion_get_template( 'collapse', ['callback' => 'opencollapse', 'id' => $id, 'class'=>$class] );
     }
 
+}
+
+if (!function_exists( 'opencollapsebody' )) {
     /**
      * Create collapsing panel.
      *
@@ -1183,39 +1182,37 @@ if (!function_exists( 'opencollapse' )
      * @return string
      */
     function opencollapsebody( $title, $unique_id, $grouping_id, $active = FALSE, $class = NULL ) {
-        $html = '<div class="panel panel-default ' . $class . '">';
+        return fusion_get_template( 'collapse', [
+            'callback' => 'opencollapsebody',
+            'title'    => $title,
+            'id'       => $unique_id,
+            'group_id' => $grouping_id,
+            'active'   => $active,
+            'class'    => $class
 
-        $html .= '<div class="panel-heading" role="tab" id="' . $unique_id . '-collapse-heading">';
-        $html .= '<h4 class="panel-title">';
-        $html .= '<a role="button" data-toggle="collapse" data-parent="#' . $grouping_id . '-accordion" href="#' . $unique_id . '-collapse" aria-expanded="true" aria-controls="' . $unique_id . '-collapse">' . $title . '</a>';
-        $html .= '</h4>';
-        $html .= '</div>';
-
-        $html .= '<div id="' . $unique_id . '-collapse" class="panel-collapse collapse' . ($active ? ' in' : '') . '" role="tabpanel" aria-labelledby="' . $unique_id . '-collapse-heading">';
-        $html .= '<div class="panel-body">';
-        return $html;
+        ] );
     }
+}
 
+if (!function_exists( 'closecollapsebody' )) {
     /**
      * Close collapsing panel.
      *
      * @return string
      */
     function closecollapsebody() {
-        $html = '</div>';  // .panel-body
-        $html .= '</div>'; // .panel-collapse
-        $html .= '</div>'; // .panel-default
-
-        return $html;
+        return fusion_get_template( 'collapse', ['callback' => 'closecollapsebody'] );
     }
+}
 
+if (!function_exists( 'closecollapse' )) {
     /**
      * Close accordion.
      *
      * @return string
      */
     function closecollapse() {
-        return '</div>';
+        return fusion_get_template( 'collapse', ['callback' => 'closecollapse'] );
     }
 }
 

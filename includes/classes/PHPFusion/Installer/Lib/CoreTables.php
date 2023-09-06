@@ -565,6 +565,12 @@ class CoreTables {
                 'length'  => 10,
                 'default' => '0'
             ], //inf_version VARCHAR(10) NOT NULL DEFAULT '0',
+            'inf_emails'  => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ]
         ];
         $table_package['messages'] = [
             'message_id'        => [

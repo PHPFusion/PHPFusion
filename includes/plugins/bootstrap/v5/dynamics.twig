@@ -29,6 +29,10 @@
 
         {% set group_class = 'form-check' %}
 
+        {% if input_options['options'] %}
+            {% set group_class = '' %}
+        {% endif %}
+
         {% set checkbox_dom = checkers.checkbox_input(input_name, input_label, input_value, input_options) %}
 
         {% set ct_checkbox_class = (input_options['toggle'] ? 'checkbox-switch ' : '') ~ 'check-group' %}
@@ -73,7 +77,8 @@
 
     {% endif %}
 
-    <div id="{{ input_options['input_id'] }}-field" class="{{ group_class }}{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
+    <div id="{{ input_options['input_id'] }}-field"
+         class="{{ group_class }}{{ whitespace(ct_row_offset) ~ whitespace(ct_checkbox_class) ~ whitespace(input_options['error_class']) ~ whitespace(input_options['class']) ~ whitespace(ct_icon_class) }}"{{ whitespace(ct_width) }}>
 
         {{ prepend_checkbox_input|raw }}
 

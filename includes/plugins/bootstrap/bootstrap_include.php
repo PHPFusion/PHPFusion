@@ -24,28 +24,40 @@
  *
  * @return string
  */
-function get_bootstrap( $part, $version = '3' ) {
+function get_bootstrap( $part, $version = '3', $php = FALSE ) {
+
     static $framework_paths = [];
 
     if (empty( $framework_paths )) {
+
         if ($version < 3) {
             $version = 3;
         } elseif ($version > 5) {
             $version = 5;
         }
-
         $version = 'v' . $version;
 
+        // Headers and footers
         require_once __DIR__ . '/' . $version . '/index.php';
 
-        $framework_paths = [
+        $_dir = __DIR__ . '/' . $version . '/';
+
+        $framework_paths['php'] = [
+            'showsublinks' => ['dir' => $_dir, 'file' => 'navbar.php'],
+            'form_inputs'  => ['dir' => $_dir, 'file' => 'dynamics.php'],
+            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.php']
+        ];
+
+        $framework_paths['twig'] = [
             'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
             'form_inputs'  => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
         ];
+
     }
 
-    return $framework_paths[$part] ?? '';
+    $_type = $php ? 'php' : 'twig';
 
+    return $framework_paths[$_type][$part] ?? '';
 }
 
 if (defined( 'BOOTSTRAP' )) {
@@ -81,6 +93,14 @@ if (defined( 'BOOTSTRAP' )) {
 
             return fusion_render( $path['dir'], $path['file'], $info, TRUE );
 //            return fusion_render( $path['dir'], $path['file'], $info, iDEVELOPER );
+
+        } elseif ($path = get_bootstrap( $component, 'auto', TRUE )) {
+
+            require_once $path['dir'] . $path['file'];
+
+            if ($callback = call_user_func( $component, $info )) {
+                return $callback;
+            }
         }
 
         return 'This template ' . $component . ' is not supported';

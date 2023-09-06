@@ -415,6 +415,26 @@ a.stretched:after {
   display: block;
   margin: 0.5rem 0;
 }
+.form-check-lg label.form-check-label {
+  font-size: 1.03rem !important;
+  font-weight: 700;
+  color: var(--header-color);
+}
+.form-check-lg label.form-check-label > p {
+  color: var(--bs-gray-700) !important;
+  font-size: 0.8rem !important;
+  margin: 0;
+}
+.hr::before {
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
+  content: "";
+  border-bottom: 1px solid var(--bs-gray-300);
+}
 .checkbox-switch {
   --toggle-switch-bg: #eff2f6;
   --toggle-switch-border: rgba(0, 0, 0, 0.25);
@@ -519,6 +539,51 @@ a.stretched:after {
 }
 .char-counter {
   font-size: 0.8rem;
+}
+.accordion h4.accordion-header button.accordion-button {
+  padding: 1rem 0 0;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.accordion h4.accordion-header button.accordion-button:not(.collapsed) {
+  color: inherit;
+  background-color: #fff;
+  box-shadow: none;
+}
+.accordion h4.accordion-header .accordion-title {
+  font-weight: 700;
+}
+.accordion h4.accordion-header .accordion-title p {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+.accordion .accordion-body {
+  padding: 0;
+}
+.accordion .accordion-body .form-check-label {
+  color: var(--color);
+  font-weight: 400;
+}
+.accordion .accordion-body .form-check-lg label.form-label {
+  font-size: 1.03rem !important;
+  font-weight: 700;
+  color: var(--header-color);
+}
+.accordion .accordion-body .form-check-lg label.form-label > p {
+  color: var(--bs-gray-700) !important;
+  font-size: 0.8rem !important;
+  margin: 0;
+}
+.nav-tabs .nav-link {
+  color: var(--color);
+}
+.nav-tabs .nav-link:hover {
+  border-color: transparent;
+}
+.nav-tabs .nav-link.active {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+  color: var(--bs-primary);
 }
 /* User info panel */
 .uip {
