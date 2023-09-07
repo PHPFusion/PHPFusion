@@ -45,8 +45,6 @@ class UserFieldsInput {
 
     public $isAdminPanel = FALSE;
 
-    private $_completeMessage;
-
     public $_method;
 
     private $_userEmail;
@@ -77,8 +75,6 @@ class UserFieldsInput {
 
         $this->data = $this->setEmptyFields();
         $this->userData = $this->setEmptyFields();
-
-
 
         $userFieldsValidate = new UserFieldsValidate( $this );
 
@@ -111,8 +107,6 @@ class UserFieldsInput {
 //        print_p( 'Email verify: ' . $this->emailVerification );
 //        print_p( 'Admin verify: ' . $this->adminActivation );
 //        print_p( $this->data );
-
-
         if (fusion_safe()) {
 
             if ($this->emailVerification) {
@@ -121,12 +115,14 @@ class UserFieldsInput {
 
             } else {
 
-                dbquery_insert( DB_USERS, $this->data, 'save' );
+                $insert_id = dbquery_insert( DB_USERS, $this->data, 'save' );
+
+                dbquery_insert( DB_USER_SETTINGS, ['user_id' => $insert_id], 'save', ['no_unique' => TRUE, 'primary_key' => 'user_id'] );
 
                 /**
                  * Create user
                  */
-                $this->_completeMessage = $locale['u160'] . " - " . $locale['u161'];
+                $notice = $locale['u160'] . " - " . $locale['u161'];
 
                 if ($this->moderation == 1) {
 
@@ -136,16 +132,14 @@ class UserFieldsInput {
                     // got admin activation and not
                     if ($this->adminActivation) {
                         // Missing registration data?
-                        $this->_completeMessage = $locale['u160'] . " - " . $locale['u162'];
+                        $notice = $locale['u160'] . " - " . $locale['u162'];
                     }
                 }
+
+                addnotice( 'success', $notice, $settings['opening_page'] );
             }
 
 //            $this->data['new_password'] = $this->getPasswordInput( 'user_password1' );
-            if ($this->_completeMessage) {
-                addnotice( 'success', $this->_completeMessage, $settings['opening_page'] );
-            }
-
             return TRUE;
         }
 
@@ -175,7 +169,7 @@ class UserFieldsInput {
         sendemail( $this->data['user_name'], $this->data['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message );
 
         // Administrator complete message
-        $this->_completeMessage = $locale['u172'];
+        addnotice('success', $locale['u172']);
     }
 
 
@@ -326,7 +320,7 @@ class UserFieldsInput {
             dbquery_insert( DB_NEW_USERS, $email_rows, 'save', ['primary_key' => 'user_name', 'no_unique' => TRUE] );
         }
 
-        $this->_completeMessage = $locale['u150'];
+        addnotice('success', $locale['u150']);
     }
 
     /**
@@ -336,13 +330,25 @@ class UserFieldsInput {
      */
     public function saveUpdate() {
 
-        $locale = fusion_get_locale();
-
-        $this->_method = "validate_update";
-
         $this->data['user_id'] = $this->userData['user_id'];
 
+        return match (get( 'section' )) {
+            default => $this->updateAccount(),
+            'notifications' => (new UserNotifications())->saveUpdate(),
+        };
+
+    }
+
+    /**
+     * @return bool
+     */
+    private function updateAccount() {
+
+        $locale = fusion_get_locale();
+
         $userFieldsValidate = new UserFieldsValidate( $this );
+
+        $this->_method = "validate_update";
 
         $callback_function = [
             /**
@@ -435,8 +441,6 @@ class UserFieldsInput {
                 // Update Table
                 dbquery_insert( DB_USERS, $this->data, 'update' );
 
-                $this->_completeMessage = $locale['u163'];
-
 //                if ($this->moderation && !empty( $pass ) && $this->_newUserPassword && $this->_newUserPassword2) {
 //                    // inform user that password has changed. and tell him your new password
 //                    include INCLUDES . "sendmail_include.php";
@@ -471,7 +475,8 @@ class UserFieldsInput {
 //                    }
 //                    return FALSE;
 //                }
-                addnotice( 'success', $this->_completeMessage );
+
+                addnotice( 'success', $locale['u163'] );
 
                 return TRUE;
             }
@@ -482,6 +487,7 @@ class UserFieldsInput {
 
         return FALSE;
     }
+
 
     /**
      * @return array
@@ -555,7 +561,8 @@ class UserFieldsInput {
                     if (dbrows( $result ) > 0) {
                         addnotice( "danger", $locale['u164'] . "<br />\n" . $locale['u121'] );
                     } else {
-                        $this->_completeMessage = $locale['u169'];
+
+                        addnotice('success', $locale['u169']);
                     }
                     dbquery( "UPDATE " . DB_USERS . " SET user_email='" . $data['user_email'] . "' WHERE user_id='" . $data['user_id'] . "'" );
                     dbquery( "DELETE FROM " . DB_EMAIL_VERIFY . " WHERE user_id='" . $data['user_id'] . "'" );

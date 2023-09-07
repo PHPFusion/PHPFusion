@@ -51,6 +51,7 @@ const DB_USER_FIELD_CATS = DB_PREFIX . 'user_field_cats';
 const DB_USER_FIELDS = DB_PREFIX . 'user_fields';
 const DB_USER_GROUPS = DB_PREFIX . 'user_groups';
 const DB_USER_LOG = DB_PREFIX . 'user_log';
+const DB_USER_SETTINGS = DB_PREFIX . 'user_settings';
 const DB_USERS = DB_PREFIX . 'users';
 const DB_TOS = DB_PREFIX . 'policies';
 const DB_THEME = DB_PREFIX . 'theme';

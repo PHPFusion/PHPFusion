@@ -4,11 +4,11 @@
 
         {% for key, value in options['options'] %}
 
-            {% set deactivation = (options['deactivate_key'] is defined) and (options['deactivate_key'] is not null) ? true : false %}
+            {% set deactivation = options['deactivate_key'] == key ? true : false %}
 
-            {% set checkbox_input_properties = whitespace( deactivation or options['deactivate_key'] == key ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value[key] == true ? 'checked' : '') %}
+            {% set checkbox_input_properties = whitespace( deactivation ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value[key] == true ? 'checked' : '') %}
 
-            {% if deactivation and options['deactivate_key'] == key %}
+            {% if deactivation %}
                 <input type="hidden" name="{{ input_name }}" id="{{ key }}">
             {% endif %}
 

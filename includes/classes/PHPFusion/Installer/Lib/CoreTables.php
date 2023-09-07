@@ -1277,6 +1277,7 @@ class CoreTables {
                 'unsigned' => TRUE,
             ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
         ];
+
         $table_package['user_fields'] = [
             'field_id'           => [
                 'type'           => 'BIGINT',
@@ -1342,6 +1343,7 @@ class CoreTables {
                 'type' => 'TEXT'
             ] //field_config TEXT NOT NULL,
         ];
+
         $table_package['user_groups'] = [
             'group_id'          => [
                 'type'           => 'TINYINT',
@@ -1372,6 +1374,7 @@ class CoreTables {
                 'default'  => '0'
             ],
         ];
+
         $table_package['user_log'] = [
             'userlog_id'        => [
                 'type'           => 'BIGINT',
@@ -1406,6 +1409,71 @@ class CoreTables {
                 'default'  => '0'
             ], //userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         ];
+
+        $table_package['user_settings'] = [
+            'user_id'                => [
+                'type'           => 'BIGINT',
+                'length'         => 20,
+                'auto_increment' => TRUE,
+                'key'            => 2, //PRIMARY KEY (user_id),
+                'unsigned'       => TRUE,
+            ],
+            'user_comments_notify'   => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_tag_notify'        => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_newsletter_notify' => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_follow_notify'     => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_pm_notify'         => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_pm_email'          => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_follow_email'      => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_feedback_email'    => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ],
+            'user_email_duration'    => [
+                'type'     => 'TINYINT',
+                'length'   => 2,
+                'default'  => '4',
+                'unsigned' => TRUE,
+            ],
+        ];
+
         $table_package['users'] = [
             'user_id'              => [
                 'type'           => 'BIGINT',
@@ -1578,11 +1646,6 @@ class CoreTables {
                 'unsigned' => TRUE,
                 'default'  => '0'
             ], //user_archive SMALLINT(6) unsigned not null default '0',
-            'user_pm_email_notify' => [
-                'type'    => 'TINYINT',
-                'length'  => 1,
-                'default' => '0'
-            ], //user_pm_email_notify TINYINT(1) not null default '0',
             'user_pm_save_sent'    => [
                 'type'    => 'TINYINT',
                 'length'  => 1,

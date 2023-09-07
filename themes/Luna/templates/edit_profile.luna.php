@@ -1,22 +1,20 @@
 <?php
-/*
- * -------------------------------------------------------+
- * | PHPFusion Content Management System
- * | Copyright (C) PHP Fusion Inc
- * | https://phpfusion.com/
- * +--------------------------------------------------------+
- * | Filename: edit_profile.luna.php
- * | Author:  meangczac (Chan)
- * +--------------------------------------------------------+
- * | This program is released as free software under the
- * | Affero GPL license. You can redistribute it and/or
- * | modify it under the terms of this license which you
- * | can read by viewing the included agpl.txt or online
- * | at www.gnu.org/licenses/agpl.html. Removal of this
- * | copyright header is strictly prohibited without
- * | written permission from the original author(s).
- * +--------------------------------------------------------
- */
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: edit_profile.luna.php
+| Author: meangczac (Chan)
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
 
 use PHPFusion\Panels;
 
@@ -31,40 +29,28 @@ const INPUT_INLINE = FALSE;
 function display_profile_form( array $info = [] ) {
 
     // Add panel to the left side
-    function navigation_panel() {
-        $html = fusion_get_function( 'openside', '' );
+    function navigation_panel( $info ) {
 
-        $html .= '<ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0" role="tablist">';
+        if (!empty( $info )) {
+            $menu = '';
+            $_get = get( 'section' );
+            $i = 0;
+            foreach ($info as $key => $rows) {
 
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0 active" href="#profileSettings" data-bs-toggle="tab" aria-selected="true" role="tab">Account</a>';
-        $html .= '</li>';
+                $active = (!$i && !$_get || $_get == $key ? ' active' : '');
 
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0" href="#notifications" data-bs-toggle="tab" aria-selected="true" role="tab">Notifications</a>';
-        $html .= '</li>';
+                $menu .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">'
+                    . '<a class="nav-link d-flex mb-0' . $active . '" href="' . $rows['link'] . '" aria-selected="true" role="tab">' . $rows['title'] . '</a>'
+                    . '</li>';
+                $i++;
+            }
+        }
 
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0" href="#privacy" data-bs-toggle="tab" aria-selected="true" role="tab">Privacy and safety</a>';
-        $html .= '</li>';
-
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0" href="#communications" data-bs-toggle="tab" aria-selected="true" role="tab">Communications</a>';
-        $html .= '</li>';
-
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0" href="#messaging" data-bs-toggle="tab" aria-selected="true" role="tab">Messaging</a>';
-        $html .= '</li>';
-
-        $html .= '<li class="nav-item" data-bs-dismiss="offcanvas" role="presentation">';
-        $html .= '<a class="nav-link d-flex mb-0" href="#close" data-bs-toggle="tab" aria-selected="true" role="tab">Close account</a>';
-        $html .= '</li>';
-
-        $html .= '</ul>';
-
-        $html .= fusion_get_function( 'closeside' );
-
-        return $html;
+        return fusion_get_function( 'openside', '' )
+            . '<ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0" role="tablist">'
+            . ($menu ?? '')
+            . '</ul>'
+            . fusion_get_function( 'closeside' );
     }
 
     function account( $info ) {
@@ -149,75 +135,47 @@ function display_profile_form( array $info = [] ) {
         return $html;
     }
 
-    function notifications() {
+    function notifications( $info ) {
+        $locale = fusion_get_locale();
 
-        $html = fusion_get_function( 'opentable', 'Notifications' );
-        $html .= '<p>Notification settings and preferences.</p>';
-
-        // notify preferences
+        $html = fusion_get_function( 'opentable', $locale['u500'] );
+        $html .= '<p>' . $locale['u501'] . '</p>';
         $html .= openform( 'notifyFrm', 'POST' );
-        $html .= form_checkbox( 'comments', 'Comments and reactions', '', ['toggle' => TRUE, 'ext_tip' => 'Notifications about activity on the posts you created, commented on, or have been mentioned.', 'class' => 'form-check-lg'] );
+        $html .= $info['user_id'];
+        $html .= $info['user_hash'];
+        $html .= $info['user_comment_notify'];
         $html .= '<div class="hr"></div>';
-        $html .= form_checkbox( 'mentions', 'Mentions', '', ['toggle' => TRUE, 'ext_tip' => 'Notify when someone mentioned or tagged me in a post, article, news or comment, or threads.', 'class' => 'form-check-lg'] );
+        $html .= $info['user_tag_notify'];
         $html .= '<div class="hr"></div>';
-        $html .= form_checkbox( 'newsletters', 'Newsletter and Subscriptions', '', ['toggle' => TRUE, 'ext_tip' => 'Notify when there are any newsletter subscriptions and invitations.', 'class' => 'form-check-lg'] );
+        $html .= $info['user_newsletter_notify'];
         $html .= '<div class="hr"></div>';
-        $html .= form_checkbox( 'trackers', 'Following', '', ['toggle' => TRUE, 'ext_tip' => 'Notify when there are any follow up updates on the articles, posts or any contents that you are tracking.', 'class' => 'form-check-lg'] );
+        $html .= $info['user_follow_notify'];
         $html .= '<div class="hr"></div>';
-        $html .= form_checkbox( 'messages', 'Private messages', '', ['toggle' => TRUE, 'ext_tip' => 'Notify when there are any new private messages.', 'class' => 'form-check-lg'] );
+        $html .= $info['user_pm_notify'];
         $html .= '<div class="hr"></div>';
-
         $html .= opencollapse( 'email', 'accordion-flush' );
-        $html .= opencollapsebody( 'Email notifications<p class="small">Notification email settings</p>', 'x1', 'email', TRUE );
-        $html .= form_checkbox( 'pm_email', 'Private message emails', '' );
-        $html .= form_checkbox( 'forum_email', 'Forum emails', '' );
-        // infusions need to add a new thing
-        $html .= form_checkbox( 'inf_email', 'Message reminder emails', '' );
+        $html .= opencollapsebody( $locale['u510'] . '<p class="small">' . $locale['u511'] . '</p>', 'x1', 'email', TRUE );
+        $html .= $info['user_pm_email'];
+        $html .= $info['user_follow_email'];
+        $html .= $info['user_feedback_email'];
         $html .= '<div class="hr mb-3"></div>';
-        $html .= form_checkbox( 'email_duration', 'Email Frequency', '', [
-            'type' => 'radio',
-            'options' => [
-                '1' => 'Daily',
-                '2' => 'Weekly',
-                '3' => 'Periodically',
-                '0' => 'Off'
-            ],
-            'class' => 'form-check-lg'
-        ] );
+        $html .= $info['user_email_duration'];
         $html .= closecollapsebody() . closecollapse();
-
-
-        $html .= '<div class="d-flex flex-row justify-content-end m-t-20">' . form_button( 'save_changes', 'Save changes', 'save_changes', ['class' => 'btn-primary'] ) . '</div>';
+        $html .= '<div class="d-flex flex-row justify-content-end m-t-20">' . $info['notify_button'] . '</div>';
         $html .= closeform();
         $html .= fusion_get_function( 'closetable', '' );
 
         return $html;
     }
 
-
     Panels::getInstance()->hidePanel( 'RIGHT' );
-    Panels::addPanel( 'navigation_panel', navigation_panel(), 1 );
+    Panels::addPanel( 'navigation_panel', navigation_panel( $info['section'] ), 1 );
 
-    $opentab = '';
-    $closetab = '';
-    if (!empty( $info['tab_info'] )) {
-        $opentab = opentab( $info['tab_info'], check_get( 'section' ) ? get( 'section' ) : 1, 'user-profile-form', TRUE );
-        $closetab = closetab();
-    }
-
-    echo '<div class="tab-content py-0 mb-0">';
-    echo '<div class="tab-pane fade active show" id="profileSettings" role="tabpanel">' . account( $info ) . '</div>';
-    echo '<div class="tab-pane fade" id="notifications" role="tabpanel">' . notifications() . '</div>';
-    echo '</div>';
-
-
-//    opentable( '' );
-//    echo $opentab;
-//    echo "<!--editprofile_pre_idx--><div id='profile_form' class='spacer-sm'>";
-//    echo $info['validate'];
-//    echo $info['terms'];
-//    echo "</div><!--editprofile_sub_idx-->";
-//    echo $closetab;
-//    closetable();
+    echo '<!--editprofile_pre_idx-->';
+    echo match (get( 'section' )) {
+        default => account( $info ),
+        'notifications' => notifications( $info ),
+    };
+    echo '<!--editprofile_sub_idx-->';
 
 }

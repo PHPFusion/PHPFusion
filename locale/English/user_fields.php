@@ -175,3 +175,27 @@ $locale['u302'] = "Password should contain at least 1 number";
 $locale['u303'] = "Password should be at least 8 characters long";
 
 $locale['u400'] = "Already on [SITENAME]?";
+
+$locale['u500'] = 'Notification';
+$locale['u501'] = 'Preferred settings for all sorts of notifications about the user account.';
+$locale['u502'] = 'Comments and reactions';
+$locale['u503'] = 'Notifications when someone reacted to the contents created, rated or commented on';
+$locale['u504'] = 'Mentions';
+$locale['u505'] = 'Notify when someone mentioned or tagged in the post, article, news or commented on';
+$locale['u506'] = 'Newsletter and Subscriptions';
+$locale['u507'] = 'Notify when there are any newsletter subscriptions and invitations';
+$locale['u508'] = 'Following';
+$locale['u509'] = 'Notify when there are any follow up updates on the articles, posts or any contents that are being tracked';
+$locale['u510'] = 'Private messages';
+$locale['u511'] = 'Notify when there are any new private messages';
+$locale['u512'] = 'Email notifications';
+$locale['u513'] = 'Receive emails for the particular updates';
+$locale['u514'] = 'Follow updates emails';
+$locale['u515'] = 'Feedback emails';
+$locale['u516'] = 'Email Frequency';
+$locale['u517'] = 'Daily';
+$locale['u518'] = 'Weekly';
+$locale['u519'] = 'Periodically';
+$locale['u520'] = 'Off';
+$locale['u521'] = 'Notification settings have been updated';
+

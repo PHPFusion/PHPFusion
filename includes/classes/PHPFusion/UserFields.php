@@ -106,37 +106,53 @@ class UserFields extends QuantumFields {
     public $defaultInputOptions = [];
 
     /**
-     * Check whether a user field is available/installed
-     *
-     * @param string $field_name
-     *
-     * @return bool
-     */
-    public static function checkUserField( $field_name ) {
-
-        static $list;
-        $result = dbquery( "SELECT field_name FROM " . DB_USER_FIELDS );
-        if (dbrows( $result ) > 0) {
-            while ($data = dbarray( $result )) {
-                $list[] = $data['field_name'];
-            }
-        }
-
-        return in_array( $field_name, $list );
-    }
-
-    /**
      * Display Input Fields
      */
     public function displayProfileInput() {
-        $locale = fusion_get_locale();
 
         $this->method = 'input';
 
+        $this->info = match (get( 'section' )) {
+            default => $this->displayAccountInput(),
+            'notifications' => $this->displayNotificationInput(),
+        };
+
+        /*
+         * Template Output
+         */
+        $this->registration ? display_register_form( $this->info ) : display_profile_form( $this->info );
+    }
+
+    /**
+     * Notification Input
+     *
+     * @return array
+     */
+    private function displayNotificationInput() {
+
+        $this->info = [
+            'section'   => $this->getProfileSections(),
+            'user_id'   => form_hidden( 'user_id', '', $this->userData["user_id"] ),
+            'user_hash' => form_hidden( 'user_hash', '', $this->userData['user_password'] ),
+        ];
+
+        $this->options += $this->defaultInputOptions;
+
+        $input = new UserNotifications();
+        $this->info = $this->info + $input->displayInputFields();
+
+        return $this->info;
+    }
+
+    /**
+     * Account Input
+     *
+     * @return array|string[]
+     */
+    private function displayAccountInput() {
+
         $this->info = [
             'section'             => $this->getProfileSections(),
-            'register'            => $this->registration,
-            'pages'               => ($this->paginate && !$this->registration) ? get( 'section' ) : '',
             'show_avatar'         => $this->showAvatarInput,
             'user_id'             => form_hidden( 'user_id', '', $this->userData["user_id"] ),
             'user_name'           => '',
@@ -177,7 +193,6 @@ class UserFields extends QuantumFields {
         $this->info['terms'] = $input->termInput();
         $this->info['button'] = $input->renderButton();
 
-
         if ($this->method == 'validate_update') {
             // User Password Verification for Email Change
             $footer = openmodal( 'verifyPassword', 'Verify password', ['hidden' => TRUE] )
@@ -190,36 +205,36 @@ class UserFields extends QuantumFields {
 
             // Port to edit profile.js
             add_to_jquery( "            
-        var submitCallModal = function(dom) {
-           var form = dom.closest('form'), hashInput = form.find('input[name=\"user_hash\"]');                                   
-            $('button[name=\"" . $this->postName . "_btn\"]').on('click', function(e) {
-               e.preventDefault();
-               $(this).prop('disabled', true);                                    
-               $('#verifyPassword-Modal').modal('show');
-               $('#user_verify_password').on('input propertychange paste', function() {                        
-                    hashInput.val( $(this).val() );                                                
-               });                 
-               $('button[name=\"confirm_password\"]').on('click', function() {
-                    $('#verifyPassword-Modal').modal('hide');
-                    form[0].submit();
-               });                                                    
-            });                           
-        };
-        
-        var email = $('#user_email').val();            
-        $('#user_email').on('input propertychange paste', function() {
-            var requireModal = false;
-            if ($(this).val() != email) {
-                requireModal = true;
-            } else {
-                requireModal = false;
-            }
-            if (requireModal) {
-                // when postname button is clicked, require the modal.                    
-                submitCallModal($(this));
-            }                                     
-        });           
-        " );
+            var submitCallModal = function(dom) {
+               var form = dom.closest('form'), hashInput = form.find('input[name=\"user_hash\"]');                                   
+                $('button[name=\"" . $this->postName . "_btn\"]').on('click', function(e) {
+                   e.preventDefault();
+                   $(this).prop('disabled', true);                                    
+                   $('#verifyPassword-Modal').modal('show');
+                   $('#user_verify_password').on('input propertychange paste', function() {                        
+                        hashInput.val( $(this).val() );                                                
+                   });                 
+                   $('button[name=\"confirm_password\"]').on('click', function() {
+                        $('#verifyPassword-Modal').modal('hide');
+                        form[0].submit();
+                   });                                                    
+                });                           
+            };
+            
+            var email = $('#user_email').val();            
+            $('#user_email').on('input propertychange paste', function() {
+                var requireModal = false;
+                if ($(this).val() != email) {
+                    requireModal = true;
+                } else {
+                    requireModal = false;
+                }
+                if (requireModal) {
+                    // when postname button is clicked, require the modal.                    
+                    submitCallModal($(this));
+                }                                     
+            });           
+            " );
         }
 
         $this->info = $this->info + $this->getUserFields();
@@ -229,24 +244,12 @@ class UserFields extends QuantumFields {
          */
         $this->info['user_custom'] = $this->getCustomFields();
 
-        if (isset( $this->info['section'] ) && count( $this->info['section'] ) > 1) {
-            $tab_title = [];
-            foreach ($this->info['section'] as $section) {
-                $tab_title['title'][$section['id']] = $section['name'];
-                $tab_title['id'][$section['id']] = $section['id'];
-                $tab_title['icon'][$section['id']] = $section['icon'];
-            }
-            $this->info['tab_info'] = $tab_title;
-        }
-        /*
-         * Template Output
-         */
-        $this->registration ? display_register_form( $this->info ) : display_profile_form( $this->info );
+        return $this->info;
     }
 
     public function getCustomFields() {
         $user_fields = '';
-        if (!empty( $this->info['user_field'] )) {
+        if (!empty( $this->info['user_field'] ) && is_array( $this->info['user_field'] )) {
             foreach ($this->info['user_field'] as $catID => $fieldData) {
                 if (!empty( $fieldData['title'] )) {
                     $user_fields .= form_para( $fieldData['title'], 'fieldcat' . $catID );
@@ -255,8 +258,9 @@ class UserFields extends QuantumFields {
                     $user_fields .= implode( '', $fieldData['fields'] );
                 }
             }
-            return $user_fields;
         }
+
+        return $user_fields;
     }
 
     /**
@@ -264,24 +268,15 @@ class UserFields extends QuantumFields {
      */
     private function getProfileSections() {
 
-        $result = dbquery( "SELECT * FROM " . DB_USER_FIELD_CATS . " WHERE field_parent=:field_parent ORDER BY field_cat_order ASC", [':field_parent' => 0] );
-        $section = [];
-        if (dbrows( $result ) > 0) {
-            $aid = isset( $_GET['aid'] ) ? fusion_get_aidlink() : '';
-            $i = 0;
-            while ($data = dbarray( $result )) {
-                $section[$data['field_cat_id']] = [
-                    "id"     => $data['field_cat_id'],
-                    'active' => (isset( $_GET['section'] ) && $_GET['section'] == $data['field_cat_id']) ? 1 : (!isset( $_GET['section'] ) && $i == 0 ? 1 : 0),
-                    'link'   => clean_request( $aid . 'section=' . $data['field_cat_id'] . '&lookup=' . $this->userData['user_id'], ['section'], FALSE ),
-                    'name'   => ucwords( self::parseLabel( $data['field_cat_name'] ) ),
-                    'icon'   => $data['field_cat_class']
-                ];
-                $i++;
-            }
-        }
+        return [
+            'account'        => ['link' => clean_request( 'section=account', ['section'], FALSE ), 'title' => 'Account'],
+            'notifications'  => ['link' => clean_request( 'section=notifications', ['section'], FALSE ), 'title' => 'Notifications'],
+            'privacy'        => ['link' => clean_request( 'section=privacy', ['section'], FALSE ), 'title' => 'Privacy and safety'],
+            'communications' => ['link' => clean_request( 'section=communications', ['section'], FALSE ), 'title' => 'Communications'],
+            'message'        => ['link' => clean_request( 'section=message', ['section'], FALSE ), 'title' => 'Messaging'],
+            'close'          => ['link' => clean_request( 'section=close', ['section'], FALSE ), 'title' => 'Close account']
+        ];
 
-        return $section;
     }
 
 
