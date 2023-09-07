@@ -36,7 +36,6 @@ if ($profile_method == "input") {
         $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$locale['uf_web_001']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
     $user_fields = [
-        'icon'  => $icon,
         'link'  => $link,
         'title' => $locale['uf_web'],
         'value' => $field_value ?: ''
