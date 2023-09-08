@@ -68,10 +68,10 @@ class UserNotifications {
             'user_email_duration'    => form_checkbox( 'e_duration', $locale['u516'], '', [
                 'type'    => 'radio',
                 'options' => [
-                    '2' => $locale['u517'],
-                    '3' => $locale['u518'],
-                    '4' => $locale['u519'],
-                    '1' => $locale['u520'],
+                    '1' => $locale['u517'],
+                    '2' => $locale['u518'],
+                    '3' => $locale['u519'],
+                    '0' => $locale['u520'],
                 ],
                 'class'   => 'form-check-lg'
             ] ),

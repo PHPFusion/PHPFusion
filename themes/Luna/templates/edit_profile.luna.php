@@ -168,6 +168,83 @@ function display_profile_form( array $info = [] ) {
         return $html;
     }
 
+    function privacy( $info ) {
+
+        $locale = fusion_get_locale();
+
+        $html = fusion_get_function( 'opentable', $locale['u600'] );
+        $html .= '<p>' . $locale['u601'] . '</p>';
+
+        if ($view = get( 'd' )) {
+
+            function display_two_step( $info ) {
+                $locale = fusion_get_locale();
+
+                // Email template checks
+                if (check_get( 'auth' )) {
+
+                    fusion_confirm_exit();
+
+                    $html = '<h6>' . $locale['u606'] . '</h6>';
+                    $html .= '<p>' . strtr( $locale['u607'], ['[EMAIL]' => '<strong>' . $info['email_display'] . '</strong>'] ) . '</p>';
+                    $html .= openform( 'privacyFrm', 'POST' );
+                    $html .= $info['user_id'];
+                    $html .= $info['user_hash'];
+                    $html .= '<div class="mb-4">' . $info['user_code'] . '</div>';
+                    $html .= $info['button'];
+                    $html .= '<div class="small mt-2">' . $locale['u609'] . '</div>';
+                    $html .= closeform();
+
+                } else {
+
+                    $html =
+                        openform( 'authFrm', 'POST', clean_request( 'auth=1', ['auth'], FALSE ) ) .
+                        '<strong>' . $locale['u602'] . '</strong>' .
+                        '<p>' . $locale['u603'] . '</p>' .
+                        '<p>' . $locale['u604'] . '</p>' .
+                        $info['get_auth'] .
+                        closeform();
+                }
+
+                return $html;
+            }
+
+
+            $html .= match ($view) {
+                default => 'Content not found',
+                'twostep' => display_two_step( $info ),
+
+            };
+
+
+        } else {
+            $html .= '<div class="list-group">';
+            $html .= '<div class="list-group-item d-flex align-items-center">';
+            $html .= '<h6>' . $locale['u602'] . '</h6>';
+            $html .= '<a href="' . $info['twostep_url'] . '" class="ms-auto btn btn-sm btn-primary-soft">Setup</a>';
+            $html .= '</div>';
+            $html .= '<div class="list-group-item d-flex align-items-center">';
+            $html .= '<h6>Login activity</h6>';
+            $html .= '<a href="' . $info['records_url'] . '" class="ms-auto btn btn-sm btn-primary-soft">View</a>';
+            $html .= '</div>';
+            $html .= '<div class="list-group-item d-flex align-items-center">';
+            $html .= '<h6>Manage your data and activity</h6>';
+            $html .= '<a href="' . $info['data_url'] . '" class="ms-auto btn btn-sm btn-primary-soft">View</a>';
+            $html .= '</div>';
+            $html .= '<div class="list-group-item d-flex align-items-center">';
+            $html .= '<h6>Social Login</h6>';
+            $html .= '<a href="' . $info['login_url'] . '" class="ms-auto btn btn-sm btn-primary-soft">Bindings</a>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+
+
+        $html .= fusion_get_function( 'closetable', '' );
+
+        return $html;
+    }
+
+
     Panels::getInstance()->hidePanel( 'RIGHT' );
     Panels::addPanel( 'navigation_panel', navigation_panel( $info['section'] ), 1 );
 
@@ -175,6 +252,7 @@ function display_profile_form( array $info = [] ) {
     echo match (get( 'section' )) {
         default => account( $info ),
         'notifications' => notifications( $info ),
+        'privacy' => privacy( $info ),
     };
     echo '<!--editprofile_sub_idx-->';
 

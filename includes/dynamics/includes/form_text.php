@@ -25,6 +25,7 @@
  * @param bool $input_value The value to be displayed.
  * @param array $options
  *
+ * Jquery mask plugin (https://igorescobar.github.io/jQuery-Mask-Plugin/docs.html#basic-usage)
  * Password strength meter (https://github.com/ablanco/jquery.pwstrength.bootstrap) - MIT License
  *
  * @return string
@@ -148,8 +149,8 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
         case 'email':
             $input_type = 'email';
             break;
-        case "password":
-            $input_type = "password";
+        case 'password':
+            $input_type = 'password';
             if ($options['password_toggle'] == TRUE) {
 
                 if (!defined( 'PWTOGGLE' )) {
@@ -215,13 +216,6 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
             add_to_footer( '<script src="' . DYNAMICS . 'assets/password/i18next.js" defer></script>' );
             add_to_footer( '<script src="' . DYNAMICS . 'assets/password/pwstrength-bootstrap.min.js" defer></script>' );
         }
-
-        /*
-         *                 $adminpassAuth->currentPassCheckLength = $settings['password_length'];
-                $adminpassAuth->currentPassCheckSpecialchar = $settings['password_char'];
-                $adminpassAuth->currentPassCheckNum = $settings['password_num'];;
-                $adminpassAuth->currentPassCheckCase = $settings['password_case'];
-         */
 
         if (defined('BOOTSTRAP') && isnum(BOOTSTRAP) && BOOTSTRAP < 5) {
             $ui_rules = 'bootstrap'.BOOTSTRAP.' : true,';

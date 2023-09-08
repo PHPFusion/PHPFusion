@@ -199,3 +199,15 @@ $locale['u519'] = 'Periodically';
 $locale['u520'] = 'Off';
 $locale['u521'] = 'Notification settings have been updated';
 
+$locale['u600'] = 'Privacy and safety';
+$locale['u601'] = 'Account access to your account, data storage and account security options';
+$locale['u602'] = 'Two step verification';
+$locale['u603'] = 'Secure your account with two-step verification';
+$locale['u604'] = 'Two step verification gives you additional security by requiring a verification code whenever sign in on a new device.';
+$locale['u605'] = 'Setup Two-step verification';
+$locale['u606'] = 'We sent a code to your email';
+$locale['u607'] = 'Enter the 6-digit verification code sent to [EMAIL]';
+$locale['u608'] = '6-digit code';
+$locale['u609'] = 'If you don\'t see the email in your inbox, check your spam folder.';
+$locale['u610'] = 'You have successfully activated your two-step verification';
+$locale['u611'] = 'Two step verification could not be performed. Please contact system administrator';

@@ -23,44 +23,49 @@ defined('IN_FUSION') || exit;
  * @param       $template_key
  * @param       $recipient_name
  * @param       $recipient_email
- * @param       $subject
- * @param       $body
  * @param array $options
  *
  * @return bool
  */
-function fusion_sendmail($template_key, $recipient_name, $recipient_email, $subject, $body, array $options = []) {
+function fusion_sendmail($template_key, $recipient_name, $recipient_email, array $options = []) {
 
     $options += [
+        'subject'      => '',
+        'message'      => '',
         'user_name'    => $recipient_name, // any given username
         'sender_name'  => fusion_get_settings('sitename'),
         'sender_email' => fusion_get_settings('siteemail'),
         'replace'      => [],
+        'language'     => LANGUAGE,
     ];
 
     try {
-        $result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key=:key LIMIT 1", [
-            ':key' => $template_key
+        $result = dbquery("SELECT template_key, template_active FROM ".DB_EMAIL_TEMPLATES." WHERE template_key=:key AND template_language=:lang LIMIT 1", [
+            ':key'  => $template_key,
+            ':lang' => $options['language']
         ]);
+
         if (dbrows($result)) {
             $data = dbarray($result);
+
             if ($data['template_active'] == "1") {
-                print_p('ahoy');
                 return sendmail_template($template_key, $recipient_name, $recipient_email, $options['sender_name'], $options['sender_email'], $options['replace']);
             }
         }
 
+        // Fallback
         if (!empty($options['replace'])) {
-            $subject = strtr($subject, $options['replace']);
-            $body = strtr($body, $options['replace']);
+            $options['subject'] = strtr($options['subject'], $options['replace']);
+            $options['message'] = strtr($options['message'], $options['replace']);
         }
 
-        return sendemail($recipient_name, $recipient_email, $options['sender_name'], $options['sender_email'], $subject, $body);
+        return sendemail($recipient_name, $recipient_email, $options['sender_name'], $options['sender_email'], $options['subject'], $options['message']);
     } catch (Exception $e) {
         set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
     }
     return FALSE;
 }
+
 
 if (!function_exists('sendemail')) {
     /**

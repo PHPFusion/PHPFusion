@@ -4,7 +4,7 @@
 
         {% for key, value in options['options'] %}
 
-            {% set deactivation = options['deactivate_key'] == key ? true : false %}
+            {% set deactivation = options['deactivate_key'] is not null and options['deactivate_key'] == key ? true : false %}
 
             {% set checkbox_input_properties = whitespace( deactivation ? 'disabled' : '') ~ whitespace(options['onclick'] ? 'onclick="'~options['onclick']~'"' : '') ~ whitespace(input_value[key] == true ? 'checked' : '') %}
 

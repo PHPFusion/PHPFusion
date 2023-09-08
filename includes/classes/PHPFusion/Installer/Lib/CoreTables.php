@@ -1418,6 +1418,47 @@ class CoreTables {
                 'key'            => 2, //PRIMARY KEY (user_id),
                 'unsigned'       => TRUE,
             ],
+            'user_auth'            => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => 0,
+            ],
+            'user_hide_email'      => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => 1,
+                'unsigned' => TRUE,
+            ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            'user_hide_phone'      => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => 1,
+                'unsigned' => TRUE,
+            ],
+            'user_inbox'           => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_inbox SMALLINT(6) unsigned not null default '0',
+            'user_outbox'          => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_outbox SMALLINT(6) unsigned not null default '0',
+            'user_archive'         => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_archive SMALLINT(6) unsigned not null default '0',
+            'user_pm_save_sent'    => [
+                'type'    => 'TINYINT',
+                'length'  => 1,
+                'default' => '0'
+            ], //user_pm_save_sent TINYINT(1) not null default '0',
             'user_comments_notify'   => [
                 'type'     => 'TINYINT',
                 'length'   => 1,
@@ -1472,6 +1513,17 @@ class CoreTables {
                 'default'  => '4',
                 'unsigned' => TRUE,
             ],
+
+            'user_language'        => [
+                'type'    => 'VARCHAR',
+                'length'  => 50,
+                'default' => $localeset
+            ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+            'user_timezone'        => [
+                'type'    => 'VARCHAR',
+                'length'  => 50,
+                'default' => 'Europe/London'
+            ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
         ];
 
         $table_package['users'] = [
@@ -1549,28 +1601,11 @@ class CoreTables {
                 'key'     => 2,
                 'default' => ''
             ], //user_email VARCHAR(100) NOT NULL DEFAULT '',
-            'user_hide_email'      => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => 1,
-                'unsigned' => TRUE,
-            ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-            'user_hide_phone'      => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => 1,
-                'unsigned' => TRUE,
-            ],
             'user_bio'             => [
                 'type'    => 'VARCHAR',
                 'length'  => 255,
                 'default' => '',
             ],
-            'user_timezone'        => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'default' => 'Europe/London'
-            ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
             'user_avatar'          => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
@@ -1628,29 +1663,6 @@ class CoreTables {
                 'key'      => 2,
                 'default'  => '0'
             ], //user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-            'user_inbox'           => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_inbox SMALLINT(6) unsigned not null default '0',
-            'user_outbox'          => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_outbox SMALLINT(6) unsigned not null default '0',
-            'user_archive'         => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_archive SMALLINT(6) unsigned not null default '0',
-            'user_pm_save_sent'    => [
-                'type'    => 'TINYINT',
-                'length'  => 1,
-                'default' => '0'
-            ], //user_pm_save_sent TINYINT(1) not null default '0',
             'user_actiontime'      => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -1661,12 +1673,6 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 170,
                 'default' => ''
-            ],
-            'user_auth'            => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'unsigned' => TRUE,
-                'default'  => 0,
             ],
             'user_auth_pin'        => [
                 'type'    => 'VARCHAR',
@@ -1711,11 +1717,6 @@ class CoreTables {
             'user_sig'             => [
                 'type' => 'TEXT'
             ], //user_sig TEXT NOT NULL,
-            'user_language'        => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'default' => $localeset
-            ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
         ];
         $table_package['theme'] = [
             'theme_id'        => [

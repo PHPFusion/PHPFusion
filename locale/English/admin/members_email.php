@@ -68,6 +68,14 @@ This email was sent because someone attempted to log into your [SITENAME] accoun
 If you are not trying to log in, we recommend that you reset your [SITENAME] password as the security of your [SITENAME] account may be compromised. The login pin contained in this email is required to access your account. Do not share the pin with anyone.<br/><br/>
 Regards,<br/>[SITENAME]<br/><br/>This notification has been sent to the email address associated with your [SITENAME] account. This email message was auto-generated. Please do not respond. If you need any additional help, please visit the [SITENAME] Support.";
 
+
+$locale['email_2fa_setup_message'] = "It looks like you are trying to setup your 2 step verification in to [SITENAME]. Here is the 2FA Pin code you need to activate 2FA in your account: [OTP]\n\n
+This email was sent because someone attempted to log into your [SITENAME] account. The login attempt included your correct username and password.\n\n
+If you are not trying to log in, we recommend that you reset your [SITENAME] password as the security of your [SITENAME] account may be compromised. The login pin contained in this email is required to access your account. Do not share the pin with anyone.\n\n
+Regards,\n\n[SITENAME]\n\nThis notification has been sent to the email address associated with your [SITENAME] account. This email message was auto-generated. Please do not respond. If you need any additional help, please visit the [SITENAME] Support.";
+
+
+
 $locale['email_pass_name'] = "Password Recovery Email";
 $locale['email_pass_subject'] = "New password request for [USER_NAME]";
 $locale['email_pass_message'] = "Hello [USER_NAME],<br/>You have or someone has requested a new password to access your [SITENAME] account.<br/>

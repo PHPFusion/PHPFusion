@@ -22,6 +22,8 @@
   @-inline-svg-url: ~"url('@{-inline-svg-code}')";
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 body {
 
   --color: #676a79;
@@ -46,10 +48,12 @@ body {
 
   color: var(--color);
   background: var(--bg);
-  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
 
   header {
     height: 70px;
@@ -180,7 +184,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
   margin-bottom: 0.5rem;
   font-weight: 700;
   line-height: 1.25;
-  color: var(--bs-heading-color, inherit);
+  color: var(--header-color, inherit);
 }
 
 a {
@@ -297,7 +301,6 @@ a {
   }
 
 }
-
 
 .btn {
   //--bs-btn-padding-x: 1rem;
@@ -445,8 +448,6 @@ a {
       //background: var(--bs-btn-hover-color);
     }
   }
-
-
 }
 
 .btn-sm, .btn-group-sm > .btn {
@@ -516,6 +517,12 @@ a.stretched:after {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
 }
 
+.form-control[data-type="password"] {
+  & ~ .input-group-text {
+    padding:0;
+  }
+}
+
 .form-tip {
   font-size: .8rem;
   line-height: 1rem;
@@ -536,7 +543,7 @@ a.stretched:after {
 
     & > p {
       color: var(--bs-gray-700) !important;
-      font-size: .8rem !important;
+      font-size: .9rem !important;
       margin:0;
     }
   }
@@ -591,7 +598,7 @@ a.stretched:after {
     p {
       color: var(--bs-card-color);
       font-weight: 400;
-      font-size: .8rem;
+      font-size: .9rem !important;
       margin-top: .2rem;
     }
   }
@@ -616,10 +623,8 @@ a.stretched:after {
     font-size: 0.9375rem;
 
     .select2-arrow {
-      border-left: 0;
       background: #fff;
-      border: none;
-      border-width: 5px;
+      border: 5px none;
 
       margin-top: 0;
 
@@ -714,9 +719,10 @@ a.stretched:after {
       font-weight: 700;
 
       p {
+        color: var(--bs-gray-700);
         display: block;
         font-weight: 400;
-        font-size: .8rem;
+        font-size: .9rem;
       }
     }
   }
@@ -737,7 +743,7 @@ a.stretched:after {
 
         & > p {
           color: var(--bs-gray-700) !important;
-          font-size: .8rem !important;
+          font-size: .9rem !important;
           margin:0;
         }
       }

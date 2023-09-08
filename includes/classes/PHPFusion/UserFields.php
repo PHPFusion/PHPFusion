@@ -115,6 +115,7 @@ class UserFields extends QuantumFields {
         $this->info = match (get( 'section' )) {
             default => $this->displayAccountInput(),
             'notifications' => $this->displayNotificationInput(),
+            'privacy' => $this->displayPrivacyInput(),
         };
 
         /*
@@ -130,19 +131,36 @@ class UserFields extends QuantumFields {
      */
     private function displayNotificationInput() {
 
-        $this->info = [
-            'section'   => $this->getProfileSections(),
-            'user_id'   => form_hidden( 'user_id', '', $this->userData["user_id"] ),
-            'user_hash' => form_hidden( 'user_hash', '', $this->userData['user_password'] ),
-        ];
-
         $this->options += $this->defaultInputOptions;
 
         $input = new UserNotifications();
-        $this->info = $this->info + $input->displayInputFields();
+        $this->info = $this->getEmptyInputInfo() + $input->displayInputFields();
 
         return $this->info;
     }
+
+    private function getEmptyInputInfo() {
+        return [
+            'section'   => $this->getProfileSections(),
+            'userdata'  => $this->userData,
+            'user_id'   => form_hidden( 'user_id', '', $this->userData["user_id"] ),
+            'user_hash' => form_hidden( 'user_hash', '', $this->userData['user_password'] ),
+        ];
+    }
+
+    /**
+     * Privacy Input
+     *
+     * @return array
+     */
+    private function displayPrivacyInput() {
+        $input = new UserPrivacy();
+        $input->userData = $this->userData;
+        $this->info = $this->getEmptyInputInfo() + $input->displayInputFields();
+
+        return $this->info;
+    }
+
 
     /**
      * Account Input
@@ -268,13 +286,18 @@ class UserFields extends QuantumFields {
      */
     private function getProfileSections() {
 
+        $link_prefix = BASEDIR.'edit_profile.php?section=';
+        if ($this->moderation) {
+            $link_prefix = ADMIN.'members.php?lookup='.$this->userData['user_id'].'&action=edit&';
+        }
+
         return [
-            'account'        => ['link' => clean_request( 'section=account', ['section'], FALSE ), 'title' => 'Account'],
-            'notifications'  => ['link' => clean_request( 'section=notifications', ['section'], FALSE ), 'title' => 'Notifications'],
-            'privacy'        => ['link' => clean_request( 'section=privacy', ['section'], FALSE ), 'title' => 'Privacy and safety'],
-            'communications' => ['link' => clean_request( 'section=communications', ['section'], FALSE ), 'title' => 'Communications'],
-            'message'        => ['link' => clean_request( 'section=message', ['section'], FALSE ), 'title' => 'Messaging'],
-            'close'          => ['link' => clean_request( 'section=close', ['section'], FALSE ), 'title' => 'Close account']
+            'account'        => ['link' => $link_prefix.'account', 'title' => 'Account'],
+            'notifications'  => ['link' => $link_prefix.'notifications', 'title' => 'Notifications'],
+            'privacy'        => ['link' => $link_prefix.'privacy', 'title' => 'Privacy and safety'],
+            'communications' => ['link' => $link_prefix.'communications', 'title' => 'Communications'],
+            'message'        => ['link' => $link_prefix.'message', 'title' => 'Messaging'],
+            'close'          => ['link' => $link_prefix.'close', 'title' => 'Close account']
         ];
 
     }

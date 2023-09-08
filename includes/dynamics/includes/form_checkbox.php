@@ -99,6 +99,7 @@ function form_checkbox( $input_name, $label = '', $input_value = '0', array $opt
             $key = key( $input_value );
             $input_value[$key] = 1;
         }
+
     }
 
     if ($options['type'] == 'toggle') {
