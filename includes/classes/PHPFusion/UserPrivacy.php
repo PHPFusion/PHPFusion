@@ -25,7 +25,12 @@ class UserPrivacy {
         ];
     }
 
-    public function displayTwoStep() {
+    /**
+     * Activate two step verification
+     * @return array
+     * @throws \Exception
+     */
+    private function displayTwoStep() {
 
         $locale = fusion_get_locale();
 
@@ -40,7 +45,7 @@ class UserPrivacy {
                 if (dbrows( $res )) {
                     $rows = dbarray( $res );
                     if ($pin == $rows['user_2fa_pin']) {
-                        $rows['user_auth'] = 1;
+
                         $data = [
                             'user_id'   => (int)$this->userData['user_id'],
                             'user_auth' => 1,
@@ -100,6 +105,7 @@ class UserPrivacy {
             'button'        => form_button( 'submit_2fa', $locale['submit'], $locale['submit'], ['class' => 'btn-primary'] ),
         ];
     }
+
 
 
 }
