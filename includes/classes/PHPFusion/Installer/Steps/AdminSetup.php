@@ -124,7 +124,7 @@ class AdminSetup extends InstallCore {
 
         $result = dbquery( "SELECT * FROM " . DB_USERS . " WHERE user_id='1'" );
 
-        if (dbrows( $result ) > 0) {
+        if (dbrows( $result )) {
 
             self::$user_data = dbarray( $result );
 
@@ -364,12 +364,20 @@ class AdminSetup extends InstallCore {
 
                     self::$user_data['user_timezone'] = self::$site_data['timeoffset'];
                     $batch_core = Batch::getInstance();
+
                     // Create Super Admin
                     if (dbcount( "(user_id)", DB_PREFIX . "users", "user_id='1'" )) {
                         self::$user_data['user_id'] = 1;
+
                         dbquery_insert( DB_PREFIX . "users", self::$user_data, 'update' );
+
+                        dbquery_insert( DB_PREFIX . 'user_settings', self::$user_data, 'update', ['no_primary' => TRUE, 'primary_key' => 'user_id'] );
+
                     } else {
-                        dbquery_insert( DB_PREFIX . "users", self::$user_data, 'save' );
+
+                        self::$user_data['user_id'] = dbquery_insert( DB_PREFIX . "users", self::$user_data, 'save' );
+
+                        dbquery_insert( DB_PREFIX . 'user_settings', self::$user_data, 'save', ['no_primary' => TRUE, 'primary_key' => 'user_id'] );
                     }
 
                     // Update Site Settings

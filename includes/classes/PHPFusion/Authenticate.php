@@ -406,7 +406,7 @@ class Authenticate {
 
         $locale_file = LOCALE . $settings['locale'] . '/global.php'; // fix for multilang issue
 
-        if (get( "logoff", FILTER_VALIDATE_INT )) {
+        if (get( 'logoff', FILTER_VALIDATE_INT )) {
             session_remove( "login_as" );
             addnotice( "success", fusion_get_locale( 'global_185', $locale_file ), BASEDIR . $settings["opening_page"] );
             redirect( BASEDIR . $settings["opening_page"] );
@@ -417,11 +417,22 @@ class Authenticate {
             if (count( $cookieDataArr ) == 3) {
                 [$userID, $cookieExpiration, $cookieHash] = $cookieDataArr;
                 if ($cookieExpiration > time()) {
+
                     // must update user_salt
-                    $result = dbquery( "SELECT * FROM " . DB_USERS . " WHERE user_id='" . (isnum( $userID ) ? $userID : 0) . "' AND user_status='0' AND user_actiontime='0' LIMIT 1" );
+                    $result = dbquery( "SELECT * FROM " . DB_USERS . " WHERE user_id=:uid AND user_status='0' AND user_actiontime='0' LIMIT 1", [
+                        ':uid' => (int)isnum( $userID ) ? $userID : 0
+                    ] );
+
                     if (dbrows( $result ) == 1) {
+
                         $user = dbarray( $result );
-                        $secure_auth = get( "auth" );
+
+                        $settings_res = dbquery( "SELECT * FROM " . DB_USER_SETTINGS . " WHERE user_id=:uid", [':uid' => (int)$user['user_id']] );
+                        if (dbrows( $settings_res )) {
+                            $user = $user + dbarray( $settings_res );
+                        }
+
+                        $secure_auth = get( 'auth' );
 
                         if (empty( $user["user_session"] )) {
                             if (FUSION_SELF == "login.php" && $secure_auth == 'security_pin') {

@@ -216,7 +216,6 @@ function display_profile_form( array $info = [] ) {
 
             };
 
-
         } else {
             $html .= '<div class="list-group">';
             $html .= '<div class="list-group-item d-flex align-items-center">';
