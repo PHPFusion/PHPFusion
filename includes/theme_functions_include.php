@@ -33,26 +33,21 @@ defined( 'IN_FUSION' ) || exit;
  * @return string
  */
 function showrendertime( $queries = TRUE ) {
-    $locale = fusion_get_locale();
-    $db_connection = DatabaseFactory::getConnection( 'default' );
-    $mysql_queries_count = $db_connection::getGlobalQueryCount();
-    if (fusion_get_settings( 'rendertime_enabled' ) == 1 || (fusion_get_settings( 'rendertime_enabled' ) == 2 && iADMIN)) {
-        $res = showbenchmark();
-        $res .= " | ";
-        $res .= ($queries ? ucfirst( $locale['global_173'] ) . ": " . $mysql_queries_count . " | " : '');
+
+    if (fusion_get_settings( 'rendertime_enabled' ) == 1 || (fusion_get_settings( 'rendertime_enabled' ) == 2 && iADMIN) || defined( 'iDEVELOPER' )) {
+
+        $locale = fusion_get_locale();
+        $db_connection = DatabaseFactory::getConnection( 'default' );
+        $mysql_queries_count = $db_connection::getGlobalQueryCount();
+
+        $res = showmemoryusage();
+        $res .= showbenchmark();
+        $res .= ($queries ? ' | ' . ucfirst( $locale['global_173'] ) . ": " . $mysql_queries_count : '');
 
         return $res;
-    } elseif (defined( 'DEVELOPER_MODE' )) {
-        $res = showbenchmark();
-        $res .= " | ";
-        $res .= ($queries ? ucfirst( $locale['global_173'] ) . ": " . $mysql_queries_count . " | " : '');
-
-        return $res;
-    } else {
-        return "";
     }
 
-
+    return '';
 }
 
 /**
@@ -67,7 +62,7 @@ function showrendertime( $queries = TRUE ) {
 function showbenchmark( $show_sql_performance = FALSE, $performance_threshold = '0.01' ) {
     $locale = fusion_get_locale();
     if ($show_sql_performance) {
-        $query_log = DatabaseFactory::getConnection( 'default' )->getQueryLog();
+        $query_log = DatabaseFactory::getConnection()->getQueryLog();
         $modal = openmodal( 'querylogsModal', "<h4><strong>Database Query Performance Logs</strong></h4>" );
         $modal_body = '';
         $i = 0;
@@ -153,11 +148,17 @@ function showbenchmark( $show_sql_performance = FALSE, $performance_threshold = 
  * @return string
  */
 function showmemoryusage() {
-    $locale = fusion_get_locale();
-    $memory_allocated = parsebytesize( memory_get_peak_usage( TRUE ) );
-    $memory_used = parsebytesize( memory_get_peak_usage( FALSE ) );
 
-    return $locale['global_174'] . ": " . $memory_used . "/" . $memory_allocated;
+    $settings = fusion_get_settings();
+
+    if ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2 && iADMIN || defined('iDEVELOPER')) {
+
+        $locale = fusion_get_locale();
+
+        return $locale['global_174'] . ': ' . parsebytesize( memory_get_peak_usage( FALSE ) ) . '/' . parsebytesize( memory_get_peak_usage( TRUE ) );
+    }
+
+    return '';
 }
 
 /**
@@ -1161,10 +1162,11 @@ if (!function_exists( 'opencollapse' )) {
      *
      * @param string $id Unique accordion ID.
      * @param string $class Additional css class
+     *
      * @return string
      */
-    function opencollapse( $id , $class = '') {
-        return fusion_get_template( 'collapse', ['callback' => 'opencollapse', 'id' => $id, 'class'=>$class] );
+    function opencollapse( $id, $class = '' ) {
+        return fusion_get_template( 'collapse', ['callback' => 'opencollapse', 'id' => $id, 'class' => $class] );
     }
 
 }

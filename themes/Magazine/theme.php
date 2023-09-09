@@ -142,14 +142,15 @@ function render_page() {
     echo '</div>';
     echo '</div>';
 
-    echo '<div class="text-center" style="margin-top: 30px;">' . showcopyright( '', TRUE ) . showprivacypolicy() . '</div>';
+    echo '<div class="text-center" style="margin-top: 30px;">' . showcopyright(  ) . showprivacypolicy() . '</div>';
 
-    if ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) {
+    $m = showrendertime() . showmemoryusage();
+    if ($m) {
         echo '<div class="text-center">';
-        echo showrendertime();
-        echo showmemoryusage();
+        echo $m;
         echo '</div>';
     }
+
     echo '<div class="text-center strong">Magazine theme &copy; ' . date( 'Y' ) . ' ' . $locale['created_by'] . ' <a href="https://github.com/RobiNN1" target="_blank">RobiNN</a></div>';
     echo showcounter();
     echo '</div>';

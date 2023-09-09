@@ -39,6 +39,8 @@ function render_page() {
     $settings = fusion_get_settings();
     $userdata = fusion_get_userdata();
 
+    echo '<div id="error-logs"></div>';
+
     echo '<header>';
 
     //fixed-top header-static
@@ -110,8 +112,8 @@ function render_page() {
     ] );
 
     $side_unit = 3;
-    $left = defined( 'LEFT' ) && !empty( LEFT ) ? 1 : 0;
-    $right = defined( 'RIGHT' ) && !empty( RIGHT ) ? 1 : 0;
+    $left = defined( 'LEFT' ) && LEFT;
+    $right = defined( 'RIGHT' ) && RIGHT;
     $lg_span = 12 - (($left + $right) * 3);
     $md_span = 8;
 
@@ -135,8 +137,16 @@ function render_page() {
 
     echo '</div></main>';
 
-    echo '<div class="copyright-bottom"><div class="container"><div class="site-policies">' . showpolicies() . '</div><div class="site-copyright">' . showcopyright() . '</div></div></div>';
+    echo '<div class="copyright-bottom"><div class="container">' .
+        '<div class="site-policies">' . showpolicies() . '</div>' .
+        '<div class="site-copyright">' . showcopyright() . '</div>' .
+        showrendertime(). showfootererrors().
+        '</div></div>';
+
 }
+
+// show the error logs
+
 
 function showpolicies() {
 
