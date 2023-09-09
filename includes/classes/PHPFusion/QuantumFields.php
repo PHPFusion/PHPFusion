@@ -1479,8 +1479,10 @@ class QuantumFields extends QuantumFactory {
         $sec_id = array_pop( $indexes );
 
         $cur_section = (isset( $_GET['section'] ) && in_array( $_GET['section'], array_values( $this->field_cat_index[0] ) ) ? (int)$_GET['section'] : $sec_id);
+
         // get current section categories
         $cur_cid = array_values( $this->field_cat_index[$cur_section] );
+
         $fields = [];
         foreach ($cur_cid as $category_id) {
             if (isset( $this->fields[$category_id] )) {
@@ -1495,11 +1497,13 @@ class QuantumFields extends QuantumFactory {
         }
 
         foreach ($field as $field_data) {
+
             $target_database = $field_data['field_cat_db'] ? DB_PREFIX . $field_data['field_cat_db'] : $db;
+
             $col_name = !empty( $field_data['field_cat_index'] ) ? $field_data['field_cat_index'] : $primary_key;
 
             // Find index primary key value
-            $primaryKeyVal = isset( $_POST[$col_name] ) ? sanitizer( $col_name, $field_data['field_default'], $col_name ) : '';
+            $primaryKeyVal = sanitizer( $col_name, $field_data['field_default'], $col_name );
 
             if (!isset( $output_fields[$target_database][$col_name] )) {
                 $output_fields[$target_database][$col_name] = $primaryKeyVal;
@@ -1507,7 +1511,7 @@ class QuantumFields extends QuantumFactory {
 
 //            $output_fields[$target_database][$field_data['field_name']] = $field_data['field_default'];
             // Set input as default if posted but blank
-            if (isset( $_POST[$field_data['field_name']] )) {
+            if (check_post( $field_data['field_name'] )) {
 //                if (check_post($field_data['field_name']) { // array support?
                 $output_fields[$target_database][$field_data['field_name']] = sanitizer( $field_data['field_name'], $field_data['field_default'], $field_data['field_name'] );
             }
@@ -1527,17 +1531,25 @@ class QuantumFields extends QuantumFactory {
     public function logUserAction( $db, $primary_key ) {
 
         if (fusion_safe()) {
+
             $field = flatten_array( $this->fields );
 
             foreach ($field as $field_data) {
 
                 $target_db = $field_data['field_cat_db'] ? DB_PREFIX . $field_data['field_cat_db'] : $db;
+
                 $col_name = !empty( $field_data['field_cat_index'] ) ? $field_data['field_cat_index'] : $primary_key;
+
                 $index_value = isset( $_POST[$col_name] ) ? form_sanitizer( $_POST[$col_name], 0 ) : '';
+
                 $old_cache = $this->callback_data[$field_data['field_name']] ?? '';
+
                 $new_val = $this->output_fields[$target_db][$field_data['field_name']] ?? '';
+
                 if ($field_data['field_log'] && $new_val && $new_val != $old_cache) {
+
                     save_user_log( $index_value, $field_data['field_name'], $new_val, $old_cache );
+
                 }
             }
         }

@@ -35,31 +35,31 @@ $errors = [];
 $settings = fusion_get_settings();
 $post_name = 'update_profile';
 
-if (check_post( $post_name )) {
+if ($settings['email_verification'] == 1) {
 
-    $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->username_change = fusion_get_settings( 'username_change' );
-    $userInput->verifyNewEmail = TRUE;
-    $userInput->registration = FALSE;
-    $userInput->userData = fusion_get_userdata();
-
-    if ($userInput->saveUpdate()) {
+    if (check_get('code')) {
+        $userInput = new PHPFusion\UserFieldsInput();
+        $userInput->verifyCode( get( 'code' ) );
         redirect( FUSION_REQUEST );
     }
 
-} else if (check_get( 'code' ) && $settings['email_verification'] == 1) {
-    $userInput = new PHPFusion\UserFieldsInput();
-    $userInput->verifyCode( get( 'code' ) );
-    redirect( FUSION_REQUEST );
-}
-
-if ($settings['email_verification'] == 1) {
     $result = dbquery( "SELECT user_email FROM " . DB_EMAIL_VERIFY . " WHERE user_id='" . fusion_get_userdata( 'user_id' ) . "'" );
     if (dbrows( $result )) {
         $data = dbarray( $result );
         $info['email_notification'] = sprintf( $locale['u200'], $data['user_email'] ) . "\n<br />\n" . $locale['u201'];
     }
 }
+
+// Always invoke because there are multiple user forms in this class
+$userInput = new PHPFusion\UserFieldsInput();
+$userInput->username_change = fusion_get_settings( 'username_change' );
+$userInput->verifyNewEmail = TRUE;
+$userInput->registration = FALSE;
+$userInput->userData = fusion_get_userdata();
+if ($userInput->saveUpdate() === TRUE) {
+    redirect( FUSION_REQUEST );
+}
+
 
 $userFields = new PHPFusion\UserFields();
 $userFields->postName = $post_name;

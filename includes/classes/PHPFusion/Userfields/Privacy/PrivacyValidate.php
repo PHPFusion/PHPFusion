@@ -1,36 +1,12 @@
 <?php
+namespace PHPFusion\Userfields\Privacy;
 
-namespace PHPFusion;
+use PHPFusion\Authenticate;
+use PHPFusion\Userfields\UserFieldsValidate;
 
-class UserPrivacy {
+class PrivacyValidate extends UserFieldsValidate {
 
-
-    public array $userData;
-
-    public function displayInputFields() {
-
-        if (check_get( 'd' )) {
-
-            return match (get( 'd' )) {
-                default => '',
-                'twostep' => $this->displayTwoStep(),
-            };
-        }
-
-        return [
-            'twostep_url' => clean_request( 'd=twostep', ['d'], FALSE ),
-            'records_url' => clean_request( 'd=records', ['d'], FALSE ),
-            'data_url'    => clean_request( 'd=data', ['d'], FALSE ),
-            'login_url'   => clean_request( 'd=login', ['d'], FALSE ),
-        ];
-    }
-
-    /**
-     * Activate two step verification
-     * @return array
-     * @throws \Exception
-     */
-    private function displayTwoStep() {
+    public function validate() {
 
         $locale = fusion_get_locale();
 
@@ -61,9 +37,11 @@ class UserPrivacy {
                 }
             }
 
-        } elseif (check_post( 'auth' ) && check_post( 'user_hash' )) {
+        }
 
-            if ($this->userData['user_hash'] == post( 'user_hash' )) {
+        elseif (check_post( 'auth' ) && check_post( 'user_hash' )) {
+
+            if ($this->userFieldsInput->getAccess()) {
 
                 $settings = fusion_get_settings();
 
@@ -74,12 +52,12 @@ class UserPrivacy {
                 dbquery( "UPDATE " . DB_USERS . " SET user_auth_pin=:pin, user_auth_actiontime=:time WHERE user_id=:uid", [
                     ':pin' => $random_pin,
                     'time' => $auth_actiontime,
-                    ':uid' => $this->userData['user_id'],
+                    ':uid' => $this->userFieldsInput->userData['user_id'],
 
                 ] );
 
                 // Attempt to send email
-                if (!fusion_sendmail( 'L_2FA', $this->userData['user_name'], $this->userData['user_email'], [
+                if (!fusion_sendmail( 'L_2FA', $this->userFieldsInput->userData['user_name'], $this->userFieldsInput->userData['user_email'], [
                     'subject' => $locale['email_2fa_subject'],
                     'message' => $locale['email_2fa_message'],
                     'replace' => [
@@ -98,14 +76,7 @@ class UserPrivacy {
             }
         }
 
-        return [
-            'email_display' => $this->userData['user_email'],
-            'user_code'     => form_text( '2fa_code', '', '', ['placeholder' => $locale['u608'], 'max_length' => 6, 'mask' => '9-9-9-9-9-9'] ),
-            'get_auth'      => form_button( 'auth', $locale['u605'], $locale['u605'], ['class' => 'btn-primary'] ),
-            'button'        => form_button( 'submit_2fa', $locale['submit'], $locale['submit'], ['class' => 'btn-primary'] ),
-        ];
+        return FALSE;
     }
-
-
 
 }

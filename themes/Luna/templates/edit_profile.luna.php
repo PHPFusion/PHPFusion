@@ -141,9 +141,8 @@ function display_profile_form( array $info = [] ) {
         $html = fusion_get_function( 'opentable', $locale['u500'] );
         $html .= '<p>' . $locale['u501'] . '</p>';
         $html .= openform( 'notifyFrm', 'POST' );
-        $html .= $info['user_id'];
         $html .= $info['user_hash'];
-        $html .= $info['user_comment_notify'];
+        $html .= $info['user_comments_notify'];
         $html .= '<div class="hr"></div>';
         $html .= $info['user_tag_notify'];
         $html .= '<div class="hr"></div>';

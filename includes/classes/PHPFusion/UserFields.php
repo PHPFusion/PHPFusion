@@ -19,6 +19,9 @@
 
 namespace PHPFusion;
 
+use PHPFusion\Userfields\Accounts\AccountsForm;
+use PHPFusion\Userfields\Privacy\PrivacyForm;
+
 /**
  * Class UserFields
  *
@@ -111,11 +114,12 @@ class UserFields extends QuantumFields {
     public function displayProfileInput() {
 
         $this->method = 'input';
+        $this->options += $this->defaultInputOptions;
 
         $this->info = match (get( 'section' )) {
             default => $this->displayAccountInput(),
-            'notifications' => $this->displayNotificationInput(),
-            'privacy' => $this->displayPrivacyInput(),
+            'notifications' => $this->getEmptyInputInfo() + $this->displayNotificationInput(),
+            'privacy' => $this->getEmptyInputInfo() + $this->displayPrivacyInput(),
         };
 
         /*
@@ -125,18 +129,44 @@ class UserFields extends QuantumFields {
     }
 
     /**
-     * Notification Input
-     *
+     * Notification input
      * @return array
      */
     private function displayNotificationInput() {
 
-        $this->options += $this->defaultInputOptions;
+        $locale = fusion_get_locale();
 
-        $input = new UserNotifications();
-        $this->info = $this->getEmptyInputInfo() + $input->displayInputFields();
+        return [
+            'user_comments_notify'    => form_checkbox( 'n_comments', $locale['u502'], $this->userData['user_comments_notify'], ['toggle' => TRUE, 'ext_tip' => $locale['u503'], 'class' => 'form-check-lg'] ),
+            'user_tag_notify'        => form_checkbox( 'n_tags', $locale['u504'], $this->userData['user_tag_notify'], ['toggle' => TRUE, 'ext_tip' => $locale['u505'], 'class' => 'form-check-lg'] ),
+            'user_newsletter_notify' => form_checkbox( 'n_newsletter', $locale['u506'], $this->userData['user_newsletter_notify'], ['toggle' => TRUE, 'ext_tip' => $locale['u507'], 'class' => 'form-check-lg'] ),
+            'user_follow_notify'     => form_checkbox( 'n_follow', $locale['u508'], $this->userData['user_follow_notify'], ['toggle' => TRUE, 'ext_tip' => $locale['u509'], 'class' => 'form-check-lg'] ),
+            'user_pm_notify'         => form_checkbox( 'n_pm', $locale['u510'], $this->userData['user_pm_notify'], ['toggle' => TRUE, 'ext_tip' => $locale['u511'], 'class' => 'form-check-lg'] ),
+            'user_pm_email'          => form_checkbox( 'e_pm', $locale['u510'], $this->userData['user_pm_email'] ),
+            'user_follow_email'      => form_checkbox( 'e_follow', $locale['u514'], $this->userData['user_follow_email'] ),
+            'user_feedback_email'    => form_checkbox( 'e_feedback', $locale['u515'], $this->userData['user_feedback_email'] ),
+            'user_email_duration'    => form_checkbox( 'e_duration', $locale['u516'], $this->userData['user_email_duration'], [
+                'type'    => 'radio',
+                'options' => [
+                    '1' => $locale['u517'],
+                    '2' => $locale['u518'],
+                    '3' => $locale['u519'],
+                    '0' => $locale['u520'],
+                ],
+                'class'   => 'form-check-lg'
+            ] ),
+            'notify_button'          => form_button( 'save_notify', $locale['save_changes'], 'save_notify', ['class' => 'btn-primary'] ),
+        ];
+    }
 
-        return $this->info;
+    /**
+     * Privacy Input
+     *
+     * @return array
+     */
+    private function displayPrivacyInput() {
+        $input = new PrivacyForm($this);
+        return $input->displayInputFields();
     }
 
     private function getEmptyInputInfo() {
@@ -148,18 +178,6 @@ class UserFields extends QuantumFields {
         ];
     }
 
-    /**
-     * Privacy Input
-     *
-     * @return array
-     */
-    private function displayPrivacyInput() {
-        $input = new UserPrivacy();
-        $input->userData = $this->userData;
-        $this->info = $this->getEmptyInputInfo() + $input->displayInputFields();
-
-        return $this->info;
-    }
 
 
     /**
@@ -169,10 +187,14 @@ class UserFields extends QuantumFields {
      */
     private function displayAccountInput() {
 
+        $input = new AccountsForm( $this );
+        $locale = fusion_get_locale();
+
         $this->info = [
             'section'             => $this->getProfileSections(),
             'show_avatar'         => $this->showAvatarInput,
             'user_id'             => form_hidden( 'user_id', '', $this->userData["user_id"] ),
+            'user_hash'           => form_hidden( 'user_hash', '', '' ),
             'user_name'           => '',
             'user_firstname'      => '',
             'user_lastname'       => '',
@@ -186,12 +208,7 @@ class UserFields extends QuantumFields {
             'user_avatar'         => '',
             'validate'            => '',
             'terms'               => '',
-            'user_hash'           => form_hidden( 'user_hash', '', '' ),
         ];
-
-        $this->options += $this->defaultInputOptions;
-
-        $input = new UserFieldsForm( $this );
 
         $this->info['user_name'] = $input->usernameInputField();
         $this->info['user_firstname'] = form_text( 'user_firstname', 'First name', $this->userData['user_firstname'], ['inline' => $this->inputInline] );
@@ -286,18 +303,18 @@ class UserFields extends QuantumFields {
      */
     private function getProfileSections() {
 
-        $link_prefix = BASEDIR.'edit_profile.php?section=';
+        $link_prefix = BASEDIR . 'edit_profile.php?section=';
         if ($this->moderation) {
-            $link_prefix = ADMIN.'members.php?lookup='.$this->userData['user_id'].'&action=edit&';
+            $link_prefix = ADMIN . 'members.php?lookup=' . $this->userData['user_id'] . '&action=edit&';
         }
 
         return [
-            'account'        => ['link' => $link_prefix.'account', 'title' => 'Account'],
-            'notifications'  => ['link' => $link_prefix.'notifications', 'title' => 'Notifications'],
-            'privacy'        => ['link' => $link_prefix.'privacy', 'title' => 'Privacy and safety'],
-            'communications' => ['link' => $link_prefix.'communications', 'title' => 'Communications'],
-            'message'        => ['link' => $link_prefix.'message', 'title' => 'Messaging'],
-            'close'          => ['link' => $link_prefix.'close', 'title' => 'Close account']
+            'account'        => ['link' => $link_prefix . 'account', 'title' => 'Account'],
+            'notifications'  => ['link' => $link_prefix . 'notifications', 'title' => 'Notifications'],
+            'privacy'        => ['link' => $link_prefix . 'privacy', 'title' => 'Privacy and safety'],
+            'communications' => ['link' => $link_prefix . 'communications', 'title' => 'Communications'],
+            'message'        => ['link' => $link_prefix . 'message', 'title' => 'Messaging'],
+            'close'          => ['link' => $link_prefix . 'close', 'title' => 'Close account']
         ];
 
     }

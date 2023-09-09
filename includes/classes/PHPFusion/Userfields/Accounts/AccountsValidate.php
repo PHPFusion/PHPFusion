@@ -1,34 +1,31 @@
 <?php
-/*-------------------------------------------------------+
-| PHPFusion Content Management System
-| Copyright (C) PHP Fusion Inc
-| https://phpfusion.com/
-+--------------------------------------------------------+
-| Filename: UserFieldsValidate.php
-| Author: meangczac (Chan)
-| PHPFusion Lead Developer, PHPFusion Core Developer
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
+/*
+ * -------------------------------------------------------+
+ * | PHPFusion Content Management System
+ * | Copyright (C) PHP Fusion Inc
+ * | https://phpfusion.com/
+ * +--------------------------------------------------------+
+ * | Filename: theme.php
+ * | Author:  Meangczac (Chan)
+ * +--------------------------------------------------------+
+ * | This program is released as free software under the
+ * | Affero GPL license. You can redistribute it and/or
+ * | modify it under the terms of this license which you
+ * | can read by viewing the included agpl.txt or online
+ * | at www.gnu.org/licenses/agpl.html. Removal of this
+ * | copyright header is strictly prohibited without
+ * | written permission from the original author(s).
+ * +--------------------------------------------------------
+ */
 
-namespace PHPFusion;
-
+namespace PHPFusion\Userfields\Accounts;
 
 use Defender;
 
-class UserFieldsValidate {
+use PHPFusion\Userfields\UserFieldsValidate;
 
+class AccountsValidate extends UserFieldsValidate {
 
-    /**
-     * @var UserFields
-     */
-    private $userFieldsInput;
     /**
      * @var string
      */
@@ -50,9 +47,6 @@ class UserFieldsValidate {
      */
     private $_username;
 
-    public function __construct( UserFieldsInput $userFieldsInput ) {
-        $this->userFieldsInput = $userFieldsInput;
-    }
 
     /**
      * Handle Username Input and Validation
@@ -109,15 +103,6 @@ class UserFieldsValidate {
         }
 
         return $this->userFieldsInput->userData['user_name'];
-    }
-
-    /**
-     * @param $fieldname
-     *
-     * @return string
-     */
-    public function sanitizer( $fieldname ) {
-        return sanitizer( $fieldname, '', $fieldname );
     }
 
     /**
@@ -235,9 +220,8 @@ class UserFieldsValidate {
             }
         }
 
-        return $this->userFieldsInput->userData['user_email'];
+        return NULL;
     }
-
 
     /**
      * @param string $field
@@ -511,6 +495,9 @@ class UserFieldsValidate {
      */
     private function verifyEmailPass() {
         // Validation of password change
-
     }
+
+
+
+
 }

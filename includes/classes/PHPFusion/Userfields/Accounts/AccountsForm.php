@@ -1,40 +1,15 @@
 <?php
-/*-------------------------------------------------------+
-| PHPFusion Content Management System
-| Copyright (C) PHP Fusion Inc
-| https://phpfusion.com/
-+--------------------------------------------------------+
-| Filename: UserFieldsForm.php
-| Author: meangczac (Chan)
-| PHPFusion Lead Developer, PHPFusion Core Developer
-+--------------------------------------------------------+
-| This program is released as free software under the
-| Affero GPL license. You can redistribute it and/or
-| modify it under the terms of this license which you
-| can read by viewing the included agpl.txt or online
-| at www.gnu.org/licenses/agpl.html. Removal of this
-| copyright header is strictly prohibited without
-| written permission from the original author(s).
-+--------------------------------------------------------*/
+namespace PHPFusion\Userfields\Accounts;
 
-namespace PHPFusion;
+use PHPFusion\LegalDocs;
+use PHPFusion\Userfields\UserFieldsForm;
 
 /**
- * Class UserFieldsForm
+ * Class AccountsInput
  *
- * @package PHPFusion
+ * @package PHPFusion\Userfields\Accounts
  */
-class UserFieldsForm {
-
-    /**
-     * @var UserFields
-     */
-    private $userFields;
-
-    public function __construct( UserFields $userFields ) {
-        $this->userFields = $userFields;
-    }
-
+class AccountsForm extends UserFieldsForm {
 
     /**
      * User Name input field
@@ -42,6 +17,7 @@ class UserFieldsForm {
      * @return string
      */
     public function usernameInputField() {
+
         $locale = fusion_get_locale();
 
         if (iADMIN || $this->userFields->username_change) {
@@ -57,7 +33,6 @@ class UserFieldsForm {
         }
         return form_hidden( "user_name", "", $this->userFields->userData["user_name"] );
     }
-
 
     /**
      * Shows password input field
@@ -443,5 +418,4 @@ class UserFieldsForm {
             );
 
     }
-
 }
