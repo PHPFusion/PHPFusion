@@ -53,5 +53,6 @@ const DB_USER_GROUPS = DB_PREFIX . 'user_groups';
 const DB_USER_LOG = DB_PREFIX . 'user_log';
 const DB_USER_SETTINGS = DB_PREFIX . 'user_settings';
 const DB_USERS = DB_PREFIX . 'users';
+const DB_USER_SESSIONS = DB_PREFIX.'user_sessions';
 const DB_TOS = DB_PREFIX . 'policies';
 const DB_THEME = DB_PREFIX . 'theme';

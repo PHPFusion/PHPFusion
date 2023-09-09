@@ -22,6 +22,8 @@ namespace PHPFusion\Userfields\Accounts;
 
 use Defender;
 
+use PHPFusion\Authenticate;
+use PHPFusion\PasswordAuth;
 use PHPFusion\Userfields\UserFieldsValidate;
 
 class AccountsValidate extends UserFieldsValidate {
@@ -46,6 +48,15 @@ class AccountsValidate extends UserFieldsValidate {
      * @var string
      */
     private $_username;
+
+    /**
+     * @param $fieldname
+     *
+     * @return string
+     */
+    public function sanitizer($fieldname) {
+        return sanitizer($fieldname, '', $fieldname);
+    }
 
 
     /**
@@ -390,16 +401,19 @@ class AccountsValidate extends UserFieldsValidate {
      * @return array
      */
     public function setAdminPassword() {
-        $locale = fusion_get_locale();
-        $settings = fusion_get_settings();
 
         if (!$this->userFieldsInput->moderation) {
 
-            if ($this->getPasswordInput( "user_admin_password" )) { // if submit current admin password
+            $locale = fusion_get_locale();
+
+            $settings = fusion_get_settings();
+
+            if ($this->getPasswordInput( 'user_admin_password' )) { // if submit current admin password
 
                 $_userAdminPassword = $this->getPasswordInput( "user_admin_password" );      // var1
                 $_newUserAdminPassword = $this->getPasswordInput( "user_admin_password1" );  // var2
                 $_newUserAdminPassword2 = $this->getPasswordInput( "user_admin_password2" ); // var3
+
                 $adminpassAuth = new PasswordAuth();
                 $adminpassAuth->currentPassCheckLength = $settings['password_length'];
                 $adminpassAuth->currentPassCheckSpecialchar = $settings['password_char'];

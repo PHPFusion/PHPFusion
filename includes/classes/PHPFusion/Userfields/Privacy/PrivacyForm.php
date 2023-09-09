@@ -23,15 +23,14 @@ use PHPFusion\Userfields\UserFieldsForm;
 
 class PrivacyForm extends UserFieldsForm {
 
-    public array $userData;
-
     public function displayInputFields() {
 
         if (check_get( 'd' )) {
 
             return match (get( 'd' )) {
                 default => '',
-                'twostep' => $this->displayTwoStep(),
+                'twostep' => $this->getTwoStep(),
+                'records' => $this->getLogin(),
             };
         }
 
@@ -47,7 +46,7 @@ class PrivacyForm extends UserFieldsForm {
      * Activate two step verification
      * @return array
      */
-    private function displayTwoStep() {
+    private function getTwoStep() {
 
         $locale = fusion_get_locale();
 
@@ -57,6 +56,19 @@ class PrivacyForm extends UserFieldsForm {
             'get_auth'      => form_button( 'auth', $locale['u605'], $locale['u605'], ['class' => 'btn-primary'] ),
             'button'        => form_button( 'submit_2fa', $locale['submit'], $locale['submit'], ['class' => 'btn-primary'] ),
         ];
+    }
+
+    private function getLogin() {
+
+        $res = dbquery("SELECT * FROM ".DB_USER_SESSIONS." WHERE user_id=:uid ORDER BY user_logintime DESC", [':uid'=> $this->userFields->userData['user_id']]);
+
+        if (dbrows($res)) {
+            while($rows = dbarray($res)) {
+                $info['user_logins'][$rows['user_session_id']] = $rows;
+            }
+        }
+
+        return $info;
     }
 
 }

@@ -208,11 +208,41 @@ function display_profile_form( array $info = [] ) {
                 return $html;
             }
 
+            function display_login_activity( $info ) {
+
+                $locale = fusion_get_locale();
+
+                $html = '<h6>Login sessions</h6>';
+                $html .= '<div class="mb-3">The information listed are logged sessions that has accessed your account.</div>';
+
+                if (!empty( $info )) {
+                    $i = 0;
+                    foreach ($info['user_logins'] as $session) {
+                        if (!$i) {
+                            $html .= '<div class="text-dark-emphasis"><strong><small>Current Session</small></strong></div>';
+                        } else {
+                            $html .= '<div class="text-dark-emphasis mt-3 mb-3"><small>Last accessed</small><br>' . timer( $session['user_logintime'], FALSE, $locale['ago'] ) . '</div>';
+                        }
+                        $html .= '<div class="mt-3 mb-3"><small>Details</small></div>';
+                        $html .= '<div class="mb-3">Session ID:<br>' . $session['user_session'] . '</div>';
+                        $html .= '<div class="mb-3">' . $session['user_os'] . ' on ' . $session['user_browser'] . '</div>';
+                        $html .= '<div class="mb-3">IP address:<br>' . $session['user_ip'] . '</div>';
+
+                        if (!$i) {
+                            $html .= '<a href="' . FUSION_SELF . '?logout=yes" class="btn btn-primary-soft btn-block">End current session and log out</a>';
+                        }
+                        $html .= '<div class="hr"></div>';
+                        $i++;
+                    }
+                }
+
+                return $html;
+            }
 
             $html .= match ($view) {
                 default => 'Content not found',
                 'twostep' => display_two_step( $info ),
-
+                'records' => display_login_activity( $info ),
             };
 
         } else {

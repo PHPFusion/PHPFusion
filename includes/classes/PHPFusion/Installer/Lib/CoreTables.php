@@ -1717,6 +1717,54 @@ class CoreTables {
                 'default' => 'Europe/London'
             ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
         ];
+
+        $table_package['user_sessions'] = [
+            'user_session_id' => [
+                'type'           => 'BIGINT',
+                'length'         => 20,
+                'auto_increment' => TRUE,
+                'key'            => 1,
+                'unsigned'       => TRUE,
+            ],
+            'user_id'      => [
+                'type'           => 'BIGINT',
+                'length'         => 20,
+                'key'            => 2,
+                'unsigned'       => TRUE,
+            ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'user_session'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 170,
+                'default' => ''
+            ],
+            'user_ip'      => [
+                'type'    => 'VARCHAR',
+                'length'  => 45,
+                'default' => '0.0.0.0'
+            ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
+            'user_device' => [
+                'type'    => 'VARCHAR',
+                'length'  => 70,
+                'default' => '',
+            ],
+            'user_os'      => [
+                'type'    => 'VARCHAR',
+                'length'  => 70,
+                'default' => '',
+            ],
+            'user_browser' => [
+                'type'    => 'VARCHAR',
+                'length'  => 70,
+                'default' => '',
+            ],
+            'user_logintime' => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ]
+        ];
+
         $table_package['theme'] = [
             'theme_id'        => [
                 'type'           => 'BIGINT',

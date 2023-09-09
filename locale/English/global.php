@@ -156,7 +156,7 @@ $locale['global_073b'] = " Comment";
 $locale['global_074'] = " Reads";
 $locale['global_074b'] = " Read";
 $locale['global_075'] = "Print";
-$locale['print'] = "Print";
+
 $locale['global_076'] = "Edit";
 $locale['global_077'] = "News";
 $locale['global_078'] = "No News has been posted yet";
@@ -342,6 +342,13 @@ Regards,<br/>[SITEUSERNAME]";
 //$locale['global_457'] = "Hi USER_NAME,
 //<br/>A new password has been set for your account at [SITENAME]. Please find the enclosed new login details:<br/>
 //Username: USER_NAME<br/>Password: [PASSWORD]<br/>Regards,<br/>[SITEUSERNAME]";
+
+$locale['global_456'] = 'One time password is successfully verified. You are now logged in.';
+$locale['global_457'] = 'Invalid Authentication Code. You have %d attempt(s) left.';
+
+
+
+
 $locale['global_458'] = "New password has been set for USER_NAME";
 $locale['global_459'] = "New password has been set for USER_NAME, and email was not sent. Please ensure to tell the user of the new details.";
 // Function parsebytesize()
@@ -450,6 +457,7 @@ $locale['rights'] = "Rights";
 $locale['info'] = "Info";
 $locale['image'] = "Image";
 // Forms
+$locale['print'] = "Print";
 $locale['choose'] = "Please Choose One...";
 $locale['no_opts'] = "No selection";
 $locale['root'] = "As Parent";

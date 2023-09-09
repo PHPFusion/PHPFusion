@@ -113,11 +113,18 @@ class Authenticate {
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
             if ($passAuth->isValidCurrentPassword( TRUE )) {
+
                 if (!$settings['multiple_logins']) {
+
                     $user['user_algo'] = $passAuth->getNewAlgo();
                     $user['user_salt'] = $passAuth->getNewSalt();
                     $user['user_password'] = $passAuth->getNewHash();
+
                     dbquery( "UPDATE " . DB_USERS . " SET user_algo='" . $user['user_algo'] . "', user_salt='" . $user['user_salt'] . "', user_password='" . $user['user_password'] . "' WHERE user_id='" . $user['user_id'] . "'" );
+
+                    // Will cause duplicate?
+//                    Authenticate::storeUserSession( $passAuth, $user['user_id'] );
+
                 }
 
                 if ($user['user_status'] == 0 && $user['user_actiontime'] == 0) {
@@ -125,28 +132,43 @@ class Authenticate {
                     Authenticate::setUserCookie( $user['user_id'], $user['user_salt'], $user['user_algo'], $remember );
 
                     if ($settings['auth_login_enabled'] == 1 && $user['user_auth'] == 1) {
+
                         $this->two_factor_redirect = TRUE;
+
                     } else {
-                        Authenticate::storeUserSession( $passAuth, $user["user_id"] );
+
+                        Authenticate::storeUserSession( $passAuth, $user['user_id'] );
+
                         $this->user_data = $user;
                     }
                 } else {
+
                     require_once INCLUDES . "suspend_include.php";
                     require_once INCLUDES . "sendmail_include.php";
+
                     if (($user['user_status'] == 3 && $user['user_actiontime'] < time()) || $user['user_status'] == 7) {
-                        dbquery( "UPDATE " . DB_USERS . " SET user_status='0', user_actiontime='0' WHERE user_id='" . $user['user_id'] . "'" );
+
+                        dbquery( "UPDATE " . DB_USERS . " SET user_status='0', user_actiontime='0' WHERE user_id=:uid", [
+                            ':uid' => (int)$user['user_id']
+                        ] );
+
+                        $subject = $locale['global_454'];
+                        $message = str_replace( "[SITEURL]", $settings['siteurl'], $locale['global_452'] );
+                        $message = str_replace( "[SITEUSERNAME]", $settings['siteusername'], $message );
+
                         if ($user['user_status'] == 3) {
+
                             $subject = str_replace( "[SITENAME]", $settings['sitename'], $locale['global_451'] );
                             $message = str_replace( "[SITEURL]", $settings['siteurl'], $locale['global_455'] );
                             $message = str_replace( "[SITEUSERNAME]", $settings['siteusername'], $message );
+
                             unsuspend_log( $user['user_id'], 3, $locale['global_450'], TRUE );
-                        } else {
-                            $subject = $locale['global_454'];
-                            $message = str_replace( "[SITEURL]", $settings['siteurl'], $locale['global_452'] );
-                            $message = str_replace( "[SITEUSERNAME]", $settings['siteusername'], $message );
                         }
+
                         $message = str_replace( "USER_NAME", $user['user_name'], $message );
+
                         sendemail( $user['user_name'], $user['user_email'], $settings['siteusername'], $settings['siteemail'], $subject, $message );
+
                     } else {
                         redirect( Authenticate::getRedirectUrl( 4, $user['user_status'], $user['user_id'] ) );
                     }
@@ -231,9 +253,35 @@ class Authenticate {
      * @param int $user_id
      */
     private static function storeUserSession( PasswordAuth $passAuth, $user_id ) {
+
         if ($passAuth->isValidCurrentPassword( TRUE )) {
+
             $session = $passAuth->getNewSalt() . "." . $passAuth->getNewHash();
-            dbquery( "UPDATE " . DB_USERS . " SET user_session='$session' WHERE user_id=$user_id" );
+
+            dbquery( 'UPDATE ' . DB_USERS . ' SET user_session=:session WHERE user_id=:uid', [
+                ':session' => $session,
+                ':uid'     => (int)$user_id
+            ] );
+
+            $_agentDetection = new BrowserDetection();
+            $ua = $_SERVER['HTTP_USER_AGENT'];
+            if ($browserInfo = $_agentDetection->getAll( $ua )) {
+                $device_type = $browserInfo['device_type'] ?? 'Unknown device';
+                $os = $browserInfo['os_title'] ?? 'Unknown OS';
+                $browser = ($browserInfo['browser_name'] ?? 'Unknown browser') . ', ' . ($browserInfo['browser_version'] ?? 'Unknown version');
+            }
+
+            $session_rows = [
+                'user_id'        => $user_id,
+                'user_ip'        => USER_IP,
+                'user_session'   => $session,
+                'user_device'    => $device_type ?? 'n/a',
+                'user_os'        => $os ?? 'n/a',
+                'user_browser'   => $browser ?? 'n/a',
+                'user_logintime' => time()
+            ];
+
+            dbquery_insert( DB_USER_SESSIONS, $session_rows, 'save' );
         }
     }
 
@@ -346,7 +394,7 @@ class Authenticate {
                     }
                 }
                 // Validate a provided password
-            } else if ($pass != "") {
+            } else if ($pass != '') {
                 $result = dbquery( "SELECT user_admin_algo, user_admin_salt, user_admin_password FROM " . DB_USERS . " WHERE user_id='" . $userdata['user_id'] . "' AND user_level < " . USER_LEVEL_MEMBER . " AND  user_status='0' AND user_actiontime='0' LIMIT 1" );
                 if (dbrows( $result ) == 1) {
                     $user = dbarray( $result );
@@ -369,6 +417,7 @@ class Authenticate {
     public static function setAdminCookie( $inputPassword ) {
         $userdata = fusion_get_userdata();
         if (iADMIN) {
+
             // Initialize password auth
             $passAuth = new PasswordAuth();
             $passAuth->currentAlgo = $userdata['user_admin_algo'];
@@ -377,12 +426,14 @@ class Authenticate {
             $passAuth->inputPassword = $inputPassword;
             // Check if input password is valid
             if ($passAuth->isValidCurrentPassword( TRUE )) {
+
                 if (fusion_get_settings( 'multiple_logins' ) != 1) {
                     $userdata['user_admin_algo'] = $passAuth->getNewAlgo();
                     $userdata['user_admin_salt'] = $passAuth->getNewSalt();
                     $userdata['user_admin_password'] = $passAuth->getNewHash();
                     dbquery( "UPDATE " . DB_USERS . " SET user_admin_algo='" . $userdata['user_admin_algo'] . "', user_admin_salt='" . $userdata['user_admin_salt'] . "', user_admin_password='" . $userdata['user_admin_password'] . "' WHERE user_id='" . $userdata['user_id'] . "'" );
                 }
+
                 Authenticate::setUserCookie( $userdata['user_id'], $userdata['user_admin_salt'], $userdata['user_admin_algo'], FALSE, FALSE );
 
                 return TRUE;
@@ -406,16 +457,25 @@ class Authenticate {
 
         $locale_file = LOCALE . $settings['locale'] . '/global.php'; // fix for multilang issue
 
+        $locale = fusion_get_locale( '', [$locale_file] );
+
         if (get( 'logoff', FILTER_VALIDATE_INT )) {
-            session_remove( "login_as" );
-            addnotice( "success", fusion_get_locale( 'global_185', $locale_file ), BASEDIR . $settings["opening_page"] );
+
+            session_remove( 'login_as' );
+
+            addnotice( "success", $locale['global_185'], BASEDIR . $settings["opening_page"] );
+
             redirect( BASEDIR . $settings["opening_page"] );
         }
 
         if (isset( $_COOKIE[COOKIE_USER] ) && $_COOKIE[COOKIE_USER] != "") {
+
             $cookieDataArr = explode( ".", $_COOKIE[COOKIE_USER] );
+
             if (count( $cookieDataArr ) == 3) {
+
                 [$userID, $cookieExpiration, $cookieHash] = $cookieDataArr;
+
                 if ($cookieExpiration > time()) {
 
                     // must update user_salt
@@ -432,25 +492,47 @@ class Authenticate {
                             $user = $user + dbarray( $settings_res );
                         }
 
+                        $session_res = dbquery( "SELECT * FROM " . DB_USER_SESSIONS . " WHERE user_id=:uid ORDER BY user_logintime DESC", [':uid' => (int)$user['user_id']] );
+                        if (dbrows( $session_res )) {
+                            $user = $user + dbarray( $session_res );
+                        }
+
                         $secure_auth = get( 'auth' );
 
-                        if (empty( $user["user_session"] )) {
-                            if (FUSION_SELF == "login.php" && $secure_auth == 'security_pin') {
-                                if ($pin = post( "pin" )) {
+                        // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
+                        $key = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $user['user_salt'] );
+
+                        $hash = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $key );
+
+                        if (empty( $user['user_session'] )) {
+
+                            if (FUSION_SELF == 'login.php' && $secure_auth == 'security_pin') {
+
+                                if ($pin = post( 'pin' )) {
+
                                     $login_count = self::getValidationCount();
 
-                                    if ($user["user_auth_actiontime"] > time()) {
+                                    if ($user['user_auth_actiontime'] > time()) {
+
                                         // if get it correct
-                                        if ($pin == $user["user_auth_pin"]) {
+
+                                        if ($pin == $user['user_auth_pin']) {
                                             // then validate the idiot.
                                             $key = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $user['user_salt'] );
                                             $hash = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $key );
+
                                             if ($cookieHash == $hash) {
+
                                                 // set the user session.
-                                                dbquery( "UPDATE " . DB_USERS . " SET user_session=:session WHERE user_id=:uid", [':uid' => $userID, ':session' => $user['user_salt'] . "." . $user['user_password']] );
+                                                dbquery( "UPDATE " . DB_USERS . " SET user_session=:session WHERE user_id=:uid", [
+                                                    ':uid'     => (int)$userID,
+                                                    ':session' => $user['user_salt'] . "." . $user['user_password']
+                                                ] );
+
                                                 // we need to do a new redirection for log in.
-                                                addnotice( 'success', 'OTP is successfully verified. You are now logged in.', fusion_get_settings( 'opening_page' ) );
-                                                redirect( BASEDIR . fusion_get_settings( 'opening_page' ) );
+                                                addnotice( 'success', $locale['global_456'], $settings['opening_page'] );
+
+                                                redirect( BASEDIR . $settings['opening_page'] );
 
                                             } else {
                                                 // Cookie has been tampered with!
@@ -459,44 +541,56 @@ class Authenticate {
                                         }
 
                                         if ($login_count) {
-                                            addnotice( 'danger', "Invalid Authentication Code. You have " . $login_count . " attempts left." );
+
+                                            addnotice( 'danger', sprintf( $locale['global_457'], $login_count ) );
+
                                         } else {
+
                                             // logout and clear cookie.
                                             self::logOut();
-                                            redirect( BASEDIR . "login.php?error=6" );
+                                            redirect( BASEDIR . 'login.php?error=6' );
                                         }
                                     } else {
+
                                         self::logOut();
-                                        redirect( BASEDIR . "login.php?error=5" );
+                                        redirect( BASEDIR . 'login.php?error=5' );
                                     }
 
-                                } else if (!$user["user_auth_pin"] && !check_get( "auth_email" )) {
+                                } else if (!$user['user_auth_pin'] && !check_get( 'auth_email' )) {
+
                                     // return sendmail signal
-                                    redirect( BASEDIR . "login.php?auth=security_pin&auth_email=pin" );
+                                    redirect( BASEDIR . 'login.php?auth=security_pin&auth_email=pin' );
                                 }
                             } else if (FUSION_SELF == 'login.php' && $secure_auth == 'restart') {
+
                                 self::logOut();
-                                redirect( BASEDIR . "login.php" );
+
+                                redirect( BASEDIR . 'login.php' );
+
                             } else {
+
                                 self::logOut();
-                                redirect( BASEDIR . "login.php?error=7" );
+                                redirect( BASEDIR . 'login.php?error=7' );
                             }
                             // If session exist.
                         } else if (FUSION_SELF == 'login.php' && $secure_auth == 'restart') {
+
                             self::logOut();
-                            redirect( BASEDIR . "login.php" );
+                            redirect( BASEDIR . 'login.php' );
                         }
 
-                        // From Version 7 to Version 9, Ported Database has this problem - where user_salt has problem entering
-                        $key = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $user['user_salt'] );
-                        $hash = hash_hmac( $user['user_algo'], $userID . $cookieExpiration, $key );
                         if ($cookieHash === $hash) {
 
-                            if ($login_id = session_get( "login_as" )) {
+                            if ($login_id = session_get( 'login_as' )) {
+
                                 if (isnum( $login_id )) {
-                                    $login_user = fusion_get_user( session_get( "login_as" ) );
-                                    if (!empty( $login_user["user_id"] ) && $login_user["user_status"] == 0 && $login_user["user_actiontime"] == 0) {
-                                        addnotice( "success", sprintf( fusion_get_locale( 'global_184', $locale_file ), $login_user["user_name"] ) );
+
+                                    $login_user = fusion_get_user( session_get( 'login_as' ) );
+
+                                    if (!empty( $login_user['user_id'] ) && $login_user['user_status'] == 0 && $login_user['user_actiontime'] == 0) {
+
+                                        addnotice( 'success', sprintf( fusion_get_locale( 'global_184', $locale_file ), $login_user['user_name'] ) );
+
                                         $user = $login_user;
                                     }
                                 }
@@ -554,18 +648,21 @@ class Authenticate {
      * @return array
      */
     public static function logOut() {
+        if (defined( 'COOKIE_USER' ) && isset( $_COOKIE[COOKIE_USER] ) && $_COOKIE[COOKIE_USER] != '') {
 
-        if (defined( 'COOKIE_USER' ) && isset( $_COOKIE[COOKIE_USER] ) && $_COOKIE[COOKIE_USER] != "") {
             $cookieDataArr = explode( ".", $_COOKIE[COOKIE_USER] );
+
             if (count( $cookieDataArr ) == 3) {
                 [$userID, $cookieExpiration, $cookieHash] = $cookieDataArr;
                 //unset($_SESSION['2fa_attempts']);
                 //unset($_SESSION['auth_email_send']);
-                dbquery( "UPDATE " . DB_USERS . " SET user_auth_pin='', user_auth_actiontime='' WHERE user_id=:uid", [':uid' => $userID] );
-                $session_token = fusion_get_user( $userID, "user_session" );
+                dbquery( "UPDATE " . DB_USERS . " SET user_auth_pin='', user_auth_actiontime='' WHERE user_id=:uid", [':uid' => (int)$userID] );
+
                 // if cookie has expired, we need to reset immediately
-                if (!empty( $session_token )) {
+                if ($session_token = fusion_get_user( $userID, "user_session" )) {
+
                     $session_token = explode( ".", $session_token );
+
                     if (count( $session_token ) === 2) {
                         //$sql = "UPDATE ".DB_USERS." SET user_salt='".$session_token[0]."', user_password='".$session_token[1]."', user_session='' WHERE user_id=$userID";
                         dbquery( "UPDATE " . DB_USERS . " SET user_session='' WHERE user_id=$userID" );
@@ -576,7 +673,8 @@ class Authenticate {
 
         self::expireAdminCookie();
 
-        dbquery( "DELETE FROM " . DB_ONLINE . " WHERE online_ip='" . USER_IP . "'" );
+        dbquery( "DELETE FROM " . DB_ONLINE . " WHERE online_ip=:ip", [':ip' => USER_IP] );
+
         // Expires cookie
         fusion_set_cookie( COOKIE_LASTVISIT, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax' );
         fusion_set_cookie( COOKIE_USER, "", time() - 1209600, COOKIE_PATH, COOKIE_DOMAIN, FALSE, TRUE, 'lax' );
@@ -595,19 +693,33 @@ class Authenticate {
         return ["user_id" => USER_IP, "user_name" => fusion_get_locale( "user_guest" ), "user_status" => 1, "user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => fusion_get_settings( "theme" )];
     }
 
+    /**
+     * @throws \Exception
+     */
     public static function validateUserPasscode() {
 
-        if (iMEMBER && (get( "auth_email" ) == "pin" || (check_post( "resend_otp" )))) {
+        if (iMEMBER && (get( 'auth_email' ) == 'pin' || (check_post( 'resend_otp' )))) {
+
             $user = fusion_get_userdata();
+
             $settings = fusion_get_settings();
+
             $locale = fusion_get_locale( '', [LOCALE . LOCALESET . 'admin/members_email.php'] );
+
             require_once INCLUDES . 'sendmail_include.php';
 
             if (check_post( 'resend_otp' ) && $user['user_auth_actiontime'] >= time() && isset( $_SESSION['new_otp_time'] ) && $_SESSION['new_otp_time'] <= time()) {
 
                 $_SESSION['new_otp_time'] = time() + 30;
 
-                fusion_sendmail( 'L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], ['replace' => ['[SITENAME]' => $settings['sitename'], '[OTP]' => $user['user_auth_pin']]] );
+                fusion_sendmail( 'L_2FA', $user['user_name'], $user['user_email'], [
+                    'subject' => $locale['email_2fa_subject'],
+                    'message' => $locale['email_2fa_message'],
+                    'replace' => [
+                        '[SITENAME]' => $settings['sitename'],
+                        '[OTP]'      => $user['user_auth_pin']
+                    ]
+                ] );
 
                 addnotice( "success", "We have resent the One Time Passcode to your registered email address" );
 
@@ -621,12 +733,20 @@ class Authenticate {
 
                 dbquery( "UPDATE " . DB_USERS . " SET user_auth_pin=:pin, user_auth_actiontime=:time WHERE user_id=:uid", [":pin" => $random_pin, ":time" => $auth_actiontime, ':uid' => $user['user_id']] );
 
-                fusion_sendmail( 'L_2FA', $user['user_name'], $user['user_email'], $locale['email_2fa_subject'], $locale['email_2fa_message'], ['replace' => ['[SITENAME]' => $settings['sitename'], '[OTP]' => $random_pin]] );
-                addnotice( "success", "We have sent a One Time Passcode to your registered email address for the authentication" );
+                fusion_sendmail( 'L_2FA', $user['user_name'], $user['user_email'], [
+                    'subject' => $locale['email_2fa_subject'],
+                    'message' => $locale['email_2fa_message'],
+                    'replace' => [
+                        '[SITENAME]' => $settings['sitename'],
+                        '[OTP]'      => $random_pin
+                    ]
+                ] );
+
+                addnotice( 'success', 'We have sent a One Time Passcode to your registered email address for the authentication' );
 
             } else {
                 // this one is to extend the validity of the shit.
-                addnotice( "danger", "You cannot request for another OTP until the time has expired" );
+                addnotice( 'danger', 'You cannot request for another OTP until the time has expired' );
             }
 
             redirect( BASEDIR . 'login.php?auth=security_pin' );

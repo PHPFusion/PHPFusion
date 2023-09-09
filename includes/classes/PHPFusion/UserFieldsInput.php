@@ -356,15 +356,17 @@ class UserFieldsInput {
      */
     private function updateAccount() {
 
-        $locale = fusion_get_locale();
-
         if (check_post( 'update_profile_btn' )) {
+
+            $locale = fusion_get_locale();
+
             $userFieldsValidate = new AccountsValidate( $this );
 
             $callback_function = [
                 /**
-                 * @uses \PHPFusion\UserFieldsValidate::setUserName()
-                 * @uses \PHPFusion\UserFieldsValidate::setUserHideEmail()
+                 * @uses \PHPFusion\Userfields\Accounts\AccountsValidate::setUserName()
+                 * @uses \PHPFusion\Userfields\Accounts\AccountsValidate::setUserEmail()
+                 * @uses \PHPFusion\Userfields\Accounts\AccountsValidate::sanitizer()
                  */
                 'user_name'      => 'setUserName',
                 'user_firstname' => 'sanitizer',
@@ -374,7 +376,7 @@ class UserFieldsInput {
                 'user_email'     => 'setUserEmail',
                 'user_bio'       => 'sanitizer',
             ];
-//        print_P( $_POST );
+
             foreach ($callback_function as $fieldname => $functions) {
                 if (check_post( $fieldname )) {
                     $value = $userFieldsValidate->$functions( $fieldname );
@@ -422,8 +424,6 @@ class UserFieldsInput {
                     $this->data += $input;
                 }
             }
-//        print_p($_input);
-//        print_p( $this->data );
 
             // id request spoofing request
             if ($this->getAccess()) {
@@ -451,7 +451,7 @@ class UserFieldsInput {
 
 //                if ($this->moderation && !empty( $pass ) && $this->_newUserPassword && $this->_newUserPassword2) {
 //                    // inform user that password has changed. and tell him your new password
-//                    include INCLUDES . "sendmail_include.php";
+//                    include INCLUDES . 'sendmail_include.php';
 //
 //                    $input = [
 //                        "mailname" => $this->userData['user_name'],
