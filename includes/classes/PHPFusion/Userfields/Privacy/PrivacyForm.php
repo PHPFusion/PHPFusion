@@ -17,8 +17,10 @@
  * | written permission from the original author(s).
  * +--------------------------------------------------------
  */
+
 namespace PHPFusion\Userfields\Privacy;
 
+use PHPFusion\Quantum\QuantumFactory;
 use PHPFusion\Userfields\UserFieldsForm;
 
 class PrivacyForm extends UserFieldsForm {
@@ -28,9 +30,10 @@ class PrivacyForm extends UserFieldsForm {
         if (check_get( 'd' )) {
 
             return match (get( 'd' )) {
-                default => '',
+                default => [],
                 'twostep' => $this->getTwoStep(),
                 'records' => $this->getLogin(),
+                'data' => $this->getLogs(),
             };
         }
 
@@ -44,6 +47,7 @@ class PrivacyForm extends UserFieldsForm {
 
     /**
      * Activate two step verification
+     *
      * @return array
      */
     private function getTwoStep() {
@@ -60,15 +64,64 @@ class PrivacyForm extends UserFieldsForm {
 
     private function getLogin() {
 
-        $res = dbquery("SELECT * FROM ".DB_USER_SESSIONS." WHERE user_id=:uid ORDER BY user_logintime DESC", [':uid'=> $this->userFields->userData['user_id']]);
+        $res = dbquery( "SELECT * FROM " . DB_USER_SESSIONS . " WHERE user_id=:uid ORDER BY user_logintime DESC", [':uid' => $this->userFields->userData['user_id']] );
 
-        if (dbrows($res)) {
-            while($rows = dbarray($res)) {
+        if (dbrows( $res )) {
+            while ($rows = dbarray( $res )) {
                 $info['user_logins'][$rows['user_session_id']] = $rows;
             }
         }
 
         return $info;
     }
+
+    /**
+     * User log information
+     * @return array
+     */
+    private function getLogs() {
+
+        $locale = fusion_get_locale();
+
+        $field_names = [
+            'user_name'           => $locale['u068'],
+            'user_firstname'      => $locale['u010'],
+            'user_lastname'       => $locale['u011'],
+            'user_addname'        => $locale['u012'],
+            'user_password'       => $locale['u133'],
+            'user_admin_password' => $locale['u144a'],
+            'user_phone'          => $locale['u013'],
+            'user_email'          => $locale['u128'],
+            'user_level'          => $locale['u063'],
+        ];
+
+        $res = dbquery( "SELECT field_title, field_name FROM " . DB_USER_FIELDS );
+        if (dbrows( $res )) {
+            while ($rows = dbarray( $res )) {
+                $field_names[$rows['field_name']] = parse_label( $rows['field_title'] );
+            }
+        }
+
+        $res = dbquery( "SELECT * FROM " . DB_USER_LOG . " WHERE userlog_user_id=:uid ORDER BY userlog_timestamp DESC", [':uid' => (int)$this->userFields->userData['user_id']] );
+        if (dbrows( $res )) {
+            while ($rows = dbarray( $res )) {
+
+                $rows['title'] = $locale['u075'];
+
+                if (isset( $field_names[$rows['userlog_field']] )) {
+                    $log = sprintf( $locale['u076'], '<strong>'.$field_names[$rows['userlog_field']].'</strong>', $rows['userlog_value_old'], $rows['userlog_value_new'] );
+                } else {
+                    $log = sprintf( $locale['u077'], $rows['userlog_value_old'], $rows['userlog_value_new'] );
+                }
+
+                $rows['description'] = $log;
+
+                $info['user_log'][$rows['userlog_id']] = $rows;
+            }
+        }
+
+        return $info ?? [];
+    }
+
 
 }

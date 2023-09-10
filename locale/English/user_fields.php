@@ -1,4 +1,12 @@
 <?php
+$locale['u010'] = 'Firstname';
+$locale['u011'] = 'Lastname';
+$locale['u012'] = 'Additional name';
+$locale['u013'] = 'Phone number';
+$locale['u014'] = 'Hide phone number';
+$locale['u015'] = 'Overview';
+
+
 // Items shown in profile
 $locale['u040'] = "Date Joined";
 $locale['u041'] = "Last Visit";
@@ -27,11 +35,15 @@ $locale['u063'] = "User Level";
 $locale['u064'] = "Email";
 $locale['u066'] = "Date Joined";
 $locale['u067'] = "Last Visit";
-$locale['u068'] = "User Name";
+$locale['u068'] = "Username";
 $locale['u070'] = "Ban";
 $locale['u071'] = "Suspend";
 $locale['u073'] = "Delete this user?";
 $locale['u074'] = "Unban";
+$locale['u075'] = 'You have updated your profile information';
+$locale['u076'] = 'You updated your account %s from %s to %s.';
+$locale['u077'] = 'You updated your account information from %s to %s';
+
 // Profile and register
 $locale['u100'] = "In order to change your password or email address, you must enter your current password.";
 $locale['u101'] = "Register";
@@ -63,6 +75,7 @@ $locale['u114'] = "User Type";
 $locale['u115'] = "Language";
 $locale['u116'] = "There are no group members.";
 $locale['u117'] = "No user groups.";
+
 // User name and email
 $locale['u119'] = "User name is prohibited.";
 $locale['u120'] = "User name contains invalid characters.";
@@ -90,6 +103,7 @@ $locale['u136'] = "Password can not be left empty.";
 $locale['u137'] = "Your current admin password can not be left empty.";
 $locale['u138'] = "Your current login password can not be left empty.";
 $locale['u139'] = "Login password did not match your current login password.";
+
 $locale['u140'] = "Admin password did not match your current admin password.";
 $locale['u141'] = " can not be the same as ";
 $locale['u142'] = " is too short or contains invalid characters!";
@@ -99,13 +113,11 @@ $locale['u144'] = "New admin password";
 $locale['u144a'] = "Current Admin Password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
-
 $locale['u147'] = 'Min. length %d chars';
 $locale['u147a'] = 'must contain %s';
 $locale['u147b'] = 'upper and lower case char';
 $locale['u147c'] = 'a number';
 $locale['u147d'] = 'a special char';
-
 $locale['u148'] = "New Login Passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
 $locale['u149'] = "Your Current Login Password was not specified or is invalid.";

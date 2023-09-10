@@ -239,10 +239,38 @@ function display_profile_form( array $info = [] ) {
                 return $html;
             }
 
+            function display_data_activity( $info ) {
+                $locale = fusion_get_locale( '', LOCALE . LOCALESET . 'admin/user_log.php' );
+                $settings = fusion_get_settings();
+
+                $html = '<h6>Activity</h6>';
+                $html .= '<div class="mb-3">' . sprintf( $locale['UL_021'], $settings['sitename'] ) . '</div>';
+                if (!empty( $info['user_log'] )) {
+                    $html .= opencollapse( 'dataActivity', 'accordion-flush' );
+                    foreach ($info['user_log'] as $log_id => $rows) {
+                        $html .= opencollapsebody( '<p class="mb-3"><small class="text-normal">' . showdate( 'forumdate', $rows['userlog_time'] ) . '</small></p>' . $rows['title'], 'log_' . $log_id, '' );
+                        $html .= $rows['description'];
+                        $html .= closecollapsebody();
+                    }
+                    $html .= closecollapse();
+                } else {
+                    $html .= '<div class="my-3">' . $locale['UL_015'] . '</div>';
+                }
+                return $html;
+            }
+
+            function display_social_logins( $info ) {
+                return '';
+            }
+
+            $html .= '<p><small><a href="' . clean_request( '', ['d'], FALSE ) . '">' . get_icon( 'left', 'me-1', $locale['back'] ) . $locale['back'] . '</a></small></p>';
+
             $html .= match ($view) {
                 default => 'Content not found',
                 'twostep' => display_two_step( $info ),
                 'records' => display_login_activity( $info ),
+                'data' => display_data_activity( $info ),
+                'login' => display_social_logins( $info ),
             };
 
         } else {

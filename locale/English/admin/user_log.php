@@ -1,5 +1,5 @@
 <?php
-$locale['UL_001'] = "User Log";
+$locale['UL_001'] = "User Log Activity";
 $locale['UL_002'] = "Date";
 $locale['UL_003'] = "User Name";
 $locale['UL_004'] = "User Field";
@@ -13,9 +13,10 @@ $locale['UL_011'] = "Submit";
 $locale['UL_012'] = "Old Value";
 $locale['UL_013'] = "New Value";
 $locale['UL_014'] = "Options";
-$locale['UL_015'] = "There aren't logs available at the moment.";
+$locale['UL_015'] = "There aren't activity logs available at the moment.";
 $locale['UL_016'] = "Delete entries older than:";
 $locale['UL_017'] = "Days";
 $locale['UL_018'] = "Ascending";
 $locale['UL_019'] = "Descending";
 $locale['UL_020'] = "Select All";
+$locale['UL_021'] = 'View the data changes that have been updated in %s';

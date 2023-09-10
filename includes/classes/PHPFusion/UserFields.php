@@ -211,12 +211,12 @@ class UserFields extends QuantumFields {
         ];
 
         $this->info['user_name'] = $input->usernameInputField();
-        $this->info['user_firstname'] = form_text( 'user_firstname', 'First name', $this->userData['user_firstname'], ['inline' => $this->inputInline] );
-        $this->info['user_lastname'] = form_text( 'user_lastname', 'Last name', $this->userData['user_lastname'], ['inline' => $this->inputInline] );
-        $this->info['user_addname'] = form_text( 'user_addname', 'Additional name', $this->userData['user_addname'], ['inline' => $this->inputInline] );
-        $this->info['user_phone'] = form_text( 'user_phone', 'Phone number', $this->userData['user_phone'], ['inline' => $this->inputInline, 'placeholder' => '(678) 3241521'] );
+        $this->info['user_firstname'] = form_text( 'user_firstname', $locale['u010'], $this->userData['user_firstname'], ['inline' => $this->inputInline] );
+        $this->info['user_lastname'] = form_text( 'user_lastname', $locale['u011'], $this->userData['user_lastname'], ['inline' => $this->inputInline] );
+        $this->info['user_addname'] = form_text( 'user_addname', $locale['u012'], $this->userData['user_addname'], ['inline' => $this->inputInline] );
+        $this->info['user_phone'] = form_text( 'user_phone', $locale['u013'], $this->userData['user_phone'], ['inline' => $this->inputInline, 'placeholder' => '(678) 3241521'] );
         $this->info['user_hide_phone'] = $input->phoneHideInputField();
-        $this->info['user_bio'] = form_textarea( 'user_bio', 'Overview', $this->userData['user_bio'], ['inline' => $this->inputInline, 'wordcount' => TRUE, 'maxlength' => 255] );
+        $this->info['user_bio'] = form_textarea( 'user_bio', $locale['u015'], $this->userData['user_bio'], ['inline' => $this->inputInline, 'wordcount' => TRUE, 'maxlength' => 255] );
         //$this->info['user_password'] = form_para( $locale['u132'], 'password', 'profile_category_name' );
         $this->info['user_password'] = $input->passwordInputField();
         //$this->info['user_admin_password'] = $locale['u131'];
@@ -331,6 +331,7 @@ class UserFields extends QuantumFields {
         $item = [];
 
         $this->callback_data = $this->userData;
+
         switch ($this->method) {
             case 'input':
                 if ($this->registration == FALSE) {
@@ -414,6 +415,7 @@ class UserFields extends QuantumFields {
 
                                 //$fields['user_field'][$cat_id]['fields'][$field['field_id']] = $field_output; // relational to the category
                                 $fields['extended_field'][$field['field_name']] = $field_output; // for the gets
+
                                 if (!empty( $field_output )) {
                                     $fields['user_field'][$cat_id]['fields'][$field['field_id']] = array_merge( $field, $field_output );
                                 }
