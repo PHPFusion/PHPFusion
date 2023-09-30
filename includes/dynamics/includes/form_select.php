@@ -556,6 +556,7 @@ function form_user_select( $input_name, $label = "", $input_value = FALSE, array
         'type'              => 'dropdown',
         'jsonmode'          => TRUE,
         'max_select'        => 3,
+        'delimiter'         => ',',
         'allowclear'        => TRUE,
     ];
 
