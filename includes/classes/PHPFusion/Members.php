@@ -302,8 +302,9 @@ class Members {
      */
     protected function getMembers() {
         return dbquery("
-            SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_language, u.user_joined, u.user_avatar, u.user_lastvisit ".$this->getSelectors()."
-            FROM ".DB_USERS." u ".$this->getJoins()."
+            SELECT u.user_id, u.user_name, u.user_status, u.user_level, u.user_groups, u.user_joined, u.user_avatar, u.user_lastvisit, us.user_language ".$this->getSelectors()."
+            FROM ".DB_USERS." AS u ".$this->getJoins()."
+            LEFT JOIN ".DB_USER_SETTINGS." AS us ON us.user_id = u.user_id
             WHERE ".(iADMIN ? "u.user_status>='0'" : "u.user_status='0'")."
             ".$this->getConditions()." GROUP BY ".$this->getGroupBy()." ORDER BY ".$this->getOrderBy()." LIMIT ".$this->rowstart.",".$this->getLimit()."
         ");
@@ -318,7 +319,7 @@ class Members {
             return self::$filters["order"];
         }
 
-        $default_sorting = "u.user_level DESC, u.user_language DESC, u.user_name $this->sort_order";
+        $default_sorting = "u.user_level DESC, us.user_language DESC, u.user_name $this->sort_order";
 
         if (isset($this->orderby)) {
             switch ($this->orderby) {
