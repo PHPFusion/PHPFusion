@@ -2122,7 +2122,7 @@ function set_language( $lang ) {
     $userdata = fusion_get_userdata();
     if (valid_language( $lang )) {
         if (iMEMBER) {
-            dbquery( "UPDATE " . DB_USERS . " SET user_language='" . $lang . "' WHERE user_id='" . $userdata['user_id'] . "'" );
+            dbquery( "UPDATE " . DB_USER_SETTINGS . " SET user_language='" . $lang . "' WHERE user_id='" . $userdata['user_id'] . "'" );
         } else {
             $rows = dbrows( dbquery( "SELECT user_language FROM " . DB_LANGUAGE_SESSIONS . " WHERE user_ip='" . USER_IP . "'" ) );
             if ($rows != 0) {
