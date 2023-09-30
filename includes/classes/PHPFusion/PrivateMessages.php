@@ -93,9 +93,10 @@ class PrivateMessages {
             ];
             if ($user_id !== $userdata) {
                 $result = dbquery("
-                    SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
-                    FROM ".DB_USERS."
-                    WHERE user_id=:userid AND user_status=:status", [':userid' => $user_id, ':status' => '0']
+                    SELECT u.*, us.user_inbox, us.user_outbox, us.user_archive, us.user_pm_email, us.user_pm_save_sent
+                    FROM ".DB_USERS." AS u
+                    LEFT JOIN ".DB_USER_SETTINGS." AS us ON us.user_id = u.user_id
+                    WHERE u.user_id=:userid AND user_status=:status", [':userid' => $user_id, ':status' => '0']
                 );
                 if (dbrows($result)) {
                     $data = dbarray($result);
