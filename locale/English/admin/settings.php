@@ -178,8 +178,8 @@ $locale['admins_699b'] = "Both";
 $locale['admins_699e'] = "Email";
 $locale['admins_699f'] = "Check uploaded files for MIME type?";
 
-$locale['admins_Gateway_001'] = "Delete tmp files";
-$locale['admins_Gateway_002'] = "Gateway tmp files have been deleted.";
+$locale['admins_gateway_001'] = "Delete tmp files";
+$locale['admins_gateway_002'] = "Gateway tmp files have been deleted.";
 
 // Private Message Settings
 $locale['admins_700'] = "Private Messages";
