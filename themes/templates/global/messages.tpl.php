@@ -134,8 +134,12 @@ if (!function_exists('display_pm_inbox')) {
 
             echo '<h4>'.$data['message']['message_header'].'</h4>';
             echo '<div class="m-b-20">';
-                echo display_avatar($data, '40px', '', FALSE, 'img-rounded pull-left m-t-5 m-r-10');
-                echo profile_link($data['user_id'], $data['user_name'], $data['user_status'],'display-block');
+                if ( !empty( $data['user_id'] ) ) {
+                    echo display_avatar($data, '40px', '', FALSE, 'img-rounded pull-left m-t-5 m-r-10');
+                    echo profile_link($data['user_id'], $data['user_name'], $data['user_status'],'display-block');
+                } else {
+                    echo $locale['632']. ': ';
+                }
                 echo '<span>'.showdate('%d %b', $data['message_datestamp']).', '.timer($data['message_datestamp']).'</span>';
             echo '</div>';
 
