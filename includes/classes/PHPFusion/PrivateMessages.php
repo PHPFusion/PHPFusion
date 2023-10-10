@@ -454,7 +454,7 @@ class PrivateMessages {
             $data = dbarray($result);
 
             if (!$data["user_id"]) {
-                $data["user_name"] = fusion_get_settings("siteusername");
+                $data["user_name"] = $this->locale['632'];
             }
 
             $data['contact_user'] = [
