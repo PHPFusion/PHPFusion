@@ -231,7 +231,7 @@ class AccountsValidate extends UserFieldsValidate {
             }
         }
 
-        return NULL;
+        return $this->_userEmail;
     }
 
     /**
