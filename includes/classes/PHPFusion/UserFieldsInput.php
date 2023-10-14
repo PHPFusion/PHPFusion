@@ -449,6 +449,7 @@ class UserFieldsInput {
                     // Update Table
                     dbquery_insert( DB_USERS, $this->data, 'update' );
 
+                    dbquery_insert( DB_USER_SETTINGS, $this->data, 'update', ['primary_key' => 'user_id'] );
 //                if ($this->moderation && !empty( $pass ) && $this->_newUserPassword && $this->_newUserPassword2) {
 //                    // inform user that password has changed. and tell him your new password
 //                    include INCLUDES . 'sendmail_include.php';
