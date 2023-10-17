@@ -1983,7 +1983,7 @@ function fusion_set_user() {
 //             we have once chance to do a OTP.
             }
             if ($userdata = $auth->getUserData()) {
-                redirect( $_SERVER['HTTP_REFERER'] ?? BASEDIR . fusion_get_settings( 'opening_page' ) );
+                redirect( BASEDIR . fusion_get_settings( 'opening_page' ) );
             }
         }
     } else if (get( 'logout' ) === 'yes') {
