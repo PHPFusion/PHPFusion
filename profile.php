@@ -25,15 +25,16 @@ if (isset($_GET['lookup']) && isnum($_GET['lookup'])) {
     if (!iMEMBER && $settings['hide_userprofiles'] == 1 || user_blacklisted($_GET['lookup'])) {
         redirect(BASEDIR."index.php");
     }
-    $user_status = " AND (user_status='0' OR user_status='3' OR user_status='7')";
+    $user_status = " AND (u.user_status='0' OR u.user_status='3' OR u.user_status='7')";
     if (iADMIN) {
         $user_status = "";
     }
     $user_data = [];
-    $result = dbquery("SELECT u.*, s.suspend_reason
-        FROM ".DB_USERS." u
-        LEFT JOIN ".DB_SUSPENDS." s ON u.user_id=s.suspended_user
-        WHERE user_id=:uid".$user_status."
+    $result = dbquery("SELECT u.*, us.*, s.suspend_reason
+        FROM ".DB_USERS." AS u
+        LEFT JOIN ".DB_USER_SETTINGS." AS us ON u.user_id=us.user_id
+        LEFT JOIN ".DB_SUSPENDS." AS s ON u.user_id=s.suspended_user
+        WHERE u.user_id=:uid".$user_status."
         ORDER BY suspend_date DESC
         LIMIT 1", [':uid' => intval($_GET['lookup'])]);
     if (dbrows($result)) {
