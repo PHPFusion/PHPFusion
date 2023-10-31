@@ -222,10 +222,12 @@ if (!function_exists( 'display_user_profile' )) {
 
                             if (isset( $category_data['fields'] )) {
                                 foreach ($category_data['fields'] as $field_id => $field_data) {
-                                    echo '<div id="field-' . $field_id . '" class="row cat-field m-b-5">';
-                                    echo '<div class="col-xs-12 col-sm-3"><strong class="field-title">' . (!empty( $field_data['icon'] ) ? $field_data['icon'] : '') . ' ' . $field_data['title'] . '</strong></div>';
-                                    echo '<div class="col-xs-12 col-sm-9">' . $field_data['value'] . '</div>';
-                                    echo '</div>';
+                                    if (!empty($field_data['title'])) {
+                                        echo '<div id="field-' . $field_id . '" class="row cat-field m-b-5">';
+                                        echo '<div class="col-xs-12 col-sm-3"><strong class="field-title">' . (!empty( $field_data['icon'] ) ? $field_data['icon'] : '') . ' ' . $field_data['title'] . '</strong></div>';
+                                        echo '<div class="col-xs-12 col-sm-9">' . $field_data['value'] . '</div>';
+                                        echo '</div>';
+                                    }
                                 }
                             }
 
