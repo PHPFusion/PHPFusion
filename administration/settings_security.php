@@ -47,6 +47,7 @@ if (check_post( 'savesettings' )) {
         'bad_words_enabled'        => post( 'bad_words_enabled' ) ? 1 : 0,
         'bad_words'                => stripinput( post( 'bad_words' ) ),
         'bad_word_replace'         => sanitizer( 'bad_word_replace', '', 'bad_word_replace' ),
+        'blaclist_site'            => sanitizer( 'blaclist_site', '', 'blaclist_site' ),
         'database_sessions'        => sanitizer( 'database_sessions', 0, 'database_sessions' ),
         'form_tokens'              => sanitizer( 'form_tokens', '', 'form_tokens' ),
         'mime_check'               => post( 'mime_check' ) ? 1 : 0,
@@ -344,6 +345,11 @@ echo form_select( 'display_validation', $locale['admins_553'], $settings['displa
     'inner_width' => '100%',
 ] );
 echo '</div></div>';
+echo form_text('blaclist_site', $locale['admins_security_019'], $settings['blaclist_site'], [
+    'type'        => 'url',
+    'regex'       => 'http(s)?\:\/\/(.*?)',
+    'placeholder' => $locale['admins_security_020']
+]);
 tablebreak();
 echo "<div class='mb-3'><h5>Bad words filters</h5></div>";
 echo form_checkbox( 'bad_words_enabled', $locale['admins_659'], $settings['bad_words_enabled'], [

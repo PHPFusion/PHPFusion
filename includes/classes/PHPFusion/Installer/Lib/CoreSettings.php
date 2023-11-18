@@ -171,6 +171,7 @@ class CoreSettings {
                 ['settings_name' => 'password_char', 'settings_value' => '1'],
                 ['settings_name' => 'password_num', 'settings_value' => '1'],
                 ['settings_name' => 'password_case', 'settings_value' => '1'],
+                ['settings_name' => 'blaclist_site', 'settings_value' => 'http://www.google.com/'],
                 ['settings_name' => 'license', 'settings_value' => 'agpl'],
                 ['settings_name' => 'license_key', 'settings_value' => ''],
             ]
