@@ -19,7 +19,7 @@
 /**
  * Get bootstrap framework file paths
  *
- * @param $part
+ * @param        $part
  * @param string $version
  *
  * @return string
@@ -28,11 +28,11 @@ function get_bootstrap( $part, $version = '3', $php = FALSE ) {
 
     static $framework_paths = [];
 
-    if (empty( $framework_paths )) {
+    if ( empty( $framework_paths ) ) {
 
-        if ($version < 3) {
+        if ( $version < 3 ) {
             $version = 3;
-        } elseif ($version > 5) {
+        } else if ( $version > 5 ) {
             $version = 5;
         }
         $version = 'v' . $version;
@@ -60,7 +60,7 @@ function get_bootstrap( $part, $version = '3', $php = FALSE ) {
     return $framework_paths[$_type][$part] ?? '';
 }
 
-if (defined( 'BOOTSTRAP' )) {
+if ( defined( 'BOOTSTRAP' ) ) {
 
     /**
      * Load bootstrap
@@ -89,16 +89,15 @@ if (defined( 'BOOTSTRAP' )) {
      */
     function fusion_get_template( $component, $info ) {
 
-        if ($path = get_bootstrap( $component )) {
+        if ( $path = get_bootstrap( $component ) ) {
 
-            return fusion_render( $path['dir'], $path['file'], $info, TRUE );
-//            return fusion_render( $path['dir'], $path['file'], $info, iDEVELOPER );
+            return fusion_render( $path['dir'], $path['file'], $info, defined( 'FUSION_TPL_DEBUG') );
 
-        } elseif ($path = get_bootstrap( $component, 'auto', TRUE )) {
+        } else if ( $path = get_bootstrap( $component, 'auto', TRUE ) ) {
 
             require_once $path['dir'] . $path['file'];
 
-            if ($callback = call_user_func( $component, $info )) {
+            if ( $callback = call_user_func( $component, $info ) ) {
                 return $callback;
             }
         }
