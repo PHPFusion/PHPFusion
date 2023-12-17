@@ -40,59 +40,81 @@ class Text extends \Defender\Validation {
 
         self::$inputConfig += $default_length;
 
-        if (is_array(self::$inputValue)) {
+        if ( is_array( self::$inputValue ) ) {
             $vars = [];
-            foreach (self::$inputValue as $val) {
-                if (self::$inputConfig['max_length']) {
+            foreach ( self::$inputValue as $val ) {
+                if ( self::$inputConfig['max_length'] ) {
                     // Input max length needs a value.
-                    if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", $val)) {
+                    if ( !preg_check( "^([.\\s\\S]{" . self::$inputConfig['min_length'] . "," . self::$inputConfig['max_length'] . "})$^", $val ) ) {
                         fusion_stop();
-                        \Defender::setInputError(self::$inputName);
+                        \Defender::setInputError( self::$inputName );
                         return self::$inputDefault;
                     }
                 }
-                $value = trim(preg_replace("/ +/i", " ", $val));
-                if (self::$inputConfig['censor_words']) {
-                    $value = censorwords($value);
+                $value = trim( preg_replace( "/ +/i", " ", $val ) );
+                $value = self::filterSvgText( $value );
+
+                if ( self::$inputConfig['censor_words'] ) {
+                    $value = censorwords( $value );
                 }
-                if (self::$inputConfig['descript']) {
-                    $value = descript($value);
+
+                if ( self::$inputConfig['descript'] ) {
+                    $value = descript( $value );
                 } else {
-                    $value = stripinput($value);
+                    $value = stripinput( $value );
                 }
+
                 $vars[] = $value;
             }
             // set options for checking on delimiter, and default is pipe (json,serialized val)
-            $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
-            $value = implode($delimiter, $vars);
+            $delimiter = ( !empty( self::$inputConfig['delimiter'] ) ) ? self::$inputConfig['delimiter'] : "|";
+            $value = implode( $delimiter, $vars );
         } else {
-            if (self::$inputConfig['max_length']) {
-                if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", self::$inputValue)) {
+
+            if ( self::$inputConfig['max_length'] ) {
+                if ( !preg_check( "^([.\\s\\S]{" . self::$inputConfig['min_length'] . "," . self::$inputConfig['max_length'] . "})$^", self::$inputValue ) ) {
                     fusion_stop();
-                    \Defender::setInputError(self::$inputName);
+                    \Defender::setInputError( self::$inputName );
                     return FALSE;
                 }
             }
 
-            $value = trim(preg_replace("/ +/i", " ", self::$inputValue));
+            $value = trim( preg_replace( "/ +/i", " ", self::$inputValue ) );
+            $value = self::filterSvgText( $value );
 
-            if (self::$inputConfig['censor_words']) {
-                $value = censorwords($value);
+            if ( self::$inputConfig['censor_words'] ) {
+                $value = censorwords( $value );
             }
-            if (self::$inputConfig['descript']) {
-                $value = descript($value);
+
+            if ( self::$inputConfig['descript'] ) {
+                $value = descript( $value );
             } else {
-                $value = stripinput($value);
+                $value = stripinput( $value );
             }
         }
-        if (self::$inputConfig['required'] && !$value) {
-            \Defender::setInputError(self::$inputName);
+
+        if ( self::$inputConfig['required'] && !$value ) {
+            \Defender::setInputError( self::$inputName );
         }
-        if (self::$inputConfig['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
+
+        if ( self::$inputConfig['safemode'] && !preg_check( "/^[-0-9A-Z_@\s]+$/i", $value ) ) {
             return FALSE;
         } else {
             return $value;
         }
+    }
+
+    private static function filterSvgText( $value ) {
+        $svg_pattern = '/<svg\b[^>]*?(?:viewBox=\"(\b[^"]*)\")?>([\s\S]*?)<\/svg>/';
+        if ( preg_match( $svg_pattern, $value, $matches ) ) {
+            preg_match_all( $svg_pattern, $value, $matches, PREG_SET_ORDER, '0' );
+            $replace_pattern = [];
+            foreach ( $matches as $pattern ) {
+                $replace_pattern[$pattern[0]] = filter_svg( $pattern[0] );
+            }
+            $value = strtr( $value, $replace_pattern );
+        }
+        return $value;
     }
 
     /**
@@ -104,12 +126,12 @@ class Text extends \Defender\Validation {
     public function verify_password() {
 
         // add min length, add max length, add strong password into roadmaps.
-        if (self::$inputConfig['required'] && !self::$inputValue) {
+        if ( self::$inputConfig['required'] && !self::$inputValue ) {
             fusion_stop();
-            \Defender::setInputError(self::$inputName);
+            \Defender::setInputError( self::$inputName );
         }
-        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
-            self::$inputValue)) {
+        if ( preg_match( "/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{" . self::$inputConfig['min_length'] . "," . self::$inputConfig['max_length'] . "}$/i",
+            self::$inputValue ) ) {
             return self::$inputValue;
         }
 
@@ -124,11 +146,11 @@ class Text extends \Defender\Validation {
      * returns str the input or bool FALSE if check fails
      */
     protected function verify_email() {
-        if (self::$inputConfig['required'] && !self::$inputValue) {
+        if ( self::$inputConfig['required'] && !self::$inputValue ) {
             fusion_stop();
-            \Defender::setInputError(self::$inputName);
+            \Defender::setInputError( self::$inputName );
         }
-        if (preg_check("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,}+)$/i", self::$inputValue)) {
+        if ( preg_check( "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,}+)$/i", self::$inputValue ) ) {
             return self::$inputValue;
         }
         return FALSE;

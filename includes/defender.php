@@ -414,7 +414,9 @@ class Defender {
      * @return string
      */
     public function sanitizer( $key, $default = '', $input_name = FALSE, $is_multiLang = FALSE ) {
+
         $value = $this->filterPostArray( $key );
+
         return $this->formSanitizer( $value, $default, $input_name, $is_multiLang );
     }
 

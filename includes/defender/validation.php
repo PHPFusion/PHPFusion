@@ -82,8 +82,8 @@ abstract class Validation {
 
     public static function getValidated() {
 
-        if (!isset( self::$validate_instance[self::$inputName] )) {
-            if (class_exists( strtoupper( self::$validation_rules_assigned[self::$inputConfig['type']][0] ) )) {
+        if ( !isset( self::$validate_instance[self::$inputName] ) ) {
+            if ( class_exists( strtoupper( self::$validation_rules_assigned[self::$inputConfig['type']][0] ) ) ) {
                 try {
                     /**
                      * @uses Checkbox::verify_checked()
@@ -92,18 +92,18 @@ abstract class Validation {
                     $class = new ReflectionClass( strtoupper( self::$validation_rules_assigned[self::$inputConfig['type']][0] ) );
                     self::$validate_instance[self::$inputName] = $class->newInstance();
 
-                } catch (ReflectionException $e) {
+                } catch ( ReflectionException $e ) {
                     set_error( E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine() );
                 }
             }
         }
 
-        if (isset( self::$validate_instance[self::$inputName] ) && self::$validate_instance[self::$inputName] !== NULL) {
+        if ( isset( self::$validate_instance[self::$inputName] ) && self::$validate_instance[self::$inputName] !== NULL ) {
 
             $object = self::$validate_instance[self::$inputName];
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
 
-            if (is_callable( [$object, $method] )) {
+            if ( is_callable( [$object, $method] ) ) {
 
                 return $object->$method();
 
@@ -121,11 +121,12 @@ abstract class Validation {
 
 }
 
-require_once(__DIR__ . '/validation/checkbox.php');
-require_once(__DIR__ . '/validation/date.php');
-require_once(__DIR__ . '/validation/number.php');
-require_once(__DIR__ . '/validation/text.php');
-require_once(__DIR__ . '/validation/upload.php');
-require_once(__DIR__ . '/validation/uri.php');
-require_once(__DIR__ . '/validation/user.php');
-require_once(__DIR__ . '/validation/contact.php');
+require_once( __DIR__ . '/validation/checkbox.php' );
+require_once( __DIR__ . '/validation/date.php' );
+require_once( __DIR__ . '/validation/number.php' );
+require_once( __DIR__ . '/validation/text.php' );
+require_once( __DIR__ . '/validation/upload.php' );
+require_once( __DIR__ . '/validation/uri.php' );
+require_once( __DIR__ . '/validation/user.php' );
+require_once( __DIR__ . '/validation/contact.php' );
+require_once( __DIR__ . '/filters.php' );
