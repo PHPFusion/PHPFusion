@@ -344,7 +344,6 @@ class ForumAdminSettings extends ForumAdminInterface {
     }
 
     private function displayPostSettings() {
-
         if (isset($_POST['save_forum_post_settings'])) {
             $inputArray = [
                 'forum_ips'                  => form_sanitizer($_POST['forum_ips'], USER_LEVEL_SUPER_ADMIN, 'forum_ips'),
@@ -379,7 +378,7 @@ class ForumAdminSettings extends ForumAdminInterface {
         // change the locale file here to this - echo "<div class='well'>".self::$locale['forum_description']."</div>";
         ?>
         <div class='well'>
-            <strong><?php echo self::$locale['forum_description'] ?></strong>
+            <strong><?php echo self::$locale['admins_forum_description'] ?></strong>
         </div>
         <?php
 
