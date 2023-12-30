@@ -118,7 +118,7 @@ class PageList extends PageAdmin {
             ];
         }
 
-        if (isset( $_GET['pref'] ) && isnum( $_GET['pref'] )) {
+        if (isset( $_GET['pref'] ) && !empty( $_GET['pref'] )) {
             $search_string['cp.page_cat'] = [
                 'input'    => intval( $_GET['pref'] ),
                 'operator' => '='
