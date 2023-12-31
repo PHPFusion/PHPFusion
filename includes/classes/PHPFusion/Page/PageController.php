@@ -147,7 +147,11 @@ class PageController extends PageModel {
 
                 // Construct Meta
                 add_to_title(self::$data['page_title']);
-                add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
+                //add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$data['page_title']]);
+                $tree = dbquery_tree_full(DB_CUSTOM_PAGES, 'page_id', 'page_cat');
+                $tree_index = tree_index($tree);
+                make_page_breadcrumbs($tree_index, $tree, 'page_id', 'page_title', 'page_id');
+
                 if (!empty(self::$data['page_keywords'])) {
                     set_meta("keywords", self::$data['page_keywords']);
                 }
