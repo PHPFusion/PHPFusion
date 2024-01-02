@@ -392,7 +392,7 @@ class AdminSetup extends InstallCore {
                         // Update all existing panel and update new enabled language values
                         dbquery( "UPDATE " . DB_PREFIX . "panels SET panel_languages='" . self::$site_data['enabled_languages'] . "'" );
 
-                        $result = dbquery( "SELECT link_language FROM " . DB_PREFIX . "site_links GROUP BY link_language ORDER BY link_language ASC" );
+                        $result = dbquery( "SELECT distinct link_language FROM " . DB_PREFIX . "site_links" );
                         $installed_languages = [];
                         if (dbrows( $result ) > 0) {
                             while ($data = dbarray( $result )) {
@@ -409,7 +409,7 @@ class AdminSetup extends InstallCore {
                         }
                         unset( $installed_languages );
 
-                        $result = dbquery( "SELECT admin_language FROM " . DB_PREFIX . "admin GROUP BY admin_language ORDER BY admin_language ASC" );
+                        $result = dbquery( "SELECT distinct admin_language FROM " . DB_PREFIX . "admin" );
                         $installed_languages = [];
                         if (dbrows( $result ) > 0) {
                             while ($data = dbarray( $result )) {
@@ -429,7 +429,7 @@ class AdminSetup extends InstallCore {
                         /*
                          * Need to run another check with email_templates because installed languages might be different.
                          */
-                        $result = dbquery( "SELECT template_language FROM " . DB_PREFIX . "email_templates GROUP BY template_language ORDER BY template_language ASC" );
+                        $result = dbquery( "SELECT distinct template_language FROM " . DB_PREFIX . "email_templates" );
                         $installed_languages = [];
                         if (dbrows( $result ) > 0) {
                             while ($data = dbarray( $result )) {
