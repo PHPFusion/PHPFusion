@@ -18,6 +18,7 @@
 namespace PHPFusion\Forums\Admin;
 
 use PHPFusion\Quantum\QuantumHelper;
+use PHPFusion\QuantumFields;
 
 class ForumAdminMood extends ForumAdminInterface {
     /**
