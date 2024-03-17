@@ -24,27 +24,54 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
+// fix prefers dark.
+//#131c25
+@media (prefers-color-scheme: dark) {
+
+    --color: #000;
+    --low-emphasis: #00000088;
+    --lighter-color: #14191e;
+    --label-color: #000000bf;
+    --input-color: #000000bf; //#29292e;
+    --input-border-color: #e1e4e6;
+    --input-border-radius: 4px;
+    --input-padding-vertical: 14px;
+    --input-padding-horizontal: 16px;
+    --header-color: #000;
+    --border-color: #00000017;
+    --bg: #000;
+    --card-header: #fff;
+    --card-radius: .4rem;
+    --inner-radius: calc(0.4rem - 1px);
+    --primary-color: #0d6efd;
+    --darker-input-bg: #eef0f2;
+
+}
+
+@media (prefers-color-scheme: light) {
+
+    --color: #676a79;
+    --low-emphasis: #00000088;
+    --lighter-color: #14191e;
+    --label-color: #000000bf;
+    --input-color: #000000bf; //#29292e;
+    --input-border-color: #e1e4e6;
+    --input-border-radius: 4px;
+    --input-padding-vertical: 14px;
+    --input-padding-horizontal: 16px;
+
+    --header-color: #000;
+    --border-color: #00000017;
+    --bg: #eff2f6;
+    --card-header: #fff;
+    --card-radius: .4rem;
+    --inner-radius: calc(0.4rem - 1px);
+    --primary-color: #0d6efd;
+    --darker-input-bg: #eef0f2;
+}
+
+
 body {
-
-  --color: #676a79;
-  --low-emphasis: #00000088;
-  --lighter-color: #14191e;
-  --label-color: #000000bf;
-  --input-color: #000000bf; //#29292e;
-  --input-border-color: #e1e4e6;
-  --input-border-radius: 4px;
-  --input-padding-vertical: 14px;
-  --input-padding-horizontal: 16px;
-
-  --header-color: #000;
-  --border-color: #00000017;
-  --bg: #eff2f6;
-  --card-header: #fff;
-  --card-radius: .4rem;
-  --inner-radius: calc(0.4rem - 1px);
-  --primary-color: #0d6efd;
-  --darker-input-bg: #eef0f2;
-
 
   color: var(--color);
   background: var(--bg);
@@ -53,7 +80,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
 
   header {
     height: 70px;

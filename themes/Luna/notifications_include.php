@@ -62,6 +62,15 @@ function notification_menu() {
 function uip_menu() {
     $userdata = fusion_get_userdata();
 
+    add_to_jquery("
+    $('.btn-theme-options').on('click', function(e) {
+        e.preventDefault();
+        let val = $(this).data('bs-theme-value');        
+        toggleColorScheme(val);        
+    });
+    ");
+    fusion_load_script(THEME.'styles.js');
+
     return [
         'n2' => [
             'link_id'         => 'n2',
@@ -131,15 +140,11 @@ function uip_menu() {
 										<path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"></path>
 										<use href="#"></use>
 									</svg>
-								</button>
-								<button type="button" class="btn btn-theme-options nav-link text-primary-hover mb-0" data-bs-theme-value="auto" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Auto">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle-half fa-fw mode-switch" viewBox="0 0 16 16">
-										<path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"></path>
-										<use href="#"></use>
-									</svg>
-								</button>
+								</button>								
 							</div>'
         ]
     ];
+
+
 
 }
