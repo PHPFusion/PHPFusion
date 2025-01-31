@@ -93,12 +93,12 @@ if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."'>";
+    echo "<link rel='stylesheet' href='".THEMES."templates/css/default.min.css?v=".filemtime(THEMES.'templates/default.css')."'>";
 }
 
-if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>";
-}
+// move to header includes.
+//echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>";
+
 // Core CSS loading
 $core_css_files = fusion_filter_hook("fusion_core_styles");
 if (is_array($core_css_files)) {
@@ -109,6 +109,7 @@ if (is_array($core_css_files)) {
         }
     }
 }
+
 // Theme CSS loading
 echo fusion_load_script(THEME."styles.css", "css", TRUE);
 

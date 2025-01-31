@@ -1,0 +1,86 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile styles/default.less",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/templates/styles/default.less", // Replace with your input .less file path
+                "themes/templates/styles/default.min.css" // Replace with your output .css file path
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile default.less files to compressed CSS"
+        },
+        {
+            "label": "Compile install.less",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/templates/styles/install.less", 
+                "themes/templates/styles/install.min.css" 
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile install.less files to compressed CSS"
+        },
+        // Do we even need this???
+        {
+            "label": "Compile tinymce.less",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/templates/styles/tinymce.less", 
+                "themes/templates/styles/tinymyce.css" 
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile install.less files to compressed CSS"
+        },
+        {
+            "label": "Compile Magazine Theme styles",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/Magazine/styles.less", 
+                "themes/Magazine/styles.min.css" 
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile Magazine styles.less files to compressed CSS"
+        },
+        {
+            "label": "Compile AdminLTE Theme styles",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/admin_themes/AdminLTE/acp_styles.less", 
+                "themes/admin_themes/AdminLTE/acp_styles.min.css" 
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile AdminLTE styles.less files to compressed CSS"
+        }
+    ]
+}

@@ -1,12 +1,13 @@
-/themes/Main
+/cache
+/includes/config.inc.php
 /locale/Untranslated
 /images/logo
 .idea/.name
 *.xml
-/infusions/service
-/infusions/documentation
 *.iml
 config.php
 config-copy.php
 *.db
 .htaccess
+/wallet
+/infusions/wallet

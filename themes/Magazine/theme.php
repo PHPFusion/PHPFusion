@@ -28,6 +28,13 @@ if (!defined('MG_LOCALE')) {
     }
 }
 
+fusion_load_script(INCLUDES."fonts/PHPFusion/font.min.css?v2", "css");
+
+/**
+ * Magazine theme layout
+ *
+ * @return void
+ */
 function render_page() {
     $locale = fusion_get_locale('', MG_LOCALE);
     $settings = fusion_get_settings();
