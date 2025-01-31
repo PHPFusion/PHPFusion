@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: mail_bbcode_include.php
-| Author: JoiNNN
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (!function_exists('replace_mail')) {
     function replace_mail($m) {
@@ -33,14 +31,14 @@ $mail_regex = '[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}';
 $text = preg_replace_callback('
 ~\[mail
 (=
-	(?P<mail>'.$mail_regex.')
-	(;(?P<subject>.*?))?
+    (?P<mail>'.$mail_regex.')
+    (;(?P<subject>.*?))?
 )?
 \]
 (?(?='.$mail_regex.') # if followed by
-	(?P<mail2>'.$mail_regex.') # then
-	|
-	(?P<title>.*?)? # else
+    (?P<mail2>'.$mail_regex.') # then
+    |
+    (?P<title>.*?)? # else
 )
 \[\/mail\]
 ~ix'

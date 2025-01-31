@@ -39,35 +39,20 @@ class ReCaptchaResponse {
 }
 
 class ReCaptcha {
-
     private static $_signupUrl = "https://www.google.com/recaptcha/admin";
     private static $_siteVerifyUrl = "https://www.google.com/recaptcha/api/siteverify?";
     private static $_version = "php_1.0";
-    private static $instance = NULL;
     private $_secret;
 
     /**
+     * Constructor.
+     *
      * @param string $secret shared secret between site and ReCAPTCHA server.
-     * @param $secret
-     * @return object
      */
-    public static function getInstance($secret) {
-        if (self::$instance === NULL) {
-            if ($secret == NULL || $secret == "") {
-                die("To use reCAPTCHA you must get an API key from <a href='".self::$_signupUrl."'>".self::$_signupUrl."</a>");
-            }
-            self::$instance = new static();
-            self::$instance->setSecret($secret);
+    function __construct($secret) {
+        if ($secret == NULL || $secret == "") {
+            die("To use reCAPTCHA you must get an API key from <a href='".self::$_signupUrl."'>".self::$_signupUrl."</a>");
         }
-
-        return (object)self::$instance;
-    }
-
-    /**
-     * Set secret key
-     * @param $secret
-     */
-    private function setSecret($secret) {
         $this->_secret = $secret;
     }
 
@@ -86,25 +71,26 @@ class ReCaptcha {
             $recaptchaResponse = new ReCaptchaResponse();
             $recaptchaResponse->success = FALSE;
             $recaptchaResponse->errorCodes = 'missing-input';
-
             return $recaptchaResponse;
         }
+
         $getResponse = $this->_submitHttpGet(
             self::$_siteVerifyUrl,
-            array(
-                'secret' => $this->_secret,
+            [
+                'secret'   => $this->_secret,
                 'remoteip' => $remoteIp,
-                'v' => self::$_version,
+                'v'        => self::$_version,
                 'response' => $response
-            )
+            ]
         );
         $answers = json_decode($getResponse, TRUE);
         $recaptchaResponse = new ReCaptchaResponse();
-        if (trim($answers ['success']) == TRUE) {
+
+        if (trim($answers['success']) == TRUE) {
             $recaptchaResponse->success = TRUE;
         } else {
             $recaptchaResponse->success = FALSE;
-            $recaptchaResponse->errorCodes = $answers [error - codes];
+            $recaptchaResponse->errorCodes = $answers['error-codes'];
         }
 
         return $recaptchaResponse;
@@ -116,13 +102,11 @@ class ReCaptcha {
      * @param string $path url path to recaptcha server.
      * @param array  $data array of parameters to be sent.
      *
-     * @return array response
+     * @return bool|string
      */
     private function _submitHTTPGet($path, $data) {
         $req = $this->_encodeQS($data);
-        $response = file_get_contents($path.$req);
-
-        return $response;
+        return file_get_contents($path.$req);
     }
 
     /**
@@ -137,11 +121,8 @@ class ReCaptcha {
         foreach ($data as $key => $value) {
             $req .= $key.'='.urlencode(stripslashes($value)).'&';
         }
-        // Cut the last '&'
-        $req = substr($req, 0, strlen($req) - 1);
 
-        return $req;
+        // Cut the last '&'
+        return substr($req, 0, strlen($req) - 1);
     }
 }
-
-?>

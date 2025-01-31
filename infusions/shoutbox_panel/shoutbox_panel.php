@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: shoutbox_panel.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
-Shoutbox::getInstance(TRUE)->get_shout();
+require_once INFUSIONS.'shoutbox_panel/shoutbox.php';
+require_once INFUSIONS.'shoutbox_panel/templates/shoutbox.tpl.php';
+
+Shoutbox::getInstance()->displayShouts();

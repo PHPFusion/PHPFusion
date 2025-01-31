@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: !autolink_bbcode_include.php
-| Author: Wooya
-| Edited: slawekneo
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,17 +17,15 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\BBCode\Autolink;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
     function bbcode_off($text, $part) {
         if ($part == 1) {
             $text = str_replace("[", " &#91;", $text);
             $text = str_replace("]", "&#93; ", $text);
-        } elseif ($part == 2) {
-            $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow">(.*?)</a>^si', '\1', $text);
+        } else if ($part == 2) {
+            $text = preg_replace('^<a href="(.*?)" target="_blank" title="autolink" rel="nofollow noopener noreferrer">(.*?)</a>^si', '\1', $text);
             $text = str_replace(" &#91;", "&#91;", $text);
             $text = str_replace("&#93; ", "&#93;", $text);
         }
@@ -63,17 +60,17 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
     function callbackURLWithProtocol($matches) {
         $len = strlen($matches[2]);
 
-        return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
-        .trimlink($matches[2], 20)
-        .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+        return $matches[1].'<a href="'.$matches[2].'" target="_blank" title="autolink" rel="nofollow noopener noreferrer">'
+            .trimlink($matches[2], 20)
+            .($len > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
 
     function callbackURLWithoutProtocol($matches) {
         $len = strlen($matches[2]);
 
-        return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow">'
-        .trimlink($matches[2], 20)
-        .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
+        return $matches[1].'<a href="http://'.$matches[2].'" target="_blank" title="autolink" rel="nofollow noopener noreferrer">'
+            .trimlink($matches[2], 20)
+            .(strlen($matches[1]) > 30 ? substr($matches[2], $len - 10, $len) : '').'</a>';
     }
 
     function callbackMail($matches) {
@@ -93,11 +90,11 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
         if ($containsPHP) {
             $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPrePHP', $text);
         }
-        $text = str_replace(array("]", "&gt;", "[", "&lt;"), array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), $text);
+        $text = str_replace(["]", "&gt;", "[", "&lt;"], ["]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"], $text);
         $text = preg_replace_callback('#(^|[\n ])((http|https|ftp|ftps)://[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si',
-                                      __NAMESPACE__.'\callbackURLWithProtocol', $text);
+            __NAMESPACE__.'\callbackURLWithProtocol', $text);
         $text = preg_replace_callback('#(^|\s)((www|ftp)\.[\w\#$%&~/.\-;:=,?@\[\]\(\)+]*)#si', __NAMESPACE__.'\callbackURLWithoutProtocol', $text);
-        $text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
+        //$text = preg_replace_callback('#[a-z0-9_.-]+?@[\w\-]+\.([\w\-\.]+\.)*[\w]+#si', __NAMESPACE__.'\callbackMail', $text);
         if ($containsCode) {
             $text = preg_replace_callback('#\[code\](.*?)\[/code\]#si', __NAMESPACE__.'\callbackPostCode', $text);
         }
@@ -108,7 +105,7 @@ if (!function_exists('PHPFusion\BBCode\Autolink\run')) {
             $text = preg_replace_callback('#\[php\](.*?)\[/php\]#si', __NAMESPACE__.'\callbackPostPHP', $text);
         }
 
-        return str_replace(array("]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"), array("]", "&gt;", "[", "&lt;"), $text);
+        return str_replace(["]&nbsp;", "&gt; ", " &nbsp;[", " &lt;"], ["]", "&gt;", "[", "&lt;"], $text);
     }
 }
 

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: shoutbox_archive.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,14 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_SHOUTBOX)) {
-    redirect(BASEDIR."error.php?code=404");
+require_once __DIR__.'/../../maincore.php';
+
+if (!defined('SHOUTBOX_PANEL_EXISTS')) {
+    redirect(BASEDIR.'error.php?code=404');
 }
-require_once THEMES."templates/header.php";
 
-include_once INFUSIONS."shoutbox_panel/shoutbox.inc";
+require_once THEMES.'templates/header.php';
+require_once INFUSIONS.'shoutbox_panel/shoutbox.php';
+require_once INFUSIONS.'shoutbox_panel/templates/shoutbox.tpl.php';
 
-Shoutbox::getInstance(TRUE)->get_archiveshout();
+Shoutbox::getInstance()->displayShouts(TRUE);
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

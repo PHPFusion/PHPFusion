@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: settings_time.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,126 +15,127 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-pageAccess('S2');
-require_once THEMES."templates/admin_header.php";
+require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
+pageaccess('S2');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['time_settings']]);
+$settings = fusion_get_settings();
 
-$settings_main = array(
-    'shortdate' => fusion_get_settings('shortdate'),
-    'longdate' => fusion_get_settings('longdate'),
-    'forumdate' => fusion_get_settings('forumdate'),
-    'newsdate' => fusion_get_settings('newsdate'),
-    'subheaderdate' => fusion_get_settings('subheaderdate'),
-    'timeoffset' => fusion_get_settings('timeoffset'),
-    'serveroffset' => fusion_get_settings('serveroffset'),
-    'default_timezone' => fusion_get_settings('default_timezone'),
-    'week_start' => fusion_get_settings('week_start')
-);
+add_breadcrumb(['link' => ADMIN.'settings_time.php'.fusion_get_aidlink(), 'title' => $locale['admins_time_settings']]);
 
-if (isset($_POST['savesettings'])) {
-	$settings_main = array(
-	    'shortdate' => form_sanitizer($_POST['shortdate'], '', 'shortdate'),
-	    'longdate' => form_sanitizer($_POST['longdate'], '', 'longdate'),
-	    'forumdate' => form_sanitizer($_POST['forumdate'], '', 'forumdate'),
-	    'newsdate' => form_sanitizer($_POST['newsdate'], '', 'newsdate'),
-	    'subheaderdate' => form_sanitizer($_POST['subheaderdate'], '', 'subheaderdate'),
-	    'timeoffset' => form_sanitizer($_POST['timeoffset'], '', 'timeoffset'),
-	    'serveroffset' => form_sanitizer($_POST['serveroffset'], '', 'serveroffset'),
-	    'default_timezone' => form_sanitizer($_POST['default_timezone'], '', 'default_timezone'),
-	    'week_start' => form_sanitizer($_POST['week_start'], 0, 'week_start')
-	);
+if (check_post('savesettings')) {
+    $inputData = [
+        'shortdate'  => sanitizer('shortdate', '', 'shortdate'),
+        'longdate'   => sanitizer('longdate', '', 'longdate'),
+        'forumdate'  => sanitizer('forumdate', '', 'forumdate'),
+        'newsdate'   => sanitizer('newsdate', '', 'newsdate'),
+        'timeoffset' => sanitizer('timeoffset', '', 'timeoffset'),
+        'week_start' => sanitizer('week_start', 0, 'week_start')
+    ];
 
-    if (\defender::safe()) {
-        foreach ($settings_main as $settings_key => $settings_value) {
-            dbquery("UPDATE ".DB_SETTINGS." SET settings_value='".$settings_value."' WHERE settings_name='".$settings_key."'");
+    if (fusion_safe()) {
+        foreach ($inputData as $settings_name => $settings_value) {
+            dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                ':settings_value' => $settings_value,
+                ':settings_name'  => $settings_name
+            ]);
         }
-        addNotice("success", $locale['900']);
-        redirect(FUSION_SELF.fusion_get_aidlink());
+
+        addnotice("success", $locale['admins_900']);
+        redirect(FUSION_REQUEST);
     }
 }
 
-$timezones = DateTimeZone::listIdentifiers(DateTimeZone::AMERICA | DateTimeZone::AFRICA | DateTimeZone::ARCTIC | DateTimeZone::ASIA | DateTimeZone::ATLANTIC | DateTimeZone::EUROPE | DateTimeZone::INDIAN | DateTimeZone::PACIFIC); //gives both african and american time zones
+$json_file = @file_get_contents(INCLUDES.'geomap/timezones.json', FALSE);
+$timezones_json = json_decode($json_file, TRUE);
 
-foreach ($timezones as $zone) {
-	$zone = explode('/', $zone); // 0 => Continent, 1 => City
-	if (!empty($zone[1])) {
-		$timezoneArray[$zone[0].'/'.$zone[1]] = str_replace('_', ' ', $zone[1]); // Creates array(DateTimeZone => 'Friendly name')
-	}
+$timezone_array = [];
+foreach ($timezones_json as $zone => $zone_city) {
+    $date = new DateTime('now', new DateTimeZone($zone));
+    $offset = $date->getOffset() / 3600;
+    $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
 }
 
 $weekdayslist = explode("|", $locale['weekdays']);
 
-$date_opts = array();
+$date_opts = [];
 foreach ($locale['dateformats'] as $dateformat) {
     $date_opts[$dateformat] = showdate($dateformat, time());
 }
 unset($dateformat);
-opentable($locale['time_settings']);
-echo "<div class='well'>".$locale['time_description']."</div>\n";
-echo openform('settingsform', 'post', FUSION_SELF.fusion_get_aidlink());
-echo "<div class='row'>\n";
-echo "<div class='col-xs-12 col-sm-12 col-md-4'>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['459'].")</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['460'].")</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['461'].")</strong></div>\n";
-echo "<div class='panel-body text-left'><strong>".$locale['458']." (".$locale['466'].")</strong></div>\n";
-echo "</div>\n";
+opentable($locale['admins_time_settings']);
+echo "<div class='well'>".$locale['admins_time_description']."</div>\n";
 
-echo "<div class='col-xs-12 col-sm-12 col-md-8'>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['serveroffset']))."</div>\n";
-echo "<div class='panel-body text-left'>";
-if (column_exists('users', 'user_timezone')) {
-    echo showdate($settings_main['longdate'], time(), array('tz_override' => fusion_get_userdata('user_timezone')));
-} else {
-    echo $locale['na'];
-}
-echo "</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['timeoffset']))."</div>\n";
-echo "<div class='panel-body text-left'>".showdate($settings_main['longdate'], time(), array('tz_override' => $settings_main['default_timezone']))."</div>\n";
-echo "</div>\n";
-echo "</div>\n";
-
+echo openform('settingsform', 'post', FUSION_REQUEST);
 echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 
 openside('');
-echo form_select('shortdate', $locale['451'], $settings_main['shortdate'], array(
-    'options' => $date_opts,
-    'placeholder' => $locale['455']
-));
-echo form_select('longdate', $locale['452'], $settings_main['longdate'], array(
-    'options' => $date_opts,
-    'placeholder' => $locale['455']
-));
-echo form_select('forumdate', $locale['453'], $settings_main['forumdate'], array(
-    'options' => $date_opts,
-    'placeholder' => $locale['455']
-));
-echo form_select('newsdate', $locale['457'], $settings_main['newsdate'], array(
-    'options' => $date_opts,
-    'placeholder' => $locale['455']
-));
-echo form_select('subheaderdate', $locale['454'], $settings_main['subheaderdate'], array(
-    'options' => $date_opts,
-    'placeholder' => $locale['455']
-));
+echo '<span class="strong">'.$locale['admins_458'].' ('.$locale['admins_464'].')</span>';
+echo '<span class="pull-right">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['timeoffset']]).'</span>';
+closeside();
+
+openside('');
+echo form_select('timeoffset', $locale['admins_464'], $settings['timeoffset'], [
+    'options' => $timezone_array, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
+closeside();
+
+openside('');
+echo form_select('week_start', $locale['admins_465'], $settings['week_start'], [
+    'options' => $weekdayslist, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
 closeside();
 echo "</div>\n";
+
 echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
 openside('');
-echo form_select('serveroffset', $locale['463'], $settings_main['serveroffset'], array("options" => $timezoneArray));
-echo form_select('timeoffset', $locale['456'], $settings_main['timeoffset'], array("options" => $timezoneArray));
-echo form_select('default_timezone', $locale['464'], $settings_main['default_timezone'], array("options" => $timezoneArray));
+echo form_select('shortdate_select', $locale['admins_451'], $settings['shortdate'], [
+    'options'     => $date_opts,
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
+echo form_text('shortdate', '', $settings['shortdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
 closeside();
+
+openside('');
+echo form_select('longdate_select', $locale['admins_452'], $settings['longdate'], [
+    'options'     => $date_opts,
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
+echo form_text('longdate', '', $settings['longdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
+closeside();
+
+openside('');
+echo form_select('forumdate_select', $locale['admins_453'], $settings['forumdate'], [
+    'options'     => $date_opts,
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
+echo form_text('forumdate', '', $settings['forumdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
+closeside();
+
+openside('');
+echo form_select('newsdate_select', $locale['admins_457'], $settings['newsdate'], [
+    'options'     => $date_opts,
+    'placeholder' => $locale['admins_455'],
+    'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE
+]);
+echo form_text('newsdate', '', $settings['newsdate'], ['deactivate' => TRUE, 'inner_width' => '100%', 'width' => '100%', 'inline' => FALSE]);
+closeside();
+
 echo "</div>\n";
-echo "<div class='col-xs-12 col-sm-12 col-md-6'>\n";
-openside('');
-echo form_select('week_start', $locale['465'], $settings_main['week_start'], array("options" => $weekdayslist));
-closeside();
-echo "</div>\n</div>\n";
-echo form_button('savesettings', $locale['750'], $locale['750'], array('class' => 'btn-success'));
+
+add_to_jquery('
+$("[id*=\'_select\']").change(function () {
+    $("#" + $(this).attr("id").replace("_select", "")).val($(this).val());
+})
+');
+
+echo "</div>\n";
+echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-primary']);
 echo closeform();
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Comments/comments_widget.php
+| Filename: comments_widget.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,7 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-$widget_locale = fusion_get_locale('', WIDGETS."comments/locale/".LANGUAGE.".php");
+$lang = file_exists(WIDGETS."comments/locale/".LANGUAGE.".php") ? WIDGETS."comments/locale/".LANGUAGE.".php" : WIDGETS."comments/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
+
 // Path Definitions
 $widget_title = $widget_locale['CMW_0100'];
 $widget_icon = 'comments.svg';

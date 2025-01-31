@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_textarea.php
 | Author: Frederick MC Chan (Chan)
@@ -15,12 +15,22 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_textarea($input_name, $label = '', $input_value = '', array $options = array()) {
-    $defender = defender::getInstance();
-    $locale = fusion_get_locale('', [
-        LOCALE.LOCALESET."admin/html_buttons.php",
-        LOCALE.LOCALESET."error.php"
-    ]);
+
+/**
+ * @param string $input_name
+ * @param string $label
+ * @param string $input_value
+ * @param array  $options
+ *
+ * @return string
+ */
+function form_textarea($input_name, $label = '', $input_value = '', array $options = []) {
+
+    $locale = fusion_get_locale('',
+        [
+            LOCALE.LOCALESET."admin/html_buttons.php",
+            LOCALE.LOCALESET."error.php"
+        ]);
 
     require_once INCLUDES."bbcode_include.php";
     require_once INCLUDES."html_buttons_include.php";
@@ -31,11 +41,11 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
     if (!empty($options['bbcode'])) {
         $options['type'] = "bbcode";
-    } elseif (!empty($options['html'])) {
+    } else if (!empty($options['html'])) {
         $options['type'] = "html";
     }
 
-    $default_options = array(
+    $default_options = [
         'input_id'            => $input_name,
         'type'                => '',
         'inline_editing'      => FALSE,
@@ -45,7 +55,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'deactivate'          => FALSE,
         'width'               => '',
         'inner_width'         => '100%',
-        'height'              => '80px',
+        'height'              => '200px',
         'class'               => '',
         'inner_class'         => '',
         'inline'              => FALSE,
@@ -55,59 +65,104 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         'form_name'           => 'input_form',
         'tinymce'             => 'simple',
         'tinymce_css'         => '',
+        'tinymce_image'       => TRUE, // Turns on or off the image selection feature in TinyMCE
         'no_resize'           => FALSE,
         'autosize'            => FALSE,
+        'bbcode'              => FALSE,
+        'html'                => FALSE,
         'preview'             => FALSE,
         'path'                => IMAGES,
         'maxlength'           => '',
         'tip'                 => '',
         'ext_tip'             => '',
         'input_bbcode'        => '',
-        'wordcount'           => FALSE,
+        'wordcount'           => FALSE, // it is a character counter, not a word counter
         'file_filter'         => ['.png', '.PNG', '.svg', '.SVG', '.bmp', '.BMP', '.jpg', '.JPG', '.jpeg', '.gif', '.GIF', '.tiff', '.TIFF'],
-        'tinymce_theme'       => 'modern',
-    );
+        'tinymce_theme'       => 'silver', // silver|mobile
+        'tinymce_skin'        => 'oxide', // oxide|oxide-dark
+        'tinymce_spellcheck'  => TRUE,
+        'rows'                => 5,
+        'censor_words'        => TRUE,
+        'descript'            => TRUE
+    ];
 
     $options += $default_options;
 
+    $input_value = clean_input_value($input_value);
+
+
     if ($options['type'] == "tinymce") {
 
-        $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'],
-            array(TRUE, 'simple', 'advanced')) ? $options['tinymce'] : "simple";
+        $options['tinymce'] = !empty($options['tinymce']) && in_array($options['tinymce'], [TRUE, 'simple', 'advanced']) ? $options['tinymce'] : "simple";
 
-        $default_tinymce_css = (defined("ADMIN_PANEL") ? THEMES."admin_themes/".fusion_get_settings("admin_theme")."/acp_styles.css" : THEMES."templates/tinymce.css");
+        $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : '');
 
-        $options['tinymce_css'] = (!empty($options['tinymce_css']) && file_exists($options['tinymce_css']) ? $options['tinymce_css'] : $default_tinymce_css);
+        $options['tinymce_spellcheck'] = $options['tinymce_spellcheck'] == TRUE ? 'true' : 'false';
 
-        $tinymce_list = array();
-        if (!empty($options['path'])) {
+        $tinymce_list = [];
+        if (!empty($options['path']) && $options['tinymce_image'] == TRUE) {
             $image_list = [];
             if (is_array($options['path'])) {
                 foreach ($options['path'] as $dir) {
-                    if (file_exists($dir)) {
+                    if (file_exists($dir) && is_dir($dir)) {
                         $image_list[$dir] = makefilelist($dir, ".|..|");
                     }
                 }
             } else {
-                $image_list[$options['path']] = makefilelist($options['path'], '.|..|');
+                if (file_exists($options['path']) && is_dir($options['path'])) {
+                    $image_list[$options['path']] = makefilelist($options['path'], '.|..|');
+                }
             }
             foreach ($image_list as $key => $images) {
-            	foreach ($images as $keys => $image_name) {
-                	$image_1 = explode('.', $image_name);
-                	$last_str = count($image_1) - 1;
-                	if (in_array(".".$image_1[$last_str], $options['file_filter'])) {
-                	    $tinymce_list[] = array('title' => $image_name, 'value' => $key.$image_name);
-                	}
-            	}
+                foreach ($images as $image_name) {
+                    $image_1 = explode('.', $image_name);
+                    $last_str = count($image_1) - 1;
+                    if (in_array(".".$image_1[$last_str], $options['file_filter'])) {
+                        $tinymce_list[] = ['title' => $image_name, 'value' => $key.$image_name];
+                    }
+                }
             }
         }
 
         $tinymce_list = json_encode($tinymce_list);
         $tinymce_smiley_vars = "";
         if (!defined('tinymce')) {
-            add_to_footer("<script type='text/javascript' src='".INCLUDES."jscripts/tinymce/tinymce.min.js'></script>");
+            add_to_head('<script src="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.js"></script>');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'jquery/jquery-ui/jquery-ui.min.css">');
+            add_to_head('<script src="'.INCLUDES.'elFinder/js/elfinder.min.js"></script>');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/elfinder.min.css">');
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'elFinder/css/theme.css">');
+            add_to_head("<script src='".INCLUDES."jscripts/tinymce5/tinymce.min.js'></script>");
+            add_to_head("<script src='".INCLUDES."elFinder/js/tinymceElfinder.min.js'></script>");
+
+            add_to_jquery('
+                const mceElf = new tinymceElfinder({
+                    // connector URL (Set your connector)
+                    url: "'.fusion_get_settings('siteurl').'includes/elFinder/php/connector.php'.fusion_get_aidlink().'",
+                    // upload target folder hash for this tinyMCE
+                    uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
+                    // elFinder dialog node id
+                    nodeId: "elfinder", // Any ID you decide
+                        ui: ["toolbar", "tree", "path", "stat"],
+                        uiOptions: {
+                            toolbar: [
+                                ["home", "back", "forward", "up", "reload"],
+                                ["mkdir", "mkfile", "upload"],
+                                ["open"],
+                                ["copy", "cut", "paste", "rm", "empty"],
+                                ["duplicate", "rename", "edit", "resize", "chmod"],
+                                ["quicklook", "info"],
+                                ["extract", "archive"],
+                                ["search"],
+                                ["view", "sort"],
+                                ["preference", "help"]
+                            ]
+                        }
+                });
+            ');
+
             define('tinymce', TRUE);
-            // PHP-Fusion Parse Cache Smileys
+            // PHPFusion Parse Cache Smileys
             $smileys = cache_smileys();
             $tinymce_smiley_vars = "";
             if (!empty($smileys)) {
@@ -136,164 +191,202 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
                 ";
             }
         }
+
+        $images = '';
+
+        if ($options['tinymce_image']) {
+            $images = "file_picker_callback : mceElf.browser,";
+        }
+
+        $tinymce_lang = '';
+        if (file_exists(LOCALE.LOCALESET."includes/jscripts/tinymce/langs/".$locale['tinymce'].".js")) {
+            $tinymce_lang = "language:'".$locale['tinymce']."',
+            language_url: '".LOCALE.LOCALESET."includes/jscripts/tinymce/langs/".$locale['tinymce'].".js',";
+        }
+
         // Mode switching for TinyMCE
         switch ($options['tinymce']) {
             case 'advanced':
                 add_to_jquery("
                 tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
-                language:'".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
-                width: '100%',
-                height: 300,
-                plugins: [
-                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'save table contextmenu directionality template paste textcolor ".($options['inline_editing'] ? " save " : "")."'
-                ],
-                image_list: $tinymce_list,
-                content_css: '".$options['tinymce_css']."',
-                toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext spellchecker searchreplace code',
-                toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
-                toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
-                image_advtab: true,
-                style_formats: [
-                    {title: 'Bold text', inline: 'b'},
-                    {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
-                    {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
-                    {title: 'Example 1', inline: 'span', classes: 'example1'},
-                    {title: 'Example 2', inline: 'span', classes: 'example2'},
-                    {title: 'Table styles'},
-                    {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
-                ],
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
-                    });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
+                    ".$images."
+                    relative_urls: false,
+                    remove_script_host: false,
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    ".$tinymce_lang."
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    width: '100%',
+                    height: 300,
+                    plugins: [
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak',
+                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                        'save table directionality template paste ".($options['inline_editing'] ? " save " : "")."'
+                    ],
+                    image_list: $tinymce_list,
+                    ".(!empty($options['tinymce_css'] ? "content_css: '".$options['tinymce_css']."'," : ''))."
+                    toolbar1: '".($options['inline_editing'] ? " save " : "")." insertfile undo redo | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | newdocument fullscreen preview cut copy paste pastetext searchreplace code',
+                    toolbar2: 'styleselect formatselect removeformat | fontselect fontsizeselect bold italic underline strikethrough subscript superscript blockquote | forecolor backcolor',
+                    toolbar3: 'hr pagebreak insertdatetime | link unlink anchor | image media | table charmap visualchars visualblocks emoticons',
+                    image_advtab: true,
+                    style_formats: [
+                        {title: 'Bold text', inline: 'b'},
+                        {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                        {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                        {title: 'Example 1', inline: 'span', classes: 'example1'},
+                        {title: 'Example 2', inline: 'span', classes: 'example2'},
+                        {title: 'Table styles'},
+                        {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+                    ],
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                 });
                 ");
                 break;
             case 'simple':
                 add_to_jquery("
                 tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
-                menubar: false,
-                statusbar: false,
-                content_css: '".$options['tinymce_css']."',
-                image_list: $tinymce_list,
-                plugins: [
-                    'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak spellchecker',
-                    'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
-                    'contextmenu directionality template paste bbcode autoresize ".($options['inline_editing'] ? " save " : "")."'
-                ],
-                height: 30,
-                image_advtab: true,
-                toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr media | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
-                language: '".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
-                object_resizing: false,
-                resize: false,
-                relative_urls: false,
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
-                    });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
+                    ".$images."
+                    relative_urls: false,
+                    remove_script_host: false,
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    menubar: false,
+                    statusbar: false,
+                    content_css: '".$options['tinymce_css']."',
+                    image_list: $tinymce_list,
+                    plugins: [
+                        'advlist autolink ".($options['autosize'] ? " autoresize " : "")." link image lists charmap print preview hr anchor pagebreak',
+                        'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                        'directionality template paste".($options['bbcode'] ? " bbcode " : "").($options['autosize'] ? " autoresize " : "").($options['inline_editing'] ? " save " : "")."'
+                    ],
+                    width: '100%',
+                    height: 100,
+                    image_advtab: true,
+                    toolbar1: 'undo redo | bold italic underline | emoticons | visualblocks | bullist numlist blockquote | hr ".($options['tinymce_image'] ? " image " : "")." | fullscreen ".($options['inline_editing'] ? " save " : "")." | code',
+                    language: '".$locale['tinymce']."',
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    object_resizing: ".($options['autosize'] ? "false" : "true").",
+                    resize: ".($options['autosize'] ? "false" : "true").",
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                 });
-                ");
-                add_to_jquery("
-                $('#inject').bind('click', function() {
+
+                $('#inject').bind('click', function () {
                     tinyMCE.activeEditor.execCommand(\"mceInsertContent\", true, '[b]I am injecting in stuff..[/b]');
-                    });
+                });
                 ");
                 break;
             case 'default':
                 add_to_jquery("
                 tinymce.init({
-                selector: '#".$options['input_id']."',
-                inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
-                content_css: '".$options['tinymce_css']."',
-                theme: '".$options['tinymce_theme']."',
-                entity_encoding : 'raw',
-                language:'".$locale['tinymce']."',
-                ".($options['tinymce_forced_root'] ? "forced_root_block : ''," : '')."
-                setup: function(ed) {
-                    // add tabkey listener
-                    ed.on('keydown', function(event) {
-                        if (event.keyCode == 9) { // tab pressed
-                            if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
-                            event.preventDefault();
-                            return false;
-                        }
-                    });
-                    // auto smileys parsing
-                    ".$tinymce_smiley_vars."
-                }
+                    ".$images."
+                    relative_urls: false,
+                    remove_script_host: false,
+                    selector: '#".$options['input_id']."',
+                    inline: ".($options['inline_editing'] == TRUE ? "true" : "false").",
+                    content_css: '".$options['tinymce_css']."',
+                    theme: '".$options['tinymce_theme']."',
+                    skin: '".(defined('TINYMCE_SKIN') ? TINYMCE_SKIN : $options['tinymce_skin'])."',
+                    ".(defined('TINYMCE_SKIN_PATH') ? "skin_url: '".TINYMCE_SKIN_PATH."', " : '')."
+                    browser_spellcheck: ".$options['tinymce_spellcheck'].",
+                    entity_encoding: 'raw',
+                    ".$tinymce_lang."
+                    directionality : '".$locale['text-direction']."',
+                    ".($options['tinymce_forced_root'] ? "forced_root_block: ''," : '')."
+                    setup: function(ed) {
+                        // add tabkey listener
+                        ed.on('keydown', function(event) {
+                            if (event.keyCode == 9) { // tab pressed
+                                if (event.shiftKey) { ed.execCommand('Outdent'); } else { ed.execCommand('Indent'); }
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                        // auto smileys parsing
+                        ".$tinymce_smiley_vars."
+                    }
                 });
                 ");
                 break;
         }
     } else {
 
-        if (!defined('autogrow') && $options['autosize']) {
-            define('autogrow', TRUE);
-            add_to_footer("<script src='".DYNAMICS."assets/autosize/jquery.autosize.min.js'></script>");
+        if ($options['type'] == 'bbcode' || $options['bbcode']) {
+            fusion_load_script(INCLUDES.'jscripts/bbcode.js');
         }
 
-        if ($options['autosize']) {
-            add_to_jquery("$('#".$options['input_id']."').autosize();");
+        if ($options['bbcode']) {
+            $options['type'] = 'bbcode';
+        } else if ($options['html']) {
+            $options['type'] = 'html';
+        }
+
+        if ($options['autosize'] || defined('AUTOSIZE')) {
+            fusion_load_script(DYNAMICS.'assets/autosize/autosize.js');
+            // add_to_footer("<script src='" . DYNAMICS . "assets/autosize/autosize.min.js'></script>");
+            add_to_jquery("autosize($('#".$options['input_id']."'));");
         }
     }
 
     if ($input_value) {
-
         $input_value = html_entity_decode(stripslashes($input_value), ENT_QUOTES, $locale['charset']);
         $input_value = htmlspecialchars_decode($input_value);
-
-        if ($options['type'] !== "tinymce") {
-            $input_value = str_replace("<br />", "", $input_value);
-        }
     }
 
     $error_class = "";
-    if ($defender->inputHasError($input_name)) {
-        $error_class = "has-error ";
+    if (\Defender::inputHasError($input_name)) {
+        $error_class = " has-error";
         if (!empty($options['error_text'])) {
-            $new_error_text = $defender->getErrorText($input_name);
+            $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            addnotice("danger", $options['error_text']);
         }
     }
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] ? "style='width: ".$options['width']." !important;'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0 p-r-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row' : '').$error_class.$options['class']."'".($options['width'] ? " style='width: ".$options['width']." !important;'" : '').">\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] == 1 ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>\n" : '';
     $html .= ($options['inline']) ? "<div class='clearfix".($label ? ' col-xs-12 col-sm-9 col-md-9 col-lg-9' : '')."'>\n" : '';
-    $tab_active = 0;
-    $tab_title = array();
+    // $tab_active = 0;
+    // $tab_title = [];
     if ($options['preview'] && ($options['type'] == "html" || $options['type'] == "bbcode")) {
+
+        $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='far fa-eye m-r-10'></i><span class='preview-text'>".$locale['preview']."</span></span></button>";
+
         $tab_title['title'][] = $locale['preview'];
         $tab_title['id'][] = "prw-".$options['input_id'];
         $tab_title['icon'][] = '';
@@ -303,21 +396,23 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $tab_active = tab_active($tab_title, 1);
     }
 
-    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0 !important;'" : '').">\n
-    <div class='panel-heading clearfix'>\n" : '';
-
+    $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "<div class='panel panel-default panel-txtarea m-b-0' ".($options['preview'] ? "style='border-radius:0;'" : '').">\n<div class='panel-heading clearfix'>\n" : '';
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
-        $html .= openeditortab($tab_title, $tab_active, $options['input_id']."-link", "", "editor-wrapper");
+
+        $html .= "<div class='nav-wrapper editor-wrapper'>\n";
+
+        // $html .= openeditortab($tab_title, $tab_active, $options['input_id'] . "-link", "", "editor-wrapper");
     }
 
     if ($options['type'] == "bbcode" && $options['form_name']) {
-        $html .= "<div class='bbcode_input'>\n";
+        $html .= "<div class='bbcode_input' style='line-height:0;'>\n";
         $html .= display_bbcodes('100%', $options['input_id'], $options['form_name'], $options['input_bbcode']);
-        $html .= $options['preview'] ? "</div>\n" : "";
-    } elseif ($options['type'] == "html" && $options['form_name']) {
-        $html .= "<div class='m-t-10 m-b-10'>\n";
+
+        $html .= ($preview_button ?? '').($options['preview'] ? "</div>\n" : "");
+    } else if ($options['type'] == "html" && $options['form_name']) {
+        $html .= "<div class='html-buttons'>\n";
         $html .= display_html($options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path']);
-        $html .= $options['preview'] ? "</div>\n" : "";
+        $html .= ($preview_button ?? '').$options['preview'] ? "</div>\n" : "";
     }
 
     $html .= ($options['type'] == "html" || $options['type'] == "bbcode") ? "</div>\n</div>\n<div class='panel-body p-0'>\n" : '';
@@ -328,9 +423,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
     }
 
     if ($options['inline_editing'] == TRUE) {
-        $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width:".$options['width'].";'" : '').">".$input_value."</div>\n";
+        $html .= "<div id='".$options['input_id']."' ".($options['width'] ? "style='display:block; width: ".$options['width'].";'" : '').">".$input_value."</div>\n";
     } else {
-        $html .= "<textarea name='$input_name' style='display:block; width:".$options['inner_width']."; height:".$options['height']."; ".($options['no_resize'] ? 'resize: none;' : '')."' class='form-control p-15 m-0 ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."' ".($options['deactivate'] ? ' readonly' : '').($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
+        $html .= "<textarea name='$input_name' style='width: ".$options['inner_width']."; height:".$options['height'].";".($options['no_resize'] ? ' resize: none;' : '')."' rows='".$options['rows']."' cols='' class='form-control m-0 ".($options['inner_class'] ? " ".$options['inner_class']." " : '').($options['autosize'] ? 'animated-height' : '')." ".(($options['type'] == "html" || $options['type'] == "bbcode") ? "no-shadow no-border bbr-0" : '')." textbox'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." id='".$options['input_id']."'".($options['deactivate'] ? ' readonly' : '')." ".($options['maxlength'] ? " maxlength='".$options['maxlength']."'" : '').">".$input_value."</textarea>\n";
     }
 
     if ($options['preview'] && ($options['type'] == "bbcode" || $options['type'] == "html")) {
@@ -340,59 +435,76 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         $html .= closetabbody();
         $html .= "</div>\n";
         add_to_jquery("
-        // preview syntax
-        var form = $('#".$options['form_name']."');
-        $('#tab-prw-".$options['input_id']."').bind('click',function(){
-        var text = $('#".$options['input_id']."').val();
-        var format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."';
-        var data = {
-            ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
-            'text' : text,
-            'editor' : format,
-            'url' : '".$_SERVER['REQUEST_URI']."',
-        };
-        var sendData = form.serialize() + '&' + $.param(data);
-        $.ajax({
-            url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
-            type: 'POST',
-            dataType: 'html',
-            data : sendData,
-            success: function(result){
-            //console.log(result);
-            $('#prw-".$options['input_id']."').html(result);
-            },
-            error: function(result) {
-                new PNotify({
-                    title: '".$locale['error_preview']."',
-                    text: '".$locale['error_preview_text']."',
-                    icon: 'notify_icon n-attention',
-                    animation: 'fade',
-                    width: 'auto',
-                    delay: '3000'
+        $(document).on('click', '[data-action=\"preview\"]', function(e) {
+            e.preventDefault();
+            let preview_tab = $('#prw-".$options['input_id']."'),
+            editor_tab = $('#txt-".$options['input_id']."'),
+            placeholder = $(this).find('.preview-text');
+
+            if ( editor_tab.is(':visible') ) {
+                $(this).addClass('active');
+                placeholder.text('Hide Preview');
+
+                let text = $('#".$options['input_id']."').val(),
+                format = '".($options['type'] == "bbcode" ? 'bbcode' : 'html')."',
+                data = {
+                    ".(defined('ADMIN_PANEL') ? "'mode': 'admin', " : "")."
+                    'text' : text,
+                    'editor' : format,
+                    'url' : '".$_SERVER['REQUEST_URI']."',
+                    'form_id' : 'prw-".$options['form_name']."',
+                    'fusion_token' : '".fusion_get_token("prw-".$options['form_name'], 30)."'
+                },
+                sendData = $(this).closest('form').serialize() + '&' + $.param(data);
+
+                $.ajax({
+                    url: '".FUSION_ROOT.INCLUDES."dynamics/assets/preview/preview.ajax.php',
+                    type: 'POST',
+                    dataType: 'html',
+                    data : sendData,
+                    success: function(result) {
+                        console.log(result);
+                        preview_tab.html(result).addClass('in active');
+                        editor_tab.removeClass('in active');
+
+                    },
+                    error: function(result) {
+                        alert('".$locale['error_preview']."' + '\\n".$locale['error_preview_text']."');
+                    }
                 });
+
+            } else {
+                $(this).removeClass('active');
+                placeholder.text('Preview');
+                preview_tab.removeClass('in active');
+                editor_tab.addClass('in active');
             }
-            });
         });
         ");
     }
 
     if (($options['type'] == "html" || $options['type'] == "bbcode") && $options['wordcount'] === TRUE) {
         $html .= "</div>\n<div class='panel-footer clearfix'>\n";
-        $html .= "<div class='overflow-hide'><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span></small></div>";
+        $html .= "<div class='overflow-hide'><i><small>".$locale['word_count'].": <span id='".$options['input_id']."-wordcount'></span>".(!empty($options['maxlength']) ? " / ".$options['maxlength'] : '')."</small></i></div>";
         add_to_jquery("
-        var init_str = $('#".$options['input_id']."').val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-        $('#".$options['input_id']."-wordcount').text(init_str);
+        if ($('#".$options['input_id']."').length) {
+            var init_str = $('#".$options['input_id']."').val().length;
+            $('#".$options['input_id']."-wordcount').text(init_str);
+        }
         $('#".$options['input_id']."').on('input propertychange paste', function() {
-        var str = $(this).val().replace(/<[^>]+>/ig, '').replace(/\\n/g,'').replace(/ /g, '').length;
-        $('#".$options['input_id']."-wordcount').text(str);
+            var str = $(this).val().length;
+            $('#".$options['input_id']."-wordcount').text(str);
         });
         ");
         $html .= "</div>\n<!---panel-footer-->";
     }
+
     if ((!$options['type'] == "bbcode" && !$options['type'] == "html")) {
         $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
     }
+
     $html .= $options['inline'] ? "</div>\n" : '';
+
     if (($options['type'] == "bbcode" || $options['type'] == "html")) {
         if ($options['wordcount']) {
             $html .= "</div>\n";
@@ -406,42 +518,46 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
         }
     }
 
-    $html .= (($options['required'] == 1 && $defender->inputHasError($input_name)) || $defender->inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+    $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name)) || \Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger text-white p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+
     $html .= "</div>\n";
 
-    $defender->add_field_session(array(
-        'input_name' => $input_name,
-        'type'       => 'textarea',
-        'title'      => $label,
-        'id'         => $options['input_id'],
-        'required'   => $options['required'],
-        'safemode'   => $options['safemode'],
-        'error_text' => $options['error_text']
-    ));
+    \Defender::add_field_session([
+        'input_name'   => clean_input_name($input_name),
+        'type'         => 'textarea',
+        'title'        => $label,
+        'id'           => $options['input_id'],
+        'required'     => $options['required'],
+        'safemode'     => $options['safemode'],
+        'error_text'   => $options['error_text'],
+        'censor_words' => $options['censor_words'],
+        'descript'     => $options['descript']
+    ]);
 
     return $html;
 }
 
 function openeditortab($tab_title, $link_active_arrkey, $id, $link = FALSE, $class = FALSE, $getname = "section") {
-    $link_mode = $link ? $link : 0;
+
+    $link_mode = !empty($link) ? $link : 0;
     $html = "<div class='nav-wrapper $class'>\n";
-    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >\n";
+    $html .= "<ul class='nav' ".($id ? "id='".$id."'" : "")." >";
     if (!empty($tab_title['title'])) {
         foreach ($tab_title['title'] as $arr => $v) {
             $v_title = str_replace("-", " ", $v);
             $tab_id = $tab_title['id'][$arr];
             $icon = (isset($tab_title['icon'][$arr])) ? $tab_title['icon'][$arr] : "";
-            $link_url = $link ? clean_request($getname.'='.$tab_id, array($getname), FALSE) : '#';
+            $link_url = $link ? clean_request($getname.'='.$tab_id, [$getname], FALSE) : '#';
             if ($link_mode) {
-                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active m-r-10'>\n" : "<li class='m-r-10'>\n";
+                $html .= ($link_active_arrkey == $tab_id) ? "<li class='active'>" : "<li>";
             } else {
-                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active m-r-10'>\n" : "<li  class='m-r-10'>\n";
+                $html .= ($link_active_arrkey == "".$tab_id) ? "<li class='active'>" : "<li>";
             }
-            $html .= "<a class='btn btn-default btn-xs m-l-10 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">\n".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>\n";
-            $html .= "</li>\n";
+            $html .= "<a class='btn btn-default btn-sm m-l-5 pointer' ".(!$link_mode ? "id='tab-".$tab_id."' data-toggle='tab' data-target='#".$tab_id."'" : "href='$link_url'").">".($icon ? "<i class='".$icon."'></i>" : '')." ".$v_title." </a>";
+            $html .= "</li>";
         }
     }
-    $html .= "</ul>\n";
+    $html .= "</ul>";
 
     return $html;
 }

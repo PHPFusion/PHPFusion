@@ -1,10 +1,9 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
 | Filename: homepagw_rewrite_info.php
 | Author: Rizado (Chubatyj Vitalij)
 +--------------------------------------------------------+
@@ -16,8 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 $permalink_name = $locale['pl_homepage_title'];
 $permalink_desc = $locale['pl_homepage_desc'];

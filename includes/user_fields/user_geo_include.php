@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_geo_include.php
 | Author: Chan (Frederick MC Chan)
@@ -15,15 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 // Display user field input
 if ($profile_method == "input") {
-    $options += array('inline' => TRUE);
+    $options += ['inline' => TRUE];
     $user_fields = form_geo('user_geo', $locale['uf_geo'], $field_value, $options);
-} elseif ($profile_method == "display") {
+} else if ($profile_method == "display") {
     if ($field_value) {
         $address = explode('|', $field_value);
         !empty($address[2]) ? $address[2] = translate_country_names($address[2]) : "";
@@ -31,5 +29,8 @@ if ($profile_method == "input") {
     } else {
         $field_value = $locale['na'];
     }
-    $user_fields = array('title' => $locale['uf_geo'], 'value' => $field_value);
+    $user_fields = [
+        'title' => $locale['uf_geo'],
+        'value' => $field_value]
+    ;
 }

@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Featurebox/featurebox.php
+| Filename: featurebox.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -17,10 +17,12 @@
 +--------------------------------------------------------*/
 
 class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+    }
 
-    public function display_widget($colData) {
+    public function displayWidget($columnData) {
         $widget_locale = fusion_get_locale('', WIDGETS."/featurebox/locale/".LANGUAGE.".php");
-        $boxData = \defender::unserialize($colData['page_content']);
+        $boxData = \Defender::unserialize($columnData['page_content']);
 
         /**
          * Array
@@ -50,13 +52,13 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
             $box_margin .= (!empty($boxData['box_link_margin_top']) ? "margin-top: ".$boxData['box_link_margin_top']."px;" : "");
             $box_margin .= (!empty($boxData['box_link_margin_bottom']) ? "margin-bottom: ".$boxData['box_link_margin_bottom']."px;" : "");
             $box_margin .= (!empty($box_margin)) ? "style='$box_margin'" : "";
-            $box_link = "<a $box_link_class href='".$boxData['box_link']."' $box_margin>".$widget_locale['0300']."</a>";
+            $box_link = "<a $box_link_class href='".$boxData['box_link']."' $box_margin>".$widget_locale['FBW_0300']."</a>";
         }
 
         $icon = '';
         switch ($boxData['box_icon_type']) {
             case '1': // Icon Image
-                $icon = "<img src='".IMAGES."/icon/".$boxData['box_icon_src']."' alt='".$boxData['box_title']."'>";
+                $icon = "<img src='".IMAGES."".$boxData['box_icon_src']."' alt='".$boxData['box_title']."'>";
                 break;
             default:
                 if (!empty($boxData['box_stacked_icon_class'])) {
@@ -71,7 +73,8 @@ class featureboxWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\P
         }
         ob_start();
         ?>
-        <div class="text-center <?php echo $boxData['box_class'] ?>" style="padding:<?php echo $boxData['box_padding']."px" ?>">
+        <div class="text-center <?php echo $boxData['box_class'] ?>"
+             style="padding:<?php echo $boxData['box_padding']."px" ?>">
             <div class="display-block clearfix" <?php echo($box_style ? "style='".$box_style."'" : '') ?>>
                 <!--Icon-->
                 <?php echo $icon ?>

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation/checkbox.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Checkbox
  * Validates Checkbox Input
@@ -28,19 +29,17 @@ class Checkbox extends \Defender\Validation {
      */
     protected function verify_checked() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::getInstance()->setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::getInstance()->setInputError(self::$inputName);
         }
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 $vars[] = stripinput($val);
             }
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : ",";
-            $value = implode($delimiter, $vars);
-
-            return $value;
-        } elseif (!empty(self::$inputValue)) {
+            return implode($delimiter, $vars);
+        } else if (self::$inputValue !== NULL) {
             if (isnum(self::$inputValue)) {
                 if (self::$inputValue == 1) {
                     return 1;

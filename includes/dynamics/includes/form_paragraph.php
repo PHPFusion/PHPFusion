@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_paragraph.php
 | Author: Frederick MC CHan (Chan)
@@ -15,11 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_para($title, $id, $class = 'underline', array $options = array()) {
-    $options += array(
+function form_para($title, $id, $class = 'underline', array $options = []) {
+    $options += [
         'tip' => !empty($options['tip']) ? "title='".$options['tip']."'" : '',
-    );
-    $html = "<h4 id='$id' class='m-b-20 $class'>$title ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</h4>\n";
-
-    return $html;
+    ];
+    return "<h4 id='$id' class='m-b-20 $class'>$title ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</h4>\n";
 }

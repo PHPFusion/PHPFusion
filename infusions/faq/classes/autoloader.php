@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: faq/classes/autoloader.php
-| Author: PHP-Fusion Development Team
+| Filename: autoloader.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,18 +18,17 @@
 require_once INCLUDES."infusions_include.php";
 
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
-        "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASS."/server.inc",
-        "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASS."/admin/faq_admin_model.inc",
-        "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASS."/admin/faq_admin_view.inc",
-        "PHPFusion\\FAQ\\FaqSettingsAdmin"    => FAQ_CLASS."/admin/controllers/faq_settings.inc",
-        "PHPFusion\\FAQ\\FaqSubmissionsAdmin" => FAQ_CLASS."/admin/controllers/faq_submissions.inc",
-        "PHPFusion\\FAQ\\FaqSubmissions"      => FAQ_CLASS."/faq/faq_submissions.inc",
-        "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASS."/admin/controllers/faq.inc",
-        "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASS."/faq/faq_view.inc",
-        "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASS."/faq/faq.inc"
-    );
+    $autoload_register_paths = [
+        "PHPFusion\\FAQ\\FaqServer"           => FAQ_CLASSES."server.php",
+        "PHPFusion\\FAQ\\FaqAdminModel"       => FAQ_CLASSES."admin/faq_admin_model.php",
+        "PHPFusion\\FAQ\\FaqAdminView"        => FAQ_CLASSES."admin/faq_admin_view.php",
+        "PHPFusion\\FAQ\\FaqSettingsAdmin"    => FAQ_CLASSES."admin/controllers/faq_settings.php",
+        "PHPFusion\\FAQ\\FaqSubmissionsAdmin" => FAQ_CLASSES."admin/controllers/faq_submissions.php",
+        "PHPFusion\\FAQ\\FaqSubmissions"      => FAQ_CLASSES."faq/faq_submissions.php",
+        "PHPFusion\\FAQ\\FaqAdmin"            => FAQ_CLASSES."admin/controllers/faq.php",
+        "PHPFusion\\FAQ\\FaqView"             => FAQ_CLASSES."faq/faq_view.php",
+        "PHPFusion\\FAQ\\Faq"                 => FAQ_CLASSES."faq/faq.php"
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];
@@ -37,5 +36,4 @@ spl_autoload_register(function ($className) {
             require $fullPath;
         }
     }
-
 });

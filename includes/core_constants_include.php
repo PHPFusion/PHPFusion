@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/core_constants_include.php
-| Author: PHP-Fusion Development Team
+| Filename: core_constants_include.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,30 +15,32 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-define("ADMIN", BASEDIR."administration/");
-define("CLASSES", BASEDIR."includes/classes/");
-define("DYNAMICS", BASEDIR."includes/dynamics/");
-define("INFUSIONS", BASEDIR."infusions/");
-define("IMAGES", BASEDIR."images/");
-define("INCLUDES", BASEDIR."includes/");
-define("LOCALE", BASEDIR."locale/");
-define("THEMES", BASEDIR."themes/");
-define("DB_HANDLERS", BASEDIR."includes/db_handlers/");
-define("FUSION_IP", $_SERVER['REMOTE_ADDR']);
-define("QUOTES_GPC", (ini_get('magic_quotes_gpc') ? TRUE : FALSE));
-define("USER_IP", $_SERVER['REMOTE_ADDR']);
-define("WIDGETS", BASEDIR."widgets/");
+defined('IN_FUSION') || exit;
 
-// Define script start time
-define("START_TIME", microtime(TRUE));
-define("FUSION_ROOT_DIR", dirname(__DIR__).'/');
-define("TIME", time());
+const ADMIN = BASEDIR.'administration/';
+const CLASSES = BASEDIR.'includes/classes/';
+const DYNAMICS = BASEDIR.'includes/dynamics/';
+const INFUSIONS = BASEDIR.'infusions/';
+const IMAGES = BASEDIR.'images/';
+const INCLUDES = BASEDIR.'includes/';
+const LOCALE = BASEDIR.'locale/';
+const THEMES = BASEDIR.'themes/';
+const TEMPLATES = BASEDIR.'themes/templates/';
+const ADMIN_THEMES = BASEDIR.'themes/admin_themes/';
+const DB_HANDLERS = BASEDIR.'includes/db_handlers/';
+const WIDGETS = BASEDIR.'widgets/';
+
+const FUSION_FOOTER = TEMPLATES.'footer.php';
+const FUSION_HEADER = TEMPLATES.'header.php';
+const FUSION_ADMIN_HEADER = TEMPLATES.'admin_header.php';
+
+define('FUSION_IP', $_SERVER['REMOTE_ADDR']);
+define('USER_IP', $_SERVER['REMOTE_ADDR']);
+define('START_TIME', microtime(TRUE));
+define('FUSION_ROOT_DIR', dirname(__DIR__).'/');
+
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = -103;
 const USER_LEVEL_ADMIN = -102;
 const USER_LEVEL_MEMBER = -101;
 const USER_LEVEL_PUBLIC = 0;
-

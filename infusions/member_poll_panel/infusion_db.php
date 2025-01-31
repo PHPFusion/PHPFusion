@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: member_poll_panel/infusion_db.php
-| Author: PHP-Fusion Development Team
+| Filename: infusion_db.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,28 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-define("DB_POLL_VOTES", DB_PREFIX."poll_votes");
-define("DB_POLLS", DB_PREFIX."polls");
+defined('IN_FUSION') || exit;
+
+// Locales
+define('POLLS_LOCALE', fusion_get_inf_locale_path('polls.php', INFUSIONS.'member_poll_panel/locale/'));
+
+// Paths
+const POLLS = INFUSIONS.'member_poll_panel/';
+
+// Database
+const DB_POLL_VOTES = DB_PREFIX."poll_votes";
+const DB_POLLS = DB_PREFIX."polls";
+
+// Admin Settings
 \PHPFusion\Admins::getInstance()->setAdminPageIcons("PO", "<i class='admin-ico fa fa-fw fa-bar-chart'></i>");
+
+if (defined('MEMBER_POLL_PANEL_EXISTS')) {
+    function polls_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_POLL_VOTES." WHERE vote_user=:user_id", [':user_id' => $data['user_id']]);
+    }
+
+    /**
+     * @uses polls_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'polls_cron_job24h_users_data');
+}

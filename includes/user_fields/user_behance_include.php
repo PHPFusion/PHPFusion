@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_behance_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,26 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-$icon = "<img src='".IMAGES."user_fields/social/behance.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/behance.svg' title='Behance' alt='Behance'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'      => TRUE,
             'max_length'  => 20,
             'error_text'  => $locale['uf_behance_error'],
             'placeholder' => $locale['uf_behance_id'],
             'label_icon'  => $icon,
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_behance', $locale['uf_behance'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
+    $link = '';
     if ($field_value) {
-        $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.behance.net/".$field_value : $field_value;
-        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_behance_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
+        $link = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://www.behance.net/".$field_value : $field_value;
+        $field_value = (fusion_get_settings('index_url_userweb') ? "" : "<!--noindex-->")."<a href='".$link."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow noopener noreferrer' ")."target='_blank'>".$locale['uf_behance_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array('title' => $icon.$locale['uf_behance'], 'value' => $field_value ?: '');
+    $user_fields = [
+        'icon'  => $icon,
+        'link'  => $link,
+        'type'  => 'social',
+        'title' => $locale['uf_behance'],
+        'value' => $field_value ?: ''
+    ];
 }

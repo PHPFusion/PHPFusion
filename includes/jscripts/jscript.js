@@ -1,10 +1,10 @@
 /*-------------------------------------------------------+
- | PHP-Fusion Content Management System
- | Copyright (C) PHP-Fusion Inc
- | https://www.php-fusion.co.uk/
+ | PHPFusion Content Management System
+ | Copyright (C) PHP Fusion Inc
+ | https://phpfusion.com/
  +--------------------------------------------------------+
  | Filename: jscript.js
- | Author: PHP-Fusion Development Team
+ | Author: Core Development Team
  +--------------------------------------------------------+
  | This program is released as free software under the
  | Affero GPL license. You can redistribute it and/or
@@ -16,38 +16,47 @@
  +--------------------------------------------------------*/
 /**
  * Flipbox
- * Need documentation
- * @param b
- * by: CrappoMan (simonpatterson@dsl.pipex.com)
+ *
+ * @param boxname
  */
-function flipBox(b) {
-    var a;
-    if (document.images["b_" + b].src.indexOf("_on") == -1) {
-        a = document.images["b_" + b].src.replace("_off", "_on");
-        document.getElementById("box_" + b).style.display = "none";
-        if (document.getElementById("box_" + b + "_diff")) {
-            document.getElementById("box_" + b + "_diff").style.display = "block"
+function flipBox(boxname) {
+    if (document.images["b_" + boxname].src.indexOf("_on") === -1) {
+        var a = document.images["b_" + boxname].src.replace("_off", "_on");
+        document.getElementById("box_" + boxname).style.display = "none";
+        if (document.getElementById("box_" + boxname + "_diff")) {
+            document.getElementById("box_" + boxname + "_diff").style.display = "block"
         }
-        document.images["b_" + b].src = a;
-        disply = "none";
-        now = new Date();
-        now.setTime(now.getTime() + 1000 * 60 * 60 * 24 * 365);
-        expire = (now.toGMTString());
-        document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
+        document.images["b_" + boxname].src = a;
+        document.cookie = "fusion_box_" + boxname + "= none";
     } else {
-        a = document.images["b_" + b].src.replace("_on", "_off");
-        document.getElementById("box_" + b).style.display = ""; //removed 'block'
-        if (document.getElementById("box_" + b + "_diff")) {
-            document.getElementById("box_" + b + "_diff").style.display = "none"
+        var a = document.images["b_" + boxname].src.replace("_on", "_off");
+        document.getElementById("box_" + boxname).style.display = ""; //removed 'block'
+        if (document.getElementById("box_" + boxname + "_diff")) {
+            document.getElementById("box_" + boxname + "_diff").style.display = "none"
         }
-        document.images["b_" + b].src = a;
-        disply = "block";
-        now = new Date();
-        now.setTime(now.getTime() + 1000 * 60 * 60 * 24 * 365);
-        expire = (now.toGMTString());
-        document.cookie = "fusion_box_" + b + "=" + escape(disply) + "; expires=" + expire
+        document.images["b_" + boxname].src = a;
+        document.cookie = "fusion_box_" + boxname + "= block";
     }
 }
+
+/**
+ * Tool to trim text
+ * Usage:
+ *     data-trim-text='30' - 30 is text length
+ *     $('[data-trim-text]').trim_text(); - function initialization
+ */
+$.fn.trim_text = function () {
+    return this.each(function () {
+        var length = $(this).data("trim-text"), newtext, dots;
+
+        dots = "";
+        if ($(this).text().length > length) dots = "...";
+        newtext = $(this).text().substr(0, length) + dots;
+
+        return $(this).text(newtext);
+    });
+};
+
 /**
  * Tool to scroll the window to a designated ID
  * @param hash - ID only
@@ -59,6 +68,7 @@ function scrollTo(hash) {
         $(document.body).animate({'scrollTop': scrollNav - hashDOM.outerHeight(true)}, 600);
     }
 }
+
 /**
  * Tool to copy source element's width to target element.
  * @param source - # or .class element to copy from
@@ -68,58 +78,54 @@ function copyWidth(source, target) {
     var width = $(source).width();
     $(target).width(width);
 }
+
 /**
  * Jquery html_entities_decode
  * @param encodedString
  * @returns {*}
  */
 function decodeEntities(encodedString) {
-    var textArea = document.createElement('textarea');
+    let textArea = document.createElement('textarea');
     textArea.innerHTML = encodedString;
     return textArea.value;
 }
 
 /**
- * Need documentation
- * @param f
- * @param i
- * @param a
- * @param e
- * @returns {boolean}
+ * addText
+ *
+ * @param textarea
+ * @param text1
+ * @param text2
+ * @param formname
  */
-function addText(f, i, a, e) {
-    if (e == undefined) {
-        e = "inputform"
-    }
-    if (f == undefined) {
-        f = "message"
-    }
-    element = document.forms[e].elements[f];
+function addText(textarea, text1, text2, formname) {
+    textarea = textarea === undefined ? "message" : textarea;
+    formname = formname === undefined ? "inputform" : formname;
+
+    var element = document.forms[formname].elements[textarea];
+
     element.focus();
     if (document.selection) {
         var c = document.selection.createRange();
-        var h = c.text.length;
-        c.text = i + c.text + a;
-        return false
+        c.text = text1 + c.text + text2;
+        return false;
     } else {
         if (element.setSelectionRange) {
             var b = element.selectionStart,
                 g = element.selectionEnd;
-            var d = element.scrollTop;
-            element.value = element.value.substring(0, b) + i + element.value.substring(b, g) + a + element.value.substring(g);
-            element.setSelectionRange(b + i.length, g + i.length);
-            element.scrollTop = d;
-            element.focus()
+            element.value = element.value.substring(0, b) + text1 + element.value.substring(b, g) + text2 + element.value.substring(g);
+            element.setSelectionRange(b + text1.length, g + text1.length);
+            element.focus();
         } else {
-            var d = element.scrollTop;
-            element.value += i + a;
-            element.scrollTop = d;
-            element.focus()
+            element.value += text1 + text2;
+            element.focus();
         }
     }
 }
+
 /**
- * Need documentation
+ * insertText
+ *
  * @param f
  * @param h
  * @param e
@@ -150,17 +156,21 @@ function insertText(f, h, e) {
         }
     }
 }
+
 /**
  * Need documentation
  * @param a
  */
 function show_hide(a) {
-    document.getElementById(a).style.display = document.getElementById(a).style.display == "none" ? "block" : "none"
+    document.getElementById(a).style.display = document.getElementById(a).style.display === "none" ? "block" : "none"
 }
+
 /*
 Variations to show_hide, in the form of a sliding action
  */
-function slide_hide(a) { $('#'+a).slideToggle(); }
+function slide_hide(a) {
+    $('#' + a).slideToggle();
+}
 
 /**
  * Need documentation
@@ -174,31 +184,34 @@ function getStyle(c, b) {
     } else {
         var a = c
     }
-    if (a.currentStyle) {
-        var d = a.currentStyle[b]
+    if (a.getComputedStyle()) {
+        var d = a.getComputedStyle()[b];
     } else {
         if (window.getComputedStyle) {
             var d = document.defaultView.getComputedStyle(a, null).getPropertyValue(b)
         }
     }
-    return d
+
+    return d;
 }
+
 /***********************************************
  * Drop Down/ Overlapping Content- � Dynamic Drive (www.dynamicdrive.com)
  * This notice must stay intact for legal use.
  * Visit http://www.dynamicdrive.com/ for full source code
  ***********************************************/
 function getposOffset(a, d) {
-    var c = (d == "left") ? a.offsetLeft : a.offsetTop;
-    var b = a.offsetParent;
+    let c = (d === "left") ? a.offsetLeft : a.offsetTop;
+    let b = a.offsetParent;
     while (b != null) {
-        if (getStyle(b, "position") != "relative") {
-            c = (d == "left") ? c + b.offsetLeft : c + b.offsetTop
+        if (getStyle(b, "position") !== "relative") {
+            c = (d === "left") ? c + b.offsetLeft : c + b.offsetTop
         }
-        b = b.offsetParent
+        b = b.offsetParent;
     }
-    return c
+    return c;
 }
+
 /**
  * Need documentation
  * @param e
@@ -209,7 +222,7 @@ function getposOffset(a, d) {
 function overlay(e, d, a) {
     if (document.getElementById) {
         var c = document.getElementById(d);
-        c.style.display = (c.style.display != "block") ? "block" : "none";
+        c.style.display = (c.style.display !== "block") ? "block" : "none";
         var b = getposOffset(e, "left") + ((typeof a != "undefined" && a.indexOf("right") != -1) ? -(c.offsetWidth - e.offsetWidth) : 0);
         var f = getposOffset(e, "top") + ((typeof a != "undefined" && a.indexOf("bottom") != -1) ? e.offsetHeight : 0);
         c.style.left = b + "px";
@@ -219,6 +232,7 @@ function overlay(e, d, a) {
         return true
     }
 }
+
 /**
  * Need documentation
  * @param a
@@ -226,7 +240,9 @@ function overlay(e, d, a) {
 function overlayclose(a) {
     document.getElementById(a).style.display = "none"
 }
+
 NewWindowPopUp = null;
+
 /**
  * Need documentation
  * @param d
@@ -250,6 +266,7 @@ function OpenWindow(d, c, a, b) {
     NewWindowPopUp = window.open(d, "", "toolbar=no,menubar=no,location=no,personalbar=no,scrollbars=yes,status=no,directories=no,resizable=yes,height=" + a + ",width=" + c + ",top=" + wtop + ",left=" + wleft + "");
     NewWindowPopUp.focus()
 }
+
 /**
  * Need documentation of usage and examples
  * @returns {boolean}
@@ -283,7 +300,7 @@ function resize_forum_imgs() {
     }
     for (var c = 0; c < document.images.length; c++) {
         var b = document.images[c];
-        if (b.className != "forum-img") {
+        if (b.className !== "forum-img") {
             continue
         }
         var j = b.height;
@@ -304,12 +321,12 @@ function resize_forum_imgs() {
         }
         var h = b.parentNode;
         var g = h.parentNode;
-        if (h.className != "forum-img-wrapper") {
+        if (h.className !== "forum-img-wrapper") {
             continue
         }
         if (d) {
             h.style.display = "inline";
-            if (g.tagName != "A") {
+            if (g.tagName !== "A") {
                 h.onclick = new Function("OpenWindow('" + b.src + "', " + (a + 40) + ", " + (j + 40) + ", true)");
                 h.onmouseover = "this.style.cursor='pointer'"
             }
@@ -333,13 +350,12 @@ function resize_forum_imgs() {
     });
  *
  */
-function setChecked(frmName,chkName,val) {
-    dml=document.forms[frmName];
-    len=dml.elements.length;
-    console.log(len);
-    for(i=0;i<len;i++){
-        if(dml.elements[i].name==chkName){
-            dml.elements[i].checked=val;
+function setChecked(frmName, chkName, val) {
+    dml = document.forms[frmName];
+    len = dml.elements.length;
+    for (i = 0; i < len; i++) {
+        if (dml.elements[i].name === chkName) {
+            dml.elements[i].checked = val;
         }
     }
 }
@@ -350,4 +366,159 @@ function setChecked(frmName,chkName,val) {
 function onload_events() {
     resize_forum_imgs()
 }
+
 window.onload = onload_events;
+
+function closeDiv() {
+    $('#close-message').fadeTo('slow', 0.01, function () {
+        $(this).slideUp('slow', function () {
+            $(this).hide()
+        })
+    })
+}
+
+window.setTimeout('closeDiv()', 5000);
+
+function run_admin(action, table_action, reset_table) {
+    table_action = table_action || '#table_action';
+    reset_table = reset_table || '#reset_table';
+
+    $(table_action).val(action);
+    $(reset_table).submit();
+}
+
+/**
+ * NotificationAPI
+ * @param type
+ * @param title
+ * @param description
+ * @param icon
+ * @param url
+ * @param options
+ */
+let add_notice = function (type, title, description = "", icon = "", url = "#", options = {}) {
+
+    let default_options = {
+        // settings
+        element: 'body',
+        position: null,
+        type: type,
+        allow_dismiss: true,
+        newest_on_top: true,
+        showProgressbar: false,
+        placement: {
+            from: "top",
+            align: "center"
+        },
+        offset: 100,
+        spacing: 10,
+        z_index: 99999,
+        delay: 2000,
+        timer: 1300,
+        url_target: '_blank',
+        mouse_over: null,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        onShow: null,
+        onShown: null,
+        onClose: null,
+        onClosed: null,
+        icon_type: 'class',
+        template: '<div data-notify="container" class="site-notification col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+            '<span data-notify="icon"></span> ' +
+            '<span data-notify="title">{1}</span> ' +
+            '<span data-notify="message">{2}</span>' +
+            '<div class="progress" data-notify="progressbar">' +
+            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+            '</div>' +
+            '<a href="{3}" target="{4}" data-notify="url"></a>' +
+            '</div>'
+    };
+
+    options = $.extend({}, default_options, options);
+
+    $.notify({
+        // options
+        icon: icon,
+        title: title,
+        message: description,
+        url: url,
+        target: '_blank'
+    }, options);
+}
+
+/**
+ * Run this function to add showhide toggle plugin
+ *Usage: showhide();
+ */
+let showhide = function () {
+// Toggle Show
+    let showhideToggle = $("a[data-toggle='show-hide']");
+    if (showhideToggle.length) {
+        $.each(showhideToggle, function (key, value) {
+            let target = $(this).data("target"),
+                targetContainer = $(this).find(target);
+
+            $(this).append("<i class='far fa-angle-down m-l-10'></i>");
+
+            if (targetContainer.length) {
+                if (targetContainer.is('hidden')) {
+                    targetContainer.show();
+                } else {
+                    targetContainer.hide();
+                }
+            }
+
+        });
+    }
+    $(document).on("click", "a[data-toggle='show-hide']", function (ev) {
+        ev.preventDefault();
+        let target = $(this).data("target"),
+            icon = $(this).find('i'),
+            targetContainer = $(this).closest('.show-hide-wrapper').find(target);
+
+        if (icon.hasClass('fa-angle-down')) {
+            icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+        } else {
+            icon.removeClass('fa-angle-up').addClass('fa-angle-down');
+        }
+
+        if (targetContainer.length) {
+            if (targetContainer.is(':hidden')) {
+                targetContainer.show();
+            } else {
+                targetContainer.hide();
+            }
+        }
+    });
+}
+
+/**
+ * Performs same as clean_request method
+ * @param adds
+ * @param filterArray
+ * @param keep
+ * @returns {string}
+ */
+let cleanRequest = function (adds, filterArray = [], keep = false) {
+    let params = new URLSearchParams(window.location.href);
+    if (filterArray.length) {
+        $.each(filterArray, function (i, ckey) {
+            if (params.has(ckey) && keep === false) {
+                params.delete(ckey);
+            }
+        });
+    }
+
+    return params.toString() + '&' + adds;
+};
+
+
+let BASEDIR = document.location.origin + site_path;
+let INFUSIONS = document.location.origin + "/infusions/";
+let INCLUDES = document.location.origin + "/includes/";
+let THEMES = document.location.origin + "/themes/";
+let CLASSES = document.location.origin + "/includes/classes/";

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation/date.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -34,7 +34,11 @@ class Date extends \Defender\Validation {
         if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
             $date = new \DateTime();
             $date_format = $date->createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
-            $timestamp = $date_format->getTimestamp();
+            $timestamp = 0;
+            if ($date_format instanceof \DateTime) {
+                $timestamp = $date_format->getTimestamp();
+            }
+
             $dateParams = getdate($timestamp);
             if (checkdate($dateParams['mon'], $dateParams['mday'], $dateParams['year'])) {
                 switch (self::$inputConfig['type']) {
@@ -42,18 +46,17 @@ class Date extends \Defender\Validation {
                         return $timestamp;
                         break;
                     case "date":
-                        $date = (string)$dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
-                        return $date;
+                        return $dateParams['year']."-".$dateParams['mon']."-".$dateParams['mday'];
                         break;
                 }
             } else {
-                \defender::stop();
-                \defender::setInputError(self::$inputName);
-                addNotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
+                fusion_stop();
+                \Defender::setInputError(self::$inputName);
+                addnotice('info', sprintf($locale['df_404'], self::$inputConfig['title']));
             }
         }
 
-        return (string)self::$inputDefault;
+        return self::$inputDefault;
     }
 
 }

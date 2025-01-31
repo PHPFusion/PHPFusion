@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Comments/comments_admin.php
+| Filename: comments_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class commentsWidgetAdmin
  */
@@ -30,31 +31,34 @@ class commentsWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
         dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_type='C' AND comment_item_id=".self::$data['page_id']);
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
+        return '';
     }
 
-    public function display_form_input() {
-        $widget_locale = fusion_get_locale('', WIDGETS."comments/locale/".LANGUAGE.".php");
+    public function displayFormInput() {
+        $lang = file_exists(WIDGETS."comments/locale/".LANGUAGE.".php") ? WIDGETS."comments/locale/".LANGUAGE.".php" : WIDGETS."comments/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
+
         self::$colData['page_content'] = 'comments';
         self::$colData['page_content_id'] = 0;
         $colId = dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'save');
         if ($colId) {
-            addNotice('success', $widget_locale['CMW_0102']);
+            addnotice('success', $widget_locale['CMW_0102']);
         } else {
-            addNotice('danger', $widget_locale['CMW_0104']);
+            addnotice('danger', $widget_locale['CMW_0104']);
         }
         redirect(clean_request('', self::getComposerExclude(), FALSE));
     }

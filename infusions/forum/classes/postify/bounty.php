@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: bounty.php
 | Author: Chan (Frederick MC Chan)
@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Class Postify_Bounty
  *
@@ -29,17 +27,17 @@ use PHPFusion\BreadCrumbs;
 class Postify_Bounty extends Forum_Postify {
 
     public function execute() {
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0399']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0399']]);
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
         if (!empty($thread_data)) {
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
             $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-            if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
+            if ($this->checkForumAccess($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
                 render_postify([
                     'title'       => self::$locale['forum_0399'],
-                    'error'       => parent::get_postify_error_message(),
+                    'error'       => parent::getPostifyErrorMessage(),
                     'description' => self::$locale['forum_0400'],
-                    'link'        => $this->get_postify_uri()
+                    'link'        => $this->getPostifyUri()
                 ]);
                 redirect($thread_data['thread_link'], 3);
             }

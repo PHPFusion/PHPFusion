@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: weblinks_admin.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
-require_once THEMES."templates/admin_header.php";
-require_once WEBLINKS_CLASS."autoloader.php";
-PHPFusion\Weblinks\WeblinksServer::WeblinksAdmin()->display_admin();
-require_once THEMES."templates/footer.php";
+require_once __DIR__.'/../../maincore.php';
+require_once THEMES.'templates/admin_header.php';
+require_once WEBLINKS_CLASSES."autoloader.php";
+PHPFusion\Weblinks\WeblinksServer::weblinksAdmin()->displayAdmin();
+require_once THEMES.'templates/footer.php';

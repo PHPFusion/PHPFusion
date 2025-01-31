@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: newpoll.php
 | Author: Chan (Frederick MC Chan)
@@ -17,8 +17,6 @@
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
-
 /**
  * Class Postify_Newpoll
  *
@@ -29,12 +27,12 @@ class Postify_Newpoll extends Forum_Postify {
 
     public function execute() {
         add_to_title(self::$locale['global_201'].self::$locale['forum_0607']);
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0607']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_0607']]);
         render_postify([
             'title'       => self::$locale['forum_0366'],
-            'error'       => $this->get_postify_error_message(),
+            'error'       => $this->getPostifyErrorMessage(),
             'description' => self::$locale['forum_0607'],
-            'link'        => $this->get_postify_uri()
+            'link'        => $this->getPostifyUri()
         ]);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: OpenGraphBlogs.php
 | Author: Chubatyj Vitalij (Rizado)
@@ -18,47 +18,48 @@
 namespace PHPFusion;
 
 class OpenGraphBlogs extends OpenGraph {
-	public static function ogBlog($blog_id = 0) {
-		$settings = fusion_get_settings();
-		$info = array();
+    public static function ogBlog($blog_id = 0) {
+        $settings = fusion_get_settings();
+        $info = [];
 
-		$result = dbquery("SELECT `blog_subject`, `blog_blog`, `blog_keywords`, `blog_image_t1` FROM `" . DB_BLOG . "` WHERE `blog_id` = '$blog_id'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$blog_id;
-			$info['keywords'] = $data['blog_keywords'] ? $data['blog_keywords'] : $settings['keywords'];
-			$info['title'] = $data['blog_subject'].' - '.$settings['sitename'];
-			$info['description'] = $data['blog_blog'] ? fusion_first_words(strip_tags(html_entity_decode($data['blog_blog'])), 50) : $settings['description'];
-			$info['type'] = 'article';
-			if (!empty($data['blog_image_t1'])) {
-				$info['image'] = $settings['siteurl'].'infusions/blog/images/thumbs/' . $data['blog_image_t1'];
-			} else {
-				$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
-			}
-		}
+        $result = dbquery("SELECT blog_subject, blog_blog, blog_keywords, blog_image, blog_image_t1, blog_image_t2 FROM ".DB_BLOG." WHERE blog_id = :blogid", [':blogid' => $blog_id]);
+        if (dbrows($result)) {
+            $data = dbarray($result);
+            $info['title'] = $data['blog_subject'].' - '.$settings['sitename'];
+            $info['description'] = !empty($data['blog_blog']) ? fusion_first_words(strip_tags(html_entity_decode($data['blog_blog'])), 50) : $settings['description'];
+            $info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$blog_id;
+            $info['keywords'] = !empty($data['blog_keywords']) ? $data['blog_keywords'] : $settings['keywords'];
+            $info['type'] = 'article';
 
-		OpenGraphBlogs::setValues($info);
-	}
+            if (!empty($data['blog_image_t1']) && file_exists(INFUSIONS.'blog/images/thumbs/'.$data['blog_image_t1'])) {
+                $info['image'] = $settings['siteurl'].'infusions/blog/images/thumbs/'.$data['blog_image_t1'];
+            } else if (!empty($data['blog_image_t2']) && file_exists(INFUSIONS.'blog/images/thumbs/'.$data['blog_image_t2'])) {
+                $info['image'] = $settings['siteurl'].'infusions/blog/images/thumbs/'.$data['blog_image_t2'];
+            } else if (!empty($data['blog_image']) && file_exists(INFUSIONS.'blog/images/'.$data['blog_image'])) {
+                $info['image'] = $settings['siteurl'].'infusions/blog/images/'.$data['blog_image'];
+            }
+        }
 
-	public static function ogBlogCat($cat_id = 0) {
-		$settings = fusion_get_settings();
-		$info = array();
+        self::setValues($info);
+    }
 
-		$result = dbquery("SELECT `blog_cat_name`, `blog_cat_image` FROM `" . DB_BLOG_CATS . "` WHERE `blog_cat_id` = '$cat_id'");
-		if (dbrows($result)) {
-			$data = dbarray($result);
-			$info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$cat_id;
-			$info['keywords'] = $settings['keywords'];
-			$info['title'] = $data['blog_cat_name'].' - '.$settings['sitename'];
-			$info['description'] = $settings['description'];
-			$info['type'] = 'website';
-			if (!empty($data['blog_cat_image'])) {
-				$info['image'] = $settings['siteurl'].'infusions/blog/blog_cats/' . $data['blog_cat_image'];
-			} else {
-				$info['image'] = $settings['siteurl'].'images/favicons/mstile-150x150.png';
-			}
-		}
+    public static function ogBlogCat($cat_id = 0) {
+        $settings = fusion_get_settings();
+        $info = [];
 
-		OpenGraphBlogs::setValues($info);
-	}
+        $result = dbquery("SELECT blog_cat_name, blog_cat_image FROM ".DB_BLOG_CATS." WHERE blog_cat_id = :cat_id", [':cat_id' => $cat_id]);
+        if (dbrows($result)) {
+            $data = dbarray($result);
+            $info['title'] = $data['blog_cat_name'].' - '.$settings['sitename'];
+            $info['url'] = $settings['siteurl'].'infusions/blog/blog.php?readmore='.$cat_id;
+            $info['description'] = $settings['description'];
+            $info['keywords'] = $settings['keywords'];
+
+            if (!empty($data['blog_cat_image']) && file_exists(IMAGES_BC.$data['blog_cat_image'])) {
+                $info['image'] = $settings['siteurl'].'infusions/blog/blog_cats/'.$data['blog_cat_image'];
+            }
+        }
+
+        self::setValues($info);
+    }
 }

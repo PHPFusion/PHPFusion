@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,37 +17,47 @@
 +--------------------------------------------------------*/
 namespace Defender;
 
+use ReflectionClass;
+use ReflectionException;
+
 abstract class Validation {
 
     protected static $inputName = '';
-    protected static $inputValue = '';
+
+    protected static $inputValue;
+
     protected static $inputDefault = '';
+
     protected static $isMultiLang = '';
-    protected static $inputConfig = '';
+
+    protected static $inputConfig = [];
+
     protected static $validate_instance = NULL;
+
     protected static $validate_method = NULL;
 
-    protected static $validation_rules_assigned = array(
-        'color'     => array('text', 'verify_text'),
-        'dropdown'  => array('text', 'verify_text'),
-        'text'      => array('text', 'verify_text'),
-        'textarea'  => array('text', 'verify_text'),
-        'textbox'   => array('text', 'verify_text'),
-        'checkbox'  => array('checkbox', 'verify_checked'),
-        'password'  => array('text', 'verify_password'),
-        'date'      => array('date', 'verify_date'),
-        'timestamp' => array('date', 'verify_date'),
-        'number'    => array('number', 'verify_number'),
-        'email'     => array('text', 'verify_email'),
-        'address'   => array('user', 'verify_address'),
-        'name'      => array('user', 'verify_name'),
-        'url'       => array('uri', 'verify_url'),
-        'image'     => array('upload', 'verify_image_upload'),
-        'file'      => array('upload', 'verify_file_upload'),
-        'document'  => array('user', 'verify_document'),
-        'radio'     => array('text', 'verify_text'),
-        'mediaSelect' => array('uri', 'verify_path')
-    );
+    protected static $validation_rules_assigned = [
+        'color'       => ['text', 'verify_text'],
+        'dropdown'    => ['text', 'verify_text'],
+        'text'        => ['text', 'verify_text'],
+        'textarea'    => ['text', 'verify_text'],
+        'textbox'     => ['text', 'verify_text'],
+        'checkbox'    => ['checkbox', 'verify_checked'],
+        'password'    => ['text', 'verify_password'],
+        'date'        => ['date', 'verify_date'],
+        'timestamp'   => ['date', 'verify_date'],
+        'number'      => ['number', 'verify_number'],
+        'email'       => ['text', 'verify_email'],
+        'address'     => ['user', 'verify_address'],
+        'name'        => ['user', 'verify_name'],
+        'url'         => ['uri', 'verify_url'],
+        'image'       => ['upload', 'verify_image_upload'],
+        'file'        => ['upload', 'verify_file_upload'],
+        'document'    => ['user', 'verify_document'],
+        'radio'       => ['text', 'verify_text'],
+        'mediaSelect' => ['uri', 'verify_path'],
+        'contact'     => ['contact', 'verify_contact']
+    ];
 
     public static function inputName($value = NULL) {
         self::$inputName = $value;
@@ -72,25 +82,29 @@ abstract class Validation {
     public static function getValidated() {
         if (!isset(self::$validate_instance[self::$inputName])) {
             if (class_exists(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]))) {
-                $class = new \ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
-                self::$validate_instance[self::$inputName] = $class->newInstance();
+                try {
+                    $class = new ReflectionClass(strtoupper(self::$validation_rules_assigned[self::$inputConfig['type']][0]));
+                    self::$validate_instance[self::$inputName] = $class->newInstance();
+                } catch (ReflectionException $e) {
+                    set_error(E_USER_NOTICE, $e->getMessage(), $e->getFile(), $e->getLine());
+                }
             }
         }
 
-        if (self::$validate_instance[self::$inputName] !== NULL) {
+        if (isset(self::$validate_instance[self::$inputName]) && self::$validate_instance[self::$inputName] !== NULL) {
             $object = self::$validate_instance[self::$inputName];
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
-            if (is_callable(array($object, $method))) {
+
+            if (is_callable([$object, $method])) {
+
                 return $object->$method();
             } else {
-                \defender::stop();
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
-                addNotice('danger', sprintf($locale['type_unset'], self::$inputName, $method));
+                fusion_stop(sprintf($locale['type_unset'], self::$inputName));
             }
         } else {
-            \defender::stop();
             $locale['type_unset'] = '%s: has no validation file'; // to be moved
-            addNotice('danger', sprintf($locale['type_unset'], self::$inputName));
+            fusion_stop(sprintf($locale['type_unset'], self::$inputName));
         }
 
         return FALSE;
@@ -98,10 +112,11 @@ abstract class Validation {
 
 }
 
-require_once(dirname(__FILE__) . '/validation/checkbox.php');
-require_once(dirname(__FILE__) . '/validation/date.php');
-require_once(dirname(__FILE__) . '/validation/number.php');
-require_once(dirname(__FILE__) . '/validation/text.php');
-require_once(dirname(__FILE__) . '/validation/upload.php');
-require_once(dirname(__FILE__) . '/validation/uri.php');
-require_once(dirname(__FILE__) . '/validation/user.php');
+require_once(__DIR__.'/validation/checkbox.php');
+require_once(__DIR__.'/validation/date.php');
+require_once(__DIR__.'/validation/number.php');
+require_once(__DIR__.'/validation/text.php');
+require_once(__DIR__.'/validation/upload.php');
+require_once(__DIR__.'/validation/uri.php');
+require_once(__DIR__.'/validation/user.php');
+require_once(__DIR__.'/validation/contact.php');

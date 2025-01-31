@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: small2_bbcode_include_var.php
-| Author: Wooya
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,11 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-$__BBCODE__[] = array(
-    "description" => $locale['bb_small2_description'], "value" => "small2",
-    "bbcode_start" => "[small2]", "bbcode_end" => "[/small2]",
-    "usage" => "[small2]".$locale['bb_small2_usage']."[/small2]"
-);
+defined('IN_FUSION') || exit;
+
+$__BBCODE__[] = [
+    "description" => $locale['bb_small2_description'],
+    "value"       => "small2", "bbcode_start" => "[small2]", "bbcode_end" => "[/small2]",
+    "usage"       => "[small2]".$locale['bb_small2_usage']."[/small2]"
+];

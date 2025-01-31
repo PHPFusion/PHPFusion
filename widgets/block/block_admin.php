@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Block/block_admin.php
+| Filename: block_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -22,7 +22,7 @@
 class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $instance = NULL;
-    private static $widget_data = array();
+    private static $widget_data = [];
 
     public static function widgetInstance() {
         if (self::$instance === NULL) {
@@ -32,61 +32,62 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function validate_input() {
-
-        self::$widget_data = array(
-            'block_title' => form_sanitizer($_POST['block_title'], '', 'block_title'),
+    public function validateInput() {
+        self::$widget_data = [
+            'block_title'       => form_sanitizer($_POST['block_title'], '', 'block_title'),
             'block_description' => form_sanitizer($_POST['block_description'], '', 'block_description'),
-            'block_align' => form_sanitizer($_POST['block_align'], '', 'block_align'),
-            'block_class' => form_sanitizer($_POST['block_class'], '', 'block_class'),
-            'block_margin' => form_sanitizer($_POST['block_margin'], '', 'block_margin'),
-            'block_padding' => form_sanitizer($_POST['block_padding'], '', 'block_padding'),
-        );
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+            'block_align'       => form_sanitizer($_POST['block_align'], '', 'block_align'),
+            'block_class'       => form_sanitizer($_POST['block_class'], '', 'block_class'),
+            'block_margin'      => form_sanitizer($_POST['block_margin'], '', 'block_margin'),
+            'block_padding'     => form_sanitizer($_POST['block_padding'], '', 'block_padding'),
+        ];
+        if (fusion_safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
-    public function display_form_input() {
+    public function displayFormInput() {
+        $lang = file_exists(WIDGETS."block/locale/".LANGUAGE.".php") ? WIDGETS."block/locale/".LANGUAGE.".php" : WIDGETS."block/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
 
-        $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
-
-        self::$widget_data = array(
-            'block_title' => '',
+        self::$widget_data = [
+            'block_title'       => '',
             'block_description' => '',
-            'block_align' => '',
-            'block_class' => '',
-            'block_padding' => '30px',
-            'block_margin' => '15px 0px',
-        );
+            'block_align'       => '',
+            'block_class'       => '',
+            'block_padding'     => '30px',
+            'block_margin'      => '15px 0px',
+        ];
 
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
 
-        echo form_text('block_title', $widget_locale['BLKW_0200'], self::$widget_data['block_title'], array('inline' => TRUE));
-        echo form_textarea('block_description', $widget_locale['BLKW_0201'], self::$widget_data['block_description'], array('inline' => TRUE));
+        echo form_text('block_title', $widget_locale['BLKW_0200'], self::$widget_data['block_title'], ['inline' => TRUE]);
+        echo form_textarea('block_description', $widget_locale['BLKW_0201'], self::$widget_data['block_description'], ['inline' => TRUE]);
         echo form_select('block_align', $widget_locale['BLKW_0202'], self::$widget_data['block_align'],
-                         array(
-                             'inline' => TRUE,
-                             'options' => array(
-                                 '0'           => $widget_locale['BLKW_0203'],
-                                 'text-left'   => $widget_locale['BLKW_0204'],
-                                 'text-center' => $widget_locale['BLKW_0205'],
-                                 'text-right'  => $widget_locale['BLKW_0206'],
-                             )
-                         )
+            [
+                'inline'  => TRUE,
+                'options' => [
+                    '0'           => $widget_locale['BLKW_0203'],
+                    'text-left'   => $widget_locale['BLKW_0204'],
+                    'text-center' => $widget_locale['BLKW_0205'],
+                    'text-right'  => $widget_locale['BLKW_0206'],
+                ]
+            ]
         );
-        echo form_text('block_class', $widget_locale['BLKW_0207'], self::$widget_data['block_class'], array('inline' => TRUE));
+        echo form_text('block_class', $widget_locale['BLKW_0207'], self::$widget_data['block_class'], ['inline' => TRUE]);
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
@@ -95,16 +96,16 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
             <div class="col-xs-12 col-sm-9">
                 <?php
                 echo form_text('block_margin', $widget_locale['BLKW_0219'], self::$widget_data['block_margin'],
-                               array(
-                                   'inline' => TRUE,
-                                   'width' => '250px',
-                               )
+                    [
+                        'inline' => TRUE,
+                        'width'  => '250px',
+                    ]
                 );
                 echo form_text('block_padding', $widget_locale['BLKW_0220'], self::$widget_data['block_padding'],
-                               array(
-                                   'inline' => TRUE,
-                                   'width' => '250px',
-                               )
+                    [
+                        'inline' => TRUE,
+                        'width'  => '250px',
+                    ]
                 );
                 ?>
             </div>
@@ -112,10 +113,11 @@ class blockWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine imple
         <?php
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', array('class' => 'btn-success'));
+        $html = form_button('save_widget', $widget_locale['BLKW_0221'], 'widget', ['class' => 'btn-primary']);
+        $html .= form_button('save_and_close_widget', $widget_locale['BLKW_0222'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }

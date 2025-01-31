@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: weblinks/classes/weblinks/weblinks_view.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,24 +15,25 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Weblinks;
 
 /**
  * Controller package for if/else
  * Class WeblinksView
+ *
  * @package PHPFusion\Weblinks
  */
 class WeblinksView extends Weblinks {
     public function display_weblink() {
-        if (isset($_GET['weblink_id']) && isnum($_GET['weblink_id'])) {
-            self::set_WeblinkCount($_GET['weblink_id']);
-        	} elseif (isset($_GET['cat_id']) && isnum($_GET['cat_id'])) {
-            $info = $this->set_WeblinkCatInfo($_GET['cat_id']);
-            render_weblinks_item($info);
-        } else {
-            $info = $this->set_WeblinksInfo();
-            display_main_weblinks($info);
+        $weblink_id = isset($_GET['weblink_id']) ? $_GET['weblink_id'] : 0;
+        $this->cat_id = isset($_GET['cat_id']) ? $_GET['cat_id'] : 0;
+        if (!empty($weblink_id) && isnum($weblink_id)) {
+            self::setWeblinkCount($weblink_id);
+        } else if (!empty($this->cat_id) && isnum($this->cat_id)) {
+            $info = $this->setWeblinkCatInfo($this->cat_id);
+            display_weblinks_item($info);
         }
+        $info = $this->setWeblinksInfo();
+        display_main_weblinks($info);
     }
 }

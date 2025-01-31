@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: breadcrumbs.php
 | Author: JoiNNN
@@ -15,18 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 use PHPFusion\BreadCrumbs;
 
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 /**
  * Add a link to the breadcrumb
  *
  * @param array $link Keys: link, title
  */
-function add_breadcrumb(array $link = array()) {
+function add_breadcrumb(array $link = []) {
     BreadCrumbs::getInstance()->addBreadCrumb($link);
 }
 
@@ -39,15 +38,24 @@ function get_breadcrumbs() {
     return BreadCrumbs::getInstance()->toArray();
 }
 
+/**
+ * @param string $cat_id
+ * @param string $cat_tbl
+ * @param string $col_id
+ * @param string $col_parent
+ * @param string $col_title
+ *
+ * @return array|bool
+ */
 function catFullPath($cat_id, $cat_tbl, $col_id, $col_parent, $col_title) {
     $tmp_id = $cat_id;
-    $cat_list = array();
+    $cat_list = [];
     while ($tmp_id > 0) {
         $result = dbquery("SELECT ".$col_id.", ".$col_parent.", ".$col_title." FROM ".$cat_tbl." WHERE ".$col_id."='".$tmp_id."'");
-        $tmp_id = 0;
+
         if (dbrows($result)) {
             $data = dbarray($result);
-            $cat_item = array('id' => $data[$col_id], 'parent' => $data[$col_parent], 'title' => $data[$col_title]);
+            $cat_item = ['id' => $data[$col_id], 'parent' => $data[$col_parent], 'title' => $data[$col_title]];
             $cat_list[] = $cat_item;
             $tmp_id = $data[$col_parent];
         } else {

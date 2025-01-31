@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: news.php
-| Author: PHP-Fusion Development Team
-| Co Author: Frederick MC Chan (Chan)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,14 +15,13 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_NEWS)) {
+require_once __DIR__.'/../../maincore.php';
+if (!defined('NEWS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
-require_once INFUSIONS."news/infusion_db.php";
-require_once NEWS_CLASS."autoloader.php";
-require_once INFUSIONS."news/templates/news.php";
-\PHPFusion\News\NewsServer::news()->display_news();
-require_once THEMES."templates/footer.php";
+require_once NEWS_CLASSES."autoloader.php";
+require_once INFUSIONS."news/templates/news.tpl.php";
+\PHPFusion\News\NewsServer::news()->displayNews();
+require_once THEMES.'templates/footer.php';

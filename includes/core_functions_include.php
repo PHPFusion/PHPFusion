@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/core_functions_include.php
-| Author: PHP-Fusion Development Team
+| Filename: core_functions_include.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,40 +15,33 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-use PHPFusion\Authenticate;
-use PHPFusion\OutputHandler;
+defined('IN_FUSION') || exit;
 
-/**
- * Current microtime as float to calculate script start/end time
- *
- * @deprecated since version 9.00, use microtime(TRUE) instead
- * @return float
- */
-function get_microtime() {
-    return microtime(TRUE);
-}
+use Defender\Token;
+use PHPFusion\Authenticate;
+use PHPFusion\ImageRepo;
+use PHPFusion\Minify\JS;
+use PHPFusion\PrivateMessages;
+use PHPFusion\QuantumFields;
 
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
  *
- * @param      $country_iso = 3-letter ISO 4217
- * @param bool $description - set to false for just symbol
+ * @param string $iso         3-letter ISO 4217
+ * @param bool   $description Set to false for just symbol
  *
- * @return null
+ * @return array|string Array of currencies or string with one currency.
  */
-function fusion_get_currency($country_iso = NULL, $description = TRUE) {
-    if (empty($locale['charset'])) {
-        include LOCALE.LOCALESET."global.php";
-        include LOCALE.LOCALESET."currency.php";
-    }
-    static $currency_symbol = array();
-    if (empty($currency_symbol)) {
+function fusion_get_currency($iso = NULL, $description = TRUE) {
+
+    $locale = fusion_get_locale('', LOCALE.LOCALESET."currency.php");
+
+    static $__currency = [];
+
+    if (empty($__currency)) {
         // Euro Exceptions list
-        $currency_exceptions = array(
+        $currency_exceptions = [
             "ADF" => "EUR",
             "ATS" => "EUR",
             "BEF" => "EUR",
@@ -61,6 +54,7 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
             "GRD" => "EUR",
             "IEP" => "EUR",
             "ITL" => "EUR",
+            "KZT" => "EUR",
             "LTL" => "EUR",
             "LUF" => "EUR",
             "LVL" => "EUR",
@@ -68,6 +62,7 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
             "MTL" => "EUR",
             "NLG" => "EUR",
             "PTE" => "EUR",
+            "RUB" => "EUR",
             "SIT" => "EUR",
             "SKK" => "EUR",
             "SML" => "EUR",
@@ -75,48 +70,45 @@ function fusion_get_currency($country_iso = NULL, $description = TRUE) {
             "DDM" => "EUR",
             "ESA" => "EUR",
             "ESB" => "EUR",
-        );
+        ];
         foreach (array_keys($locale['currency']) as $country_iso) {
-            $iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
-            $c_symbol = (!empty($locale['currency_symbol'][$iso]) ? html_entity_decode($locale['currency_symbol'][$iso], ENT_QUOTES,
-                $locale['charset']) : $iso);
-            $c_text = $locale['currency'][$iso];
-            $currency_symbol[$country_iso] = $description ? $c_text." ($c_symbol)" : $c_symbol;
+            $c_iso = !empty($currency_exceptions[$country_iso]) ? $currency_exceptions[$country_iso] : $country_iso;
+            $c_symbol = (!empty($locale['currency_symbol'][$c_iso]) ? html_entity_decode($locale['currency_symbol'][$c_iso], ENT_QUOTES, $locale['charset']) : $c_iso);
+            $c_text = $locale['currency'][$c_iso];
+            $__currency[$country_iso] = $description ? $c_text." ($c_symbol)" : $c_symbol;
         }
     }
 
-    return $country_iso === NULL ? $currency_symbol : (isset($currency_symbol[$country_iso]) ? $currency_symbol[$country_iso] : NULL);
+    return $iso === NULL ? $__currency : (isset($__currency[$iso]) ? $__currency[$iso] : NULL);
 }
 
-
 /**
- * Check if a given theme exists and is valid
+ * Check if a given theme exists and is valid.
  *
- * @global string[] $settings
+ * @param string $theme The theme folder you want to check.
  *
- * @param string    $theme
- *
- * @return boolean
+ * @return bool False if the theme does not exist and true if it does.
  */
 function theme_exists($theme) {
+
     if ($theme == "Default") {
         $theme = fusion_get_settings('theme');
     }
 
-    return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i",
-            $theme) and file_exists(THEMES.$theme."/theme.php") and file_exists(THEMES.$theme."/styles.css");
+    return is_string($theme) and
+        preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and
+        file_exists(THEMES.$theme."/theme.php") and
+        file_exists(THEMES.$theme."/styles.css");
 }
 
 /**
- * Set a valid theme
+ * Set a valid theme.
  *
- * @global string[] $settings
- * @global array    $locale
- *
- * @param string    $theme
+ * @param string $theme The theme folder you want to set.
  */
 function set_theme($theme) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+
+    $locale = fusion_get_locale();
     if (defined("THEME")) {
         return;
     }
@@ -137,7 +129,7 @@ function set_theme($theme) {
 
     if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
 
-        addNotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
+        addnotice('danger', "<strong>".$theme." - ".$locale['global_300'].".</strong><br /><br />\n".$no_theme_message);
 
     } else {
 
@@ -151,106 +143,221 @@ function set_theme($theme) {
 }
 
 /**
- * Set the admin password when needed
+ * Set password of the currently logged in an administrator.
  *
- * @param $password
+ * @param string $password Any password.
  *
- * @return bool
+ * @return bool True if a password is set.
  */
 function set_admin_pass($password) {
+
     return Authenticate::setAdminCookie($password);
 }
 
 /**
- * Check if admin password matches userdata
+ * Check if admin password matches userdata.
  *
- * @param string $password
+ * @param string $password Password.
  *
- * @return boolean
+ * @return bool True if the password matches the user's admin password or if the admin's cookie or session is set and is valid.
  */
 function check_admin_pass($password) {
+
     return Authenticate::validateAuthAdmin($password);
 }
 
 /**
- * Redirect browser using header or script function
+ * Redirect to internal or external URL.
  *
- * @param            $location - Desintation URL
- * @param bool|FALSE $delay    - meta refresh delay
- * @param bool|FALSE $script   - true if you want to redirect via javascript
- *
- * @define STOP_REDIRECT to prevent redirection
+ * @param string $location Desintation URL.
+ * @param bool   $delay    meta refresh delay.
+ * @param bool   $script   True if you want to redirect via javascript.
+ * @param int    $code     HTTP status code to send.
  */
+function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
 
-function redirect($location, $delay = FALSE, $script = FALSE) {
-    //define('STOP_REDIRECT', true);
-    //$location = fusion_get_settings('site_seo') && defined('IN_PERMALINK') ? FUSION_ROOT.$location : $location;
     if (!defined('STOP_REDIRECT')) {
         if (isnum($delay)) {
             $ref = "<meta http-equiv='refresh' content='$delay; url=".$location."' />";
             add_to_head($ref);
         } else {
-            if ($script == FALSE) {
+            if ($script == FALSE && !headers_sent()) {
+                set_status_header($code);
                 header("Location: ".str_replace("&amp;", "&", $location));
-                exit;
             } else {
                 echo "<script type='text/javascript'>document.location.href='".str_replace("&amp;", "&", $location)."'</script>\n";
-                exit;
             }
+            exit;
         }
-    } else {
-        debug_print_backtrace();
-        echo "redirected to ".$location;
     }
 }
 
 /**
- * Clean URL Function, prevents entities in server globals
+ * Set HTTP status header.
  *
- * @param string $url
+ * @param int $code Status header code.
  *
- * @return string
+ * @return bool Whether header was sent.
+ */
+function set_status_header($code = 200) {
+
+    if (headers_sent()) {
+        return FALSE;
+    }
+
+    $protocol = $_SERVER['SERVER_PROTOCOL'];
+
+    if ('HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol) {
+        $protocol = 'HTTP/1.0';
+    }
+
+    $desc = [
+        100 => 'Continue',
+        101 => 'Switching Protocols',
+        102 => 'Processing',
+        200 => 'OK',
+        201 => 'Created',
+        202 => 'Accepted',
+        203 => 'Non-Authoritative Information',
+        204 => 'No Content',
+        205 => 'Reset Content',
+        206 => 'Partial Content',
+        207 => 'Multi-Status',
+        226 => 'IM Used',
+        300 => 'Multiple Choices',
+        301 => 'Moved Permanently',
+        302 => 'Found',
+        303 => 'See Other',
+        304 => 'Not Modified',
+        305 => 'Use Proxy',
+        306 => 'Reserved',
+        307 => 'Temporary Redirect',
+        400 => 'Bad Request',
+        401 => 'Unauthorized',
+        402 => 'Payment Required',
+        403 => 'Forbidden',
+        404 => 'Not Found',
+        405 => 'Method Not Allowed',
+        406 => 'Not Acceptable',
+        407 => 'Proxy Authentication Required',
+        408 => 'Request Timeout',
+        409 => 'Conflict',
+        410 => 'Gone',
+        411 => 'Length Required',
+        412 => 'Precondition Failed',
+        413 => 'Request Entity Too Large',
+        414 => 'Request-URI Too Long',
+        415 => 'Unsupported Media Type',
+        416 => 'Requested Range Not Satisfiable',
+        417 => 'Expectation Failed',
+        422 => 'Unprocessable Entity',
+        423 => 'Locked',
+        424 => 'Failed Dependency',
+        426 => 'Upgrade Required',
+        500 => 'Internal Server Error',
+        501 => 'Not Implemented',
+        502 => 'Bad Gateway',
+        503 => 'Service Unavailable',
+        504 => 'Gateway Timeout',
+        505 => 'HTTP Version Not Supported',
+        506 => 'Variant Also Negotiates',
+        507 => 'Insufficient Storage',
+        510 => 'Not Extended'
+    ];
+
+    $desc = !empty($desc[$code]) ? $desc[$code] : '';
+
+    header("$protocol $code $desc");
+
+    return TRUE;
+}
+
+/**
+ * Get HTTP response code.
+ *
+ * @param string $url URL.
+ *
+ * @return false|string
+ */
+function get_http_response_code($url) {
+
+    if (function_exists('curl_init')) {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_exec($handle);
+        $http_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+        curl_close($handle);
+
+        return $http_code;
+    } else {
+        stream_context_set_default([
+            'ssl' => [
+                'verify_peer'      => FALSE,
+                'verify_peer_name' => FALSE
+            ],
+        ]);
+
+        $headers = @get_headers($url);
+
+        return substr($headers[0], 9, 3);
+    }
+}
+
+/**
+ * Clean the URL and prevents entities in server globals.
+ *
+ * @param string $url URL.
+ *
+ * @return string $url clean and ready for use XHTML strict and without any dangerous code.
  */
 function cleanurl($url) {
-    $bad_entities = array("&", "\"", "'", '\"', "\'", "<", ">", "", "", "*");
-    $safe_entities = array("&amp;", "", "", "", "", "", "", "", "", "");
+
+    $bad_entities = ["&", "\"", "'", '\"', "\'", "<", ">", "", "", "*"];
+    $safe_entities = ["&amp;", "", "", "", "", "", "", "", "", ""];
 
     return str_replace($bad_entities, $safe_entities, $url);
 }
 
 /**
- * Strip Input Function, prevents HTML in unwanted places
+ * Prevents HTML in unwanted places
  *
- * @param string|string[] $text
+ * @param string|array $text String or array to be stripped.
  *
- * @return string|string[]
+ * @return array|string The given string decoded as non HTML text.
  */
 function stripinput($text) {
-    if (!is_array($text)) {
-        return str_replace('\\', '&#092;', htmlspecialchars(stripslash(trim($text)), ENT_QUOTES));
+
+    if (!is_array($text) && !is_null($text)) {
+        return str_replace('\\', '&#092;', htmlspecialchars(stripslashes(trim($text)), ENT_QUOTES));
     }
-    foreach ($text as $i => $item) {
-        $text[$i] = stripinput($item);
+
+    if (is_array($text) && !is_null($text)) {
+        foreach ($text as $i => $item) {
+            $text[$i] = stripinput($item);
+        }
     }
 
     return $text;
 }
 
 /**
- * Prevent any possible XSS attacks via $_GET
+ * Prevent any possible XSS attacks via $_GET.
  *
- * @param string $check_url
+ * @param array|string $check_url String or array to be stripped.
  *
- * @return boolean TRUE if the URL is not secure
+ * @return bool True if the URL is not secure.
  */
 function stripget($check_url) {
-    if (!is_array($check_url)) {
-        $check_url = str_replace(array("\"", "\'"), array("", ""), urldecode($check_url));
 
-        return (bool)preg_match("/<[^<>]+>/i", $check_url);
-    }
-    foreach ($check_url as $value) {
-        if (stripget($value)) {
+    if (is_array($check_url)) {
+        foreach ($check_url as $value) {
+            if (stripget($value) == TRUE) {
+                return TRUE;
+            }
+        }
+    } else {
+        $check_url = str_replace(["\"", "\'"], ["", ""], urldecode($check_url));
+        if (preg_match("/<[^<>]+>/i", $check_url)) {
             return TRUE;
         }
     }
@@ -259,116 +366,89 @@ function stripget($check_url) {
 }
 
 /**
- * Strip file name
+ * Strips a given filename from any unwanted characters and symbols.
  *
- * @param string $filename
+ * @param string $filename Filename you want to strip. Remember to remove the file extension before parsing it through this function.
  *
- * @return string
+ * @return string The filename stripped and ready for use.
  */
 function stripfilename($filename) {
-    $patterns = array(
+
+    $patterns = [
         '/\s+/'              => '_',
         '/[^a-z0-9_-]|^\W/i' => '',
         '/([_-])\1+/'        => '$1'
-    );
+    ];
 
     return preg_replace(array_keys($patterns), $patterns, strtolower($filename)) ?: (string)time();
 }
 
 /**
- * Strip Slash Function, only stripslashes if magic_quotes_gpc is on
+ * Converts all applicable characters to HTML entities.
+ * htmlentities is too agressive so we use this function.
  *
- * @param string $text
+ * @param string $text The input string.
  *
- * @return string
- */
-function stripslash($text) {
-    if (QUOTES_GPC) {
-        $text = stripslashes($text);
-    }
-
-    return $text;
-}
-
-/**
- * Add Slash Function, add correct number of slashes depending on quotes_gpc
- *
- * @param string $text
- *
- * @return string
- */
-function addslash($text) {
-    if (!QUOTES_GPC) {
-        $text = addslashes(addslashes($text));
-    } else {
-        $text = addslashes($text);
-    }
-
-    return $text;
-}
-
-/**
- * htmlentities is too agressive so we use this function
- *
- * @param string $text
- *
- * @return string
+ * @return string Encoded string.
  */
 function phpentities($text) {
+
     return str_replace('\\', '&#092;', htmlspecialchars($text, ENT_QUOTES));
 }
 
 /**
- * Trim a line of text to a preferred length
+ * Prevent strings from growing to long and breaking the layout.
  *
- * @param string $text
- * @param int    $length
+ * @param string $text   String to trim.
+ * @param int    $length Max length of the string.
  *
- * @return string
+ * @return string String trimmed to the given length.
  */
 function trimlink($text, $length) {
+
     if (strlen($text) > $length) {
-        $text = mb_substr($text, 0, ($length - 3), mb_detect_encoding($text))."...";
+        if (function_exists('mb_substr')) {
+            $text = mb_substr($text, 0, ($length - 3), 'UTF-8')."...";
+        } else {
+            $text = substr($text, 0, ($length - 3))."...";
+        }
     }
 
     return $text;
 }
 
 /**
- * Trim a text to a number of words
+ * Trim a text to a number of words.
  *
- * @param string $text
- * @param int    $limit  The number of words
+ * @param string $text   String to trim.
+ * @param int    $limit  The number of words.
  * @param string $suffix If $text is longer than $limit, $suffix will be appended.
- *                       Tip: You can pass an html link to the full content.
  *
- * @return string
+ * @return string String trimmed to the given length.
  */
 function fusion_first_words($text, $limit, $suffix = '&hellip;') {
+
     $text = preg_replace('/[\r\n]+/', '', $text);
-    return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])
-				[[:punct:]]\s*
-		))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
+
+    return preg_replace('~^(\s*\w+'.str_repeat('\W+\w+', $limit - 1).'(?(?=[?!:;.])[[:punct:]]\s*))\b(.+)$~isxu', '$1'.$suffix, strip_tags($text));
 }
 
 /**
- * Pure trim function
+ * Pure trim function.
  *
- * @param string $str
- * @param int    $length
+ * @param string $str    String to trim.
+ * @param int    $length The number of characters.
  *
- * @return string
+ * @return string Trimmed text.
  */
-function trim_text($str, $length = FALSE) {
-    $length = (isset($length) && (!empty($length))) ? stripinput($length) : "300";
-    $startfrom = $length;
-    for ($i = $startfrom; $i <= strlen($str); $i++) {
+function trim_text($str, $length = 300) {
+
+    for ($i = $length; $i <= strlen($str); $i++) {
         $spacetest = substr("$str", $i, 1);
         if ($spacetest == " ") {
             $spaceok = substr("$str", 0, $i);
 
             return ($spaceok."...");
-            break;
         }
     }
 
@@ -376,46 +456,148 @@ function trim_text($str, $length = FALSE) {
 }
 
 /**
- * Validate numeric input
- * Note : Negative numbers are not numbers. Use is_numeric($value) instead.
+ * Replaces special characters in a string with their "non-special" counterpart.
  *
- * @param            $value
- * @param bool|FALSE $decimal
+ * @param string $value String to normalize.
  *
- * @return bool
+ * @return string
  */
-function isnum($value, $decimal = FALSE) {
-    $float = $decimal ? '(\.{0,1})[0-9]*' : '';
+function normalize($value) {
 
-    return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
+    $table = [
+        '&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a', '(' => '', ')' => '', '.' => '',
+        'Á'     => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c',
+        'È'     => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i',
+        'Ï'     => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o',
+        'Ø'     => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y',
+        'ß'     => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a',
+        'æ'     => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'ì'     => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o',
+        'ô'     => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u',
+        'û'     => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a',
+        'ā'     => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c',
+        'ć'     => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c',
+        'č'     => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e',
+        'ē'     => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e',
+        'ę'     => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g',
+        'ğ'     => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h',
+        'ĥ'     => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i',
+        'ī'     => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i',
+        'ı'     => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k',
+        'ķ'     => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l',
+        'Ľ'     => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l',
+        'Ń'     => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n',
+        'ŉ'     => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o',
+        'ŏ'     => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r',
+        'ŕ'     => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's',
+        'ś'     => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's',
+        'š'     => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't',
+        'ŧ'     => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u',
+        'ŭ'     => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u',
+        'ų'     => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y',
+        'Ź'     => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z',
+        'ſ'     => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u',
+        'ư'     => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o',
+        'ǒ'     => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u',
+        'ǘ'     => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a',
+        'ǻ'     => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e',
+        'Ё'     => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b',
+        'В'     => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z',
+        'И'     => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n',
+        'О'     => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u',
+        'Ф'     => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch',
+        'Ъ'     => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja',
+        'а'     => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e',
+        'ж'     => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l',
+        'м'     => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's',
+        'т'     => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+        'ш'     => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je',
+        'ю'     => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i',
+        'Ґ'     => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd',
+        'ה'     => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i',
+        'ך'     => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n',
+        'נ'     => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C',
+        'צ'     => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm',
+        'ء'     => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't',
+        'ث'     => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd',
+        'ر'     => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's', 'ض' => 'z',
+        'ط'     => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q', 'ک' => 'k',
+        'گ'     => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
+    ];
+
+    return strtr($value, $table);
 }
 
 /**
- * Custom preg-match function
+ * Generate random string.
  *
- * @param string $expression
- * @param string $value
+ * @param int  $length       The length of the string.
+ * @param bool $letters_only Only letters.
  *
- * @return boolean FALSE when $value is an array
+ * @return string
+ */
+function random_string($length = 6, $letters_only = FALSE) {
+
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if ($letters_only) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
+    $characters_length = strlen($characters);
+    $random_string = '';
+    for ($i = 0; $i < $length; $i++) {
+        $random_string .= $characters[rand(0, $characters_length - 1)];
+    }
+
+    return $random_string;
+}
+
+/**
+ * Validate numeric input.
+ *
+ * @param mixed $value    The value to be checked.
+ * @param bool  $decimal  Decimals.
+ * @param bool  $negative Negative numbers.
+ *
+ * @return bool True if the value is a number.
+ */
+function isnum($value, $decimal = FALSE, $negative = FALSE) {
+
+    if ($negative == TRUE) {
+        return is_numeric($value);
+    } else {
+        $float = $decimal ? '(.{0,1})[0-9]*' : '';
+
+        return !is_array($value) and preg_match("/^[0-9]+".$float."$/", $value);
+    }
+}
+
+/**
+ * Custom preg_match function.
+ *
+ * @param string $expression The expression to search for.
+ * @param mixed  $value      The input string.
+ *
+ * @return bool FALSE when $value is an array
  */
 function preg_check($expression, $value) {
+
     return !is_array($value) and preg_match($expression, $value);
 }
 
 /**
- * Generate a clean Request URI
+ * Generate a clean Request URI.
  *
- * @param string    $request_addition    - 'page=1&amp;ref=2' or array('page' => 1, 'ref' => 2)
- * @param array     $filter_array        - array('aid','page', ref')
- * @param bool|TRUE $keep_filtered       - true to keep filter, false to remove filter from FUSION_REQUEST
- *                                       If remove is true, to remove everything and keep $requests_array and $request
- *                                       addition. If remove is false, to keep everything else except $requests_array
+ * @param mixed $request_addition 'page=1&ref=2' or array('page' => 1, 'ref' => 2)
+ * @param array $filter_array     array('aid','page', ref')
+ * @param bool  $keep_filtered    True to keep filter, false to remove filter from FUSION_REQUEST.
+ *                                If remove is true, to remove everything and keep $requests_array and $request
+ *                                addition. If remove is false, to keep everything else except $requests_array
  *
  * @return string
  */
-function clean_request($request_addition = '', array $filter_array = array(), $keep_filtered = TRUE) {
+function clean_request($request_addition = '', $filter_array = [], $keep_filtered = TRUE) {
 
-    $fusion_query = array();
+    $fusion_query = [];
 
     if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
         global $filepath;
@@ -426,10 +608,10 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
         }
     } else {
 
-        $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + array(
+        $url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + [
                 'path'  => '',
                 'query' => ''
-            );
+            ];
 
         if ($url['query']) {
             parse_str($url['query'], $fusion_query); // this is original.
@@ -444,7 +626,7 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
 
     if ($request_addition) {
 
-        $request_addition_array = array();
+        $request_addition_array = [];
 
         if (is_array($request_addition)) {
             $fusion_query = $fusion_query + $request_addition;
@@ -455,61 +637,51 @@ function clean_request($request_addition = '', array $filter_array = array(), $k
     }
 
     $prefix = $fusion_query ? '?' : '';
-    $query = $url['path'].$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
 
-    return (string)$query;
+    return $url['path'].$prefix.http_build_query($fusion_query, 'flags_', '&amp;');
 }
 
 /**
- * Cache smileys mysql
+ * Cache of all smileys from the database.
  *
- * @return array
+ * @return array Array of all smileys.
  */
 function cache_smileys() {
-    static $smiley_cache = NULL;
-    if ($smiley_cache === NULL) {
-        $smiley_cache = array();
-        $result = dbquery("SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
-        while ($data = dbarray($result)) {
-            $smiley_cache[] = array(
-                "smiley_code"  => $data['smiley_code'],
-                "smiley_image" => $data['smiley_image'],
-                "smiley_text"  => $data['smiley_text']
-            );
-        }
-    }
 
-    return $smiley_cache;
+    return ImageRepo::cacheSmileys();
 }
 
 /**
- * Parse smiley bbcode
+ * Parse the smileys in string and display smiley codes as smiley images.
  *
- * @param string $message
+ * @param string $message A string that should have parsed smileys.
  *
- * @return string
+ * @return string String with parsed smiley codes as smiley images ready for display.
  */
 function parsesmileys($message) {
+
     if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php\])#si", $message)) {
         foreach (cache_smileys() as $smiley) {
             $smiley_code = preg_quote($smiley['smiley_code'], '#');
             $smiley_image = get_image("smiley_".$smiley['smiley_text']);
-            $smiley_image = "<img src='$smiley_image' alt='".$smiley['smiley_text']."' style='vertical-align:middle;' />";
-            $message = preg_replace("#{$smiley_code}#s", $smiley_image, $message);
+            $smiley_image = "<img class='smiley' style='width:20px;height:20px;' src='$smiley_image' alt='".$smiley['smiley_text']."'>";
+            $message = preg_replace("#$smiley_code#s", $smiley_image, $message);
         }
     }
+
     return $message;
 }
 
 /**
- * Show smiley icons in comments, forum and other post pages
+ * Show smiley's button which will insert the smileys to the given textarea and form.
  *
- * @param string $textarea The name of the textarea
- * @param string $form     The name of the form
+ * @param string $textarea The id of the textarea
+ * @param string $form     The form id in which the textarea is located.
  *
- * @return string
+ * @return string  Option for users to insert smileys in a post by displaying the smiley's button.
  */
 function displaysmileys($textarea, $form = "inputform") {
+
     $smileys = "";
     $i = 0;
     foreach (cache_smileys() as $smiley) {
@@ -517,41 +689,55 @@ function displaysmileys($textarea, $form = "inputform") {
             $smileys .= "<br />\n";
         }
         $i++;
-        $smileys .= "<img src='".get_image("smiley_".$smiley['smiley_text'])."' alt='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\" />\n";
+        $img = get_image("smiley_".$smiley['smiley_text']);
+        $smileys .= "<img class='smiley m-2' style='width:20px;height:20px;' src='".$img."' alt='".$smiley['smiley_text']."' title='".$smiley['smiley_text']."' onclick=\"insertText('".$textarea."', '".$smiley['smiley_code']."', '".$form."');\">\n";
     }
 
     return $smileys;
 }
 
 /**
- * Tag a user by simply just posting his name like @Chan and if found, returns a tooltip.
+ * Tag a user by simply just posting his name like @Nick and if found, returns a tooltip.
  *
- * @param $user_name
+ * @param string $user_name @Nick
+ * @param string $tooltip   Additional info e.g. ($userdata['user_lastvisit'] - 120 < time() ? 'Online' : 'Offline').
  *
- * @return mixed
+ * @return string Tooltip with info.
  */
-function fusion_parse_user($user_name) {
-    $user_regex = ' @[-0-9A-Z_\.]{1,50}';
-    $text = preg_replace_callback("#$user_regex#i", function ($user_name) {
-        $user_name = preg_replace('/[^A-Za-z0-9\-]/', '', $user_name);
+function fusion_parse_user($user_name, $tooltip = '') {
+    return preg_replace_callback("/\@([A-Za-z0-9\-_!\.]+)/", function ($user_name) use ($tooltip) {
+        $user = $user_name[1];
+        $result = dbquery("SELECT *
+            FROM ".DB_USERS."
+            WHERE (user_name=:user_00 OR user_name=:user_01 OR user_name=:user_02 OR user_name=:user_03) AND user_status='0'
+            LIMIT 1
+        ", [
+            ':user_00' => $user,
+            ':user_01' => ucwords($user),
+            ':user_02' => strtoupper($user),
+            ':user_03' => strtolower($user)
+        ]);
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            return render_user_tags($data, $tooltip);
+        }
 
-        return render_user_tags($user_name);
+        return $user_name[0];
     }, $user_name);
-
-    return $text;
 }
 
 /**
- * Cache bbcode mysql
+ * Cache of all installed BBCodes from the database.
  *
- * @return array
+ * @return array Array of all BBCodes.
  */
 function cache_bbcode() {
-    static $bbcode_cache = NULL;
-    if ($bbcode_cache === NULL) {
-        $bbcode_cache = array();
-        $result = dbquery("SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order ASC");
-        while ($data = dbarray($result)) {
+
+    static $bbcode_cache = [];
+    if (empty($bbcode_cache)) {
+        $bbcode_cache = [];
+        $result = cdquery('bbcodes_cache', "SELECT bbcode_name FROM ".DB_BBCODES." ORDER BY bbcode_order");
+        while ($data = cdarray($result)) {
             $bbcode_cache[] = $data['bbcode_name'];
         }
     }
@@ -560,103 +746,162 @@ function cache_bbcode() {
 }
 
 /**
- * Parse and force image/ to IMAGES directory
+ * Parse and force image/ to own directory.
  * Neutralize all image dir levels and convert image to pf image folder
  *
- * @param        $data
- * @param string $prefix_
+ * @param string $data    String to parse.
+ * @param string $prefix_ Image folder.
  *
- * @return mixed
+ * @return string Parsed string.
  */
-function parse_imageDir($data, $prefix_ = "") {
+function parse_image_dir($data, $prefix_ = "") {
+
     $str = str_replace("../", "", $data);
 
     return (string)$prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
 }
 
 /**
- * Interpret output to match input of textarea having both bbcode, html and tinymce buttons
+ * Parse BBCodes, smileys and any special characters to HTML string.
  *
- * @param            $text
- * @param bool|TRUE  $smileys
- * @param bool|TRUE  $bbcode
- * @param bool|TRUE  $decode
- * @param string     $default_image_folder
- * @param bool|FALSE $add_line_breaks
+ * @param string $value   String with unparsed text.
+ * @param array  $options Array of options.
  *
  * @return string
  */
-function parse_textarea($text, $smileys = TRUE, $bbcode = TRUE, $decode = TRUE, $default_image_folder = IMAGES, $add_line_breaks = FALSE) {
-    $text = $decode == TRUE ? html_entity_decode(stripslashes($text), ENT_QUOTES, fusion_get_locale('charset')) : $text;
-    $text = $decode == TRUE ? html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset')) : $text; // decode for double encoding.
-    $text = !empty($default_image_folder) ? parse_imageDir($text, $default_image_folder) : $text;
-    $text = $smileys == TRUE ? parsesmileys($text) : $text;
-    $text = $bbcode == TRUE ? parseubb($text) : $text;
-    $text = fusion_parse_user($text);
-    $text = $add_line_breaks ? nl2br($text) : $text;
-    if (defined('IN_PERMALINK')) {
-        //$text = strtr($text, [fusion_get_settings('site_path') => '']);
+function parse_text($value, $options = []) {
+    $default_options = [
+        'parse_smileys'        => TRUE, // Smiley parsing.
+        'parse_bbcode'         => TRUE, // BBCode parsing.
+        'decode'               => TRUE, // Decode HTML entities.
+        'default_image_folder' => IMAGES, // Image folder for parse_image_dir().
+        'add_line_breaks'      => FALSE, // Allows nl2br().
+        'descript'             => TRUE, // Sanitize text.
+        'parse_users'          => TRUE // Create user @tags.
+    ];
+
+    $options += $default_options;
+
+    $charset = fusion_get_locale('charset');
+    $value = stripslashes($value);
+    if ($options['descript']) {
+        $value = descript($value);
+        $value = htmlspecialchars_decode($value);
     }
-    return (string)$text;
+    if ($options['default_image_folder']) {
+        $value = parse_image_dir($value, $options['default_image_folder']);
+    }
+    if ($options['parse_bbcode']) {
+        $value = parseubb($value);
+    }
+    if ($options['parse_smileys']) {
+        $value = parsesmileys($value);
+    }
+    if ($options['add_line_breaks']) {
+        $value = nl2br($value);
+    }
+    if ($options['parse_users']) {
+        $value = fusion_parse_user($value);
+    }
+    if ($options['decode']) {
+        $value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
+        $value = encode_code($value);
+    }
+
+    return (string)$value;
 }
 
 /**
- * Parse bbcode
+ * Parse BBCodes in the given string.
  *
- * @param        $text
- * @param string $selected - The names of the required bbcodes to parse, separated by "|"
+ * @param string $text     A string that contains the text to be parsed.
+ * @param string $selected The names of the required bbcodes to parse, separated by |.
+ * @param bool   $descript Sanitize text.
  *
- * @return string
+ * @return string Parsed string.
  */
-function parseubb($text, $selected = "") {
+function parseubb($text, $selected = "", $descript = TRUE) {
+
+    if ($descript) {
+        $text = descript($text, FALSE);
+    }
+
     $bbcode_cache = cache_bbcode();
+    $bbcodes = [];
+    foreach ($bbcode_cache as $bbcode) {
+        $bbcodes[$bbcode] = $bbcode;
+    }
+
+    if (!empty($bbcodes['code'])) {
+        $move_to_top = $bbcodes['code'];
+        unset($bbcodes['code']);
+        array_unshift($bbcodes, $move_to_top);
+    }
+
+    $sel_bbcodes = [];
+
     if ($selected) {
         $sel_bbcodes = explode("|", $selected);
     }
-    foreach ($bbcode_cache as $bbcode) {
+    foreach ($bbcodes as $bbcode) {
+        $locale_file = '';
+        if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE.LOCALESET."bbcodes/".$bbcode.".php";
+        } else if (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
+            $locale_file = LOCALE."English/bbcodes/".$bbcode.".php";
+        }
+        if ($locale_file) {
+            \PHPFusion\Locale::setLocale($locale_file);
+        }
+    }
+
+    $locale = fusion_get_locale();
+
+    foreach ($bbcodes as $bbcode) {
         if ($selected && in_array($bbcode, $sel_bbcodes)) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-                if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                    include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-                } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                    include(LOCALE."English/bbcodes/".$bbcode.".php");
-                }
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
             }
-        } elseif (!$selected) {
+        } else if (!$selected) {
             if (file_exists(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php")) {
-                if (file_exists(LOCALE.LOCALESET."bbcodes/".$bbcode.".php")) {
-                    include(LOCALE.LOCALESET."bbcodes/".$bbcode.".php");
-                } elseif (file_exists(LOCALE."English/bbcodes/".$bbcode.".php")) {
-                    include(LOCALE."English/bbcodes/".$bbcode.".php");
-                }
                 include(INCLUDES."bbcodes/".$bbcode."_bbcode_include.php");
             }
         }
     }
-    $text = descript($text, FALSE);
+
+    // Added to fix code sniffer reported error
+    unset($locale);
 
     return $text;
 }
 
 /**
- * Javascript email encoder by Tyler Akins
+ * Hide email from robots that have JavaScript disabled, as it requires JavaScript to view email.
  * Create a "mailto" link for the email address
  *
- * @param string $email
- * @param string $title   The text of the link
- * @param string $subject The subject of the message
+ * @param string $email   The email you want to hide from robots.
+ * @param string $title   The text of the link.
+ * @param string $subject A subject for a mail message if someone opens a link, and it opens in the mail client.
  *
- * @return string
+ * @return string If browser has JavaScript enabled, email will be displayed correctly,
+ *                otherwise, it will be hidden and difficult for a robot to decrypt.
  */
 function hide_email($email, $title = "", $subject = "") {
+
     if (preg_match("/^[-0-9A-Z_\.]{1,50}@([-0-9A-Z_\.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
+        $enc_email = '';
         $parts = explode("@", $email);
-        $MailLink = "<a href='mailto:".$parts[0]."@".$parts[1];
+        $email = $parts[0].'@'.$parts[1];
+        for ($i = 0; $i < strlen($email); $i++) {
+            $enc_email .= '&#'.ord($email[$i]).';';
+        }
+
+        $MailLink = "<a href='mailto:".$enc_email;
         if ($subject != "") {
             $MailLink .= "?subject=".urlencode($subject);
         }
-        $MailLink .= "'>".($title ? $title : $parts[0]."@".$parts[1])."</a>";
+        $MailLink .= "'>".(!empty($title) ? $title : $enc_email)."</a>";
+
         $MailLetters = "";
         for ($i = 0; $i < strlen($MailLink); $i++) {
             $l = substr($MailLink, $i, 1);
@@ -673,10 +918,13 @@ function hide_email($email, $title = "", $subject = "") {
             $index += 48;
             $MailIndexes .= chr($index);
         }
+
+        $id = 'e'.rand(1, 99999999);
+
         $MailIndexes = str_replace("\\", "\\\\", $MailIndexes);
         $MailIndexes = str_replace("\"", "\\\"", $MailIndexes);
-        $res = "<script type='text/javascript'>";
-        $res .= "/*<![CDATA[*/";
+        $res = "<span id='".$id."'></span>";
+        $res .= "<script type='text/javascript'>";
         $res .= "ML=\"".str_replace("<", "xxxx", $MailLettersEnc)."\";";
         $res .= "MI=\"".str_replace("<", "xxxx", $MailIndexes)."\";";
         $res .= "ML=ML.replace(/xxxx/g, '<');";
@@ -684,8 +932,7 @@ function hide_email($email, $title = "", $subject = "") {
         $res .= "OT=\"\";";
         $res .= "for(j=0;j < MI.length;j++){";
         $res .= "OT+=ML.charAt(MI.charCodeAt(j)-48);";
-        $res .= "}document.write(OT);";
-        $res .= "/*]]>*/";
+        $res .= "}var e=document.getElementById('".$id."');e.innerHTML += OT;";
         $res .= "</script>";
 
         return $res;
@@ -695,34 +942,124 @@ function hide_email($email, $title = "", $subject = "") {
 }
 
 /**
- * Format spaces and tabs in code bb tags
+ * Encode and format code inside <code> tag.
  *
- * @param string $text
+ * @param string $text String with code.
  *
- * @return string
+ * @return string Encoded and formatted code.
  */
-function formatcode($text) {
-    $text = str_replace(
-        ["  ", "  ", "\t"],
-        ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;"],
-        $text
-    );
-    $text = preg_replace("/^ {1}/m", "&nbsp;", $text);
+function encode_code($text) {
+
+    preg_match_all("#<code>(.*?)</code>#is", $text, $codes);
+    $replace = [];
+    foreach ($codes[1] as $key => $codeblock) {
+        $replace[$key] = htmlentities($codeblock, ENT_QUOTES, 'UTF-8', FALSE);
+    }
+    unset($key, $codeblock);
+
+    if (!empty($codes[0])) {
+        if (!defined('PRISMJS')) {
+            define('PRISMJS', TRUE);
+            add_to_head('<link rel="stylesheet" href="'.INCLUDES.'bbcodes/code/prism.css">');
+            add_to_footer('<script src="'.INCLUDES.'bbcodes/code/prism.js"></script>');
+        }
+    }
+
+    foreach ($codes[0] as $key => $replacer) {
+        $code = str_replace('&lt;br /&gt;', '', $replace[$key]);
+        $code = format_code($code);
+        $text = str_replace($replacer, '<pre><code class="language-php">'.$code.'</code></pre>', $text);
+    }
+    unset($key, $replacer, $replace);
 
     return $text;
 }
 
 /**
- * Highlights given words in subject
+ * Add correct amount of spaces and tabs inside code.
  *
- * @param string $word    The highlighted word
- * @param string $subject The source text
+ * @param string $code The code you want to format.
+ *
+ * @return string Formatted code.
+ */
+function format_code($code) {
+
+    $code = htmlentities($code, ENT_QUOTES, 'UTF-8', FALSE);
+
+    $code = str_replace(
+        ["  ", "  ", "\t", "[", "]"],
+        ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;", "&#91;", "&#93;"],
+        $code
+    );
+
+    return preg_replace("/^ {1}/m", "&nbsp;", $code);
+}
+
+/**
+ * Formats a number in a numeric acronym, and rounding.
+ *
+ * @param int    $value        Number to format.
+ * @param int    $decimals     The number of decimals.
+ * @param string $dec_point    Decimal point.
+ * @param string $thousand_sep Thousands separator.
+ * @param bool   $round        Round number.
+ * @param bool   $acryonym     Acronym.
  *
  * @return string
  */
-function highlight_words($word, $subject) {
-    for ($i = 0, $l = count($word); $i < $l; $i++) {
-        $word[$i] = str_replace(array(
+function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE) {
+
+    $array = [
+        13 => $acryonym ? "t" : "trillion",
+        10 => $acryonym ? "b" : "billion",
+        7  => $acryonym ? "m" : "million",
+        4  => $acryonym ? "k" : "thousand"
+    ];
+
+    if (is_numeric($value)) {
+        if ($round === TRUE) {
+            foreach ($array as $length => $rounding) {
+                if (strlen($value) >= $length) {
+                    $power = pow(10, $length - 1);
+                    if ($value > $power && $length > 4 && $decimals === NULL) {
+                        $decimals = 2;
+                    }
+
+                    return number_format(($value / $power), $decimals, $dec_point, $thousand_sep).$rounding;
+                }
+            }
+        }
+
+        return number_format($value, $decimals, $dec_point, $thousand_sep);
+    }
+
+    return $value;
+}
+
+/**
+ * Converts any formatted number back to float numbers in PHP
+ *
+ * @param string|int $value Formatted number.
+ *
+ * @return float
+ */
+function format_float($value) {
+
+    return floatval(preg_replace('/[^\d.]/', '', $value));
+}
+
+/**
+ * Highlights given words in string.
+ *
+ * @param array  $words   The words to highlight.
+ * @param string $subject Text that contains a word (s) that should be highlighted.
+ *
+ * @return string Words highlighted in the string.
+ */
+function highlight_words($words, $subject) {
+
+    for ($i = 0, $l = count($words); $i < $l; $i++) {
+        $word[$i] = str_replace([
             "\\",
             "+",
             "*",
@@ -744,10 +1081,10 @@ function highlight_words($word, $subject) {
             "#",
             "-",
             "_"
-        ), "", $word[$i]);
-        if (!empty($word[$i])) {
-            $subject = preg_replace("#($word[$i])(?![^<]*>)#i",
-                "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px'>\${1}</span>",
+        ], "", $words[$i]);
+        if (!empty($words[$i])) {
+            $subject = preg_replace("#($words[$i])(?![^<]*>)#i",
+                "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px;'>\${1}</span>",
                 $subject);
         }
     }
@@ -756,48 +1093,91 @@ function highlight_words($word, $subject) {
 }
 
 /**
- * This function sanitize news & article submissions
+ * Sanitize text and remove a potentially dangerous HTML and JavaScript.
  *
- * @param string  $text
- * @param boolean $striptags FALSE if you don't want to remove html tags. TRUE by default
+ * @param string $text          String to be sanitized.
+ * @param bool   $strip_tags    Removes potentially dangerous HTML tags.
+ * @param bool   $strip_scripts Removes <script> tags.
  *
- * @return string
+ * @return string|array Sanitized and safe string.
  */
-function descript($text, $striptags = TRUE) {
+function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE) {
+
+    if (is_array($text) || is_null($text)) {
+        return $text;
+    }
+
+    $text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
+    $text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
+
     // Convert problematic ascii characters to their true values
-    $patterns = array(
-        '#(&\#x)([0-9A-F]+);*#si'                                                                                                       => '',
-        '#(<[^>]+[/\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onfocus|onload|xmlns)[^>]*>#iU' => '>',
-        '#([a-z]*)=([\`\'\"]*)script:#iU'                                                                                               => '$1=$2nojscript...',
-        '#([a-z]*)=([\`\'\"]*)javascript:#iU'                                                                                           => '$1=$2nojavascript...',
-        '#([a-z]*)=([\'\"]*)vbscript:#iU'                                                                                               => '$1=$2novbscript...',
-        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU'                                                                             => "$1>",
-        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'                                                                              => "$1>"
-    );
-    foreach (array_merge(array('(', ')', ':'), range('A', 'Z'), range('a', 'z')) as $chr) {
+    $patterns = [
+        '#(&\#x)([0-9A-F]+);*#si'                           => '',
+        '#(/\bon\w+=\S+(?=.*>))#is'                         => '',
+        '#([a-z]*)=([\`\'\"]*)script:#iU'                   => '$1=$2nojscript...',
+        '#([a-z]*)=([\`\'\"]*)javascript:#iU'               => '$1=$2nojavascript...',
+        '#([a-z]*)=([\'\"]*)vbscript:#iU'                   => '$1=$2novbscript...',
+        '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>",
+        '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU'  => "$1>"
+    ];
+
+    foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
         $patterns["#(&\#)(0*".ord($chr)."+);*#si"] = $chr;
     }
-    if ($striptags) {
+
+    if ($strip_tags) {
         do {
             $count = 0;
-            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
-                "", $text, -1, $count);
+            $text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
         } while ($count);
     }
 
-    return preg_replace(array_keys($patterns), $patterns, $text);
+    $text = preg_replace(array_keys($patterns), $patterns, $text);
+
+    $preg_patterns = [
+        // Fix &entity\n
+        '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;',
+        '/(&#*\w+)[\x00-\x20]+;/u'                                                                                                                                                                      => '$1;>',
+        '/(&#x*[0-9A-F]+);*/iu'                                                                                                                                                                         => '$1;',
+        // Remove any attribute starting with "on" or xml name space
+        '#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>',
+        // Remove any xss injected without a closing tag
+        '#(<[^>]+?\s*[\x00-\x20"\'\\\\\/])((?:on|xmlns)+[=\w\d()]*+)#iu'                                                                                                                                => '$1>',
+        // javascript: and VB script: protocols
+        '#([a-z]*)[\x00-\x20]*=[\x00-\x20]*([`\'"]*)[\x00-\x20]*j[\x00-\x20]*a[\x00-\x20]*v[\x00-\x20]*a[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu' => '$1=$2nojavascript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iu'                                        => '$1=$2novbscript...',
+        '#([a-z]*)[\x00-\x20]*=([\'"]*)[\x00-\x20]*-moz-binding[\x00-\x20]*:#u'                                                                                                                         => '$1=$2nomozbinding...',
+        // Only works in IE: <span style="width: expression(alert('Ping!'));"></span>
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>',
+        '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu'                                                  => '$1>',
+        // namespace elements
+        '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => ''
+    ];
+
+    if ($strip_scripts) {
+        $preg_patterns += [
+            '#<script(.*?)>(.*?)</script>#is' => ''
+        ];
+    }
+
+    foreach ($preg_patterns as $pattern => $replacement) {
+        $text = preg_replace($pattern, $replacement, $text);
+    }
+
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8', FALSE);
 }
 
 /**
- * Scan image files for malicious code
+ * Scan image files for malicious code.
  *
- * @param string $file
+ * @param string $file Path to image.
  *
- * @return boolean
+ * @return bool True or false, depending on whether the image is safe or not.
  */
 function verify_image($file) {
+
     $txt = file_get_contents($file);
-    $patterns = array(
+    $patterns = [
         '#\<\?php#i',
         '#&(quot|lt|gt|nbsp);#i',
         '#&\#x([0-9a-f]+);#i',
@@ -808,7 +1188,7 @@ function verify_image($file) {
         "#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU",
         "#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU",
         "#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i"
-    );
+    ];
     foreach ($patterns as $pattern) {
         if (preg_match($pattern, $txt)) {
             return FALSE;
@@ -819,18 +1199,19 @@ function verify_image($file) {
 }
 
 /**
- * Replace offensive words with the defined replacement word
+ * Replace offensive words with the defined replacement word.
+ * The list of offensive words and the replacement word are both defined in the Security Settings.
  *
- * @param string $text
+ * @param string $text Text that should be censored.
  *
- * @return string
+ * @return string Censored text.
  */
 function censorwords($text) {
-    $settings['bad_words'] = trim(fusion_get_settings('bad_words'));
-    $settings['bad_words_enabled'] = (boolean)fusion_get_settings('bad_words_enabled');
-    $settings['bad_word_replace'] = fusion_get_settings('bad_word_replace');
-    if ($settings['bad_words_enabled'] && $settings['bad_words']) {
-        $words = preg_quote($settings['bad_words'], "/");
+
+    $settings = fusion_get_settings();
+
+    if ($settings['bad_words_enabled'] && !empty($settings['bad_words'])) {
+        $words = preg_quote(trim($settings['bad_words']), "/");
         $words = preg_replace("/\\s+/", "|", $words);
         $text = preg_replace("/".$words."/si", $settings['bad_word_replace'], $text);
     }
@@ -839,49 +1220,48 @@ function censorwords($text) {
 }
 
 /**
- * Get a user level's name by the numeric code of level
+ * Get a user level's name by the numeric code of level.
  *
- * @global array $locale
+ * @param int $userlevel Level code.
  *
- * @param int    $userlevel
- *
- * @return string
+ * @return string The name of the given user level, null if it does not exist.
  */
 function getuserlevel($userlevel) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $userlevels = array(
-        -101 => $locale['user1'],
-        -102 => $locale['user2'],
-        -103 => $locale['user3']
-    );
 
-    return isset($userlevels[$userlevel]) ? $userlevels[$userlevel] : NULL;
+    $locale = fusion_get_locale();
+    $userlevels = [
+        USER_LEVEL_MEMBER      => $locale['user1'],
+        USER_LEVEL_ADMIN       => $locale['user2'],
+        USER_LEVEL_SUPER_ADMIN => $locale['user3']
+    ];
+
+    return $userlevels[$userlevel] ?? NULL;
 }
 
 /**
- * Get a user status by the numeric code of the status
+ * Get a user status by the numeric code of status.
  *
- * @global array $locale
+ * @param int $userstatus Status code 0 - 8.
  *
- * @param int    $userstatus
- *
- * @return string|NULL NULL if the status does not exist
+ * @return string|null The name of the given user status, null if it does not exist.
  */
 function getuserstatus($userstatus) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
+
+    $locale = fusion_get_locale();
 
     return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status'.$userstatus] : NULL;
 }
 
 /**
- * Check if Administrator has correct rights assigned
+ * Check if an Administrator has the correct rights assigned.
  *
- * @param string $right The code of the right
+ * @param string $rights Rights you want to check for the administrator.
  *
- * @return boolean
+ * @return bool True if the user is an Administrator with rights defined in $rights.
  */
-function checkrights($right) {
-    if (iADMIN && in_array($right, explode(".", iUSER_RIGHTS))) {
+function checkrights($rights) {
+
+    if (iADMIN && in_array($rights, explode(".", iUSER_RIGHTS))) {
         return TRUE;
     } else {
         return FALSE;
@@ -889,13 +1269,14 @@ function checkrights($right) {
 }
 
 /**
- * Function to redirect on invalid page access.
+ * Check the user has rights and redirect if the user does not have rights for the page.
  *
- * @param      $rights
- * @param bool $debug
+ * @param string $rights Rights you want to check for the administrator.
+ * @param bool   $debug  For debugging purposes.
  */
-function pageAccess($rights, $debug = FALSE) {
-    $error = array();
+function pageaccess($rights, $debug = FALSE) {
+
+    $error = [];
     if ($debug) {
         print_p('Admin Panel mode');
     }
@@ -926,63 +1307,100 @@ function pageAccess($rights, $debug = FALSE) {
 }
 
 /**
- * Check if user is assigned to the specified user group
+ * Check if user is assigned to the specified user group(s).
  *
- * @param int $group
+ * @param int    $group The group number you want to check for the user.
+ * @param string $delim Delimiter.
  *
- * @return boolean
+ * @return bool True if the user is in the group.
  */
-function checkgroup($group) {
-    if (iSUPERADMIN) {
-        return TRUE;
-    } elseif (iADMIN && ($group == "0" || $group == "-101" || $group == "-102")) {
-        return TRUE;
-    } elseif (iMEMBER && ($group == "0" || $group == "-101")) {
-        return TRUE;
-    } elseif (iGUEST && $group == "0") {
-        return TRUE;
-    } elseif (iMEMBER && $group && in_array($group, explode(".", iUSER_GROUPS))) {
-        return TRUE;
+function checkgroup($group, $delim = ',') {
+
+    if (strpos($group, $delim) !== FALSE) {
+        foreach (explode($delim, $group) as $group_) {
+            if (iSUPERADMIN) {
+                return TRUE;
+            } else if (iADMIN && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER || $group_ == USER_LEVEL_ADMIN)) {
+                return TRUE;
+            } else if (iMEMBER && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER)) {
+                return TRUE;
+            } else if (iGUEST && $group_ == 0) {
+                return TRUE;
+            } else if (iMEMBER && $group_ && in_array($group_, explode(".", iUSER_GROUPS))) {
+                return TRUE;
+            }
+        }
     } else {
-        return FALSE;
+        if (iSUPERADMIN) {
+            return TRUE;
+        } else if (iADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
+            return TRUE;
+        } else if (iMEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
+            return TRUE;
+        } else if (iGUEST && $group == 0) {
+            return TRUE;
+        } else if (iMEMBER && $group && in_array($group, explode('.', iUSER_GROUPS))) {
+            return TRUE;
+        }
     }
+
+    return NULL;
 }
 
 /**
- * Check access given a user level and user group
+ * Check if user is assigned to the specified user group(s) and has the required user level.
  *
- * @param $group
- * @param $user_level
- * @param $user_groups
+ * @param int    $group       The group number(s) you want to check for the user.
+ * @param int    $user_level  User level.
+ * @param string $user_groups Assigned groups to the user.
+ * @param string $delim       Delimiter.
  *
- * @return bool
+ * @return bool True if the user has access.
  */
-function checkusergroup($group, $user_level, $user_groups) {
-    if ($user_level == USER_LEVEL_SUPER_ADMIN) {
-        return TRUE;
-    } elseif ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == '-101' || $group == '-102')) {
-        return TRUE;
-    } elseif ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == '-101')) {
-        return TRUE;
-    } elseif ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
-        return TRUE;
-    } elseif ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
-        return TRUE;
+function checkusergroup($group, $user_level, $user_groups, $delim = ',') {
+
+    if (strpos($group, $delim) !== FALSE) {
+        foreach (explode($delim, $group) as $group_) {
+            if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_ADMIN && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER || $group_ == USER_LEVEL_ADMIN)) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_MEMBER && ($group_ == 0 || $group_ == USER_LEVEL_MEMBER)) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_PUBLIC && $group_ == 0) {
+                return TRUE;
+            } else if ($user_level == USER_LEVEL_MEMBER && $group_ && in_array($group_, explode('.', $user_groups))) {
+                return TRUE;
+            }
+        }
+    } else {
+        if ($user_level == USER_LEVEL_SUPER_ADMIN) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_ADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_MEMBER && ($group == 0 || $group == USER_LEVEL_MEMBER)) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_PUBLIC && $group == 0) {
+            return TRUE;
+        } else if ($user_level == USER_LEVEL_MEMBER && $group && in_array($group, explode('.', $user_groups))) {
+            return TRUE;
+        }
     }
 
-    return FALSE;
+    return NULL;
 }
 
 /**
- * Cache groups' data into an array
+ * Cache of all user groups from the database.
  *
- * @return array
+ * @return array Array of all user groups.
  */
 function cache_groups() {
+
     static $groups_cache = NULL;
     if ($groups_cache === NULL) {
-        $groups_cache = array();
-        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id ASC");
+        $groups_cache = [];
+        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." ORDER BY group_id");
         while ($data = dbarray($result)) {
             $groups_cache[] = $data;
         }
@@ -992,72 +1410,76 @@ function cache_groups() {
 }
 
 /**
- * Compile access levels & user group array
+ * Gets all access levels and user groups and make one array out of them for easy access and usage.
  *
- * @global array $locale
- * @return array structure of elements: array($levelOrGroupid, $levelnameOrGroupname, $levelGroupDescription,
- *               $levelGroupIcon)
+ * @return array  Array of all access levels and user groups.
  */
 function getusergroups() {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $groups_array = array(
-        array("0", $locale['user0'], $locale['user0'], 'fa fa-user'),
-        array("-101", $locale['user1'], $locale['user1'], 'fa fa-user'),
-        array("-102", $locale['user2'], $locale['user2'], 'fa fa-user'),
-        array("-103", $locale['user3'], $locale['user3'], 'fa fa-user')
-    );
+
+    $locale = fusion_get_locale();
+    $groups_array = [
+        [USER_LEVEL_PUBLIC, $locale['user0'], $locale['user0'], 'fa fa-user'],
+        [USER_LEVEL_MEMBER, $locale['user1'], $locale['user1'], 'fa fa-user'],
+        [USER_LEVEL_ADMIN, $locale['user2'], $locale['user2'], 'fa fa-user'],
+        [USER_LEVEL_SUPER_ADMIN, $locale['user3'], $locale['user3'], 'fa fa-user']
+    ];
     $groups_cache = cache_groups();
     foreach ($groups_cache as $group) {
         $group_icon = !empty($group['group_icon']) ? $group['group_icon'] : '';
-        array_push($groups_array, array($group['group_id'], $group['group_name'], $group['group_description'], $group_icon));
+        array_push($groups_array, [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon]);
     }
 
     return $groups_array;
 }
 
 /**
- * Get the name of the access level or user group
+ * Get the name of the access level or user group.
  *
- * @global array  $locale
+ * @param int  $group_id    The ID of the group or access level to which you want to get a name.
+ * @param bool $return_desc If true, description will be returned instead of name.
+ * @param bool $return_icon If true, icon will be returned next to name.
  *
- * @param int     $group_id
- * @param boolean $return_desc If TRUE, group_description will be returned instead of group_name
- * @param boolean $return_icon If TRUE, group_icon will be returned instead of group_icon group_name
- *
- * @return array
+ * @return string The name or icon or description of the given group, null if it does not exist.
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE) {
 
-    foreach (getusergroups() as $key => $group) {
-
+    foreach (getusergroups() as $group) {
         if ($group_id == $group[0]) {
             return ($return_desc ? ($group[2] ?: '-') : (!empty($group[3]) && $return_icon ? "<i class='".$group[3]."'></i> " : "").$group[1]);
         }
     }
 
-    return FALSE;
+    return NULL;
 }
 
 /**
- * Get All Groups Arrays
+ * Gets array of all access levels and user groups.
  *
- * @return array
+ * @param array $remove Array of groups you want to exclude from output.
+ *
+ * @return array Array of all access levels and user groups.
  */
-function fusion_get_groups() {
-    $visibility_opts = array();
-    foreach (getusergroups() as $groups) {
-        $visibility_opts[$groups[0]] = $groups[1];
+function fusion_get_groups($remove = []) {
+
+    $visibility_opts = [];
+    $groups = array_diff_key(getusergroups(), array_flip($remove));
+    foreach ($groups as $group) {
+        $visibility_opts[$group[0]] = $group[1];
     }
 
     return $visibility_opts;
 }
 
 /**
- * Getting the real users_group access.
- * Return true or false. (BOOLEAN)
+ * Check if user has access to the group.
+ *
+ * @param int $group_id The ID of the group.
+ *
+ * @return bool True if the user has access.
  */
-function users_groupaccess($field) {
-    if (preg_match("(^\.{$field}$|\.{$field}\.|\.{$field}$)", fusion_get_userdata('user_groups'))) {
+function users_groupaccess($group_id) {
+
+    if (preg_match("(^\.$group_id$|\.$group_id\.|\.$group_id$)", fusion_get_userdata('user_groups'))) {
         return TRUE;
     }
 
@@ -1065,92 +1487,144 @@ function users_groupaccess($field) {
 }
 
 /**
- * Getting the access levels used when asking the database for data
+ * Getting the access levels used when asking the database for data.
  *
- * @param string $field
+ * @param string $field MySQL's field from which you want to check access.
+ * @param string $delim Delimiter.
  *
- * @return string The part of WHERE clause. Always returns a condition
+ * @return string The part of WHERE clause, always returns a condition.
  */
-function groupaccess($field) {
+function groupaccess($field, $delim = ',') {
+
     $res = '';
     if (iGUEST) {
-        $res = $field." = ".USER_LEVEL_PUBLIC;
-    } elseif (iSUPERADMIN) {
+        $res = $field." in (".USER_LEVEL_PUBLIC.")";
+    } else if (iSUPERADMIN) {
         $res = "1 = 1";
-    } elseif (iADMIN) {
+    } else if (iADMIN) {
         $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.", ".USER_LEVEL_ADMIN.")";
-    } elseif (iMEMBER) {
+    } else if (iMEMBER) {
         $res = $field." in (".USER_LEVEL_PUBLIC.", ".USER_LEVEL_MEMBER.")";
     }
+
     if (iUSER_GROUPS != "" && !iSUPERADMIN) {
-        $res = "(".$res." OR $field='".str_replace(".", "' OR $field='", iUSER_GROUPS)."')";
+        $groups = explode('.', iUSER_GROUPS);
+        $groups_ = [];
+        foreach ($groups as $group) {
+            $groups_[] = in_group($field, $group, $delim);
+        }
+        $group_sql = implode(' OR ', $groups_);
+        $res = "(".$res." OR ".$group_sql.")";
     }
 
     return $res;
 }
 
 /**
- * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
+ * Get the data of the access level or user group.
  *
- * @global string[] $userdata
- *
- * @param strig     $field The name of the field
- *
- * @return string It can return an empty condition!
- */
-function blacklist($field) {
-    $userdata = fusion_get_userdata('user_id');
-    $blacklist = array();
-    if (in_array('user_blacklist', fieldgenerator(DB_USERS))) {
-        $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE user_blacklist REGEXP('^\\\.{$userdata['user_id']}$|\\\.{$userdata['user_id']}\\\.|\\\.{$userdata['user_id']}$')");
-        if (dbrows($result) > 0) {
-            while ($data = dbarray($result)) {
-                if ($data['user_level'] > -102) {
-                    $blacklist[] = $data['user_id']; // all users to filter
-                }
-            }
-        }
-        $i = 0;
-        $sql = '';
-        foreach ($blacklist as $id) {
-            $sql .= ($i > 0) ? "AND $field !='$id'" : "($field !='$id'";
-            $i++;
-        }
-        $sql .= $sql ? ")" : ' 1=1 ';
-
-        return "$sql";
-    } else {
-        return "";
-    }
-}
-
-/**
- * check if user was blacklisted by a member
- *
- * @global string[] $userdata
- *
- * @param int       $user_id
- *
- * @return boolean
- */
-function user_blacklisted($user_id) {
-
-    return in_array('user_blacklist', fieldgenerator(DB_USERS)) and in_array($user_id, explode('.', fusion_get_userdata('user_blacklist')));
-}
-
-/**
- * Create a list of files or folders and store them in an array
- *
- * @param string  $folder
- * @param string  $filter     - The names of the filtered folder separated by "|"
- * @param boolean $sort       - FALSE if you don't want to sort the result. TRUE by default
- * @param string  $type       - possible values: 'files' to list files, 'folders' to list folders
- * @param string  $ext_filter - file extensions separated by "|". Only when $type is 'files'
+ * @param int $group_id The ID of the group.
  *
  * @return array
  */
-function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filter = "") {
-    $res = array();
+function getgroupdata($group_id) {
+
+    foreach (getusergroups() as $group) {
+        if ($group_id == $group[0]) {
+            return $group;
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * UF blacklist for SQL - same as groupaccess() but $field is the user_id column.
+ *
+ * @param string $field The name of the field
+ *
+ * @return string SQL condition. It can return an empty condition if the user_blacklist field is not installed!
+ */
+function blacklist($field) {
+
+    if (column_exists('users', 'user_blacklist')) {
+        $user_id = fusion_get_userdata('user_id');
+        if (!empty($user_id)) {
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $user_id));
+            if (dbrows($result) > 0) {
+                $i = 0;
+                $sql = '';
+
+                while ($data = dbarray($result)) {
+                    $sql .= ($i > 0) ? "AND $field !='".$data['user_id']."'" : "($field !='".$data['user_id']."'";
+                    $i++;
+                }
+                $sql .= $sql ? ")" : '1=1';
+
+                return $sql;
+            }
+        }
+    }
+
+    return '';
+}
+
+/**
+ * Check if user was blacklisted by a member.
+ *
+ * @param int  $user_id User ID.
+ * @param bool $me      Set true to hide blocked user's content on your account.
+ *
+ * @return bool True if the user is blacklisted.
+ */
+function user_blacklisted($user_id, $me = FALSE) {
+
+    if (column_exists('users', 'user_blacklist')) {
+        $my_id = fusion_get_userdata('user_id');
+        if ($me && !empty(fusion_get_userdata('user_blacklist'))) {
+            $blacklist = explode(',', fusion_get_userdata('user_blacklist'));
+            if (!empty($blacklist)) {
+                foreach ($blacklist as $id) {
+                    if ($id == $user_id) {
+                        return TRUE;
+                    }
+                }
+            }
+        } else {
+            $result = dbquery("SELECT user_id, user_level FROM ".DB_USERS." WHERE ".in_group('user_blacklist', $my_id));
+            if (dbrows($result) > 0) {
+                while ($data = dbarray($result)) {
+                    if ($user_id == $data['user_id']) {
+                        return TRUE;
+                    }
+                }
+            }
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ * Create a list of files or folders and store them in an array.
+ *
+ * @param string $folder     Path to folder.
+ * @param string $filter     The names of the filtered folders and files separated by |, false to use default filter.
+ * @param bool   $sort       False if you don't want to sort the result.
+ * @param string $type       Possible value: files, folders.
+ * @param string $ext_filter File extensions separated by |, only when $type is 'files'.
+ *
+ * @return array Array of all items.
+ */
+function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = "") {
+
+    $res = [];
+
+    $default_filters = '.|..|.htaccess|index.php|._DS_STORE|.tmp';
+    if ($filter === FALSE) {
+        $filter = $default_filters;
+    }
+
     $filter = explode("|", $filter);
     if ($type == "files" && !empty($ext_filter)) {
         $ext_filter = explode("|", strtolower($ext_filter));
@@ -1168,7 +1642,8 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
                         $res[] = $file;
                     }
                 }
-            } elseif ($type == "folders" && !in_array($file, $filter)) {
+            } else if
+            ($type == "folders" && !in_array($file, $filter)) {
                 if (is_dir($folder.$file)) {
                     $res[] = $file;
                 }
@@ -1176,8 +1651,9 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
         }
         closedir($temp);
         if ($sort) {
-            sort($res);
+            natsort($res);
         }
+
     } else {
         $error_log = debug_backtrace()[1];
         $function = (isset($error_log['class']) ? $error_log['class'] : '').(isset($error_log['type']) ? $error_log['type'] : '').(isset($error_log['function']) ? $error_log['function'] : '');
@@ -1185,65 +1661,44 @@ function makefilelist($folder, $filter, $sort = TRUE, $type = "files", $ext_filt
             '{%folder%}'   => $folder,
             '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>'.$function.'</code>' : '')
         ]);
-        setError(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line'], '');
+        set_error(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
     }
 
     return $res;
 }
 
 /**
- * Create a selection list from an array created by makefilelist()
+ * Creates page navigation.
  *
- * @param string[] $files
- * @param string   $selected
+ * @param int    $rowstart The number of the first listed item.
+ * @param int    $count    The number of entries displayed on one page.
+ * @param int    $total    The total entries which should be displayed.
+ * @param int    $range    The number of page buttons displayed and the range of them.
+ * @param string $link     The base url before the appended part.
+ * @param string $getname  The name of the $_GET parameter that contains the start number.
+ * @param bool   $button   Displays as button.
  *
- * @return string
+ * @return string|bool HTML navigation. False if $count is invalid.
  */
-function makefileopts(array $files, $selected = "") {
-    $res = "";
-    foreach ($files as $file) {
-        $sel = ($selected == $file ? " selected='selected'" : "");
-        $res .= "<option value='".$file."'$sel>".$file."</option>\n";
-    }
-
-    return $res;
-}
-
-/**
- * Making Page Navigation
- *
- * @global array  $locale
- *
- * @param int     $start      The number of the first listed item - $_GET['rowstart']
- * @param int     $count      The number of displayed items - LIMIT on sql
- * @param int     $total      The number of all items - a dbcount of total
- * @param int     $range      The number of links before and after the current page
- * @param string  $link       The base url before the appended part
- * @param string  $getname    the variable name in the query string which stores
- *                            the number of the current page
- * @param boolean $button     Displays as button
- *
- * @return boolean|string FALSE if $count is invalid
- */
-function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = "rowstart", $button = FALSE) {
+function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname = "rowstart", $button = FALSE) {
 
     $locale = fusion_get_locale();
     /* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
        In such case this function will not work properly.
        With this fix (used $settings instead fusion_get_settings) function will work.*/
-    if (fusion_get_settings("bootstrap")) {
-        $tpl_global = "<nav>%s<div class='btn-group'>\n%s</div></nav>\n";
+    if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
+        $tpl_global = "<nav class='pagination'><div class='pagination-row'>%s</div><div class='pagination-nav'><div class='btn-group'>\n%s</div></div></nav>\n";
         $tpl_currpage = "<a class='btn btn-sm btn-default active' href='%s=%d'><strong>%d</strong></a>\n";
         $tpl_page = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
-        $tpl_divider = "</div>\n<div class='btn-group'>";
+        $tpl_divider = "</div>\n<span>...</span>\n<div class='btn-group'>";
         $tpl_firstpage = "<a class='btn btn-sm btn-default' data-value='0' href='%s=0'>1</a>\n";
         $tpl_lastpage = "<a class='btn btn-sm btn-default' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='btn btn-primary btn-block btn-md' data-value='%d' href='%s=%d'>%s</a>\n";
     } else {
-        $tpl_global = "<div class='pagenav'>%s\n%s\n</div>\n";
-        $tpl_currpage = "<span><strong>%d</strong></span>";
+        $tpl_global = "<div class='pagenav'>%s\n%s</div>\n";
+        $tpl_currpage = "<a class='pagenavlink active' href='%s=%d'>%d</a>";
         $tpl_page = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>";
-        $tpl_divider = "...";
+        $tpl_divider = "<span class='pagenavdivider'>...</span>";
         $tpl_firstpage = "<a class='pagenavlink' data-value='0' href='%s=0'>1</a>";
         $tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
         $tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
@@ -1263,8 +1718,9 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
     if ($pg_cnt <= 1) {
         return "";
     }
-    $idx_back = $start - $count;
-    $idx_next = $start + $count;
+    $idx_back = $rowstart - $count;
+    $idx_next = $rowstart + $count;
+
     if ($button == TRUE) {
         if ($idx_next >= $total) {
             return sprintf($tpl_button, 0, $link.$getname, 0, $locale['load_end']);
@@ -1272,8 +1728,23 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
             return sprintf($tpl_button, $idx_next, $link.$getname, $idx_next, $locale['load_more']);
         }
     }
-    $cur_page = ceil(($start + 1) / $count);
-    $res = "";
+
+    $cur_page = ceil(($rowstart + 1) / $count);
+    $idx_fst = max($cur_page - $range, 1);
+    $idx_lst = min($cur_page + $range, $pg_cnt);
+
+    if ($range == 0) {
+        $idx_fst = 1;
+        $idx_lst = $pg_cnt;
+    }
+
+    $res = '';
+
+    if ($cur_page != $idx_fst) {
+        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, '<i class="fas fa-angle-left m-r-5"></i> '.$locale['first']);
+        $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, '<i class="fas fa-angle-double-left m-r-5"></i>'.$locale['previous']);
+    }
+
     if ($idx_back >= 0) {
         if ($cur_page > ($range + 1)) {
             $res .= sprintf($tpl_firstpage, $link.$getname);
@@ -1282,12 +1753,7 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
             }
         }
     }
-    $idx_fst = max($cur_page - $range, 1);
-    $idx_lst = min($cur_page + $range, $pg_cnt);
-    if ($range == 0) {
-        $idx_fst = 1;
-        $idx_lst = $pg_cnt;
-    }
+
     for ($i = $idx_fst; $i <= $idx_lst; $i++) {
         $offset_page = ($i - 1) * $count;
         if ($i == $cur_page) {
@@ -1296,72 +1762,120 @@ function makepagenav($start, $count, $total, $range = 0, $link = "", $getname = 
             $res .= sprintf($tpl_page, $offset_page, $link.$getname, $offset_page, $i);
         }
     }
+
     if ($idx_next < $total) {
         if ($cur_page < ($pg_cnt - $range)) {
             if ($cur_page != ($pg_cnt - $range - 1)) {
                 $res .= $tpl_divider;
             }
+
             $res .= sprintf($tpl_lastpage, ($pg_cnt - 1) * $count, $link.$getname, ($pg_cnt - 1) * $count, $pg_cnt);
         }
     }
 
-    return sprintf($tpl_global, "<small class='m-r-10'>".$locale['global_092']." ".$cur_page.$locale['global_093'].$pg_cnt."</small> ", $res);
+    if ($cur_page != $idx_lst) {
+        $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].'<i class="fas fa-angle-double-right m-l-5"></i>');
+        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].'<i class="fas fa-angle-right m-l-5"></i>');
+    }
+
+    // Upon pressing enter key, redirect
+    add_to_jquery("
+    $('#".$getname."_pg').on('keydown', function(e) {
+        if (e.keyCode === 13) {
+            let v = $(this).val();                
+            if ($.isNumeric(v)) {                               
+               document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
+            }            
+        }
+    });
+    ");
+
+
+    $cur_page_field = form_text($getname.'_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']);
+
+    return sprintf($tpl_global, "<span>".$locale['global_092']."</span> ".$cur_page_field." ".$locale['global_093']." ".$pg_cnt, $res);
 }
 
 /**
- * @param        $scroll_url    The ajax script that loads the content
- * @param int    $rowstart      Current rowstart - $_GET['rowstart']
- * @param int    $total_count   The total rows - dbrows($result);
- * @param string $getname       Default is 'rowstart'
- * @param string $additional_http_query '&section=some_section'
+ * Rowstart count.
+ *
+ * @param int $count The number of entries displayed on one page.
+ * @param int $total The total entries which should be displayed.
+ * @param int $range The number of page buttons displayed and the range of them.
+ *
+ * @return float
+ */
+function rowstart_count($total, $count, $range = 3) {
+
+    if ($total > $count) {
+        $cur_page = ceil(($total + 1) / $count);
+        $pg_cnt = ceil($total / $count);
+        if ($pg_cnt <= 1) {
+            return 0;
+        }
+        $row = min($cur_page + $range, $pg_cnt);
+
+        return ($row - 1) * $count;
+    }
+
+    return 0;
+}
+
+/**
+ * Infinite scroll pagination.
+ *
+ * @param string $scroll_url The ajax script that loads the content.
+ * @param int    $rowstart   The number of the first listed item.
+ * @param int    $count      The number of entries displayed on one page.
+ * @param string $getname    The name of the $_GET parameter that contains the start number.
+ * @param string $http_query Additional http query.
  *
  * @return string
  */
-function infinite_scroll($scroll_url, $rowstart = 0, $total_count, $getname = 'rowstart', $additional_http_query = '') {
-    $script = "<script>
-    var count = $rowstart+1;
-    $(window).scroll(function(){
-      if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
-        if (count <= '$total_count') {
-            loadInfinityContent(count);
-            count++;
+function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', $http_query = '') {
+
+    $locale = fusion_get_locale();
+
+    add_to_jquery("
+        var count = $rowstart+1;
+        $(window).scroll(function(){
+          if ($(window).scrollTop() == ($(document).height() - $(window).height())) {
+            if (count <= '$count') {
+                loadInfinityContent(count);
+                count++;
+            }
+          }
+        });
+       function loadInfinityContent(pageNumber){
+           $('.infiniteLoader').show('fast');
+           $.ajax({
+                  url: '$scroll_url',
+                  type:'GET',
+                  data: 'action=infinite_scroll&$getname='+ pageNumber +'".($http_query ? "&".$http_query : '')."',
+                  success: function(html){
+                      $('.infiniteLoader').hide();
+                      $('#scroll_target').append(html);  // This will be the div where our content will be loaded
+                  }
+              });
+          return false;
         }
-      }
-    });
-   function loadInfinityContent(pageNumber){
-       $('.infiniteLoader').show('fast');
-       $.ajax({
-              url: '$scroll_url',
-              type:'GET',
-              data: 'action=infinite_scroll&$getname='+ pageNumber +'".($additional_http_query ? "&".$additional_http_query : '')."',
-              success: function(html){
-                  $('.infiniteLoader').hide();
-                  $('#scroll_target').append(html);  // This will be the div where our content will be loaded
-              }
-          });
-      return false;
-    }
-    </script>";
-    add_to_jquery(str_replace(['<script>', '</script>'], '', $script));
+    ");
 
     return "
     <div id='scroll_target'></div>
-    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>Loading...</div></div>
+    <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>".$locale['loading']."</div></div>
     ";
 }
 
 /**
- * Hierarchy Page Breadcrumbs
- * This function generates breadcrumbs on all your category needs on $_GET['rownav'] as your cat_id
+ * Hierarchy Page Breadcrumbs, generates breadcrumbs on all your category needs.
  *
- * @param $tree_index - dbquery_tree(DB_NEWS_CATS, "news_cat_id", "news_cat_parent")
- *                    / tree_index(dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent"))
- * @param $tree_full  - dbquery_tree_full(DB_NEWS_CATS, "news_cat_id", "news_cat_parent");
- * @param $id_col     - "news_cat_id",
- * @param $title_col  - "news_cat_name",
- * @param $getname    - cat_id, download_cat_id, news_cat_id, i.e. $_GET['cat_id']
+ * @param array  $tree_index dbquery_tree() or tree_index().
+ * @param array  $tree_full  dbquery_tree_full().
+ * @param string $id_col     The name of the category id column.
+ * @param string $title_col  The name of the category nmae column.
+ * @param string $getname    The name of the $_GET parameter.
  */
-
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav") {
 
     $_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
@@ -1369,13 +1883,14 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
     // Recursive fatal protection
     if (!function_exists('breadcrumb_page_arrays')) {
         function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id) {
-            $crumb = &$crumb;
+
+            $crumb = [];
             if (isset($tree_index[get_parent($tree_index, $id)])) {
                 $_name = get_parent_array($tree_full, $id);
-                $crumb = array(
-                    'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], array("aid"), TRUE) : "",
-                    'title' => isset($_name[$title_col]) ? \PHPFusion\QuantumFields::parse_label($_name[$title_col]) : "",
-                );
+                $crumb = [
+                    'link'  => isset($_name[$id_col]) ? clean_request($getname."=".$_name[$id_col], ["aid"]) : "",
+                    'title' => isset($_name[$title_col]) ? QuantumFields::parseLabel($_name[$title_col]) : "",
+                ];
                 if (get_parent($tree_index, $id) == 0) {
                     return $crumb;
                 }
@@ -1391,86 +1906,117 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
         }
     }
 
-    // then we make a infinity recursive function to loop/break it out.
+    // then we make an infinity recursive function to loop/break it out.
     $crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
     // then we sort in reverse.
-    if (count($crumb['title']) > 1) {
+    $title_count = !empty($crumb['title']) && is_array($crumb['title']) ? count($crumb['title']) > 1 : 0;
+    if ($title_count) {
         krsort($crumb['title']);
         krsort($crumb['link']);
     }
-    if (count($crumb['title']) > 1) {
+    if ($title_count) {
         foreach ($crumb['title'] as $i => $value) {
-            \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'][$i], 'title' => $value]);
+            add_breadcrumb(['link' => $crumb['link'][$i], 'title' => $value]);
             if ($i == count($crumb['title']) - 1) {
-                OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$value);
-                OutputHandler::addToMeta($value);
+                add_to_title($value);
+                add_to_meta($value);
             }
         }
-    } elseif (isset($crumb['title'])) {
-        OutputHandler::addToTitle($GLOBALS['locale']['global_200'].$crumb['title']);
-        OutputHandler::addToMeta($crumb['title']);
-        \PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
+    } else if (isset($crumb['title'])) {
+        add_to_title($crumb['title']);
+        add_to_meta($crumb['title']);
+        add_breadcrumb(['link' => $crumb['link'], 'title' => $crumb['title']]);
     }
 }
 
 /**
- * Format the date & time accordingly
+ * Format the date and time according to the site and user offset.
  *
- * @global string[] $settings
- * @global string[] $userdata
+ * @param string $format  Possible value: shortdate, longdate, forumdate, newsdate or date pattern for the strftime.
+ * @param int    $val     Unix timestamp.
+ * @param array  $options Possible options tz_override.
  *
- * @param string    $format shrtwdate, longdate, forumdate, newsdate or date pattern for the strftime
- * @param int       $val    unix timestamp
- *
- * @return string
+ * @return string String formatted according to the given format string.
+ *                Month and weekday names and other language dependent strings respect the current locale set.
  */
-function showdate($format, $val, $options = array()) {
+function showdate($format, $val, $options = []) {
     $userdata = fusion_get_userdata();
-/*    $tz_server = fusion_get_settings("serveroffset");
-	if (empty($tz_server)) $tz_server = 'Europe/London';*/
-	if (isset($options['tz_override'])) {
-		$tz_client = $options['tz_override'];
-	} else {
+
+    if (isset($options['tz_override'])) {
+        $tz_client = $options['tz_override'];
+    } else {
         if (!empty($userdata['user_timezone'])) {
             $tz_client = $userdata['user_timezone'];
         } else {
-            $tz_client = fusion_get_settings("timeoffset");
+            $tz_client = fusion_get_settings('timeoffset');
         }
-	}
-	if (empty($tz_client)) $tz_client = 'Europe/London';
-//    $server_dtz = new DateTimeZone($tz_server);
-    $client_dtz = new DateTimeZone($tz_client);
-//    $server_dt = new DateTime("now", $server_dtz);
-    $client_dt = new DateTime("now", $client_dtz);
-    //$offset = $client_dtz->getOffset($client_dt) - $server_dtz->getOffset($server_dt);
-    $offset = $client_dtz->getOffset($client_dt);
-
-//    if ($format == "shortdate" || $format == "longdate" || $format == "forumdate" || $format == "newsdate") {
-	if (in_array($format, array("shortdate", "longdate", "forumdate", "newsdate"))) {
-        $format = fusion_get_settings($format);
-        $offset = intval($val) + $offset;
-
-        return strftime($format, $offset);
-    } else {
-        $offset = intval($val) + $offset;
-
-        return strftime($format, $offset);
     }
+
+    if (empty($tz_client)) {
+        $tz_client = 'Europe/London';
+    }
+
+    $offset = 0;
+
+    try {
+        $client_dtz = new DateTimeZone($tz_client);
+        $client_dt = new DateTime('now', $client_dtz);
+        $offset = (int)$client_dtz->getOffset($client_dt);
+    } catch (Exception $e) {
+        set_error(E_CORE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
+    }
+
+    if (!empty($val)) {
+        $offset = (int)$val + $offset;
+        if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
+            $format = fusion_get_settings($format);
+
+            return format_date($format, $offset);
+        }
+
+        return format_date($format, $offset);
+
+    }
+
+    $format = fusion_get_settings($format);
+    $offset = time() + $offset;
+
+    return format_date($format, $offset);
 }
 
 /**
- * Translate bytes into kB, MB, GB or TB by CrappoMan, lelebart fix
+ * Format date - replacement for strftime()
  *
- * @global array  $locale
- *
- * @param int     $size   The number of bytes
- * @param int     $digits Precision
- * @param boolean $dir    TRUE if it is the size of a directory
+ * @param string $format Dateformat
+ * @param int    $time   Timestamp
  *
  * @return string
  */
-function parsebytesize($size, $digits = 2, $dir = FALSE) {
-    global $locale;
+function format_date($format, $time) {
+    $format = str_replace(
+        ['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'],
+        ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'A', 'a', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'],
+        $format
+    );
+
+    $date = DateTimeImmutable::createFromFormat('U', $time);
+
+    return $date->format($format);
+}
+
+/**
+ * Translate bytes into kB, MB, GB or TB.
+ *
+ * @param int  $size     The number of bytes.
+ * @param int  $decimals The number of decimals.
+ * @param bool $dir      True if it is the size of a directory.
+ *
+ * @return string
+ */
+function parsebytesize($size, $decimals = 2, $dir = FALSE) {
+
+    $locale = fusion_get_locale();
+
     $kb = 1024;
     $mb = 1024 * $kb;
     $gb = 1024 * $mb;
@@ -1480,69 +2026,36 @@ function parsebytesize($size, $digits = 2, $dir = FALSE) {
 
     if (($size == 0) && ($dir)) {
         return "0 ".$locale['global_460'];
-    } elseif ($size < $kb) {
+    } else if ($size < $kb) {
         return $size.$locale['global_461'];
-    } elseif ($size < $mb) {
-        return round($size / $kb, $digits).$locale['global_462'];
-    } elseif ($size < $gb) {
-        return round($size / $mb, $digits).$locale['global_463'];
-    } elseif ($size < $tb) {
-        return round($size / $gb, $digits).$locale['global_464'];
+    } else if ($size < $mb) {
+        return round($size / $kb, $decimals).'kB';
+    } else if ($size < $gb) {
+        return round($size / $mb, $decimals).'MB';
+    } else if ($size < $tb) {
+        return round($size / $gb, $decimals).'GB';
     } else {
-        return round($size / $tb, $digits).$locale['global_465'];
+        return round($size / $tb, $decimals).'TB';
     }
 }
 
 /**
- * User profile link
+ * Prints human-readable information about a variable.
  *
- * @global array    $locale
- * @global string[] $settings
+ * @param mixed $data  The expression to be printed.
+ * @param bool  $modal Dump info in the modal.
+ * @param bool  $print Dump info in <pre> tag.
  *
- * @param int       $user_id
- * @param string    $user_name
- * @param int       $user_status
- * @param string    $class html class of link
- *
- * @return string
+ * @return string The value of the variable.
  */
-function profile_link($user_id, $user_name, $user_status, $class = "profile-link", $display_link = TRUE) {
+function print_p($data, $modal = FALSE, $print = TRUE) {
 
-    $locale = fusion_get_locale();
-    $settings = fusion_get_settings();
-    $class = ($class ? " class='$class'" : "");
-    if ((in_array($user_status, array(
-                0,
-                3,
-                7
-            )) || checkrights("M")) && (iMEMBER || $settings['hide_userprofiles'] == "0") && $display_link == TRUE
-    ) {
-        $link = "<a href='".BASEDIR."profile.php?lookup=".$user_id."'".$class.">".$user_name."</a>";
-    } elseif ($user_status == "5" || $user_status == "6") {
-        $link = $locale['user_anonymous'];
-    } else {
-        $link = $user_name;
-    }
-
-    return $link;
-}
-
-/**
- * Variable dump printer for debugging purposes
- *
- * @param      $array
- * @param bool $modal
- * @param bool $print
- *
- * @return string
- */
-function print_p($array, $modal = FALSE, $print = TRUE) {
     ob_start();
-    echo htmlspecialchars(print_r($array, TRUE), ENT_QUOTES, 'utf-8');
+    echo htmlspecialchars(print_r($data, TRUE), ENT_QUOTES, 'utf-8');
     $debug = ob_get_clean();
     if ($modal == TRUE) {
         $modal = openmodal('Debug', 'Debug');
-        $modal .= "<pre style='white-space:pre-wrap !important;'>";
+        $modal .= "<pre class='printp' style='white-space:pre-wrap !important;'>";
         $modal .= $debug;
         $modal .= "</pre>\n";
         $modal .= closemodal();
@@ -1551,7 +2064,7 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
         return FALSE;
     }
     if ($print == TRUE) {
-        echo "<pre style='white-space:pre-wrap !important;'>";
+        echo "<pre class='printp' style='white-space:pre-wrap !important;'>";
         echo $debug;
         echo "</pre>\n";
     }
@@ -1560,16 +2073,16 @@ function print_p($array, $modal = FALSE, $print = TRUE) {
 }
 
 /**
- * Fetch the settings from the database
+ * Fetch the settings from the database.
  *
  * @param string $key The key of one setting
  *
- * @return string[]|string Associative array of settings or one setting by key
- *                    if $key was given
+ * @return string[]|string Associative array of settings or one setting by key.
  */
 function fusion_get_settings($key = NULL) {
+
     // It is initialized only once because of 'static'
-    static $settings = array();
+    static $settings = [];
     if (empty($settings) and defined('DB_SETTINGS') and dbconnection() && db_exists('settings')) {
         $result = dbquery("SELECT * FROM ".DB_SETTINGS);
         while ($data = dbarray($result)) {
@@ -1577,139 +2090,132 @@ function fusion_get_settings($key = NULL) {
         }
     }
 
-    return $key === NULL ? $settings : (isset($settings[$key]) ? $settings[$key] : NULL);
+    return $key === NULL ? $settings : ($settings[$key] ?? NULL);
 }
 
 /**
- * Get Locale
+ * Fetch username by ID.
  *
- * Fetch a given locale key
+ * @param int $user_id User ID.
  *
- * @param null   $key          - The key of one setting
- * @param string $include_file - The full path of the file which to be included, can be either string or array
- *
- * @return array|null
- */
-function fusion_get_locale($key = NULL, $include_file = "") {
-    return PHPFusion\Locale::getLocale($key, $include_file);
-}
-
-/**
- * Fetches username
- *
- * @param $user_id
- *
- * @return string
+ * @return string Username.
  */
 function fusion_get_username($user_id) {
-    $result = NULL;
+
     $result = (dbresult(dbquery("SELECT user_name FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"), 0));
 
     return ($result !== NULL) ? $result : fusion_get_locale("na");
 }
 
 /**
- * Get a user own data
+ * Fetch user data of the currently logged-in user from database.
  *
- * @param $key - The column of one user information
+ * @param string $key The key of one column.
  *
- * @return array|null
+ * @return string|array Associative array of all data or one column by key.
  */
 function fusion_get_userdata($key = NULL) {
+
     global $userdata;
     if (empty($userdata)) {
-        $userdata = array("user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default');
+        $userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip" => USER_IP];
     }
-    $userdata = $userdata + array(
-        "user_id"     => 0,
-        "user_name"   => fusion_get_locale("user_guest", LOCALE.LOCALESET."global.php"),
-        "user_status" => 1,
-        "user_level"  => 0,
-        "user_rights" => "",
-        "user_groups" => "",
-        "user_theme"  => fusion_get_settings("theme"),
-    );
+    $userdata = $userdata + [
+            "user_id"     => 0,
+            "user_name"   => fusion_get_locale("user_guest"),
+            "user_status" => 1,
+            "user_level"  => 0,
+            "user_rights" => "",
+            "user_groups" => "",
+            "user_theme"  => fusion_get_settings("theme"),
+        ];
 
-    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : $userdata);
+    return $key === NULL ? $userdata : (isset($userdata[$key]) ? $userdata[$key] : NULL);
 }
 
 /**
- * Get any users data
+ * Get the data of any user by ID.
  *
- * @param      $user_id - the user id
- * @param null $key     - the keys of your user id
+ * @param int    $user_id The user ID.
+ * @param string $key     The key of column.
  *
- * @return mixed
+ * @return string|array Associative array of all data or one column by key.
  */
 function fusion_get_user($user_id, $key = NULL) {
-    global $performance_test;
 
-    static $user = array();
+    static $user = [];
     if (!isset($user[$user_id]) && isnum($user_id)) {
         $user[$user_id] = dbarray(dbquery("SELECT * FROM ".DB_USERS." WHERE user_id='".intval($user_id)."'"));
-        // check how many times this query is made with the same user.
-        $performance_test = $performance_test + 1;
+    }
+    if (!isset($user[$user_id])) {
+        return NULL;
     }
 
-    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : $user);
+    return $key === NULL ? $user[$user_id] : (isset($user[$user_id][$key]) ? $user[$user_id][$key] : NULL);
 }
 
 /**
- * Get Aidlink
+ * Get Aidlink.
  *
  * @return string
  */
 function fusion_get_aidlink() {
+
     $aidlink = '';
     if (defined('iADMIN') && iADMIN && defined('iAUTH')) {
         $aidlink = '?aid='.iAUTH;
     }
 
-    return (string)$aidlink;
+    return $aidlink;
 }
 
 /**
- * Fetch PM Settings
+ * Get form tokens.
  *
- * @param      $user_id
- * @param null $key - user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+ * @param string $form_id    Form ID.
+ * @param int    $max_tokens Max tokens.
  *
- * @return array|bool|null
+ * @return string
+ */
+function fusion_get_token($form_id, $max_tokens = 5) {
+
+    return Token::generate_token($form_id, $max_tokens);
+}
+
+/**
+ * Fetch user PM settings.
+ *
+ * @param int    $user_id User ID.
+ * @param string $key     user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+ *
+ * @return array|string Associative array of all data or one column by key.
  */
 function user_pm_settings($user_id, $key = NULL) {
-    return \PHPFusion\PrivateMessages::get_pm_settings($user_id, $key);
+
+    return PrivateMessages::getPmSettings($user_id, $key);
 }
 
 /**
- * Run the installer or halt the script
- */
-function fusion_run_installer() {
-    if (file_exists("install.php")) {
-        redirect("install.php");
-    } else {
-        die("No config.php or install.php files were found");
-    }
-}
-
-/*-------------------------
- * Language Handling
- +-------------------------/
-
-/**
- * Define Site Language
- * @param $lang
+ * Define constants for site language.
+ *
+ * @param string $lang The name of the language.
  */
 function define_site_language($lang) {
+
     if (valid_language($lang)) {
         define('LANGUAGE', $lang);
         define('LOCALESET', $lang.'/');
     }
 }
 
-// Set the requested language
+/**
+ * Set the requested language.
+ *
+ * @param string $lang The name of the language.
+ */
 function set_language($lang) {
-    global $userdata;
 
+    $userdata = fusion_get_userdata();
     if (valid_language($lang)) {
         if (iMEMBER) {
             dbquery("UPDATE ".DB_USERS." SET user_language='".$lang."' WHERE user_id='".$userdata['user_id']."'");
@@ -1718,28 +2224,29 @@ function set_language($lang) {
             if ($rows != 0) {
                 dbquery("UPDATE ".DB_LANGUAGE_SESSIONS." SET user_language='".$lang."', user_datestamp='".time()."' WHERE user_ip='".USER_IP."'");
             } else {
-                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".TIME."');");
+                dbquery("INSERT INTO ".DB_LANGUAGE_SESSIONS." (user_ip, user_language, user_datestamp) VALUES ('".USER_IP."', '".$lang."', '".time()."');");
             }
             // Sanitize guest sessions occasionally
-            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(TIME - (86400 * 60))."'");
+            dbquery("DELETE FROM ".DB_LANGUAGE_SESSIONS." WHERE user_datestamp<'".(time() - (86400 * 60))."'");
         }
     }
 }
 
 /**
- * Check if a given language is valid or if exists
- * Checks whether a language can be found in enabled languages array
- * Can also be used to check whether a language actually exists
+ * Check if a given language is valid or if exists.
+ * Checks whether a language can be found in enabled languages array.
+ * Can also be used to check whether a language actually exists.
  *
- * @param string $lang
- * @param bool   $file_check intended to be used when enabling languages in Admin Panel
+ * @param string $lang       The name of the language.
+ * @param bool   $file_check Intended to be used when enabling languages in Admin Panel.
  *
  * @return bool
  */
 function valid_language($lang, $file_check = FALSE) {
+
     $enabled_languages = fusion_get_enabled_languages();
-    if (preg_match("/^([a-z0-9_-]){2,50}$/i",
-            $lang) && ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
+    if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) &&
+        ($file_check ? file_exists(LOCALE.$lang."/global.php") : isset($enabled_languages[$lang]))
     ) {
         return TRUE;
     } else {
@@ -1748,120 +2255,36 @@ function valid_language($lang, $file_check = FALSE) {
 }
 
 /**
- * Create a selection list of possible languages in list
- *
- * @todo rename it from get_available_languages_list to a more proper name
- *
- * @param string $selected_language
- *
- * @return string
- */
-function get_available_languages_list($selected_language = "") {
-    $enabled_languages = fusion_get_enabled_languages();
-    $res = "";
-    foreach ($enabled_languages as $language) {
-        $sel = ($selected_language == $language ? " selected='selected'" : "");
-        $label = str_replace('_', ' ', $language);
-        $res .= "<option value='".$language."'$sel>".$label."</option>\n";
-    }
-
-    return $res;
-}
-
-/**
- * Get Language Switch Arrays
+ * Get language switch arrays.
  *
  * @return array
  */
 function fusion_get_language_switch() {
-    static $language_switch = array();
+
+    static $language_switch = [];
     if (empty($language_link)) {
         $enabled_languages = fusion_get_enabled_languages();
         foreach ($enabled_languages as $language => $language_name) {
-            $link = clean_request('lang='.$language, array('lang'), FALSE);
-            $language_switch[$language] = array(
+            $link = clean_request('lang='.$language, ['lang'], FALSE);
+            $language_switch[$language] = [
                 "language_name"   => $language_name,
                 "language_icon_s" => BASEDIR."locale/$language/$language-s.png",
                 "language_icon"   => BASEDIR."locale/$language/$language.png",
                 "language_link"   => $link,
-            );
+            ];
         }
     }
 
-    return (array)$language_switch;
+    return $language_switch;
 }
 
 /**
- * Language switcher function
+ * Get the array of enabled languages.
  *
- * @param bool|TRUE $icon
- */
-function lang_switcher($icon = TRUE) {
-    $locale = fusion_get_locale('', LOCALE.LOCALESET."global.php");
-    $enabled_languages = fusion_get_enabled_languages();
-    if (count($enabled_languages) <= 1) {
-        return;
-    }
-    openside($locale['global_ML102']);
-    echo "<h5><strong>".$locale['UM101']."</strong></h5>\n";
-    if ($icon) {
-        $language_switch = fusion_get_language_switch();
-        if (!empty($language_switch)) {
-            $row = 0;
-            foreach ($language_switch as $folder => $langData) {
-                $icon = "<img class='display-block img-responsive' alt='".$langData['language_name']."' src='".$langData['language_icon']."' title='".$langData['language_name']."' style='min-width:20px;'/>\n";
-                if ($folder != LANGUAGE) {
-                    $icon = "<a class='side pull-left display-block' href='".$langData['language_link']."'>".$icon."</a>\n ";
-                }
-                echo(($row > 0 and $row % 4 === 0) ? '<br />' : '');
-                echo "<div class='display-inline-block clearfix'>\n".$icon."</div>\n";
-                $row++;
-            }
-        }
-    } else {
-        include_once INCLUDES."translate_include.php";
-        echo openform('lang_menu_form', 'post', FUSION_SELF);
-        echo form_select('lang_menu', '', fusion_get_settings('locale'), array("options" => fusion_get_enabled_languages(), "width" => "100%"));
-        echo closeform();
-        add_to_jquery("
-			function showflag(item){
-				return '<div class=\"clearfix\" style=\"width:100%; padding-left:10px;\"><img style=\"height:20px; margin-top:3px !important;\" class=\"img-responsive pull-left\" src=\"".LOCALE."' + item.text + '/'+item.text + '-s.png\"/><span class=\"p-l-10\">'+ item.text +'</span></div>';
-			}
-			$('#lang_menu').select2({
-			placeholder: '".$locale['global_ML103']."',
-			formatSelection: showflag,
-			escapeMarkup: function(m) { return m; },
-			formatResult: showflag,
-			}).bind('change', function(item) {
-				window.location.href = '".FUSION_REQUEST."?lang='+$(this).val();
-			});
-		");
-    }
-    closeside();
-}
-
-
-/**
- * Detect whether the system is installed and return the config file path
- *
- * @return string
- */
-function fusion_detect_installation() {
-    $config_path = dirname(__DIR__).'/config.php';
-    if (!is_file($config_path) or !filesize($config_path)) {
-        fusion_run_installer();
-    }
-
-    return $config_path;
-}
-
-/**
- * Get the array of enabled languages
- *
- * @staticvar string[] $enabled_languages
- * @return string[]
+ * @return array
  */
 function fusion_get_enabled_languages() {
+
     $settings = fusion_get_settings();
     static $enabled_languages = NULL;
 
@@ -1874,10 +2297,16 @@ function fusion_get_enabled_languages() {
         }
     }
 
-    return (array)$enabled_languages;
+    return $enabled_languages;
 }
 
-function fusion_get_detected_language() {
+/**
+ * Get the array of detected languages.
+ *
+ * @return array
+ */
+function fusion_get_detected_languages() {
+
     static $detected_languages = NULL;
     if ($detected_languages === NULL) {
         $all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
@@ -1886,70 +2315,467 @@ function fusion_get_detected_language() {
         }
     }
 
-    return (array)$detected_languages;
+    return $detected_languages;
 }
 
 /**
- * Log user actions
+ * Run the installer or halt the script
+ */
+function fusion_run_installer() {
+
+    if (is_file("install.php")) {
+        redirect("install.php");
+    } else {
+        die("No config.php or install.php files were found");
+    }
+}
+
+/**
+ * Detect whether the system is installed and return the config file path.
  *
- * @param $user_id
- * @param $column_name - affected column
- * @param $new_value
- * @param $old_value
- *                     Note: Showing $action can be done using $locale in 9.1 via registration in a table
+ * @return string
+ */
+function fusion_detect_installation() {
+
+    $config_path = dirname(__DIR__).'/config.php';
+    if (!is_file($config_path) or !filesize($config_path)) {
+        fusion_run_installer();
+    }
+
+    return $config_path;
+}
+
+/**
+ * Log user actions.
+ *
+ * @param int    $user_id     User ID.
+ * @param string $column_name Affected column.
+ * @param string $new_value   New value.
+ * @param string $old_value   Old value.
  */
 function save_user_log($user_id, $column_name, $new_value, $old_value) {
-    $data = array(
+
+    $data = [
         "userlog_id"        => 0,
         "userlog_user_id"   => $user_id,
         "userlog_field"     => $column_name,
         "userlog_value_new" => $new_value,
         "userlog_value_old" => $old_value,
         "userlog_timestamp" => time(),
-    );
-    dbquery_insert(DB_USER_LOG, $data, "save", array("keep_session" => TRUE));
+    ];
+    dbquery_insert(DB_USER_LOG, $data, "save", ["keep_session" => TRUE]);
 }
 
 /**
- * Minify JS Code
+ * Minify JS code.
  *
- * @param $code
+ * @param string $code Unminified code.
  *
- * @return bool|string
+ * @return string Minified code.
  */
 function jsminify($code) {
-    $min = \PHPFusion\Minifier::minify($code, array('flaggedComments' => false));
 
-    return $min;
+    $minifier = new JS($code);
+
+    return $minifier->minify();
 }
 
 /**
- * A wrapper function for file_put_contents with cache invalidation
- *
- * If opcache is enabled on the server, this function will write the file
+ * A wrapper function for file_put_contents with cache invalidation.
+ * If opcache is enabled on the server, this function will write the file.
  * as the original file_put_contents and invalidate the cache of the file.
- *
  * It is needed when you create a file dynamically and want to include it
  * before the cache is invalidated. Redirection does not matter.
  *
- * @todo Find a better place and/or name for this function
- *
- * @param string          $file file path
- * @param string|string[] $data
- * @param int             $flags
+ * @param string       $file File path.
+ * @param string|array $data The data to write.
+ * @param int          $flags
  *
  * @return int Number of written bytes
  */
 function write_file($file, $data, $flags = NULL) {
-    $bytes = NULL;
+
     if ($flags === NULL) {
-        $bytes = \file_put_contents($file, $data);
+        $bytes = file_put_contents($file, $data);
     } else {
-        $bytes = \file_put_contents($file, $data, $flags);
+        $bytes = file_put_contents($file, $data, $flags);
     }
     if (function_exists('opcache_invalidate')) {
-        \opcache_invalidate($file, TRUE);
+        opcache_invalidate($file, TRUE);
     }
 
     return $bytes;
+}
+
+/**
+ * Returns nearest data unit.
+ *
+ * @param int $total_bit Number of bytes.
+ *
+ * @return int
+ */
+function calculate_byte($total_bit) {
+
+    $calc_opts = fusion_get_locale('admins_1020', LOCALE.LOCALESET."admin/settings.php");
+    foreach ($calc_opts as $byte => $val) {
+        if ($total_bit / $byte <= 999) {
+            return (int)$byte;
+        }
+    }
+
+    return 1048576;
+}
+
+/**
+ * Recursively remove folder and all files/subdirectories.
+ *
+ * @param string $dir Path to the folder.
+ */
+function rrmdir($dir) {
+
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != '.' && $object != '..') {
+                if (filetype($dir.'/'.$object) == 'dir') {
+                    rrmdir($dir.'/'.$object);
+                } else {
+                    unlink($dir.'/'.$object);
+                }
+            }
+        }
+        reset($objects);
+        rmdir($dir);
+    }
+}
+
+/**
+ * Alternative to rename() that works on Windows.
+ *
+ * @param string $origin The old name.
+ * @param string $target The new name.
+ */
+function fusion_rename($origin, $target) {
+
+    if ($origin != "." && $origin != ".." && !is_dir($origin)) {
+        if (TRUE !== @rename($origin, $target)) {
+            copy($origin, $target);
+            unlink($origin);
+        }
+    }
+}
+
+/**
+ * cURL method to get any contents for Apache that does not support SSL for remote paths.
+ *
+ * @param string $url
+ *
+ * @return bool|string
+ */
+function fusion_get_contents($url) {
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // PHP 7.1
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $data = @file_get_contents($url);
+    }
+
+    return $data;
+}
+
+/**
+ * Checks whether a string is JSON or not.
+ *
+ * @param string $string The string to be checked.
+ *
+ * @return bool
+ */
+function is_json($string) {
+
+    json_decode($string);
+
+    return (json_last_error() == JSON_ERROR_NONE);
+}
+
+/**
+ * Cached script loader.
+ * This function will cache the path that has been added and avoid duplicates.
+ *
+ * @param string $file_path The source file.
+ * @param string $file_type Possible value: script, css.
+ * @param bool   $html      Return as html tags instead add to output handler.
+ * @param bool   $cached    False to invalidate browser's cache.
+ *
+ * @return string|null
+ */
+function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE) {
+    static $paths = [];
+
+    $file_info = pathinfo($file_path);
+
+    if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
+
+        $mtime = 0;
+        $file = $file_info['dirname'].'/'.$file_info['basename'];
+        $min_file = $file_info['dirname'].'/'.$file_info['filename'].(!stristr($file_info['filename'], '.min') ? '.min.' : '.').$file_info['extension'];
+        // do not inspect this file
+        $return_file = $file;
+        // inspect only on min file
+        $siteurl = fusion_get_settings('siteurl') ?? $_SERVER['HTTP_HOST'];
+        $m_min_file = str_replace($siteurl, BASEDIR, $min_file);
+
+        if (is_file($m_min_file)) { // fixes https:// on local server
+            $return_file = $m_min_file;
+        } else if (is_file($min_file)) { // checks local server
+            $return_file = $min_file;
+        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN)) { // checks remote server
+            // this is very slow... over 10 seconds on some circumstance
+            // if (fusion_get_contents($min_file)) {
+            $return_file = $min_file;
+            // }
+        }
+
+        if (is_file($return_file)) {
+            $mtime = filemtime($return_file);
+        }
+
+        $file_path = $return_file."?v=".$mtime;
+        if (!$cached) {
+            $file_path = $return_file;
+        }
+    }
+
+    if ($file_path && empty($paths[$file_path])) {
+
+        $paths[$file_path] = $file_path;
+
+        if ($file_type == "script") {
+
+            $html_tag = "<script src='$file_path'></script>";
+            if ($html === TRUE) {
+                return $html_tag;
+            }
+            add_to_footer($html_tag);
+
+        } else if ($file_type == "css") {
+            $html_tag = "<link rel='stylesheet' href='$file_path' media='all'>";
+            if ($html === TRUE) {
+                return $html_tag;
+            }
+            add_to_head($html_tag);
+        }
+    }
+
+    return NULL;
+}
+
+/**
+ * Get max server upload limit.
+ *
+ * @return mixed
+ */
+function max_server_upload() {
+
+    // select maximum upload size
+    $max_upload = convert_to_bytes(ini_get('upload_max_filesize'));
+    // select post limit
+    $max_post = convert_to_bytes(ini_get('post_max_size'));
+    // select memory limit
+    $memory_limit = convert_to_bytes(ini_get('memory_limit'));
+
+    // return the smallest of them, this defines the real limit
+    return min($max_upload, $max_post, $memory_limit);
+}
+
+/**
+ * Convert to bytes.
+ *
+ * @param int|string $val
+ *
+ * @return int
+ */
+function convert_to_bytes($val) {
+
+    $val = trim($val);
+    $last = strtolower($val[strlen($val) - 1]);
+    $kb = 1024;
+    $mb = 1024 * $kb;
+    $gb = 1024 * $mb;
+    switch ($last) {
+        case 'g':
+            $val = (int)$val * $gb;
+            break;
+        case 'm':
+            $val = (int)$val * $mb;
+            break;
+        case 'k':
+            $val = (int)$val * $kb;
+            break;
+    }
+
+    return (int)$val;
+}
+
+/**
+ * Get current URL.
+ *
+ * @return string
+ */
+function get_current_url() {
+
+    $s = (empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on")) ? "s" : "";
+    $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
+    $port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":".$_SERVER["SERVER_PORT"]);
+
+    return $protocol."://".$_SERVER['SERVER_NAME'].$port.
+        (str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
+}
+
+/**
+ * @param $s1
+ * @param $s2
+ *
+ * @return false|string
+ */
+function strleft($s1, $s2) {
+
+    return substr($s1, 0, strpos($s1, $s2));
+}
+
+/**
+ * Adds a whitespace if value is present.
+ *
+ * @param string $value
+ *
+ * @return string
+ */
+function whitespace($value) {
+
+    if (!empty($value)) {
+        return " ".$value;
+    }
+
+    return "";
+}
+
+/**
+ * Send a cookie.
+ *
+ * @param string      $name     The name of the cookie.
+ * @param string      $value    The value of the cookie.
+ * @param int         $expires  The time the cookie expires.
+ * @param string      $path     The path on the server in which the cookie will be available on.
+ * @param string      $domain   The (sub)domain that the cookie is available to.
+ * @param bool        $secure   Whether the client should send back the cookie only over HTTPS or null to auto-enable this when the request is already using HTTPS.
+ * @param bool        $httponly Whether the cookie will be made accessible only through the HTTP protocol.
+ * @param string|null $samesite Whether the cookie will be available for cross-site requests. Possible value: none | lax | strict
+ */
+function fusion_set_cookie($name, $value, $expires, $path, $domain, $secure = FALSE, $httponly = FALSE, $samesite = NULL) {
+
+    $samesite = in_array($samesite, ['lax', 'none', 'strict', NULL]) ? $samesite : NULL;
+
+    if (PHP_VERSION_ID < 70300) {
+        if (!headers_sent()) {
+            if ($value !== '') {
+                $expires = $expires !== 0 ? ' expires='.$expires.';' : '';
+                $domain = $domain ? 'domain='.$domain.';' : '';
+                $secure = $secure ? 'secure;' : '';
+                $httponly = $httponly ? 'httponly;' : '';
+                $samesite = $samesite !== NULL ? 'samesite='.$samesite : '';
+
+                header("Set-Cookie: $name=$value; $expires path=$path; $domain $secure $httponly $samesite");
+            } else {
+                setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+            }
+        } else {
+            setcookie($name, $value, $expires, $path, $domain, $secure, $httponly);
+        }
+    } else {
+        setcookie($name,
+            $value,
+            [
+                'expires'  => $expires,
+                'path'     => $path,
+                'domain'   => $domain,
+                'secure'   => $secure,
+                'httponly' => $httponly,
+                'samesite' => $samesite
+            ]);
+    }
+}
+
+/**
+ * Turn on/off maintenance mode.
+ *
+ * @param bool $maintenance Turn On/Off.
+ *
+ * @return bool
+ */
+function maintenance_mode($maintenance = TRUE) {
+
+    $file = BASEDIR.'.maintenance';
+
+    if ($maintenance) {
+        if (!($fp = @fopen($file, 'w'))) {
+            return FALSE;
+        }
+
+        @fwrite($fp, '<?php $mt_mode_start = '.time().'; ?>');
+        @fclose($fp);
+        @chmod($file, 0644);
+
+        return is_readable($file);
+    } else {
+        if (file_exists($file)) {
+            return @unlink($file);
+        }
+
+        return NULL;
+    }
+}
+
+/**
+ * Recursive in_array
+ *
+ * @param mixed $needle   The searched value.
+ * @param array $haystack The array.
+ * @param bool  $strict   If the third parameter strict is set to true then the in_array() function will also check the types of the needle in the haystack.
+ *
+ * @return bool
+ */
+function in_array_r($needle, $haystack, $strict = FALSE) {
+
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+/**
+ * Check if current page is set as homepage.
+ *
+ * @return bool
+ */
+function is_homepage() {
+
+    $settings = fusion_get_settings();
+
+    if ($settings['site_seo']) {
+        $params = http_build_query(\PHPFusion\Rewrite\Router::getRouterInstance()->getFileParams());
+        $path = \PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath();
+        $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
+    } else {
+        $file_path = '/'.PERMALINK_CURRENT_PATH;
+    }
+
+    return $settings['opening_page'] == 'index.php' && $file_path == '/' || $file_path == '/'.$settings['opening_page'];
 }

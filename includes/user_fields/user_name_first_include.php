@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_name_first_include.php
 | Author: Chubatyj Vitalij (Rizado)
@@ -15,13 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if ($profile_method == "input") {
-    $options += array('inline' => TRUE, 'max_length' => 20);
+    $options += ['inline' => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_name_first', $locale['uf_name_first'], $field_value, $options);
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $locale['uf_name_first'], 'value' => $field_value ?: "");
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'title' => $locale['uf_name_first'],
+        'value' => $field_value ?: ''
+    ];
 }

@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) 2002 - 2011 Nick Jones
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: output_handling_include.php
 | Author: Max Toball (Matonor)
@@ -20,12 +20,22 @@
 use PHPFusion\OutputHandler;
 
 /**
- * Set the new title of the page
+ * Set the new title of the page.
+ * Function will replace the title meta tag's content by the one specified by the $title argument.
  *
  * @param string $title
  */
 function set_title($title = "") {
     OutputHandler::setTitle($title);
+}
+
+/**
+ * Get current page title
+ *
+ * @return string
+ */
+function get_title() {
+    return OutputHandler::getTitle();
 }
 
 /**
@@ -78,8 +88,8 @@ function add_to_footer($tag = "") {
 /**
  * Replace something in the output using regexp
  *
- * @param string $target Regexp pattern without delimiters
- * @param string $replace The new content
+ * @param string $target    Regexp pattern without delimiters
+ * @param string $replace   The new content
  * @param string $modifiers Regexp modifiers
  */
 function replace_in_output($target, $replace, $modifiers = "") {
@@ -99,6 +109,7 @@ function add_handler($callback) {
  * Execute the output handlers
  *
  * @param string $output
+ *
  * @return string
  */
 function handle_output($output) {
@@ -108,8 +119,17 @@ function handle_output($output) {
 /**
  * Add javascript source code to the output
  *
- * @param string $tag
+ * @param string $code
  */
-function add_to_jquery($tag = "") {
-    OutputHandler::addToJQuery($tag);
+function add_to_jquery($code = "") {
+    OutputHandler::addToJQuery($code);
+}
+
+/**
+ * Add css code to the output
+ *
+ * @param string $css
+ */
+function add_to_css($css = "") {
+    OutputHandler::addToCss($css);
 }

@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: track.php
 | Author: Chan (Frederick MC Chan)
@@ -16,8 +16,6 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 namespace PHPFusion\Forums\Postify;
-
-use PHPFusion\BreadCrumbs;
 
 /**
  * Thread Tracking
@@ -34,7 +32,7 @@ class Postify_Track extends Forum_Postify {
      */
     public function execute() {
 
-        BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => parent::$locale['forum_0552']]);
+        add_breadcrumb(['link' => FUSION_REQUEST, 'title' => parent::$locale['forum_0552']]);
 
         $thread_data = dbarray(dbquery("SELECT thread_id, forum_id, thread_lastpostid, thread_postcount, thread_subject FROM ".DB_FORUM_THREADS." WHERE thread_id=:thread_id", [':thread_id' => $_GET['thread_id']]));
 
@@ -42,16 +40,16 @@ class Postify_Track extends Forum_Postify {
 
             if (self::$forum_settings['thread_notify']) {
 
-                $thread_data['thread_link'] = FORUM.'viewthread.php?thread_id='.$thread_data['thread_id'].'&pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'];
+                $thread_data['thread_link'] = fusion_get_settings('siteurl').'infusions/forum/viewthread.php?thread_id='.$thread_data['thread_id'].'&pid='.$thread_data['thread_lastpostid'].'#post_'.$thread_data['thread_lastpostid'];
 
                 $forum_index = dbquery_tree(DB_FORUMS, 'forum_id', 'forum_cat');
-                if ($this->check_forum_access($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
+                if ($this->checkForumAccess($forum_index, $_GET['forum_id'], $_GET['thread_id'])) {
                     $description = '';
 
                     switch ($_GET['post']) {
                         case 'on':
                             if (!dbcount("(thread_id)", DB_FORUM_THREAD_NOTIFY, "thread_id='".$_GET['thread_id']."' AND notify_user='".fusion_get_userdata('user_id')."'")) {
-                                dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES ('".$_GET['thread_id']."', NOW(), '".fusion_get_userdata('user_id')."', '1')");
+                                dbquery("INSERT INTO ".DB_FORUM_THREAD_NOTIFY." (thread_id, notify_datestamp, notify_user, notify_status) VALUES ('".$_GET['thread_id']."', '".time()."', '".fusion_get_userdata('user_id')."', '1')");
                                 $description = self::$locale['forum_0553'];
                             }
                             break;
@@ -65,7 +63,7 @@ class Postify_Track extends Forum_Postify {
                     $link[] = ['url' => FORUM."index.php", 'title' => self::$locale['forum_0550']];
                     render_postify([
                         'title'       => self::$locale['forum_0552'],
-                        'error'       => parent::get_postify_error_message(),
+                        'error'       => parent::getPostifyErrorMessage(),
                         'description' => $description,
                         'link'        => $link
                     ]);
@@ -78,7 +76,6 @@ class Postify_Track extends Forum_Postify {
 
                 }
             } else {
-
                 redirect($thread_data['thread_link'], 3);
 
             }

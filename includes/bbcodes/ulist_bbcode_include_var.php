@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: ulist_bbcode_include_var.php
-| Author: Wooya
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,19 +15,20 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-//Unordered list BBCode VARS
-$__BBCODE__[] = array(
-    "description" => $locale['bb_ulist_description'], "value" => "ulist",
-    "bbcode_start" => "[ulist=TYPE]", "bbcode_end" => "[/ulist]",
-    "usage" => "[ulist=(disc|circle|square)]".$locale['bb_ulist_usage']."[/ulist]",
-    "onclick" => "return overlay(this, 'bbcode_ulist_".$textarea_name."', 'rightbottom');",
-    "onmouseover" => "", "onmouseout" => "",
-    "html_start" => "<div id='bbcode_ulist_".$textarea_name."' class='tbl1 bbcode-popup' style='display: none; border:1px solid black; position: absolute; width: auto; height: auto; text-align: center' onclick=\"overlayclose('bbcode_ulist_".$textarea_name."');\">",
-    "includejscript" => "", "calljscript" => "", "phpfunction" => "",
-    "html_middle" => "<input type='button' value='".$locale['bb_ulist_1']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=disc]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_2']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=circle]', '[/ulist]', '".$inputform_name."');return false;\" /><br /><input type='button' value='".$locale['bb_ulist_3']."' class='button' style='width:70px' onclick=\"addText('".$textarea_name."', '[ulist=square]', '[/ulist]', '".$inputform_name."');return false;\" />",
-    "html_end" => "</div>"
-);
+defined('IN_FUSION') || exit;
 
+$__BBCODE__[] = [
+    "description"    => $locale['bb_ulist_description'],
+    "value"          => "ulist", "bbcode_start" => "[ulist=TYPE]", "bbcode_end" => "[/ulist]",
+    "usage"          => "[ulist=(disc|circle|square)]".$locale['bb_ulist_usage']."[/ulist]",
+    "onclick"        => "return false;",
+    "id"             => 'bbcode_ulist_'.$textarea_name,
+    'dropdown_items' => [
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[ulist=disc]', '[/ulist]', '".$inputform_name."');return false;\"><span>".$locale['bb_ulist_1']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[ulist=circle]', '[/ulist]', '".$inputform_name."');return false;\"><span>".$locale['bb_ulist_2']."</span></a>",
+        "<a class='bbcode-link' href='#' onclick=\"addText('".$textarea_name."', '[ulist=square]', '[/ulist]', '".$inputform_name."');return false;\"><span>".$locale['bb_ulist_3']."</span></a>",
+    ],
+    'dropdown'       => TRUE,
+    'dropdown_style' => 'min-width: 50px;',
+    'svg'            => '<i class="fas fa-list-ul fa-lg"></i>'
+];

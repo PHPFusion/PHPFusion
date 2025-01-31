@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation/user.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class User
  * Validates User type Input
@@ -24,74 +25,76 @@ class User extends \Defender\Validation {
     public static function verify_name() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-firstname');
+            fusion_stop();
+            \Defender::setInputError($name.'-firstname');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][1]) {
-            \defender::stop();
-            \defender::setInputError($name.'-lastname');
+            fusion_stop();
+            \Defender::setInputError($name.'-lastname');
         }
-        if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+        if (fusion_safe()) {
+            return Text::verify_text();
         }
+
+        return NULL;
     }
 
     public static function verify_address() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-street-1');
+            fusion_stop();
+            \Defender::setInputError($name.'-street-1');
 
         }
         if (self::$inputConfig['required'] && !$_POST[$name][2]) {
-            \defender::stop();
-            \defender::setInputError($name.'-country');
+            fusion_stop();
+            \Defender::setInputError($name.'-country');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][3]) {
-            \defender::stop();
-            \defender::setInputError($name.'-region');
+            fusion_stop();
+            \Defender::setInputError($name.'-region');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][4]) {
-            \defender::stop();
-            \defender::setInputError($name.'-city');
+            fusion_stop();
+            \Defender::setInputError($name.'-city');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][5]) {
-            \defender::stop();
-            \defender::setInputError($name.'-postcode');
+            fusion_stop();
+            \Defender::setInputError($name.'-postcode');
         }
-        if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+        if (fusion_safe()) {
+            return Text::verify_text();
         }
+
+        return NULL;
     }
 
     public function verify_document() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-1');
+            fusion_stop();
+            \Defender::setInputError($name.'-doc-1');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][1]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-2');
+            fusion_stop();
+            \Defender::setInputError($name.'-doc-2');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][2]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-3');
+            fusion_stop();
+            \Defender::setInputError($name.'-doc-3');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][3]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-4');
+            fusion_stop();
+            \Defender::setInputError($name.'-doc-4');
         }
         if (self::$inputConfig['required'] && !$_POST[$name][4]) {
-            \defender::stop();
-            \defender::setInputError($name.'-doc-5');
+            fusion_stop();
+            \Defender::setInputError($name.'-doc-5');
         }
-        if (\defender::safe()) {
-            $return_value = Text::verify_text();
-            return $return_value;
+        if (fusion_safe()) {
+            return Text::verify_text();
         }
-    }
 
+        return NULL;
+    }
 }

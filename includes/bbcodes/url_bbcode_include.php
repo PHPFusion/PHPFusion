@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: url_bbcode_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if (!function_exists('replace_url')) {
     function replace_url($m) {
@@ -25,14 +23,14 @@ if (!function_exists('replace_url')) {
 
         // Get input url if any, if not get the content as a url but check if has a schema, if not add one
         $this_url = (!empty($m['url']) ? (preg_match("#^((f|ht)tp(s)?://)#i",
-                                                     $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i",
-                                                                                                                 $m['content']) ? $m['content'] : "http://".$m['content']));
+            $m['url']) ? $m['url'] : "http://".$m['url']) : (preg_match("#^((f|ht)tp(s)?://)#i",
+            $m['content']) ? $m['content'] : "http://".$m['content']));
 
         // Trim only the default url
         $content = (empty($m['url']) ? trimlink($m['content'], 40).(strlen($m['content']) > 40 ? substr($m['content'], strlen($m['content']) - 10,
-                                                                                                        strlen($m['content'])) : '') : $m['content']);
+                strlen($m['content'])) : '') : $m['content']);
 
-        return ($index_url_bbcode ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($index_url_bbcode ? "" : "rel='nofollow' ")."title='".urldecode($this_url)."'>".$content."</a>".($index_url_bbcode ? "" : "<!--/noindex-->");
+        return ($index_url_bbcode ? "" : "<!--noindex-->")."<a href='$this_url' target='_blank' ".($index_url_bbcode ? "" : "rel='nofollow noopener noreferrer' ")."title='".urldecode($this_url)."'>".$content."</a>".($index_url_bbcode ? "" : "<!--/noindex-->");
     }
 }
 

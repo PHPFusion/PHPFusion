@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_icq_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,14 +15,12 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-$icon = "<img src='".IMAGES."user_fields/social/icq.svg'/>";
+$icon = "<img src='".IMAGES."user_fields/social/icq.svg' title='ICQ' alt='ICQ'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'           => TRUE,
             'number'           => TRUE,
             'max_length'       => 9,
@@ -31,9 +29,13 @@ if ($profile_method == "input") {
             'error_text'       => $locale['uf_icq_error'],
             'regex_error_text' => $locale['uf_icq_error_1'],
             'label_icon'       => $icon,
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_icq', $locale['uf_icq'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_icq'], 'value' => $field_value ?: "");
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_icq'],
+        'value' => $field_value ?: ''
+    ];
 }

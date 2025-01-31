@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation/uri.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Uri
  * Validates URL Input
@@ -27,9 +28,10 @@ class Uri extends \Defender\Validation {
      */
     protected function verify_URL() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
+
         if (self::$inputValue) {
             $url_parts = parse_url(self::$inputValue);
             $internal_url = fusion_get_settings('siteurl').self::$inputValue;
@@ -38,67 +40,79 @@ class Uri extends \Defender\Validation {
                 $remote_url = 'http://'.self::$inputValue;
                 if (self::validateURL($internal_url) !== FALSE) {
                     return $internal_url;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
+                } else if (self::validateURL($remote_url) !== FALSE) {
                     return $remote_url;
                 }
             } else {
                 $remote_url = self::$inputValue;
                 if (self::validateURL($internal_url) !== FALSE) {
                     return self::$inputValue;
-                } elseif (self::validateURL($remote_url) !== FALSE) {
+                } else if (self::validateURL($remote_url) !== FALSE) {
                     return self::$inputValue;
                 }
             }
-
-            return FALSE;
         }
+
+        return FALSE;
     }
 
 
     /**
      * Validate URL
+     *
      * @param $url
+     *
      * @return bool
      */
     protected static function validateURL($url) {
         if (function_exists('curl_version')) {
-            $fp = curl_init($url);
-            curl_setopt($fp, CURLOPT_TIMEOUT, 20);
-            curl_setopt($fp, CURLOPT_FAILONERROR, TRUE);
-            curl_setopt($fp, CURLOPT_REFERER, $url);
-            curl_setopt($fp, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($fp, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
-            curl_setopt($fp, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_exec($fp);
-            if (curl_errno($fp) != 0) {
-                curl_close($fp);
-                return FALSE;
-            } else {
-                curl_close($fp);
+            $ch = curl_init($url);
+
+            curl_setopt_array($ch, [
+                CURLOPT_TIMEOUT        => 20,
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_NOBODY         => 1,
+                CURLOPT_HEADER         => 0,
+                CURLOPT_RETURNTRANSFER => 0,
+                CURLOPT_SSL_VERIFYHOST => 0,
+                //CURLOPT_SSL_VERIFYPEER => 0 // PHP 7.1
+            ]);
+
+            curl_exec($ch);
+
+            $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $allowed_http = array_flip([301, 302, 200]);
+
+            if (isset($allowed_http[$http_code])) {
                 return $url;
+            } else {
+                return FALSE;
             }
-        } elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED) === FALSE) {
-            return FALSE;
+
+            curl_close($ch);
+        } else if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        } else if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
+            return $url;
         }
 
         return FALSE;
     }
 
-
     /**
      * Verify Paths within CMS
-     * @return bool|string
+     *
+     * @return string|null
      */
     public function verify_path() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
         if (file_exists(self::$inputConfig['path'].self::$inputValue) && is_file(self::$inputConfig['path'].self::$inputValue)) {
             return self::$inputValue;
         }
 
-        return FALSE;
+        return NULL;
     }
-
 }

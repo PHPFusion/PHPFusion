@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_ordering.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,66 +16,41 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-function make_order_opts(&$result, $id_col, $cat_col, $title_col, $order_col) {
+function make_order_opts($result, $id_col, $cat_col, $title_col, $order_col) {
     $master_sort = sorter($result, $order_col);
+    $option = [];
     foreach ($master_sort as $data) {
         $title = $data[$title_col];
         $order = $data[$order_col];
         $cat = $data[$cat_col];
         $id = $data[$id_col];
-        $option[] = array("id" => "$id", "title" => "".$order.". ".$title."", "order" => "$order", "cat" => "$cat");
+        $option[] = ["id" => "$id", "title" => "".$order.". ".$title."", "order" => "$order", "cat" => "$cat"];
         if (array_key_exists("children", $data)) {
             $option = array_merge($option,
-                                  make_order_opts($data['children'], $id_col, $cat_col, $title_col, $order_col));
+                make_order_opts($data['children'], $id_col, $cat_col, $title_col, $order_col));
         }
     }
 
     return $option;
 }
 
-function form_select_order($title, $input_name, $input_id, $option_array, $input_value = FALSE, $chain_to_parent_id, $array = FALSE) {
-    global $_POST;
-    if (!defined("SELECT2")) {
-        define("SELECT2", TRUE);
-        add_to_footer("<script src='".TEMPLATES_LIB."select2/select2.min.js'></script>");
-        add_to_head("<link href='".TEMPLATES_LIB."select2/select2.css' rel='stylesheet' />");
-    }
-    if (!defined("SELECTCHAIN")) {
-        define("SELECTCHAIN", TRUE);
-        add_to_head("<script type='text/javascript' src='".TEMPLATES_LIB."chainselect/jquery.chained.js'></script>");
-    }
+function form_select_order($title, $input_name, $option_array, $input_value, $chain_to_parent_id, $array = FALSE) {
     if (isset($title) && ($title !== "")) {
         $title = stripinput($title);
     } else {
         $title = "";
     }
+
+    $input_id = !empty($input_name) ? $input_name : '';
+
     if (isset($input_name) && ($input_name !== "")) {
         $input_name = stripinput($input_name);
     } else {
         $input_name = "";
     }
-    if (isset($desc) && ($desc !== "")) {
-        $desc = stripinput($desc);
-    } else {
-        $desc = "";
-    }
-    if (isset($input_value) && ($input_value !== "")) {
-        $input_value = stripinput($input_value);
-    } else {
-        $input_value = "";
-    }
-    if (isset($is_order) && ($is_order !== "")) {
-        $is_order = stripinput($is_order);
-    } else {
-        $is_order = "";
-    }
     if (!is_array($array)) {
-        $array = array();
         $state_validation = "";
-        $required = "";
         $placeholder = "";
-        $deactivate = "";
-        $labeloff = "";
         $multiple = "";
         $allowclear = "";
         $width = "style='width:250px;'";
@@ -83,8 +58,6 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         $required = (array_key_exists('required', $array)) ? $array['required'] : "";
         $is_multiple = (array_key_exists('is_multiple', $array)) ? $array['is_multiple'] : "";
         $placeholder = (array_key_exists('placeholder', $array)) ? $array['placeholder'] : "";
-        $deactivate = (array_key_exists('deactivate', $array)) ? $array['deactivate'] : "";
-        $labeloff = (array_key_exists('labeloff', $array)) ? $array['labeloff'] : "";
         $width = (array_key_exists('width', $array)) ? "style='width:".$array['width']."'" : "style='width:250px;'";
         $allowclear = ($placeholder !== "") ? "allowClear:true" : "";
         // $requested by Tyler for his project
@@ -95,8 +68,10 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         }
         $multiple = ($is_multiple == "1") ? "multiple" : "";
     }
-    $html = "";
-    $html .= "<div class='form-group ".$state_validation." lres'><label class='col-lg-3 control-label' for='$input_id'>$title</label>";
+
+    $input_value = clean_input_value($input_value);
+
+    $html = "<div class='form-group ".$state_validation." lres'><label class='col-lg-3 control-label' for='$input_id'>$title</label>";
     $html .= "<div class='col-lg-9'>";
     $html .= "<select name='$input_name' id='$input_id' $width $multiple>";
     if (is_array($option_array)) {
@@ -110,11 +85,6 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
              *  $arr['order'] = "the order"
              *  $arr['title'] = "the name"
              */
-            if ($input_value !== "" && ($arr['order'] == $input_value)) {
-                $select = "selected";
-            } else {
-                $select = "";
-            }
             if (array_key_exists("cat", $arr)) {
                 $subclass = "class='".$arr['cat']."'";
             } else {
@@ -126,16 +96,17 @@ function form_select_order($title, $input_name, $input_id, $option_array, $input
         $html .= "<option value=''></option>";
     }
     $html .= "</select>";
-    $html .= add_to_jquery("
+    add_to_jquery("
         $('#".$input_id."').select2({
-    	placeholder: '".$placeholder."',
-		$allowclear
-		});
-        ");
-    $html .= add_to_jquery("
-    $('#".$input_id."').chained('#".$chain_to_parent_id."');
+        placeholder: '".$placeholder."',
+        $allowclear
+        });
     ");
+    add_to_jquery("$('#".$input_id."').chained('#".$chain_to_parent_id."');");
     $html .= "</div></div>";
+
+    load_select2_script();
+    fusion_load_script(DYNAMICS."assets/chainselect/jquery.chained.js");
 
     return $html;
 }

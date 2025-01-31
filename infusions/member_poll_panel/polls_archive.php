@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: polls_archive.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,14 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_POLLS) && !db_exists(DB_POLL_VOTES)) {
-    redirect(BASEDIR."error.php?code=404");
+require_once __DIR__.'/../../maincore.php';
+if (!defined('MEMBER_POLL_PANEL_EXISTS')) {
+    redirect(BASEDIR.'error.php?code=404');
 }
 
-require_once THEMES."templates/header.php";
-require_once INFUSIONS."member_poll_panel/poll_classes.inc";
+require_once THEMES.'templates/header.php';
+require_once INFUSIONS.'member_poll_panel/poll_classes.php';
 
-MemberPoll::getInstance(TRUE)->archive_poll();
+MemberPoll::getInstance()->pollsArchive();
 
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

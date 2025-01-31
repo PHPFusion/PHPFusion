@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusions.php
-| Author: PHP-Fusion Development Team
-| Co-Author: Christian Damsgaard Jorgensen (PMM)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,79 +15,94 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-require_once THEMES."templates/admin_header.php";
-pageAccess('I');
+use PHPFusion\Installer\Infusions;
+
+require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
+pageaccess('I');
+
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
 $settings = fusion_get_settings();
 
-add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['412']."');});");
-\PHPFusion\BreadCrumbs::getInstance()->addBreadCrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['400']]);
+add_breadcrumb(['link' => ADMIN.'infusions.php'.fusion_get_aidlink(), 'title' => $locale['INF_400']]);
 
-if (($folder = filter_input(INPUT_POST, 'infuse'))) {
-    PHPFusion\Installer\Infusion_Core::getInstance()->infuse($folder);
-} elseif ($folder = filter_input(INPUT_POST, 'defuse')) {
-    PHPFusion\Installer\Infusion_Core::getInstance()->defuse($folder);
+add_to_jquery("$('.defuse').bind('click', function() {return confirm('".$locale['INF_412']."');});");
+if ($folder = post("infuse")) {
+    Infusions::getInstance()->infuse($folder);
+    cdreset('installed_infusions');
+    cdreset('adminpages');
+    cdreset('infsettings');
+    redirect(FUSION_REQUEST);
+} else if ($folder = post("defuse")) {
+    Infusions::getInstance()->defuse($folder);
+    cdreset('installed_infusions');
+    cdreset('adminpages');
+    cdreset('infsettings');
+    redirect(FUSION_REQUEST);
 }
 
-opentable($locale['400']);
-echo "<div class='text-right'>\n";
-echo "<a href='https://www.php-fusion.co.uk/infusions/addondb/directory.php' title='".$locale['422']."' target='_blank'>".$locale['422']."</a>\n";
-echo "</div>\n";
-$temp = opendir(INFUSIONS);
-$infs = array();
-while ($folder = readdir($temp)) {
-    if (!in_array($folder, array("..", ".")) && ($inf = PHPFusion\Installer\Infusion_Core::load_infusion($folder))) {
-        $infs[] = $inf;
+opentable($locale['INF_400']);
+echo "<div class='text-right m-b-20'><a href='https://phpfusion.com/infusions/marketplace/' title='".$locale['INF_422']."' target='_blank'>".$locale['INF_422']."</a></div>";
+
+$infs = [];
+$temp = makefilelist(INFUSIONS, ".|..|index.php", TRUE, "folders");
+foreach ($temp as $folders) {
+    $inf = Infusions::loadInfusion($folders);
+    if (!empty($inf)) {
+        $infs[$folders] = $inf;
     }
 }
-closedir($temp);
-sort($infs);
-if (!isset($_POST['infuse']) && !isset($_POST['infusion']) && !isset($_GET['defuse'])) {
-    $content = "";
-    if ($infs) {
-        $content .= "<div class='list-group'>\n";
-        $content .= "<div class='list-group-item hidden-xs'>\n";
-        $content .= "<div class='row'>\n";
-        $content .= "<div class='col-xs-2 col-sm-4 col-md-2'>\n<strong>".$locale['419']."</strong></div>\n";
-        $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n<strong>".$locale['400']."</strong></div>\n";
-        $content .= "<div class='col-xs-2 col-sm-2 col-md-2'>\n<strong>".$locale['418']."</strong></div>\n";
-        $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['420']."</strong></div>\n";
-        $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3 col-lg-offset-0 col-lg-2'>\n<strong>".$locale['421']."</strong></div>\n";
-        $content .= "</div>\n</div>\n";
 
+if ($infs) {
+    echo "<div class='list-group'>\n";
+    echo "<div class='list-group-item hidden-xs'>\n";
+    echo "<div class='row'>\n";
+    echo "<div class='col-sm-3 col-md-2 col-lg-2'><strong>".$locale['INF_419']."</strong></div>\n";
+    echo "<div class='col-sm-7 col-md-5 col-lg-3'><strong>".$locale['INF_400']."</strong></div>\n";
+    echo "<div class='col-sm-2 col-md-2 col-lg-2'><strong>".$locale['INF_418']."</strong></div>\n";
+    echo "<div class='hidden-sm col-md-1 col-lg-1'><strong>".$locale['rights']."</strong></div>\n";
+    echo "<div class='hidden-sm col-md-2 col-lg-1'><strong>".$locale['INF_420']."</strong></div>\n";
+    echo "<div class='hidden-sm hidden-md col-lg-3'><strong>".$locale['INF_421']."</strong></div>\n";
+    echo "</div>\n</div>\n";
 
-        foreach ($infs as $i => $inf) {
+    foreach ($infs as $i => $inf) {
 
-            $content .= openform('infuseform', 'post', FUSION_SELF.fusion_get_aidlink());
-            $content .= "<div class='list-group-item'>\n";
-            $content .= "<div class='row'>\n";
-            $content .= "<div class='col-xs-2 col-sm-4 col-md-2'>\n";
-            if ($inf['status'] > 0) {
-                if ($inf['status'] > 1) {
-                    $content .= form_button('infuse', $locale['416'], $inf['folder'], array('class' => 'btn-info m-t-5 infuse', 'icon' => ' fa fa-magnet', 'input_id' => 'infuse_'.$i));
-                } else {
-                    $content .= form_button('defuse', $locale['411'], $inf['folder'], array('class' => 'btn-default m-t-5 defuse', 'icon' => 'fa fa-trash', 'input_id' => 'defuse_'.$i));
-                }
+        $adminpanel = !empty($inf['mlt_adminpanel'][LANGUAGE][0]) ? $inf['mlt_adminpanel'][LANGUAGE][0] : ($inf['adminpanel'][0] ?? [
+                'panel'  => $inf['folder'],
+                'rights' => $inf['rights']
+            ]);
+
+        $title = $inf['status'] > 0 ? '<a href="'.INFUSIONS.$inf['folder'].'/'.$adminpanel['panel'].fusion_get_aidlink().'">'.$inf['title'].'</a>' : $inf['title'];
+
+        echo openform('infuseform', 'POST');
+        echo "<div class='list-group-item'>\n";
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-4 col-sm-3 col-md-2 col-lg-2'>\n";
+        if ($inf['status'] > 0) {
+            if ($inf['status'] > 1) {
+                echo form_button('infuse', $locale['INF_416'], $inf['folder'], ['class' => 'btn-info m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i]);
             } else {
-                $content .= form_button('infuse', $locale['401'], $inf['folder'], array('class' => 'btn-primary m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i));
+                echo form_button('defuse', $locale['INF_411'], $inf['folder'], ['class' => 'btn-default m-t-5 defuse', 'icon' => 'fa fa-trash', 'input_id' => 'defuse_'.$i]);
             }
-            $content .= "</div>\n";
-            $content .= "<div class='col-xs-6 col-sm-6 col-md-5 col-lg-4'>\n";
-            $content .= "<div class='pull-left m-r-10'>\n<img style='width:48px;' src='".$inf['image']."' alt='".$inf['name']."'/></div>\n";
-            $content .= "<div class='overflow-hide'>\n<strong>".$inf['title']."</strong><br/>".$inf['description']."</div>\n</div>\n";
-            $content .= "<div class='col-xs-2 col-sm-2 col-md-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['414']."</label></h5>")."</div>\n";
-            $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".($inf['version'] ? $inf['version'] : '')."</div>\n";
-            $content .= "<div class='col-xs-10 col-xs-offset-2 col-sm-10 col-sm-offset-2 col-md-8 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".($inf['developer'] ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['409']."</a>" : '')."</div>\n";
-
-            $content .= "</div>\n</div>\n";
+        } else {
+            echo form_button('infuse', $locale['INF_401'], $inf['folder'], ['class' => 'btn-primary m-t-5 infuse', 'icon' => 'fa fa-magnet', 'input_id' => 'infuse_'.$i]);
+        }
+        echo "</div>\n";
+        echo "<div class='col-xs-8 col-sm-7 col-md-5 col-lg-3'>\n";
+        echo "<div class='hidden-xs pull-left m-r-10'><img style='width:48px;' alt='".$inf['name']."' src='".$inf['image']."'/></div>\n";
+        echo "<div class='overflow-hide'><strong>".$title."</strong><br/>".$inf['description']."</div>";
+        echo "</div>";
+        echo "<div class='hidden-xs col-sm-2 col-md-2 col-lg-2'><h5 class='m-0'>".($inf['status'] > 0 ? "<span class='label label-success'>".$locale['INF_415']."</span>" : "<span class='label label-default'>".$locale['INF_414']."</span>")."</h5></div>\n";
+        echo "<div class='hidden-xs hidden-sm col-md-1 col-lg-1'><span class='badge'>".$adminpanel['rights']."</span></div>\n";
+        echo "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
+        echo "<div class='hidden-xs hidden-sm col-md-12 col-md-offset-2 col-lg-3 col-lg-offset-0'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['INF_409']."</a>" : '')."</div>\n";
+        echo "</div></div>";
     }
-    } else {
-        $content .= "<br /><p class='text-center'>".$locale['417']."</p>\n";
-    }
-
-    $content .= "</div>\n";
-    echo $content;
+} else {
+    echo "<div class='text-center'>".$locale['INF_417']."</div>";
 }
+
+echo "</div>";
+
 closetable();
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

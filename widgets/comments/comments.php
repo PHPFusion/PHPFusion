@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Comments/comments.php
+| Filename: comments.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,12 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class commentsWidget
  */
 class commentsWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
+    public function displayInfo($colData) {
+    }
 
-    public function display_widget($colData) {
+    public function displayWidget($columnData) {
         ob_start();
         require_once INCLUDES."comments_include.php";
         showcomments("C", DB_CUSTOM_PAGES, "page_id", self::$data['page_id'], BASEDIR."viewpage.php?page_id=".self::$data['page_id']);

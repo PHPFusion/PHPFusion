@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: answer.php
 | Author: Chan (Frederick MC Chan)
@@ -15,10 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Forums\Postify;
 
-use PHPFusion\BreadCrumbs;
 use PHPFusion\Forums\Moderator;
 
 /**
@@ -32,11 +30,11 @@ class Postify_Answer extends Forum_Postify {
     public function execute() {
         // no need for permissions.
         $thread_data = dbarray(dbquery("
-        SELECT t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, p.post_id, p.post_author, p.post_answer, 
+        SELECT t.thread_id, t.forum_id, t.thread_lastpostid, t.thread_postcount, t.thread_subject, p.post_id, p.post_author, p.post_answer,
         f.forum_mods, t.thread_answered, t.thread_author
-        FROM ".DB_FORUM_THREADS." t 
+        FROM ".DB_FORUM_THREADS." t
         INNER JOIN ".DB_FORUMS." f ON f.forum_id=t.forum_id
-        INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id 
+        INNER JOIN ".DB_FORUM_POSTS." p ON p.thread_id = t.thread_id
         WHERE t.thread_id=:thread_id AND p.post_id=:post_id",
                 [
                     ':thread_id' => $_GET['thread_id'],
@@ -45,12 +43,16 @@ class Postify_Answer extends Forum_Postify {
             )
         );
         if (!empty($thread_data)) {
-            Moderator::define_forum_mods($thread_data);
+            Moderator::defineForumMods($thread_data);
+
+            $title = '';
+            $description = '';
+
             $thread_data['thread_link'] = fusion_get_settings('siteurl')."infusions/forum/viewthread.php?forum_id=".$thread_data['forum_id']."&thread_id=".$thread_data['thread_id']."&pid=".$thread_data['thread_lastpostid']."#post_".$thread_data['thread_lastpostid'];
             // if this is an author or is a forum moderator
             if (($thread_data['thread_author'] == fusion_get_userdata('user_id') || iMOD)) {
                 add_to_title(self::$locale['global_201'].self::$locale['forum_4001']);
-                BreadCrumbs::getInstance()->addBreadCrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
+                add_breadcrumb(['link' => FUSION_REQUEST, 'title' => self::$locale['forum_4001']]);
 
                 // Accepting the answer
                 // 3 scenarios
@@ -103,8 +105,8 @@ class Postify_Answer extends Forum_Postify {
                     } else {
 
                         $c_result = dbquery("
-                            SELECT r.rep_id, p.post_id, p.thread_id, p.post_author 
-                            FROM ".DB_FORUM_POSTS." p  
+                            SELECT r.rep_id, p.post_id, p.thread_id, p.post_author
+                            FROM ".DB_FORUM_POSTS." p
                             LEFT JOIN  ".DB_FORUM_USER_REP." r ON r.post_id = p.post_id AND r.rep_answer=:answer AND r.user_id=:user_id
                             WHERE  p.thread_id=:thread_id AND p.post_answer=:answer01",
                             [
@@ -144,7 +146,7 @@ class Postify_Answer extends Forum_Postify {
                                 ]
                             );
 
-                            // Give points to the current user if its not self.
+                            // Give points to the current user if it's not self.
                             if ($thread_data['post_author'] !== fusion_get_userdata('user_id')) {
                                 dbquery("UPDATE ".DB_USERS." SET user_reputation=user_reputation+:points WHERE user_id=:user_id", [
                                     ':points'  => self::$forum_settings['answering_points'],
@@ -222,12 +224,13 @@ class Postify_Answer extends Forum_Postify {
 
                 }
             }
+
             render_postify(
                 [
                     'title'       => $title,
                     'description' => $description,
-                    'error'       => $this->get_postify_error_message(),
-                    'link'        => $this->get_postify_uri()
+                    'error'       => $this->getPostifyErrorMessage(),
+                    'link'        => $this->getPostifyUri()
                 ]
             );
         } else {

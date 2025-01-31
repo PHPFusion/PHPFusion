@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Slider/slider_admin.php
+| Filename: slider_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -15,40 +15,41 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class carouselWidgetAdmin
  * To use WidgetAdminInterface - Widget SDK Standard Guidelines
  */
 class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
-    private static $widget_data = array();
-    private static $exclude_return = array('slider', 'sliderAction', 'widgetAction', 'widgetKey');
+    private static $widget_data = [];
+    private static $exclude_return = ['slider', 'sliderAction', 'widgetAction', 'widgetKey'];
     private static $slider_settings = [];
     private static $slider_content = [];
     private static $slider_tab = [];
     private static $slider_locale = [];
     private static $tab_active = '';
     private static $new_slider = FALSE;
-    private static $default_slider_data = array(
-        'slider_image_src' => '',
-        'slider_title' => '',
-        'slider_description' => '',
-        'slider_link' => '',
-        'slider_order' => '',
+    private static $default_slider_data = [
+        'slider_image_src'      => '',
+        'slider_title'          => '',
+        'slider_description'    => '',
+        'slider_link'           => '',
+        'slider_order'          => '',
         'slider_caption_offset' => 100,
-        'slider_caption_align' => 'left',
-        'slider_title_size' => 30,
-        'slider_desc_size' => 15,
-        'slider_btn_size' => 'normal',
-    );
-    private static $default_slider_settings = array(
-        'slider_id' => '',
-        'slider_path' => 0,
-        'slider_height' => '300',
+        'slider_caption_align'  => 'left',
+        'slider_title_size'     => 30,
+        'slider_desc_size'      => 15,
+        'slider_btn_size'       => 'normal',
+    ];
+    private static $default_slider_settings = [
+        'slider_id'         => '',
+        'slider_path'       => 0,
+        'slider_height'     => '300',
         'slider_navigation' => TRUE,
-        'slider_interval' => 200,
-        'slider_indicator' => TRUE,
-    );
+        'slider_interval'   => 200,
+        'slider_indicator'  => TRUE,
+    ];
     private static $widget_instance = NULL;
 
     public static function widgetInstance() {
@@ -57,11 +58,12 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             self::$widget_instance = new static();
 
-            self::$slider_locale = fusion_get_locale('', WIDGETS."slider/locale/".LANGUAGE.".php");
+            $lang = file_exists(WIDGETS."slider/locale/".LANGUAGE.".php") ? WIDGETS."slider/locale/".LANGUAGE.".php" : WIDGETS."slider/locale/English.php";
+            self::$slider_locale = fusion_get_locale('', $lang);
 
             if (!empty(self::$colData['page_content'])) {
 
-                self::$slider_content = \defender::unserialize(self::$colData['page_content']);
+                self::$slider_content = \Defender::unserialize(self::$colData['page_content']);
 
                 // Delete
                 if (isset($_GET['widgetAction']) && isset($_GET['widgetKey']) && isnum($_GET['widgetKey'])) {
@@ -89,10 +91,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                                         }
                                     }
 
-                                    self::$colData['page_content'] = \defender::serialize($slider_arr);
+                                    self::$colData['page_content'] = \Defender::serialize($slider_arr);
                                     dbquery_insert(DB_CUSTOM_PAGES_CONTENT, self::$colData, 'update');
-                                    addNotice('success', self::$slider_locale['SLDW_0200']);
-                                    redirect(clean_request('slider=cur_slider', array('widgetAction', 'widgetKey'), FALSE));
+                                    addnotice('success', self::$slider_locale['SLDW_0200']);
+                                    redirect(clean_request('slider=cur_slider', ['widgetAction', 'widgetKey'], FALSE));
                                 }
 
                                 break;
@@ -101,7 +103,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                                 break;
                         }
                     } else {
-                        redirect(clean_request('slider=cur_slider', array('widgetAction', 'widgetKey'), FALSE));
+                        redirect(clean_request('slider=cur_slider', ['widgetAction', 'widgetKey'], FALSE));
                     }
                 }
             }
@@ -110,7 +112,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
 
             // Parse Slider Settings
             if (!empty(self::$colData['page_options'])) {
-                self::$slider_settings = \defender::unserialize(self::$colData['page_options']);
+                self::$slider_settings = \Defender::unserialize(self::$colData['page_options']);
             }
             self::$slider_settings += self::$default_slider_settings;
 
@@ -134,7 +136,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                 self::$slider_tab['id'][2] = "slider_settings";
 
                 self::$tab_active = isset($_GET['slider']) && in_array($_GET['slider'],
-                                                                       self::$slider_tab['id']) ? $_GET['slider'] : self::$slider_tab['id'][0];
+                    self::$slider_tab['id']) ? $_GET['slider'] : self::$slider_tab['id'][0];
             }
 
         }
@@ -142,35 +144,35 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         return self::$widget_instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
         return self::$exclude_return;
     }
 
-    public function validate_input() {
+    public function validateInput() {
 
-        $widget_data = array();
+        $widget_data = [];
 
         if (!empty(self::$colData['page_content'])) {
-            $widget_data = \defender::unserialize(self::$colData['page_content']);
+            $widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
 
-        $data = array(
-            'slider_title' => form_sanitizer($_POST['slider_title'], '', 'slider_title'),
-            'slider_description' => form_sanitizer($_POST['slider_description'], '', 'slider_description'),
-            'slider_link' => form_sanitizer($_POST['slider_link'], '', 'slider_link'),
-            'slider_order' => form_sanitizer($_POST['slider_order'], 0, 'slider_order'),
+        $data = [
+            'slider_title'          => form_sanitizer($_POST['slider_title'], '', 'slider_title'),
+            'slider_description'    => form_sanitizer($_POST['slider_description'], '', 'slider_description'),
+            'slider_link'           => form_sanitizer($_POST['slider_link'], '', 'slider_link'),
+            'slider_order'          => form_sanitizer($_POST['slider_order'], 0, 'slider_order'),
             'slider_caption_offset' => form_sanitizer($_POST['slider_caption_offset'], 0, 'slider_caption_offset'),
-            'slider_caption_align' => form_sanitizer($_POST['slider_caption_align'], '', 'slider_caption_align'),
-            'slider_title_size' => form_sanitizer($_POST['slider_title_size'], '', 'slider_title_size'),
-            'slider_desc_size' => form_sanitizer($_POST['slider_desc_size'], '', 'slider_desc_size'),
-            'slider_btn_size' => form_sanitizer($_POST['slider_btn_size'], '', 'slider_btn_size')
-        );
+            'slider_caption_align'  => form_sanitizer($_POST['slider_caption_align'], '', 'slider_caption_align'),
+            'slider_title_size'     => form_sanitizer($_POST['slider_title_size'], '', 'slider_title_size'),
+            'slider_desc_size'      => form_sanitizer($_POST['slider_desc_size'], '', 'slider_desc_size'),
+            'slider_btn_size'       => form_sanitizer($_POST['slider_btn_size'], '', 'slider_btn_size')
+        ];
 
         if ($data['slider_order'] == 0) {
             $data['slider_order'] = count($widget_data) + 1;
         }
 
-        if (\defender::safe()) {
+        if (fusion_safe()) {
             if (!empty($_FILES['slider_image_src']['tmp_name'])) {
                 $upload = form_sanitizer($_FILES['slider_image_src'], '', 'slider_image_src');
                 if (empty($upload['error'])) {
@@ -208,34 +210,37 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             $count++;
         }
 
-        if (\defender::safe() && !empty($widget_data)) {
-            $widget_data = \defender::serialize($widget_data);
+        if (fusion_safe() && !empty($widget_data)) {
+            $widget_data = \Defender::serialize($widget_data);
             return $widget_data;
         }
 
+        return NULL;
     }
 
-    public function validate_settings() {
-        $widget_settings = array(
-            'slider_id' => form_sanitizer($_POST['slider_id'], '', 'slider_id'),
-            'slider_path' => form_sanitizer($_POST['slider_path'], '', 'slider_path'),
-            'slider_height' => form_sanitizer($_POST['slider_height'], '', 'slider_height'),
+    public function validateSettings() {
+        $widget_settings = [
+            'slider_id'         => form_sanitizer($_POST['slider_id'], '', 'slider_id'),
+            'slider_path'       => form_sanitizer($_POST['slider_path'], '', 'slider_path'),
+            'slider_height'     => form_sanitizer($_POST['slider_height'], '', 'slider_height'),
             'slider_navigation' => form_sanitizer($_POST['slider_navigation'], 0, 'slider_navigation'),
-            'slider_indicator' => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
-            'slider_interval' => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
-        );
-        if (defender::safe() && !empty($widget_settings)) {
-            return \defender::serialize($widget_settings);
+            'slider_indicator'  => form_sanitizer($_POST['slider_indicator'], 0, 'slider_indicator'),
+            'slider_interval'   => form_sanitizer($_POST['slider_interval'], 0, 'slider_interval')
+        ];
+        if (fusion_safe() && !empty($widget_settings)) {
+            return \Defender::serialize($widget_settings);
         }
+
+        return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
     /*
      * Slider Interface
      */
-    public function display_form_input() {
+    public function displayFormInput() {
 
         echo opentab(self::$slider_tab, self::$tab_active, 'slider_tabs', TRUE, 'm-t-20 nav-tabs', 'slider', ['widgetAction', 'widgetKey']);
 
@@ -258,7 +263,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
     private function slider_content() {
         if (!empty(self::$colData['page_content'])) {
 
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
 
             if (!empty(self::$widget_data)) {
                 ?>
@@ -276,9 +281,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                     $i = 0;
                     foreach (self::$widget_data as $slider) :
                         $edit_link = clean_request("slider=slider_frm&widgetAction=edit&widgetKey=$i",
-                                                   array('widgetAction', 'widgetKey', 'slider'), FALSE);
+                            ['widgetAction', 'widgetKey', 'slider'], FALSE);
                         $del_link = clean_request("slider=cur_slider&widgetAction=del&widgetKey=$i",
-                                                  array('widgetAction', 'widgetKey', 'slider'), FALSE);
+                            ['widgetAction', 'widgetKey', 'slider'], FALSE);
                         ?>
                         <tr>
                             <td><?php echo $slider['slider_title'] ?></td>
@@ -326,9 +331,9 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         }
 
         // Folder options
-        $image_options = array(
+        $image_options = [
             0 => self::$slider_locale['SLDW_0535']
-        );
+        ];
         $options = makefilelist(IMAGES, '.|..|._DS_STORE', TRUE, 'folders', '.|..|._DS_STORE');
         if (!empty($options)) {
             foreach ($options as $folders) {
@@ -336,13 +341,13 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             }
         }
 
-        echo form_text('slider_id', self::$slider_locale['SLDW_0500'], self::$slider_settings['slider_id'], array('inline' => TRUE)).
+        echo form_text('slider_id', self::$slider_locale['SLDW_0500'], self::$slider_settings['slider_id'], ['inline' => TRUE]).
             form_select('slider_path', self::$slider_locale['SLDW_0534'], self::$slider_settings['slider_path'],
-                        array('inline' => TRUE, 'options' => $image_options)).
+                ['inline' => TRUE, 'options' => $image_options]).
             form_text('slider_height', self::$slider_locale['SLDW_0501'], self::$slider_settings['slider_height'],
-                      array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px')).
+                ['inline' => TRUE, 'append' => TRUE, 'append_value' => 'px', 'type' => 'number', 'required' => TRUE, 'width' => '180px']).
             form_text('slider_interval', self::$slider_locale['SLDW_0603'], self::$slider_settings['slider_interval'],
-                  array('inline' => TRUE, 'append' => TRUE, 'append_value' => 'ms', 'type' => 'number', 'required' => TRUE, 'width' => '180px'));
+                ['inline' => TRUE, 'append' => TRUE, 'append_value' => 'ms', 'type' => 'number', 'required' => TRUE, 'width' => '180px']);
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
@@ -350,25 +355,26 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                 <br/><i><?php echo self::$slider_locale['SLDW_0304'] ?></i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                $options = array(
+                $options = [
                     0 => self::$slider_locale['SLDW_0503'],
                     1 => self::$slider_locale['SLDW_0504']
-                );
+                ];
                 echo form_checkbox('slider_navigation', '', self::$slider_settings['slider_navigation'],
-                                   array('type' => 'radio', 'options' => $options));
+                    ['type' => 'radio', 'options' => $options]);
                 ?>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-3"><?php echo self::$slider_locale['SLDW_0505'] ?><br/><i><?php echo self::$slider_locale['SLDW_0506'] ?></i></div>
+            <div class="col-xs-12 col-sm-3"><?php echo self::$slider_locale['SLDW_0505'] ?>
+                <br/><i><?php echo self::$slider_locale['SLDW_0506'] ?></i></div>
             <div class="col-xs-12 col-sm-9">
                 <?php
-                $options = array(
+                $options = [
                     0 => self::$slider_locale['SLDW_0507'],
                     1 => self::$slider_locale['SLDW_0508']
-                );
+                ];
                 echo form_checkbox('slider_indicator', '', self::$slider_settings['slider_indicator'],
-                                   array('type' => 'radio', 'options' => $options));
+                    ['type' => 'radio', 'options' => $options]);
                 ?>
             </div>
         </div>
@@ -387,26 +393,26 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             <div class="col-xs-12 col-sm-9">
                 <?php
                 echo form_fileinput('slider_image_src', '', self::$slider_content['slider_image_src'],
-                                    array(
-                                        'upload_path' => IMAGES.self::$slider_settings['slider_path']."/",
-                                        'required'    => TRUE,
-                                        'template'    => 'modern',
-                                        'media'       => TRUE,
-                                        'error_text'  => self::$slider_locale['SLDW_0512'],
-                                        "max_width"   => 2000,
-                                        "max_height"  => 1800,
-                                        "max_byte"    => 150000000,
-                                    )
+                    [
+                        'upload_path' => IMAGES.self::$slider_settings['slider_path']."/",
+                        'required'    => TRUE,
+                        'template'    => 'modern',
+                        'media'       => TRUE,
+                        'error_text'  => self::$slider_locale['SLDW_0512'],
+                        "max_width"   => 2000,
+                        "max_height"  => 1800,
+                        "max_byte"    => 150000000,
+                    ]
                 );
                 ?>
             </div>
         </div>
         <?php
-        echo form_text('slider_title', self::$slider_locale['SLDW_0513'], self::$slider_content['slider_title'], array('inline' => TRUE));
-        echo form_textarea('slider_description', self::$slider_locale['SLDW_0514'], self::$slider_content['slider_description'], array('inline' => TRUE));
-        echo form_text('slider_link', self::$slider_locale['SLDW_0515'], self::$slider_content['slider_link'], array('inline' => TRUE, 'type' => 'url'));
+        echo form_text('slider_title', self::$slider_locale['SLDW_0513'], self::$slider_content['slider_title'], ['inline' => TRUE]);
+        echo form_textarea('slider_description', self::$slider_locale['SLDW_0514'], self::$slider_content['slider_description'], ['inline' => TRUE]);
+        echo form_text('slider_link', self::$slider_locale['SLDW_0515'], self::$slider_content['slider_link'], ['inline' => TRUE, 'type' => 'url']);
         echo form_text('slider_order', self::$slider_locale['SLDW_0516'], self::$slider_content['slider_order'],
-                       array('inline' => TRUE, 'type' => 'number', 'width' => '100px'));
+            ['inline' => TRUE, 'type' => 'number', 'width' => '100px']);
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-3">
@@ -415,59 +421,59 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
             <div class="col-xs-12 col-sm-9">
                 <?php
                 echo form_text('slider_caption_offset', self::$slider_locale['SLDW_0519'], self::$slider_content['slider_caption_offset'],
-                               array(
-                                   'inline'       => TRUE,
-                                   'type'         => 'number',
-                                   'append'       => TRUE,
-                                   'append_value' => 'px',
-                                   'width'        => '100px',
-                                   'ext_tip'      => self::$slider_locale['SLDW_0520'],
-                                   'required'     => TRUE
-                               ));
-                $options = array(
+                    [
+                        'inline'       => TRUE,
+                        'type'         => 'number',
+                        'append'       => TRUE,
+                        'append_value' => 'px',
+                        'width'        => '100px',
+                        'ext_tip'      => self::$slider_locale['SLDW_0520'],
+                        'required'     => TRUE
+                    ]);
+                $options = [
                     'text-left'   => self::$slider_locale['SLDW_0521'],
                     'text-right'  => self::$slider_locale['SLDW_0522'],
                     'text-center' => self::$slider_locale['SLDW_0523']
-                );
+                ];
                 echo form_select('slider_caption_align', self::$slider_locale['SLDW_0524'], self::$slider_content['slider_caption_offset'],
-                                 array(
-                                     'inline' => TRUE,
-                                     'options' => $options
-                                 )
+                    [
+                        'inline'  => TRUE,
+                        'options' => $options
+                    ]
                 );
                 echo form_text('slider_title_size', self::$slider_locale['SLDW_0525'], self::$slider_content['slider_title_size'],
-                               array(
-                                   'inline'       => TRUE,
-                                   'type'         => 'number',
-                                   'append'       => TRUE,
-                                   'append_value' => 'px',
-                                   'width'        => '100px',
-                                   'ext_tip'      => self::$slider_locale['SLDW_0526'],
-                                   'required'     => TRUE
-                               )
+                    [
+                        'inline'       => TRUE,
+                        'type'         => 'number',
+                        'append'       => TRUE,
+                        'append_value' => 'px',
+                        'width'        => '100px',
+                        'ext_tip'      => self::$slider_locale['SLDW_0526'],
+                        'required'     => TRUE
+                    ]
                 );
                 echo form_text('slider_desc_size', self::$slider_locale['SLDW_0527'], self::$slider_content['slider_desc_size'],
-                               array(
-                                   'inline'       => TRUE,
-                                   'type'         => 'number',
-                                   'append'       => TRUE,
-                                   'append_value' => 'px',
-                                   'width'        => '100px',
-                                   'ext_tip'      => self::$slider_locale['SLDW_0528'],
-                                   'required'     => TRUE
-                               )
+                    [
+                        'inline'       => TRUE,
+                        'type'         => 'number',
+                        'append'       => TRUE,
+                        'append_value' => 'px',
+                        'width'        => '100px',
+                        'ext_tip'      => self::$slider_locale['SLDW_0528'],
+                        'required'     => TRUE
+                    ]
                 );
-                $options = array(
+                $options = [
                     0        => self::$slider_locale['SLDW_0529'],
                     'btn-sm' => self::$slider_locale['SLDW_0530'],
                     'btn-md' => self::$slider_locale['SLDW_0531'],
                     'btn-lg' => self::$slider_locale['SLDW_0532']
-                );
+                ];
                 echo form_select('slider_btn_size', self::$slider_locale['SLDW_0533'], self::$slider_content['slider_btn_size'],
-                                 array(
-                                     'inline' => TRUE,
-                                     'options' => $options
-                                 )
+                    [
+                        'inline'  => TRUE,
+                        'options' => $options
+                    ]
                 );
                 ?>
             </div>
@@ -475,7 +481,7 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
         <?php
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
 
         switch (self::$tab_active) {
             case 'slider_settings':
@@ -489,10 +495,10 @@ class carouselWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine im
                 break;
         }
 
-        echo form_button('save_widget', self::$slider_locale['SLDW_0600'], $input_value, array('class' => 'btn-primary'));
+        $html = form_button('save_widget', self::$slider_locale['SLDW_0600'], $input_value, ['class' => 'btn-primary']);
         if (self::$new_slider === FALSE) {
-            echo form_button('save_and_close_widget', self::$slider_locale['SLDW_0601'], $input_value, array('class' => 'btn-success'));
+            $html .= form_button('save_and_close_widget', self::$slider_locale['SLDW_0601'], $input_value, ['class' => 'btn-success']);
         }
-
+        return $html;
     }
 }

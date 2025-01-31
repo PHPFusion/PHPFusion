@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_shouts-stat_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,23 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if ($profile_method == "input") {
-    //Nothing here
     $user_fields = '';
     if (defined('ADMIN_PANEL')) { // To show in admin panel only.
-    	if (db_exists(DB_SHOUTBOX)) {
-    	    $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_shouts-stat']."</div>";
-		}
+        $user_fields .= "<div class='row'>\n<div class='col-xs-12 col-sm-3 strong'>".$locale['uf_shouts-stat']."</div>\n<div class='col-xs-12 col-sm-9'>\n";
+        if (defined('SHOUTBOX_PANEL_EXISTS')) {
+            $user_fields .= "--";
+        } else {
+            $user_fields .= "<div class='alert alert-warning'><strong><i class='fa fa-exclamation-triangle m-r-10'></i>".$locale['uf_shouts-stat_na']."</strong></div>";
+        }
+        $user_fields .= "</div>\n</div>\n";
     }
-} elseif ($profile_method == "display") {
-
-    if (db_exists(DB_SHOUTBOX)) {
-		$user_fields = array(
-			'title' => $locale['uf_shouts-stat'],
-			'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'")));
-	}
+} else if ($profile_method == "display") {
+    if (defined('SHOUTBOX_PANEL_EXISTS')) {
+        $user_fields = [
+            'title' => $locale['uf_shouts-stat'],
+            'value' => number_format(dbcount("(shout_id)", DB_SHOUTBOX, "shout_name='".intval($_GET['lookup'])."'"))
+        ];
+    }
 }

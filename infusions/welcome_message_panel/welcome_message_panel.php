@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: welcome_message_panel.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,11 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
+defined('IN_FUSION') || exit;
+
+if (!function_exists('render_welcome_panel')) {
+    function render_welcome_panel() {
+        $locale = fusion_get_locale();
+
+        opentable($locale['global_035']);
+        echo html_entity_decode(stripslashes(nl2br(fusion_get_settings('siteintro'))), ENT_QUOTES);
+        closetable();
+    }
 }
-$locale = fusion_get_locale();
-$message = fusion_get_settings("siteintro");
-opentable($locale['global_035']);
-echo stripslashes(parseubb(nl2br($message)))."\n";
-closetable();
+
+render_welcome_panel();

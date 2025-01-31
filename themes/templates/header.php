@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: header.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,45 +15,62 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
+$settings = fusion_get_settings();
+$userdata = fusion_get_userdata();
 
 // Check if Maintenance is Enabled
-$user_level = fusion_get_userdata("user_level");
-if (fusion_get_settings("maintenance") == "1") {
-    if (fusion_get_settings("maintenance_level") < $user_level or empty($user_level)) {
-        if (fusion_get_settings("site_seo")) {
-            redirect(FUSION_ROOT.BASEDIR."maintenance.php");
-        } else {
-            redirect(BASEDIR."maintenance.php");
-        }
+if ($settings['maintenance'] == "1" &&
+    ((iMEMBER && $settings['maintenance_level'] == USER_LEVEL_MEMBER && $userdata['user_id'] != "1") ||
+    ($settings['maintenance_level'] < $userdata['user_level']))
+) {
+    if ($settings['site_seo']) {
+        redirect(FUSION_ROOT.BASEDIR."maintenance.php");
+    } else {
+        redirect(BASEDIR."maintenance.php");
     }
 }
 
-if (fusion_get_settings("site_seo")) {
+if ($settings['site_seo']) {
     $permalink = \PHPFusion\Rewrite\Permalinks::getPermalinkInstance();
 }
 
 require_once INCLUDES."breadcrumbs.php";
-require_once INCLUDES."header_includes.php";
+if (file_exists(INCLUDES."header_includes.php")) {
+    require_once INCLUDES."header_includes.php";
+}
+
 require_once THEME."theme.php";
-require_once THEMES."templates/render_functions.php";
+
+require_once INCLUDES."theme_functions_include.php";
+
+// for compatibility
+if (!defined('THEME_BULLET')) {
+    define('THEME_BULLET', '&middot;');
+}
 
 $o_param = [
-    ':user_id'   => (iMEMBER ? fusion_get_userdata('user_id') : 0),
+    ':user_id'   => (iMEMBER ? $userdata['user_id'] : 0),
     ':online_ip' => USER_IP,
 ];
 // Online users database -- to core level whether panel is on or not
 if (dbcount("(online_user)", DB_ONLINE, "online_user=:user_id AND online_ip=:online_ip", $o_param)) {
-    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".TIME."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".fusion_get_userdata('user_id')."'" : "online_user='0' AND online_ip='".USER_IP."'"));
+    dbquery("UPDATE ".DB_ONLINE." SET online_lastactive='".time()."', online_ip='".USER_IP."' WHERE ".(iMEMBER ? "online_user='".$userdata['user_id']."'" : "online_user='0' AND online_ip='".USER_IP."'"));
 } else {
-    dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".TIME."')");
+    dbquery("INSERT INTO ".DB_ONLINE." (online_user, online_ip, online_ip_type, online_lastactive) VALUES ('".$o_param[':user_id']."', '".USER_IP."', '".USER_IP_TYPE."', '".time()."')");
 }
-dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (TIME - 60)]);
+dbquery("DELETE FROM ".DB_ONLINE." WHERE online_lastactive < :last_time", [':last_time' => (time() - 60)]);
 
 if (iMEMBER) {
-    dbquery("UPDATE ".DB_USERS." SET user_lastvisit=UNIX_TIMESTAMP(NOW()), user_ip='".USER_IP."', user_ip_type='".USER_IP_TYPE."' WHERE user_id='".fusion_get_userdata("user_id")."'");
+    $result = dbquery("UPDATE ".DB_USERS." SET user_lastvisit=:time, user_ip=:ip, user_ip_type=:ip_type WHERE user_id=:user_id",
+        [
+            ':time'    => time(),
+            ':ip'      => USER_IP,
+            ':ip_type' => USER_IP_TYPE,
+            ':user_id' => $userdata['user_id']
+        ]
+    );
 }
 
 ob_start();

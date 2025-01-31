@@ -16,10 +16,11 @@ $locale['html_012'] = "Center";
 $locale['html_013'] = "Small";
 $locale['html_014'] = "Small2";
 $locale['html_015'] = "Alt";
-$locale['html_016'] = "Pagebreak";
+$locale['html_016'] = "Page break";
 $locale['html_017'] = "Font Color";
 $locale['html_018'] = "Paragraph";
 $locale['html_019'] = "Headings";
+$locale['html_020'] = "Line Break";
 
 $locale['texts'] = "Text";
 $locale['preview'] = "Preview";

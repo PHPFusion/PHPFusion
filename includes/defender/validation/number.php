@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: includes/defender/validation/number.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,6 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
  * Class Number
  * Validates Number Input
@@ -29,29 +30,24 @@ class Number extends \Defender\Validation {
     public function verify_number() {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
-            \defender::stop();
-            \defender::setInputError(self::$inputName);
+            fusion_stop();
+            \Defender::setInputError(self::$inputName);
         }
 
         if (is_array(self::$inputValue)) {
-            $vars = array();
+            $vars = [];
             foreach (self::$inputValue as $val) {
                 if (!empty($val) && isnum($val, TRUE)) {
                     $vars[] = $val;
                 }
             }
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : ",";
-            $value = implode($delimiter, $vars);
-
-            return $value; // empty str is returned if $vars ends up empty
-
-        } elseif (empty(self::$inputValue) || isnum(self::$inputValue, TRUE)) {
+            return implode($delimiter, $vars); // empty str is returned if $vars ends up empty
+        } else if (empty(self::$inputValue) || isnum(self::$inputValue, TRUE)) {
             return self::$inputValue;
         } else {
             return FALSE;
         }
 
     }
-
-
 }

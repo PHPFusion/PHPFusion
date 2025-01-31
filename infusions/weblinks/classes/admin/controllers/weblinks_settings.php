@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: weblinks/admin/controllers/weblinks_settings.php
-| Author: PHP-Fusion Development Team
+| Filename: weblinks_settings.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,7 +18,6 @@
 namespace PHPFusion\Weblinks;
 
 class WeblinksSettingsAdmin extends WeblinksAdminModel {
-
     private static $instance = NULL;
 
     public static function getInstance() {
@@ -31,57 +30,64 @@ class WeblinksSettingsAdmin extends WeblinksAdminModel {
 
     public function displayWeblinksAdmin() {
 
-        pageAccess("W");
-        $this->locale = self::get_WeblinkAdminLocale();
-        $weblink_settings = self::get_weblink_settings();
+        pageaccess("W");
+        $locale = self::getWeblinkAdminLocale();
+        $weblink_settings = self::getWeblinkSettings();
 
-		// Save
-        if (isset($_POST['savesettings'])) {
-            $inputArray = array(
-				"links_per_page"        => form_sanitizer($_POST['links_per_page'], 15, "links_per_page"),
-                "links_allow_submission"  => form_sanitizer($_POST['links_allow_submission'], 0, "links_allow_submission"),
-                "links_extended_required" => form_sanitizer($_POST['links_extended_required'], 0, "links_extended_required")
-            );
+        // Save
+        if (check_post('savesettings')) {
 
-			// Update
-            if (\defender::safe()) {
+            $inputArray = [
+                'links_per_page'          => sanitizer('links_per_page', 15, 'links_per_page'),
+                'links_allow_submission'  => post('links_allow_submission') ? 1 : 0,
+                'links_extended_required' => post('links_extended_required') ? 1 : 0,
+                'links_submission_access' => sanitizer(['links_submission_access'], USER_LEVEL_MEMBER, 'links_submission_access')
+            ];
+
+            // Update
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "weblinks",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    $inputSettings = [
+                        'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => "weblinks",
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice("success", $this->locale['900']);
+                addnotice('success', $locale['admins_900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("danger", $this->locale['901']);
-				$weblink_settings = $inputArray;
+                addnotice('danger', $locale['admins_901']);
+                $weblink_settings = $inputArray;
             }
         }
 
-		opentable("");
-		echo openform("settingsform", "post", FUSION_REQUEST);
-		echo "<div class='well m-b-0 spacer-xs'>".$this->locale['WLS_0400']."</div>\n";
+        echo openform('settingsform', 'post', FUSION_REQUEST);
+        echo "<div class='well'>".$locale['WLS_0400']."</div>\n";
 
-		echo "<div class='row'>\n";
-		echo "<div class='col-xs-12 col-sm-12'>\n";
+        echo form_text('links_per_page', $locale['WLS_0132'], $weblink_settings['links_per_page'], [
+            'max_length'  => 4,
+            'inner_width' => '250px',
+            'type'        => 'number',
+            'inline'      => TRUE
+        ]);
+        echo form_select('links_allow_submission', $locale['WLS_0007'], $weblink_settings['links_allow_submission'], [
+            'inline'  => TRUE,
+            'options' => [
+                $locale['disable'], $locale['enable']
+            ]
+        ]);
+        echo form_select('links_submission_access[]', $locale['submit_access'], $weblink_settings['links_submission_access'], [
+            'inline'   => TRUE,
+            'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+            'multiple' => TRUE
+        ]);
+        echo form_select('links_extended_required', $locale['WLS_0403'], $weblink_settings['links_extended_required'], [
+            'inline'  => TRUE,
+            'options' => [
+                $locale['no'], $locale['yes']
+            ]
+        ]);
 
-        echo form_text("links_per_page", $this->locale['WLS_0132'], $weblink_settings['links_per_page'], array(
-            "max_length" => 4, "inner_width" => "250px", "type" => "number"
-			));
-
-        echo form_select("links_allow_submission", $this->locale['WLS_0007'], $weblink_settings['links_allow_submission'], array(
-				"options" => array($this->locale['disable'], $this->locale['enable'])
-			));
-
-		echo form_select("links_extended_required", $this->locale['WLS_0403'], $weblink_settings['links_extended_required'], array(
-				"options" => array($this->locale['disable'], $this->locale['enable'])
-			));
-        echo "</div>\n";
-        echo "</div>\n";
-
-		echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success", "icon" => "fa fa-fw fa-hdd-o"));
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
-		closetable();
     }
 }

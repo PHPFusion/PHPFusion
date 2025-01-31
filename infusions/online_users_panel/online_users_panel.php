@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: online_users_panel.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,46 +15,48 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-$locale = fusion_get_locale();
-openside($locale['global_010']);
-$user_online_query = "SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status FROM ".DB_ONLINE." ton LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id";
-$result = dbquery($user_online_query);
+require_once INFUSIONS.'online_users_panel/templates/online_users.tpl.php';
+
+$result = dbquery("SELECT ton.online_user, tu.user_id, tu.user_name, tu.user_status
+    FROM ".DB_ONLINE." ton
+    LEFT JOIN ".DB_USERS." tu ON ton.online_user=tu.user_id
+");
+
 $guests = 0;
-$members = array();
+$members = [];
+
 while ($data = dbarray($result)) {
     if ($data['online_user'] == "0") {
         $guests++;
     } else {
-        $members[] = array($data['user_id'], $data['user_name'], $data['user_status']);
+        $members[$data['user_id']] = [$data['user_id'], $data['user_name'], $data['user_status']];
     }
 }
 
-echo "<strong>".$locale['global_011'].":</strong> ".$guests."<br /><br />\n";
-echo "<strong>".$locale['global_012'].":</strong> ".count($members)."<br />\n";
+$newest = dbarray(dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));
 
-if (count($members)) {
-    $i = 1;
-    while (list($key, $member) = each($members)) {
-        echo "<span class='side'>".profile_link($member[0], $member[1], $member[2])."</span>";
-        if ($i != count($members)) {
-            echo ",\n";
-        } else {
-            echo "<br />\n";
-        }
-        $i++;
-    }
-}
-echo "<br />\n".THEME_BULLET." ".$locale['global_014'].": ".number_format(dbcount("(user_id)", DB_USERS, "user_status<='1'"))."<br />\n";
+$info = [
+    'guests'              => $guests,
+    'members'             => number_format(count($members)),
+    'total_members'       => number_format(dbcount("(user_id)", DB_USERS, "user_status<='1'")),
+    'online_members'      => '',
+    'newest_member'       => profile_link($newest['user_id'], $newest['user_name'], $newest['user_status']),
+    'unactivated_members' => ''
+];
 
-if (iADMIN && checkrights("M") && fusion_get_settings("admin_activation") == "1") {
-    echo THEME_BULLET." <a href='".ADMIN."members.php".fusion_get_aidlink()."&amp;status=2' class='side'>".$locale['global_015']."</a>: ";
-    echo dbcount("(user_id)", DB_USERS, "user_status='2'")."<br />\n";
+if (iADMIN && checkrights('M') && fusion_get_settings('admin_activation') == '1') {
+    $info['unactivated_members'] = [
+        'admin_link'    => ADMIN.'members.php'.fusion_get_aidlink().'&status=2',
+        'total_members' => number_format(dbcount("(user_id)", DB_USERS, "user_status='2'"))
+    ];
 }
 
-$data = dbarray(dbquery("SELECT user_id, user_name, user_status FROM ".DB_USERS." WHERE user_status='0' ORDER BY user_joined DESC LIMIT 0,1"));
-echo THEME_BULLET." ".$locale['global_016'].": <span class='side'>".profile_link($data['user_id'], $data['user_name'], $data['user_status'])."</span>\n";
-closeside();
+if (!empty($members)) {
+    $info['online_members'] = implode(', ', array_map(function ($members) {
+        return profile_link($members[0], $members[1], $members[2]);
+    }, $members));
+}
+
+online_users_panel($info);

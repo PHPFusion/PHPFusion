@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: downloads/index.php
 | Author: Frederick MC Chan (Chan)
@@ -16,20 +16,20 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_DOWNLOADS)) {
+if (!defined('DOWNLOADS_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
 
 $request = pathinfo($_SERVER['REQUEST_URI']);
 $result = dbquery("SELECT download_file FROM ".DB_DOWNLOADS." WHERE ".groupaccess('download_visibility')." AND download_file='".form_sanitizer($request['basename'],
-                                                                                                                                               '')."' ");
+        '')."' ");
 if (dbrows($result) > 0) {
     $data = dbarray($result);
     require_once INCLUDES."class.httpdownload.php";
-    $object = new httpdownload;
-    $object->set_byfile(DOWNLOADS."/files/".$data['download_file']);
+    $object = new PHPFusion\httpdownload;
+    $object->set_byfile(DOWNLOADS_FILES.$data['download_file']);
     $object->use_resume = TRUE;
     $object->download();
 } else {
-    redirect(BASEDIR."index.php");
+    redirect(DOWNLOADS.'downloads.php');
 }

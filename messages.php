@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: messages.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,14 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
-if (!iMEMBER) {
-    redirect("index.php");
-}
-require_once THEMES."templates/header.php";
-include LOCALE.LOCALESET."messages.php";
-include THEMES."templates/global/messages.php";
-$message = new \PHPFusion\PrivateMessages();
-$message->display_inbox();
-display_inbox($message->getInfo());
-require_once THEMES."templates/footer.php";
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
+include THEMES."templates/global/messages.tpl.php";
+PHPFusion\PrivateMessages::getInstance()->server()->view();
+require_once THEMES.'templates/footer.php';

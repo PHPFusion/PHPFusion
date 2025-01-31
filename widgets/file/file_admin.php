@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: File/file_admin.php
+| Filename: file_admin.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -22,7 +22,7 @@
 class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implements \PHPFusion\Page\WidgetAdminInterface {
 
     private static $instance = NULL;
-    private static $widget_data = array();
+    private static $widget_data = [];
 
     public static function widgetInstance() {
         if (self::$instance === NULL) {
@@ -32,43 +32,48 @@ class fileWidgetAdmin extends \PHPFusion\Page\Composer\Node\ComposeEngine implem
         return self::$instance;
     }
 
-    public function exclude_return() {
+    public function excludeReturn() {
     }
 
-    public function validate_settings() {
+    public function validateSettings() {
     }
 
-    public function validate_input() {
+    public function validateInput() {
 
-        self::$widget_data = array(
-            'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
+        self::$widget_data = [
+            //'file_title' => form_sanitizer($_POST['file_title'], '', 'file_title'),
             'file_url'   => form_sanitizer($_POST['file_url'], '', 'file_url'),
-        );
-        if (\defender::safe()) {
-            return \defender::serialize(self::$widget_data);
+        ];
+        if (fusion_safe()) {
+            return \Defender::serialize(self::$widget_data);
         }
+
+        return NULL;
     }
 
-    public function validate_delete() {
+    public function validateDelete() {
     }
 
-    public function display_form_input() {
-        $widget_locale = fusion_get_locale('', WIDGETS."/file/locale/".LANGUAGE.".php");
-        self::$widget_data = array(
+    public function displayFormInput() {
+        $lang = file_exists(WIDGETS."file/locale/".LANGUAGE.".php") ? WIDGETS."file/locale/".LANGUAGE.".php" : WIDGETS."file/locale/English.php";
+        $widget_locale = fusion_get_locale('', $lang);
+
+        self::$widget_data = [
             'file_title' => '',
             'file_url'   => '',
-        );
+        ];
         if (!empty(self::$colData['page_content'])) {
-            self::$widget_data = \defender::unserialize(self::$colData['page_content']);
+            self::$widget_data = \Defender::unserialize(self::$colData['page_content']);
         }
-        echo form_text('file_title', $widget_locale['f0100'], self::$widget_data['file_title'], array('inline' => TRUE, 'required' => TRUE));
-        echo form_text('file_url', $widget_locale['f0102'], self::$widget_data['file_url'], array('inline' => TRUE, 'required' => TRUE));
+        //echo form_text('file_title', $widget_locale['f0100'], self::$widget_data['file_title'], ['inline' => TRUE, 'required' => TRUE]);
+        echo form_text('file_url', $widget_locale['f0102'], self::$widget_data['file_url'], ['inline' => TRUE, 'required' => TRUE]);
     }
 
-    public function display_form_button() {
+    public function displayFormButton() {
         $widget_locale = fusion_get_locale('', WIDGETS."/file/locale/".LANGUAGE.".php");
-        echo form_button('save_widget', $widget_locale['f0103'], 'widget', array('class' => 'btn-primary'));
-        echo form_button('save_and_close_widget', $widget_locale['f0104'], 'widget', array('class' => 'btn-success'));
+        //$html = form_button('save_widget', $widget_locale['f0103'], 'widget', ['class' => 'btn-primary']);
+        $html = form_button('save_and_close_widget', $widget_locale['f0104'], 'widget', ['class' => 'btn-success']);
+        return $html;
     }
 
 }

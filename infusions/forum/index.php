@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: forum/index.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,15 +15,17 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-if (!db_exists(DB_FORUMS)) {
+require_once __DIR__.'/../../maincore.php';
+if (!defined('FORUM_EXISTS')) {
     redirect(BASEDIR."error.php?code=404");
 }
-require_once THEMES."templates/header.php";
+require_once THEMES.'templates/header.php';
 require_once INCLUDES."infusions_include.php";
-require_once FORUM_CLASS."autoloader.php";
+require_once FORUM_CLASSES."autoloader.php";
 require_once INFUSIONS."forum/forum_include.php";
-include INFUSIONS."forum/templates/forum_main.php";
+include INFUSIONS."forum/templates/forum.tpl.php";
+// Base theme is 0.06s TOP
+\PHPFusion\Locale::setLocale(FORUM_LOCALE);
 $info = \PHPFusion\Forums\ForumServer::forum()->getForumInfo();
 render_forum($info);
-require_once THEMES."templates/footer.php";
+require_once THEMES.'templates/footer.php';

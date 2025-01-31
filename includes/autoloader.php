@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: includes/autoloader.php
+| Filename: autoloader.php
 | Author: Takács Ákos (Rimelek)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -21,16 +21,31 @@
 spl_autoload_register(function ($className) {
     $baseDir = __DIR__.'/classes/';
     $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-    $fullPath = $baseDir.$path.'.inc';
+    $fullPath = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
         require_once $fullPath;
     }
+
     $baseDir = __DIR__.'/';
-    $fullPath = $baseDir.$path.'.inc';
+    $fullPath = $baseDir.$path.'.php';
     if (is_file($fullPath)) {
         require_once $fullPath;
     }
 });
+
+spl_autoload_register(function ($className) {
+    if (stristr($className, '_')) {
+        $className = explode('_', $className);
+        $className = $className[0].'.'.strtolower($className[1]);
+        $baseDir = __DIR__.'/classes/';
+        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+        $fullPath = $baseDir.$path.'.php';
+        if (is_file($fullPath)) {
+            require_once $fullPath;
+        }
+    }
+});
+
 /*
  * Autoloader for compatibility reason
  *
@@ -41,45 +56,54 @@ spl_autoload_register(function ($className) {
         return;
     }
     $baseDir = __DIR__.'/classes/';
-    $fullPath = $baseDir.$className.'.class.inc';
+    $fullPath = $baseDir.$className.'.class.php';
     if (is_file($fullPath)) {
-        require $fullPath;
+        require_once $fullPath;
     }
 });
 
-/*
- * New convention to rename core files as .inc instead of.php
+/**
+ * Infusions Autoloading
+ * All class files must be lowercase and end with .class.php in infusions global namespace
  */
 spl_autoload_register(function ($className) {
-    if (stristr($className, '_')) {
-        $className = explode('_', $className);
-        $className = $className[0].'.'.strtolower($className[1]);
-        $baseDir = __DIR__.'/classes/';
-        $path = str_replace('\\', DIRECTORY_SEPARATOR, $className);
-        $fullPath = $baseDir.$path.'.inc';
+    if (stristr($className, 'PHPFusion\\Infusions')) {
+
+        $className = str_replace('PHPFusion\\Infusions\\', '', $className);
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+
+        $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
         if (is_file($fullPath)) {
-            require $fullPath;
+            require_once $fullPath;
+        } else {
+            // Files with all lowercase accepted
+            $className = strtolower($className);
+            $fullPath = BASEDIR.'infusions/'.$className.'.class.php';
+            if (is_file($fullPath)) {
+                require_once $fullPath;
+            }
         }
     }
 });
 
-
 /**
  * Get path of config.php
+ *
  * @param int $max_level
+ *
  * @return string|null The relative path of the base directory
- * or NULL if config.php was not found
+ * or empty string if config.php was not found
  */
 function fusion_get_config($max_level = 7) {
-    static $config_path = NULL;
-    if ($config_path === NULL) {
+    static $config_path = '';
+    if ($config_path === '') {
         $basedir = "";
         $i = 0;
         while ($i <= $max_level and !file_exists($basedir."config.php")) {
             $basedir .= "../";
             $i++;
         }
-        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : NULL;
+        $config_path = file_exists($basedir."config.php") ? $basedir."config.php" : '';
     }
 
     return $config_path;
@@ -92,12 +116,38 @@ if (!defined('BASEDIR')) {
 /*
  * Include core files that is required in working order
  */
-
 require_once __DIR__.'/core_functions_include.php';
+require_once __DIR__.'/deprecated.php';
 require_once __DIR__.'/core_constants_include.php';
 require_once __DIR__."/sqlhandler.inc.php";
 require_once __DIR__."/translate_include.php";
 require_once __DIR__."/output_handling_include.php";
-require_once __DIR__."/notify.inc";
-//require_once __DIR__.'/theme_functions_include.php';
+require_once __DIR__."/notify.php";
+require_once __DIR__."/hooks_include.php";
+
+if (is_file(__DIR__."/vendor/autoload.php")) {
+    require_once __DIR__."/vendor/autoload.php";
+}
+
+if (is_file(__DIR__."/custom_includes.php")) {
+    require_once __DIR__."/custom_includes.php";
+}
 //require_once __DIR__.'/db_handlers/all_functions_include.php';
+
+// Generate config file
+if (!is_file(__DIR__.'/config.inc.php')) {
+    $text = "<?php".PHP_EOL;
+    $text .= "/**".PHP_EOL;
+    $text .= " * Here you can configure additional system settings".PHP_EOL;
+    $text .= " */".PHP_EOL;
+    $text .= "\$config_inc = [".PHP_EOL;
+    $text .= "    'cache' => [".PHP_EOL;
+    $text .= "        'storage'        => 'file', // file|redis|memcache".PHP_EOL;
+    $text .= "        'memcache_hosts' => ['localhost:11211'], // e.g. ['localhost:11211', '192.168.1.100:11211', 'unix:///var/tmp/memcached.sock']".PHP_EOL;
+    $text .= "        'redis_hosts'    => ['localhost:6379'], // e.g. ['localhost:6379', '192.168.1.100:6379:1:passwd']".PHP_EOL;
+    $text .= "        'path'           => BASEDIR.'cache/system/' // for FileCache".PHP_EOL;
+    $text .= "    ]".PHP_EOL;
+    $text .= "];".PHP_EOL;
+
+    write_file(__DIR__.'/config.inc.php', $text);
+}

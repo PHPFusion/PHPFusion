@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_timezone_include_var.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 // Version of the user fields api
 $user_field_api_version = "1.01.00";
@@ -25,4 +23,4 @@ $user_field_name = $locale['uf_timezone'];
 $user_field_desc = $locale['uf_timezone_desc'];
 $user_field_dbname = "user_timezone";
 $user_field_group = 3;
-$user_field_dbinfo = "user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London'";
+$user_field_dbinfo = "VARCHAR(50) NOT NULL DEFAULT 'Europe/London'";

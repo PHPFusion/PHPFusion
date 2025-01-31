@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: errors.php
-| Author: Hans Kristian Flaatten (Starefossen)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,13 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../maincore.php";
-pageAccess('ERRO');
-require_once THEMES."templates/admin_header.php";
-
-$error = \PHPFusion\Errors::getInstance();
-if (method_exists($error, "display_administration")) {
-    $error->display_administration();
-}
-
-require_once THEMES."templates/footer.php";
+require_once __DIR__.'/../maincore.php';
+require_once THEMES.'templates/admin_header.php';
+pageaccess('ERRO');
+\PHPFusion\Errors::getInstance()->displayAdministration();
+require_once THEMES.'templates/footer.php';

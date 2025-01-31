@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: youtube_bbcode_include.php
-| Author: Wooya
-| Modifed: NetriX
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,8 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-$text = preg_replace('#\[youtube\](http:|https:)?(\/\/www.youtube\.com\/watch\?v=|\/\/youtu\.be\/)?(.*?)\[/youtube\]#si',
-                     '<iframe width="560" height="315" src="https://www.youtube.com/embed/\3" style="border:0" allowfullscreen></iframe>', $text);
+defined('IN_FUSION') || exit;
+
+$html = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/\3" referrerpolicy="no-referrer" allowfullscreen></iframe></div>';
+$text = preg_replace('#\[youtube\](http:|https:)?(\/\/www.youtube\.com\/watch\?v=|\/\/youtu\.be\/)?(.*?)\[/youtube\]#si', $html, $text);

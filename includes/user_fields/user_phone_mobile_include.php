@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_phone_mobile_include.php
 | Author: Chubatyj Vitalij (Rizado)
@@ -15,15 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 if ($profile_method == "input") {
-    $options += array("inline" => TRUE, "number" => TRUE, 'max_length' => 20);
+    $options += ["inline" => TRUE, "number" => TRUE, 'max_length' => 20];
     $user_fields = form_text('user_phone_mobile', $locale['uf_phone_mobile'], $field_value, $options);
-} elseif ($profile_method == "display") {
-
-    $user_fields = array('title' => $locale['uf_phone_mobile'], 'value' => $field_value ?: "");
-
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'title' => $locale['uf_phone_mobile'],
+        'value' => $field_value ?: ''
+    ];
 }

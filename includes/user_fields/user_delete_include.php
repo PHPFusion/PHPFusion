@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_delete_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
 // Display user field input
 if ($profile_method == "input") {
@@ -27,19 +25,19 @@ if ($profile_method == "input") {
         $user_fields = "<div class='well m-t-5 text-center'>".$locale['uf_delete']."</div>";
     }
 
-// Display in profile
-} elseif ($profile_method == "display") {
+    // Display in profile
+} else if ($profile_method == "display") {
     if (!defined('ADMIN_PANEL')) {
 
         if (iMEMBER && isset($_POST['delete_me']) && fusion_get_userdata('user_id') == $_GET['lookup'] && !iSUPERADMIN) {
             $data = fusion_get_userdata('user_id');
 
-            if (db_exists(DB_ARTICLES)) {
+            if (defined('ARTICLES_EXISTS')) {
                 dbquery("DELETE FROM ".DB_ARTICLES." WHERE article_name='".$data."'");
             }
             dbquery("DELETE FROM ".DB_COMMENTS." WHERE comment_name='".$data."'");
             dbquery("DELETE FROM ".DB_MESSAGES." WHERE message_to='".$data."' OR message_from='".$data."'");
-            if (db_exists(DB_NEWS)) {
+            if (defined('NEWS_EXISTS')) {
                 dbquery("DELETE FROM ".DB_NEWS." WHERE news_name='".$data."'");
             }
             if (db_exists(DB_POLL_VOTES)) {
@@ -58,7 +56,7 @@ if ($profile_method == "input") {
             }
             dbquery("DELETE FROM ".DB_USERS." WHERE user_id='".$data."'");
 
-            addNotice('success', $locale['uf_delete_exit']);
+            addnotice('success', $locale['uf_delete_exit']);
             redirect('index.php');
         }
 
@@ -67,7 +65,10 @@ if ($profile_method == "input") {
             $ab = openform('delete_me', 'post', $action_url);
             $ab .= form_button('delete_me', $locale['uf_delete_del'], "delete_me");
             $ab .= closeform();
-            $user_fields = array('title' => $locale['uf_delete'], 'value' => $ab);
+            $user_fields = [
+                'title' => $locale['uf_delete'],
+                'value' => $ab
+            ];
         }
     }
 }

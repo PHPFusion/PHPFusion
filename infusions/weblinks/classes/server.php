@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: weblinks/classes/server.php
-| Author: PHP-Fusion Development Team
+| Filename: server.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,18 +15,31 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Weblinks;
 
 class WeblinksServer {
-
-    protected static $weblink_settings = array();
+    private static $weblink_settings = [];
     private static $weblink_instance = NULL;
     private static $weblink_submit_instance = NULL;
     private static $weblink_admin_instance = NULL;
-    private static $locale = array();
 
-    public static function Weblinks() {
+    protected $def_cat = [
+        'weblink_categories' => [],
+        'weblink_parent'     => '',
+        'weblink_tablename'  => '',
+        'weblink_filter'     => []
+    ];
+
+    protected $def_data = [
+        'weblink_categories' => [],
+        'weblink_parent'     => '',
+        'weblink_item_rows'  => 0,
+        'weblink_tablename'  => '',
+        'weblink_filter'     => [],
+        'weblink_items'      => []
+    ];
+
+    public static function weblinks() {
         if (self::$weblink_instance === NULL) {
             self::$weblink_instance = new WeblinksView();
         }
@@ -34,7 +47,7 @@ class WeblinksServer {
         return self::$weblink_instance;
     }
 
-    public static function WeblinksSubmit() {
+    public static function weblinksSubmit() {
         if (self::$weblink_submit_instance === NULL) {
             self::$weblink_submit_instance = new WeblinksSubmissions();
         }
@@ -42,7 +55,7 @@ class WeblinksServer {
         return self::$weblink_submit_instance;
     }
 
-    public static function WeblinksAdmin() {
+    public static function weblinksAdmin() {
         if (self::$weblink_admin_instance === NULL) {
             self::$weblink_admin_instance = new WeblinksAdminView();
         }
@@ -50,11 +63,11 @@ class WeblinksServer {
         return self::$weblink_admin_instance;
     }
 
-    public static function get_weblink_settings() {
+    public static function getWeblinkSettings($key = NULL) {
         if (empty(self::$weblink_settings)) {
             self::$weblink_settings = get_settings("weblinks");
         }
-        return self::$weblink_settings;
+        return $key === NULL ? self::$weblink_settings : (isset(self::$weblink_settings[$key]) ? self::$weblink_settings[$key] : NULL);
     }
 
 }

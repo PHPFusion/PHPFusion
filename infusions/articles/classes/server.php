@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: articles/classes/server.php
-| Author: PHP-Fusion Development Team
+| Filename: server.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,16 +15,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion\Articles;
 
 class ArticlesServer {
-
-    protected static $article_settings = array();
+    protected static $article_settings = [];
     private static $article_instance = NULL;
     private static $article_admin_instance = NULL;
 
-    public static function Articles() {
+    public static function articles() {
         if (self::$article_instance === NULL) {
             self::$article_instance = new ArticlesView();
         }
@@ -32,7 +30,7 @@ class ArticlesServer {
         return self::$article_instance;
     }
 
-    public static function ArticlesAdmin() {
+    public static function articlesAdmin() {
         if (self::$article_admin_instance === NULL) {
             self::$article_admin_instance = new ArticlesAdminView();
         }
@@ -40,12 +38,18 @@ class ArticlesServer {
         return self::$article_admin_instance;
     }
 
-    public static function get_article_settings() {
+    public static function getArticleSettings() {
         if (empty(self::$article_settings)) {
-            self::$article_settings = get_settings("article");
+            self::$article_settings = get_settings("articles");
         }
+
         return self::$article_settings;
     }
 
-
+    /**
+     * @deprecated use getArticleSettings()
+     */
+    public static function get_article_settings() {
+        return self::getArticleSettings();
+    }
 }

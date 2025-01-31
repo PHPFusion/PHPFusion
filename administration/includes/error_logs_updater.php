@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: error_logs_updater.php
 | Author: Frederick MC Chan (Chan)
@@ -15,44 +15,49 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "../../maincore.php";
+defined("IN_FUSION") || exit;
 
-$aid = isset($_GET['aidlink']) ? explode('=', $_GET['aidlink']) : '';
+/**
+ * Error logs updater
+ */
+function error_logs_updater() {
+    $id = get('error_id', FILTER_SANITIZE_NUMBER_INT);
+    $type = get('error_type', FILTER_SANITIZE_NUMBER_INT);
 
-if (!empty($aid)) {
-    $aid = $aid[1];
-}
-$id = isset($_GET['error_id']) && isnum($_GET['error_id']) ? $_GET['error_id'] : 0;
+    if (checkrights("ERRO") && fusion_safe()) {
+        $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated'];
 
-$type = isset($_GET['error_type']) && isnum($_GET['error_type']) ? $_GET['error_type'] : 0;
+        $result = dbquery("SELECT error_status FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
 
-if (checkrights("ERRO") && defined("iAUTH") && $aid == iAUTH && defender::safe()) {
-
-    $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Not Updated');
-
-    $result = dbquery("SELECT error_status	FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
-
-    if (dbrows($result) > 0) {
-        $data = dbarray($result);
-        if ($type == 999) {
-            // Delete Error
-            $result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
-            if ($result) {
-                $this_response = array('fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'RMD');
+        if (dbrows($result) > 0) {
+            $data = dbarray($result);
+            if ($type == 999) {
+                // Delete Error
+                $result = dbquery("DELETE FROM ".DB_ERRORS." WHERE error_id='".intval($id)."'");
+                if ($result) {
+                    $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'RMD'];
+                }
+            } else {
+                // Update Error Status
+                $result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".intval($type)."' WHERE error_id='".intval($id)."'");
+                if ($result) {
+                    $this_response = ['fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'OK'];
+                }
             }
         } else {
-            // Update Error Status
-            $result = dbquery("UPDATE ".DB_ERRORS." SET error_status='".intval($type)."' WHERE error_id='".intval($id)."'");
-            if ($result) {
-                $this_response = array('fusion_error_id' => $id, 'from' => $data['error_status'], 'to' => $type, 'status' => 'OK');
-            }
+            // Invalid error ID
+            $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid ID'];
         }
     } else {
-        // Invalid error ID
-        $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid ID');
+        $this_response = ['fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid Token or Insufficient Rights'];
     }
-} else {
-    $this_response = array('fusion_error_id' => $id, 'from' => 0, 'status' => 'Invalid Token or Insufficient Rights');
+
+    header('Content-Type: application/json');
+
+    echo json_encode($this_response);
 }
 
-echo json_encode($this_response);
+/**
+ * @uses error_logs_updater()
+ */
+fusion_add_hook('fusion_admin_hooks', 'error_logs_updater');

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: news/classes/autoloader.php
-| Author: PHP-Fusion Development Team
+| Filename: autoloader.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,20 +18,18 @@
 require_once INCLUDES."infusions_include.php";
 
 spl_autoload_register(function ($className) {
-
-    $autoload_register_paths = array(
-        "PHPFusion\\News\\NewsServer"           => NEWS_CLASS."/server.php",
-        "PHPFusion\\News\\NewsView"             => NEWS_CLASS."/news/news_view.php",
-        "PHPFusion\\News\\News_Preview"         => NEWS_CLASS."/admin/controllers/news_preview.php",
-        "PHPFusion\\News\\News"                 => NEWS_CLASS."/news/news.php",
-        "PHPFusion\\News\\NewsAdminView"        => NEWS_CLASS."/admin/news_admin_view.php",
-        "PHPFusion\\News\\NewsAdminModel"       => NEWS_CLASS."/admin/news_admin_model.php",
-        "PHPFusion\\News\\NewsCategoryAdmin"    => NEWS_CLASS."/admin/controllers/news_cat.php",
-        "PHPFusion\\News\\NewsSettingsAdmin"    => NEWS_CLASS."/admin/controllers/news_settings.php",
-        "PHPFusion\\News\\NewsSubmissionsAdmin" => NEWS_CLASS."/admin/controllers/news_submissions.php",
-        "PHPFusion\\News\\NewsAdmin" => NEWS_CLASS."/admin/controllers/news.php",
-        "PHPFusion\\OpenGraphNews" => NEWS_CLASS."/news/OpenGraphNews.php"
-    );
+    $autoload_register_paths = [
+        "PHPFusion\\News\\NewsServer"           => NEWS_CLASSES."server.php",
+        "PHPFusion\\News\\NewsView"             => NEWS_CLASSES."news/news_view.php",
+        "PHPFusion\\News\\News"                 => NEWS_CLASSES."news/news.php",
+        "PHPFusion\\News\\NewsAdminView"        => NEWS_CLASSES."admin/news_admin_view.php",
+        "PHPFusion\\News\\NewsAdminModel"       => NEWS_CLASSES."admin/news_admin_model.php",
+        "PHPFusion\\News\\NewsCategoryAdmin"    => NEWS_CLASSES."admin/controllers/news_cat.php",
+        "PHPFusion\\News\\NewsSettingsAdmin"    => NEWS_CLASSES."admin/controllers/news_settings.php",
+        "PHPFusion\\News\\NewsSubmissionsAdmin" => NEWS_CLASSES."admin/controllers/news_submissions.php",
+        "PHPFusion\\News\\NewsAdmin"            => NEWS_CLASSES."admin/controllers/news.php",
+        "PHPFusion\\OpenGraphNews"              => NEWS_CLASSES."news/OpenGraphNews.php"
+    ];
 
     if (isset($autoload_register_paths[$className])) {
         $fullPath = $autoload_register_paths[$className];
@@ -39,6 +37,4 @@ spl_autoload_register(function ($className) {
             require $fullPath;
         }
     }
-
-
 });

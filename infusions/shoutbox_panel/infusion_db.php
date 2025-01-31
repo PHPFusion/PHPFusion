@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: infusion_db.php
-| Author: MarcusG
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,20 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("S", "<i class='fa fa-commenting fa-lg'></i>");
+defined('IN_FUSION') || exit;
 
-if (!defined("DB_SHOUTBOX")) {
-    define("DB_SHOUTBOX", DB_PREFIX."shoutbox");
-}
+// Locales
+define('SHOUTBOX_LOCALE', fusion_get_inf_locale_path('shoutbox.php', INFUSIONS.'shoutbox_panel/locale/'));
 
-// Added Shoutbox Locale Constant
-if (!defined("SHOUTBOX_LOCALE")) {
-    if (file_exists(INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php")) {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/".LANGUAGE.".php");
-    } else {
-        define("SHOUTBOX_LOCALE", INFUSIONS."shoutbox_panel/locale/English.php");
-    }
-}
+// Paths
+const SHOUTBOX = INFUSIONS.'shoutbox_panel/';
+
+// Database
+const DB_SHOUTBOX = DB_PREFIX."shoutbox";
+
+// Admin Settings
+\PHPFusion\Admins::getInstance()->setAdminPageIcons("S", "<i class='admin-ico fa fa-fw fa-commenting'></i>");

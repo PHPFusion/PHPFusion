@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Block/block_widget.php
+| Filename: block_widget.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -16,7 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 // Path Definitions
-$widget_locale = fusion_get_locale('', WIDGETS."/block/locale/".LANGUAGE.".php");
+$lang = file_exists(WIDGETS."block/locale/".LANGUAGE.".php") ? WIDGETS."block/locale/".LANGUAGE.".php" : WIDGETS."block/locale/English.php";
+$widget_locale = fusion_get_locale('', $lang);
 
 $widget_title = $widget_locale['BLKW_0100'];
 $widget_icon = 'block.svg';

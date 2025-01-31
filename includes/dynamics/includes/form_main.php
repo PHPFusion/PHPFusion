@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_main.php
 | Author: Frederick MC Chan (Chan)
@@ -15,50 +15,125 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 /**
- * @param       $form_name
- * @param       $method - 'post' or 'get'
- * @param       $action_url - form current uri
- * @param array $options :
- *                          form_id = default as form_name
- *                          class = default empty
- *                          enctype = true or false , set true to allow file upload
- *                          max_tokens = store into session number of tokens , default as 1.
+ * The function should be able used to replace conventional <form> tags to provide an enhanced feature to your application.
+ *
+ * @param string $form_name  Form ID.
+ * @param string $method     Possible value: post, get.
+ * @param string $action_url Form current uri.
+ * @param array  $options
+ *
  * @return string
  */
-function openform($form_name, $method, $action_url, array $options = array()) {
+function openform($form_name, $method, $action_url = FORM_REQUEST, array $options = []) {
 
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
 
-    $default_options = array(
-        'form_id'    => !empty($options['form_id']) ? $options['form_id'] : $form_name,
-        'class'      => !empty($options['class']) ? $options['class'] : '',
-        'enctype'    => !empty($options['enctype']) && $options['enctype'] == TRUE ? TRUE : FALSE,
-        'max_tokens' => !empty($options['max_tokens']) && isnum($options['max_tokens']) ? $options['max_tokens'] : 5,
-        'remote_url' => !empty($options['remote_url']) ? $options['remote_url'] : '',
-        'inline'     => FALSE,
-        'on_submit'  => '',
-    );
+    $default_options = [
+        'form_id'    => $form_name,
+        'class'      => '', // CSS class properties.
+        'enctype'    => FALSE, // Set true for allowing multipart.
+        'max_tokens' => fusion_get_settings('form_tokens'),
+        'inline'     => FALSE, // Set true for making form inline.
+        'on_submit'  => '', // Adds javascript function on form submit.
+        'honeypot'   => TRUE, // Enables honeypots to counter botting.
+    ];
+
     $options += $default_options;
 
-    $class = '';
-    if (!\defender::safe()) {
-        $class .= "warning ".$options['class'];
-    } elseif (!empty($options['class'])) {
-        $class .= $options['class'];
+    if (!$action_url) {
+        $action_url = FORM_REQUEST;
     }
 
-    //$action_prefix = fusion_get_settings("site_seo") == 1 && !defined("ADMIN_PANEL") ? FUSION_ROOT : "";
-    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' class='".($options['inline'] ? "form-inline " : '').($class ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '')." ".($options['on_submit'] ? "onSubmit='".$options['on_submit']."'" : '').">\n";
+    $class = $options['class'];
+
+    if (!fusion_safe()) {
+        $class .= " warning";
+    }
+
+    $html = "<form name='".$form_name."' id='".$options['form_id']."' method='".$method."' action='".$action_url."' role='form' class='".($options['inline'] ? "form-inline " : '').(!empty($class) ? $class : 'm-0')."'".($options['enctype'] ? " enctype='multipart/form-data'" : '').($options['on_submit'] ? " onSubmit='".$options['on_submit']."'" : '').">\n";
+
     if ($method == 'post') {
-        $token = \Defender\Token::generate_token($options['form_id'], $options['max_tokens'], $options['remote_url']);
+        $token = fusion_get_token($options['form_id'], $options['max_tokens']);
         $html .= "<input type='hidden' name='fusion_token' value='".$token."' />\n";
         $html .= "<input type='hidden' name='form_id' value='".$options['form_id']."' />\n";
+        if ($options['honeypot']) {
+            $input_name = 'fusion_'.random_string();
+            $html .= "<input type='hidden' name='$input_name' value=''>\n";
+            Defender::getInstance()->addHoneypot([
+                'honeypot'   => $options['form_id'].'_honeypot',
+                'input_name' => $input_name,
+                'form_name'  => $form_name,
+                'type'       => 'honeypot',
+            ]);
+        }
     }
 
     return $html;
 }
 
+/**
+ * @return string
+ */
 function closeform() {
     return "</form>\n";
+}
+
+/**
+ * @param mixed $value
+ *
+ * @return array|string
+ */
+function clean_input_name($value) {
+    $re = '/\[(.*?)\]/m';
+    return preg_replace($re, '', $value);
+}
+
+/**
+ * @param $value
+ *
+ * @return array|string
+ */
+function clean_input_value($value) {
+    if (!is_float($value)) {
+        if (is_string($value)) {
+            return stripinput($value);
+        }
+        if (is_array($value)) {
+            return array_map('stripinput', $value);
+        }
+    }
+
+    return $value;
+}
+
+/**
+ * Load Select2
+ */
+function load_select2_script() {
+    static $loaded = FALSE;
+    if ($loaded === FALSE) {
+        /**
+         * @return string
+         * @see load_select2_script()
+         */
+        function select2csspath() {
+            return DYNAMICS."assets/select2/select2.css";
+        }
+
+        $select2_locale_path = LOCALE.LOCALESET."includes/dynamics/assets/select2/select2_locale_".fusion_get_locale('select2').".js";
+        fusion_load_script(DYNAMICS."assets/select2/select2.js");
+
+        if (is_file($select2_locale_path)) {
+            fusion_load_script($select2_locale_path);
+        }
+
+        /**
+         * @uses select2csspath()
+         */
+        fusion_add_hook("fusion_core_styles", "select2csspath");
+
+        $loaded = TRUE;
+    }
 }

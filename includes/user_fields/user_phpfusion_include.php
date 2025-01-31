@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_phpfusion_include.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,22 +15,24 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-$icon = "<img src='".IMAGES."php-fusion-icon.png'/>";
+$icon = "<img src='".IMAGES."phpfusion-icon.png' title='PHPFusion' alt='PHPFusion'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
+    $options = [
             'inline'      => TRUE,
             'max_length'  => 20,
             'error_text'  => $locale['uf_phpfusion_error'],
             'placeholder' => $locale['uf_phpfusion_id'],
             'label_icon'  => $icon,
-        ) + $options;
+        ] + $options;
     $user_fields = form_text('user_phpfusion', $locale['uf_phpfusion'], $field_value, $options);
-// Display in profile
-} elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_phpfusion'], 'value' => $field_value ?: '');
+    // Display in profile
+} else if ($profile_method == "display") {
+    $user_fields = [
+        'icon'  => $icon,
+        'title' => $locale['uf_phpfusion'],
+        'value' => $field_value ?: ''
+    ];
 }

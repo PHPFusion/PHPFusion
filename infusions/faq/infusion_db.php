@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: faq/infusion_db.php
-| Author: PHP-Fusion Development Team
+| Filename: infusion_db.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,34 +15,35 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
+use PHPFusion\Admins;
 
 // Locales
-if (!defined("FAQ_LOCALE")) {
-    if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq.php")) {
-        define("FAQ_LOCALE", INFUSIONS."faq/locale/".LOCALESET."faq.php");
-    } else {
-        define("FAQ_LOCALE", INFUSIONS."faq/locale/English/faq.php");
-    }
-}
-
-if (!defined("FAQ_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."faq/locale/".LOCALESET."faq_admin.php")) {
-        define("FAQ_ADMIN_LOCALE", INFUSIONS."faq/locale/".LOCALESET."faq_admin.php");
-    } else {
-        define("FAQ_ADMIN_LOCALE", INFUSIONS."faq/locale/English/faq_admin.php");
-    }
-}
+define("FAQ_LOCALE", fusion_get_inf_locale_path('faq.php', INFUSIONS.'faq/locale/'));
 
 // Paths
-if (!defined('FAQ_CLASS')) define('FAQ_CLASS', INFUSIONS.'faq/classes/');
-// Database
-if (!defined('DB_FAQS')) define('DB_FAQS', DB_PREFIX.'faqs');
-if (!defined('DB_FAQ_CATS')) define('DB_FAQ_CATS', DB_PREFIX.'faq_cats');
+const FAQ = INFUSIONS.'faq/';
+const FAQ_CLASSES = INFUSIONS.'faq/classes/';
 
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
-\PHPFusion\Admins::getInstance()->setCommentType("FQ", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitType("q", fusion_get_locale("FQ", LOCALE.LOCALESET."admin/main.php"));
-\PHPFusion\Admins::getInstance()->setSubmitLink("q", INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&amp;section=submissions&amp;submit_id=%s");
+// Database
+const DB_FAQS = DB_PREFIX.'faqs';
+const DB_FAQ_CATS = DB_PREFIX.'faq_cats';
+
+// Admin Settings
+Admins::getInstance()->setAdminPageIcons("FQ", "<i class='admin-ico fa fa-fw fa-life-buoy'></i>");
+
+$inf_settings = get_settings('faq');
+if (
+    (!empty($inf_settings['faq_allow_submission']) && $inf_settings['faq_allow_submission']) &&
+    (!empty($inf_settings['faq_submission_access']) && checkgroup($inf_settings['faq_submission_access']))
+) {
+    Admins::getInstance()->setSubmitData('q', [
+        'infusion_name' => 'faq',
+        'link'          => INFUSIONS."faq/faq_submit.php",
+        'submit_link'   => "submit.php?stype=q",
+        'submit_locale' => fusion_get_locale('FQ', LOCALE.LOCALESET."admin/main.php"),
+        'title'         => fusion_get_locale('faq_submit', FAQ_LOCALE),
+        'admin_link'    => INFUSIONS."faq/faq_admin.php".fusion_get_aidlink()."&section=submissions&submit_id=%s"
+    ]);
+}

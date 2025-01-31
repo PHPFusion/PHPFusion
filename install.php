@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: install.php
-| Author: Frederick MC Chan (Chan)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,8 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-define('BASEDIR', '');
-define("IN_FUSION", true);
+const BASEDIR = '';
+const IN_FUSION = TRUE;
 require_once __DIR__.'/includes/autoloader.php';
 // Start the installer
-PHPFusion\Installer\Install_Core::getInstance()->install_phpfusion();
+PHPFusion\Installer\InstallCore::getInstallInstance()->installPhpfusion();

@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: form_fileinput.php
 | Author: Frederick MC CHan (Chan)
@@ -18,66 +18,76 @@
 +--------------------------------------------------------*/
 
 /**
- * @param            $input_name
- * @param string     $label
- * @param bool|FALSE $input_value
- * @param array      $options
- * if media is true, defender will check if any file uploaded. If no, select from media selection
+ * Generates a file upload input.
+ *
+ * @param string $input_name  Name of the input, by default it's also used as the ID for the input.
+ * @param string $label       Input label.
+ * @param bool   $input_value The value to be displayed.
+ * @param array  $options
  *
  * @return string
  */
-function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+function form_fileinput($input_name, $label = '', $input_value = FALSE, array $options = []) {
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
+
     $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
-    $template_choices = array('classic', 'modern', 'thumbnail');
+    $input_value = clean_input_value($input_value);
 
-    $default_options = array(
+    $template_choices = ['classic', 'modern', 'thumbnail'];
+
+    $default_options = [
         'input_id'          => $input_name,
-        'upload_path'       => IMAGES,
-        'required'          => FALSE,
-        'safemode'          => FALSE,
-        'deactivate'        => FALSE,
+        'upload_path'       => IMAGES, // The upload path for the file(s).
+        'required'          => FALSE, // Whether this field is required during form submission.
+        'safemode'          => FALSE, // Extra security settings such as strict type GD2 checks, and other validation during upload.
+        'deactivate'        => FALSE, // Disable the input and set it as readonly.
         'preview_off'       => FALSE,
-        'type'              => 'image', //// ['image', 'html', 'text', 'video', 'audio', 'flash', 'object']
-        'width'             => '100%',
+        'type'              => 'image', // Possible value: image, html, text, video, audio, flash, object, file
+        'width'             => '', // Accepts px or % values.
         'label'             => $locale['browse'],
         'inline'            => TRUE,
-        'class'             => "",
-        'tip'               => "",
-        'ext_tip'           => "",
+        'class'             => "", // The input container wrapper class.
+        'tip'               => "", // Displays a tip by the label.
+        'ext_tip'           => "", // Displays a tip at the bottom of the input.
         'error_text'        => $locale['error_input_file'],
         'btn_class'         => 'btn-default',
         'icon'              => 'fa fa-upload',
         'jsonurl'           => FALSE,
+        'dropzone'          => FALSE,
         'valid_ext'         => '.jpg,.png,.PNG,.JPG,.JPEG,.gif,.GIF,.bmp,.BMP',
-        'thumbnail'         => FALSE,
-        'thumbnail_w'       => 300,
-        'thumbnail_h'       => 300,
-        'thumbnail_folder'  => "",
-        'thumbnail_ratio'   => 0,
-        'thumbnail_suffix'  => '_t1',
-        'thumbnail2'        => FALSE,
-        'thumbnail2_w'      => 600,
-        'thumbnail2_h'      => 400,
-        'thumbnail2_suffix' => '_t2',
-        'thumbnail2_ratio'  => 0,
-        'delete_original'   => FALSE,
-        'max_width'         => 1800,
-        'max_height'        => 1600,
-        'max_byte'          => 1500000,
-        'max_count'         => 1,
-        'multiple'          => FALSE,
-        'template'          => 'classic',
-        'media'             => FALSE,
-        'placeholder'       => '',
-    );
+        'thumbnail'         => FALSE, // Set to true to create primary thumbnail.
+        'thumbnail_w'       => 300, // The width of the primary thumbnail.
+        'thumbnail_h'       => 300, // The height of the primary thumbnail.
+        'thumbnail_folder'  => "", // The path to the primary thumnail storage.
+        'thumbnail_ratio'   => 0, // Keep original ratio or forced square dimension (0 - original, 1 - square). Possible value: 0, 1
+        'thumbnail_suffix'  => '_t1', // Adds a suffix to primary thumbnail filename.
+        'thumbnail2'        => FALSE, // Set to true to create secondary thumbnail.
+        'thumbnail2_w'      => 600, // The width of the secondary thumbnail.
+        'thumbnail2_h'      => 400, // The height of the secondary thumbnail.
+        'thumbnail2_suffix' => '_t2', // Adds a suffix to secondary thumbnail filename.
+        'thumbnail2_ratio'  => 0, // Keep original ratio or forced square dimension (0 - original, 1 - square). Possible value: 0, 1
+        'delete_original'   => FALSE, // This is used to delete the uploaded file. It can be used along with thumbnail creation where you can set this parameter to true to keep only the thumbnail.
+        'max_width'         => 1800, // Defines a maximum alloweable image width. Only takes effect if type is set to image.
+        'max_height'        => 1600, // Defines a maximum alloweable image height. Only takes effect if type is set to image.
+        'max_byte'          => 15728640, // Defines a maximum alloweable image size. Only takes effect if type is set to image.
+        'max_count'         => 1, // Sets a minimum alloweable file selection count per instance. Declare a new max_count to 10 to allow user to select 10 files.
+        'multiple'          => FALSE, // Whether the current fileinput allows multiple files selection per instance.
+        'template'          => 'classic', // Customize HTML output of the widget. Possible value: classic, modern, thumbnail
+        'media'             => FALSE, // Displays a file media browser selector to allow user to select files within the upload_path to pick on. If is true, defender will check if any file uploaded. If no, select from media selection.
+        'placeholder'       => '', // A placeholder for the field.
+        'form_id'           => '', // The current <form> element id that this widget is placed in.
+        'hide_upload'       => TRUE, // Show or hide an upload file button when file has been selected.
+        'hide_remove'       => FALSE, // Show or hide a remove file button when file has been selected.
+        'krajee_disabled'   => FALSE, // Disables Kartik Bootstrap Jquery plugin and shows a normal browser fileinput instead.
+        'replace_upload'    => FALSE, // Change the upload name to a new unique name upon successful upload.
+    ];
 
     $options += $default_options;
 
-    if (!is_dir($options['upload_path'])) {
+    if (!is_dir($options['upload_path']) && !$options['jsonurl']) {
         $options['upload_path'] = IMAGES;
     }
 
@@ -87,30 +97,34 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $options['template'] = "classic";
     }
 
-    $options['input_id'] = trim($options['input_id'], "[]");
+    $options['input_id'] = trim(str_replace("[", "-", $options['input_id']), "]");
 
     $error_class = "";
-    if (\defender::inputHasError($input_name)) {
+    if (\Defender::inputHasError($input_name)) {
         $error_class = "has-error ";
         if (!empty($options['error_text'])) {
-            addNotice("danger", "<strong>$title</strong> - ".$options['error_text']);
+            $new_error_text = \Defender::getErrorText($input_name);
+            if (!empty($new_error_text)) {
+                $options['error_text'] = $new_error_text;
+            }
+            addnotice("danger", $options['error_text']);
         }
     }
 
     // default max file size
     $format = '';
-    $browseLabel = $options['placeholder'] ?: $locale['df_300'];
-    // file type if single filter, if not will accept as object if left empty.
+    $browseLabel = $locale['df_300'];
     $type_for_js = NULL;
     if ($options['type']) {
+        // file type if single filter, if not will accept as object if left empty.
         if (!stristr($options['type'], ',') && $options['type']) {
             if ($options['type'] == 'image') {
                 $format = "image/*";
                 $browseLabel = $locale['df_301'];
-            } elseif ($options['type'] == 'video') {
+            } else if ($options['type'] == 'video') {
                 $format = "video/*";
                 $browseLabel = $locale['df_302'];
-            } elseif ($options['type'] == 'audio') {
+            } else if ($options['type'] == 'audio') {
                 $format = "audio/*";
                 $browseLabel = $locale['df_303'];
             }
@@ -118,53 +132,33 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
         $type_for_js = json_encode((array)$options['type']);
     }
 
-    $value = '';
-    if (!empty($input_value)) {
-        if (is_array($input_value)) {
-            foreach ($input_value as $value) {
-                // attempt to find file and append file with base path to avoid breaking image
-                $image_src = (file_exists($options['upload_path'].$value)) ? $options['upload_path'].$value : $value;
-                $value[] = "<img class='img-responsive' src='".$image_src."/>";
-            }
-        } else {
-            $image_src = (file_exists($options['upload_path'].$input_value)) ? $options['upload_path'].$input_value : $input_value;
-            $value = "<img class='img-responsive' src='".$image_src."'/>";
-        }
-        $value = json_encode($value);
-    }
+    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."'".($options['width'] ? " style='width: ".$options['width']." !important;'" : '').">\n";
+    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
+    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+    </label>\n" : '';
+    $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>\n" : "";
+    $html .= "<input type='file'".($options['krajee_disabled'] == TRUE ? " class='form-control' " : "").($format ? " accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."'".($options['width'] ? " style='width: ".$options['width'].";' " : '')."".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
+    $html .= $options['ext_tip'] ? "<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
+    $html .= (\Defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
 
-    if (!defined('form_fileinput')) {
-        add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
-        add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
-        define('form_fileinput', TRUE);
-    }
-
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'display-block overflow-hide ' : '').$error_class.$options['class']."' ".($options['width'] && !$label ? "style='width: ".$options['width']." !important;'" : '').">\n";
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3 p-l-0" : '')."' for='".$options['input_id']."'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
-	".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-	</label>\n" : '';
-    $html .= ($options['inline']) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>\n" : "";
-    $html .= "<input type='file' ".($format ? "accept='".$format."'" : '')." name='".$input_name."' id='".$options['input_id']."' style='width:".$options['width']."' ".($options['deactivate'] ? 'readonly' : '')." ".($options['multiple'] ? "multiple='1'" : '')." />\n";
-    $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span><br/>" : "";
-    $html .= (\defender::inputHasError($input_name)) ? "<div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : '';
     // Inserts Media Selector
     // Draw the framework first
     if ($options['media'] == TRUE) {
         $files_list = makefilelist($options['upload_path'], ".|..|index.php|", TRUE, 'files', 'psd|txt|md|php|exe|bat|pdf|js');
         $container_height = 300;
         $image_container_height = floor($container_height / 2.5);
-        $html .= "<div id='".$options['input_id']."-media' class='panel panel-default'>";
+        $html .= "<div id='".$options['input_id']."-media' class='panel panel-default spacer-sm'>";
         $html .= "<div class='panel-body'>\n";
         $html .= "<h5>".$locale['global_901']."</h5>";
         if (!empty($files_list)) {
             $html .= form_hidden($input_name."-mediaSelector", '', $input_value,
-                array('input_id' => $options['input_id']."-mediaSelector"));
+                ['input_id' => $options['input_id']."-mediaSelector"]);
             $html .= "<hr/>";
             $html .= "<div id='".$options['input_id']."-mediaContainer' class='row' style='max-height:".$container_height."px; overflow-y: scroll'>";
             foreach ($files_list as $files) {
                 $html .= "<div class='col-xs-6 col-sm-3 clearfix text-center m-b-15'>\n";
                 $html .= "<div class='media-container' title='$files' data-file='$files' style='height:".$image_container_height."px;'>\n";
-                $html .= "<img class='center-y' style='margin: 0 auto;' src='".$options['upload_path'].$files."' alt='$files'/>";
+                $html .= "<img class='center-y img-responsive' style='margin: 0 auto;' src='".$options['upload_path'].$files."' alt='$files'/>";
                 $html .= "</div>\n";
                 $html .= "<small>$files</small>";
                 $html .= "</div>\n";
@@ -184,18 +178,18 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
                 mediaSelect();
             ");
         }
-        $html .= (\defender::inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
+        $html .= (\Defender::inputHasError($input_name."-mediaSelector")) ? "<div id='".$options['input_id']."-mediaSelector' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div>" : "";
 
         $html .= "</div>\n";
         $html .= "</div>\n";
     }
-    $html .= ($options['inline']) ? "</div>\n" : "";
+    $html .= $options['inline'] && $label ? "</div>\n" : "";
     $html .= "</div>\n";
 
-    \defender::getInstance()->add_field_session(
-        array(
+    \Defender::getInstance()->add_field_session(
+        [
             'input_name'        => trim($input_name, '[]'),
-            'type'              => ((array)$options['type'] == array('image') ? 'image' : 'file'),
+            'type'              => ((array)$options['type'] == ['image'] ? 'image' : 'file'),
             'title'             => $title,
             'id'                => $options['input_id'],
             'required'          => $options['required'],
@@ -220,96 +214,180 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             'max_byte'          => $options['max_byte'],
             'multiple'          => $options['multiple'],
             'valid_ext'         => $options['valid_ext'],
-        )
+            'replace_upload'    => $options['replace_upload'],
+        ]
     );
 
-    if ($options['media']) {
-        \defender::getInstance()->add_field_session(
-            array(
-                'input_name' => $input_name."-mediaSelector",
-                'title'      => trim($title, '[]'),
-                'id'         => $options['input_id']."-mediaSelector",
-                'type'       => 'mediaSelect',
-                'path'       => $options['upload_path'],
-                'required'   => $options['required'],
-                'safemode'   => $options['safemode'],
-            )
-        );
-    }
 
-    switch ($options['template']) {
-        case "classic":
-            add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                browseClass: 'btn ".$options['btn_class']." button',
-                uploadClass: 'btn btn-default button',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
-                removeClass : 'btn btn-default button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"".$options['icon']." m-r-10\"></i>',
-                ".($options['jsonurl'] ? "uploadUrl : '".$options['url']."'," : '')."
-                ".($options['jsonurl'] ? '' : 'showUpload: false')."
-            });
-            ");
-            break;
-        case "modern":
-            add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                browseClass: 'btn btn-modal btn-lg',
-                uploadClass: 'btn btn-modal btn-lg',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
-                removeClass : 'btn button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
-                showCaption: false,
-                showRemove: false,
-                showUpload: false,
-                layoutTemplates: {
-                 main2: '<div class=\"btn-photo-upload btn-link\">'+' {browse}'+' </div></span></div> {preview}',
-                 },
-            });
-            ");
-            break;
-        case "thumbnail":
-            add_to_jquery("
-            $('#".$options['input_id']."').fileinput({
-                allowedFileTypes: ".$type_for_js.",
-                allowedPreviewTypes : ".$type_for_js.",
-                ".($value ? "initialPreview: ".$value.", " : '')."
-                ".($options['preview_off'] ? "showPreview: false, " : '')."
-                defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
-                browseClass: 'btn btn-sm btn-block btn-default',
-                uploadClass: 'btn btn-modal',
-                captionClass : '',
-                maxFileCount: '".$options['max_count']."',
-                removeLabel: '".$locale['remove']."',
-                removeTitle: '".$locale['df_304']."',
-                removeClass : 'btn button',
-                browseLabel: '".$browseLabel."',
-                browseIcon: '<i class=\"fa fa-plus m-r-10\"></i>',
-                showCaption: false,
-                showRemove: false,
-                showUpload: false,
-                layoutTemplates: {
-                    main2: '<div class=\"panel panel-default\">'+'{preview}'+'<div class=\"panel-body\">'+' {browse}'+'</div></div>',
+    if ($options['krajee_disabled'] === FALSE) {
+        $browseLabel = $options['placeholder'] ?: $browseLabel;
+        $value = "";
+        if (!empty($input_value)) {
+            if (is_array($input_value)) {
+                $value = [];
+                foreach ($input_value as $c_value) {
+                    $value[] = (file_exists($options['upload_path'].$c_value) ? $options['upload_path'].$c_value : $c_value);
+                }
+            } else {
+                $value = (file_exists($options['upload_path'].$input_value) ? $options['upload_path'].$input_value : $input_value);
+            }
+            $value = json_encode($value);
+        }
+
+        $extra_data_js = "";
+        if ($options['form_id'] && $options['jsonurl']) {
+            $extra_data_js = "
+                uploadExtraData: function() {
+                    var inputs = $('#".$options['form_id']." :input');
+                    var obj = $.map(inputs, function(x, y) {
+                        return {
+                            Key: x.name,
+                            Value: $(x).val()
+                        };
+                    });
+                    return obj;
                 },
-            });
-            ");
-            break;
+            ";
+        }
+        if ($options['media']) {
+            \Defender::getInstance()->add_field_session(
+                [
+                    'input_name' => $input_name."-mediaSelector",
+                    'title'      => trim($title, '[]'),
+                    'id'         => $options['input_id']."-mediaSelector",
+                    'type'       => 'mediaSelect',
+                    'path'       => $options['upload_path'],
+                    'required'   => $options['required'],
+                    'safemode'   => $options['safemode'],
+                ]
+            );
+        }
+
+        $lang = file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js') ? 'language: "'.$locale['short_lang_name'].'",' : '';
+
+        $icons = "
+        browseIcon: '<i class=\"".$options['icon']."\"></i>&nbsp;',
+        previewFileIcon: '<i class=\"fas fa-file\"></i>',
+        removeIcon: '<i class=\"fas fa-trash\"></i>',
+        cancelIcon: '<i class=\"fas fa-ban\"></i>',
+        pauseIcon: '<i class=\"fas fa-pause\"></i>',
+        uploadIcon: '<i class=\"fas fa-upload\"></i>',
+        msgValidationErrorIcon: '<i class=\"fas fa-exclamation-circle\"></i> ',
+        fileActionSettings: {
+            removeIcon: '<i class=\"fas fa-trash\"></i>',
+            uploadIcon: '<i class=\"fas fa-upload\"></i>',
+            uploadRetryIcon: '<i class=\"fas fa-redo\"></i>',
+            downloadIcon: '<i class=\"fas fa-download\"></i>',
+            zoomIcon: '<i class=\"fas fa-search-plus\"></i>',
+            dragIcon: '<i class=\"fas fa-arrows-alt\"></i>',
+            indicatorNew: '<i class=\"fas fa-plus text-warning\"></i>',
+            indicatorSuccess: '<i class=\"fas fa-check text-success\"></i>',
+            indicatorError: '<i class=\"fas fa-exclamation text-danger\"></i>',
+            indicatorLoading: '<i class=\"fas fa-hourglass-end text-muted\"></i>',
+            indicatorPaused: '<i class=\"fas fa-pause text-primary\"></i>'
+        },
+        ";
+
+        switch ($options['template']) {
+            case "classic":
+                add_to_jquery("
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        initialPreviewAsData: true,
+                        browseClass: 'btn ".$options['btn_class']." button',
+                        uploadClass: 'btn btn-default button',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn ".$options['btn_class']." button',
+                        browseLabel: '".$browseLabel."',
+                        ".$icons."
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        ".($locale['text-direction'] == 'rtl' ? 'rtl: true,' : '')."
+                        $extra_data_js
+                        ".$lang."
+                    });
+                ");
+                break;
+            case "modern":
+                add_to_jquery("
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        initialPreviewAsData: true,
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        browseClass: 'btn btn-modal btn-lg',
+                        uploadClass: 'btn btn-modal btn-lg',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn button',
+                        browseLabel: '".$browseLabel."',
+                        ".$icons."
+                        showCaption: false,
+                        showRemove: false,
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        $extra_data_js
+                        layoutTemplates: {
+                            main2: '<div class=\"btn-photo-upload btn-link\">{preview}<div class=\"kv-upload-progress hide\"></div>{remove}{cancel}{upload}{browse}</div>'
+                        },
+                        ".$lang."
+                    });
+                ");
+                break;
+            case "thumbnail":
+                add_to_jquery("
+                    $('#".$options['input_id']."').fileinput({
+                        allowedFileTypes: ".$type_for_js.",
+                        allowedPreviewTypes : ".$type_for_js.",
+                        ".($value ? "initialPreview: ".$value.", " : '')."
+                        ".($options['preview_off'] ? "showPreview: false, " : '')."
+                        initialPreviewAsData: true,
+                        defaultPreviewContent: '<img class=\"img-responsive\" src=\"".IMAGES."no_photo.png\" alt=\"".$browseLabel."\" style=\"width:100%;\">',
+                        browseClass: 'btn btn-block btn-default',
+                        uploadClass: 'btn btn-modal',
+                        captionClass : '',
+                        maxFileCount: '".$options['max_count']."',
+                        removeClass : 'btn button',
+                        browseLabel: '".$browseLabel."',
+                        ".$icons."
+                        showCaption: false,
+                        showRemove: false,
+                        ".($options['jsonurl'] ? "uploadUrl : '".$options['jsonurl']."'," : '')."
+                        ".($options['hide_upload'] ? 'showUpload: false,' : '')."
+                        ".($options['hide_remove'] ? 'showRemove: false,' : '')."
+                        dropZoneEnabled: ".($options['dropzone'] ? "true" : "false").",
+                        $extra_data_js
+                        layoutTemplates: {
+                            main2: '<div class=\"panel panel-default\">' + '{preview}' + '<div class=\"panel-body\">' + ' {browse}' + '</div></div>',
+                        },
+                        ".$lang."
+                    });
+                ");
+                break;
+        }
+
+        if (!defined('FORM_FILEINPUT')) {
+            define('FORM_FILEINPUT', TRUE);
+
+            add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput.min.css' media='all' rel='stylesheet' type='text/css' />");
+            if ($locale['text-direction'] == 'rtl') {
+                add_to_head("<link href='".DYNAMICS."assets/fileinput/css/fileinput-rtl.min.css' media='all' rel='stylesheet' type='text/css' />");
+            }
+            add_to_footer("<script src='".DYNAMICS."assets/fileinput/js/fileinput.min.js' type='text/javascript'></script>");
+
+            if (file_exists(LOCALE.LOCALESET.'includes/dynamics/assets/fileinput/js/locales/'.$locale['short_lang_name'].'.js')) {
+                add_to_footer("<script src='".LOCALE.LOCALESET."includes/dynamics/assets/fileinput/js/locales/".$locale['short_lang_name'].".js' type='text/javascript'></script>");
+            }
+        }
     }
 
     return $html;

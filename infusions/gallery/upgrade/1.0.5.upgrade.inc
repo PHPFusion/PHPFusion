@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: /gallery/upgrade/1.0.5.upgrade.inc
-| Upgrade Gallery to Version 9.0.2 (RC5)
-| Author: PHP-Fusion Development Team
+| Filename: 1.0.5.upgrade.inc
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -19,6 +18,8 @@
 $inf_version = '1.0.5';
 require_once INCLUDES."infusions_include.php";
 
+$locale = fusion_get_locale();
+
 if (!column_exists(DB_PHOTOS, 'photo_keywords', FALSE)) {
     // Option to use keywords in photos
     $inf_altertable[] = DB_PHOTOS." ADD photo_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER photo_description";
@@ -28,14 +29,25 @@ $check_array = [
     'album_language' => " ADD album_language varchar(50) NOT NULL default '".fusion_get_settings('localeset')."' AFTER album_datestamp",
     'album_keywords' => " ADD album_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER album_description",
     'album_image'    => " ADD album_image VARCHAR(200) NOT NULL DEFAULT '' AFTER album_keywords",
-    'album_thumb1'   => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
-    'album_thumb2'   => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_thumb1",
+    //'album_thumb1'   => " ADD album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image",
+    'album_thumb2'   => " ADD album_thumb2 VARCHAR(200) NOT NULL DEFAULT ''",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
         dbquery("ALTER TABLE ".DB_PHOTO_ALBUMS." ".$value);
     }
 }
+
+$change_album = [
+    'album_thumb' => " CHANGE album_thumb album_thumb1 VARCHAR(200) NOT NULL DEFAULT '' AFTER album_image"
+];
+
+foreach ($change_album as $key => $value) {
+    if (column_exists(DB_PHOTO_ALBUMS, $key, FALSE)) {
+        $inf_altertable[] = DB_PHOTO_ALBUMS.$value;
+    }
+}
+
 // Make sure access table are support for new levels
 if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
     $inf_altertable[] = DB_PHOTO_ALBUMS." CHANGE album_access album_access CHAR(4) NOT NULL DEFAULT '".USER_LEVEL_MEMBER."'";
@@ -44,24 +56,8 @@ if (column_exists(DB_PHOTO_ALBUMS, 'album_access', FALSE)) {
 // Update new access levels for album access
 $result = dbquery("SELECT album_id, album_access, album_language FROM ".DB_PHOTO_ALBUMS);
 if (dbrows($result)) {
-    $localeset = fusion_get_settings('localeset');
     while ($data = dbarray($result)) {
-        $update = array();
-        if ($data['album_access']) { // access > 1 (i.e. 100, 101, 102, 103)
-            $update['album_access'] = '-'.$data['album_access'];
-        }
-        if (!$data['album_language']) {
-            $update['album_language'] = $localeset;
-        }
-        if (!empty($update)) {
-            $update = array_map(function ($key) use ($update) {
-                return "`$key` = '".$update[$key]."'";
-            }, array_keys($update));
-        }
-        $upgrade = implode(', ', $update);
-        if (!empty($update)) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET $upgrade WHERE album_id='".$data['album_id']."'";
-        }
+        $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_access='-".$data['album_access']."' WHERE album_id='".$data['album_id']."' AND album_access != 0";
     }
 }
 
@@ -101,9 +97,7 @@ foreach ($check_array as $key => $value) {
 $result = dbquery("SELECT album_id, album_thumb FROM ".DB_PHOTO_ALBUMS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
-        if ($data['album_thumb']) {
-            $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."', album_language='".fusion_get_settings('locale')."' WHERE album_id='".$data['album_id']."'";
-        }
+        $inf_updatedbrow[] = DB_PHOTO_ALBUMS." SET album_image='".$data['album_thumb']."', album_language='".fusion_get_settings('locale')."' WHERE album_id='".$data['album_id']."'";
     }
 }
 
@@ -118,13 +112,28 @@ if (!empty($enabled_languages)) {
     foreach ($enabled_languages as $language) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$language."')";
 
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/gallery/gallery.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=p' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_PHOTO_ALBUMS." WHERE album_language='".$language."'"; //will not be able to delete photos tied to it.
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3308']."', 'infusions/gallery/gallery.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3313']."', 'submit.php?stype=p', ".USER_LEVEL_MEMBER.", '1', '0', '15', '1', '".$enabled_languages[$i]."')";
+}
+
+// Move all photos
+if (is_dir(IMAGES."photoalbum/")) {
+    rrmdir(IMAGES.'photoalbum/submissions/');
+
+    $files = makefilelist(IMAGES."photoalbum/", ".|..|index.php");
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."photoalbum/".$file, INFUSIONS.'gallery/photos/'.$file);
+    }
+
+    $folders = makefilelist(IMAGES."photoalbum/", ".|..|index.php", TRUE, 'folders');
+    foreach ($folders as $folder) {
+        rename(IMAGES."photoalbum/".$folder, INFUSIONS.'gallery/photos/'.$folder);
+    }
+
+    // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'photoalbum');
 }

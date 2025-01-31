@@ -1,6 +1,7 @@
 <?php
 // Admin Links
 $locale['200'] = "[SITENAME] Admin Panel";
+$locale['200a'] = "Admin Panel";
 $locale['ac00'] = "Admin Home";
 $locale['ac01'] = "Content Admin";
 $locale['ac02'] = "User Admin";
@@ -31,7 +32,7 @@ $locale['PH'] = "Gallery";
 $locale['B'] = "Blacklist";
 $locale['C'] = "Comments";
 $locale['DB'] = "Database Backup";
-$locale['PI'] = "PHP Info";
+$locale['PI'] = "Server Info";
 $locale['PO'] = "Polls";
 $locale['SL'] = "Site Links";
 $locale['SU'] = "Submissions";
@@ -67,6 +68,7 @@ $locale['ROB'] = "robots.txt";
 $locale['TS'] = "Theme Manager";
 $locale['S13'] = "Settings Blog";
 $locale['LANG'] = "Language Settings";
+$locale['FM'] = "Fusion File Manager";
 
 // Site Information
 $locale['250'] = "Dashboard - Site Overview";
@@ -113,3 +115,20 @@ $locale['283'] = "Infusions";
 $locale['284'] = "There are no infusions installed";
 $locale['285'] = "Manage Infusions";
 $locale['286'] = "Review Submission";
+
+$locale['290'] = "There is an autosave of this post that is more recent than the version below.";
+$locale['291'] = "View the autosave";
+$locale['292'] = "Saved Revisions";
+$locale['293'] = "Fill to Autosave";
+
+$locale['search_msg_100'] = 'Failed system validation';
+$locale['search_msg_101'] = 'Failed system security measures';
+$locale['search_msg_102'] = 'Pages failed to load';
+$locale['search_msg_103'] = 'Search string is too short';
+$locale['search_msg_104'] = 'There are no results found';
+
+$locale['deprecated_section'] = 'This section is deprecated. We no longer recommend it and plan to remove it soon.';
+$locale['new_update_avalaible'] = "A new PHPFusion v%s update is available!";
+$locale['infusions_updates_avalaible'] = "Updates for infusions are available.";
+$locale['update_now'] = "Update now";
+$locale['unactivated_users'] = "There are several unactivated users in the database. [LINK]Click here[/LINK] to view them and activate.";

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: articles/admin/controllers/article_settings.php
-| Author: PHP-Fusion Development Team
+| Filename: article_settings.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -18,11 +18,9 @@
 namespace PHPFusion\Articles;
 
 class ArticlesSettingsAdmin extends ArticlesAdminModel {
-
     private static $instance = NULL;
-    private $locale = array();
 
-    public static function getInstance() {
+    public static function articles() {
         if (self::$instance == NULL) {
             self::$instance = new static();
         }
@@ -31,46 +29,59 @@ class ArticlesSettingsAdmin extends ArticlesAdminModel {
     }
 
     public function displayArticlesAdmin() {
-
-        pageAccess("A");
-        $this->locale = self::get_articleAdminLocale();
-        $article_settings = self::get_article_settings();
+        pageaccess("A");
+        $locale = self::getArticleAdminLocales();
+        $article_settings = self::getArticleSettings();
 
         // Save
         if (isset($_POST['savesettings'])) {
-            $inputArray = array(
-                "article_pagination"        => form_sanitizer($_POST['article_pagination'], 1, "article_pagination"),
-                "article_allow_submission"  => form_sanitizer($_POST['article_allow_submission'], 0, "article_allow_submission"),
-                "article_extended_required" => form_sanitizer($_POST['article_extended_required'], 0, "article_extended_required")
-            );
+            $inputArray = [
+                'article_pagination'        => form_sanitizer($_POST['article_pagination'], 15, 'article_pagination'),
+                'article_allow_submission'  => form_sanitizer($_POST['article_allow_submission'], 0, 'article_allow_submission'),
+                'article_extended_required' => form_sanitizer($_POST['article_extended_required'], 0, 'article_extended_required'),
+                'article_submission_access' => form_sanitizer($_POST['article_submission_access'], USER_LEVEL_MEMBER, 'article_submission_access')
+            ];
 
             // Update
-            if (\defender::safe()) {
+            if (fusion_safe()) {
                 foreach ($inputArray as $settings_name => $settings_value) {
-                    $inputSettings = array(
-                        "settings_name" => $settings_name, "settings_value" => $settings_value, "settings_inf" => "article",
-                    );
-                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, "update", array("primary_key" => "settings_name"));
+                    $inputSettings = [
+                        'settings_name' => $settings_name, 'settings_value' => $settings_value, 'settings_inf' => 'articles',
+                    ];
+                    dbquery_insert(DB_SETTINGS_INF, $inputSettings, 'update', ['primary_key' => 'settings_name']);
                 }
-                addNotice("success", $this->locale['900']);
+                addnotice('success', $locale['900']);
                 redirect(FUSION_REQUEST);
             } else {
-                addNotice("danger", $this->locale['901']);
+                addnotice('danger', $locale['901']);
                 $article_settings = $inputArray;
             }
         }
 
-        //opentable("");
-        ?>
-        <div class="well spacer-md">
-            <?php echo $this->locale['article_0400']; ?>
-        </div>
-        <?php
-        echo openform("settingsform", "post", FUSION_REQUEST, ['class' => 'spacer-sm']);
-        echo form_text("article_pagination", $this->locale['article_0401'], $article_settings['article_pagination'], array('inline' => true, 'max_length' => 4, 'inner_width' => '250px', 'width' => '150px', 'type' => 'number'));
-        echo form_select("article_allow_submission", $this->locale['article_0007'], $article_settings['article_allow_submission'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
-        echo form_select("article_extended_required", $this->locale['article_0403'], $article_settings['article_extended_required'], array("inline" => true, "options" => array($this->locale['disable'], $this->locale['enable'])));
-        echo form_button("savesettings", $this->locale['750'], $this->locale['750'], array("class" => "btn-success"));
+        echo "<div class='well'>".$locale['article_0400']."</div>";
+
+        echo openform('settingsform', 'post', FUSION_REQUEST, ['class' => 'spacer-sm']);
+        echo form_text('article_pagination', $locale['article_0401'], $article_settings['article_pagination'], [
+            'inline'      => TRUE,
+            'max_length'  => 4,
+            'inner_width' => '250px',
+            'width'       => '150px',
+            'type'        => 'number'
+        ]);
+        echo form_select('article_allow_submission', $locale['article_0007'], $article_settings['article_allow_submission'], [
+            'inline'  => TRUE,
+            'options' => [$locale['disable'], $locale['enable']]
+        ]);
+        echo form_select('article_submission_access[]', $locale['submit_access'], $article_settings['article_submission_access'], [
+            'inline'   => TRUE,
+            'options'  => fusion_get_groups([USER_LEVEL_PUBLIC]),
+            'multiple' => TRUE,
+        ]);
+        echo form_select('article_extended_required', $locale['article_0403'], $article_settings['article_extended_required'], [
+            'inline'  => TRUE,
+            'options' => [$locale['no'], $locale['yes']]
+        ]);
+        echo form_button('savesettings', $locale['admins_750'], $locale['admins_750'], ['class' => 'btn-success', 'icon' => 'fa fa-fw fa-hdd-o']);
         echo closeform();
     }
 }

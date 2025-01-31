@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: members/sub_controllers/members_action.php
-| Author: PHP-Fusion Development Team
+| Filename: members_action.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -26,17 +26,18 @@ use Administration\Members\Members_Admin;
  * @package Administration\Members\Sub_Controllers
  */
 class Members_Action extends Members_Admin {
-
-    private $action_user_id = array();
+    private $action_user_id = [];
     private $action = 0;
-    private $users = array();
+    private $users = [];
 
     /**
      * Setter of the class user_id
      *
      * @param array $value
      */
-    public function set_userID(array $value = array()) {
+    public function set_userID(array $value = []) {
+        $user_id = [];
+
         foreach ($value as $id) {
             if (isnum($id)) {
                 $user_id[$id] = $id;
@@ -54,7 +55,7 @@ class Members_Action extends Members_Admin {
      *
      * @var array
      */
-    private $action_map = array(
+    private $action_map = [
         // OK
         /*
          * Eligible is anyone not 1
@@ -141,10 +142,10 @@ class Members_Action extends Members_Admin {
             'user_status_log_func' => 'suspend_log',
             'action_time'          => TRUE,
             'email'                => TRUE,
-            'user_email_title'     => 'email_deactivate_subject',
-            'user_email_message'   => 'email_deactivate_message',
+            'email_title'          => 'email_deactivate_subject',
+            'email_message'        => 'email_deactivate_message',
         ]
-    );
+    ];
 
     public function user_check($x, $y, $z) {
         switch ($z) {
@@ -170,43 +171,48 @@ class Members_Action extends Members_Admin {
         $form = '';
         $users_list = '';
 
-        $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
-        $result = dbquery($query);
-        if (dbrows($result)) {
-            while ($u_data = dbarray($result)) {
-                if ($this->user_check(
-                    $u_data['user_status'],
-                    $this->action_map[$this->action]['check_value'],
-                    $this->action_map[$this->action]['check_operator'])
-                ) {
-                    $this->users[$u_data['user_id']] = $u_data;
+        if (!empty($this->action)) {
+            $query = "SELECT user_id, user_name, user_avatar, user_email, user_level, user_password, user_status FROM ".DB_USERS." WHERE user_id IN (".implode(',', $this->action_user_id).") AND user_level > ".USER_LEVEL_SUPER_ADMIN." GROUP BY user_id";
+            $result = dbquery($query);
+            if (dbrows($result)) {
+                while ($u_data = dbarray($result)) {
+                    if ($this->user_check(
+                        $u_data['user_status'],
+                        $this->action_map[$this->action]['check_value'],
+                        $this->action_map[$this->action]['check_operator'])
+                    ) {
+                        $this->users[$u_data['user_id']] = $u_data;
+                    }
                 }
             }
         }
 
         if (!empty($this->users)) {
+            $u_name = [];
 
-            if (isset($_POST['post_action'])) {
+            if (check_post('post_action')) {
                 $settings = fusion_get_settings();
                 $userdata = fusion_get_userdata();
                 $reason = '';
+
                 if (!empty($this->action_map[$this->action]['reason'])) {
-                    $reason = form_sanitizer($_POST['reason'], '', 'reason');
+                    $reason = sanitizer('reason', '', 'reason');
                 }
+
                 $duration = 0;
                 if (!empty($this->action_map[$this->action]['action_time'])) {
-                    $duration = form_sanitizer($_POST['duration'], '', 'duration');
-                    $duration = ($duration * 86400) + TIME;
+                    $duration = sanitizer('duration', '', 'duration');
+                    $duration = ($duration * 86400) + time();
                 }
-                if (\defender::safe()) {
 
+                if (fusion_safe()) {
                     foreach ($this->users as $user_id => $u_data) {
 
-                        dbquery("UPDATE ".DB_USERS." SET user_status=:user_status, user_actiontime=:action_time WHERE user_id=:user_id", array(
+                        dbquery("UPDATE ".DB_USERS." SET user_status=:user_status, user_actiontime=:action_time WHERE user_id=:user_id", [
                             ':user_status' => $this->action_map[$this->action]['user_status_change'],
                             ':action_time' => $duration,
                             ':user_id'     => $user_id
-                        ));
+                        ]);
                         /*
                          * Executes log
                          */
@@ -241,35 +247,36 @@ class Members_Action extends Members_Admin {
                         }
                         $u_name[] = $u_data['user_name'];
                     }
-                    addNotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
+
+                    addnotice('success', sprintf(self::$locale['ME_432'], implode(', ', $u_name), self::$locale[$this->action_map[$this->action]['a_message']]));
+                    //redirect(FUSION_REQUEST);
                     redirect(FUSION_SELF.fusion_get_aidlink());
                 }
             } else {
-
                 $height = '45px';
                 foreach ($this->users as $user_data) {
                     $users_list .= strtr($this->user_block_template(),
                         [
-                            '{%user_avatar%}' => display_avatar($user_data, $height, '', '', '', ''),
+                            '{%user_avatar%}' => display_avatar($user_data, $height, '', FALSE),
                             '{%height%}'      => $height,
                             '{%user_name%}'   => $user_data['user_name']
                         ]
                     );
                 }
                 if (isset($this->action_map[$this->action]['action_time'])) {
-                    $form .= form_text('duration', self::$locale['ME_435'], '', array('type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'inner_width' => '120px'));
+                    $form .= form_text('duration', self::$locale['ME_435'], '', ['type' => 'number', 'append' => TRUE, 'append_value' => self::$locale['ME_436'], 'required' => TRUE, 'width' => '150px']);
                 }
                 if (!empty($this->action_map[$this->action]['reason'])) {
-                    $form .= form_textarea('reason', self::$locale['ME_433'], '', array('required' => TRUE, 'placeholder' => self::$locale['ME_434']));
+                    $form .= form_textarea('reason', self::$locale['ME_433'], '', ['required' => TRUE, 'placeholder' => self::$locale['ME_434']]);
                 }
                 $form .= form_hidden('action', '', $this->action);
                 foreach ($this->action_user_id as $user_id) {
                     $form .= form_hidden('user_id[]', '', $user_id);
                 }
-                $form .= form_button('post_action', self::$locale['update'], $this->action, array('class' => 'btn-primary'));
+                $form .= form_button('post_action', self::$locale['update'], $this->action, ['class' => 'btn-primary']);
                 ob_start();
-                echo openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], array('static' => TRUE));
-                echo openform('uAdmin_frm', 'post', FUSION_SELF.fusion_get_aidlink());
+                echo openmodal('uAdmin_modal', self::$locale[$this->action_map[$this->action]['title']].self::$locale['ME_413'], ['static' => TRUE]);
+                echo openform('uAdmin_frm', 'post', FUSION_REQUEST);
                 echo strtr($this->action_form_template(), [
                     '{%message%}'    => sprintf(self::$locale['ME_431'], self::$locale[$this->action_map[$this->action]['a_message']]),
                     '{%users_list%}' => $users_list,
@@ -282,7 +289,7 @@ class Members_Action extends Members_Admin {
                 add_to_footer($modal);
             }
         } else {
-            addNotice('danger', self::$locale['ME_430']);
+            // addNotice('danger', self::$locale['ME_430']);
             redirect(FUSION_SELF.fusion_get_aidlink());
         }
     }
@@ -298,7 +305,7 @@ class Members_Action extends Members_Admin {
 
     private function user_block_template() {
         return "
-        <div class='display-inline-block list-group-item p-0'>\n
+        <div class='display-inline-block panel panel-default panel-body p-0'>\n
         <div class='pull-left m-r-10'>{%user_avatar%}</div>\n
         <div class='overflow-hide'>\n
         <span class='va' style='height:{%height%};'></span>\n
@@ -310,5 +317,5 @@ class Members_Action extends Members_Admin {
 
 }
 
-require_once(dirname(__FILE__).'/../../../includes/sendmail_include.php');
-require_once(dirname(__FILE__).'/../../../includes/suspend_include.php');
+require_once(__DIR__.'/../../../includes/sendmail_include.php');
+require_once(__DIR__.'/../../../includes/suspend_include.php');

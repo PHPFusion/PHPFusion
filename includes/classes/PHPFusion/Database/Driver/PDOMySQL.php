@@ -1,0 +1,249 @@
+<?php
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: PDOMySQL.php
+| Author: Core Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+namespace PHPFusion\Database\Driver;
+
+use PDO;
+use PDOException;
+use PDOStatement;
+use PHPFusion\Database\AbstractDatabaseDriver;
+use PHPFusion\Database\Exception\SelectionException;
+
+class PDOMySQL extends AbstractDatabaseDriver {
+
+    private static $paramTypeMap = [
+        self::PARAM_INT  => PDO::PARAM_INT,
+        self::PARAM_BOOL => PDO::PARAM_BOOL,
+        self::PARAM_STR  => PDO::PARAM_STR,
+        self::PARAM_NULL => PDO::PARAM_NULL
+    ];
+    /**
+     * @var \PDO
+     */
+    private $connection = NULL;
+
+    /**
+     * Close the connection
+     */
+    public function close() {
+        $this->connection = NULL;
+    }
+
+    /**
+     * @return bool TRUE if the connection is alive
+     */
+    public function isConnected() {
+        return $this->connection instanceof PDO;
+    }
+
+    /**
+     * Send a database query
+     *
+     * @param string $query SQL
+     * @param array  $parameters
+     *
+     * @return PDOStatement|bool on error
+     */
+    public function _query($query, array $parameters = []) {
+        try {
+            $result = $this->connection->prepare($query);
+            foreach ($parameters as $key => $parameter) {
+                $result->bindValue($key, $parameter, self::$paramTypeMap[self::getParameterType($parameter)]);
+            }
+            $result->execute();
+
+            return $result;
+        } catch (PDOException $e) {
+            trigger_error("Query Error: ".$query."<br/>Stack Trace: ".$e->getTraceAsString()."<br/>Error Nature: ".$e->getMessage(), E_USER_NOTICE);
+            return FALSE;
+        }
+    }
+
+    /**
+     * Count the number of rows in a table filtered by conditions
+     *
+     * @param string $field      Parenthesized field name
+     * @param string $table      Table name
+     * @param string $conditions conditions after "where"
+     * @param array  $parameters
+     *
+     * @return int
+     */
+    public function count($field, $table, $conditions = "", array $parameters = []) {
+        $cond = ($conditions ? " WHERE ".$conditions : "");
+        $sql = "SELECT COUNT".$field." FROM ".$table.$cond;
+        $statement = $this->query($sql, $parameters);
+
+        return $statement ? $statement->fetchColumn() : FALSE;
+    }
+
+    /**
+     * Fetch the first column of a specific row
+     *
+     * @param \PDOStatement $result
+     * @param int           $row
+     *
+     * @return mixed
+     */
+    public function fetchFirstColumn($result, $row = 0) {
+        //seek
+        if ($result !== FALSE) {
+            for ($i = 0; $i < $row; $i++) {
+                $result->fetchColumn();
+            }
+            //returns false when an error occurs
+            return $result->fetchColumn();
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Count the number of affected rows by the given query
+     *
+     * @param \PDOStatement $result
+     *
+     * @return int
+     */
+    public function countRows($result) {
+        if ($result !== FALSE) {
+            return $result->rowCount();
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Count the number of affected columns by the given query
+     *
+     * @param \PDOStatement $result
+     *
+     * @return int
+     */
+    public function countColumns($result) {
+        if ($result !== FALSE) {
+            return $result->columnCount();
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Fetch one row as an associative array
+     *
+     * @param \PDOStatement $result
+     *
+     * @return array Associative array
+     */
+    public function fetchAssoc($result) {
+        if ($result) {
+            $result->setFetchMode(PDO::FETCH_ASSOC);
+            return $result->fetch();
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Fetch one row as a numeric array
+     *
+     * @param \PDOStatement $result
+     *
+     * @return array Numeric array
+     */
+    public function fetchRow($result) {
+        if ($result !== FALSE) {
+            $result->setFetchMode(PDO::FETCH_NUM);
+
+            return $result->fetch();
+        }
+
+        return NULL;
+    }
+
+    /**
+     * Get the last inserted auto increment id
+     *
+     * @return int
+     */
+    public function getLastId() {
+        return (int)$this->connection->lastInsertId();
+    }
+
+    /**
+     * Implementation of \PDO::quote()
+     *
+     * @see http://php.net/manual/en/pdo.quote.php
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public function quote($value) {
+        return $this->connection->quote($value);
+    }
+
+    /**
+     * Get the database server version
+     *
+     * @return string
+     */
+    public function getServerVersion() {
+        return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
+    }
+
+    /**
+     * Connect to the database
+     *
+     * @param string $host Server domain or IP followed by an optional port definition
+     * @param string $user
+     * @param string $pass Password
+     * @param string $db   The name of the database
+     * @param array  $options
+     *
+     * @throws \ErrorException  When the connection could not be established
+     */
+    protected function connect($host, $user, $pass, $db, array $options = []) {
+        if ($this->connection === NULL) {
+            $options += [
+                'charset' => 'utf8',
+                'port'    => 3306
+            ];
+
+            try {
+                $pdo = $this->connection = new PDO("mysql:host=".$host.";dbname=".$db.";port=".$options['port'].";charset=".$options['charset'], $user, $pass,
+                    [
+                        /*
+                         * Inserted to solve the issue of the ignored charset in the connection string.
+                         * DO NOT REMOVE THE CHARSET FROM THE CONNECTION STRING. That is still needed!
+                         */
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES '.$options['charset'].', sql_mode=ALLOW_INVALID_DATES'
+                    ]
+                );
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
+                $pdo->setAttribute(PDO::ATTR_PERSISTENT, FALSE);
+            } catch (PDOException $error) {
+                //$file = debug_print_backtrace();
+                throw $error->getCode() === self::ERROR_UNKNOWN_DATABASE
+                    ? new SelectionException($error->getMessage(), $error->getCode(), $error)
+                    : new \ErrorException($error->getMessage(), $error->getCode(), 1, debug_backtrace()[1]['file']); //new ConnectionException($error->getMessage(), $error->getCode(), $error);
+            }
+        }
+    }
+
+}

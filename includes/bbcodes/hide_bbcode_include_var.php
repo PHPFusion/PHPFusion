@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: hide_bbcode_include_var.php
-| Author: Wooya
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,15 +15,16 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
+
 if (iADMIN) {
-    $__BBCODE__[] = array(
-        "description" => $locale['bb_hide_description'], "value" => "hide",
+    $__BBCODE__[] = [
+        "description"  => $locale['bb_hide_description'],
+        "value"        => "hide",
         "bbcode_start" => "[hide]", "bbcode_end" => "[/hide]",
-        "usage" => "[hide]".$locale['bb_hide_usage']."[/hide]"
-    );
+        "usage"        => "[hide]".$locale['bb_hide_usage']."[/hide]",
+        'svg'          => '<i class="fas fa-eye-slash"></i>'
+    ];
 } else {
     $__BBCODE_NOT_QUOTABLE__[] = "hide";
 }

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: /news/upgrade/1.11.php
-| Author: PHP-Fusion Development Team
+| Filename: 1.11.upgrade.inc
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,29 +17,29 @@
 +--------------------------------------------------------*/
 $inf_version = '1.11';
 require_once INCLUDES."infusions_include.php";
+$locale = fusion_get_locale();
 
 $check_array = [
     // Add support for keywords in news items
-    'news_keywords' => " ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended",
-    'news_language' => " ADD news_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_allow_ratings",
-    'news_image_align' => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
-    'news_image_full_default' => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
+    'news_keywords'            => " ADD news_keywords VARCHAR(250) NOT NULL DEFAULT '' AFTER news_extended",
+    'news_language'            => " ADD news_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_allow_ratings",
+    'news_image_align'         => " ADD news_image_align VARCHAR(15) NOT NULL DEFAULT '' AFTER news_sticky",
+    'news_image_full_default'  => " ADD news_image_full_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_align",
     'news_image_front_default' => " ADD news_image_front_default MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0' AFTER news_image_full_default",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS, $key)) {
-        $alter_table = DB_NEWS.$value;
-        dbquery("ALTER TABLE ".$alter_table);
+        $inf_altertable[] = DB_NEWS.$value;
     }
 }
 
 $check_array = [
     // Add support of hierarchy to News
-    'news_cat_parent' => " ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id",
+    'news_cat_parent'     => " ADD news_cat_parent MEDIUMINT(8) NOT NULL DEFAULT '0' AFTER news_cat_id",
     'news_cat_visibility' => " ADD news_cat_visibility TINYINT(4) NOT NULL DEFAULT '0' AFTER news_cat_image",
-    'news_cat_draft' => " ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility",
-    'news_cat_sticky' => " ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft",
-    'news_cat_language' => " ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_cat_sticky",
+    'news_cat_draft'      => " ADD news_cat_draft TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_visibility",
+    'news_cat_sticky'     => " ADD news_cat_sticky TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER news_cat_draft",
+    'news_cat_language'   => " ADD news_cat_language VARCHAR(50) NOT NULL DEFAULT '".fusion_get_settings('locale')."' AFTER news_cat_sticky",
 ];
 foreach ($check_array as $key => $value) {
     if (!column_exists(DB_NEWS_CATS, $key)) {
@@ -56,30 +56,28 @@ if (column_exists(DB_NEWS, 'news_visibility')) {
 $result = dbquery("SELECT news_id, news_visibility FROM ".DB_NEWS);
 if (dbrows($result) > 0) {
     while ($data = dbarray($result)) {
-        if ($data['news_visibility']) {
-            $inf_updatedbrow[] = DB_NEWS." SET news_visibility ='-".$data['news_visibility']."' WHERE news_id='".$data['news_id']."'";
-        }
+        $inf_updatedbrow[] = DB_NEWS." SET news_visibility ='-".$data['news_visibility']."' WHERE news_id='".$data['news_id']."' AND news_visibility != 0";
     }
 }
 
 // Insert new and old settings tables to Infusions table
 $check_array = [
-    'news_image_readmore' => 1,
-    'news_image_frontpage' => 0,
-    'news_thumb_ratio' => 0,
-    'news_image_link' => 1,
-    'news_photo_w' => 1920,
-    'news_photo_h' => 1080,
-    'news_thumb_w' => 600,
-    'news_thumb_h' => 400,
-    'news_photo_max_w' => 1920,
-    'news_photo_max_h' => 1080,
-    'news_photo_max_b' => 3 * 1024 * 1024,
-    'news_pagination' => 15,
-    'news_extended_required' => 0,
-    'news_allow_submission' => 1,
+    'news_image_readmore'         => 1,
+    'news_image_frontpage'        => 0,
+    'news_thumb_ratio'            => 0,
+    'news_image_link'             => 1,
+    'news_photo_w'                => 1920,
+    'news_photo_h'                => 1080,
+    'news_thumb_w'                => 600,
+    'news_thumb_h'                => 400,
+    'news_photo_max_w'            => 1920,
+    'news_photo_max_h'            => 1080,
+    'news_photo_max_b'            => 3 * 1024 * 1024,
+    'news_pagination'             => 15,
+    'news_extended_required'      => 0,
+    'news_allow_submission'       => 1,
     'news_allow_submission_files' => 1,
-    'news_file_types' => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
+    'news_file_types'             => '.pdf,.gif,.jpg,.png,.svg,.zip,.rar,.tar,.bz2,.7z',
 ];
 $settings = get_settings('news');
 
@@ -88,9 +86,9 @@ foreach ($check_array as $key => $value) {
         $inf_insertdbrow[] = DB_SETTINGS_INF." (settings_name, settings_value, settings_inf) VALUES ('$key', '$value', 'news')";
     }
 }
-if (!db_exists(DB_NEWS_IMAGES)) {
 
-    $create_table = DB_NEWS_IMAGES." (
+if (!db_exists(DB_NEWS_IMAGES)) {
+    dbquery("CREATE TABLE ".DB_NEWS_IMAGES." (
     news_image_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
     news_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
     news_image VARCHAR(100) NOT NULL DEFAULT '',
@@ -98,56 +96,63 @@ if (!db_exists(DB_NEWS_IMAGES)) {
     news_image_t2 VARCHAR(100) NOT NULL DEFAULT '',
     news_image_user MEDIUMINT(9) NOT NULL DEFAULT '0',
     news_image_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
-	PRIMARY KEY (news_image_id)
-    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci";
-    dbquery("CREATE TABLE ".$create_table);
+    PRIMARY KEY (news_image_id)
+    ) ENGINE=MyISAM DEFAULT CHARSET=UTF8 COLLATE=utf8_unicode_ci");
+}
 
-    // Port Photos into New Tables
-    $query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS;
-    $result = dbquery($query);
-    if (dbrows($result)) {
-        while ($data = dbarray($result)) {
-            $insert_rows = DB_NEWS_IMAGES." (news_id, news_image, news_image_t1, news_image_t2, news_image_user, news_image_datestamp) VALUES (
-            '".$data['news_id']."',
-            '".$data['news_image']."',
-            '".$data['news_image_t1']."',
-            '".$data['news_image_t2']."',
-            '".$data['news_image_user']."',
-            '".$data['news_image_datestamp']."'
-            )";
-            dbquery("INSERT INTO ".$insert_rows);
-            $id = dblastid();
-            // We update news column
-            dbquery("UPDATE ".DB_NEWS." SET news_image_align=:align, news_image_full_default=:id, news_image_front_default=:id2",
-                [
-                    ':align' => 'news-img-center',
-                    ':id'    => $id,
-                    ':id2'   => $id
-                ]
-            );
-            // Now we move all the images over
-            if (file_exists(IMAGES."news/".$data['news_image'])) {
-                rename(IMAGES."news/".$data['news_image'], INFUSIONS."news/images/".$data['news_image']);
-            }
-            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t1'])) {
-                rename(IMAGES."news/thumbs/".$data['news_image_t1'], INFUSIONS."news/thumbs/".$data['news_image_t1']);
-            }
-            if (file_exists(IMAGES."news/thumbs/".$data['news_image_t2'])) {
-                rename(IMAGES."news/thumbs/".$data['news_image_t2'], INFUSIONS."news/thumbs/".$data['news_image_t2']);
-            }
+// Port Photos into New Tables
+$query = "SELECT news_id, news_image, news_image_t1, news_image_t2, news_name 'news_image_user', news_datestamp 'news_image_datestamp' FROM ".DB_NEWS." WHERE news_image !='' ORDER BY news_id ASC";
+$result = dbquery($query);
+if (dbrows($result)) {
+    while ($data = dbarray($result)) {
+        if (!empty($data['news_image'])) {
+            $id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
+            $cdata = [
+                'news_id'                  => $data['news_id'],
+                'news_image_align'         => 'news-img-center',
+                'news_image_full_default'  => $id,
+                'news_image_front_default' => $id,
+            ];
+            dbquery_insert(DB_NEWS, $cdata, 'update', ['keep_session' => TRUE]);
+            // delay the process by 0.3 seconds to prevent redirection before process completes
+            //sleep(0.3);
         }
     }
 }
 
-// Check all images
+if (is_dir(IMAGES."news/thumbs/")) {
+    $files = makefilelist(IMAGES."news/thumbs/", ".|..|index.php");
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news/thumbs/".$file, INFUSIONS."news/thumbs/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news/thumbs');
+}
 
+if (is_dir(IMAGES."news/")) {
+    $files = makefilelist(IMAGES."news/", ".|..|index.php");
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news/".$file, INFUSIONS."news/images/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news');
+}
+
+if (is_dir(IMAGES."news_cats/")) {
+    $files = makefilelist(IMAGES."news_cats/", ".|..|index.php");
+    foreach ($files as $file) {
+        fusion_rename(IMAGES."news_cats/".$file, INFUSIONS."news/news_cats/".$file);
+    }
+    // Remove the whole old dir including rouge files
+    rrmdir(IMAGES.'news_cats');
+}
 
 // Drop existing columns
 $check_array = [
-    'news_image' => 1,
+    'news_image'    => 1,
     'news_image_t1' => 1,
     'news_image_t2' => 1,
-    'news_ialign' => 1,
+    'news_ialign'   => 1,
 ];
 foreach ($check_array as $key => $value) {
     if (column_exists(DB_NEWS, $key)) {
@@ -180,10 +185,10 @@ if (dbrows($result)) {
         'hardware.gif'   => 'hardware.svg',
         'journal.gif'    => 'journal.svg',
         'members.gif'    => 'members.svg',
-        'mods.gif'       => 'members.svg',
-        'network.gif'    => 'members.svg',
+        'mods.gif'       => 'mods.svg',
+        'network.gif'    => 'network.svg',
         'news.gif'       => 'news.svg',
-        'php-fusion.gif' => 'php-fusion.svg',
+        'php-fusion.gif' => 'phpfusion.svg',
         'security.gif'   => 'security.svg',
         'software.gif'   => 'software.svg',
         'themes.gif'     => 'themes.svg',
@@ -203,7 +208,6 @@ if (!empty($enabled_languages)) {
         $locale = fusion_get_locale('', LOCALE.$language."/setup.php");
         // add new language records
         $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '1', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '1', '".$language."')";
 
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3500']."', 'bugs.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3501']."', 'downloads.svg', '".$language."')";
@@ -215,7 +219,7 @@ if (!empty($enabled_languages)) {
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3507']."', 'mods.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3509']."', 'network.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3510']."', 'news.svg', '".$language."')";
-        $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'php-fusion.svg', '".$language."')";
+        $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3511']."', 'phpfusion.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3512']."', 'security.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3513']."', 'software.svg', '".$language."')";
         $mlt_insertdbrow[$language][] = DB_NEWS_CATS." (news_cat_name, news_cat_image, news_cat_language) VALUES ('".$locale['setup_3514']."', 'themes.svg', '".$language."')";
@@ -223,11 +227,9 @@ if (!empty($enabled_languages)) {
 
         // drop deprecated language records
         $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='infusions/news/news.php' AND link_language='".$language."'";
-        $mlt_deldbrow[$language][] = DB_SITE_LINKS." WHERE link_url='submit.php?stype=n' AND link_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_NEWS_CATS." WHERE news_cat_language='".$language."'";
         $mlt_deldbrow[$language][] = DB_NEWS." WHERE news_language='".$language."'";
     }
 } else {
     $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES('".$locale['setup_3205']."', 'infusions/news/news.php', '0', '2', '0', '2', '1', '".LANGUAGE."')";
-    $inf_insertdbrow[] = DB_SITE_LINKS." (link_name, link_url, link_visibility, link_position, link_window, link_order, link_status, link_language) VALUES ('".$locale['setup_3311']."', 'submit.php?stype=n', ".USER_LEVEL_MEMBER.", '1', '0', '13', '1', '".LANGUAGE."')";
 }

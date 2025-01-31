@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: weblink_submit.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,8 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once file_exists('maincore.php') ? 'maincore.php' : __DIR__."/../../maincore.php";
-require_once THEMES."templates/header.php";
-require_once WEBLINKS_CLASS."autoloader.php";
-PHPFusion\Weblinks\WeblinksServer::WeblinksSubmit()->displayWeblinks();
-require_once THEMES."templates/footer.php";
+require_once __DIR__.'/../../maincore.php';
+require_once THEMES.'templates/header.php';
+require_once WEBLINKS_CLASSES."autoloader.php";
+require_once INFUSIONS."weblinks/templates/weblinks.tpl.php";
+PHPFusion\Weblinks\WeblinksServer::weblinksSubmit()->displayWeblinks();
+require_once THEMES.'templates/footer.php';

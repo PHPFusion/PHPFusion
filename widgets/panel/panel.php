@@ -1,10 +1,10 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: Panel/panel.php
+| Filename: panel.php
 | Author: Frederick MC Chan (Chan)
 +--------------------------------------------------------+
 | This program is released as free software under the
@@ -18,18 +18,22 @@
 
 class panelWidget extends \PHPFusion\Page\PageModel implements \PHPFusion\Page\WidgetInterface {
 
-    public function display_info($colData) {
-        $panelData = \defender::unserialize($colData['page_content']);
+    public function displayInfo($colData) {
+        $panelData = \Defender::unserialize($colData['page_content']);
 
         return fusion_get_locale('PW_0222', WIDGETS."panel/locale/".LANGUAGE.".php").": ".$panelData['panel_include'];
     }
 
-    public function display_widget($colData) {
-        $panelData = \defender::unserialize($colData['page_content']);
+    public function displayWidget($columnData) {
+        $panelData = \Defender::unserialize($columnData['page_content']);
         $panelPath = INFUSIONS.$panelData['panel_include']."/".$panelData['panel_include'].".php";
         if (!empty($panelData['panel_include']) && file_exists($panelPath)) {
+            ob_start();
             require_once $panelPath;
+            return ob_get_clean();
         }
+
+        return NULL;
     }
 
 }

@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: photo_functions_include
-| Author: PHP-Fusion Development Team
+| Filename: photo_functions_include.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,20 +15,30 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
+/**
+ * Create a thumbnail image from an already uploaded image on your server.
+ *
+ * @param string $filetype  This function only supports three filetypes: gif, jpeg, png, webp
+ * @param string $origfile  Path to the orginal file you want to create a thumbnail of.
+ * @param string $thumbfile Path to the thumbnail file you want to create.
+ * @param int    $new_w     Max width for thumbnail image.
+ * @param int    $new_h     Max height for thumbnail image.
+ */
 function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     $settings = fusion_get_settings();
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         $origimage = imagecreatefromjpeg($origfile);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
+    } else if ($filetype == 4) {
+        $origimage = imagecreatefromwebp($origfile);
     }
+
     $old_x = imagesx($origimage);
     $old_y = imagesy($origimage);
     $ratio_x = $old_x / $new_w;
@@ -39,7 +49,7 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
     } else {
         $thumb_w = round($old_x / $ratio_y);
         $thumb_h = round($old_y / $ratio_y);
-    };
+    }
     if ($settings['thumb_compression'] == "gd1") {
         $thumbimage = imagecreate($thumb_w, $thumb_h);
         imagecopyresized($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
@@ -51,28 +61,44 @@ function createthumbnail($filetype, $origfile, $thumbfile, $new_w, $new_h) {
         }
         imagecopyresampled($thumbimage, $origimage, 0, 0, 0, 0, $thumb_w, $thumb_h, $old_x, $old_y);
     }
+
     touch($thumbfile);
+
     if ($filetype == 1) {
         imagegif($thumbimage, $thumbfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         imagejpeg($thumbimage, $thumbfile, 100);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         imagepng($thumbimage, $thumbfile, 9, PNG_ALL_FILTERS);
+    } else if ($filetype == 4) {
+        imagewebp($thumbimage, $thumbfile);
     }
+
     imagedestroy($origimage);
     imagedestroy($thumbimage);
 }
 
+/**
+ * Create a square thumbnail image from an already uploaded image on your server.
+ *
+ * @param string $filetype  This function only supports three filetypes: gif, jpeg, png, webp
+ * @param string $origfile  Path to the orginal file you want to create a thumbnail of.
+ * @param string $thumbfile Path to the thumbnail file you want to create.
+ * @param int    $new_size  Max size for thumbnail image.
+ */
 function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     $settings = fusion_get_settings();
     $origimage = '';
     if ($filetype == 1) {
         $origimage = imagecreatefromgif($origfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         $origimage = imagecreatefromjpeg($origfile);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         $origimage = imagecreatefrompng($origfile);
+    } else if ($filetype == 4) {
+        $origimage = imagecreatefromwebp($origfile);
     }
+
     $old_x = imagesx($origimage);
     $old_y = imagesy($origimage);
     $x = 0;
@@ -80,7 +106,7 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     if ($old_x > $old_y) {
         $x = ceil(($old_x - $old_y) / 2);
         $old_x = $old_y;
-    } elseif ($old_y > $old_x) {
+    } else if ($old_y > $old_x) {
         $y = ceil(($old_y - $old_x) / 2);
         $old_y = $old_x;
     }
@@ -92,16 +118,26 @@ function createsquarethumbnail($filetype, $origfile, $thumbfile, $new_size) {
     imagecopyresampled($new_image, $origimage, 0, 0, $x, $y, $new_size, $new_size, $old_x, $old_y);
     if ($filetype == 1) {
         imagegif($new_image, $thumbfile);
-    } elseif ($filetype == 2) {
+    } else if ($filetype == 2) {
         imagejpeg($new_image, $thumbfile, 100);
-    } elseif ($filetype == 3) {
+    } else if ($filetype == 3) {
         imagepng($new_image, $thumbfile, 9, PNG_ALL_FILTERS);
+    } else if ($filetype == 4) {
+        imagewebp($new_image, $thumbfile);
     }
+
     imagedestroy($origimage);
     imagedestroy($new_image);
 }
 
-// returns the image name.
+/**
+ * Find another available image name based on the image in the folder.
+ *
+ * @param string $dir   The directory to check for the image, remember a / at the end of the directory path.
+ * @param string $image The image inside the directory you want to check for.
+ *
+ * @return string
+ */
 function image_exists($dir, $image) {
     $i = 1;
     $image_name = substr($image, 0, strrpos($image, "."));
@@ -115,22 +151,23 @@ function image_exists($dir, $image) {
 }
 
 /**
- * Retrieve Information about a specific Image
- * @param $imagePath
+ * Get information about a specific image.
+ *
+ * @param string $image_path Path to the image.
+ *
  * @return array|bool
- * Courtesy of : drpain.webster.org.za @ php.net
  */
-function exif($imagePath) {
-    global $locale;
+function exif($image_path) {
     error_reporting(0); // turn off everything. most of Photoshop images are unsupported.
     // Check if the variable is set and if the file itself exists before continuing
-    if ((isset($imagePath)) and (file_exists($imagePath)) and !is_dir($imagePath)) {
+    if ((isset($image_path)) and (file_exists($image_path)) and !is_dir($image_path)) {
         // There are 2 arrays which contains the information we are after, so it's easier to state them both
-        $exif_base = @getimagesize($imagePath);
-        $exif_ifd0 = @exif_read_data($imagePath, 'IFD0', 0);
-        $exif_exif = @exif_read_data($imagePath, 'EXIF', 0);
-        //error control
-        $notFound = $locale['na'];
+        $exif_base = getimagesize($image_path);
+        if (function_exists('exif_read_data')) {
+            $exif_ifd0 = exif_read_data($image_path, 'IFD0', 0);
+            $exif_exif = exif_read_data($image_path, 'EXIF', 0);
+        }
+        $notFound = fusion_get_locale('na');
         // Make
         if (isset($exif_ifd0['Make'])) {
             $camMake = $exif_ifd0['Make'];
@@ -167,7 +204,7 @@ function exif($imagePath) {
         } else {
             $camIso = $notFound;
         }
-        $return = array();
+        $return = [];
         $return['width'] = $exif_base[0];
         $return['height'] = $exif_base[1];
         $return['mime'] = $exif_base['mime'];
@@ -187,15 +224,18 @@ function exif($imagePath) {
 }
 
 /**
- * Copy a file from any source to any destination
- * @param $source -- copy file from URL
- * @param $destination -- copy file to folder
+ * Copy a file from any source to any destination.
+ *
+ * @param string $source      Copy file from URL.
+ * @param string $destination Destination folder.
+ *
+ * @return array
  */
 function copy_file($source, $destination) {
     $upload['name'] = '';
     $upload['error'] = TRUE;
     function getimg($url) {
-        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg';
+        $headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg, image/png, image/webp';
         $headers[] = 'Connection: Keep-Alive';
         $headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
         $user_agent = 'php';

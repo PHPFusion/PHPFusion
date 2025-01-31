@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: error.php
-| Author: PHP-Fusion Development Team
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,86 +15,58 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once "maincore.php";
-require_once THEMES."templates/header.php";
-require_once THEMES."templates/global/error.php";
-/**
- * Dir Replacements
- * @param string $output
- * @return mixed
- */
-function replaceDir($output = "") {
-    $findHTMLTags = "/(href|src)=('|\")((?!(htt|ft)p(s)?:\\/\\/)[^\\']*)/i";
-    if (!function_exists("replaceHTMLTags")) {
-        function replaceHTMLTags($m) {
-            return $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
-        }
-    }
+require_once __DIR__.'/maincore.php';
+require_once THEMES.'templates/header.php';
 
-    return preg_replace_callback("$findHTMLTags", "replaceHTMLTags", $output);
-}
-add_handler("replaceDir");
+$locale = fusion_get_locale('', LOCALE.LOCALESET.'error.php');
 
-$locale = fusion_get_locale("", LOCALE.LOCALESET."error.php");
+require_once THEMES."templates/global/error.tpl.php";
 
-$default = array(
-    'title' => $locale['errunk'],
-    'image_src' => IMAGES."error/unknown.png",
+add_handler(function ($output = '') {
+    return (string)preg_replace_callback("/(href|src)=(\'|\")((?!(htt|ft)p(s)?:\/\/)[^\\\\(\'|\")]*)/im", function ($m) {
+        return $m[1]."=".$m[2].fusion_get_settings('siteurl').$m[3];
+    }, $output);
+});
+
+$info = [];
+
+$default = [
+    'title'  => $locale['errunk'],
     'status' => '505',
-    'back' => [
-        'url' => BASEDIR.'index.php',
+    'back'   => [
+        'url'   => BASEDIR.'index.php',
         'title' => $locale['errret']
     ]
-);
+];
 
 if (isset($_GET['code'])) {
     switch ($_GET['code']) {
         case 401:
             header("HTTP/1.1 401 Unauthorized");
-            $info = array(
-                'title' => $locale['err401'],
-                'image_src' => IMAGES.'error/401.png',
+            $info = [
+                'title'  => $locale['err401'],
                 'status' => 401
-            );
+            ];
             break;
         case 403:
             header("HTTP/1.1 403 Forbidden");
-            $info = array(
-                'title' => $locale['err403'],
-                'image_src' => IMAGES.'error/403.png',
+            $info = [
+                'title'  => $locale['err403'],
                 'status' => 403,
-            );
+            ];
             break;
         case 404:
             header("HTTP/1.1 404 Not Found");
-            $info = array(
-                'title' => $locale['err404'],
-                'image_src' => IMAGES.'error/404.png',
+            $info = [
+                'title'  => $locale['err404'],
                 'status' => 404,
-            );
-            break;
-        case 500:
-            header("HTTP/1.1 500 Internal Server Error");
-            $info = array(
-                'title' => $locale['err500'],
-                'image_src' => IMAGES.'error/500.png',
-                'status' => 500,
-            );
+            ];
             break;
     }
 }
 
 $info += $default;
-\PHPFusion\Panels::getInstance()->hide_panel('LEFT');
-\PHPFusion\Panels::getInstance()->hide_panel('RIGHT');
-ob_start();
+
 display_error_page($info);
-echo strtr(ob_get_clean(), [
-    '{%title%}' => $info['title'],
-    '{%message%}' => $locale['errmsg'],
-    '{%image_src%}' => $info['image_src'],
-    '{%error_code%}' => $info['status'],
-    '{%back_link%}' => $info['back']['url'],
-    '{%back_title%}' => $info['back']['title']
-]);
-require_once THEMES."templates/footer.php";
+
+require_once THEMES.'templates/footer.php';

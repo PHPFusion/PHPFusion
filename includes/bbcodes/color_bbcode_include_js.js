@@ -7,8 +7,7 @@ function showMapColor(color, mapId) {
 //based on TinyMce color map plugin - modified by wooya
 function ColorMap(elname, formname) {
     var html = "";
-    var colors = new Array(
-        "#000000", "#000033", "#000066", "#000099", "#0000cc", "#0000ff", "#330000", "#330033",
+    var colors = ["#000000", "#000033", "#000066", "#000099", "#0000cc", "#0000ff", "#330000", "#330033",
         "#330066", "#330099", "#3300cc", "#3300ff", "#660000", "#660033", "#660066", "#660099",
         "#6600cc", "#6600ff", "#990000", "#990033", "#990066", "#990099", "#9900cc", "#9900ff",
         "#cc0000", "#cc0033", "#cc0066", "#cc0099", "#cc00cc", "#cc00ff", "#ff0000", "#ff0033",
@@ -34,28 +33,28 @@ function ColorMap(elname, formname) {
         "#00ffcc", "#00ffff", "#33ff00", "#33ff33", "#33ff66", "#33ff99", "#33ffcc", "#33ffff",
         "#66ff00", "#66ff33", "#66ff66", "#66ff99", "#66ffcc", "#66ffff", "#99ff00", "#99ff33",
         "#99ff66", "#99ff99", "#99ffcc", "#99ffff", "#ccff00", "#ccff33", "#ccff66", "#ccff99",
-        "#ccffcc", "#ccffff", "#ffff00", "#ffff33", "#ffff66", "#ffff99", "#ffffcc", "#ffffff"
-    );
+        "#ccffcc", "#ccffff", "#ffff00", "#ffff33", "#ffff66", "#ffff99", "#ffffcc", "#ffffff"];
 
-    html += '<table border="0" cellspacing="1" cellpadding="0" class="tbl"><tr>';
+    html += '<div style="display:flex;flex-direction:row;flex-wrap:wrap;width:100%;">';
     for (var i = 0; i < colors.length; i++) {
         if (formname == undefined) {
-            html += "<td style='width:10px;height:10px;cursor:crosshair;background-color:" + colors[i] + "' onmousedown=\"addText('" + elname + "', '[color=" + colors[i] + "]', '[/color]');return false;\" onfocus=\"showMapColor('" + colors[i] + "', '" + elname + "');\" onmouseover=\"showMapColor('" + colors[i] + "', '" + elname + "');\">"
+            html += "<div style='display:block;width:15px;height:15px;cursor:crosshair;background-color:" + colors[i] + "' onmousedown=\"addText('" + elname + "', '[color=" + colors[i] + "]', '[/color]');return false;\" onfocus=\"showMapColor('" + colors[i] + "', '" + elname + "');\" onmouseover=\"showMapColor('" + colors[i] + "', '" + elname + "');\">"
         } else {
-            html += "<td style='width:10px;height:10px;cursor:crosshair;background-color:" + colors[i] + "' onmousedown=\"addText('" + elname + "', '[color=" + colors[i] + "]', '[/color]', '" + formname + "');return false;\" onfocus=\"showMapColor('" + colors[i] + "', '" + elname + "');\" onmouseover=\"showMapColor('" + colors[i] + "', '" + elname + "');\">"
+            html += "<div style='display:block;width:15px;height:15px;cursor:crosshair;background-color:" + colors[i] + "' onmousedown=\"addText('" + elname + "', '[color=" + colors[i] + "]', '[/color]', '" + formname + "');return false;\" onfocus=\"showMapColor('" + colors[i] + "', '" + elname + "');\" onmouseover=\"showMapColor('" + colors[i] + "', '" + elname + "');\">"
         }
-        html += '</td>';
-        if ((i + 1) % 18 == 0)    html += '</tr><tr>';
+        html += '</div>';
+        // if ((i + 1) % 18 == 0)    html += '</tr><tr>';
     }
-    html += '<tr><td colspan="18">'
-        + '<table width="100%" border="0" cellspacing="0" cellpadding="0">'
-        + '<tr><td id="selectedMapColor' + elname + '" width="50%" height="16">'
-        + '</td><td width="50%">'
-        + '<input id="selectedMapColorBox' + elname + '" name="selectedMapColorBox' + elname + '" type="text" size="7" maxlength="7" style="text-align:center;font-weight:bold;width:100%" class="textbox" value="" />'
-        + '</td></tr>'
-        + '</table>'
-        + '</td></tr>'
-        + '</table>';
+    html +=
+        '<div style="display:flex;flex-direction:row;flex-wrap:wrap;width:100%;">'
+        + '<div id="selectedMapColor' + elname + '" style="width:50%;height:100%;">'
+        + '</div><div style="width:50%;">'
+        + '<input id="selectedMapColorBox' + elname + '" name="selectedMapColorBox' + elname + '" type="text" size="7" maxlength="7" class="form-control" value="" />'
+        + '</div>'
+        + '</div>'
+
+    ;
 
     $('#bbcode_color_map_' + elname).append(html);
 }
+

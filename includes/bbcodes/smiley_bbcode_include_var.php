@@ -1,8 +1,9 @@
 <?php
+
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: smiley_bbcode_include_var.php
 | Author: Wooya
@@ -15,23 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined('IN_FUSION') || exit;
 
-$__BBCODE__[] = array(
-    "description"    => $locale['bb_smiley_description'],
-    "value"          => "smiley",
-    "bbcode_start"   => "",
-    "bbcode_end"     => "", "usage" => $locale['bb_smiley_usage'],
-    "onclick"        => "return overlay(this, 'bbcode_smileys_list_".$textarea_name."', '".((isset($p_data['panel_side']) && $p_data['panel_side'] == 4) ? "bottomright" : "bottomleft")."');",
-    "onmouseover"    => "",
-    "onmouseout"     => "",
-    "html_start"     => "<div id='bbcode_smileys_list_".$textarea_name."' class='bbcode-popup' style='display:none; border: 1px solid #ccc; position: absolute; overflow: auto; height: auto; padding: 6px 15px; background: #fff;' onclick=\"overlayclose('bbcode_smileys_list_".$textarea_name."');\">",
-    "includejscript" => "",
-    "calljscript"    => "",
-    "phpfunction"    => "echo displaysmileys('$textarea_name', '$inputform_name');",
-    "html_middle"    => "",
-    "html_end"       => "</div>"
-);
-
+$__BBCODE__[] = [
+    "description"       => $locale['bb_smiley_description'],
+    "value"             => "smiley",
+    "usage"             => $locale['bb_smiley_usage'],
+    'id'                => 'bbcode_smileys_list_'.$textarea_name,
+    'php_function'      => 'display_smiley_options',
+    'php_function_args' => [$textarea_name, $inputform_name],
+    'dropdown'          => TRUE,
+    'svg'               => "<i class='far fa-smile fa-lg'></i>"
+];

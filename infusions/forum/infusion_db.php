@@ -1,11 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: forum/infusion_db.php
-| Author: PHP-Fusion Development Team
+| Filename: infusion_db.php
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -15,100 +15,75 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-define("FORUM", INFUSIONS."forum/");
-define("RANKS", FORUM."ranks/");
+defined('IN_FUSION') || exit;
 
-define("DB_FORUM_ATTACHMENTS", DB_PREFIX."forum_attachments");
-define("DB_FORUM_POLL_OPTIONS", DB_PREFIX."forum_poll_options");
-define("DB_FORUM_POLL_VOTERS", DB_PREFIX."forum_poll_voters");
-define("DB_FORUM_POLLS", DB_PREFIX."forum_polls");
-define("DB_FORUM_POSTS", DB_PREFIX."forum_posts");
-define("DB_FORUM_RANKS", DB_PREFIX."forum_ranks");
-define("DB_FORUM_THREAD_NOTIFY", DB_PREFIX."forum_thread_notify");
-define("DB_FORUM_THREADS", DB_PREFIX."forum_threads");
-define("DB_FORUM_VOTES", DB_PREFIX."forum_votes");
-define("DB_FORUM_USER_REP", DB_PREFIX."forum_user_reputation");
-define("DB_FORUMS", DB_PREFIX."forums");
+use PHPFusion\Admins;
 
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
-\PHPFusion\Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
+// Locales
+define("FORUM_LOCALE", fusion_get_inf_locale_path('forum.php', INFUSIONS."forum/locale/"));
+define("FORUM_ADMIN_LOCALE", fusion_get_inf_locale_path('forum_admin.php', INFUSIONS."forum/locale/"));
+define("FORUM_RANKS_LOCALE", fusion_get_inf_locale_path('forum_ranks.php', INFUSIONS."forum/locale/"));
+define("FORUM_TAGS_LOCALE", fusion_get_inf_locale_path('forum_tags.php', INFUSIONS."forum/locale/"));
 
-if (!defined("FORUM_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum.php")) {
-        define("FORUM_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum.php");
-    } else {
-        define("FORUM_LOCALE", INFUSIONS."forum/locale/English/forum.php");
+// Paths
+const FORUM = INFUSIONS."forum/";
+const RANKS = FORUM."ranks/";
+const FORUM_CLASSES = INFUSIONS."forum/classes/";
+const FORUM_SECTIONS = INFUSIONS."forum/sections/";
+const FORUM_TEMPLATES = INFUSIONS."forum/templates/";
+
+// Database
+const DB_FORUM_ATTACHMENTS = DB_PREFIX."forum_attachments";
+const DB_FORUM_POLL_OPTIONS = DB_PREFIX."forum_poll_options";
+const DB_FORUM_POLL_VOTERS = DB_PREFIX."forum_poll_voters";
+const DB_FORUM_POLLS = DB_PREFIX."forum_polls";
+const DB_FORUM_POSTS = DB_PREFIX."forum_posts";
+const DB_FORUM_RANKS = DB_PREFIX."forum_ranks";
+const DB_FORUM_THREAD_NOTIFY = DB_PREFIX."forum_thread_notify";
+const DB_FORUM_THREADS = DB_PREFIX."forum_threads";
+const DB_FORUM_VOTES = DB_PREFIX."forum_votes";
+const DB_FORUM_USER_REP = DB_PREFIX."forum_user_reputation";
+const DB_FORUMS = DB_PREFIX."forums";
+const DB_FORUM_TAGS = DB_PREFIX."forum_thread_tags";
+const DB_FORUM_MOODS = DB_PREFIX."forum_post_mood";
+const DB_POST_NOTIFY = DB_PREFIX."forum_post_notify";
+
+define('LASTVISITED', Authenticate::setLastVisitCookie());
+
+// Admin Settings
+Admins::getInstance()->setAdminPageIcons("F", "<i class='admin-ico fa fa-fw fa-comment-o'></i>");
+Admins::getInstance()->setAdminPageIcons("FR", "<i class='admin-ico fa fa-fw fa-gavel'></i>");
+Admins::getInstance()->setFolderPermissions('forum', [
+    'infusions/forum/attachments/' => TRUE,
+    'infusions/forum/images/'      => TRUE
+]);
+
+Admins::getInstance()->setCustomFolder('F', [
+    [
+        'path'  => FORUM.'images',
+        'URL'   => fusion_get_settings('siteurl').'infusions/forum/images/',
+        'alias' => 'forum'
+    ]
+]);
+
+if (defined('FORUM_EXISTS')) {
+    function forum_cron_job24h() {
+        dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_datestamp <:notify_datestamp", [':notify_datestamp' => time() - 1209600]);
     }
-}
-if (!defined("FORUM_RANKS_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_admin.php")) {
-        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php");
-    } else {
-        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/English/forum_ranks.php");
+
+    /**
+     * @uses forum_cron_job24h()
+     */
+    fusion_add_hook('cron_job24h', 'forum_cron_job24h');
+
+    function forum_cron_job24h_users_data($data) {
+        dbquery("DELETE FROM ".DB_FORUM_THREADS." WHERE thread_author=:user_id", [':user_id' => $data['user_id']]);
+        dbquery("DELETE FROM ".DB_FORUM_POSTS." WHERE post_author=:user_id", [':user_id' => $data['user_id']]);
+        dbquery("DELETE FROM ".DB_FORUM_THREAD_NOTIFY." WHERE notify_user=:user_id", [':user_id' => $data['user_id']]);
     }
-}
-if (!defined("FORUM_TAGS_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_tags.php")) {
-        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_tags.php");
-    } else {
-        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/English/forum_tags.php");
-    }
-}
 
-if (!defined("FORUM_ADMIN_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_admin.php")) {
-        define("FORUM_ADMIN_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_admin.php");
-    } else {
-        define("FORUM_ADMIN_LOCALE", INFUSIONS."forum/locale/English/forum_admin.php");
-    }
-}
-
-if (!defined("SETTINGS_LOCALE")) {
-    if (file_exists(LOCALE.LOCALESET."admin/settings.php")) {
-        define("SETTINGS_LOCALE", LOCALE.LOCALESET."admin/settings.php");
-    } else {
-        define("SETTINGS_LOCALE", LOCALE."English/admin/settings.php");
-    }
-}
-
-if (!defined("FORUM_RANKS_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php")) {
-        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_ranks.php");
-    } else {
-        define("FORUM_RANKS_LOCALE", INFUSIONS."forum/locale/English/forum_ranks.php");
-    }
-}
-
-if (!defined("FORUM_TAGS_LOCALE")) {
-    if (file_exists(INFUSIONS."forum/locale/".LOCALESET."forum_tags.php")) {
-        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/".LOCALESET."forum_tags.php");
-    } else {
-        define("FORUM_TAGS_LOCALE", INFUSIONS."forum/locale/English/forum_tags.php");
-    }
-}
-
-if (!defined("DB_FORUM_TAGS")) {
-    define("DB_FORUM_TAGS", DB_PREFIX."forum_thread_tags");
-}
-
-if (!defined("DB_FORUM_MOODS")) {
-    define("DB_FORUM_MOODS", DB_PREFIX."forum_post_mood");
-}
-
-if (!defined("DB_POST_NOTIFY")) {
-    define("DB_POST_NOTIFY", DB_PREFIX."forum_post_notify");
-}
-
-
-if (!defined("FORUM_CLASS")) {
-    define("FORUM_CLASS", INFUSIONS."forum/classes/");
-}
-if (!defined("FORUM_SECTIONS")) {
-    define("FORUM_SECTIONS", INFUSIONS."forum/sections/");
-}
-if (!defined("FORUM_TEMPLATES")) {
-    define("FORUM_TEMPLATES", INFUSIONS."forum/templates/");
+    /**
+     * @uses forum_cron_job24h_users_data()
+     */
+    fusion_add_hook('cron_job24h_users_data', 'forum_cron_job24h_users_data');
 }
