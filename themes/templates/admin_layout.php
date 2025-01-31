@@ -56,7 +56,7 @@ if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/styles/default.min.css?v=".filemtime(THEMES.'templates/styles/default.min.css')."'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 

@@ -277,7 +277,7 @@ class Errors {
 
         if ($this->error_id) {
             // dump 1 and 2
-            add_to_head("<link rel='stylesheet' href='".THEMES."templates/errors.min.css' type='text/css' media='all' />");
+            add_to_head("<link rel='stylesheet' href='".THEMES."templates/styles/errors.min.css' type='text/css' media='all' />");
             define('no_debugger', 1);
             $data = dbarray(dbquery("SELECT * FROM ".DB_ERRORS." WHERE error_id=:errorid LIMIT 1", [':errorid' => $this->error_id]));
             if (!$data) {

@@ -93,7 +93,7 @@ if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/css/default.min.css?v=".filemtime(THEMES.'templates/default.css')."'>";
+    echo "<link rel='stylesheet' href='".THEMES."templates/styles/default.min.css?v=".filemtime(THEMES.'templates/styles/default.min.css')."'>";
 }
 
 // move to header includes.

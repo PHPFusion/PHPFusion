@@ -44,7 +44,7 @@ echo '<html>';
         echo '<title>'.fusion_get_settings('sitename').'</title>';
         echo '<link rel="stylesheet" type="text/css" href="'.THEME.'styles.css"/>';
         if (!defined('NO_DEFAULT_CSS')) {
-            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/default.css"/>';
+            echo '<link rel="stylesheet" type="text/css" href="'.THEMES.'templates/styles/default.min.css"/>';
         }
         echo '<meta http-equiv="refresh" content="2; url='.$urlprefix.$url.'" />';
         echo render_favicons(IMAGES);
