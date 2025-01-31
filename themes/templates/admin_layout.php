@@ -71,7 +71,7 @@ if (is_array($core_css_files)) {
     }
 }
 // Theme CSS loading
-echo fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.css", "css", TRUE);
+echo fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.min.css", "css", TRUE);
 
 $theme_css_files = fusion_filter_hook("fusion_css_styles");
 if (is_array($theme_css_files)) {

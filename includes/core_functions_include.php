@@ -95,10 +95,7 @@ function theme_exists($theme) {
         $theme = fusion_get_settings('theme');
     }
 
-    return is_string($theme) and
-        preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and
-        file_exists(THEMES.$theme."/theme.php") and
-        file_exists(THEMES.$theme."/styles.css");
+    return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and file_exists(THEMES.$theme."/theme.php") and (file_exists(THEMES.$theme."/styles.css") || file_exists(THEMES.$theme."/styles.min.css"));
 }
 
 /**
@@ -109,14 +106,17 @@ function theme_exists($theme) {
 function set_theme($theme) {
 
     $locale = fusion_get_locale();
+    
     if (defined("THEME")) {
         return;
     }
+
     if (theme_exists($theme)) {
         define("THEME", THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
 
         return;
     }
+
     foreach (new GlobIterator(THEMES.'*') as $dir) {
         if ($dir->isDir() and theme_exists($dir->getBasename())) {
             define("THEME", $dir->getPathname()."/");
