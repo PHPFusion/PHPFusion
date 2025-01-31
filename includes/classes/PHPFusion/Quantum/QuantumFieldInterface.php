@@ -221,7 +221,7 @@ class QuantumFieldInterface {
                 dbquery("DELETE FROM ".DB_USER_FIELDS." WHERE field_id='".$data['field_id']."'");
             }
 
-            add_notice($msg_status, $message);
+            addnotice($msg_status, $message);
             redirect(FUSION_SELF.$aidlink);
         }
     }

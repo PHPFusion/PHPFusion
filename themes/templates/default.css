@@ -2,6 +2,29 @@
 .label-danger {
     margin-top: 5px;
 }
+/** Sizing **/
+.w100 {
+    width:100%;
+}
+.h100 {
+    height:100%;
+}
+.h100px {
+    height:100px;
+}
+.h50px {
+    height:50px;
+}
+.h100vw {
+    height:100vw;
+}
+.w100vh {
+    width:100vh;
+}
+
+.w250px {
+    width:250px;
+}
 
 /* positioning - these works on containers that has display:absolute or display:fixed only  */
 .top-0 {
@@ -351,7 +374,10 @@ Grids
 .m-t-30 {
     margin-top: 30px !important;
 }
-
+.m-l-a 
+{
+    margin-left: auto !important;
+}
 .m-l-0 {
     margin-left: 0 !important;
 }
@@ -375,7 +401,9 @@ Grids
 .m-l-30 {
     margin-left: 30px !important;
 }
-
+.m-r-a {
+    margin-right: auto !important;
+}
 .m-r-0 {
     margin-right: 0 !important;
 }
@@ -399,7 +427,6 @@ Grids
 .m-r-30 {
     margin-right: 30px !important;
 }
-
 .m-auto {
     margin: 0 auto !important;
 }
@@ -550,7 +577,36 @@ Grids
 .display-table-cell {
     display: table-cell;
 }
-
+.display-flex {
+    display:flex;
+}
+.display-flex.gap-10 {
+    gap:1rem;
+}
+.display-flex.gap-15 {
+    gap:1.5rem;
+}
+.display-flex.justify-content-between {
+    justify-content:space-between;
+}
+.display-flex.justify-content-center {
+    justify-content:center;
+}
+.display-flex.align-items-center {
+    align-items:center;
+}
+.display-flex.align-items-end {
+    align-items:end;
+}
+.display-flex.align-items-start {
+    align-items:start;
+}
+.display-flex.flex-row {
+    flex-direction:row;
+}
+.display-flex.flex-column {
+    flex-direction: column;
+}
 .position-relative {
     position: relative;
 }
@@ -622,8 +678,12 @@ Grids
     font-size: 85% !important;
 }
 
-.text-bold, .font-bold, .strong {
-    font-weight: bold !important;
+.strong, .text-strong {
+    font-weight:700 !important;
+}
+
+.text-bold, .font-bold, .bold {
+    font-weight: 600 !important;
 }
 
 .text-light, .font-light {

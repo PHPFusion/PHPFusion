@@ -162,7 +162,7 @@ class LostPassword extends PasswordAuth {
 
             return TRUE;
         } else {
-            return FALSE;
+            addnotice('success', 'Please check your email to reset your password.');            
         }
     }
 }

@@ -35,6 +35,10 @@
  * Example 2:
  * 'date_format_js'  => 'YYYY-M-DD',
  * 'date_format_php' => 'Y-m-d',
+ * 
+ * Example 3: 1 January 2026
+ * 'date_format_js'  => 'D MMMM YYYY', 
+ * 'date_format_php' => 'd F Y', 
  *
  * Joining 2 datepickers (Start and End)
  * =======================================
@@ -88,6 +92,10 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
 
     $options += $default_options;
 
+    if (!in_array($options['type'], ['date', 'timestamp'])) {
+        $options['type'] = $default_options['type'];
+    }
+
     if (!defined('DATEPICKER')) {
         define('DATEPICKER', TRUE);
         if (file_exists(LOCALE.LOCALESET."includes/dynamics/assets/datepicker/locale/tooltip/".$locale['datepicker'].".js")) {
@@ -114,11 +122,17 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     }
 
     if (!empty($input_value)) {
+
         if ($options['type'] == "timestamp") {
-            $input_value = date($options['date_format_php'], isnum($input_value) ? $input_value : strtotime(str_replace('-', '/', $input_value)));
+            
+            $input_value = date(trim($options['date_format_php']), is_numeric($input_value) ? $input_value : strtotime(str_replace('-', '/', $input_value)));
+
         } else if ($options['type'] == "date") {
+
             if (stristr($input_value, $options['delimiter'])) {
+            
                 $input_value = explode($options['delimiter'], $input_value);
+            
                 if (count($input_value) == 3) {
                     $params = [
                         'year'  => $input_value[0],
@@ -130,6 +144,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
                     }
                 }
             }
+
         }
     } else {
         $input_value = "";
@@ -160,9 +175,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         $weekendFilter[1] = (!empty($options['weekend']) && is_array($options['weekend'])) ? "[".implode(",", $options['weekend'])."]" : "[0,6]";
     }
 
-    if (!in_array($options['type'], ['date', 'timestamp'])) {
-        $options['type'] = $default_options['type'];
-    }
+
 
     $options['week_start'] = (int)$options['week_start'];
 

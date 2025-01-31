@@ -768,15 +768,22 @@ function fusion_table($table_id, array $options = []) {
     // Ajax handling script
     if ($options['remote_file']) {
 
+        // Automate column data if not present
         if (empty($options["columns"]) && preg_match("@^http(s)?://@i", $options["remote_file"])) {
+
             $file_output = fusion_get_contents($options['remote_file']);
+            
             if (!empty($file_output)) {
+
                 if (is_json($file_output)) {
+
                     $output_array = json_decode($file_output, TRUE);
+                    
                     //print_P($output_array);
                     if ($options['reponse_debug']) {
                         print_p($output_array);
                     }
+                    
                     // Column
                     if (!empty($output_array['data'])) {
                         $output_data = $output_array["data"];
@@ -791,6 +798,7 @@ function fusion_table($table_id, array $options = []) {
                         }
                     }
                 }
+
             } else {
                 addnotice("danger", "Table columns could not be loaded automatically.");
             }
@@ -945,6 +953,7 @@ function fusion_table($table_id, array $options = []) {
                     fusion_load_script($css_file, 'css');
                 }
             }
+
             if (isset($plugin_registers['all']['js'])) {
                 foreach ($plugin_registers['all']['js'] as $js_file) {
                     fusion_load_script($js_file);
@@ -958,6 +967,7 @@ function fusion_table($table_id, array $options = []) {
     if ($options['debug']) {
         print_p($javascript);
     }
+
     add_to_jquery($javascript);
 
     return $table_id;

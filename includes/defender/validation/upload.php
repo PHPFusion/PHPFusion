@@ -35,7 +35,7 @@ class Upload extends Validation {
     }
 
     /** @noinspection PhpInconsistentReturnPointsInspection */
-    protected function verify_file_upload() {
+    protected function verifyFileUpload() {
         $locale = fusion_get_locale();
         require_once INCLUDES."infusions_include.php";
         if (self::$inputConfig['multiple']) {
@@ -208,7 +208,7 @@ class Upload extends Validation {
      *
      * @return array
      */
-    protected function verify_image_upload() {
+    protected function verifyImageUpload() {
 
         if (self::$inputConfig['multiple']) {
 

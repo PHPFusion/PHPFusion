@@ -4,10 +4,21 @@ body {
 }
 
 body {
-    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        'Open Sans',
+        'Helvetica Neue',
+        sans-serif;
     font-weight: 400;
     overflow-x: hidden;
     overflow-y: auto;
+    line-height:1.4;
+    font-size:16px;
 }
 
 @media (min-width: 2000px) {
@@ -152,6 +163,7 @@ h6,
 .h5,
 .h6 {
     font-family: 'Source Sans Pro', sans-serif;
+    font-weight:500;
 }
 
 a {
@@ -259,15 +271,20 @@ a:focus {
     border-radius: 3px;
     box-shadow: none;
     background-image: none !important;
+    border-color: #d2d6de;
+    box-shadow: none !important;
 }
 
-.select2-container-multi .select2-choices .select2-search-field input {
-    padding: 1px !important;
-    padding-left: 5px !important;
+.select2-container-multi .select2-choices .select2-search-field input {    
+    padding-left: 12px !important;
+    height: 36px;
+    font-size: 14px;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice {
     margin: 3px 0 3px 3px !important;
+    background: #fff;
+    box-shadow: none;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice table {
@@ -282,14 +299,17 @@ a:focus {
 .select2-search .select2-input.select2-active {
     background: url("../../../images/loader.svg") no-repeat 100%, -webkit-gradient(linear, left top, left bottom, color-stop(85%, #FFF), color-stop(99%, #EEE)) !important;
     background: url("../../../images/loader.svg") no-repeat 100%, linear-gradient(top, #FFF 85%, #EEE 99%) !important;
+    background-size: 30px !important;
 }
 
 .select2-more-results.select2-active {
     background: #F4F4F4 url("../../../images/loader.svg") no-repeat 100% !important;
+    background-size: 30px !important;
 }
 
 .select2-container-multi .select2-choices .select2-search-field .select2-input.select2-active {
     background: #FFF url("../../../images/loader.svg") no-repeat 100% !important;
+    background-size: 30px !important;
 }
 
 .select2-results {
@@ -361,6 +381,11 @@ a:focus {
 .list-group-item:first-child,
 .list-group-item:last-child {
     border-radius: 0;
+}
+
+.list-group-item.active, .list-group-item.active:hover {
+    background: rgb(240, 245, 255);
+    color:#000;
 }
 
 .main-header {
@@ -1571,9 +1596,11 @@ a:focus {
 .select2-container .select2-choice {
     background: #fff;
     border-color: #d2d6de;
-    border-radius: 0;
-    height: 30px;
+    border-radius: 0;        
+    height: 34px;
     font-size: 14px;
+    padding-top: 5px;
+    padding-left: 13px;    
 }
 
 .select2-container .select2-choice .select2-arrow {
@@ -1602,7 +1629,7 @@ a:focus {
     border-radius: 0;
 }
 
-.form-control {
+.form-control {    
     border-radius: 0;
     box-shadow: none;
     border-color: #d2d6de;
@@ -1672,6 +1699,7 @@ a:focus {
     border-radius: 0;
     border-color: #d2d6de;
     background-color: #fff;
+    padding: 0 15px;
 }
 
 .input-group .input-group-btn .btn {
@@ -1711,9 +1739,14 @@ a:focus {
 .form-control {
     border-radius: 0;
 }
-
+.checkbox-switch.form-group.check-group > label {
+    width:100% !important;
+}
 input[type="checkbox"] {
     position: relative;
+}
+input[type="checkbox"]:disabled {
+    opacity:.2;
 }
 
 input[type="checkbox"]:after,
@@ -2380,9 +2413,10 @@ input[type="checkbox"]:checked:before {
 }
 
 .btn {
-    border-radius: 0;
+    /* border-radius: 0; */
     box-shadow: none;
     border: 1px solid transparent;
+    transition: 0.2s ease-in-out background-color, 0.2s ease-in-out color;
 }
 
 .btn.btn-flat {
@@ -2433,14 +2467,15 @@ input[type="checkbox"]:checked:before {
 }
 
 .btn-primary {
-    background-color: #3c8dbc;
-    border-color: #367fa9;
+    
+    background-color:rgb(23, 114, 175);
+    border-color: rgb(23, 114, 176);
 }
 
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary.hover {
-    background-color: #367fa9;
+    background-color:rgb(16, 89, 137);
 }
 
 .btn-success {

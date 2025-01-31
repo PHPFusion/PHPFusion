@@ -29,7 +29,7 @@ class Contact extends Validation {
      * Checks if is a valid number
      * returns str the input or bool FALSE if check fails
      */
-    public function verify_contact() {
+    public function verifyContact() {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
             fusion_stop();

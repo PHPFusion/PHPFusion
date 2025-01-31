@@ -26,7 +26,7 @@ class Uri extends \Defender\Validation {
      * require path.
      * returns str the input or bool FALSE if check fails
      */
-    protected function verify_URL() {
+    protected function verifyURL() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
             fusion_stop();
             \Defender::setInputError(self::$inputName);
@@ -104,7 +104,7 @@ class Uri extends \Defender\Validation {
      *
      * @return string|null
      */
-    public function verify_path() {
+    public function verifyPath() {
         if (self::$inputConfig['required'] && !self::$inputValue) {
             fusion_stop();
             \Defender::setInputError(self::$inputName);

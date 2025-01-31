@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
@@ -20,29 +21,33 @@
  * Class Text
  * Validates Text Input
  */
-class Text extends \Defender\Validation {
-
+class Text extends \Defender\Validation
+{
     /**
      * validate and sanitize a text
      * accepts only 50 characters + @ + 4 characters
      * returns str the sanitized input or bool FALSE
      * if safemode is set and the check fails
      */
-    public static function verify_text() {
+    public static function verifyText()
+    {
 
         // each configuration for text validation should have a min and max length check
         $default_length = [
             'min_length'   => 1,
             'max_length'   => '',
-            'censor_words' => TRUE,
-            'descript'     => TRUE
+            'censor_words' => true,
+            'descript'     => true
         ];
 
         self::$inputConfig += $default_length;
 
         if (is_array(self::$inputValue)) {
+
             $vars = [];
+
             foreach (self::$inputValue as $val) {
+
                 if (self::$inputConfig['max_length']) {
                     // Input max length needs a value.
                     if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", $val)) {
@@ -51,26 +56,36 @@ class Text extends \Defender\Validation {
                         return self::$inputDefault;
                     }
                 }
+
                 $value = trim(preg_replace("/ +/i", " ", $val));
+
                 if (self::$inputConfig['censor_words']) {
                     $value = censorwords($value);
                 }
+
                 if (self::$inputConfig['descript']) {
                     $value = descript($value);
                 } else {
                     $value = stripinput($value);
                 }
+
                 $vars[] = $value;
             }
+
             // set options for checking on delimiter, and default is pipe (json,serialized val)
             $delimiter = (!empty(self::$inputConfig['delimiter'])) ? self::$inputConfig['delimiter'] : "|";
+
             $value = implode($delimiter, $vars);
+
+            return $value;
+
         } else {
+
             if (self::$inputConfig['max_length']) {
                 if (!preg_check("^([.\\s\\S]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."})$^", self::$inputValue)) {
                     fusion_stop();
                     \Defender::setInputError(self::$inputName);
-                    return FALSE;
+                    return false;
                 }
             }
 
@@ -85,11 +100,13 @@ class Text extends \Defender\Validation {
                 $value = stripinput($value);
             }
         }
-        if (self::$inputConfig['required'] && !$value) {
+        
+        if (self::$inputConfig['required'] && !$value) {            
             \Defender::setInputError(self::$inputName);
         }
+
         if (self::$inputConfig['safemode'] && !preg_check("/^[-0-9A-Z_@\s]+$/i", $value)) {
-            return FALSE;
+            return false;
         } else {
             return $value;
         }
@@ -101,19 +118,22 @@ class Text extends \Defender\Validation {
      * returns str the input or bool FALSE if check fails
      */
 
-    public function verify_password() {
+    public function verifyPassword()
+    {
 
         // add min length, add max length, add strong password into roadmaps.
         if (self::$inputConfig['required'] && !self::$inputValue) {
             fusion_stop();
             \Defender::setInputError(self::$inputName);
         }
-        if (preg_match("/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
-            self::$inputValue)) {
+        if (preg_match(
+            "/^[0-9A-Z@!#$%&\/\(\)=\-_?+\*\.,:;\<\>`]{".self::$inputConfig['min_length'].",".self::$inputConfig['max_length']."}$/i",
+            self::$inputValue
+        )) {
             return self::$inputValue;
         }
 
-        return FALSE;
+        return false;
 
     }
 
@@ -123,7 +143,8 @@ class Text extends \Defender\Validation {
      * accepts only 50 characters + @ + 4 characters
      * returns str the input or bool FALSE if check fails
      */
-    protected function verify_email() {
+    protected function verifyEmail()
+    {
         if (self::$inputConfig['required'] && !self::$inputValue) {
             fusion_stop();
             \Defender::setInputError(self::$inputName);
@@ -131,6 +152,6 @@ class Text extends \Defender\Validation {
         if (preg_check("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,}+)$/i", self::$inputValue)) {
             return self::$inputValue;
         }
-        return FALSE;
+        return false;
     }
 }

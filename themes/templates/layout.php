@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\Minify;
+
 use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale();
@@ -27,18 +29,18 @@ if (!headers_sent()) {
     header("Content-Type: text/html; charset=".$locale['charset']);
 }
 
-echo "<!DOCTYPE html>\n";
-echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">\n";
-echo "<head>\n";
-echo "<title>".$settings['sitename']."</title>\n";
-echo "<meta charset='".$locale['charset']."'>\n";
-echo "<meta name='description' content='".str_replace("\n", ' ', strip_tags(htmlspecialchars_decode($settings['description'])))."'>\n";
-echo "<meta name='url' content='".$settings['siteurl']."'>\n";
-echo "<meta name='keywords' content='".$settings['keywords']."'>\n";
-echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>\n";
+echo "<!DOCTYPE html>";
+echo "<html lang='".$locale['xml_lang']."' dir='".$locale['text-direction']."'".($settings['create_og_tags'] ? " prefix='og: http://ogp.me/ns#'" : "").">";
+echo "<head>";
+echo "<title>".$settings['sitename']."</title>";
+echo "<meta charset='".$locale['charset']."'>";
+echo "<meta name='description' content='".str_replace("", ' ', strip_tags(htmlspecialchars_decode($settings['description'])))."'>";
+echo "<meta name='url' content='".$settings['siteurl']."'>";
+echo "<meta name='keywords' content='".$settings['keywords']."'>";
+echo "<meta name='image' content='".$settings['siteurl'].$settings['sitebanner']."'>";
 
 $is_https = (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
-echo "<link rel='canonical' href='http".($is_https ? 's' : '')."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."'>\n";
+echo "<link rel='canonical' href='http".($is_https ? 's' : '')."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."'>";
 
 $languages = fusion_get_enabled_languages();
 if (count($languages) > 1) {
@@ -47,10 +49,10 @@ if (count($languages) > 1) {
         echo '<link rel="alternate" hreflang="'.$locale['xml_lang'].'" href="'.$settings['siteurl'].$settings['opening_page'].'?lang='.$language_folder.'">';
     }
 
-    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>\n";
+    echo "<link rel='alternate' hreflang='x-default' href='".$settings['siteurl']."'>";
 }
 
-if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
 
@@ -82,20 +84,20 @@ if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOO
 }
 
 if (defined('ENTYPO') && ENTYPO == TRUE) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/entypo/entypo.min.css'>";
 }
 
 if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>\n";
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/all.min.css'>";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/font-awesome-5/css/v4-shims.min.css'>";
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."'>";
 }
 
 if (!defined('PF_FONT') || (defined('PF_FONT') && PF_FONT == TRUE)) {
-    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
+    echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>";
 }
 // Core CSS loading
 $core_css_files = fusion_filter_hook("fusion_core_styles");
@@ -135,10 +137,10 @@ if (function_exists("get_head_tags")) {
     echo get_head_tags();
 }
 
-echo "<script src='".INCLUDES."jquery/jquery-2.min.js'></script>\n";
+echo "<script src='".INCLUDES."jquery/jquery-2.min.js'></script>";
 echo "<script>var site_path = '".$settings['site_path']."';</script>";
-echo "<script defer src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>\n";
-echo "</head>\n";
+echo "<script defer src='".INCLUDES."jscripts/jscript.min.js?v=".filemtime(INCLUDES.'jscripts/jscript.min.js')."'></script>";
+echo "</head>";
 
 /**
  * Constant - THEME_BODY;
@@ -147,7 +149,7 @@ echo "</head>\n";
  */
 
 if (!defined("THEME_BODY")) {
-    echo "<body>\n";
+    echo "<body>";
 } else {
     echo THEME_BODY;
 }
@@ -180,7 +182,7 @@ if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOO
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap-submenu.min.js"></script>';
     }
 }
-echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
+echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
@@ -192,22 +194,21 @@ if (defined('BOOTSTRAP') && BOOTSTRAP == TRUE) {
     $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 }
 
-// Output lines added with add_to_jquery()
 $fusion_jquery_tags = OutputHandler::$jqueryCode;
+
 if (!empty($fusion_jquery_tags)) {
+
     $jquery_tags .= $fusion_jquery_tags;
 
-    if ($settings['devmode'] == 0) {
-        $minifier = new PHPFusion\Minify\JS($jquery_tags);
-        $js = $minifier->minify();
-    } else {
-        $js = $jquery_tags;
+    $js = $jquery_tags;
+
+    if ($settings['devmode'] == 0 || !defined('FUSION_DEVELOPMENT')) {
+        $js = Minify::minify($jquery_tags);
     }
 
-    echo "<script>$(function(){".$js."});</script>\n";
+    echo "<script>$(function(){".$js."});</script>";
 }
-
-echo "</body>\n";
+echo "</body>";
 echo "</html>";
 
 PHPFusion\OpenGraph::ogDefault();

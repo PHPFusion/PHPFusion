@@ -136,6 +136,7 @@ if (is_file(__DIR__."/custom_includes.php")) {
 
 // Generate config file
 if (!is_file(__DIR__.'/config.inc.php')) {
+    // why do we need additional config systems when we can integrate to config.php?
     $text = "<?php".PHP_EOL;
     $text .= "/**".PHP_EOL;
     $text .= " * Here you can configure additional system settings".PHP_EOL;
@@ -151,3 +152,7 @@ if (!is_file(__DIR__.'/config.inc.php')) {
 
     write_file(__DIR__.'/config.inc.php', $text);
 }
+
+// if (is_file(__DIR__.'/config.php')) {
+    
+// }

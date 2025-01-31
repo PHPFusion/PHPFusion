@@ -15,7 +15,8 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
+use PHPFusion\Minify;
+use PHPFusion\Minify\Minify as MinifyMinify;
 use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
@@ -55,7 +56,7 @@ if (defined('FONTAWESOME') && FONTAWESOME == TRUE) {
 }
 
 if (!defined('NO_DEFAULT_CSS')) {
-    echo "<link rel='stylesheet' href='".THEMES."templates/default.min.css?v=".filemtime(THEMES.'templates/default.min.css')."'>\n";
+    echo "<link rel='stylesheet' href='".THEMES."templates/default.css?v=".filemtime(THEMES.'templates/default.css')."'>\n";
     echo "<link rel='stylesheet' href='".INCLUDES."fonts/PHPFusion/font.min.css?v2'>\n";
 }
 
@@ -127,30 +128,43 @@ if (!check_admin_pass('')) {
 }
 
 // Load Bootstrap javascript
-if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == true) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == true)) {
     if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
     } else {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap.min.js"></script>';
+        echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap-submenu.min.js"></script>';
     }
 }
+
 echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
 // Output lines added with add_to_jquery()
+
+$jquery_tags = '';
+
+if (defined('BOOTSTRAP') && BOOTSTRAP == true) {
+    $jquery_tags .= "$('[data-submenu]').submenupicker();";
+    // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
+    $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
+}
+
 $fusion_jquery_tags = OutputHandler::$jqueryCode;
 
 if (!empty($fusion_jquery_tags)) {
-    if ($settings['devmode'] == 0) {
-        $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
-        $js = $minifier->minify();
-    } else {
-        $js = $fusion_jquery_tags;
-    }
+
+    $jquery_tags .= $fusion_jquery_tags;  
+
+    $js = $jquery_tags;
+
+    if ($settings['devmode'] == 0 || !defined('FUSION_DEVELOPMENT')) {        
+        $js = Minify::minify($jquery_tags);
+    } 
 
     echo "<script>$(function(){".$js."});</script>\n";
 }
-
-echo "</body>\n";
+echo "</body>";
 echo "</html>";

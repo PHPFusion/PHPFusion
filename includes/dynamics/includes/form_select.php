@@ -82,6 +82,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
         'id_col'               => '',         // Chain Primary Key Column Name
         'cat_col'              => '',         // Chain Category Column Name
         'title_col'            => '',         // Chain Title Column Name
+        'title_append_id' => FALSE, // appends ID column info into the option text
         'custom_query'         => '',         // SQL query replacements
         'value_filter'         => ['col' => '', 'value' => NULL], // Specify if building opts has to specifically match these conditions
         'optgroup'             => FALSE,      // Enable the option group output - if db, id_col, cat_col, and title_col is specified.
@@ -163,13 +164,23 @@ function form_select($input_name, $label, $input_value, $options = []) {
                             if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
                                 if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
                                     $list[$key] = $pattern.$value[$options['title_col']];
+                                    if ($options['title_append_id']) {
+                                        $list[$key] .= " (ID:".$value[$options['id_col']].")";
+                                    }
                                 }
                             } else {
                                 $list[$key] = $pattern.$value[$options['title_col']];
+                                
+if ($options['title_append_id']) {
+    $list[$key] .= " (ID:".$value[$options['id_col']].")";
+}
+
                             }
                             // Build Child
                             if (isset($data[$key])) {
+
                                 $child = get_form_select_opts($data, $options, $key, $level + 1);
+                                
                                 if ($options['optgroup']) {
                                     $list[$key] = [
                                         'text'     => $list[$key],
@@ -197,6 +208,11 @@ function form_select($input_name, $label, $input_value, $options = []) {
                                 } else {
                                     $list[$key] = $pattern.html_entity_decode($value[$options['title_col']]);
                                 }
+                                
+                                if ($options['title_append_id']) {
+                                    $list[$key] .= " (ID:".$value[$options['id_col']].")";
+                                }
+
                                 // Build Child
                                 if (isset($data[$key])) {
                                     $child = get_form_select_opts($data, $options, $key, $level + 1);
@@ -242,7 +258,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
         if (!empty($select_db[$options['db']])) {
             // Build options and override declared options
-            $options['options'] = get_form_select_opts($select_db[$options['db']], $options);
+            $options['options'] = get_form_select_opts($select_db[$options['db']], $options);            
         } else {
             $options['options'] = ['0' => $locale['no_opts']];
             $options['deactivate'] = 1;

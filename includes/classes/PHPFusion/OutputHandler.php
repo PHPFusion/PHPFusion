@@ -17,6 +17,8 @@
 +--------------------------------------------------------*/
 namespace PHPFusion;
 
+use PHPFusion\Minify;
+
 class OutputHandler {
     /**
      * Additional tags to the html head
@@ -207,8 +209,7 @@ class OutputHandler {
 
         if (!empty(self::$cssCode)) {
             if ($settings['devmode'] == 0) {
-                $minifier = new Minify\CSS(self::$cssCode);
-                $css = $minifier->minify();
+                $css = Minify::minify(self::$cssCode);                
             } else {
                 $css = self::$cssCode;
             }
