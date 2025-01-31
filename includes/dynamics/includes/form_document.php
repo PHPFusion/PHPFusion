@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHP-Fusion Content Management System
 | Copyright (C) PHP-Fusion Inc
@@ -17,13 +18,14 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-function form_document($input_name, $label = '', $input_value = FALSE, array $options = array()) {
+function form_document($input_name, $label = '', $input_value = false, array $options = array())
+{
     $locale = fusion_get_locale();
     $defender = \defender::getInstance();
     $settings = fusion_get_settings();
 
     if (!defined('DATEPICKER')) {
-        define('DATEPICKER', TRUE);
+        define('DATEPICKER', true);
         add_to_head("<link href='".DYNAMICS."assets/datepicker/css/datepicker3.css' rel='stylesheet' />");
         add_to_head("<script src='".DYNAMICS."assets/datepicker/js/bootstrap-datepicker.js'></script>");
     }
@@ -56,10 +58,17 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         $input_value['5'] = "";
     }
 
+    $week_start = !empty($options['week_start']) && is_numeric($options['week_start'])
+        ? $options['week_start']
+        : (isset($settings['week_start']) && is_numeric($settings['week_start'])
+            ? $settings['week_start']
+            : 0);
+
+
     $options += array(
-        'required' => FALSE,
+        'required' => false,
         'placeholder' => '',
-        'deactivate' => FALSE,
+        'deactivate' => false,
         'width' => '100%',
         'class' => '',
         'inline' => '',
@@ -70,9 +79,9 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         'error_text_4' => !empty($options['error_text_4']) ? $options['error_text_4'] : $locale['doc_authority_error'],
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['doc_issue_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : '',
-        'safemode' => FALSE,
+        'safemode' => false,
         'date_format' => !empty($options['date_format']) ? $options['date_format'] : 'dd-mm-yyyy',
-        'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
+        'week_start' => $week_start,
     );
 
     $error_key = array(
