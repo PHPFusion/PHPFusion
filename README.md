@@ -7,5 +7,8 @@ All further development progress on the V9 latest standard should push to this b
 ## Minimum Requirements:
 Technical Requirements to start using PHPFusion v9.10.03A will be as following:
 
-PHP version: 8.1.0 (Recommended 8.2)
-MYSQL version: MYSQL 8.0.13 (Recommended MySQL 8.1)
+**PHP version:** 8.1.0 (Recommended 8.2)
+
+**MYSQL version:** MYSQL 8.0.13 (Recommended MySQL 8.1)
+
+**Others**: OpCache (strongly recommended), Redis, Memcached, GDLib, Internationalization packages should be enabled on Apache.
