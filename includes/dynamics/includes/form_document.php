@@ -72,7 +72,7 @@ function form_document($input_name, $label = '', $input_value = FALSE, array $op
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : '',
         'safemode' => FALSE,
         'date_format' => !empty($options['date_format']) ? $options['date_format'] : 'dd-mm-yyyy',
-        'week_start' => !empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0
+        'week_start' => (!empty($options['week_start']) && isnum($options['week_start']) ? $options['week_start'] : (isset($settings['week_start']) && isnum($settings['week_start']) ? $settings['week_start'] : 0) )
     );
 
     $error_key = array(
