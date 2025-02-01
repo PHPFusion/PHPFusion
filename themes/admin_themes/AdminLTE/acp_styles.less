@@ -5913,6 +5913,20 @@ table.text-center th {
     justify-content: flex-end;
 }
 
+// Offcanvas padding
+.offcanvas {
+    .offcanvas-content {
+        padding-top: 95px;
+    }
+}
+
+// Media query to change padding-top on larger screens
+@media screen and (min-width: 861px) {
+    .offcanvas .offcanvas-content {
+        padding-top: 43px;
+    }
+}
+
 @media (min-width: 768px) {
     .skin-purple-light.sidebar-mini.sidebar-collapse .sidebar-menu>li>.treeview-menu {
         border-left: 1px solid #d2d6de;

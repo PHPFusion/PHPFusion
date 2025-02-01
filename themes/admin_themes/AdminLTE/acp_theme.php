@@ -73,6 +73,51 @@ function opentable($title = NULL, $class = NULL, $bg = TRUE) {
 function closetable($bg = TRUE) {
     AdminLTE\AdminPanel::closeTable($bg);
 }
+/**
+ * Open offcanvas dialog
+ * @param [type] $id - The unique identifier for the offcanvas dialog
+ * @param [type] $title - The title of the offcanvas dialog
+ * @return void
+ */
+function opencanvas($id, $title = "")
+{
+    // Open the offcanvas structure with dynamic ID
+    echo "<div class='offcanvas' id='$id'>";
+    echo "<div class='offcanvas-content'>";
+
+    // Title of the offcanvas (if provided)
+    echo "<div class='offcanvas-header'>";
+    if ($title) {
+        echo "<h3>$title</h3>";
+    }
+    // Close button with data-pf-toggle attribute
+    echo "<button class='close-btn' data-pf-toggle='$id'><i class='fa fa-times'></i></button>";
+    echo "</div>";
+
+    // Body of the offcanvas
+    echo "<div class='offcanvas-body'>";
+
+    // Include the jQuery plugin script only once
+    if (!defined('OFFCANVAS')) {
+        define('OFFCANVAS', true);
+        fusion_load_script(INCLUDES . "jquery/jquery-canvas.js");
+    }
+}
+
+/**
+ * Close offcanvas dialog
+ * @param [type] $id - The unique identifier for the offcanvas dialog
+ * @return void
+ */
+function closecanvas($id)
+{
+    // Close the offcanvas body and content
+    echo "</div></div></div>";
+
+    // Add the overlay that corresponds to the offcanvas ID
+    echo "<div class='offcanvas-overlay' id='overlay-$id'></div>";
+}
+
 
 add_handler(function ($output = '') {
     $color = !check_admin_pass('') ? 'd2d6de' : '3c8dbc';

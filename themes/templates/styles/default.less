@@ -1726,3 +1726,116 @@ Responsive Admin for all Admin Themes.
     font-weight: bold;
     background-color: #FCCAC2;
 }
+
+// Offcanvas
+// Variables// Variables
+@offcanvas-width: 50vw;
+@transition-speed: .3s;
+@background-color: #fff;
+@content-color: current;
+@close-btn-color: #fff;
+@overlay-color: rgba(0, 0, 0, 0.4);
+@overlay-z-index: 999;
+@offcanvas-z-index: 1000;
+
+// Mixin for transitions
+.transition(@property, @duration) {
+    transition: @property @duration;
+}
+
+// Offcanvas Sidebar Styles
+.offcanvas {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: @offcanvas-width;
+    background-color: @background-color;
+    color: @content-color;
+    transform: translateX(100%); // Start offcanvas off-screen to the right
+    visibility: hidden;
+    z-index: @offcanvas-z-index;
+    overflow-y: auto;
+    .transition(transform, @transition-speed); // Smoother transition for transform
+    // .transition(visibility, @transition-speed);
+
+    &.opening {
+        visibility: visible; // Make visible once opening
+        transform: translateX(0); // Slide in from the right
+
+    }
+
+    &.active {
+        visibility: visible; // Ensure it's visible once opened
+        transform: translateX(0); // Slide in from the right
+    }
+
+    &.closing {
+        visibility: visible; // Make visible once closing
+        transform: translateX(100%); // Slide back out to the right
+    }
+
+    .offcanvas-content {
+        padding: 20px;
+
+        h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 30px;
+        color: @close-btn-color;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+}
+
+// Offcanvas Overlay Styles
+.offcanvas-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: @overlay-color;
+    visibility: hidden;
+    opacity: 0;
+    z-index: @overlay-z-index; // Set z-index for overlay    
+    transition: .5s ease-in-out;
+
+    &.active {
+        visibility: visible;
+        opacity: 1;
+        .transition(visibility, 0s 0s); // Immediate visibility change once opacity is done
+    }
+}
+
+// Open Button Styles
+.open-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+}
