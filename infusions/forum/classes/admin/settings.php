@@ -416,7 +416,7 @@ class ForumAdminSettings extends ForumAdminInterface {
                     </div>
                 </div>";
 
-                $calc_opts = self::$locale['1020'];
+                $calc_opts = self::$locale['admins_1020'];
                 $calc_c = calculate_byte($forum_settings['forum_attachmax']);
                 $calc_b = $forum_settings['forum_attachmax'] / $calc_c;
                 require_once INCLUDES."mimetypes_include.php";
