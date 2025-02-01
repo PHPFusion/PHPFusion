@@ -38,6 +38,8 @@ if (!check_admin_pass('')) {
     define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
 }
 
+fusion_load_script(INCLUDES . "jquery/jquery.fusion-objects.js");
+
 function render_admin_panel() {
     new AdminLTE\AdminPanel();
 }
@@ -96,12 +98,6 @@ function opencanvas($id, $title = "")
 
     // Body of the offcanvas
     echo "<div class='offcanvas-body'>";
-
-    // Include the jQuery plugin script only once
-    if (!defined('OFFCANVAS')) {
-        define('OFFCANVAS', true);
-        fusion_load_script(INCLUDES . "jquery/jquery-canvas.js");
-    }
 }
 
 /**
