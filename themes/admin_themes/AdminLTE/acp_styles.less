@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 html,
 body {
     height: 100%;
 }
 
 body {
-    font-family: -apple-system,
+    font-family: "Roboto", -apple-system,
         BlinkMacSystemFont,
         'Segoe UI',
         Roboto,
@@ -337,6 +339,11 @@ a:focus {
 
 .select2-container {
     width: 100% !important;
+}
+
+.panel-title {    
+    font-weight:600;
+    font-size: revert;
 }
 
 .panel-txtarea {
@@ -2957,10 +2964,20 @@ table.text-center th {
     background-color: #f8f8f8;
 }
 
-.label-default {
-    background-color: #d2d6de;
-    color: #444;
+.label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    height: 24px;
+    max-width: 250px;
+    border-radius: 8px;
+
+    &.label-default {
+        background-color: rgb(230, 224, 217);
+        color: rgb(0, 0, 0);
+    }
 }
+
 
 .modal {
     background: rgba(0, 0, 0, 0.3);

@@ -192,6 +192,10 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
     }
 }
 
+function no_redirect(){
+    define('STOP_REDIRECT', true);
+}
+
 /**
  * Set HTTP status header.
  *
@@ -340,6 +344,7 @@ function stripinput($text) {
     return $text;
 }
 
+
 /**
  * Prevent any possible XSS attacks via $_GET.
  *
@@ -418,6 +423,35 @@ function trimlink($text, $length) {
 }
 
 /**
+ * Masks an email
+ */
+function mask_email($email)
+{
+    $parts = explode('@', $email);
+    if (count($parts) !== 2) {
+        return $email; // Return as is if not a valid email
+    }
+
+    $maskedDomain = substr($parts[1], 0, 1) . '...'; // Keep the first letter of the domain
+    return $parts[0] . '@' . $maskedDomain;
+}
+
+/**
+ * Masks a phone
+ */
+function mask_phone_number($number) {
+    if (strlen($number) < 5) {
+        return $number; // Return as is if too short
+    }
+
+    $firstTwo = substr($number, 0, 2);  // First 2 digits
+    $lastThree = substr($number, -3);   // Last 3 digits
+    $masked = str_repeat('*', strlen($number) - 5); // Mask the middle part
+
+    return $firstTwo . $masked . $lastThree;
+}
+
+/**
  * Trim a text to a number of words.
  *
  * @param string $text   String to trim.
@@ -453,6 +487,18 @@ function trim_text($str, $length = 300) {
     }
 
     return ($str);
+}
+
+/**
+ * Formats a string number to a float
+ *
+ * @param string $number The number to format.
+ * @return string Formatted float.
+ */
+function float_format($number) :float
+{
+    $cleanNumber = str_replace(',', '', $number);
+    return filter_var($cleanNumber, FILTER_VALIDATE_FLOAT);
 }
 
 /**

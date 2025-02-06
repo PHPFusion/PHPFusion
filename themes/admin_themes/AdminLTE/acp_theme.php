@@ -75,6 +75,9 @@ function opentable($title = NULL, $class = NULL, $bg = TRUE) {
 function closetable($bg = TRUE) {
     AdminLTE\AdminPanel::closeTable($bg);
 }
+
+// Fusion OBjects UI Kits (Put here temporarily before moving this to a dedicated file)
+
 /**
  * Open offcanvas dialog
  * @param [type] $id - The unique identifier for the offcanvas dialog
@@ -114,6 +117,36 @@ function closecanvas($id)
     echo "<div class='offcanvas-overlay' id='overlay-$id'></div>";
 }
 
+/**
+ * Open swapbox
+ * 
+ * Usage:
+ * ----
+ * $id = 'swapbox';
+ * <h4><a href="#" data-pf-toggle="swap" data-toggle-id="$id"><i class="fa fa-plus"></i> Swap</a></h4>                                    
+ *  openswap(id: $id);
+ *  echo 'Swap content is shown here';
+ *  closeswap(id: $id);
+ *
+ * @param [type] $id - The unique identifier for the swap box 
+ * @param [type] $title - The title link of the swap box 
+ * @return void
+ */
+function openswap($id, $title) {
+    echo "<div id='$id' class='swapbox'>";
+    echo "<h4 class='swap-title display-block'><a href='#' data-pf-toggle='swap' data-toggle-id='$id' class='display-inline-block'>$title</a><h4>";
+    echo "<div class='swap-box clearfix' style='display:none;'>";
+}
+/**
+ * Close swapbox
+ * @param [type] $id - The unique identifier for the swap box 
+ * @return void
+ */
+function closeswap($id)
+{
+    echo "<a href='#' class='hide-swap bold pull-right text-smaller' data-pf-toggle='swap' data-toggle-id='$id'>Close</a></div>";
+    echo "</div>";
+}
 
 add_handler(function ($output = '') {
     $color = !check_admin_pass('') ? 'd2d6de' : '3c8dbc';

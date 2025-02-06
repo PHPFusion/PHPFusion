@@ -997,6 +997,7 @@ if (!function_exists('countdown')) {
     }
 }
 
+
 if (!function_exists('opencollapse')
     && !function_exists('opencollapsebody')
     && !function_exists('closecollapsebody')
@@ -1021,16 +1022,23 @@ if (!function_exists('opencollapse')
      * @param string $grouping_id Parent's accordion ID.
      * @param bool   $active      Panel state.
      * @param string $class       Panel CSS class.
+     * @param string $heading_size        Heading Size 1 to 5 (1 is h5, 2 is h4, 3 is h3, 4 is h2, 5 is h1).
      *
      * @return string
      */
-    function opencollapsebody($title, $unique_id, $grouping_id, $active = FALSE, $class = NULL) {
-        $html = '<div class="panel panel-default '.$class.'">';
+    function opencollapsebody($title, $unique_id, $grouping_id, $active = FALSE, $class = NULL, $heading_size = 3) {
+      
+        if ($heading_size && $heading_size < 6) {
+            $heading_size = 'h' . (6 - $heading_size);            
+        } else {
+            $heading_size = 'h4';
+        }
 
+        $html = '<div class="panel panel-default '.$class.'">';
         $html .= '<div class="panel-heading" role="tab" id="'.$unique_id.'-collapse-heading">';
-        $html .= '<h4 class="panel-title">';
+        $html .= '<'. $heading_size.' class="panel-title">';
         $html .= '<a role="button" data-toggle="collapse" data-parent="#'.$grouping_id.'-accordion" href="#'.$unique_id.'-collapse" aria-expanded="true" aria-controls="'.$unique_id.'-collapse">'.$title.'</a>';
-        $html .= '</h4>';
+        $html .= '</'. $heading_size.'>';
         $html .= '</div>';
 
         $html .= '<div id="'.$unique_id.'-collapse" class="panel-collapse collapse'.($active ? ' in' : '').'" role="tabpanel" aria-labelledby="'.$unique_id.'-collapse-heading">';

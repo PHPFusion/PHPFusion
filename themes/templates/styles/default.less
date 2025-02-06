@@ -1,3 +1,10 @@
+// Variables
+@rounded-radius: 1rem;
+
+@transparent-btn-hover-bg: rgba(0,0,0,.05);
+
+@font-active-color: rgb(66, 139, 202);
+
 /* Default PHPFusion CSS3 Class */
 .label-danger {
     margin-top: 5px;
@@ -674,7 +681,21 @@ Grids
     border-bottom: 0;
 }
 
-/* text family */
+/* Shape family */
+.rounded {
+    border-radius: @rounded-radius;
+    -webkit-border-radius: @rounded-radius;    
+}
+.circle {
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+.oval {
+    border-radius: 999px;
+    -webkit-border-radius: 999px;
+}
+
+/* Font and Ligatures family */
 .text-white {
     color: #FFF !important;
 }
@@ -694,33 +715,35 @@ Grids
 .text-darker {
     opacity: 1;
 }
-
-.text-bigger {
-    font-size: 110% !important;
+.tiny, .text-tiny {
+    font-size: 75% !important;
 }
-
-.text-smaller {
+.small, .text-smaller {
     font-size: 85% !important;
 }
-
-.strong,
-.text-strong {
-    font-weight: 700 !important;
+.big, .text-bigger {
+    font-size: 110% !important;
+}
+.large, .text-larger {
+    font-size: 130% !important;
 }
 
-.text-bold,
-.font-bold,
-.bold {
-    font-weight: 600 !important;
-}
-
-.text-light,
-.font-light {
+.light, .text-light, .font-light {
     font-weight: 300 !important;
 }
 
-.text-normal,
-.font-normal {
+.bold, .text-bold, .font-bold {
+    font-weight: 600 !important;
+}
+
+.strong, .text-strong, .font-strong {
+    font-weight: 700 !important;
+}
+.thick, .text-thick, .font-thick {
+    font-weight: 800 !important;
+}
+
+.text-normal, .font-normal {
     font-weight: normal !important;
     text-transform: none !important;
     text-decoration: none !important;
@@ -728,7 +751,7 @@ Grids
 }
 
 .text-active {
-    color: rgb(66, 139, 202);
+    color: @font-active-color;
 }
 
 .text-disabled {
@@ -754,7 +777,24 @@ Grids
 .text-underline {
     text-decoration: underline;
 }
-
+.lh-1 {
+    line-height:1;
+}
+.lh-2 {
+    line-height:2;
+}
+.lh-3 {
+    line-height:3;
+}
+.lh-sm {
+    line-height: .9rem;
+}
+.lh-md {
+    line-height: 3rem;
+}
+.lh-lg {
+    line-height: 5rem;
+}
 /* image family*/
 .img-center {
     display: inline-block;
@@ -1602,6 +1642,16 @@ Responsive Admin for all Admin Themes.
     }
 }
 
+// Buttons
+.btn {
+    &.btn-clear {
+        background:transparent;        
+        &:hover, &:focus {
+            background: @transparent-btn-hover-bg;
+        }
+    }
+}
+
 /**Bbcodes */
 .panel.panel-txtarea>.panel-heading>.nav-wrapper.editor-wrapper {
     width: 100%;
@@ -1730,6 +1780,7 @@ Responsive Admin for all Admin Themes.
 // Offcanvas
 // Variables// Variables
 @offcanvas-width: 50vw;
+@offcanvas-max-width: 568px;
 @transition-speed: .3s;
 @background-color: #fff;
 @content-color: current;
@@ -1750,6 +1801,7 @@ Responsive Admin for all Admin Themes.
     right: 0;
     bottom: 0;
     width: @offcanvas-width;
+    max-width:@offcanvas-max-width;
     background-color: @background-color;
     color: @content-color;
     transform: translateX(100%); // Start offcanvas off-screen to the right
