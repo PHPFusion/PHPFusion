@@ -11,3 +11,5 @@ config-copy.php
 .htaccess
 /wallet
 /infusions/wallet
+/infusions/helpcenter
+/infusions/license
