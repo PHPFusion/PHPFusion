@@ -23,14 +23,26 @@ $locale = fusion_get_locale();
 $settings = fusion_get_settings();
 
 add_to_title($locale['global_100']);
-add_to_meta("keywords", $locale['global_100']);
+add_to_meta('keywords', $locale['global_100']);
+
 $info = [];
+
+$login_connectors = [];
+
 if (!iMEMBER) {
+
     if (isset($_GET['error']) && isnum($_GET['error'])) {
-        $action_url = FUSION_REQUEST;
-        if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {
+        
+        $action_url = FUSION_REQUEST;        
+
+        if (isset($_GET['redirect']) && strpos(urldecode($_GET['redirect']), "/") === 0) {        
+            
             $action_url = cleanurl(urldecode($_GET['redirect']));
+            
+            redirect($action_url);
         }
+
+
         switch ($_GET['error']) {
             case 1:
                 addnotice("danger", $locale['error_input_login']);
@@ -86,24 +98,20 @@ if (!iMEMBER) {
                 break;
         }
     }
-    switch ($settings['login_method']) {
-        case "2" :
-            $placeholder = $locale['global_101c'];
-            break;
-        case "1" :
-            $placeholder = $locale['global_101b'];
-            break;
-        default:
-            $placeholder = $locale['global_101a'];
-    }
 
-    $login_connectors = [];
     $login_hooks = fusion_filter_hook('fusion_login_connectors');
+    
     if (!empty($login_hooks)) {
         foreach ($login_hooks as $buttons) {
             $login_connectors[] = $buttons;
         }
     }
+
+    $placeholder = match ($settings['login_method']) {
+        "2" => $locale['global_101c'],
+        "1" => $locale['global_101b'],
+        default => $locale['global_101a'],
+    };
 
     $info = [
         'open_form'            => openform('loginpageform', 'POST', $settings['opening_page']),
@@ -126,5 +134,7 @@ if (!iMEMBER) {
         'connect_buttons'      => $login_connectors
     ];
 }
+
 display_loginform($info);
+
 require_once THEMES.'templates/footer.php';
