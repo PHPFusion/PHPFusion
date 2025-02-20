@@ -666,12 +666,10 @@ class UserFieldsInput {
 
         // hidden input tamper check - user_hash must not be changed.
         // id request spoofing request
-        $cond_1 = !(iADMIN && checkrights('M'));
-        $cond_2 = ($this->userData['user_password'] != sanitizer("user_hash", "", "user_hash")) && !defined('ADMIN_PANEL');
-        $cond_3 = $this->data['user_id'] != fusion_get_userdata('user_id') && !defined('ADMIN_PANEL');
-
-        if ($cond_1 || $cond_2 || $cond_3) {
-            fusion_stop($locale['error_request']);
+        if ( ( !iADMIN && checkrights( 'M' ) ) ||
+            ( $this->userData['user_password'] != sanitizer( "user_hash", "", "user_hash" ) ) ||
+            ( $this->data['user_id'] != fusion_get_userdata( 'user_id' ) ) ) {
+            fusion_stop( $locale['error_request'] );
 
             return FALSE;
         }
