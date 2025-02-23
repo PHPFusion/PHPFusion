@@ -7,7 +7,7 @@ class Polaris extends PolarisThemeFactory
     public static function getInstance()
     {
         if (self::$instance === NULL) {
-            self::$instance = new static();            
+            self::$instance = new static();
         }
         return self::$instance;
     }
@@ -27,7 +27,7 @@ class Polaris extends PolarisThemeFactory
             <div class="<?php echo $this->getLayoutClass() ?>">
                 <?php echo AU_CENTER; ?>
                 <?php echo showbanners(1) ?>
-                <div class=" row">
+                <div class="row">
                     <?php if (LEFT): ?>
                         <div class="<?php echo $this->getLeftLayoutClass() ?>">
                             <?php echo LEFT ?>
@@ -114,7 +114,7 @@ class Polaris extends PolarisThemeFactory
 
 
 
-    public function opentable($title, $class)
+    public static function opentable($title, $class)
     {
     ?>
         <div class="polaris-box">
@@ -127,7 +127,7 @@ class Polaris extends PolarisThemeFactory
         <?php
     }
 
-    public function openside($title, $class)
+    public static function openside($title, $class)
     {
     ?>
         <div class="polaris-card<?php $class ? ' ' . $class : '' ?>">

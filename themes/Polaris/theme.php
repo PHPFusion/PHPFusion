@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 defined('IN_FUSION') || exit;
 
 require_once __DIR__ . '/classes/PolarisThemeFactory.class.php';
@@ -32,7 +31,7 @@ require_once __DIR__ . '/classes/Polaris.class.php';
  */
 function render_page()
 {
-    $theme = Polaris::getInstance();    
+    $theme = Polaris::getInstance();
     $theme->setLayoutClass();
     $theme->setSiteLinksOptions();
 
@@ -40,9 +39,9 @@ function render_page()
 }
 
 
-function polaris_uip()
+/*function polaris_uip()
 {
-    $locale = fusion_get_locale('', MG_LOCALE);
+    $locale = fusion_get_locale('', POLARIS_LOCALE);
     $settings = fusion_get_settings();
     $userdata = fusion_get_userdata();
     $languages = fusion_get_enabled_languages();
@@ -127,24 +126,22 @@ function polaris_uip()
     $html = ob_get_contents();
     ob_end_clean();
     return $html;
-}
+}*/
 
-function opentable($title = FALSE, $class = '')
-{
-    Polaris::getInstance()->opentable($title, $class);
-}
+if ( !defined('ADMIN_PANEL') ) {
+    function opentable( $title = FALSE, $class = '' ) {
+        Polaris::getInstance()->opentable( $title, $class );
+    }
 
-function closetable()
-{
-    Polaris::getInstance()->closeComponents(2);
-}
+    function closetable() {
+        Polaris::getInstance()->closeComponents(2);
+    }
 
-function openside($title = FALSE, $class = '')
-{
-    Polaris::getInstance()->openside($title, $class);
-}
+    function openside( $title = FALSE, $class = '' ) {
+        Polaris::getInstance()->openside( $title, $class );
+    }
 
-function closeside()
-{
-    Polaris::getInstance()->closeComponents(1);
+    function closeside() {
+        Polaris::getInstance()->closeComponents(1);
+    }
 }

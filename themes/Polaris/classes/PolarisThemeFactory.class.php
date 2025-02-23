@@ -2,13 +2,13 @@
 
 use PHPFusion\Administration\Sitelinks;
 
-fusion_load_script(INCLUDES . "fonts/PHPFusion/font.min.css?v2", "css");
+fusion_load_script( INCLUDES . "fonts/PHPFusion/font.min.css?v2", "css" );
 
-if (!defined('POLARIS_LOCALE')) {
-    if (file_exists(THEMES . 'Polaris/locale/' . LANGUAGE . '.php')) {
-        define('POLARIS_LOCALE', THEMES . 'Polaris/locale/' . LANGUAGE . '.php');
+if ( !defined( 'POLARIS_LOCALE' ) ) {
+    if (file_exists( THEMES . 'Polaris/locale/' . LANGUAGE . '.php' ) ) {
+        define( 'POLARIS_LOCALE', THEMES . 'Polaris/locale/' . LANGUAGE . '.php' );
     } else {
-        define('POLARIS_LOCALE', THEMES . 'Polaris/locale/English.php');
+        define( 'POLARIS_LOCALE', THEMES . 'Polaris/locale/English.php' );
     }
 }
 
@@ -98,7 +98,7 @@ abstract class PolarisThemeFactory
             // if show header is not false, show default or custom header
             'show_header' => $show_header != NULL ? $show_header : $default_options['show_header'],
             /*
-             'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light' : 'navbar-default',            
+             'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light' : 'navbar-default',
             'additional_nav_class' => '',
             'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class
             'locale'               => [],

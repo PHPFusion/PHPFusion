@@ -17,9 +17,9 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-require_once __DIR__ . '/theme_core.php';
+require_once __DIR__ . '/theme.php';
 
-$locale = fusion_get_locale('', POLARIS_LOCALE);
+$locale = fusion_get_locale( '', POLARIS_LOCALE );
 
 $theme_title       = 'Polaris';
 $theme_description = $locale['POLARIS_100'];
@@ -31,10 +31,10 @@ $theme_version     = '1.0.0';
 $theme_folder      = 'Polaris';
 
 $theme_insertdbrow[] = DB_SETTINGS_THEME . " (settings_name, settings_value, settings_theme) VALUES
+    ('color_scheme', '', '" . $theme_folder . "'),
     ('github_url', '', '" . $theme_folder . "'),
     ('facebook_url', '', '" . $theme_folder . "'),
-    ('twitter_url', '', '" . $theme_folder . "'),
-    ('
+    ('twitter_url', '', '" . $theme_folder . "')
 ";
 
 $theme_deldbrow[] = DB_SETTINGS_THEME . " WHERE settings_theme='" . $theme_folder . "'";
