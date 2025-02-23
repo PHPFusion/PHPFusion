@@ -24,6 +24,10 @@ $theme_admin = new \PHPFusion\Atom\Admin();
 
 opentable($locale['theme_1000']);
 switch (get('action')) {
+    case 'set_active':
+        if (check_get('theme')) {
+            $theme_admin::setActiveTheme();            
+        }
     case "manage":
         if (check_get('theme')) {
             $theme_admin::displayThemeEditor(get('theme'));

@@ -67,6 +67,22 @@
             "detail": "Compile Magazine styles.less files to compressed CSS"
         },
         {
+            "label": "Compile Polaris Theme styles",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/Polaris/styles.less",
+                "themes/Polaris/styles.min.css"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile Polaris theme styles.less files to compressed CSS"
+        },
+        {
             "label": "Compile AdminLTE Theme styles",
             "type": "shell",
             "command": "lessc",
