@@ -4,8 +4,8 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: theme_db.php
-| Author: Meangczac
+| Filename: Polaris/theme_db.php
+| Author: Meangczac (Chan), Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or

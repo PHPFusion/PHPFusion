@@ -3432,20 +3432,30 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     }
 }
 
-#main-menu .navbar-brand {
-    padding: 5px;
-    height: 80px;
+#main-menu {
+    height: 60px;
+
+    .container-fluid {
+        display: flex;
+        padding: 0 64px;
+    }
+
+    .navbar-brand {
+        height: 80px;
+
+        &>img {
+            height: 50px;
+        }
+    }
+
+    .navbar-toggle {
+        padding: 10px 10px;
+        margin-top: 22px;
+        margin-bottom: 22px;
+    }
 }
 
-#main-menu .navbar-brand>img {
-    height: 70px;
-}
 
-#main-menu .navbar-toggle {
-    padding: 10px 10px;
-    margin-top: 22px;
-    margin-bottom: 22px;
-}
 
 .breadcrumb {
     padding: 8px 15px;

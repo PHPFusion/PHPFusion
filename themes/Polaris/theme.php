@@ -4,8 +4,8 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: theme.php
-| Author: RobiNN
+| Filename: Polaris/theme.php
+| Author: Meangczac (Chan), Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -17,6 +17,9 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+require_once INCLUDES.'theme_functions_include.php';
+
+require_once __DIR__ . '/classes/Polaris.autoloader.php';
 require_once __DIR__ . '/classes/PolarisThemeFactory.class.php';
 require_once __DIR__ . '/classes/Polaris.class.php';
 
@@ -128,20 +131,24 @@ function render_page()
     return $html;
 }*/
 
-if ( !defined('ADMIN_PANEL') ) {
-    function opentable( $title = FALSE, $class = '' ) {
-        Polaris::getInstance()->opentable( $title, $class );
+if (!defined('ADMIN_PANEL')) {
+    function opentable($title = FALSE, $class = '')
+    {
+        Polaris::getInstance()->opentable($title, $class);
     }
 
-    function closetable() {
+    function closetable()
+    {
         Polaris::getInstance()->closeComponents(2);
     }
 
-    function openside( $title = FALSE, $class = '' ) {
-        Polaris::getInstance()->openside( $title, $class );
+    function openside($title = FALSE, $class = '')
+    {
+        Polaris::getInstance()->openside($title, $class);
     }
 
-    function closeside() {
+    function closeside()
+    {
         Polaris::getInstance()->closeComponents(1);
     }
 }

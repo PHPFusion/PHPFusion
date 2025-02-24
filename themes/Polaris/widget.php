@@ -4,8 +4,8 @@
 | Copyright (C) PHP Fusion Inc
 | https://phpfusion.com/
 +--------------------------------------------------------+
-| Filename: widget.php
-| Author: Meangczac
+| Filename: Polaris/widget.php
+| Author: Meangczac (Chan), Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
