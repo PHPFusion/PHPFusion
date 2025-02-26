@@ -37,26 +37,26 @@ abstract class Validation {
     protected static $validate_method = NULL;
 
     protected static $validation_rules_assigned = [
-        'color'       => ['text', 'verifyText'],
-        'dropdown'    => ['text', 'verifyText'],
-        'text'        => ['text', 'verifyText'],
-        'textarea'    => ['text', 'verifyText'],
-        'textbox'     => ['text', 'verifyText'],
-        'checkbox'    => ['checkbox', 'verifyChecked'],
-        'password'    => ['text', 'verifyPassword'],
-        'date'        => ['date', 'verifyDate'],
-        'timestamp'   => ['date', 'verifyDate'],
-        'number'      => ['number', 'verifyNumber'],
-        'email'       => ['text', 'verifyEmail'],
-        'address'     => ['user', 'verifyAddress'],
-        'name'        => ['user', 'verifyName'],
-        'url'         => ['uri', 'verifyURL'],
-        'image'       => ['upload', 'verifyImageUpload'],
-        'file'        => ['upload', 'verifyFileUpload'],
-        'document'    => ['user', 'verifyDocument'],
-        'radio'       => ['text', 'verifyText'],
-        'mediaSelect' => ['uri', 'verifyPath'],
-        'contact'     => ['user', 'verifyContact']
+        'color'       => ['text', 'verify_text'],
+        'dropdown'    => ['text', 'verify_text'],
+        'text'        => ['text', 'verify_text'],
+        'textarea'    => ['text', 'verify_text'],
+        'textbox'     => ['text', 'verify_text'],
+        'checkbox'    => ['checkbox', 'verify_checked'],
+        'password'    => ['text', 'verify_password'],
+        'date'        => ['date', 'verify_date'],
+        'timestamp'   => ['date', 'verify_date'],
+        'number'      => ['number', 'verify_number'],
+        'email'       => ['text', 'verify_email'],
+        'address'     => ['user', 'verify_address'],
+        'name'        => ['user', 'verify_name'],
+        'url'         => ['uri', 'verify_url'],
+        'image'       => ['upload', 'verify_image_upload'],
+        'file'        => ['upload', 'verify_file_upload'],
+        'document'    => ['user', 'verify_document'],
+        'radio'       => ['text', 'verify_text'],
+        'mediaSelect' => ['uri', 'verify_path'],
+        'contact'     => ['contact', 'verify_contact']
     ];
 
     public static function inputName($value = NULL) {
@@ -92,15 +92,12 @@ abstract class Validation {
         }
 
         if (isset(self::$validate_instance[self::$inputName]) && self::$validate_instance[self::$inputName] !== NULL) {
-            
             $object = self::$validate_instance[self::$inputName];
-            
             $method = self::$validation_rules_assigned[self::$inputConfig['type']][1];
 
             if (is_callable([$object, $method])) {
 
                 return $object->$method();
-                
             } else {
                 $locale['type_unset'] = '%s: has no type set of %s'; // to be moved
                 fusion_stop(sprintf($locale['type_unset'], self::$inputName));

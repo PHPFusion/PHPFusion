@@ -126,8 +126,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             $checkbox .= "</div>";
         }
     } else {
-        $checkbox_class = ($options['toggle'] ? 'pull-right m-l-15' : 'pull-left m-r-15');
-        $checkbox .= "<div class='".(!empty($label) ? $checkbox_class : '')."'>";
+
+        $checkbox .= "<div class='".(!empty($label) ? 'pull-left' : '')." m-r-10'>";
         $checkbox .= "<input id='".$options['input_id']."' style='margin:0;vertical-align:middle;' name='$input_name' value='".$options['value']."' type='".$options['type']."'".($options['deactivate'] ? ' disabled' : '').($options['onclick'] ? ' onclick="'.$options['onclick'].'"' : '').($input_value == $options['value'] ? ' checked' : '').">";
         $checkbox .= "</div>";
     }

@@ -48,7 +48,6 @@ class SiteLinks {
     private static $instances = [];
     private static $primary_cache_data = [];
     private static $optional_cache_data = [];
-    private $menu_options = [];
 
     /**
      * Get Site Links Position Options
@@ -298,8 +297,6 @@ class SiteLinks {
     public static function getInstance($id = self::MENU_DEFAULT_ID) {
         self::$id = $id;
         if (isset(self::$instances[$id])) {
-            // $c = \debug_backtrace();
-            // print_p($c);
             return self::$instances[$id];
         } else {
             return self::$instances[$id] = new static();

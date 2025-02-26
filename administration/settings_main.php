@@ -142,7 +142,7 @@ echo "<div class='row'>\n";
 echo "<div class='col-xs-12 col-sm-4'>\n";
 echo "<strong>".$locale['admins_401a']."</strong><br/><i>".$locale['admins_401b']."</i>";
 echo "<div class='spacer-xs'>\n";
-echo get_icon( 'fa fa-external-link', 'm-r-10' );
+echo "<i class='fa fa-external-link m-r-10'></i>";
 echo "<span id='display_protocol'>".$settings['site_protocol']."</span>://";
 echo "<span id='display_host'>".$settings['site_host']."</span>";
 echo "<span id='display_port'>".($settings['site_port'] ? ":".$settings['site_port'] : "")."</span>";

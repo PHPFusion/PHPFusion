@@ -64,8 +64,8 @@ if (strpos($current_url, '/')) {
 
     } else {
         
-        if ($polaris_template_debug) {
-            addnotice('danger', 'Template file not found.');
+        if ($polaris_template_debug && !defined('ADMIN_PANEL')) {
+            addnotice('danger', 'Polaris: Template file not found.');
         }
                
     }
@@ -80,8 +80,8 @@ if (strpos($current_url, '/')) {
 
     } else {
 
-        if ($polaris_template_debug) {
-            addnotice('danger', 'Template file not found.');
+        if ($polaris_template_debug && !defined('ADMIN_PANEL')) {
+            addnotice('danger', 'Polaris Template file not found.');
         }
                
     }

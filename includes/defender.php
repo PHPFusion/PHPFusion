@@ -644,7 +644,7 @@ class Defender {
     /**
      * @param string $input_name
      */
-    public static function setInputError($input_name) {        
+    public static function setInputError($input_name) {
         self::$input_errors[$input_name] = TRUE;
     }
 

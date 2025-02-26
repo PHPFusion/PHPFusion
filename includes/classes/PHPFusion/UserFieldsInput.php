@@ -666,10 +666,10 @@ class UserFieldsInput {
 
         // hidden input tamper check - user_hash must not be changed.
         // id request spoofing request
-        if ( ( !iADMIN && checkrights( 'M' ) ) ||
-            ( $this->userData['user_password'] != sanitizer( "user_hash", "", "user_hash" ) ) ||
-            ( $this->data['user_id'] != fusion_get_userdata( 'user_id' ) ) ) {
-            fusion_stop( $locale['error_request'] );
+        if (!(iADMIN && checkrights('M')) ||
+            ($this->userData['user_password'] != sanitizer("user_hash", "", "user_hash")) ||
+            ($this->data['user_id'] != fusion_get_userdata('user_id'))) {
+            fusion_stop($locale['error_request']);
 
             return FALSE;
         }
@@ -699,7 +699,7 @@ class UserFieldsInput {
             if ($this->isAdminPanel && $this->_isValidCurrentPassword && $this->_newUserPassword && $this->_newUserPassword2) {
                 // inform user that password has changed. and tell him your new password
                 include INCLUDES."sendmail_include.php";
-                addnotice("success", str_replace("USER_NAME", (string)$this->userData['user_name'], $locale['global_458']));
+                addnotice("success", str_replace("USER_NAME", $this->userData['user_name'], $locale['global_458']));
 
                 $input = [
                     "mailname" => $this->userData['user_name'],
@@ -725,7 +725,7 @@ class UserFieldsInput {
                 if (!sendemail($input['mailname'], $input['email'], $settings['siteusername'], $settings['siteemail'], $input['subject'],
                     $input['message'])
                 ) {
-                    addnotice('warning', str_replace("USER_NAME", (string)$this->userData['user_name'], $locale['global_459']));
+                    addnotice('warning', str_replace("USER_NAME", $this->userData['user_name'], $locale['global_459']));
                 }
 
                 redirect(FUSION_REQUEST);

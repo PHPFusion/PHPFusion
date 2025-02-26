@@ -15,13 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
 use PHPFusion\Rewrite\Router;
 
-class Panels
-{
+class Panels {
     const PANEL_LEFT = 1;
     const PANEL_U_CENTER = 2;
     const PANEL_L_CENTER = 3;
@@ -32,11 +30,7 @@ class Panels
     const PANEL_USER2 = 8;
     const PANEL_USER3 = 9;
     const PANEL_USER4 = 10;
-
     private static $panel_instance = NULL;
-
-    private $panelContent;
-
     private static $panel_name = [
         ['name' => 'LEFT', 'side' => 'left'],
         ['name' => 'U_CENTER', 'side' => 'upper'],
@@ -60,8 +54,7 @@ class Panels
      *
      * @return Panels|null
      */
-    public static function getInstance($set_info = TRUE)
-    {
+    public static function getInstance($set_info = TRUE) {
         if (self::$panel_instance === NULL) {
             self::$panel_instance = new static();
             if ($set_info) {
@@ -77,9 +70,8 @@ class Panels
      *
      * @return array
      */
-    public static function cachePanels()
-    {
-        $panel_query = "SELECT * FROM " . DB_PANELS . " WHERE panel_status=:panel_status ORDER BY panel_side, panel_order";
+    public static function cachePanels() {
+        $panel_query = "SELECT * FROM ".DB_PANELS." WHERE panel_status=:panel_status ORDER BY panel_side, panel_order";
         $param = [
             ':panel_status' => 1,
         ];
@@ -120,11 +112,10 @@ class Panels
      * @param $panel_access
      * @param $panel_order
      */
-    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access = USER_LEVEL_PUBLIC, $panel_order = 0)
-    {
+    public static function addPanel($panel_name, $panel_content, $panel_side, $panel_access = USER_LEVEL_PUBLIC, $panel_order = 0) {
         if (checkgroup($panel_access)) {
             self::$panels_cache[$panel_side][] = [
-                'panel_id'          => str_replace(" ", "_", $panel_name) . '-' . $panel_side,
+                'panel_id'          => str_replace(" ", "_", $panel_name).'-'.$panel_side,
                 'panel_content'     => $panel_content,
                 'panel_side'        => $panel_side,
                 'panel_filename'    => '',
@@ -148,8 +139,7 @@ class Panels
      *
      * @return string
      */
-    public static function displayPanel($panel_id)
-    {
+    public static function displayPanel($panel_id) {
         $locale = fusion_get_locale();
         $html = "";
         if (!empty(self::$panels_cache)) {
@@ -158,8 +148,8 @@ class Panels
                 if ($panelData['panel_id'] == $panel_id) {
                     ob_start();
                     if ($panelData['panel_type'] == "file") {
-                        if (is_file(INFUSIONS . $panelData['panel_filename'] . "/" . $panelData['panel_filename'] . ".php")) {
-                            include INFUSIONS . $panelData['panel_filename'] . "/" . $panelData['panel_filename'] . ".php";
+                        if (is_file(INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php")) {
+                            include INFUSIONS.$panelData['panel_filename']."/".$panelData['panel_filename'].".php";
                         } else {
                             if (iADMIN) {
                                 addnotice('warning', sprintf($locale["global_130"], $panelData["panel_name"]));
@@ -188,8 +178,7 @@ class Panels
      *
      * @return array
      */
-    public static function getPanelExcluded()
-    {
+    public static function getPanelExcluded() {
         return self::$panel_excluded;
     }
 
@@ -200,21 +189,19 @@ class Panels
      *
      * @return array
      */
-    public static function getAvailablePanels($excluded_panels = [])
-    {
+    public static function getAvailablePanels($excluded_panels = []) {
         // find current installed panels.
         if (empty(self::$available_panels)) {
             $temp = opendir(INFUSIONS);
             self::$available_panels['none'] = fusion_get_locale('469');
             while ($folder = readdir($temp)) {
-                if (
-                    !in_array($folder, [
+                if (!in_array($folder, [
                         ".",
                         ".."
                     ]) && strstr($folder, "_panel")
                 ) {
 
-                    if (is_dir(INFUSIONS . $folder)) {
+                    if (is_dir(INFUSIONS.$folder)) {
                         self::$available_panels[$folder] = $folder;
                     }
                     if ((!empty($excluded_panels) && in_array($folder, $excluded_panels))) {
@@ -233,8 +220,7 @@ class Panels
      *
      * @param $side - 'LEFT', 'RIGHT', 'U_CENTER', 'L_CENTER', 'AU_CENTER', 'BL_CENTER', 'USER1', 'USER2', 'USER3', 'USER4'
      */
-    public function hidePanel($side)
-    {
+    public function hidePanel($side) {
         foreach (self::$panel_name as $p_key => $p_side) {
             if ($p_side['name'] == $side) {
                 self::$panel_excluded[$p_key + 1] = $side;
@@ -245,16 +231,14 @@ class Panels
     /**
      * Hide all panels
      */
-    public function hideAll()
-    {
+    public function hideAll() {
         self::$hide_all = TRUE;
     }
 
     /**
      * Cache and generate Panel Constants
      */
-    public function getSitePanel()
-    {
+    public function getSitePanel() {
         if (self::$hide_all == TRUE) {
             return NULL;
         }
@@ -266,7 +250,7 @@ class Panels
         $locale = fusion_get_locale();
 
         // Add admin message
-        $admin_mess = "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>" . $locale['global_303'] . "</strong></div>\n</noscript>\n<!--error_handler-->\n";
+        $admin_mess = "<noscript><div class='alert alert-danger noscript-message admin-message'><strong>".$locale['global_303']."</strong></div>\n</noscript>\n<!--error_handler-->\n";
         add_to_head($admin_mess);
         // Optimize this part to cache_panels
         foreach (self::$panel_name as $p_key => $p_side) {
@@ -287,9 +271,9 @@ class Panels
                             if (fusion_get_settings('site_seo')) {
                                 $params = http_build_query(Router::getRouterInstance()->getFileParams());
                                 $path = Router::getRouterInstance()->getFilePath();
-                                $script_url = '/' . (!empty($path) ? $path : PERMALINK_CURRENT_PATH) . ($params ? "?" : '') . $params;
+                                $script_url = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                             } else {
-                                $script_url = '/' . PERMALINK_CURRENT_PATH;
+                                $script_url = '/'.PERMALINK_CURRENT_PATH;
                             }
 
                             foreach ($url_arr as $url_list) {
@@ -314,7 +298,7 @@ class Panels
                                     break;
                                 case 2: // Display on Opening Page only
                                     $opening_page = fusion_get_settings('opening_page');
-                                    if ($opening_page == 'index.php' && $script_url == '/' || $script_url == '/' . $opening_page) {
+                                    if ($opening_page == 'index.php' && $script_url == '/' || $script_url == '/'.$opening_page) {
                                         $show_panel = TRUE;
                                     } else if (PERMALINK_CURRENT_PATH === $opening_page) {
                                         $show_panel = TRUE;
@@ -332,7 +316,7 @@ class Panels
 
                             if ($show_panel === TRUE) { // Prevention of rendering unnecessary files
                                 if ($p_data['panel_type'] == "file") {
-                                    $file_path = INFUSIONS . $p_data['panel_filename'] . "/" . $p_data['panel_filename'] . ".php";
+                                    $file_path = INFUSIONS.$p_data['panel_filename']."/".$p_data['panel_filename'].".php";
                                     if (is_file($file_path)) {
                                         include $file_path;
                                     } else {
@@ -348,15 +332,16 @@ class Panels
                                         if ($p_data['panel_type'] == 'custom') {
                                             if (!strpos($p_data['panel_content'], '<?php')) {
                                                 //$panelContent .= "<?php ".PHP_EOL;
-                                                $panelStart .= "echo \"" . PHP_EOL;
+                                                $panelStart .= "echo \"".PHP_EOL;
                                             }
                                             if (!strpos($p_data['panel_content'], '?>')) {
-                                                $panelEnd .= "\";" . PHP_EOL;
+                                                $panelEnd .= "\";".PHP_EOL;
                                             }
                                             $p_data['panel_content'] = str_replace("\"", "\\'", $p_data['panel_content']);
                                         }
-                                        $panelContent = $panelStart . stripslashes($p_data['panel_content']) . $panelEnd;
+                                        $panelContent = $panelStart.stripslashes($p_data['panel_content']).$panelEnd;
                                         eval($panelContent);
+
                                     } else {
                                         echo stripslashes($p_data['panel_content']);
                                     }
@@ -368,47 +353,26 @@ class Panels
                         if (multilang_table("PN")) {
                             unset($p_langs);
                         }
+
                     }
+
                 }
 
                 $content = ob_get_contents();
 
-                $html = "<div class='content" . ucfirst($p_side['side']) . "'>";
+                $html = "<div class='content".ucfirst($p_side['side'])."'>";
                 $html .= $content;
                 $html .= "</div>\n";
 
-                // define($p_side['name'], (!empty($content) ? $html : ''));
-                $this->setPanelContent($p_side['name'], !empty($content) ? $html : '');
-
+                define($p_side['name'], (!empty($content) ? $html : ''));
                 ob_end_clean();
+
             } else {
                 // This is in administration
-                // define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
-                $this->setPanelContent($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
+                define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
             }
         }
 
-        // Hardcode this for IDE recognition.
-        define('LEFT', $this->getPanelContent('LEFT'));
-        define('RIGHT', $this->getPanelContent('RIGHT'));
-        define('U_CENTER', $this->getPanelContent('U_CENTER'));
-        define('L_CENTER', $this->getPanelContent('L_CENTER'));
-        define('AU_CENTER', $this->getPanelContent('AU_CENTER'));
-        define('BL_CENTER', $this->getPanelContent('BL_CENTER'));
-        define('USER1', $this->getPanelContent('USER1'));
-        define('USER2', $this->getPanelContent('USER2'));
-        define('USER3', $this->getPanelContent('USER3'));
-        define('USER4', $this->getPanelContent('USER4'));
-    }
-
-    public function setPanelContent($name, $value)
-    {
-        $this->panelContent[$name] = $value;
-    }
-
-    public function getPanelContent($name)
-    {
-        return !empty($this->panelContent[$name]) ? $this->panelContent[$name] : '';
     }
 
     /**
@@ -419,8 +383,7 @@ class Panels
      *
      * @return bool
      */
-    public static function checkPanelStatus($side)
-    {
+    public static function checkPanelStatus($side) {
         $settings = fusion_get_settings();
 
         $exclude_list = "";
@@ -470,15 +433,13 @@ class Panels
         }
 
         if (is_array($exclude_list)) {
-
-            $script_url = explode("/", '/' . PERMALINK_CURRENT_PATH);
-
-            if ($settings['site_seo']) {
-
+            if (fusion_get_settings('site_seo')) {
                 $params = http_build_query(Router::getRouterInstance()->getFileParams());
                 $path = Router::getRouterInstance()->getFilePath();
-                $file_path = '/' . (!empty($path) ? $path : PERMALINK_CURRENT_PATH) . ($params ? "?" : '') . $params;
+                $file_path = '/'.(!empty($path) ? $path : PERMALINK_CURRENT_PATH).($params ? "?" : '').$params;
                 $script_url = explode("/", $file_path);
+            } else {
+                $script_url = explode("/", '/'.PERMALINK_CURRENT_PATH);
             }
 
             $url_count = count($script_url);
@@ -486,7 +447,7 @@ class Panels
             $current_url = "";
             while ($base_url_count != 0) {
                 $current = $url_count - $base_url_count;
-                $current_url .= "/" . (!empty($script_url[$current]) ? $script_url[$current] : '');
+                $current_url .= "/".(!empty($script_url[$current]) ? $script_url[$current] : '');
                 $base_url_count--;
             }
 
@@ -497,6 +458,7 @@ class Panels
                     $url[] = $current_url;
                 }
             }
+
 
             return !in_array($current_url, $url);
         } else {
@@ -510,11 +472,10 @@ class Panels
      *
      * @return false|int
      */
-    private function wildcardMatch($source, $pattern)
-    {
+    private function wildcardMatch($source, $pattern) {
         $pattern = preg_quote($pattern, '/');
         $pattern = str_replace('\*', '.*', $pattern);
-        return preg_match('/^' . $pattern . '$/i', $source);
+        return preg_match('/^'.$pattern.'$/i', $source);
     }
 
     /**
@@ -524,8 +485,7 @@ class Panels
      *
      * @deprecated use hidePanel()
      */
-    public function hide_panel($side)
-    {
+    public function hide_panel($side) {
         $this->hidePanel($side);
     }
 }

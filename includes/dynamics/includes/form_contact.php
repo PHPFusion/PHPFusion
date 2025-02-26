@@ -73,7 +73,6 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
         'descript'          => TRUE,
         'error_text'        => !empty($options['error_text']) ? $options['error_text'] : $locale['prefix_error'],
         'error_text_2'      => !empty($options['error_text_2']) ? $options['error_text_2'] : $locale['contact_error'],
-        'country_selector_id' => '', // id of a country selector
     ];
 
     $options += $default_options;
@@ -104,15 +103,12 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $error_class = "";
     if (\Defender::inputHasError($input_name)) {
-
         $error_class = " has-error";
         if (!empty($options['error_text'])) {
-        
             $new_error_text = \Defender::getErrorText($input_name);
             if (!empty($new_error_text)) {
                 $options['error_text'] = $new_error_text;
             }
-        
             addnotice("danger", $options['error_text']);
         }
     }
@@ -123,44 +119,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
         $max_length = ' maxlength="'.$options['max_length'].'"';
     }
 
-    $country_code = json_encode(calling_codes());                
-
     // Formats a prefix number
-    if ($options['country_selector_id']) {
-
-        add_to_jquery("
-
-        var countrySelect = $('#".$options['country_selector_id']."');
-        
-        if (countrySelect.length > 0) {
-            
-            countrySelect.on('change', function() {
-                
-                var countryCodesArray = ".$country_code.";
-                
-                var selectedCountry = $(this).val();
-
-                var selectedPrefix = countryCodesArray[selectedCountry];
-                
-                var prefixSelectorCode = $('#".$options['input_id']."ContactPrefixCode');
-                
-                var prefixSelector =  $('#".$options['input_id']."ContactPrefix'); //billing_contactContactPrefix
-                
-                if (prefixSelector.length > 0) {                    
-
-                    prefixSelector.val(selectedPrefix);        
-                }
-            
-                if (prefixSelectorCode.length > 0) {
-
-                    prefixSelectorCode.text(selectedPrefix);
-                }
-
-            });
-        }
-        
-        ");
-    } 
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
 
@@ -170,26 +129,17 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "<div class='input-group".($options['group_size'] ? ' input-group-'.$options['group_size'] : '')."' ".($options['width'] ? "style='width: ".$options['width']."'" : '').">";
 
-    $html .= "<div class='input-group-addon input-group-prepend ".(empty($options['country_selector_id']) ? 'p-0 br-0' : '')."'>";
+    $html .= "<span class='input-group-addon input-group-prepend p-0 br-0'>";
 
-    $html .= "<span class='input-group-text display-inline-block'>";
+    $html .= "<span class='input-group-text'>";
 
-    if ($options['country_selector_id']) {
-        
-        $html .= "<div id='".$options['input_id']."ContactPrefixCode' class='strong'>".(!empty($input_value[0]) ? $input_value[0] :  "+00")."</div>";
-
-        $html .= form_hidden($input_name.'[]', '', $input_value[0], ['input_id'=>$options['input_id'].'ContactPrefix']);
-
-    } else {
-
-        $html .= form_select($input_name.'[]', '', $input_value[0], ["options" => calling_codes(), "class" => "m-r-10", "width" => "100px", 'inner_width'=>'100px']);
-    }
-
-    $html .= "</div>";
+    $html .= form_select($input_name."_prefix", "", $input_value[0], ["options" => calling_codes(), "class" => "m-0", "width" => "250px"]);
 
     $html .= "</span>";
 
-    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='".$input_name."[]' id='".$options['input_id']."_contact' value='".$input_value['1']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
+    $html .= "</span>";
+
+    $html .= "<input type='tel' data-type='tel' ".(!empty($options_data) ? implode(' ', $options_data) : '')." "."class='form-control textbox ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '').$max_length." name='$input_name' id='".$options['input_id']."_contact' value='".$input_value['1']."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')."".($options['autocomplete_off'] ? " autocomplete='off'" : '')." ".($options['deactivate'] ? 'readonly' : '').">";
 
     if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
 
@@ -213,14 +163,13 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= $options['append_html'];
 
-    $html .= ($options['inline'] && $label) ? "</div>" : '';
-
-    $html .= "</div>";
+    $html .= ($options['inline'] && $label) ? "</div>" : "";
 
     $html .= ($options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "");
 
     $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['append_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 
+    $html .= "</div>";
 
     $html .= "</div>";
 
@@ -233,7 +182,9 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
         'safemode'       => $options['safemode'],
         'regex'          => $options['regex'],
         'callback_check' => $options['callback_check'],
-        'delimiter'      => $options['delimiter'],        
+        'delimiter'      => $options['delimiter'],
+        'min_length'     => $options['min_length'],
+        'max_length'     => $options['max_length']
     ]);
 
     // This should affect all number inputs by type, not by ID
@@ -287,6 +238,14 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
         ");
     }
 
+    if ($options['autocomplete_off']) {
+        // Delay by 20ms and reset values.
+        add_to_jquery("
+            $('#".$options['input_id']."').val(' ');
+            setTimeout( function(){ $('#".$options['input_id']."').val(''); }, 20);
+        ");
+    }
+
     return $html;
 }
 
@@ -298,13 +257,12 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 function calling_codes($country_code = NULL) {
     $countries = [];
     static $calling_codes = [];
-    
-    require INCLUDES.'geomap/geo.countries.php';
+    require_once INCLUDES.'geomap/geo.countries.php';
 
     if (!empty($countries) && empty($calling_codes)) {
         foreach ($countries as $country) {
             // there is an array for these areas replicated.
-            $calling_codes[$country["code"]] = $country["prefix"];
+            $calling_codes[$country["code"]."*".$country["prefix"]] = $country["name"]." (".$country["prefix"].")";
         }
     }
 

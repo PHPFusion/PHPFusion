@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
@@ -21,109 +20,56 @@
  * Class User
  * Validates User type Input
  */
-class User extends \Defender\Validation
-{
-    public static function verifyName()
-    {
-        $name = self::$inputName;
+class User extends \Defender\Validation {
 
+    public static function verify_name() {
+        $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
             fusion_stop();
             \Defender::setInputError($name.'-firstname');
         }
-        
         if (self::$inputConfig['required'] && !$_POST[$name][1]) {
             fusion_stop();
             \Defender::setInputError($name.'-lastname');
         }
-
         if (fusion_safe()) {
-            return Text::verifyText();
+            return Text::verify_text();
         }
 
-        return null;
+        return NULL;
     }
 
-    /**
-     * Validate Address type input
-     *
-     * @return void
-     */
-    public static function verifyAddress()
-    {
+    public static function verify_address() {
         $name = self::$inputName;
-
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
             fusion_stop();
-            \Defender::setInputError($name.'_street1');
-        }
+            \Defender::setInputError($name.'-street-1');
 
+        }
         if (self::$inputConfig['required'] && !$_POST[$name][2]) {
             fusion_stop();
             \Defender::setInputError($name.'-country');
         }
-
         if (self::$inputConfig['required'] && !$_POST[$name][3]) {
             fusion_stop();
             \Defender::setInputError($name.'-region');
         }
-
         if (self::$inputConfig['required'] && !$_POST[$name][4]) {
             fusion_stop();
             \Defender::setInputError($name.'-city');
         }
-
         if (self::$inputConfig['required'] && !$_POST[$name][5]) {
             fusion_stop();
             \Defender::setInputError($name.'-postcode');
         }
-
         if (fusion_safe()) {
-            return Text::verifyText();
+            return Text::verify_text();
         }
 
-        return null;
+        return NULL;
     }
 
-    /**
-     * Validate contact information.
-     *
-     * @return void
-     */
-    public static function verifyContact()
-    {
-
-        $name = self::$inputName;        
-
-        if (self::$inputConfig['required'] && !$_POST[$name][0]) {
-            fusion_stop();
-            Defender::setInputError($name);            
-        }
-
-        if (self::$inputConfig['required'] && !$_POST[$name][1]) {
-            fusion_stop();
-            Defender::setInputError($name);            
-        }
-
-        if (!empty($_POST[$name][0]) && !empty($_POST[$name][1])) {
-            if (!in_array($_POST[$name][0],calling_codes())) {
-     
-                fusion_stop();
-                Defender::setInputError($name);
-            }            
-        }
-
-        if (fusion_safe()) {                          
-            return Text::verifyText();        
-        }
-
-        return '';
-    }
-
-
-
-    public function verifyDocument()
-    {
+    public function verify_document() {
         $name = self::$inputName;
         if (self::$inputConfig['required'] && !$_POST[$name][0]) {
             fusion_stop();
@@ -146,9 +92,9 @@ class User extends \Defender\Validation
             \Defender::setInputError($name.'-doc-5');
         }
         if (fusion_safe()) {
-            return Text::verifyText();
+            return Text::verify_text();
         }
 
-        return null;
+        return NULL;
     }
 }

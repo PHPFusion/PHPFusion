@@ -27,7 +27,7 @@ class Number extends \Defender\Validation {
      * returns str the input or bool FALSE if check fails
      * TODO: support decimal
      */
-    public function verifyNumber() {
+    public function verify_number() {
 
         if (self::$inputConfig['required'] && (empty(self::$inputValue))) {
             fusion_stop();

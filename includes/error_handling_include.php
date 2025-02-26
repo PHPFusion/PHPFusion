@@ -32,7 +32,7 @@ if (fusion_get_settings('error_logging_enabled') == 1) {
  * @param string $error_file    The file in question, run a debug_backtrace()[2] in the file
  * @param int    $error_line    The line in question, run a debug_backtrace()[2] in the file
  */
-function set_error($error_level, $error_message, $error_file = __FILE__, $error_line = __LINE__) {
+function set_error($error_level, $error_message, $error_file, $error_line) {
     if (fusion_get_settings('error_logging_method') == 'database') {
         $errors = PHPFusion\Errors::getInstance();
         $errors->setError($error_level, $error_message, $error_file, $error_line);

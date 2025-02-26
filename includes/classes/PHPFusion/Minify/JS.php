@@ -124,7 +124,7 @@ class JS extends Minify {
     public function __construct() {
         parent::__construct();
 
-        call_user_func_array( ['PHPFusion\Minify\Minify', '__construct'], func_get_args() );
+        call_user_func_array(['parent', '__construct'], func_get_args());
 
         $dataDir = CLASSES.'PHPFusion/Minify/data/js/';
         $options = FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES;

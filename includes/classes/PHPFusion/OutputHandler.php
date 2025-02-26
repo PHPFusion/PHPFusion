@@ -15,13 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 namespace PHPFusion;
 
-use PHPFusion\Minify;
-
-class OutputHandler
-{
+class OutputHandler {
     /**
      * Additional tags to the html head
      *
@@ -70,8 +66,7 @@ class OutputHandler
      *
      * @param string $title
      */
-    public static function setTitle($title = "")
-    {
+    public static function setTitle($title = "") {
         self::$pageTitle = $title;
     }
 
@@ -80,8 +75,7 @@ class OutputHandler
      *
      * @param string $addition
      */
-    public static function addToTitle($addition = "")
-    {
+    public static function addToTitle($addition = "") {
         self::$pageTitle .= $addition;
     }
 
@@ -91,8 +85,7 @@ class OutputHandler
      * @param string $name
      * @param string $content
      */
-    public static function setMeta($name, $content = "")
-    {
+    public static function setMeta($name, $content = "") {
         self::$pageMeta[$name] = $content;
     }
 
@@ -102,8 +95,7 @@ class OutputHandler
      * @param string $name
      * @param string $addition
      */
-    public static function addToMeta($name, $addition = "")
-    {
+    public static function addToMeta($name, $addition = "") {
         if (empty(self::$pageMeta)) {
             $settings = fusion_get_settings();
             self::$pageMeta = [
@@ -112,7 +104,7 @@ class OutputHandler
             ];
         }
         if (isset(self::$pageMeta[$name])) {
-            self::$pageMeta[$name] .= "," . $addition;
+            self::$pageMeta[$name] .= ",".$addition;
         }
     }
 
@@ -121,10 +113,9 @@ class OutputHandler
      *
      * @param string $tag
      */
-    public static function addToHead($tag = "")
-    {
+    public static function addToHead($tag = "") {
         if (!stristr(self::$pageHeadTags, $tag)) {
-            self::$pageHeadTags .= $tag . "\n";
+            self::$pageHeadTags .= $tag."\n";
         }
     }
 
@@ -133,10 +124,9 @@ class OutputHandler
      *
      * @param string $tag
      */
-    public static function addToFooter($tag = "")
-    {
+    public static function addToFooter($tag = "") {
         if (!stristr(self::$pageFooterTags, $tag)) {
-            self::$pageFooterTags .= $tag . "\n";
+            self::$pageFooterTags .= $tag."\n";
         }
     }
 
@@ -145,8 +135,7 @@ class OutputHandler
      *
      * @param string $code
      */
-    public static function addToJQuery($code = "")
-    {
+    public static function addToJQuery($code = "") {
         if (!stristr(self::$jqueryCode, $code)) {
             self::$jqueryCode .= $code;
         }
@@ -157,8 +146,7 @@ class OutputHandler
      *
      * @param string $code
      */
-    public static function addToCss($code = "")
-    {
+    public static function addToCss($code = "") {
         if (!stristr(self::$cssCode, $code)) {
             self::$cssCode .= $code;
         }
@@ -171,10 +159,9 @@ class OutputHandler
      * @param string $replace   The new content
      * @param string $modifiers Regexp modifiers
      */
-    public static function replaceInOutput($target, $replace, $modifiers = "")
-    {
+    public static function replaceInOutput($target, $replace, $modifiers = "") {
         self::$outputHandlers[] = function ($output) use ($target, $replace, $modifiers) {
-            return preg_replace('^' . preg_quote($target, "^") . '^' . $modifiers, $replace, $output);
+            return preg_replace('^'.preg_quote($target, "^").'^'.$modifiers, $replace, $output);
         };
     }
 
@@ -183,8 +170,7 @@ class OutputHandler
      *
      * @param callback $callback The name of a function or other callable object
      */
-    public static function addHandler($callback)
-    {
+    public static function addHandler($callback) {
         if (is_callable($callback)) {
             self::$outputHandlers[] = $callback;
         }
@@ -193,8 +179,7 @@ class OutputHandler
     /**
      * Get Current Page Title
      */
-    public static function getTitle()
-    {
+    public static function getTitle() {
         if (!empty(self::$pageTitle)) {
             return self::$pageTitle;
         }
@@ -212,56 +197,33 @@ class OutputHandler
      * @global array $locale
      *
      */
-    public static function handleOutput($output)
-    {
+    public static function handleOutput($output) {
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
 
         if (!empty(self::$pageHeadTags)) {
-            $output = preg_replace("#</head>#", self::$pageHeadTags . "</head>", $output, 1);
+            $output = preg_replace("#</head>#", self::$pageHeadTags."</head>", $output, 1);
         }
 
         if (!empty(self::$cssCode)) {
             if ($settings['devmode'] == 0) {
-                $css = Minify::minify(self::$cssCode);
+                $minifier = new Minify\CSS(self::$cssCode);
+                $css = $minifier->minify();
             } else {
                 $css = self::$cssCode;
             }
 
-            $output = preg_replace("#</head>#", "<style>" . $css . "</style></head>", $output, 1);
+            $output = preg_replace("#</head>#", "<style>".$css."</style></head>", $output, 1);
         }
 
         if (self::$pageTitle != $settings['sitename']) {
-            self::$pageTitle = self::$pageTitle . (self::$pageTitle ? $locale['global_200'] : '') . $settings['sitename'];
-            $output = preg_replace("#<title>.*</title>#i", "<title>" . self::$pageTitle . "</title>", $output, 1);
+            self::$pageTitle = self::$pageTitle.(self::$pageTitle ? $locale['global_200'] : '').$settings['sitename'];
+            $output = preg_replace("#<title>.*</title>#i", "<title>".self::$pageTitle."</title>", $output, 1);
         }
 
-    
         if (!empty(self::$pageMeta)) {
-
-           foreach (self::$pageMeta as $name => $content) {
-
-                // Regex to check if the meta tag exists
-                $pattern = "#<meta (http-equiv|name)=(['\"])" . preg_quote($name, '#') . "\\2 content=(['\"]).*?\\3#i";
-
-                // If the meta tag exists, update it
-                if (preg_match($pattern, $output)) {
-                    $output = preg_replace(
-                        $pattern,
-                        "<meta $1=$2" . $name . "$2 content=$3" . $content . "$3",
-                        $output,
-                        1
-                    );
-                } else {
-                    // If the meta tag doesn't exist, add it
-                    $output = preg_replace(
-                        "#<head>#i",
-                        "<head>\n    <meta name=\"" . $name . "\" content=\"" . $content . "\">",
-                        $output,
-                        1
-                    );
-                }
-
+            foreach (self::$pageMeta as $name => $content) {
+                $output = preg_replace("#<meta (http-equiv|name)='$name' content='.*'(.*?)>#i", "<meta \\1='".$name."' content='".$content."'>", $output, 1);
             }
         }
 

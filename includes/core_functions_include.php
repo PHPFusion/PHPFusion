@@ -2585,8 +2585,8 @@ function fusion_load_script($file_path, $file_type = 'script', $html = false)
             $file_path = $min_file;
             if (!defined('FUSION_DEVELOPMENT')) {
                 $file_path = $min_file . '?v=' . filemtime($min_file);
-            }
         }
+    }
 
         $paths[$file_path] = $file_path;
 

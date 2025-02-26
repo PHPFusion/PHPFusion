@@ -29,15 +29,11 @@ class Date extends \Defender\Validation {
      *
      * @return int|string
      */
-    public function verifyDate() {
-
+    public function verify_date() {
         $locale = fusion_get_locale();
-        
         if (self::$inputValue && !empty(self::$inputConfig['date_format'])) {
-
             $date = new \DateTime();
             $date_format = $date->createFromFormat(self::$inputConfig['date_format'], self::$inputValue);
-
             $timestamp = 0;
             if ($date_format instanceof \DateTime) {
                 $timestamp = $date_format->getTimestamp();
