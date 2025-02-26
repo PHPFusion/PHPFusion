@@ -48,6 +48,7 @@ class SiteLinks {
     private static $instances = [];
     private static $primary_cache_data = [];
     private static $optional_cache_data = [];
+    public static $menu_options;
 
     /**
      * Get Site Links Position Options
