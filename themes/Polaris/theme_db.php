@@ -31,10 +31,10 @@ $theme_version     = '1.0.0';
 $theme_folder      = 'Polaris';
 
 $theme_insertdbrow[] = DB_SETTINGS_THEME . " (settings_name, settings_value, settings_theme) VALUES
-    ('color_scheme', '', '" . $theme_folder . "'),
-    ('github_url', '', '" . $theme_folder . "'),
-    ('facebook_url', '', '" . $theme_folder . "'),
-    ('twitter_url', '', '" . $theme_folder . "')
+    ('polaris_color_scheme', '', '" . $theme_folder . "'),
+    ('polaris_github_url', '', '" . $theme_folder . "'),
+    ('polaris_facebook_url', '', '" . $theme_folder . "'),
+    ('polaris_twitter_url', '', '" . $theme_folder . "')
 ";
 
 $theme_deldbrow[] = DB_SETTINGS_THEME . " WHERE settings_theme='" . $theme_folder . "'";
