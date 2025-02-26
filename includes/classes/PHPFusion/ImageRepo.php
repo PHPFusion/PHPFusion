@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: ImageRepo.php
-| Author: Takács Ákos (Rimelek)
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -194,6 +194,23 @@ class ImageRepo {
      */
     public static function setImage($name, $path) {
         self::$image_paths[$name] = $path;
+    }
+
+    /**
+     * @param        $name
+     * @param string $class
+     *
+     * @return string
+     */
+    public static function getIcon( string $name, string $class = "", string $tooltip = "", string $style = "" ) {
+        $icon = ( self::$glyphicons[$name] ) ?? $name;
+        $style = $style ? " style='" . $style . "'" : '';
+        $tooltip = $tooltip ? " data-toggle='tooltip' title='" . $tooltip . "'" : '';
+        return "<i class='" . $icon . whitespace( $class ) . "'" . $style . $tooltip . "></i>";
+    }
+
+    public static function setIcon($name, $value) {
+        self::$glyphicons[$name] = $value;
     }
 
     /**
