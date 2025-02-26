@@ -49,7 +49,7 @@ class Polaris extends PolarisThemeFactory
 
         echo PHPFusion\SiteLinks::setSubLinks($this->getSiteLinksOptions())->showSubLinks();
 
-?>
+        ?>
         <main class="main-content">
             <div class="<?php echo $this->getLayoutClass() ?>">
                 <?php echo defined('AU_CENTER') ? AU_CENTER : ''; ?>

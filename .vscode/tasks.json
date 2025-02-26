@@ -97,6 +97,22 @@
             },
             "problemMatcher": [],
             "detail": "Compile AdminLTE styles.less files to compressed CSS"
-        }
+        },
+        {
+            "label": "PHPFusion homepage styles",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--clean-css",
+                "themes/templates/phpfusion/styles/index.less",
+                "themes/templates/phpfusion/styles/index.css",                                
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile PHPFusion.com Homepage styles to css"
+        },
     ]
 }

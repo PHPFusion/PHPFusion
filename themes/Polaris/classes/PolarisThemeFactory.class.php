@@ -83,7 +83,7 @@ abstract class PolarisThemeFactory
      */
     protected function getContentLayoutClass()
     {
-        return 'col-xs-12 col-sm-' . $this->content['sm'] . ' col-md-' . $this->content['md'] . ' col-lg-' . $this->content['lg'];
+        return 'polaris-col-m col-xs-12 col-sm-' . $this->content['sm'] . ' col-md-' . $this->content['md'] . ' col-lg-' . $this->content['lg'];
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class PolarisThemeFactory
 
     protected function getLeftLayoutClass()
     {
-        return 'col-xs-12 col-sm-' . $this->left['sm'] . ' col-md-' . $this->left['md'] . ' col-lg-' . $this->left['lg'];
+        return 'polaris-col-l col-xs-12 col-sm-' . $this->left['sm'] . ' col-md-' . $this->left['md'] . ' col-lg-' . $this->left['lg'];
     }
 
     /**
@@ -102,7 +102,7 @@ abstract class PolarisThemeFactory
      */
     protected function getRightLayoutClass()
     {
-        return 'col-xs-12 col-sm-' . $this->right['sm'] . ' col-md-' . $this->right['md'] . ' col-lg-' . $this->right['lg'];
+        return 'polaris-col-r col-xs-12 col-sm-' . $this->right['sm'] . ' col-md-' . $this->right['md'] . ' col-lg-' . $this->right['lg'];
     }
 
     /**

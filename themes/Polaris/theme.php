@@ -23,8 +23,7 @@ require_once __DIR__ . '/classes/Polaris.autoloader.php';
 require_once __DIR__ . '/classes/PolarisThemeFactory.class.php';
 require_once __DIR__ . '/classes/Polaris.class.php';
 
-
-// Configure theme here
+fusion_load_script(THEME.'polaris.js');
 
 
 /**
