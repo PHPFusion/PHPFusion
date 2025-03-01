@@ -176,8 +176,8 @@ function blacklist_listing() {
     echo "<div class='m-t-15'>\n";
     echo "<div class='clearfix m-b-20'>\n";
     echo "<div class='pull-right'>";
-    echo "<a class='btn btn-success btn-sm m-r-10' href=".clean_request('section=blacklist_form', ['section', 'rowstart'], FALSE)."><i class='fa fa-fw fa-plus'></i>".$locale['BLS_022']."</a>";
-    echo "<a class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action','#blacklist_table');\"><i class='fa fa-fw fa-trash-o'></i>".$locale['delete']."</a>";
+    echo "<a class='btn btn-success btn-sm m-r-10' href=".clean_request('section=blacklist_form', ['section', 'rowstart'], FALSE).">" . get_icon( 'fa fa-plus', 'fa-fw m-l-10' ) . $locale['BLS_022']."</a>";
+    echo "<a class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action','#blacklist_table');\">" . get_icon( 'fa fa-trash-o', 'fa-fw m-r-10' ) . $locale['delete']."</a>";
     echo "</div>";
     //echo "<div class='pull-left'><span class='pull-right m-t-10'>".sprintf($locale['BLS_023'], $rows, $total_rows)."</span></div>\n";
     echo "</div>\n";
@@ -207,8 +207,8 @@ function blacklist_listing() {
             echo "</td>\n<td>".(!empty($data['user_name']) ? profile_link($data['user_id'], $data['user_name'], $data['user_status']) : $locale['na'])."</td>\n";
             echo "<td>".(!empty($data['blacklist_datestamp']) ? showdate("shortdate", $data['blacklist_datestamp']) : $locale['na'])."</td>\n";
             echo "<td>
-                <a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=blacklist_form&action=edit&blacklist_id=".$data['blacklist_id']."'><i class='fa fa-edit fa-fw'></i> ".$locale['edit']."</a>
-                <a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&section=blacklist&action=delete&blacklist_id=".$data['blacklist_id']."' onclick=\"return confirm('".$locale['BLS_014']."');\">".$locale['delete']."<i class='fa fa-trash m-l-10'></i></a>
+                <a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=blacklist_form&action=edit&blacklist_id=".$data['blacklist_id']."'>" . get_icon( 'fa fa-edit', 'fa-fw m-r-10' ) . $locale['edit']."</a>
+                <a class='btn btn-danger btn-sm' href='".FUSION_SELF.$aidlink."&section=blacklist&action=delete&blacklist_id=".$data['blacklist_id']."' onclick=\"return confirm('".$locale['BLS_014']."');\">" . $locale['delete'] . get_icon( 'fa fa-trash', 'm-l-10' ) . "</a>
                 </td>\n";
             echo "</tr>\n";
             add_to_jquery('$("#blist-id-'.$data['blacklist_id'].'").click(function() {

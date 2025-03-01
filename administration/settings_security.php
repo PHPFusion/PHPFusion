@@ -181,7 +181,7 @@ if (!$settings['recaptcha_public']) {
         'end'   => "</a>\n",
     ];
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
-    echo "<div class='alert alert-warning m-t-10'><i class='fa fa-google fa-lg fa-fw'></i> ".$locale['no_keys']."</div>\n";
+    echo "<div class='alert alert-warning m-t-10'>" . get_icon( 'fa fa-google', 'fa-lg fa-fw m-l-10' ) . $locale['no_keys']."</div>\n";
 }
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], $settings['recaptcha_public'], [
     'placeholder' => $locale['grecaptcha_placeholder_1'],

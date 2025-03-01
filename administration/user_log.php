@@ -185,7 +185,7 @@ if (!defined('FUSION_NULL')) {
         echo "</table>\n</div>";
         echo "<div class='clearfix display-block'>\n";
         echo "<div class='display-inline-block pull-left m-r-20'>".form_checkbox('check_all', $locale['UL_020'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</div>";
-        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#userlog_table');\"><i class='fa fa-fw fa-trash-o'></i> ".$locale['delete']."</a></div>";
+        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete', '#table_action', '#userlog_table');\">" . get_icon( 'fa fa-trash-o', 'fa-fw m-r-10' ) . $locale['delete'] . "</a></div>";
         echo "</div>\n";
         echo closeform();
         add_to_jquery("

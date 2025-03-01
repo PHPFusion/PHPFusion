@@ -100,9 +100,9 @@ function smiley_listing() {
             echo "<td class='col-xs-2'>".$info['smiley_code']."</td>\n";
             echo "<td class='col-xs-2'><img style='width:20px;height:20px;' src='".IMAGES."smiley/".$info['smiley_image']."' alt='".$info['smiley_text']."' title='".$info['smiley_text']."' /></td>\n";
             echo "<td class='col-xs-2'>".$info['smiley_text']."</td>\n";
-            echo "<td class='col-xs-4'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=smiley_form&action=edit&smiley_id=".$info['smiley_id']."'>".$locale['edit']."<i class='fa fa-edit m-l-10'></i></a> \n";
-            echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=delete&smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".$locale['SMLY_417']."');\">".$locale['disable']."<i class='fa fa-close m-l-10'></i></a> \n";
-            echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=delete&disable=1&smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".$locale['SMLY_416']."');\">".$locale['delete']."<i class='fa fa-trash m-l-10'></i></a></td>\n</tr>\n";
+            echo "<td class='col-xs-4'><a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=smiley_form&action=edit&smiley_id=".$info['smiley_id']."'>" . $locale['edit'] . get_icon( 'fa fa-edit', 'm-l-10' ) . "</a> \n";
+            echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=delete&smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".$locale['SMLY_417']."');\">" . $locale['disable'] . get_icon( 'fa fa-close', 'm-l-10' ) . "</a> \n";
+            echo "<a class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&action=delete&disable=1&smiley_id=".$info['smiley_id']."' onclick=\"return confirm('".$locale['SMLY_416']."');\">" . $locale['delete'] . get_icon( 'fa fa-trash', 'm-l-10' ) . "</a></td>\n</tr>\n";
         }
         echo "</table>\n</div>";
     } else {
@@ -117,7 +117,7 @@ function smiley_listing() {
             echo "<tr>\n";
             echo "<td class='col-xs-2'><img style='width:20px;height:20px;' src='".IMAGES."smiley/".$list."' alt='' title='' style='border:none;' /></td>\n";
             echo "<td class='col-xs-2'>".ucwords(str_replace(['.gif', '.png', '.jpg', '.svg'], '', $list))."</td>\n";
-            echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=smiley_form&smiley_text=".$list."'>".$locale['add']."<i class='fa fa-plus m-l-10'></i></a></td>\n";
+            echo "<td class='col-xs-2'><a id='confirm' class='btn btn-default btn-sm' href='".FUSION_SELF.$aidlink."&section=smiley_form&smiley_text=".$list."'>" . $locale['add'] . get_icon( 'fa fa-plus', 'm-l-10' ) . "</a></td>\n";
             echo "</tr>\n";
         }
         echo "</table>\n</div>";

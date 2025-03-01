@@ -217,11 +217,11 @@ function bbcode_list() {
                 $up = $data['bbcode_order'] - 1;
                 $down = $data['bbcode_order'] + 1;
                 if ($i == 1) {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
+                    $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'>" . get_icon( 'fa fa-angle-down', 'fa-lg', $locale['BBCA_408'] ) . "</a>\n";
                 } else {
-                    $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mup&bbcode_id=".$data['bbcode_id']."&order=$up'><i class='fa fa-lg fa-angle-up' title='".$locale['BBCA_409']."'></i></a>\n";
+                    $up_down = " <a href='".FUSION_SELF.$aidlink."&action=mup&bbcode_id=".$data['bbcode_id']."&order=$up'>" . get_icon( 'fa fa-angle-up', 'fa-lg', $locale['BBCA_409'] ) . "</a>\n";
                     if ($i < $numrows) {
-                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'><i class='fa fa-lg fa-angle-down' title='".$locale['BBCA_408']."'></i></a>\n";
+                        $up_down .= " <a href='".FUSION_SELF.$aidlink."&action=mdown&bbcode_id=".$data['bbcode_id']."&order=$down'>" . get_icon( 'fa fa-angle-down', 'fa-lg', $locale['BBCA_408'] ) . "</a>\n";
                     }
                 }
             }
