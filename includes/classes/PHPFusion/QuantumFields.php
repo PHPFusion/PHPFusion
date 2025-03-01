@@ -1365,7 +1365,7 @@ class QuantumFields extends QuantumFactory {
         echo "<hr/>";
         echo form_select_tree('field_cat',
             $this->locale['fields_0410'],
-            empty( $this->field_data['field_cat'] ) ? $user_field_group : $this->field_data['field_cat'],
+            empty( $this->field_data['field_cat'] ) ? in_array($user_field_group, array_keys($this->page_list) ) ? 0 : $user_field_group : $this->field_data['field_cat'],
             [
                 'no_root'      => 1,
                 'disable_opts' => array_keys($this->page_list),
