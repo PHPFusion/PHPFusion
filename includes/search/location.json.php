@@ -1,9 +1,9 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
-|
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
 | Guildsquare
 | Copyright (C) 2014 - 2014 Guildsquare
 | http://www.guildsquare.com/
@@ -20,9 +20,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
-require_once dirname(__FILE__).'../../../maincore.php';
-if (!defined("IN_FUSION")) {die("Access Denied");}
+require_once __DIR__.'../../../maincore.php';
 include INCLUDES."geomap/geomap.inc.php";
 $q = $_GET['q'];
 $found = 0;

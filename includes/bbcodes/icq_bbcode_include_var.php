@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: icq_bbcode_include_var.php
 | Author: Wooya
@@ -15,10 +15,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-$__BBCODE__[] = array(
-    "description" => $locale['bb_icq_description'], "value" => "icq", "bbcode_start" => "[icq]",
-    "bbcode_end" => "[/icq]", "usage" => "[icq]".$locale['bb_icq_usage']."[/icq]"
-);
+defined( 'IN_FUSION' ) || exit;
+$__BBCODE__[] = [
+    "description"  => $locale['bb_icq_description'],
+    "value"        => "icq",
+    "bbcode_start" => "[icq]",
+    "bbcode_end"   => "[/icq]", "usage" => "[icq]".$locale['bb_icq_usage']."[/icq]"
+];

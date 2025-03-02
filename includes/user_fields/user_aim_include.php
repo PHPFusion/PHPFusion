@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: user_aim_include.php
 | Author: PHP-Fusion Development Team
@@ -22,17 +22,20 @@ if (!defined("IN_FUSION")) {
 $icon = "<img src='".IMAGES."user_fields/social/aim.svg'>\n";
 // Display user field input
 if ($profile_method == "input") {
-    $options = array(
-            'inline'           => TRUE,
-            'max_length'       => 16,
-            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-            'error_text'       => $locale['uf_aim_error'],
-            'regex_error_text' => $locale['uf_aim_error_1'],
-            'placeholder'      => $locale['uf_aim'],
-            'label_icon'       => $icon
-        ) + $options;
+    $options = [
+        'inline'           => TRUE,
+        'max_length'       => 16,
+        'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+        'error_text'       => $locale['uf_aim_error'],
+        'regex_error_text' => $locale['uf_aim_error_1'],
+        'placeholder'      => $locale['uf_aim'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_aim', $locale['uf_aim'], $field_value, $options);
 // Display in profile
 } elseif ($profile_method == "display") {
-    $user_fields = array('title' => $icon.$locale['uf_aim'], 'value' => $field_value ?: '');
+    $user_fields = [
+        'title' => $icon.$locale['uf_aim'],
+        'value' => $field_value ?: ''
+    ];
 }

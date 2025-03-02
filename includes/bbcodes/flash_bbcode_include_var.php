@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: flash_bbcode_include_var.php
 | Author: Wooya
@@ -16,11 +16,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-$__BBCODE__[] = array(
-    "description" => $locale['bb_flash_description'], "value" => "flash",
-    "bbcode_start" => "[flash width=200 height=50]", "bbcode_end" => "[/flash]",
-    "usage" => "[flash width=".$locale['bb_flash_width']." height=".$locale['bb_flash_height']."]".$locale['bb_flash_usage']."[/flash]"
-);
+defined( 'IN_FUSION' ) || exit;
+$__BBCODE__[] = [
+    "description"  => $locale['bb_flash_description'],
+    "value"        => "flash",
+    "bbcode_start" => "[flash width=200 height=50]",
+    "bbcode_end"   => "[/flash]",
+    "usage"        => "[flash width=".$locale['bb_flash_width']." height=".$locale['bb_flash_height']."]".$locale['bb_flash_usage']."[/flash]"
+];

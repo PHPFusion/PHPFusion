@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined( 'IN_FUSION' ) || exit;
 
 $icon = "<img src='".IMAGES."user_fields/social/googleplus.svg'/>";
 // Display user field input
@@ -36,5 +34,8 @@ if ($profile_method == "input") {
         $field_value = !preg_match("@^http(s)?\:\/\/@i", $field_value) ? "https://plus.google.com/+".$field_value : $field_value;
         $field_value = (fusion_get_settings('index_url_userweb') ? '' : "<!--noindex-->")."<a href='".$field_value."' title='".$field_value."' ".(fusion_get_settings('index_url_userweb') ? "" : "rel='nofollow' ")."target='_blank'>".$locale['uf_googleplus_desc']."</a>".(fusion_get_settings('index_url_userweb') ? "" : "<!--/noindex-->");
     }
-    $user_fields = array('title' => $icon.$locale['uf_googleplus'], 'value' => $field_value ?: '');
+    $user_fields = [
+        'title' => $icon.$locale['uf_googleplus'],
+        'value' => $field_value ?: ''
+    ];
 }

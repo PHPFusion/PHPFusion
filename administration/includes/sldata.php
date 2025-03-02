@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------*
 | Filename: administration/includes/sldata.php
 | Author: Frederick MC Chan (Chan)
@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 require_once "../../maincore.php";
 
 $aid = isset($_GET['token']) ? explode('=', $_GET['token']) : '';

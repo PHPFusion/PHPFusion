@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: yandex_bbcode_include_var.php
 | Author: Rizado (Chubatyj Vitalij)
@@ -15,11 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
-$__BBCODE__[] = array(
-    "description" => $locale['bb_yandex_description'], "value" => "yandex",
-    "bbcode_start" => "[yandex]", "bbcode_end" => "[/yandex]",
-    "usage" => "[yandex]".$locale['bb_yandex_usage']."[/yandex]"
-);
+defined( 'IN_FUSION' ) || exit;
+$__BBCODE__[] = [
+    "description"  => $locale['bb_yandex_description'],
+    "value"        => "yandex",
+    "bbcode_start" => "[yandex]",
+    "bbcode_end"   => "[/yandex]",
+    "usage"        => "[yandex]".$locale['bb_yandex_usage']."[/yandex]"
+];
