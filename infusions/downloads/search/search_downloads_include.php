@@ -26,7 +26,7 @@ if (defined('DOWNLOADS_EXISTS')) {
     $settings = fusion_get_settings();
     $locale = fusion_get_locale('', INFUSIONS."downloads/locale/".LOCALESET."search/downloads.php");
     $item_count = "0 ".$locale['d402']." ".$locale['522']."<br />\n";
-    $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND download_datestamp>='.(time() - Search_Engine::get_param('datelimit')) : '');
+    $date_search = (Search_Engine::get_param('datelimit') != 0 && isnum(Search_Engine::get_param('datelimit')) ? ' AND download_datestamp>='.(time() - Search_Engine::get_param('datelimit')) : '');
 
     if (Search_Engine::get_param('stype') == 'downloads' || Search_Engine::get_param('stype') == 'all') {
 
@@ -41,7 +41,7 @@ if (defined('DOWNLOADS_EXISTS')) {
             '1' => ' ASC',
         ];
 
-        $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
+        $sortby = !empty(Search_Engine::get_param('sort')) ? " ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
 
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
 

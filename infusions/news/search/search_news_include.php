@@ -40,9 +40,9 @@ if (defined('NEWS_EXISTS')) {
             '1' => ' ASC',
         ];
 
-        $sortby = !empty(Search_Engine::get_param('sort')) ? "ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
+        $sortby = !empty(Search_Engine::get_param('sort')) ? " ORDER BY ".$sort_by[Search_Engine::get_param('sort')].$order_by[Search_Engine::get_param('order')] : '';
         $limit = (Search_Engine::get_param('stype') != "all" ? " LIMIT ".Search_Engine::get_param('rowstart').",10" : '');
-        $date_search = (Search_Engine::get_param('datelimit') != 0 ? ' AND news_datestamp>='.(time() - Search_Engine::get_param('datelimit')) : '');
+        $date_search = (Search_Engine::get_param('datelimit') != 0 && isnum(Search_Engine::get_param('datelimit')) ? ' AND news_datestamp>='.(time() - Search_Engine::get_param('datelimit')) : '');
 
         switch (Search_Engine::get_param('fields')) {
             case 2:
