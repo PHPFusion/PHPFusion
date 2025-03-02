@@ -66,7 +66,7 @@ if (!defined('ADMIN_PANEL')) {
             $data = dbarray(dbquery("SELECT article_cat_language
                 FROM ".DB_PREFIX."article_cats
                 WHERE article_cat_id=:id
-            ", [':id' => [':id' => check_get('cat_id') ? get('cat_id') : $a_matches[1]]]));
+            ", [':id' => check_get('cat_id') ? get('cat_id') : $a_matches[1]]));
 
             if (!empty($data['article_cat_language'])) {
                 $lang = explode(',', $data['article_cat_language']);

@@ -21,7 +21,7 @@ pageaccess('UL');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/user_log.php");
 
-add_breadcrumb(['link' => ADMIN.'administrators.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
+add_breadcrumb(['link' => ADMIN.'user_log.php'.fusion_get_aidlink(), 'title' => $locale['UL_001']]);
 
 $rowstart = (check_get('rowstart') && get('rowstart', FILTER_VALIDATE_INT) ? get('rowstart') : 0);
 
