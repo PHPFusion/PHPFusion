@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: forum_threads_panel.php
 | Author: PHP-Fusion Development Team
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined( 'IN_FUSION' ) || exit;
 
 include INCLUDES."infusions_include.php";
 require_once INFUSIONS."forum/infusion_db.php";
@@ -30,7 +28,7 @@ echo "<div class='side-label'><strong>".$locale['global_021']."</strong></div>\n
 $result = dbquery("SELECT f.forum_id, f.forum_access, t.thread_id, t.thread_subject
 	FROM ".DB_FORUMS." f
 	LEFT JOIN ".DB_FORUM_THREADS." t ON f.forum_id = t.forum_id
-	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0' 
+	".(multilang_table("FO") ? "WHERE f.forum_language='".LANGUAGE."' AND" : "WHERE")." ".groupaccess('f.forum_access')." AND f.forum_type!='1' AND f.forum_type!='3' AND t.thread_hidden='0'
 	GROUP BY t.thread_id ORDER BY t.thread_lastpost DESC LIMIT ".$inf_settings['numofthreads']."");
 if (dbrows($result)) {
     echo "<ul class='side'>\n";
