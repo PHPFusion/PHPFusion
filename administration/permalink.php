@@ -440,7 +440,7 @@ switch ($sections) {
         break;
     case "pls":
         echo openform('settingsseo', 'post', FUSION_REQUEST);
-        echo "<div class='well'><i class='fa fa-lg fa-exclamation-circle m-r-10'></i>".$locale['seo_htc_warning']."</div>";
+        echo "<div class='well'>" . get_icon( 'fa fa-exclamation-circle', 'fa-lg m-r-10' ) . $locale['seo_htc_warning'] . "</div>";
         echo form_checkbox('site_seo', $locale['admins_438'], $settings_seo['site_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
         echo form_checkbox('normalize_seo', $locale['admins_439'], $settings_seo['normalize_seo'], ['toggle' => TRUE, 'inline' => TRUE]);
         echo form_checkbox('debug_seo', $locale['admins_440'], $settings_seo['debug_seo'], ['toggle' => TRUE, 'inline' => TRUE]);

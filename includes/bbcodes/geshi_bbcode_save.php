@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: geshi_bbcode_save.php
 | Author: Wooya
@@ -22,8 +22,8 @@ function unstripinput($text) {
     if (QUOTES_GPC) {
         $text = stripslashes($text);
     }
-    $search = array("\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;");
-    $replace = array("\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">");
+    $search = ["\n", "&amp;", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;"];
+    $replace = ["\r\n", "&", "\"", "'", "\\", '\"', "\'", "<", ">"];
     $text = str_replace($search, $replace, $text);
 
     return $text;

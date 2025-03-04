@@ -1224,6 +1224,7 @@ class QuantumFields extends QuantumFactory {
         $user_field_api_version = '';
         $user_field_desc = '';
         $user_field_dbname = '';
+        $user_field_group = 0;
         $user_field_dbinfo = '';
 
         if ($this->module_debug == TRUE) {
@@ -1362,10 +1363,9 @@ class QuantumFields extends QuantumFactory {
         echo "<span class='text-dark strong'>".$this->locale['fields_0407']."</span>".(!empty($user_field_desc) ? "<br/>".$user_field_desc : '')."<br/>";
         echo "</div>";
         echo "<hr/>";
-
         echo form_select_tree('field_cat',
             $this->locale['fields_0410'],
-            $this->field_data['field_cat'],
+            empty( $this->field_data['field_cat'] ) ? in_array($user_field_group, array_keys($this->page_list) ) ? 0 : $user_field_group : $this->field_data['field_cat'],
             [
                 'no_root'      => 1,
                 'disable_opts' => array_keys($this->page_list),

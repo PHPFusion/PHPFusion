@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: php_bbcode_include.php
 | Author: Wooya
@@ -16,17 +16,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined( 'IN_FUSION' ) || exit;
 
 require_once INCLUDES.'bbcodes/phphighlight/PHP_Highlight.php';
 unset ($matches);
 preg_match_all("#\[php\](.*?)\[/php\]#si", $text, $matches, PREG_PATTERN_ORDER);
 for ($i = 0; $i < count($matches[0]); $i++) {
     $input = str_replace('<br>', '', str_replace('<br  />', '', str_replace('<br />', '', stripslashes($matches[1][$i]))));
-    $search = array("\\", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", "&amp;");
-    $replace = array("\\\\", "\"", "'", "\\", "\"", "\'", "<", ">", "&");
+    $search = ["\\", "&quot;", "&#39;", "&#92;", "&quot;", "&#39;", "&lt;", "&gt;", "&amp;"];
+    $replace = ["\\\\", "\"", "'", "\\", "\"", "\'", "<", ">", "&"];
     $input = str_replace($search, $replace, $input);
     $start_php = !preg_match("/<\?php/i", $input) ? "<?php\n" : "";
     $end_php = !preg_match("/\?>/i", $input) ? "\n?>" : "";

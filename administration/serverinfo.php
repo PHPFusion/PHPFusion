@@ -135,7 +135,7 @@ function folderpermission() {
     // Check file/folder writeable
     $i = 0;
     foreach ($folders as $folder => $writeable) {
-        $status .= "<tr>\n<td style='width:50%'><i class='fa fa-folder fa-fw'></i> ".$folder."</td><td class='text-right'>";
+        $status .= "<tr>\n<td style='width:50%'>" . get_icon( 'fa fa-folder', 'fa-fw m-r-10' ) . $folder . "</td><td class='text-right'>";
         if (is_writable(BASEDIR.$folder) == TRUE) {
             $status .= "<span class='".($writeable == TRUE ? "text-success" : "text-danger text-bold text-uppercase")."'>".$locale['SRV_441']."</span>";
         } else {

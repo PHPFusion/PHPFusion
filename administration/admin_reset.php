@@ -281,7 +281,7 @@ function admin_reset_listing() {
             echo "<td>".$reset_passwords."</td>\n";
             echo "<td>".$sucess." ".$locale['apw_422']." ".($sucess + $failed)."</td>\n";
             echo "<td>".(!empty($info['reset_reason']) ? $info['reset_reason'] : $locale['apw_423'])."</td>\n";
-            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\"><i class='fa fa-trash'></i> ".$locale['delete']."</a></td>\n";
+            echo "<td><a id='confirm' class='btn btn-danger btn-sm' href='".FUSION_SELF.fusion_get_aidlink()."&section=adminreset_list&action=delete&reset_id=".$info['reset_id']."' onclick=\"return confirm('".$locale['apw_428']."');\">" . get_icon( 'fa fa-trash', 'm-r-10' ) . $locale['delete']."</a></td>\n";
             echo "</tr>\n";
             add_to_jquery('$("#reset-id-'.$info['reset_id'].'").click(function() {
                 if ($(this).prop("checked")) {
@@ -296,7 +296,7 @@ function admin_reset_listing() {
         echo "</table>\n</div>";
         echo "<div class='clearfix display-block'>\n";
         echo "<div class='display-inline-block pull-left m-r-20'>".form_checkbox('check_all', $locale['apw_430'], '', ['class' => 'm-b-0', 'reverse_label' => TRUE])."</div>";
-        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\"><i class='fa fa-trash-o'></i> ".$locale['delete']."</a></div>";
+        echo "<div class='display-inline-block'><a class='btn btn-danger btn-sm' onclick=\"run_admin('delete');\">" . get_icon( 'fa fa-trash-o', 'm-r-10' ) . $locale['delete']."</a></div>";
         echo "</div>\n";
         echo closeform();
         add_to_jquery("

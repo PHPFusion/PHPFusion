@@ -1,12 +1,11 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
-| File Category: Core Rewrite Modules
-| Filename: downloads_rewrite_info.php
-| Author: Chan (Frederick MC Chan)
+| Filename: 9.10.31.upgrade.inc
+| Author: Core Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,8 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
+$locale = fusion_get_locale( '', LOCALE.LOCALESET.'setup.php' );
+$settings = fusion_get_settings();
+
+$update_settings_tbl = [
+    'version' => '9.10.31',
+];
+
+foreach ( $update_settings_tbl as $key => $value ) {
+    if ( isset( $settings[$key] ) ) {
+        $inf_updatedbrow[] = DB_SETTINGS . " SET settings_value='" . $value . "' WHERE settings_name='" . $key . "'";
+    }
 }
-$permalink_name = $locale['pl_downloads_title'];
-$permalink_desc = $locale['pl_downloads_desc'];

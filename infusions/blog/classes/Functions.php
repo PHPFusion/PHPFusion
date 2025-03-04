@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: classes/Functions.php
 | Author: Frederick MC CHan (Chan)
@@ -18,10 +18,6 @@
 namespace PHPFusion\Blog;
 
 use PHPFusion\Feedback\Comments;
-
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
 
 /**
  * Functions for Blog System

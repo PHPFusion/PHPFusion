@@ -1,8 +1,8 @@
 <?php
 /*-------------------------------------------------------+
-| PHP-Fusion Content Management System
-| Copyright (C) PHP-Fusion Inc
-| https://www.php-fusion.co.uk/
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: google_bbcode_include.php
 | Author: Wooya
@@ -15,9 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-if (!defined("IN_FUSION")) {
-    die("Access Denied");
-}
+defined( 'IN_FUSION' ) || exit;
 $text = preg_replace('#\[google\](.*?)\[/google\]#si',
                      '<img src=\'http://www.google.com/logos/Logo_25wht.gif\' width=\'38\' height=\'18\' alt=\'Google Search\' border=\'0\' style=\'vertical-align:middle;\'> <a href=\'http://www.google.com/search?hl=&amp;lr=&amp;q=\1\' target=\'_blank\'>\1</a>',
                      $text);

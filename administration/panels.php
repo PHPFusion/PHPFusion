@@ -446,7 +446,7 @@ class PanelsAdministration {
         $count = dbcount("('panel_id')", DB_PANELS, "panel_side='".$side."'");
         $title = $type." <span id='side-".$side."' class='badge num pull-right'>".$count."</span>";
         $html = "<div class='panel panel-default' style='border-style: dashed'>\n<div class='panel-body clearfix'>\n";
-        $html .= "<i class='fa fa-desktop m-r-10'></i> $title ";
+        $html .= get_icon( 'fa fa-desktop', 'm-r-10' ) . $title;
         $html .= "</div>\n";
         $html .= "<ul id='panel-side".$side."' data-side='".$side."' style='list-style: none;' class='panels-list connected list-group p-10'>\n";
         if (isset($this->panel_data[$side])) {
@@ -455,23 +455,23 @@ class PanelsAdministration {
                 $type = $data['panel_type'] == "file" ? self::$locale['PANEL_423'] : self::$locale['PANEL_424'];
                 $html .= "<li id='listItem_".$data['panel_id']."' style='border:1px solid #ddd;' class='pointer list-group-item ".$row_color.($data['panel_status'] == 0 ? " pdisabled" : '')."'>\n";
                 $html .= "<div class='handle'>\n";
-                $html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='move'></i>\n";
+                $html .= "<i class='pull-right display-inline-block m-t-5 m-r-10 fa fa-arrows-alt' title='" . self::$locale['move'] . "'></i>\n";
                 $html .= "<div class='overflow-hide'>\n";
                 $html .= "<a id='dd".$data['panel_id']."' class='dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>\n";
                 $html .= "<strong>".$data['panel_name']."</strong> <span class='caret'></span>\n\n";
                 $html .= "</a>\n";
                 $html .= "<ul class='dropdown-menu' aria-labelledby='dd".$data['panel_id']."'>\n";
-                $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-bullseye m-r-10 m-t-5'></i> ".getgroupname($data['panel_access'])."</li>\n";
-                $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-file-o m-r-10 m-t-5'></i><span class='badge'>".$type."</span></li>\n";
-                $html .= "<li style='padding:3px 20px;'>\n<i class='fa fa-arrows-v m-r-10'></i> ".$data['panel_order']."</li>\n";
+                $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-bullseye', 'm-r-10 m-t-5' ) . getgroupname( $data['panel_access'] ) . "</li>\n";
+                $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-file-o', 'm-r-10 m-t-5' ) . "<span class='badge'>" . $type . "</span></li>\n";
+                $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-arrows-v', 'm-r-10' ) . $data['panel_order'] . "</li>\n";
                 $html .= "<li class='divider'></li>\n";
-                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&section=panelform&action=edit&panel_id=".$data['panel_id']."'><i class='fa fa-pencil m-r-10 m-t-5'></i>".self::$locale['edit']."</a>\n</li>\n";
+                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&section=panelform&action=edit&panel_id=".$data['panel_id']."'>" . get_icon( 'fa fa-pencil', 'm-r-10 m-t-5' ) . self::$locale['edit'] . "</a>\n</li>\n";
                 if ($data['panel_status'] == 0) {
-                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=1&panel_id=".$data['panel_id']."'><i class='fa fa-check m-r-10 m-t-5'></i>".self::$locale['PANEL_435']."</a>\n</li>\n";
+                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=1&panel_id=".$data['panel_id']."'>" . get_icon( 'fa fa-check', 'm-r-10 m-t-5' ) . self::$locale['PANEL_435'] . "</a>\n</li>\n";
                 } else {
-                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=0&panel_id=".$data['panel_id']."'><i class='fa fa-close m-r-10 m-t-5'></i>".self::$locale['PANEL_436']."</a>\n</li>\n";
+                    $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=setstatus&panel_status=0&panel_id=".$data['panel_id']."'>" . get_icon( 'fa fa-close', 'm-r-10 m-t-5' ) . self::$locale['PANEL_436'] . "</a>\n</li>\n";
                 }
-                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=delete&panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['PANEL_440']."');\"><i class='fa fa-trash m-r-10 m-t-5'></i>".self::$locale['delete']."</a>\n</li>\n";
+                $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&action=delete&panel_id=".$data['panel_id']."' onclick=\"return confirm('".self::$locale['PANEL_440']."');\">" . get_icon( 'fa fa-trash', 'm-r-10 m-t-5' ) . self::$locale['delete'] . "</a>\n</li>\n";
                 $html .= "</ul>\n";
                 $html .= "</div>\n";
                 $html .= "</div>\n";

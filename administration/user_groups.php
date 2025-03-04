@@ -275,7 +275,7 @@ class UserGroups {
         $aidlink = fusion_get_aidlink();
 
         $html = "<div class='clearfix'>\n";
-        $html .= "<div class='pull-right'><a class='btn btn-success' href='".FUSION_SELF.$aidlink."&section=usergroup_form'><i class='fa fa-plus fa-fw'></i> ".self::$locale['GRP_428']."</a>\n</div>\n";
+        $html .= "<div class='pull-right'><a class='btn btn-success' href='".FUSION_SELF.$aidlink."&section=usergroup_form'>" . get_icon( 'fa fa-plus', 'fa-fw m-r-10' ) . self::$locale['GRP_428'] . "</a>\n</div>\n";
         $html .= "</div>\n";
         $html .= "<div class='table-responsive'><table class='table table-striped'>\n";
         $html .= "<thead>\n";
@@ -295,7 +295,7 @@ class UserGroups {
                 $html .= "<tr>\n";
                 $html .= "<td><a href='$edit_link'>".$groups[1]." (".self::countUserGroup($groups[0]).")</a></td>\n";
                 $html .= "<td>".$groups[2]."</td>\n";
-                $html .= "<td class='text-center'>".(!empty($groups[3]) ? "<i class='".$groups[3]."'></i> " : $groups[3])."</td>\n";
+                $html .= "<td class='text-center'>".(!empty($groups[3]) ? get_icon( $groups[3] ) : $groups[3])."</td>\n";
                 $html .= "<td>";
                 $html .= "<a href='$member_link'>".self::$locale['GRP_438']."</a> - ";
                 $html .= "<a href='$edit_link'>".self::$locale['edit']."</a> - ";
@@ -314,7 +314,7 @@ class UserGroups {
 
             $html .= "<td>".$groups[1]."</td>\n";
             $html .= "<td>".$groups[2]."</td>\n";
-            $html .= "<td class='text-center'>".(!empty($groups[3]) ? "<i class='".$groups[3]."'></i>" : $groups[3])."</td>\n";
+            $html .= "<td class='text-center'>".(!empty($groups[3]) ? get_icon( $groups[3] ) : $groups[3])."</td>\n";
             $html .= "<td>&nbsp;</td>\n";
             $html .= "<td>".$groups[0]."</td>\n";
             $html .= "</tr>\n";
