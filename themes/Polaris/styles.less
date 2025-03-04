@@ -1,18 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+/**
+Variables
+*/
+@global-font: "Roboto", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+@global-font-size: 14px;
+@global-line-height: 1.42857143;
+
+@navbar-brand-height: 26px;
+@navbar-margin-top:-13px;
+@navbar-font-color: rgba(0, 0, 0, .55);
+@navbar-font-active-color: rgba(0, 0, 0);
+@navbar-font-transition: color .2s cubic-bezier(0.4, 0.8, .75, 1);
+@navbar-item-padding: 22px 10px;
+
 body {
-    font-family: "Roboto", -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        Roboto,
-        Oxygen,
-        Ubuntu,
-        Cantarell,
-        'Open Sans',
-        'Helvetica Neue',
-        sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
+    font-family: @global-font;
+    font-size: @global-font-size;
+    line-height: @global-line-height;
     color: #555555;
     background-color: #f5f5f5;
 }
@@ -186,6 +191,14 @@ a.bg-danger:focus {
     padding-bottom: 9px;
     margin: 40px 0 20px;
     border-bottom: 1px solid #eeeeee;
+}
+
+.stroke {
+    stroke: #000;
+}
+
+.fill {
+    fill: #000;
 }
 
 .opentable,
@@ -2832,7 +2845,9 @@ select[multiple] .input-group-sm>.input-group-btn>.btn {
     }
 
     .navbar-collapse.collapse {
-        display: block !important;
+        display: flex !important;
+        width: 100%;
+        align-items: center;
         height: auto !important;
         padding-bottom: 0;
         overflow: visible !important;
@@ -2869,6 +2884,7 @@ select[multiple] .input-group-sm>.input-group-btn>.btn {
 .container-fluid>.navbar-collapse {
     margin-right: -15px;
     margin-left: -15px;
+
 }
 
 @media (min-width: 768px) {
@@ -2925,7 +2941,7 @@ select[multiple] .input-group-sm>.input-group-btn>.btn {
     padding: 15px 15px;
     font-size: 18px;
     line-height: 20px;
-    height: 50px;
+    height: @navbar-brand-height;
 }
 
 .navbar-brand:hover,
@@ -3428,25 +3444,34 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
 @media (min-width: 768px) {
     #main-menu .navbar-nav>li>a {
-        padding: 30px 10px;
+        padding: @navbar-item-padding;
         font-size: 15px;
     }
 }
 
 #main-menu {
     height: 60px;
+    border-width: 1px;
     margin-bottom: 0;
 
     .container-fluid {
         display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
         padding: 0 64px;
     }
 
-    .navbar-brand {
-        height: 80px;
+    .navbar-header {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 
-        &>img {
-            height: 50px;
+    .navbar-brand {
+        img {
+            margin-top: @navbar-margin-top;
+            height: @navbar-brand-height;            
         }
     }
 
@@ -3455,9 +3480,91 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
         margin-top: 22px;
         margin-bottom: 22px;
     }
+
+    .nav-link {
+        color: @navbar-font-color;
+        transition: @navbar-font-transition;
+
+        &.active {
+            color: @navbar-font-active-color;
+        }
+
+        &:after {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 2px;
+            background-color: #000;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            opacity: 0;
+            transition: all .2s cubic-bezier(0.4, 0.8, 0.74, 1);
+        }
+    }
+
+    ul.nav>li:hover,
+    ul.nav>li:focus {
+        &>.nav-link {
+            color: @navbar-font-active-color;
+
+            &:after {
+                content: "";
+                width: calc(100% - 24px);
+                opacity: 1;
+                transition: all .2s cubic-bezier(0.4, 0.8, 0.74, 1) .05s;
+            }
+        }
+    }
+
+
+    #searchtext-field {
+        margin-bottom: 0;
+        margin-left: auto;
+
+        .input-group-prepend {
+            background: 0;
+            border: 0;
+            position: absolute;
+            left: 0;
+            z-index: 41;
+        }
+
+        svg {
+            fill: #000;
+            opacity: .55;
+        }
+
+        input {
+            background: #f6f6f6 !important;
+            border: 1px solid #dcdcdc;
+            border-radius: 32px;
+            height: 30px;
+            line-height: 20px;
+            padding: 0;
+            padding-left: 3rem;
+            font-size: 12px;
+            outline: 0;
+            border: 1px solid #ccc;
+            background: transparent;
+            color: rgba(0, 0, 0, 0.95);
+            position: relative;
+            z-index: 40;
+
+
+            &:hover,
+            &:focus,
+            &:active {
+                outline: none;
+                box-shadow: none;
+                border: 1px solid #dcdcdc;
+            }
+        }
+
+
+    }
 }
-
-
 
 .breadcrumb {
     padding: 8px 15px;

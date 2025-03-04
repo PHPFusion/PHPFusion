@@ -130,14 +130,22 @@ abstract class PolarisThemeFactory
      * @param boolean $show_header - show header or not
      * @return void
      */
-    public function setSiteLinksOptions($id = 'main-menu', $nav_class = 'nav navbar-nav primary', $container = NULL, $container_fluid = NULL, $show_header = NULL)
+    public function setSiteLinksOptions($id = 'main-menu', $nav_class = 'nav navbar-nav primary', $container = NULL, 
+    $container_fluid = NULL, $show_header = NULL, $searchbar = NULL,
+    $searchbar_dropdown = NULL, $html_pre_content = NULL, $html_content = NULL, $html_post_content = NULL
+    )
     {
         $settings = fusion_get_settings();
 
         $default_options = [
             'container_fluid' => $this->is_menu_fluid, //!defined('CONTAINER_OFF'),
             'container' => !$this->is_menu_fluid,
-            'show_header' => '<a class="navbar-brand" href="' . BASEDIR . $settings['opening_page'] . '"><img src="' . BASEDIR . $settings['sitebanner'] . '" alt="' . $settings['sitename'] . '" class="img-responsive"/></a>'
+            'show_header' => '<a class="navbar-brand" href="' . BASEDIR . $settings['opening_page'] . '"><img src="' . BASEDIR . $settings['sitebanner'] . '" alt="' . $settings['sitename'] . '" class="img-responsive"/></a>',
+            'searchbar' => FALSE,
+            'searchbar_dropdown' => TRUE,
+            'html_post_content' => '',
+            'html_content' => '',
+            'html_post_content' => '',
             //'html_pre_content' => mg_user_menu()
         ];
 
@@ -148,6 +156,12 @@ abstract class PolarisThemeFactory
             'container' => $container != NULL ? $container : $default_options['container'],
             // if show header is not false, show default or custom header
             'show_header' => $show_header != NULL ? $show_header : $default_options['show_header'],
+            'searchbar'            => $searchbar != NULL ? $searchbar : $default_options['searchbar'],
+            'searchbar_dropdown' => $searchbar_dropdown != NULL ? $searchbar_dropdown : $default_options['searchbar_dropdown'],
+            'html_post_content' => $html_post_content != NULL ? $html_post_content : $default_options['html_post_content'],
+            'html_content' => $html_content != NULL ? $html_content: $default_options['html_content'],
+            'html_pre_content' => $html_pre_content != NULL ? $html_pre_content : $default_options['html_pre_content']
+
             /*
              'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light' : 'navbar-default',
             'additional_nav_class' => '',
@@ -156,21 +170,17 @@ abstract class PolarisThemeFactory
             'separator'            => '', // $sep
             'links_per_page'       => '',
             'grouping'             => '',
-            'show_banner'          => FALSE,
-            'show_header'          => FALSE,
+            'show_banner'          => FALSE,            
             'custom_header'        => '',
             'language_switcher'    => FALSE,
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
             'searchbar_btn_class'  => 'btn-primary',
             'caret_icon'           => defined('BOOTSTRAP4') ? '' : 'caret',
-            'link_position'        => [2, 3],
-            'html_pre_content'     => '',
-            'html_content'         => '',
-            'html_post_content'    => ''
+            'link_position'        => [2, 3],                    
             */
         ];
-        //print_P($this->siteLinksOptions);
+        
     }
 
     /**

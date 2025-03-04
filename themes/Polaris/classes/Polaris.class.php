@@ -37,6 +37,18 @@ class Polaris extends PolarisThemeFactory
         return self::$instance;
     }
 
+    private function searchbar() {
+        // make a dynamic loading searchbar with dropdown
+        return form_text('searchtext', '', '', ['placeholder'=>'Search '.fusion_get_settings('sitename'), 'prepend'=>TRUE, 'prepend_value'=> '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.26686 7.53301C3.26686 5.25023 5.11742 3.39967 7.4002 3.39967C9.68297 3.39967 11.5335 5.25023 11.5335 7.53301C11.5335 9.81579 9.68297 11.6663 7.4002 11.6663C5.11742 11.6663 3.26686 9.81579 3.26686 7.53301ZM7.4002 2.33301C4.52831 2.33301 2.2002 4.66113 2.2002 7.53301C2.2002 10.4049 4.52831 12.733 7.4002 12.733C8.64404 12.733 9.78588 12.2963 10.6808 11.5678L13.4398 14.3269L14.1941 13.5726L11.435 10.8136C12.1635 9.9187 12.6002 8.77685 12.6002 7.53301C12.6002 4.66113 10.2721 2.33301 7.4002 2.33301Z" class="fill"></path></svg>']);
+    }
+
+    private function uip() {
+        return '<ul class="uip nav navbar-nav"><li class="dropdown">
+        <a href="#" class="uip dropdown-toggle" data-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.25" transform="rotate(90 12 12)" stroke-width="1.5" class="stroke"></circle> <path d="M14.75 10.5356C14.75 12.0544 13.5188 13.2856 12 13.2856C10.4812 13.2856 9.25 12.0544 9.25 10.5356C9.25 9.01686 10.4812 7.78564 12 7.78564C13.5188 7.78564 14.75 9.01686 14.75 10.5356Z" stroke-width="1.5" class="stroke"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M18.0627 18.6515C17.1211 16.2223 14.7617 14.5 12 14.5C9.23819 14.5 6.8787 16.2224 5.93713 18.6517C5.53341 18.2835 5.16332 17.879 4.83203 17.4435C6.14128 14.8098 8.85928 13 12 13C15.1406 13 17.8585 14.8097 19.1678 17.4432C18.8365 17.8788 18.4665 18.2833 18.0627 18.6515Z" class="fill"></path></svg></a>
+        <ul class="dropdown-menu">
+        <li>this is the dropdown menu</li>
+        </ul></li></ul>';
+    }
     /**
      * Display theme
      * @return void
@@ -44,8 +56,15 @@ class Polaris extends PolarisThemeFactory
     public function renderPage()
     {
         $theme_settings = get_theme_settings('Polaris');
+        
         $settings = fusion_get_settings();
+
         $locale = fusion_get_locale('', POLARIS_LOCALE);
+
+        $this->setSiteLinksOptions(
+            show_header : '<a class="navbar-brand" href="' . BASEDIR . $settings['opening_page'] . '"><img src="' . IMAGES .'assets/phpfusion_logo_d.png' . '" alt="' . $settings['sitename'] . '" class="img-responsive"/></a>',
+            html_post_content: $this->searchbar().$this->uip()
+        );
 
         echo PHPFusion\SiteLinks::setSubLinks($this->getSiteLinksOptions())->showSubLinks();
 

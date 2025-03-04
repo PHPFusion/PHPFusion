@@ -67,10 +67,11 @@
             "detail": "Compile Magazine styles.less files to compressed CSS"
         },
         {
-            "label": "Compile Polaris Theme styles",
+            "label": "Compile Polaris Theme styles with Source Map",
             "type": "shell",
             "command": "lessc",
             "args": [
+                "--source-map-inline",                                
                 "--clean-css",
                 "themes/Polaris/styles.less",
                 "themes/Polaris/styles.min.css"
@@ -80,13 +81,14 @@
                 "isDefault": true
             },
             "problemMatcher": [],
-            "detail": "Compile Polaris theme styles.less files to compressed CSS"
+            "detail": "Compile Polaris theme styles.less files to compressed CSS with source map"
         },
         {
             "label": "Compile AdminLTE Theme styles",
             "type": "shell",
             "command": "lessc",
             "args": [
+                 "--source-map-inline",       
                 "--clean-css",
                 "themes/admin_themes/AdminLTE/acp_styles.less", 
                 "themes/admin_themes/AdminLTE/acp_styles.min.css" 
@@ -103,9 +105,10 @@
             "type": "shell",
             "command": "lessc",
             "args": [
+                "--source-map-inline",
                 "--clean-css",
-                "themes/templates/phpfusion/styles/index.less",
-                "themes/templates/phpfusion/styles/index.css",                                
+                "themes/templates/phpfusion/assets/styles/index.less",
+                "themes/templates/phpfusion/assets/styles/index.css",                                
             ],
             "group": {
                 "kind": "build",
