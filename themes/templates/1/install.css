@@ -1,0 +1,175 @@
+* {
+    outline: none !important;
+}
+
+html * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    padding: 3% 0;
+    background-color: #36393F;
+    font-family: 'Noto Sans', sans-serif;
+    color: #4A4A4A;
+    position: relative;
+}
+
+body.upgrade {
+    background-color: #0a4480;
+}
+
+body.upgrade .left-side > div {
+    background-color: #052341;
+}
+
+a {
+    color: #5294E2;
+}
+
+a:hover,
+a:focus,
+a:active {
+    color: #4c74bc;
+}
+
+.block-container {
+    position: relative;
+    z-index: 89;
+    width: 100%;
+    max-width: 1000px;
+    padding: 15px;
+}
+
+.block {
+    box-shadow: 0 5px 100px #000;
+}
+
+.left-side > div {
+    background-color: #2F3136;
+    color: #fff;
+    padding: 0 0 40px;
+}
+
+.logo {
+    width: 100px;
+    margin: 10px auto;
+}
+
+.menu {
+    margin-bottom: 20px;
+}
+
+.menu > li {
+    padding: 10px 30px;
+}
+
+.menu > li.active {
+    background-color: rgba(0, 0, 0, 0.27);
+}
+
+@media (min-width: 768px) {
+    .menu > li.active:before {
+        content: '';
+        position: absolute;
+        right: -1px;
+        border-bottom: 10px solid transparent;
+        border-top: 10px solid transparent;
+        border-right: 10px solid #DCDCDC;
+    }
+}
+
+.build-version {
+    font-size: 12px;
+    font-weight: 300;
+    margin: 20px 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.content > div {
+    padding: 35px;
+    background-color: #DCDCDC;
+}
+
+.block-content {
+    margin-bottom: 40px;
+}
+
+.block-content > .title {
+    margin-top: 0;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.block-content p {
+    color: #4A4A4A;
+}
+
+.left-side,
+.content {
+    padding: 0;
+}
+
+.buttons {
+    padding-top: 20px;
+    position: absolute;
+    right: 35px;
+    bottom: 35px;
+}
+
+hr {
+    border-color: #b5b5b5;
+}
+
+input[type="checkbox"] {
+    position: relative;
+}
+
+input[type="checkbox"]:after,
+input[type="checkbox"]:focus:after {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    border: 1px solid #707070;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+input[type="checkbox"]:checked:before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 6px;
+    display: table;
+    width: 7px;
+    height: 15px;
+    border: 2px solid #707070;
+    border-top-width: 0;
+    border-left-width: 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+table {
+    background-color: #fff;
+}
+
+.control-label {
+    font-size: 12px;
+}
+
+html[dir="rtl"] .menu > li.active:before {
+    right: inherit;
+    left: -1px;
+    border-bottom: 10px solid transparent;
+    border-top: 10px solid transparent;
+    border-right: none;
+    border-left: 10px solid #DCDCDC;
+}

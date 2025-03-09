@@ -1,0 +1,1114 @@
+<?php
+/*-------------------------------------------------------+
+| PHPFusion Content Management System
+| Copyright (C) PHP Fusion Inc
+| https://phpfusion.com/
++--------------------------------------------------------+
+| Filename: news.php
+| Author: Core Development Team
++--------------------------------------------------------+
+| This program is released as free software under the
+| Affero GPL license. You can redistribute it and/or
+| modify it under the terms of this license which you
+| can read by viewing the included agpl.txt or online
+| at www.gnu.org/licenses/agpl.html. Removal of this
+| copyright header is strictly prohibited without
+| written permission from the original author(s).
++--------------------------------------------------------*/
+
+namespace PHPFusion\News;
+
+use PHPFusion\Admins;
+
+class NewsAdmin extends NewsAdminModel {
+    private static $instance = NULL;
+    private static $locale = [];
+    private $form_action = FUSION_REQUEST;
+    private $news_data = [];
+
+    public static function getInstance() {
+        pageaccess('N');
+        if (self::$instance == NULL) {
+            self::$instance = new static();
+        }
+        self::$locale = self::getNewsAdminLocale();
+        return self::$instance;
+    }
+
+    public function displayNewsAdmin() {
+        if (isset($_POST['cancel']))
+            redirect(FUSION_SELF.fusion_get_aidlink());
+        if (isset($_GET['ref']) && $_GET['ref'] == 'news_form') {
+            $this->displayNewsForm();
+        } else {
+            $this->displayNewsListing();
+            $this->clearUnattachedImage();
+        }
+    }
+
+    /**
+     * Displays News Form
+     */
+    public function displayNewsForm() {
+        $this->news_data = [
+            'news_id'                  => 0,
+            'news_draft'               => 0,
+            'news_sticky'              => 0,
+            'news_news'                => '',
+            'news_datestamp'           => time(),
+            'news_extended'            => '',
+            'news_keywords'            => '',
+            'news_breaks'              => 'n',
+            'news_allow_comments'      => 1,
+            'news_allow_ratings'       => 1,
+            'news_language'            => LANGUAGE,
+            'news_visibility'          => 0,
+            'news_subject'             => '',
+            'news_start'               => '',
+            'news_end'                 => '',
+            'news_cat'                 => 0,
+            'news_image'               => '',
+            'news_image_full_default'  => '',
+            'news_image_front_default' => '',
+            'news_image_align'         => 'pull-left'
+        ];
+
+        if ((isset($_POST['save'])) or (isset($_POST['save_and_close'])) or (isset($_POST['preview'])) or (isset($_POST['del_photo']))) {
+
+            $news_news = '';
+            if ($_POST['news_news']) {
+                $news_news = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, $_POST['news_news']);
+            }
+
+            $news_extended = '';
+            if ($_POST['news_extended']) {
+                $news_extended = str_replace("src='".str_replace('../', '', IMAGES_N), "src='".IMAGES_N, $_POST['news_extended']);
+            }
+
+            $this->news_data = [
+                'news_id'                  => form_sanitizer($_POST['news_id'], 0, 'news_id'),
+                'news_subject'             => form_sanitizer($_POST['news_subject'], '', 'news_subject'),
+                'news_cat'                 => form_sanitizer($_POST['news_cat'], 0, 'news_cat'),
+                'news_news'                => form_sanitizer($news_news, "", "news_news"),
+                'news_extended'            => form_sanitizer($news_extended, "", "news_extended"),
+                'news_keywords'            => form_sanitizer($_POST['news_keywords'], '', 'news_keywords'),
+                'news_datestamp'           => form_sanitizer($_POST['news_datestamp'], time(), 'news_datestamp'),
+                'news_start'               => form_sanitizer($_POST['news_start'], 0, 'news_start'),
+                'news_end'                 => form_sanitizer($_POST['news_end'], 0, 'news_end'),
+                'news_visibility'          => form_sanitizer($_POST['news_visibility'], 0, 'news_visibility'),
+                'news_draft'               => form_sanitizer($_POST['news_draft'], 0, 'news_draft'),
+                'news_sticky'              => isset($_POST['news_sticky']) ? "1" : "0",
+                'news_name'                => form_sanitizer($_POST['news_name'], 0, 'news_name'),
+                'news_allow_comments'      => isset($_POST['news_allow_comments']) ? "1" : "0",
+                'news_allow_ratings'       => isset($_POST['news_allow_ratings']) ? "1" : "0",
+                'news_language'            => form_sanitizer($_POST['news_language'], LANGUAGE, 'news_language'),
+                'news_image_front_default' => 0,
+                'news_breaks'              => 'n',
+                'news_image_align'         => form_sanitizer($_POST['news_image_align'], 'pull-left', 'news_image_align'),
+            ];
+
+            if (fusion_get_settings('tinymce_enabled') != 1) {
+                $this->news_data['news_breaks'] = isset($_POST['news_breaks']) ? "y" : "n";
+            }
+
+            if (fusion_safe()) {
+                if ($this->news_data['news_id']) {
+                    // update news gallery default if exist
+                    if (!empty($_POST['news_image_full_default'])) {
+                        $this->news_data['news_image_full_default'] = form_sanitizer($_POST['news_image_full_default'], '', 'news_image_full_default');
+                    }
+                    if (!empty($_POST['news_image_front_default'])) {
+                        $this->news_data['news_image_front_default'] = form_sanitizer($_POST['news_image_front_default'], '', 'news_image_front_default');
+                    }
+                    if (!empty($_POST['news_image_align'])) {
+                        $this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
+                    }
+                } else {
+                    if (!empty($_FILES['featured_image'])) { // when files is uploaded.
+                        $upload = form_sanitizer($_FILES['featured_image'], '', 'featured_image');
+                        if (!empty($upload)) {
+                            if (!$upload['error']) {
+                                $data = [
+                                    'news_image_user'      => fusion_get_userdata('user_id'),
+                                    'news_id'              => 0,
+                                    'news_image'           => $upload['image_name'],
+                                    'news_image_t1'        => $upload['thumb1_name'],
+                                    'news_image_t2'        => $upload['thumb2_name'],
+                                    'news_image_datestamp' => time()
+                                ];
+                                $photo_id = dbquery_insert(DB_NEWS_IMAGES, $data, 'save', ['keep_session' => TRUE]);
+                                $this->news_data['news_image_full_default'] = $photo_id;
+                                $this->news_data['news_image_front_default'] = $photo_id;
+                            }
+                        }
+                    } else {
+                        // load the photo
+                        $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+                        if (dbrows($photo_result)) {
+                            $photo_data = dbarray($photo_result);
+                            $this->news_data['news_image_full_default'] = $photo_data['news_image_id'];
+                            $this->news_data['news_image_front_default'] = $photo_data['news_image_id'];
+                        }
+                    }
+                    // Repeated
+                    //$this->news_data['news_image_align'] = form_sanitizer($_POST['news_image_align'], '', 'news_image_align');
+                }
+
+                if (isset($_POST['del_photo'])) {
+                    $this->clearUnattachedImage();
+                } else if (isset($_POST['preview'])) {
+                    $footer = openmodal("news_preview", "<i class='fa fa-eye fa-lg m-r-10'></i> ".self::$locale['preview'].": ".$this->news_data['news_subject']);
+                    $footer .= parse_text($this->news_data['news_news'], [
+                        'parse_smileys'        => FALSE,
+                        'parse_bbcode'         => FALSE,
+                        'default_image_folder' => IMAGES_N,
+                        'add_line_breaks'      => TRUE
+                    ]);
+                    if ($this->news_data['news_extended']) {
+                        $footer .= "<hr class='m-t-20 m-b-20'>\n";
+                        $footer .= parse_text($this->news_data['news_extended'], [
+                            'parse_smileys'        => FALSE,
+                            'parse_bbcode'         => FALSE,
+                            'default_image_folder' => IMAGES_N,
+                            'add_line_breaks'      => TRUE
+                        ]);
+                    }
+                    $footer .= closemodal();
+                    add_to_footer($footer);
+
+                    if (isset($this->news_data['news_id'])) {
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
+                    }
+                } else {
+                    // reset other sticky
+                    if ($this->news_data['news_sticky'] == 1) {
+                        dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_sticky='1'");
+                    }
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".$this->news_data['news_id']."'")) {
+                        dbquery_insert(DB_NEWS, $this->news_data, 'update', ['keep_session' => TRUE]);
+                        addnotice('success', self::$locale['news_0101']);
+                    } else {
+                        $this->news_data['news_id'] = dbquery_insert(DB_NEWS, $this->news_data, 'save', ['keep_session' => TRUE]);
+                        // update the last uploaded image to the news.
+                        $photo_result = dbquery("SELECT news_image_id FROM ".DB_NEWS_IMAGES." WHERE news_id=0 ORDER BY news_image_datestamp DESC LIMIT 1");
+                        if (dbrows($photo_result)) {
+                            $photo_data = dbarray($photo_result);
+                            dbquery("UPDATE ".DB_NEWS_IMAGES." SET news_id=:news_id WHERE news_image_id=:news_image_id", [
+                                ':news_image_id' => $photo_data['news_image_id'],
+                                ':news_id'       => $this->news_data['news_id']
+                            ]);
+                        }
+                        addnotice('success', self::$locale['news_0100']);
+                    }
+
+                    if (isset($_POST['save_and_close'])) {
+                        redirect(clean_request("", ['ref', 'action', 'news_id'], FALSE));
+                    } else {
+                        redirect(clean_request('news_id='.$this->news_data['news_id'].'&action=edit&ref=news_form', ['ref'], FALSE));
+                    }
+                }
+            }
+        }
+
+        if ((isset($_GET['action']) && $_GET['action'] == "edit") && (isset($_POST['news_id']) && isnum($_POST['news_id'])) || (isset($_GET['news_id']) && isnum($_GET['news_id']))) {
+            $result = dbquery("SELECT * FROM ".DB_NEWS." WHERE news_id=:news_id", [':news_id' => (isset($_POST['news_id']) ? $_POST['news_id'] : $_GET['news_id'])]);
+            if (dbrows($result)) {
+                $this->news_data = dbarray($result);
+            } else {
+                redirect(FUSION_SELF.fusion_get_aidlink());
+            }
+        }
+
+        $this->default_news_data['news_name'] = fusion_get_userdata('user_id');
+        $this->news_data = $this->news_data + $this->default_news_data;
+        self::newsContentForm();
+    }
+
+    /**
+     * Check any news image record with image id 0 and clear it.
+     */
+    private function clearUnattachedImage() {
+        if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0")) {
+            $photo_result = dbquery("SELECT news_image_id, news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id=0");
+            if (dbrows($photo_result)) {
+                $photo_data = dbarray($photo_result);
+                if (file_exists(IMAGES_N.$photo_data['news_image']))
+                    unlink(IMAGES_N.$photo_data['news_image']);
+                if (file_exists(IMAGES_N_T.$photo_data['news_image_t1']))
+                    unlink(IMAGES_N_T.$photo_data['news_image_t1']);
+                if (file_exists(IMAGES_N_T.$photo_data['news_image_t2']))
+                    unlink(IMAGES_N_T.$photo_data['news_image_t2']);
+                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id=0 AND submit_id !=0");
+            }
+        }
+    }
+
+    private function newsContentForm() {
+        $news_settings = self::getNewsSettings();
+
+        $snippetSettings = [
+            'required'    => TRUE,
+            'preview'     => TRUE,
+            'html'        => TRUE,
+            'path'        => IMAGES_N,
+            'autosize'    => TRUE,
+            'placeholder' => self::$locale['news_0203a'],
+            'form_name'   => 'news_form',
+            'wordcount'   => TRUE,
+            'rows'        => '20',
+            'file_filter' => explode(',', $news_settings['news_file_types']),
+        ];
+        $extendedSettings = [
+            'required'    => (bool)$news_settings['news_extended_required'],
+            'rows'        => '20',
+            'placeholder' => '',
+            'file_filter' => explode(',', $news_settings['news_file_types']),
+            'path'        => IMAGES_N
+        ];
+        $extendedSettings += $snippetSettings;
+
+        if (fusion_get_settings('tinymce_enabled')) {
+            $snippetSettings = [
+                'required'    => TRUE,
+                'rows'        => '20',
+                'type'        => 'tinymce',
+                'tinymce'     => 'advanced',
+                'file_filter' => explode(',', $news_settings['news_file_types']),
+                'path'        => IMAGES_N
+            ];
+
+            $extendedSettings = [
+                'required'    => (bool)$news_settings['news_extended_required'],
+                'preview'     => TRUE,
+                'type'        => 'tinymce',
+                'tinymce'     => 'advanced',
+                'rows'        => '20',
+                'placeholder' => self::$locale['news_0005'],
+                'form_name'   => 'news_form',
+                'path'        => IMAGES_N,
+                'wordcount'   => TRUE,
+                'file_filter' => explode(',', $news_settings['news_file_types']),
+            ];
+        }
+
+        // Set Session Cache
+        echo Admins::getInstance()->requestCache('news_form', 'N', $this->news_data['news_id'], [
+            'news_subject'  => self::$locale['news_0200'],
+            'news_news'     => self::$locale['news_0203'],
+            'news_extended' => self::$locale['news_0204']
+        ]);
+
+
+        echo openform('news_form', 'post', $this->form_action, ['enctype' => TRUE]);
+        echo "<div class='spacer-sm'>\n";
+        self::displayNewsButtons('newsContent');
+        echo "</div>\n";
+        echo "<hr/>\n";
+        echo form_hidden('news_id', "", $this->news_data['news_id']);
+        echo "<div class='row'>\n";
+        echo "<div class='col-xs-12 col-sm-12 col-md-7 col-lg-8'>\n";
+        echo form_hidden('news_name', '', $this->news_data['news_name']);
+        echo form_text('news_subject', '', $this->news_data['news_subject'],
+            [
+                'required'    => TRUE,
+                'max_length'  => 200,
+                'error_text'  => self::$locale['news_0280'],
+                'class'       => 'form-group-lg',
+                'placeholder' => self::$locale['news_0200'],
+            ]
+        );
+
+        $tab_title['title'][] = self::$locale['news_0203'];
+        $tab_title['id'][] = 'snippet';
+        $tab_title['icon'][] = '';
+        $tab_title['title'][] = self::$locale['news_0204'];
+        $tab_title['id'][] = 'extended';
+        $tab_title['icon'][] = '';
+        $tab_active = tab_active($tab_title, 0);
+        echo opentab($tab_title, $tab_active, 'newstext', FALSE, 'nav-tabs');
+        echo opentabbody($tab_title['title'][0], 'snippet', $tab_active);
+        echo form_textarea('news_news', '', $this->news_data['news_news'], $snippetSettings);
+        echo closetabbody();
+        echo opentabbody($tab_title['title'][1], 'extended', $tab_active);
+        echo form_textarea('news_extended', '', $this->news_data['news_extended'], $extendedSettings);
+        echo closetabbody();
+        echo closetab();
+
+        echo "</div><div class='col-xs-12 col-sm-12 col-md-5 col-lg-4'>\n";
+        openside(self::$locale['news_0255']);
+        echo form_select('news_draft', self::$locale['news_0253'], $this->news_data['news_draft'],
+            [
+                'inner_width' => '100%',
+                'options'     => [
+                    1 => self::$locale['draft'],
+                    0 => self::$locale['publish']
+                ]
+            ]
+        );
+        echo form_select_tree('news_cat', self::$locale['news_0201'], $this->news_data['news_cat'],
+            [
+                'inner_width'  => '100%',
+                'parent_value' => self::$locale['news_0202'],
+                'query'        => (multilang_table('NS') ? "WHERE ".in_group('news_cat_language', LANGUAGE) : '')
+            ],
+            DB_NEWS_CATS, 'news_cat_name', 'news_cat_id', 'news_cat_parent'
+        );
+        echo form_select('news_visibility[]', self::$locale['news_0209'], $this->news_data['news_visibility'],
+            [
+                'options'     => fusion_get_groups(),
+                'placeholder' => self::$locale['choose'],
+                'inner_width' => '100%',
+                'multiple'    => TRUE
+            ]
+        );
+        if (multilang_table('NS')) {
+            echo form_select('news_language[]', self::$locale['language'], $this->news_data['news_language'], [
+                'options'     => fusion_get_enabled_languages(),
+                'placeholder' => self::$locale['choose'],
+                'inner_width' => '100%',
+                'multiple'    => TRUE
+            ]);
+        } else {
+            echo form_hidden('news_language', '', $this->news_data['news_language']);
+        }
+        echo form_datepicker('news_datestamp', self::$locale['news_0266'], $this->news_data['news_datestamp']);
+        closeside();
+
+        if ($this->news_data['news_id']) {
+            $this->newsGallery();
+        } else {
+            openside(self::$locale['news_0006']);
+            if (dbcount("(news_image_id)", DB_NEWS_IMAGES, "news_id=0 AND submit_id=0")) {
+                echo "<div class='list-group-item m-b-10'>\n";
+                echo "<img src='".IMAGES_N.dbresult(dbquery("SELECT news_image FROM ".DB_NEWS_IMAGES." WHERE news_id=0"), 0)."' class='img-responsive'>\n";
+                echo form_button('del_photo', self::$locale['news_0010'], self::$locale['news_0010'], ['class' => 'btn-danger btn-block spacer-xs']);
+                echo "</div>\n";
+            } else {
+                echo form_fileinput('featured_image', self::$locale['news_0011'], isset($_FILES['featured_image']['name']) ? $_FILES['featured_image']['name'] : '',
+                    [
+                        'upload_path'      => IMAGES_N,
+                        'max_width'        => $news_settings['news_photo_max_w'],
+                        'max_height'       => $news_settings['news_photo_max_h'],
+                        'max_byte'         => $news_settings['news_photo_max_b'],
+                        'thumbnail'        => TRUE,
+                        'thumbnail_w'      => $news_settings['news_thumb_w'],
+                        'thumbnail_h'      => $news_settings['news_thumb_h'],
+                        'thumbnail_folder' => 'thumbs',
+                        'delete_original'  => 0,
+                        'thumbnail2'       => TRUE,
+                        'thumbnail2_w'     => $news_settings['news_photo_w'],
+                        'thumbnail2_h'     => $news_settings['news_photo_h'],
+                        'type'             => 'image',
+                        'class'            => 'm-b-0',
+                        'valid_ext'        => $news_settings['news_file_types'],
+                        'template'         => 'thumbnail',
+                        'inline'           => FALSE,
+                    ]
+                );
+            }
+            echo form_select('news_image_align', self::$locale['news_0218'], $this->news_data['news_image_align'], [
+                    'options'     => [
+                        'pull-left'       => self::$locale['left'],
+                        'news-img-center' => self::$locale['center'],
+                        'pull-right'      => self::$locale['right']
+                    ],
+                    'inner_width' => '100%'
+                ]
+            );
+            closeside();
+        }
+        openside('');
+        echo form_datepicker('news_start', self::$locale['news_0206'], $this->news_data['news_start'],
+            [
+                'placeholder' => self::$locale['news_0208'],
+                'join_to_id'  => 'news_end',
+                'width'       => '100%'
+            ]
+        );
+        echo form_datepicker('news_end', self::$locale['news_0207'], $this->news_data['news_end'],
+            [
+                'placeholder'  => self::$locale['news_0208'],
+                'join_from_id' => 'news_start',
+                'width'        => '100%'
+
+            ]
+        );
+        closeside();
+        openside('');
+        echo form_checkbox('news_sticky', self::$locale['news_0211'], $this->news_data['news_sticky'],
+            [
+                'class'         => 'm-b-5',
+                'reverse_label' => TRUE
+            ]
+        );
+        if (fusion_get_settings("tinymce_enabled") != 1) {
+            echo form_checkbox('news_breaks', self::$locale['news_0212'], $this->news_data['news_breaks'],
+                [
+                    'value'         => 'y',
+                    'class'         => 'm-b-5',
+                    'reverse_label' => TRUE
+                ]
+            );
+        }
+        echo form_checkbox('news_allow_comments', self::$locale['news_0213'], $this->news_data['news_allow_comments'],
+                [
+                    'reverse_label' => TRUE,
+                    'class'         => 'm-b-5',
+                    'ext_tip'       => (!fusion_get_settings('comments_enabled') ? "<div class='alert alert-warning'>".sprintf(self::$locale['news_0283'],
+                            self::$locale['comments'])."</div>" : "")
+                ]
+            ).form_checkbox('news_allow_ratings', self::$locale['news_0214'], $this->news_data['news_allow_ratings'],
+                [
+                    'reverse_label' => TRUE,
+                    'class'         => 'm-b-5',
+                    'ext_tip'       => (!fusion_get_settings("comments_enabled") ? "<div class='alert alert-warning'>".sprintf(self::$locale['news_0283'],
+                            self::$locale['ratings']).'</div>' : '')
+                ]
+            );
+        closeside();
+
+        openside(self::$locale['news_0205']);
+        echo form_select('news_keywords', '', $this->news_data['news_keywords'],
+            [
+                'max_length'  => 320,
+                'placeholder' => self::$locale['news_0205a'],
+                'width'       => '100%',
+                'inner_width' => '100%',
+                'error_text'  => self::$locale['news_0285'],
+                'tags'        => TRUE,
+                'multiple'    => TRUE
+            ]
+        );
+        closeside();
+        echo "</div>\n</div>\n";
+
+        self::displayNewsButtons('content2');
+        echo closeform();
+    }
+
+    /**
+     * Generate sets of push buttons for news Content form
+     *
+     * @param string $unique_id
+     */
+    private function displayNewsButtons($unique_id) {
+        echo form_button('preview', self::$locale['preview'], self::$locale['preview'], ['input_id' => 'preview-'.$unique_id, 'class' => 'btn-default m-r-10', 'icon' => 'fa fa-eye']);
+        echo form_button('cancel', self::$locale['cancel'], self::$locale['cancel'],
+            ['class' => 'btn-default m-r-10', 'input_id' => 'cancel-'.$unique_id, 'icon' => 'fa fa-times']);
+        echo form_button('save', self::$locale['news_0241'], self::$locale['news_0241'],
+            ['class' => 'btn-success', 'input_id' => 'save-'.$unique_id, 'icon' => 'fa fa-hdd-o']);
+        echo form_button("save_and_close", self::$locale['save_and_close'], self::$locale['save_and_close'],
+            ["class" => "btn-primary m-l-10", 'input_id' => 'save_and_close-'.$unique_id, 'icon' => 'fa fa-hdd-o']);
+    }
+
+    /**
+     * Gallery Features
+     */
+    private function newsGallery() {
+        $news_settings = self::getNewsSettings();
+
+        $default_fileinput_options = [
+            'upload_path'      => IMAGES_N,
+            'max_width'        => $news_settings['news_photo_max_w'],
+            'max_height'       => $news_settings['news_photo_max_h'],
+            'max_byte'         => $news_settings['news_photo_max_b'],
+            'thumbnail'        => TRUE,
+            'thumbnail_w'      => $news_settings['news_thumb_w'],
+            'thumbnail_h'      => $news_settings['news_thumb_h'],
+            'thumbnail_folder' => 'thumbs',
+            'delete_original'  => 0,
+            'thumbnail2'       => TRUE,
+            'thumbnail2_w'     => $news_settings['news_photo_w'],
+            'thumbnail2_h'     => $news_settings['news_photo_h'],
+            'type'             => 'image',
+            'template'         => 'modern',
+            'class'            => 'm-b-0',
+            'valid_ext'        => $news_settings['news_file_types'],
+            'multiple'         => TRUE,
+            'max_count'        => 8
+        ];
+
+        $alignOptions = [
+            'pull-left'       => self::$locale['left'],
+            'news-img-center' => self::$locale['center'],
+            'pull-right'      => self::$locale['right']
+        ];
+
+        /**
+         * Post Save
+         */
+
+        if (!empty($_FILES['news_image'])) { // when files is uploaded.
+            $upload = form_sanitizer($_FILES['news_image'], '', 'news_image');
+            $success_upload = 0;
+            $failed_upload = 0;
+
+            if (!empty($upload)) {
+                $total_files_uploaded = count($upload);
+
+                for ($i = 0; $i < $total_files_uploaded; $i++) {
+                    $current_upload = $upload[$i];
+                    //print_p($current_upload);
+                    if (!$current_upload['error']) {
+                        $data = [
+                            'news_image_user'      => fusion_get_userdata('user_id'),
+                            'news_id'              => $this->news_data['news_id'],
+                            'news_image'           => $current_upload['image_name'],
+                            'news_image_t1'        => $current_upload['thumb1_name'],
+                            'news_image_t2'        => $current_upload['thumb2_name'],
+                            'news_image_datestamp' => time()
+                        ];
+                        dbquery_insert(DB_NEWS_IMAGES, $data, 'save');
+                        $success_upload++;
+                    } else {
+                        $failed_upload++;
+                    }
+                }
+                addnotice("success", sprintf(self::$locale['news_0268'], $success_upload));
+                if ($failed_upload) {
+                    addnotice("warning", sprintf(self::$locale['news_0269'], $failed_upload));
+                }
+                if (fusion_safe()) {
+                    redirect(FUSION_REQUEST);
+                }
+            }
+        }
+
+        if (isset($_POST['delete_photo']) && isnum($_POST['delete_photo'])) {
+            $photo_id = intval($_POST['delete_photo']);
+            $photo_query = "SELECT news_image_id, news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_image_id='".$photo_id."'";
+            $photo_result = dbquery($photo_query);
+            if (dbrows($photo_result)) {
+                $data = dbarray($photo_result);
+                if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+                    unlink(IMAGES_N.$data['news_image']);
+                }
+                if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                    unlink(IMAGES_N_T.$data['news_image_t1']);
+                }
+                if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                    unlink(IMAGES_N_T.$data['news_image_t2']);
+                }
+                dbquery_insert(DB_NEWS_IMAGES, $data, 'delete');
+                addnotice('success', self::$locale['news_0104']);
+                redirect(FUSION_REQUEST);
+            }
+        }
+
+        $photo_query = "SELECT * FROM ".DB_NEWS_IMAGES." WHERE news_id='".$this->news_data['news_id']."'";
+        $photo_result = dbquery($photo_query);
+        $news_photos = [];
+        $news_photo_opts = [];
+        if (dbrows($photo_result) > 0) {
+            while ($photo_data = dbarray($photo_result)) {
+                $news_photos[$photo_data['news_image_id']] = $photo_data;
+                $news_photo_opts[$photo_data['news_image_id']] = $photo_data['news_image'];
+            }
+        }
+
+        openside(self::$locale['news_0006']);
+        echo form_button('image_gallery', self::$locale['news_0007'], 'image_gallery', ['type' => 'button', 'class' => 'btn-default', 'deactivate' => !$this->news_data['news_id']]);
+        if (!empty($news_photo_opts)) :
+            ?>
+            <hr/>
+            <?php
+            echo form_select('news_image_front_default', self::$locale['news_0011'], $this->news_data['news_image_front_default'],
+                    [
+                        'allowclear'  => TRUE,
+                        'placeholder' => self::$locale['news_0270'],
+                        'inline'      => FALSE,
+                        'inner_width' => '100%',
+                        'options'     => $news_photo_opts
+                    ]
+                ).
+                form_select('news_image_full_default', self::$locale['news_0012'], $this->news_data['news_image_full_default'],
+                    [
+                        'allowclear'  => TRUE,
+                        'placeholder' => self::$locale['news_0270'],
+                        'inline'      => FALSE,
+                        'inner_width' => '100%',
+                        'options'     => $news_photo_opts
+                    ]
+                ).
+                form_select('news_image_align', self::$locale['news_0218'], $this->news_data['news_image_align'], ["options" => $alignOptions, 'inline' => FALSE, 'inner_width' => '100%']);
+        else:
+            echo form_hidden('news_image_align', '', $this->news_data['news_image_align']);
+        endif;
+        closeside();
+
+        ob_start();
+        echo openmodal('image_gallery_modal', self::$locale['news_0006'], ['button_id' => 'image_gallery']);
+        echo openform('gallery_form', 'POST', FUSION_REQUEST, ['enctype' => TRUE]);
+
+        // Two tabs
+        $modal_tab['title'][] = self::$locale['news_0008'];
+        $modal_tab['id'][] = 'news_upload_tab';
+        $modal_tab['title'][] = self::$locale['news_0009'];
+        $modal_tab['id'][] = 'news_media_tab';
+        $modal_tab_active = tab_active($modal_tab, 0);
+        echo opentab($modal_tab, $modal_tab_active, 'newsModalTab');
+        echo opentabbody($modal_tab['title'][0], $modal_tab['id'][0], $modal_tab_active);
+        ?>
+        <div class="p-20">
+            <div class="well">
+                <?php
+                echo form_fileinput('news_image[]', '', '', $default_fileinput_options);
+                ?>
+                <?php echo sprintf(self::$locale['news_0217'], parsebytesize($news_settings['news_photo_max_b'])); ?>
+            </div>
+            <?php echo form_button('upload_photo', self::$locale['news_0008'], 'upload', ['class' => 'btn-primary btn-lg']) ?>
+        </div>
+        <?php
+        echo closetabbody();
+        echo opentabbody($modal_tab['title'][1], $modal_tab['id'][1], $modal_tab_active);
+        ?>
+        <div class="p-20">
+            <div class="row">
+                <?php
+                if (!empty($news_photos)) :
+                    foreach ($news_photos as $photo_data) :
+                        $image_path = self::getNewsImagePath($photo_data['news_image'], $photo_data['news_image_t1'],
+                            $photo_data['news_image_t2']);
+                        ?>
+                        <div class="pull-left m-r-10 m-l-10 text-center">
+                            <div class="file-input">
+                                <div class="panel panel-default">
+                                    <div class="file-preview">
+                                        <div class="file-preview-frame overflow-hide">
+                                            <?php echo colorbox($image_path, $image_path); ?>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body" style="padding: 3px 5px 15px">
+                                        <p><?php echo trimlink($photo_data['news_image'], 15) ?></p>
+                                        <?php echo form_button('delete_photo', self::$locale['news_0010'], $photo_data['news_image_id'],
+                                            [
+                                                'input_id' => 'delete_photo_'.$photo_data['news_image_id'],
+                                                'icon'     => 'fa fa-trash'
+                                            ]
+                                        ) ?>
+                                    </div>
+                                    <div class="panel-footer text-left text-lighter">
+                                        <?php echo timer($photo_data['news_image_datestamp']) ?>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php
+                    endforeach;
+                else:
+                    ?>
+                    <div class="well text-center"><?php echo self::$locale['news_0267'] ?></div>
+                <?php
+                endif; ?>
+            </div>
+        </div>
+
+        <?php
+        echo closetabbody();
+        echo closetab();
+        closeside();
+        echo closeform();
+        echo closemodal();
+        $html = ob_get_contents();
+        ob_end_clean();
+        add_to_footer($html);
+    }
+
+    /**
+     * Displays News Listing
+     */
+    private function displayNewsListing() {
+        self::executeNewsDelete();
+
+        // Run functions
+        $allowed_actions = array_flip(["publish", "unpublish", "sticky", "unsticky", "delete", "news_display"]);
+
+        if (isset($_POST['table_action']) && isset($allowed_actions[$_POST['table_action']])) {
+
+            $input = (isset($_POST['news_id'])) ? explode(",", form_sanitizer($_POST['news_id'], "", "news_id")) : "";
+
+            if (!empty($input)) {
+                foreach ($input as $news_id) {
+                    // check input table
+                    if (dbcount("('news_id')", DB_NEWS, "news_id='".intval($news_id)."'") && fusion_safe()) {
+
+                        switch ($_POST['table_action']) {
+                            case "publish":
+                                dbquery("UPDATE ".DB_NEWS." SET news_draft='0' WHERE news_id='".intval($news_id)."'");
+                                addnotice("success", self::$locale['news_0101']);
+                                break;
+                            case "unpublish":
+                                dbquery("UPDATE ".DB_NEWS." SET news_draft='1' WHERE news_id='".intval($news_id)."'");
+                                addnotice("success", self::$locale['news_0101']);
+                                break;
+                            case "sticky":
+                                dbquery("UPDATE ".DB_NEWS." SET news_sticky='1' WHERE news_id='".intval($news_id)."'");
+                                addnotice("success", self::$locale['news_0101']);
+                                break;
+                            case "unsticky":
+                                dbquery("UPDATE ".DB_NEWS." SET news_sticky='0' WHERE news_id='".intval($news_id)."'");
+                                addnotice("success", self::$locale['news_0101']);
+                                break;
+                            case "delete":
+                                $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
+                                if (dbrows($result) > 0) {
+                                    $photo = dbarray($result);
+                                    if (!empty($photo['news_image']) && file_exists(IMAGES_N.$photo['news_image'])) {
+                                        unlink(IMAGES_N.$photo['news_image']);
+                                    }
+                                    if (!empty($photo['news_image_t1']) && file_exists(IMAGES_N_T.$photo['news_image_t1'])) {
+                                        unlink(IMAGES_N_T.$photo['news_image_t1']);
+                                    }
+                                    if (!empty($photo['news_image_t2']) && file_exists(IMAGES_N_T.$photo['news_image_t2'])) {
+                                        unlink(IMAGES_N_T.$photo['news_image_t2']);
+                                    }
+                                    if (!empty($photo['news_image_t2']) && file_exists(IMAGES_N.$photo['news_image_t2'])) {
+                                        unlink(IMAGES_N.$photo['news_image_t2']);
+                                    }
+                                }
+                                dbquery("DELETE FROM  ".DB_NEWS_IMAGES." WHERE news_id='".intval($news_id)."'");
+                                dbquery("DELETE FROM  ".DB_NEWS." WHERE news_id='".intval($news_id)."'");
+                                addnotice("success", self::$locale['news_0102']);
+                                break;
+                            default:
+                                redirect(FUSION_REQUEST);
+                        }
+                    }
+                }
+                redirect(FUSION_REQUEST);
+            }
+            addnotice("warning", self::$locale['news_0108']);
+            redirect(FUSION_REQUEST);
+        }
+
+        if (isset($_POST['news_clear'])) {
+            redirect(FUSION_SELF.fusion_get_aidlink());
+        }
+
+        // Switch to post
+        $sql_condition = "";
+        $sql_params = [];
+        $search_string = [];
+        if (isset($_POST['p-submit-news_text'])) {
+            $search_string['news_subject'] = [
+                "input" => form_sanitizer($_POST['news_text'], "", "news_text"), "operator" => "LIKE"
+            ];
+        }
+
+        if (!empty($_POST['news_status']) && isnum($_POST['news_status'])) {
+            switch ($_POST['news_status']) {
+                case 1: // is a draft
+                    $search_string['news_draft'] = ["input" => 1, "operator" => "="];
+                    break;
+                case 2: // is a sticky
+                    $search_string['news_sticky'] = ["input" => 1, "operator" => "="];
+                    break;
+            }
+        }
+
+        if (!empty($_POST['news_visibility'])) {
+            $search_string['news_visibility'] = [
+                "input" => form_sanitizer($_POST['news_visibility'], "", "news_visibility"), "operator" => "="
+            ];
+        }
+
+        if (!empty($_POST['news_category'])) {
+            $search_string['news_cat_id'] = [
+                "input" => form_sanitizer($_POST['news_category'], "", "news_category"), "operator" => "="
+            ];
+        }
+
+        if (!empty($_POST['news_author'])) {
+            $search_string['news_name'] = [
+                "input" => form_sanitizer($_POST['news_author'], "", "news_author"), "operator" => "="
+            ];
+        }
+
+        if (!empty($search_string)) {
+            foreach ($search_string as $key => $values) {
+                $sql_condition .= " AND $key ".$values['operator']." :".$key;
+                $sql_params[':'.$key] = ($values['operator'] == "LIKE" ? "%" : '').$values['input'].($values['operator'] == "LIKE" ? "%" : '');
+            }
+        }
+
+        $default_display = 16;
+        $limit = $default_display;
+        if ((!empty($_POST['news_display']) && isnum($_POST['news_display'])) || (!empty($_GET['news_display']) && isnum($_GET['news_display']))) {
+            $limit = (!empty($_POST['news_display']) ? $_POST['news_display'] : $_GET['news_display']);
+        }
+
+        $max_rows = dbcount("(news_id)", DB_NEWS);
+        $rowstart = 0;
+        if (!isset($_POST['news_display'])) {
+            $rowstart = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $max_rows ? $_GET['rowstart'] : 0);
+        }
+        $news_query = "SELECT n.*, nc.*,
+        IF(nc.news_cat_name !='', nc.news_cat_name, '".self::$locale['news_0202']."') 'news_cat_name',
+        u.user_id, u.user_name, u.user_status, u.user_avatar
+        FROM ".DB_NEWS." n
+        INNER JOIN ".DB_USERS." u on u.user_id=n.news_name
+        LEFT JOIN ".DB_NEWS_CATS." nc ON nc.news_cat_id=n.news_cat
+        WHERE ".in_group('n.news_language', LANGUAGE)." $sql_condition
+        GROUP BY n.news_id
+        ORDER BY n.news_datestamp DESC
+        LIMIT $rowstart, $limit
+        ";
+        $result2 = dbquery($news_query, $sql_params);
+        $news_rows = dbrows($result2);
+
+        $image_rows = [];
+        $image_result = dbquery("SELECT news_id, count(news_image_id) 'image_count' FROM ".DB_NEWS_IMAGES." GROUP BY news_id ORDER BY news_id ASC");
+        if (dbrows($image_result)) {
+            while ($imgData = dbarray($image_result)) {
+                $image_rows[$imgData['news_id']] = $imgData['image_count'];
+            }
+        }
+
+        $comment_rows = [];
+        $comment_result = dbquery("SELECT comment_item_id, count(comment_id) 'comment_count' FROM ".DB_COMMENTS." WHERE comment_type=:comment_type GROUP BY comment_item_id ORDER BY comment_item_id ASC", [':comment_type' => 'N']);
+        if (dbrows($comment_result)) {
+            while ($comData = dbarray($comment_result)) {
+                $comment_rows[$comData['comment_item_id']] = $comData['comment_count'];
+            }
+        }
+
+        echo openform("news_filter", "post", FUSION_REQUEST);
+        echo "<div class='clearfix'>\n";
+
+        echo "<div class='pull-right'>\n";
+        echo "<a class='btn btn-sm m-l-5 btn-success' href='".clean_request("ref=news_form", ["ref"], FALSE)."'><i class='fa fa-plus fa-fw'></i> ".self::$locale['news_0002']."</a>";
+        echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('publish', '#table_action', '#news_table');\"><i class='fa fa-check fa-fw'></i> ".self::$locale['publish']."</button>";
+        echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('unpublish', '#table_action', '#news_table');\"><i class='fa fa-ban fa-fw'></i> ".self::$locale['unpublish']."</button>";
+        echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('sticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note fa-fw'></i> ".self::$locale['sticky']."</button>";
+        echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-default' onclick=\"run_admin('unsticky', '#table_action', '#news_table');\"><i class='fa fa-sticky-note-o fa-fw'></i> ".self::$locale['unsticky']."</button>";
+        echo "<button type='button' class='hidden-xs btn btn-sm m-l-5 btn-danger' onclick=\"run_admin('delete', '#table_action', '#news_table');\"><i class='fa fa-trash-o fa-fw'></i> ".self::$locale['delete']."</button>";
+        echo "</div>\n";
+        $filter_values = [
+            "news_text"       => !empty($_POST['news_text']) ? form_sanitizer($_POST['news_text'], "", "news_text") : "",
+            "news_status"     => !empty($_POST['news_status']) ? form_sanitizer($_POST['news_status'], "", "news_status") : "",
+            "news_category"   => !empty($_POST['news_category']) ? form_sanitizer($_POST['news_category'], "", "news_category") : "",
+            "news_visibility" => !empty($_POST['news_visibility']) ? form_sanitizer($_POST['news_visibility'], "", "news_visibility") : "",
+            "news_author"     => !empty($_POST['news_author']) ? form_sanitizer($_POST['news_author'], "", "news_author") : "",
+        ];
+        $filter_empty = TRUE;
+        foreach ($filter_values as $val) {
+            if ($val) {
+                $filter_empty = FALSE;
+                break;
+            }
+        }
+        echo "<div class='pull-left'>\n";
+        echo form_text('news_text', '', $filter_values['news_text'], [
+            'placeholder'       => self::$locale['news_0200'],
+            'append_button'     => TRUE,
+            'append_value'      => "<i class='fa fa-search'></i>",
+            'append_form_value' => 'search_news',
+            'width'             => '170px',
+            'group_size'        => 'sm'
+        ]);
+        echo "</div>\n";
+        echo "</div>\n";
+
+        echo "<div class='display-inline-block hidden-xs vt'>\n";
+        echo "<a class='btn btn-sm ".($filter_empty == FALSE ? "btn-info" : " btn-default'")."' id='toggle_options' href='#'>".self::$locale['news_0242']."
+            <span id='filter_caret' class='fa ".($filter_empty == FALSE ? "fa-caret-up" : "fa-caret-down")."'></span></a>\n";
+        echo form_button("news_clear", self::$locale['news_0243'], "clear", ['class' => 'btn-default btn-sm']);
+        echo "</div>\n";
+        add_to_jquery("
+            $('#toggle_options').bind('click', function(e) {
+                e.preventDefault();
+                $('#news_filter_options').slideToggle();
+                var caret_status = $('#filter_caret').hasClass('fa-caret-down');
+                if (caret_status == 1) {
+                    $('#filter_caret').removeClass('fa-caret-down').addClass('fa-caret-up');
+                    $(this).removeClass('btn-default').addClass('btn-info');
+                } else {
+                    $('#filter_caret').removeClass('fa-caret-up').addClass('fa-caret-down');
+                    $(this).removeClass('btn-info').addClass('btn-default');
+                }
+            });
+            // Select change
+            $('#news_status, #news_visibility, #news_category, #news_author, #news_display').bind('change', function(e){
+                $(this).closest('form').submit();
+            });
+            ");
+        unset($filter_values['news_text']);
+        echo "<div class='m-t-10' id='news_filter_options'".($filter_empty == FALSE ? "" : " style='display:none;'").">\n";
+        echo "<div class='display-inline-block'>\n";
+        echo form_select("news_status", "", $filter_values['news_status'], [
+            "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0244']." -", "options" => [
+                0 => self::$locale['news_0245'],
+                1 => self::$locale['draft'],
+                2 => self::$locale['sticky'],
+            ]
+        ]);
+        echo "</div>\n";
+        echo "<div class='display-inline-block'>\n";
+        echo form_select("news_visibility", "", $filter_values['news_visibility'], [
+            "allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0246']." -", "options" => fusion_get_groups()
+        ]);
+        echo "</div>\n";
+        echo "<div class='display-inline-block'>\n";
+        $news_cats_opts = [0 => self::$locale['news_0247']];
+        $result = dbquery("SELECT * FROM ".DB_NEWS_CATS." ORDER BY news_cat_name ASC");
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $news_cats_opts[$data['news_cat_id']] = $data['news_cat_name'];
+            }
+        }
+        echo form_select("news_category", "", $filter_values['news_category'], ["allowclear" => TRUE, "placeholder" => "- ".self::$locale['news_0248']." -", "options" => $news_cats_opts]);
+        echo "</div>\n";
+        echo "<div class='display-inline-block'>\n";
+        $author_opts = [0 => self::$locale['news_0251']];
+        $result = dbquery("SELECT n.news_name, u.user_id, u.user_name, u.user_status
+              FROM ".DB_NEWS." n
+              LEFT JOIN ".DB_USERS." u ON n.news_name = u.user_id
+              GROUP BY u.user_id
+              ORDER BY user_name ASC");
+        if (dbrows($result) > 0) {
+            while ($data = dbarray($result)) {
+                $author_opts[$data['user_id']] = $data['user_name'];
+            }
+        }
+        echo form_select("news_author", "", $filter_values['news_author'],
+            [
+                'allowclear'  => TRUE,
+                'placeholder' => '- '.self::$locale['news_0252'].' -',
+                'options'     => $author_opts
+            ]
+        );
+        echo "</div>\n";
+        echo "</div>\n";
+        echo closeform();
+        ?>
+        <hr/>
+        <?php echo openform("news_table", "post", FUSION_REQUEST); ?>
+        <?php echo form_hidden("table_action"); ?>
+        <div class="display-block">
+            <div class="display-inline-block m-l-10">
+                <?php echo form_select('news_display', self::$locale['show'], $limit,
+                    [
+                        'inner_width' => '100px',
+                        'inline'      => TRUE,
+                        'options'     => [
+                            5   => 5,
+                            10  => 10,
+                            16  => 16,
+                            25  => 25,
+                            50  => 50,
+                            100 => 100
+                        ],
+                    ]
+                ); ?>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="hidden-xs"></th>
+                    <th class="strong"><?php echo self::$locale['news_0200'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['news_0201'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['news_0209'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['sticky'] ?></th>
+                    <th class="strong min"><?php echo self::$locale['draft'] ?></th>
+                    <th class="strong"><?php echo self::$locale['global_073'] ?></th>
+                    <th class="strong"><?php echo self::$locale['news_0009'] ?></th>
+                    <th class="strong"><?php echo self::$locale['global_050'] ?></th>
+                    <th class="strong"><?php echo self::$locale['actions'] ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php if (dbrows($result2) > 0) :
+                    while ($data = dbarray($result2)) : ?>
+                        <?php
+
+                        $edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_form&amp;news_id=".$data['news_id'];
+                        $cat_edit_link = FUSION_SELF.fusion_get_aidlink()."&amp;action=edit&amp;ref=news_category&amp;cat_id=".$data['news_cat_id'];
+                        ?>
+                        <tr>
+                            <td class="hidden-xs"><?php echo form_checkbox("news_id[]", "", "", ['input_id' => 'news'.$data['news_id'], "value" => $data['news_id'], "class" => 'm-0']) ?></td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $edit_link ?>"><?php echo $data['news_subject'] ?></a>
+                            </td>
+                            <td>
+                                <a class="text-dark" href="<?php echo $cat_edit_link ?>"><?php echo $data['news_cat_name'] ?></a>
+                            </td>
+                            <td><?php echo getgroupname($data['news_visibility']) ?></td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_sticky'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
+                            <td>
+                                <span class="badge"><?php echo $data['news_draft'] ? self::$locale['yes'] : self::$locale['no'] ?></span>
+                            </td>
+                            <td><?php echo format_word(isset($comment_rows[$data['news_id']]) ? $comment_rows[$data['news_id']] : 0, self::$locale['fmt_comment']) ?></td>
+                            <td><?php echo format_word(isset($image_rows[$data['news_id']]) ? $image_rows[$data['news_id']] : 0, self::$locale['fmt_photo']) ?></td>
+                            <td>
+                                <div class="overflow-hide"><?php echo profile_link($data['user_id'], $data['user_name'], $data['user_status']) ?></div>
+                            </td>
+                            <td>
+                                <a href="<?php echo $edit_link ?>"><?php echo self::$locale['edit'] ?></a> &middot;
+                                <a href="<?php echo FUSION_SELF.fusion_get_aidlink()."&amp;action=delete&amp;news_id=".$data['news_id'] ?>" onclick="return confirm('<?php echo self::$locale['news_0281']; ?>')"><?php echo self::$locale['delete'] ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                    endwhile;
+                else: ?>
+                    <tr>
+                        <td colspan="10" class="text-center"><strong><?php echo self::$locale['news_0109'] ?></strong>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        echo closeform();
+        if ($max_rows > $news_rows) : ?>
+            <div class="display-inline-block">
+                <?php
+                echo makepagenav($rowstart, $limit, $max_rows, 3, FUSION_SELF.fusion_get_aidlink()."&news_display=$limit&amp;")
+                ?>
+            </div>
+        <?php endif;
+    }
+
+    /**
+     * News Delete Function
+     */
+    private function executeNewsDelete() {
+        if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['news_id']) && isnum($_GET['news_id'])) {
+
+            $news_id = intval($_GET['news_id']);
+
+            if (dbcount("(news_id)", DB_NEWS, "news_id='$news_id'")) {
+
+                $result = dbquery("SELECT news_image, news_image_t1, news_image_t2 FROM ".DB_NEWS_IMAGES." WHERE news_id='".intval($_GET['news_id'])."'");
+                if (dbrows($result)) {
+                    while ($data = dbarray($result)) {
+                        if (!empty($data['news_image']) && file_exists(IMAGES_N.$data['news_image'])) {
+                            unlink(IMAGES_N.$data['news_image']);
+                        }
+                        if (!empty($data['news_image_t1']) && file_exists(IMAGES_N_T.$data['news_image_t1'])) {
+                            unlink(IMAGES_N_T.$data['news_image_t1']);
+                        }
+                        if (!empty($data['news_image_t2']) && file_exists(IMAGES_N_T.$data['news_image_t2'])) {
+                            unlink(IMAGES_N_T.$data['news_image_t2']);
+                        }
+                    }
+                }
+
+                dbquery("DELETE FROM ".DB_NEWS_IMAGES." WHERE news_id='$news_id'");
+                dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='$news_id'");
+                dbquery("DELETE FROM ".DB_COMMENTS."  WHERE comment_item_id='$news_id' and comment_type='N'");
+                dbquery("DELETE FROM ".DB_RATINGS." WHERE rating_item_id='$news_id' and rating_type='N'");
+                dbquery("DELETE FROM ".DB_NEWS." WHERE news_id='$news_id'");
+                addnotice('success', self::$locale['news_0102']);
+
+            }
+            redirect(FUSION_SELF.fusion_get_aidlink());
+        }
+    }
+}

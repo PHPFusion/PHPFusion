@@ -1,0 +1,13 @@
+.profile_text {
+    color: rgb(0, 0, 0);
+}
+
+.profile_link_nav > li > a {
+    font-size: 110%;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.profile_link_nav .active {
+    font-weight: 600;
+}

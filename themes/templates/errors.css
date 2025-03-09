@@ -1,0 +1,39 @@
+.err_tbl-border {
+    border: 1px solid #EEE;
+    color: #555 !important;
+    background-color: #FFF !important;
+    font: 90%/120% Menlo, Monaco, Consolas, "Courier New", monospace !important;
+}
+
+.err_tbl {
+    color: #555;
+    padding: 4px;
+    background-color: #FFF;
+}
+
+.err_tbl1 {
+    color: #555;
+    background-color: rgb(234, 255, 234);
+    padding: 5px 15px;
+    word-wrap: break-word;
+    max-width: 90%;
+}
+
+.err_tbl2 {
+    color: rgba(0, 0, 0, 0.3);
+    padding: 5px 15px;
+    background-color: rgb(219, 255, 219);
+    border-color: rgb(193, 233, 193);
+}
+
+.err_tbl-error {
+    color: #AC260F;
+    font-weight: bold;
+    background-color: #FCCAC2;
+}
+
+.err_tbl-error-line {
+    color: #AC260F;
+    font-weight: bold;
+    background-color: #FCCAC2;
+}

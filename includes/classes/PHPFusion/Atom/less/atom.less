@@ -1,0 +1,239 @@
+@import "bootstrap.less";
+
+// branding
+@brand-primary: darken(@primary_color, 6.5%);
+@brand-success: @success_color;
+@brand-info: @info_color;
+@brand-warning: @warning_color;
+@brand-danger: @danger_color;
+
+// Gray base
+@gray-base: #000;
+@gray-darker: lighten(@gray-base, 13.5%);
+// #222
+@gray-dark: lighten(@gray-base, 20%);
+// #333
+@gray: lighten(@gray-base, 33.5%);
+// #555
+@gray-light: lighten(@gray-base, 46.7%);
+// #777
+@gray-lighter: lighten(@gray-base, 93.5%);
+// #eee
+
+// Body Backgrounds
+@body-bg: #fff;
+//** Global text color on `<body>`.
+@text-color: @base_font_color;
+//** Global textual link color.
+@link-color: @link_color;
+@link-weight: @link_weight;
+@link-style: @link_style;
+@link-decoration: @link_decoration;
+//** Link hover color set via `darken()` function.
+@link-hover-color: @link_hover_color;
+//darken(@link-color, 15%);
+@link-hover-weight: @link_hover_weight;
+@link-hover-style: @link_hover_style;
+@link-hover-decoration: @link_hover_decoration;
+//underline;
+
+// Fonts
+@font-family-sans-serif: @sans_serif_fonts;
+@font-family-serif: @serif_fonts;
+//** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
+@font-family-monospace: @monospace_fonts;
+@font-family-base: @base_font;
+
+@font-size-base: @base_font_size;
+@font-size-large: @base_font_size_l;
+@font-size-small: @base_font_size_s;
+
+@font-size-h1: @font_size_h1;
+//floor((@font-size-base * 2.6)); // ~36px
+@font-weight-h1: @font_weight_h1;
+@font-height-h1: @font_height_h1;
+@font-color-h1: @font_color_h1;
+@font-decoration-h1: @font_decoration_h1;
+@font-style-h1: @font_style_h1;
+
+@font-size-h2: @font_size_h2;
+// floor((@font-size-base * 2.15)); // ~30px
+@font-weight-h2: @font_weight_h2;
+@font-height-h2: @font_height_h2;
+@font-color-h2: @font_color_h2;
+@font-decoration-h2: @font_decoration_h2;
+@font-style-h2: @font_style_h2;
+
+@font-size-h3: @font_size_h3;
+// ceil((@font-size-base * 1.7)); // ~24px
+@font-weight-h3: @font_weight_h3;
+@font-height-h3: @font_height_h3;
+@font-color-h3: @font_color_h3;
+@font-decoration-h3: @font_decoration_h3;
+@font-style-h3: @font_style_h3;
+
+@font-size-h4: @font_size_h4;
+//ceil((@font-size-base * 1.25)); // ~18px
+@font-weight-h4: @font_weight_h4;
+@font-height-h4: @font_height_h4;
+@font-color-h4: @font_color_h4;
+@font-decoration-h4: @font_decoration_h4;
+@font-style-h4: @font_style_h4;
+
+@font-size-h5: @font_size_h5;
+//@font-size-base;
+@font-weight-h5: @font_weight_h5;
+@font-height-h5: @font_height_h5;
+@font-color-h5: @font_color_h5;
+@font-decoration-h5: @font_decoration_h5;
+@font-style-h5: @font_style_h5;
+
+@font-size-h6: @font_size_h6;
+//ceil((@font-size-base * 0.85)); // ~12px
+@font-weight-h6: @font_weight_h6;
+@font-height-h6: @font_height_h6;
+@font-color-h6: @font_color_h6;
+@font-decoration-h6: @font_decoration_h6;
+@font-style-h6: @font_style_h6;
+
+//** Unit-less `line-height` for use in components like buttons.
+@line-height-base: @base_font_height;
+//1.428571429; // 20/14
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+@line-height-computed: floor((@font-size-base * @line-height-base));
+// ~20px
+
+//** By default, this inherits from the `<body>`.
+@headings-font-family: inherit;
+
+// Code
+@code-color: @code_color;
+@code-bg: @code_bgcolor;
+
+@blockquote-font-size: @quote_size;
+//(@font-size-base * 1.25);
+@blockquote-color: @quote_color;
+@blockquote-height: @quote_height;
+@blockquote-weight: @quote_weight;
+@blockquote-style: @quote_style;
+@blockquote-decoration: @quote_decoration;
+
+//** Load fonts from this directory.
+@icon-font-path: "../fonts/";
+//** File name for all font files.
+@icon-font-name: "glyphicons-halflings-regular";
+//** Element ID within SVG icon file.
+@icon-font-svg-id: "glyphicons_halflingsregular";
+
+//## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
+
+@padding-base-vertical: 6px;
+@padding-base-horizontal: 12px;
+
+@padding-large-vertical: 10px;
+@padding-large-horizontal: 16px;
+
+@padding-small-vertical: 5px;
+@padding-small-horizontal: 10px;
+
+@padding-xs-vertical: 1px;
+@padding-xs-horizontal: 5px;
+
+@line-height-large: 1.33;
+@line-height-small: 1.5;
+
+@border-radius-base: 4px;
+@border-radius-large: 6px;
+@border-radius-small: 3px;
+
+//** Global color for active items (e.g., navs or dropdowns).
+@component-active-color: #fff;
+//** Global background color for active items (e.g., navs or dropdowns).
+@component-active-bg: @brand-primary;
+//** Width of the `border` for generating carets that indicator dropdowns.
+@caret-width-base: 4px;
+//** Carets increase slightly in size for larger components.
+@caret-width-large: 5px;
+//== Container sizes
+//## Define the maximum width of `.container` for different screen sizes.
+// Small screen / tablet
+@container-tablet: (@container_sm + @grid-gutter-width);
+//** For `@screen-sm-min` and up.
+@container-sm: @container-tablet;
+// Medium screen / desktop
+@container-desktop: (@container_md + @grid-gutter-width);
+//** For `@screen-md-min` and up.
+@container-md: @container-desktop;
+// Large screen / wide desktop
+@container-large-desktop: (@container_lg + @grid-gutter-width);
+//** For `@screen-lg-min` and up.
+@container-lg: @container-large-desktop;
+
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+@btn-border-width: @btn_border;
+@btn-radius: @btn_radius;
+@btn-font-weight: normal;
+
+@btn-default-color: #333;
+@btn-default-bg: #fff;
+@btn-default-border: #ccc;
+@btn-fill: @btn_fill;
+
+// Button Primary
+@btn-primary-bg: @btn_primary;
+@btn-primary-color: @btn_primary_color;
+@btn-primary-bg-hover: @btn_primary_hover;
+@btn-primary-color-hover: @btn_primary_color_hover;
+@btn-primary-bg-active: @btn_primary_active;
+@btn-primary-color-active: @btn_primary_color_hover;
+@btn-primary-border: darken(@btn-primary-bg, 5%);
+@btn-primary-border-hover: darken(@btn-primary-bg-hover, 5%);
+@btn-primary-border-active: darken(@btn-primary-bg-active, 5%);
+
+// Button Info
+@btn-info-bg: @btn_info;
+@btn-info-color: @btn_info_color;
+@btn-info-bg-hover: @btn_info_hover;
+@btn-info-color-hover: @btn_info_color_hover;
+@btn-info-bg-active: @btn_info_active;
+@btn-info-color-active: @btn_info_color_hover;
+@btn-info-border: darken(@btn-info-bg, 5%);
+@btn-info-border-hover: darken(@btn-info-bg-hover, 5%);
+@btn-info-border-active: darken(@btn-info-bg-active, 5%);
+
+// Button Success
+@btn-success-bg: @btn_success;
+@btn-success-color: @btn_success_color;
+@btn-success-bg-hover: @btn_success_hover;
+@btn-success-color-hover: @btn_success_color_hover;
+@btn-success-bg-active: @btn_success_active;
+@btn-success-color-active: @btn_success_color_hover;
+@btn-success-border: darken(@btn-success-bg, 5%);
+@btn-success-border-hover: darken(@btn-success-bg-hover, 5%);
+@btn-success-border-active: darken(@btn-success-bg-active, 5%);
+
+// Button Warning
+@btn-warning-bg: @btn_warning;
+@btn-warning-color: @btn_warning_color;
+@btn-warning-bg-hover: @btn_warning_hover;
+@btn-warning-color-hover: @btn_warning_color_hover;
+@btn-warning-bg-active: @btn_warning_active;
+@btn-warning-color-active: @btn_warning_color_hover;
+@btn-warning-border: darken(@btn-warning-bg, 5%);
+@btn-warning-border-hover: darken(@btn-warning-bg-hover, 5%);
+@btn-warning-border-active: darken(@btn-warning-bg-active, 5%);
+
+// Button Danger
+@btn-danger-bg: @btn_danger;
+@btn-danger-color: @btn_danger_color;
+@btn-danger-bg-hover: @btn_danger_hover;
+@btn-danger-color-hover: @btn_danger_color_hover;
+@btn-danger-bg-active: @btn_danger_active;
+@btn-danger-color-active: @btn_danger_color_hover;
+@btn-danger-border: darken(@btn-danger-bg, 5%);
+@btn-danger-border-hover: darken(@btn-danger-bg-hover, 5%);
+@btn-danger-border-active: darken(@btn-danger-bg-active, 5%);
+
+@btn-link-disabled-color: @gray-light;

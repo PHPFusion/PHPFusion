@@ -1,0 +1,90 @@
+<?php
+// Panel Management
+$locale['PANEL_400'] = "Panels";
+$locale['PANEL_401'] = "Panel Name";
+$locale['PANEL_402'] = "Side";
+$locale['PANEL_403'] = "Order";
+$locale['PANEL_404'] = "Type";
+$locale['PANEL_405'] = "Access";
+$locale['PANEL_406'] = "Options";
+$locale['PANEL_407'] = "Current Panels";
+$locale['PANEL_408'] = "Add Panel";
+$locale['PANEL_409'] = "Edit Panel";
+$locale['PANEL_410'] = "You can drag and drop the panels across the panels window to switch positions or shuffle the panel ordering.";
+// Panel Settings
+$locale['PANEL_420'] = "Left";
+$locale['PANEL_421'] = "Upper Center";
+$locale['PANEL_422'] = "Right";
+$locale['PANEL_423'] = "File";
+$locale['PANEL_424'] = "PHP";
+$locale['PANEL_425'] = "Lower Center";
+$locale['PANEL_426'] = "Below header";
+$locale['PANEL_427'] = "Above footer";
+$locale['PANEL_428a'] = "User 1";
+$locale['PANEL_428b'] = "User 2";
+$locale['PANEL_428c'] = "User 3";
+$locale['PANEL_428d'] = "User 4";
+// Panel Options1
+$locale['PANEL_430'] = "Move to left";
+$locale['PANEL_431'] = "Move to right";
+$locale['PANEL_432'] = "Move up";
+$locale['PANEL_433'] = "Move down";
+$locale['PANEL_435'] = "Enable";
+$locale['PANEL_436'] = "Disable";
+$locale['PANEL_438'] = "New Panel";
+$locale['PANEL_439'] = "Refresh Panel Order Values";
+$locale['PANEL_440'] = "Delete this Panel?";
+$locale['PANEL_441'] = "Left";
+$locale['PANEL_442'] = "Right";
+$locale['PANEL_443'] = "Up";
+$locale['PANEL_444'] = "Down";
+$locale['PANEL_445'] = "Move to upper";
+$locale['PANEL_446'] = "Move to lower";
+// Add/Edit Panel Form
+$locale['PANEL_450'] = "Edit Panel";
+$locale['PANEL_451'] = "Add Panel";
+$locale['PANEL_452'] = "Panel Name:";
+$locale['PANEL_453'] = "Panel Filename:";
+$locale['PANEL_454'] = "Panel content will be ignored if selected";
+$locale['PANEL_455'] = "Panel Content:";
+$locale['PANEL_456'] = "Admin Password:";
+$locale['PANEL_457'] = "Panel Side:";
+$locale['PANEL_458'] = "Panel Access:";
+$locale['PANEL_459'] = "Display panel on all pages";
+$locale['PANEL_460'] = "Preview Panel";
+$locale['PANEL_461'] = "Save Panel";
+$locale['PANEL_462'] = "Panel Restriction:";
+$locale['PANEL_463'] = "Examples:";
+$locale['PANEL_464'] = "Exclude on these pages only";
+$locale['PANEL_465'] = "Include on these pages only";
+$locale['PANEL_466'] = "Panel Language:";
+$locale['PANEL_467'] = "Display on Opening Page only";
+$locale['PANEL_468'] = "Panel Type";
+$locale['PANEL_469'] = "None";
+$locale['PANEL_469a'] = "Content";
+// Update/Add new Panel Errors
+$locale['PANEL_470'] = "Panel name not defined";
+$locale['PANEL_471'] = "Panel name in use";
+$locale['PANEL_472'] = "Panel content not defined";
+$locale['PANEL_473'] = "Panel filename not defined";
+$locale['PANEL_474'] = "Admin password is incorrect";
+$locale['PANEL_475'] = "There must be at least a section in the filter list to use the filter";
+// Update/Add new Panel Success/Fail
+$locale['PANEL_480'] = "Update Panel";
+$locale['PANEL_481'] = "Could not update Panel";
+$locale['PANEL_482'] = "Panel updated";
+$locale['PANEL_483'] = "New Panel";
+$locale['PANEL_484'] = "Could not add new Panel";
+$locale['PANEL_485'] = "New Panel Added";
+$locale['PANEL_486'] = "Return to Panel Management";
+$locale['PANEL_487'] = "Return to Admin Index";
+$locale['PANEL_488'] = "Panel order updated.";
+$locale['PANEL_489'] = "Panel deleted.";
+//Visual Panel
+$locale['PANEL_600'] = "Panel Management Interface";
+$locale['PANEL_602'] = "Unused panels";
+$locale['PANEL_603'] = "Used panels";
+$locale['PANEL_604'] = "Panel|Panels";
+// $locale['PANEL_605'] = "";
+$locale['PANEL_606'] = "Site content";
+$locale['PANEL_607'] = "File";

@@ -1,0 +1,97 @@
+#home_carousel .item > img {
+    min-height:800px;
+}
+#home_carousel .item .logo >img {
+    position: absolute;
+    top: 135px;
+    left: -140px;
+    width: 20%;
+}
+.container .container {
+    width: 100%;
+}
+#support {
+    background: url(images/bg04.jpg) fixed bottom;
+    background-size: cover;
+    height: 600px;
+}
+#home_parallax {
+    background: url(images/bg02.jpg) fixed;
+    background-size: cover;
+    height: 750px;
+}
+#home_parallax::before {
+    position: absolute;
+    background: url(images/developer.png) center bottom no-repeat;
+    height: 750px;
+    width: 100%;
+    margin: auto;
+}
+.row.home_feature {
+}
+
+#support .support {
+    text-align: center;
+}
+#support h3 {
+    color: #fff;
+}
+#support h4 {
+    display: inline-block;
+    color: #fff;
+    background-color: #393d50;
+    padding: 15px;
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 35px;
+}
+#support p {
+    text-align: center;
+    max-width: 750px;
+    margin: 50px auto;
+    color: #99a9b5;
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 25px;
+}
+
+#home_parallax h3, #home_feature h3, #support h3, #showcase h3 {
+    font-size: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#latest {
+    padding-bottom: 100px;
+}
+#latest p {
+    display: block;
+    margin-bottom: 20px;
+}
+#showcase > div:first-child {
+    width: 45%;
+}
+#showcase {
+    height: 700px;
+    overflow: hidden;
+}
+#showcase:after {
+    background: url(images/theme9.jpg) center top;
+    display: block;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    clear: none;
+    height: 700px;
+    left: 0;
+}
+#home_parallax p, #home_feature p, #showcase p {
+    font: 23px/40px 'Ubuntu', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    display: block;
+    width: 80%;
+    margin: 40px auto 0;
+}
+#showcase p {
+    width: 100%;
+}
