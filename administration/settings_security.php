@@ -61,6 +61,7 @@ if (check_post('savesettings')) {
         'bad_words_enabled'   => post('bad_words_enabled') ? 1 : 0,
         'bad_words'           => stripinput(post('bad_words')),
         'bad_word_replace'    => sanitizer('bad_word_replace', '', 'bad_word_replace'),
+        'blaclist_site'       => sanitizer( 'blaclist_site', '', 'blaclist_site' ),
         'database_sessions'   => sanitizer('database_sessions', 0, 'database_sessions'),
         'form_tokens'         => sanitizer('form_tokens', '', 'form_tokens'),
         'mime_check'          => post('mime_check') ? 1 : 0,
@@ -245,6 +246,11 @@ echo form_checkbox('mime_check', $locale['admins_699f'], $settings['mime_check']
 closeside();
 
 openside('');
+echo form_text('blaclist_site', $locale['admins_security_019'], $settings['blaclist_site'], [
+    'type'        => 'url',
+    'regex'       => 'http(s)?\:\/\/(.*?)',
+    'placeholder' => $locale['admins_security_020']
+]);
 echo form_text('flood_interval', $locale['admins_660'], $settings['flood_interval'], [
     'type'        => 'number',
     'inner_width' => '150px',
