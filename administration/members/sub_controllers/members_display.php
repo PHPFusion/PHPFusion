@@ -201,7 +201,7 @@ class Members_Display extends Members_Admin {
 
         $query_bind = array_merge($status_bind, $search_bind);
         $rowCount = dbcount('(user_id)', DB_USERS, ltrim($status_cond, 'WHERE ').$search_cond, $query_bind);
-        $rowstart = check_get('rowstart') && get('rowstart', FILTER_SANITIZE_NUMBER_INT) <= $rowCount ? get('rowstart') : 0;
+        $rowstart = get_rowstart( "rowstart", $rowCount );
         $limit = 16;
         $newrows = 0;
         $newrowsCount = 0;
