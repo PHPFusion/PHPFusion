@@ -67,7 +67,7 @@ if (isset($_POST) && !empty($_POST)) {
     }
     $db_where = ($db_where != "" ? "WHERE ".$db_where : "");
     // build get string
-    $get_string .= "&orderby=".$order_by."&expr=".$expr."&user=".$user."&user_field=".$user_field;
+    $get_string .= "&orderby=" . $order_by . "&expr=" . $expr . ( !empty( $user ) ? "&user=" . $user . "" : '' ) . ( !empty( $user_field ) ? "&user_field=" . $user_field . "" : '' );
 }
 
 // End $_GET Vars
@@ -87,7 +87,7 @@ if (check_post(['log_id'])) {
 
 if (check_post('day_delete') && post('day_delete', FILTER_VALIDATE_INT)) {
     $delete = sanitizer('day_delete', 0, 'day_delete');
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:time", [
+    dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_timestamp<:time", [
         ':time' => time() - $delete * 24 * 60 * 60,
     ]);
     addnotice('info', sprintf($locale['UL_005'], $delete));
@@ -95,7 +95,7 @@ if (check_post('day_delete') && post('day_delete', FILTER_VALIDATE_INT)) {
 }
 
 if (check_get('delete') && get('delete', FILTER_VALIDATE_INT)) {
-    $result = dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => get('delete')]);
+    dbquery("DELETE FROM ".DB_USER_LOG." WHERE userlog_id=:delete", [':delete' => get('delete')]);
     addnotice('info', $locale['UL_006']);
     redirect(clean_request('', ['delete'], FALSE));
 }

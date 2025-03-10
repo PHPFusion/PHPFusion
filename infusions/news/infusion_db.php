@@ -118,7 +118,7 @@ if (defined('NEWS_EXISTS')) {
         $module[DB_NEWS]['blockTitle'] = $locale['home_0000'];
         $module[DB_NEWS]['inf_settings'] = get_settings('news');
 
-        if (dbrows($result) > 0) {
+        if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $data['content'] = parse_text($data['content'], ['parse_bbcode' => FALSE, 'default_image_folder' => NULL]);
                 $data['url'] = INFUSIONS.'news/news.php?readmore='.$data['id'];
