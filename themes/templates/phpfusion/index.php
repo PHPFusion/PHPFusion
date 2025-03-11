@@ -54,6 +54,7 @@ function display_home($info)
     <!--clip-bg-->
     <div class="position-absolute absolute-center overflow-hidden">
 
+
         <!-- Laptop bg -->
         <div class="position-absolute absolute-center overflow-hidden w-screen" laptop-bg-position style="width: 1155px;">
             <!-- Laptop background clip path -->
@@ -64,20 +65,70 @@ function display_home($info)
             </div>
         </div>
 
+        <!-- Devices -->
+        <div class="position-absolute absolute-center overflow-hidden w-screen" style="width: 100vw; height:1862px;">
 
-        <div class="position-absolute absolute-center overflow-hidden w-screen content-height" style="width:calc(var(--vw, 1vw)* 50.3);height: calc(var(--vw, 1vw)* 30.889);">
-            <!-- Background -->
-            <!-- Logo -->
-            <div class="bg-img" laptop-transform="">
-                <div class="bg-img" laptop-scale="">
-                    <!-- Laptop     -->
-                    <div class="bg-img opacity-0" laptop-opacity="">
-                        <img class="bg-img loaded" src="<?php echo IMAGES ?>assets/laptop.png" data-ll-status="loaded">
+            <!-- cms logo -->
+            <div class="bg-img opacity-0" cms-text style="width:100vw; height:2000px;">
+                <img class="bg-img cms-logo loaded" src="<?php echo IMAGES ?>assets/cmslogo.png">
+                <div class="bg-img cms-text">Discover the power of PHPFusion, a lightweight yet
+                    powerful CMS designed for simplicity and flexibility.
+                    From dynamic content management to built-in security,
+                    PHPFusion has everything you need to create and
+                    manage your website with ease. Whether you're a beginner or an experienced developer,
+                    PHPFusion is the perfect choice for your next project.
+                </div>
+            </div>
+
+
+            <div class="position-absolute absolute-center overflow-hidden w-screen content-height" style="width:calc(var(--vw, 1vw)* 50.3);height: calc(var(--vw, 1vw)* 30.889);">
+                <!-- Logo -->
+                <div class="bg-img" laptop-transform>
+                    <div class="bg-img" laptop-scale>
+                        <!-- Laptop     -->
+                        <div class="bg-img opacity-0" laptop-opacity>
+                            <img class="bg-img loaded" src="<?php echo IMAGES ?>assets/laptop.png" data-ll-status="loaded">
+                        </div>
+                        <!-- Logo -->
+                        <div class="relative w100 h100" init-enter-os="" style="opacity: 1; transform: translateY(0px);">
+                            <img class="logo-v9 absolute absolute-center" src="<?php echo IMAGES ?>assets/9logo.png">
+                        </div>
+                        <!--Fusion LTE background-->
+                        <div class="relative w100 h100" lte-bg style="opacity:0; transform:scale(0), translateY(0px);">
+                            <img class="admin-v9 position-absolute absolute-center" src="<?php echo IMAGES ?>assets/phpfusion_admin_LTE.png">
+                        </div>
                     </div>
-                    <!-- Logo -->
-                    <div class="relative w100 h100" init-enter-os="" style="opacity: 1; transform: translateY(0px);">
-                        <img class="logo-v9 absolute absolute-center" src="<?php echo IMAGES ?>assets/9logo.png">
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <div class="home-wrapper mt-spacer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="hero">
+                        <h3 class="text-success bold">Infusions</h3>
+                        <h2 class="text-dark bold">Expandability with modular applications</h4>
+                            <p style="font-size:1.8rem;color:#202020;">Enhance your PHPFusion experience with modular applications—easily installable extensions that expand system functionality to meet your needs.</p>
                     </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    <div class="well">
+                        <h3 class="text-success bold">Themes</h3>
+                        <h2 class="text-dark bold">Customizable with themes and templates</h4>
+                            <p style="font-size:1.8rem;color:#202020;">Personalize your site with PHPFusion’s flexible themes and templates—effortless customization to match your style.</p>
+
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6">
+                    <div class="well">Lightweight</div>
+                    <h2 class="text-dark bold">Fast performant</h4>
+                        <p style="font-size:1.8rem;color:#202020;">Enhance your PHPFusion experience with modular applications—easily installable extensions that expand system functionality to meet your needs.</p>
                 </div>
             </div>
         </div>
@@ -85,9 +136,6 @@ function display_home($info)
     </div>
 
 
-    </div>
-    </div>
-    </div>
 <?php
 
 }

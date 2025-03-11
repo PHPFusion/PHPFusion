@@ -18,7 +18,9 @@ $(document).ready(function () {
         });
 
     });
-    
+        
+    let isPoppedUp = false;
+    let fusionTrigger = 120;
     $(window).on("scroll", function () {
         let scrollTop = $(window).scrollTop();
         let maxScroll = 100; // Adjust as needed
@@ -49,8 +51,7 @@ $(document).ready(function () {
         // Fade out .bg-img.v9 img after 80px scroll
         let imgOpacity = scrollTop <= 100 ? 1 : 1 - ((scrollTop - 100) / 20);
         imgOpacity = Math.max(imgOpacity, 0); // Ensure opacity doesn't go below 0
-
-        console.log(imgOpacity);
+        
         // Apply transformations dynamically
         $("img.logo-v9").css({
             // "transform": `scale(${scale})`,
@@ -59,6 +60,7 @@ $(document).ready(function () {
         });
 
         $(".bg-img[laptop-opacity]").css("opacity", opacity);
+      
 
         $("[laptop-bg]").css({
             "transform": `scale(${laptopScale})`,
@@ -72,6 +74,37 @@ $(document).ready(function () {
         $("[laptop-bg-position]").css({
             "height": newHeight,
         });
+
+        let scrollHit = 200;
+        let lteOpacity = scrollTop >= scrollHit ? 1 : 0;
+        lteOpacity = Math.max(lteOpacity, 0); // Ensure opacity doesn't go below 0
+        
+        let LteMaxY = scrollTop >= scrollHit ? -440 : 0;
+        let LteMaxScale = scrollTop >= scrollHit ? .81 : 0;
+
+
+        $("[lte-bg]").css({
+            "opacity": lteOpacity,
+            "transform": `scale(${LteMaxScale}) translateY(${LteMaxY}px)`,
+            "transition": "opacity .6s ease-out, scale .3s ease-out"
+        });
+
+        var deviceStart = 200, deviceEnd = 250;
+        var deviceProgress = Math.min(Math.max((scrollTop - deviceStart) / (deviceEnd - deviceStart), 0), 1); // Clamped between 0 and 1
+
+
+        $(".bg-img[pad-opacity]").css({
+            "opacity": progress * 1, // Direct calculation
+            "transform": "translateX(" + (-150 + progress * 100) + "px)", // Direct calculation
+                        "transition": "transform .4s ease-out"
+        });
+
+        $(".bg-img[cms-text]").css({
+            "opacity": progress * 1, // Direct calculation
+            "transform": "translateY(" + (-100 + progress * 100) + "px)", // Direct calculation
+             "transition": "transform .3s ease-out"
+        });
+
     });
 
 
