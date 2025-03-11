@@ -143,24 +143,8 @@ class Admin {
      *
      * @return bool
      */
-    public static function verifyTheme($theme_name)
-    {
-        return (is_dir(THEMES . $theme_name) && file_exists(THEMES . $theme_name . "/theme.php") && (file_exists(THEMES . $theme_name . "/styles.css") || file_exists(THEMES . $theme_name . "/styles.less")) && fusion_get_settings('theme') == $theme_name);
-    }
-
-    public static function setActiveTheme()
-    {
-
-        $theme_name = get('theme');
-
-        if (self::themeInstallable($theme_name, get('section') == 'admin_themes')) {
-
-            dbquery("UPDATE " . DB_SETTINGS . " SET settings_value='" . $theme_name . "' WHERE settings_name='theme'");
-
-            //redirect(clean_request('', ['action', 'theme'], FALSE));        
-        } else {
-            addnotice('danger', 'This theme is not installable. Please contact the administrator for assistance');
-        }
+    public static function verifyTheme($theme_name) {
+        return (is_dir(THEMES.$theme_name) && file_exists(THEMES.$theme_name."/theme.php") && file_exists(THEMES.$theme_name."/styles.css") && fusion_get_settings('theme') == $theme_name);
     }
 
     /**
@@ -287,9 +271,9 @@ class Admin {
         $atheme_ = $admin == TRUE ? 'admin_theme' : 'theme';
 
         return (
-            is_dir($folder . $theme_name) &&
-            file_exists($folder . $theme_name . '/' . $atheme . 'theme.php') &&
-            (file_exists($folder . $theme_name . '/' . $atheme . 'styles.less') || file_exists($folder . $theme_name . '/' . $atheme . 'styles.css')) &&
+            is_dir($folder.$theme_name) &&
+            file_exists($folder.$theme_name.'/'.$atheme.'theme.php') &&
+            file_exists($folder.$theme_name.'/'.$atheme.'styles.css') &&
             fusion_get_settings($atheme_) !== $theme_name
         );
     }

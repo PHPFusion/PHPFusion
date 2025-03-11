@@ -21,10 +21,9 @@ pageaccess('TS');
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/theme.php');
 $theme_admin = new \PHPFusion\Atom\Admin();
-
 opentable($locale['theme_1000']);
 switch (get('action')) {
-    case "manage":
+     case "manage":
         if (check_get('theme')) {
             $theme_admin::displayThemeEditor(get('theme'));
         }

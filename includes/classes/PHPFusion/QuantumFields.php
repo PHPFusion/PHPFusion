@@ -1363,6 +1363,7 @@ class QuantumFields extends QuantumFactory {
         echo "<span class='text-dark strong'>".$this->locale['fields_0407']."</span>".(!empty($user_field_desc) ? "<br/>".$user_field_desc : '')."<br/>";
         echo "</div>";
         echo "<hr/>";
+
         echo form_select_tree('field_cat',
             $this->locale['fields_0410'],
             empty( $this->field_data['field_cat'] ) ? in_array($user_field_group, array_keys($this->page_list) ) ? 0 : $user_field_group : $this->field_data['field_cat'],

@@ -56,13 +56,13 @@ class Polaris extends PolarisThemeFactory
     public function renderPage()
     {
         $theme_settings = get_theme_settings('Polaris');
-        
+
         $settings = fusion_get_settings();
 
         $locale = fusion_get_locale('', POLARIS_LOCALE);
 
         $this->setSiteLinksOptions(
-            show_header : '<a class="navbar-brand" href="' . BASEDIR . $settings['opening_page'] . '"><img src="' . IMAGES .'assets/phpfusion_logo_d.png' . '" alt="' . $settings['sitename'] . '" class="img-responsive"/></a>',
+            show_header : '<a class="navbar-brand" href="' . BASEDIR . $settings['opening_page'] . '"><img src="' . IMAGES .'phpfusion-logo-d.svg' . '" alt="' . $settings['sitename'] . '" class="img-responsive"/></a>',
             html_post_content: $this->searchbar().$this->uip()
         );
 
@@ -160,7 +160,7 @@ class Polaris extends PolarisThemeFactory
     }
 
     /**
-     * Opentable component     
+     * Opentable component
      * @param string $title Title of the table component
      * @param string $class Class name for the table component
      */

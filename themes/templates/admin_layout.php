@@ -15,8 +15,7 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-use PHPFusion\Minify;
-use PHPFusion\Minify\Minify as MinifyMinify;
+
 use PHPFusion\OutputHandler;
 
 $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/main.php");
@@ -72,7 +71,6 @@ if (is_array($core_css_files)) {
 }
 // Theme CSS loading
 echo fusion_load_script(THEMES."admin_themes/".$settings["admin_theme"]."/acp_styles.min.css", "css", TRUE);
-
 $theme_css_files = fusion_filter_hook("fusion_css_styles");
 if (is_array($theme_css_files)) {
     $theme_css_files = array_filter($theme_css_files);
@@ -128,43 +126,30 @@ if (!check_admin_pass('')) {
 }
 
 // Load Bootstrap javascript
-if ((defined('BOOTSTRAP') && BOOTSTRAP == true) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == true)) {
+if ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) || (defined('BOOTSTRAP4') && BOOTSTRAP4 == TRUE)) {
     if (defined('BOOTSTRAP4')) {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap.bundle.min.js"></script>';
-        echo '<script src="'.INCLUDES.'bootstrap/bootstrap4/js/bootstrap-submenu.min.js"></script>';
     } else {
         echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap.min.js"></script>';
-        echo '<script src="'.INCLUDES.'bootstrap/bootstrap3/js/bootstrap-submenu.min.js"></script>';
     }
 }
-
 echo "<script defer src='".INCLUDES."jquery/notify.min.js'></script>\n";
 // Output lines added with add_to_footer()
 echo OutputHandler::$pageFooterTags;
 
 // Output lines added with add_to_jquery()
-
-$jquery_tags = '';
-
-if (defined('BOOTSTRAP') && BOOTSTRAP == true) {
-    $jquery_tags .= "$('[data-submenu]').submenupicker();";
-    // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
-    $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
-}
-
 $fusion_jquery_tags = OutputHandler::$jqueryCode;
 
 if (!empty($fusion_jquery_tags)) {
-
-    $jquery_tags .= $fusion_jquery_tags;  
-
-    $js = $jquery_tags;
-
-    if ($settings['devmode'] == 0 || !defined('FUSION_DEVELOPMENT')) {        
-        $js = Minify::minify($jquery_tags);
-    } 
+    if ($settings['devmode'] == 0) {
+        $minifier = new PHPFusion\Minify\JS($fusion_jquery_tags);
+        $js = $minifier->minify();
+    } else {
+        $js = $fusion_jquery_tags;
+    }
 
     echo "<script>$(function(){".$js."});</script>\n";
 }
-echo "</body>";
+
+echo "</body>\n";
 echo "</html>";

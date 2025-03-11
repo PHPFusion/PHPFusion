@@ -33,7 +33,7 @@ $update = new PHPFusion\Update();
 
 echo '<div class="m-b-20">';
 echo sprintf($locale['U_002'], showdate('longdate', $settings['update_last_checked']));
-echo '<a href="#" id="forceupdate" class="m-l-10 btn btn-default">' . get_icon( 'fas fa-sync fa-spin', 'm-r-10', '', 'display:none;' ) . $locale['U_003'].'</a>';
+echo '<a href="#" id="forceupdate" class="m-l-10 btn btn-default">' . get_icon( 'fas fa-sync fa-spin', 'm-r-10', '', 'display:none;' ) . $locale['U_003'] . '</a>';
 
 if (!check_get('updatelocales') && is_array($update->getEnabledLanguages())) {
     echo '<a class="btn btn-primary m-l-10" href="#" id="updatelocales">' . get_icon( 'fas fa-sync fa-spin', 'm-r-10', '', 'display:none;' ) . $locale['U_016'] . '</a>';

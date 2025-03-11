@@ -298,23 +298,25 @@ class Dashboard {
 
         $locale = fusion_get_locale();
         $aidlink = fusion_get_aidlink();
-        $admin_title = str_replace('[SITENAME]', fusion_get_settings('sitename'), $locale['200']);
-        $admin_title = !empty($locale['200a']) ? $locale['200a'] : $admin_title;
+        $admin_title = str_replace('[SITENAME]', fusion_get_settings( 'sitename'), $locale['200'] );
+        $admin_title = !empty( $locale['200a'] ) ? $locale['200a'] : $admin_title;
 
         $html = fusion_get_function('opentable', $admin_title);
         $html .= '<div class="row">';
-        if (count($admin_icons['data']) > 0) {
-            foreach ($admin_icons['data'] as $data) {
-                $html .= '<div class="icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2">';
-                    $html .= '<a class="btn btn-app" href="'.$data['admin_link'].$aidlink.'">';
-                        $html .= '<img class="display-block" src="'.get_image('ac_'.$data['admin_rights']).'" alt="'.$data['admin_title'].'"/>';
-                        $html .= '<span>'.$data['admin_title'].'</span>';
-                    $html .= '</a>';
-                $html .= '</div>';
+        if ( count( $admin_icons['data'] ) > 0 ) {
+            foreach ( $admin_icons['data'] as $data ) {
+                if ( !empty( $data['admin_link'] ) || !empty( $data['admin_rights'] ) ) {
+                    $html .= "<div class='icon-wrapper col-xs-6 col-sm-2 col-md-2 col-lg-2'>
+                        <a class='btn btn-app' href='" . $data['admin_link'] . $aidlink . "'>
+                        <img class='display-block' src='" . get_image( 'ac_' . $data['admin_rights'] ) . "' title='" . $data['admin_title'] . "'/>
+                        <span>" . $data['admin_title'] . "</span>
+                        </a>
+                    </div>";
+                }
             }
         }
         $html .= '</div>';
-        $html .= fusion_get_function('closetable');
+        $html .= fusion_get_function( 'closetable' );
 
         return $html;
     }

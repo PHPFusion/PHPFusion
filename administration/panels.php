@@ -462,7 +462,7 @@ class PanelsAdministration {
                 $html .= "</a>\n";
                 $html .= "<ul class='dropdown-menu' aria-labelledby='dd".$data['panel_id']."'>\n";
                 $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-bullseye', 'm-r-10 m-t-5' ) . getgroupname( $data['panel_access'] ) . "</li>\n";
-                $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-file-o', 'm-r-10 m-t-5' ) . "<span class='badge'>" . $type . "</span></li>\n";
+                $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-file-o', 'm-r-10 m-t-5' ) . "<span class='badge'>".$type."</span></li>\n";
                 $html .= "<li style='padding:3px 20px;'>\n" . get_icon( 'fa fa-arrows-v', 'm-r-10' ) . $data['panel_order'] . "</li>\n";
                 $html .= "<li class='divider'></li>\n";
                 $html .= "<li class='dropdown-item'><a href='".FUSION_SELF.$aidlink."&section=panelform&action=edit&panel_id=".$data['panel_id']."'>" . get_icon( 'fa fa-pencil', 'm-r-10 m-t-5' ) . self::$locale['edit'] . "</a>\n</li>\n";

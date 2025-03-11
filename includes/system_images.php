@@ -50,10 +50,10 @@ function set_image($name, $path) {
  * @param        $icon
  * @param string $class
  * @param string $tooltip
+ * @param string $style
  *
  * @return string
  */
-
 function get_icon( $icon, string $class = "", $tooltip = "", $style = "" ) {
     return ImageRepo::getIcon( $icon, $class, $tooltip, $style );
 }
@@ -67,7 +67,6 @@ function get_icon( $icon, string $class = "", $tooltip = "", $style = "" ) {
 function set_icon($name, $value) {
     ImageRepo::setIcon($name, $value);
 }
-
 /**
  * Replace a part in each image path.
  *

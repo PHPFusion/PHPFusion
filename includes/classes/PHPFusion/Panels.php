@@ -31,6 +31,7 @@ class Panels {
     const PANEL_USER3 = 9;
     const PANEL_USER4 = 10;
     private static $panel_instance = NULL;
+    private $panelContent;
     private static $panel_name = [
         ['name' => 'LEFT', 'side' => 'left'],
         ['name' => 'U_CENTER', 'side' => 'upper'],
@@ -364,17 +365,41 @@ class Panels {
                 $html .= $content;
                 $html .= "</div>\n";
 
-                define($p_side['name'], (!empty($content) ? $html : ''));
+                //define($p_side['name'], (!empty($content) ? $html : ''));
+                $this->setPanelContent($p_side['name'], !empty($content) ? $html : '');
                 ob_end_clean();
 
             } else {
                 // This is in administration
-                define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
+                //define($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
+                $this->setPanelContent($p_side['name'], ($p_side['name'] === 'U_CENTER' ? $admin_mess : ''));
             }
         }
 
+        // Hardcode this for IDE recognition.
+        define('LEFT', $this->getPanelContent('LEFT'));
+        define('RIGHT', $this->getPanelContent('RIGHT'));
+        define('U_CENTER', $this->getPanelContent('U_CENTER'));
+        define('L_CENTER', $this->getPanelContent('L_CENTER'));
+        define('AU_CENTER', $this->getPanelContent('AU_CENTER'));
+        define('BL_CENTER', $this->getPanelContent('BL_CENTER'));
+        define('USER1', $this->getPanelContent('USER1'));
+        define('USER2', $this->getPanelContent('USER2'));
+        define('USER3', $this->getPanelContent('USER3'));
+        define('USER4', $this->getPanelContent('USER4'));
     }
 
+   // }
+
+    public function setPanelContent($name, $value)
+    {
+        $this->panelContent[$name] = $value;
+    }
+
+    public function getPanelContent($name)
+    {
+        return !empty($this->panelContent[$name]) ? $this->panelContent[$name] : '';
+    }
     /**
      * Check panel exclusions in certain page, which will be dropped sooner or later
      * Because we will need page composition database soon

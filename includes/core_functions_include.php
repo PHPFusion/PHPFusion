@@ -95,7 +95,10 @@ function theme_exists($theme) {
         $theme = fusion_get_settings('theme');
     }
 
-    return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and file_exists(THEMES.$theme."/theme.php") and (file_exists(THEMES.$theme."/styles.css") || file_exists(THEMES.$theme."/styles.min.css"));
+    return is_string($theme) and
+        preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and
+        file_exists(THEMES.$theme."/theme.php") and
+        file_exists(THEMES.$theme."/styles.css");
 }
 
 /**
@@ -106,17 +109,14 @@ function theme_exists($theme) {
 function set_theme($theme) {
 
     $locale = fusion_get_locale();
-    
     if (defined("THEME")) {
         return;
     }
-
     if (theme_exists($theme)) {
         define("THEME", THEMES.($theme == "Default" ? fusion_get_settings('theme') : $theme)."/");
 
         return;
     }
-
     foreach (new GlobIterator(THEMES.'*') as $dir) {
         if ($dir->isDir() and theme_exists($dir->getBasename())) {
             define("THEME", $dir->getPathname()."/");
@@ -193,7 +193,7 @@ function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
 }
 
 function no_redirect(){
-    define('STOP_REDIRECT', true);
+    define( 'STOP_REDIRECT', TRUE );
 }
 
 /**
@@ -343,7 +343,6 @@ function stripinput($text) {
 
     return $text;
 }
-
 
 /**
  * Prevent any possible XSS attacks via $_GET.
@@ -607,12 +606,7 @@ function random_string($length = 6, $letters_only = FALSE) {
  * @return bool True if the value is a number.
  */
 function isnum($value, $decimal = FALSE, $negative = FALSE) {
-    // Check if the input is a scalar value (string, int, float, etc.) or explicitly null
-    if (!is_scalar($value)) {
-        return FALSE; // Return false if the value is not suitable for validation
-    }
 
-    $value = (string)$value; // Cast value to string to prevent deprecation warnings
     if ($negative == TRUE) {
         return is_numeric($value);
     } else {
@@ -1833,10 +1827,10 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     add_to_jquery("
     $('#".$getname."_pg').on('keydown', function(e) {
         if (e.keyCode === 13) {
-            let v = $(this).val();                
-            if ($.isNumeric(v)) {                               
+            let v = $(this).val();
+            if ($.isNumeric(v)) {
                document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
-            }            
+            }
         }
     });
     ");
@@ -2560,57 +2554,71 @@ function is_json($string) {
  *
  * @param string $file_path The source file.
  * @param string $file_type Possible value: script, css.
- * @param bool $html        Return as html tags instead add to output handler.
+ * @param bool   $html      Return as html tags instead add to output handler.
+ * @param bool   $cached    False to invalidate browser's cache.
  *
  * @return string|null
  */
-function fusion_load_script($file_path, $file_type = 'script', $html = false)
-{
+function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE) {
     static $paths = [];
 
-    if ($file_path && empty($paths[$file_path])) {
+    $file_info = pathinfo($file_path);
 
-        $_fileinfo = pathinfo($file_path);
+    if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
 
-        $base_file = $_fileinfo['dirname'] . '/' . $_fileinfo['filename'] . '.' . $_fileinfo['extension'];
-        if (is_file($base_file)) {
-            $file_path = $base_file;
-            if (!defined('FUSION_DEVELOPMENT')) {
-                $file_path = $base_file . '?v=' . filemtime($base_file);
-            }
+        $mtime = 0;
+        $file = $file_info['dirname'].'/'.$file_info['basename'];
+        $min_file = $file_info['dirname'].'/'.$file_info['filename'].(!stristr($file_info['filename'], '.min') ? '.min.' : '.').$file_info['extension'];
+        // do not inspect this file
+        $return_file = $file;
+        // inspect only on min file
+        $siteurl = fusion_get_settings('siteurl') ?? $_SERVER['HTTP_HOST'];
+        $m_min_file = str_replace($siteurl, BASEDIR, $min_file);
+
+        if (is_file($m_min_file)) { // fixes https:// on local server
+            $return_file = $m_min_file;
+        } else if (is_file($min_file)) { // checks local server
+            $return_file = $min_file;
+        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN)) { // checks remote server
+            // this is very slow... over 10 seconds on some circumstance
+            // if (fusion_get_contents($min_file)) {
+            $return_file = $min_file;
+            // }
         }
 
-        $min_file = $_fileinfo['dirname'] . '/' . $_fileinfo['filename'] . (strpos($_fileinfo['filename'], '.min') ? '.' : '.min.') . $_fileinfo['extension'];
-        if (is_file($min_file)) {
-            $file_path = $min_file;
-            if (!defined('FUSION_DEVELOPMENT')) {
-                $file_path = $min_file . '?v=' . filemtime($min_file);
+        if (is_file($return_file)) {
+            $mtime = filemtime($return_file);
+        }
+
+        $file_path = $return_file."?v=".$mtime;
+        if (!$cached) {
+            $file_path = $return_file;
         }
     }
+
+    if ($file_path && empty($paths[$file_path])) {
 
         $paths[$file_path] = $file_path;
 
         if ($file_type == "script") {
 
-            $html_tag = "<script src='$file_path' defer></script>";
-            if ($html === true) {
+            $html_tag = "<script src='$file_path'></script>";
+            if ($html === TRUE) {
                 return $html_tag;
             }
             add_to_footer($html_tag);
 
-        } elseif ($file_type == "css") {
-            $html_tag = "<link rel='stylesheet' href='$file_path' type='text/css' media='all'>";
-            if ($html === true) {
+        } else if ($file_type == "css") {
+            $html_tag = "<link rel='stylesheet' href='$file_path' media='all'>";
+            if ($html === TRUE) {
                 return $html_tag;
             }
             add_to_head($html_tag);
         }
     }
 
-    return null;
+    return NULL;
 }
-
-
 
 /**
  * Get max server upload limit.

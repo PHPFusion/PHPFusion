@@ -78,7 +78,7 @@ abstract class PolarisThemeFactory
     }
 
     /**
-     * Primary column 
+     * Primary column
      * @return string
      */
     protected function getContentLayoutClass()
@@ -130,7 +130,7 @@ abstract class PolarisThemeFactory
      * @param boolean $show_header - show header or not
      * @return void
      */
-    public function setSiteLinksOptions($id = 'main-menu', $nav_class = 'nav navbar-nav primary', $container = NULL, 
+    public function setSiteLinksOptions($id = 'main-menu', $nav_class = 'nav navbar-nav primary', $container = NULL,
     $container_fluid = NULL, $show_header = NULL, $searchbar = NULL,
     $searchbar_dropdown = NULL, $html_pre_content = NULL, $html_content = NULL, $html_post_content = NULL
     )
@@ -146,7 +146,7 @@ abstract class PolarisThemeFactory
             'html_post_content' => '',
             'html_content' => '',
             'html_post_content' => '',
-            //'html_pre_content' => mg_user_menu()
+            'html_pre_content' => '' //polaris_uip()
         ];
 
         $this->siteLinksOptions = [
@@ -170,17 +170,17 @@ abstract class PolarisThemeFactory
             'separator'            => '', // $sep
             'links_per_page'       => '',
             'grouping'             => '',
-            'show_banner'          => FALSE,            
+            'show_banner'          => FALSE,
             'custom_header'        => '',
             'language_switcher'    => FALSE,
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
             'searchbar_btn_class'  => 'btn-primary',
             'caret_icon'           => defined('BOOTSTRAP4') ? '' : 'caret',
-            'link_position'        => [2, 3],                    
+            'link_position'        => [2, 3],
             */
         ];
-        
+
     }
 
     /**
@@ -199,7 +199,7 @@ abstract class PolarisThemeFactory
     /**
      * Get the site links options.
      * @return array|string
-     */    
+     */
     public function getSiteLinksOptions($key = NULL)
     {
         if ($key !== NULL) {

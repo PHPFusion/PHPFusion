@@ -61,6 +61,7 @@ if (check_post('savesettings')) {
         'bad_words_enabled'   => post('bad_words_enabled') ? 1 : 0,
         'bad_words'           => stripinput(post('bad_words')),
         'bad_word_replace'    => sanitizer('bad_word_replace', '', 'bad_word_replace'),
+        'blaclist_site'       => sanitizer( 'blaclist_site', '', 'blaclist_site' ),
         'database_sessions'   => sanitizer('database_sessions', 0, 'database_sessions'),
         'form_tokens'         => sanitizer('form_tokens', '', 'form_tokens'),
         'mime_check'          => post('mime_check') ? 1 : 0,
@@ -181,7 +182,7 @@ if (!$settings['recaptcha_public']) {
         'end'   => "</a>\n",
     ];
     $locale['no_keys'] = str_replace($link, $link_replacements, $locale['no_keys']);
-    echo "<div class='alert alert-warning m-t-10'>" . get_icon( 'fa fa-google', 'fa-lg fa-fw m-l-10' ) . $locale['no_keys']."</div>\n";
+    echo "<div class='alert alert-warning m-t-10'>" . get_icon( 'fa fa-google', 'fa-lg fa-fw m-l-10' ) . $locale['no_keys'] . "</div>\n";
 }
 echo form_text('recaptcha_public', $locale['grecaptcha_0100'], $settings['recaptcha_public'], [
     'placeholder' => $locale['grecaptcha_placeholder_1'],
@@ -245,6 +246,11 @@ echo form_checkbox('mime_check', $locale['admins_699f'], $settings['mime_check']
 closeside();
 
 openside('');
+echo form_text('blaclist_site', $locale['admins_security_019'], $settings['blaclist_site'], [
+    'type'        => 'url',
+    'regex'       => 'http(s)?\:\/\/(.*?)',
+    'placeholder' => $locale['admins_security_020']
+]);
 echo form_text('flood_interval', $locale['admins_660'], $settings['flood_interval'], [
     'type'        => 'number',
     'inner_width' => '150px',

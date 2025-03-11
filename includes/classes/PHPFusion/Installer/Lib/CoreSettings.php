@@ -520,6 +520,10 @@ class CoreSettings {
                     'settings_value' => 'database'
                 ],
                 [
+                    'settings_name'  => 'blaclist_site',
+                    'settings_value' => 'http://www.google.com/'
+                ],
+                [
                     'settings_name'  => 'license',
                     'settings_value' => 'agpl'
                 ],

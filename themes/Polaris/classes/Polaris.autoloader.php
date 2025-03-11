@@ -55,25 +55,25 @@ if (strpos($current_url, '/')) {
 
     // Load the correct file if it exists
     if (file_exists($exact_file_path)) {
-        
+
         include $exact_file_path;
 
     } elseif (isset($index_file_path) && file_exists($index_file_path)) {
-        
+
         include $index_file_path;
 
     } else {
-        
+
         if ($polaris_template_debug && !defined('ADMIN_PANEL')) {
             addnotice('danger', 'Polaris: Template file not found.');
         }
-               
+
     }
 
 } else {
-    
+
     $default_file = $_main_templates_dir . FUSION_SELF;
-    
+
     if (file_exists($default_file)) {
 
         include $default_file;
@@ -83,6 +83,6 @@ if (strpos($current_url, '/')) {
         if ($polaris_template_debug && !defined('ADMIN_PANEL')) {
             addnotice('danger', 'Polaris Template file not found.');
         }
-               
+
     }
 }

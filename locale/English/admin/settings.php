@@ -294,5 +294,7 @@ $locale['admins_security_015'] = "Error logging";
 $locale['admins_security_016'] = "Error logging method";
 $locale['admins_security_017'] = "File";
 $locale['admins_security_018'] = "Database";
+$locale['admins_security_019'] = "Prohibited IP address redirection";
+$locale['admins_security_020'] = "Full link http://xxx.xx";
 
 include_once __DIR__.'/../../../includes/dateformats.php';

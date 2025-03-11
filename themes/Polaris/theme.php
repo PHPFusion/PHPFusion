@@ -23,7 +23,6 @@ require_once __DIR__ . '/classes/Polaris.autoloader.php';
 require_once __DIR__ . '/classes/PolarisThemeFactory.class.php';
 require_once __DIR__ . '/classes/Polaris.class.php';
 
-fusion_load_script(THEME.'polaris.js');
 
 
 /**
@@ -131,6 +130,7 @@ function render_page()
 }*/
 
 if (!defined('ADMIN_PANEL')) {
+fusion_load_script(THEME.'polaris.js');
     function opentable($title = FALSE, $class = '')
     {
         Polaris::getInstance()->opentable($title, $class);

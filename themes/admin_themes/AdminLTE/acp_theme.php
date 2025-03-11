@@ -38,7 +38,7 @@ if (!check_admin_pass('')) {
     define('THEME_BODY', '<body class="hold-transition skin-blue sidebar-mini">');
 }
 
-fusion_load_script(INCLUDES . "jquery/jquery.fusion-objects.js");
+fusion_load_script( INCLUDES . "jquery/jquery.fusion-objects.js" );
 
 function render_admin_panel() {
     new AdminLTE\AdminPanel();
@@ -119,17 +119,17 @@ function closecanvas($id)
 
 /**
  * Open swapbox
- * 
+ *
  * Usage:
  * ----
  * $id = 'swapbox';
- * <h4><a href="#" data-pf-toggle="swap" data-toggle-id="$id"><i class="fa fa-plus"></i> Swap</a></h4>                                    
+ * <h4><a href="#" data-pf-toggle="swap" data-toggle-id="$id"><i class="fa fa-plus"></i> Swap</a></h4>
  *  openswap(id: $id);
  *  echo 'Swap content is shown here';
  *  closeswap(id: $id);
  *
- * @param [type] $id - The unique identifier for the swap box 
- * @param [type] $title - The title link of the swap box 
+ * @param [type] $id - The unique identifier for the swap box
+ * @param [type] $title - The title link of the swap box
  * @return void
  */
 function openswap($id, $title) {
@@ -139,7 +139,7 @@ function openswap($id, $title) {
 }
 /**
  * Close swapbox
- * @param [type] $id - The unique identifier for the swap box 
+ * @param [type] $id - The unique identifier for the swap box
  * @return void
  */
 function closeswap($id)
