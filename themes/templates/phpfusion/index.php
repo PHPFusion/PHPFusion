@@ -26,7 +26,7 @@ function display_home($info)
 {
 
     $version = '9.10.30';
-
+    fusion_load_script(TEMPLATES . 'phpfusion/assets/styles/index.css', 'css');
     // Disable all panels on this template. 
     PHPFusion\Panels::getInstance()->hideAll();
     // Add methods to disable the home calculations.
@@ -45,13 +45,14 @@ function display_home($info)
                     'append_value' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M3.626 3.533a.249.249 0 0 0-.126.217v9.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-9.5a.249.249 0 0 0-.126-.217.75.75 0 0 1 .752-1.298c.541.313.874.89.874 1.515v9.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-9.5c0-.625.333-1.202.874-1.515a.75.75 0 0 1 .752 1.298ZM5.75 1h4.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 5 4.75v-3A.75.75 0 0 1 5.75 1Zm.75 3h3V2.5h-3Z"></path></svg>',
 
                 ]) ?>
-                <a class="btn btn-primary" href="<?php echo INFUSIONS ?>helpcenter/">Read the docs</a>
+                <a class="btn btn-default" href="<?php echo INFUSIONS ?>helpcenter/">Read the docs</a>
             </div>
             <div>
                 Currently <strong>v<?php echo $version ?></strong> &middot; <a href="">Download</a> &middot; <a href="">All releases</a>
             </div>
         </div>
     </div>
+
     <div class="download spacer-lg">
         <div class="container">
             <div class="row">
@@ -63,11 +64,12 @@ function display_home($info)
                     <div class="m-b-10">Get PHPFusion directly from GitHub—access the latest version and updates straight from the source.</div>
                     <div>Install PHPFusion via GitHub and stay up to date with the latest features and improvements. Follow our step-by-step guide to download, set up, and start building your website with ease.</div>
                     <div class="spacer-sm">
-                    <div class="well">git clone https://github.com/php-fusion/PHPFusion.git</div>
-                    <div class="well">cd PHPFusion</div>
-                </div>
-
-                    <a href="">Read our installation docs</a> for more info on how to install PHPFusion via GitHub.
+                        <div class="well">git clone https://github.com/php-fusion/PHPFusion.git</div>
+                        <div class="well">cd PHPFusion</div>
+                        <div>
+                            <a href="">Read our installation docs</a> for more info on how to install PHPFusion via GitHub.</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -76,10 +78,63 @@ function display_home($info)
                     </svg>
                     <h4>Direct download</h4>
                     <div>Download PHPFusion directly and start building your website in no time. No complex setup—just grab the latest version and install it with ease. Get started today and explore the powerful features of PHPFusion!</div>
+                    <div class="spacer-sm">
+                        <h5><a class="go-item-link" href="#">Go to download page<?php echo ARROW ?></a></h5>
+                    </div>
+                </div>
+            </div>
+        </div><!--container-->
+    </div>
+    <div class="blockwall">
+        <div class="container">
+            <div class="postercard primary">
+                <div class="description">
+                    <div class="label label-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path d="M5 5.782V2.5h-.25a.75.75 0 0 1 0-1.5h6.5a.75.75 0 0 1 0 1.5H11v3.282l3.666 5.76C15.619 13.04 14.543 15 12.767 15H3.233c-1.776 0-2.852-1.96-1.899-3.458Zm-2.4 6.565a.75.75 0 0 0 .633 1.153h9.534a.75.75 0 0 0 .633-1.153L12.225 10.5h-8.45ZM9.5 2.5h-3V6c0 .143-.04.283-.117.403L4.73 9h6.54L9.617 6.403A.746.746 0 0 1 9.5 6Z"></path>
+                        </svg>
+                        Features
+                    </div>
+                    <h2 class="serif">Discover the Latest PHPFusion CMS</h3>
+                        <div class="spacer-md">PHPFusion offers a wide range of features to help you build a powerful website. From user management to content creation, PHPFusion has everything you need to create a seamless web experience.</div>
+                        <div>
+                            <a href="#" class="display-inline-block btn btn-default">
+                                <div class="go-item-link">Explore features<?php echo ARROW ?></div>
+                            </a>
+                        </div>
+                </div>
+                <div class="image">
+                    <div class="cover"><img src="<?php echo IMAGES ?>assets/bg1.jpg"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="blockwall">
+        <div class="container">
+            <div class="postercard info">
+                <div class="description">
+                    <div class="label label-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path d="M4 8H2.5a1 1 0 0 0-1 1v5.25a.75.75 0 0 1-1.5 0V9a2.5 2.5 0 0 1 2.5-2.5H4V5.133a1.75 1.75 0 0 1 1.533-1.737l2.831-.353.76-.913c.332-.4.825-.63 1.344-.63h.782c.966 0 1.75.784 1.75 1.75V4h2.25a.75.75 0 0 1 0 1.5H13v4h2.25a.75.75 0 0 1 0 1.5H13v.75a1.75 1.75 0 0 1-1.75 1.75h-.782c-.519 0-1.012-.23-1.344-.63l-.761-.912-2.83-.354A1.75 1.75 0 0 1 4 9.867Zm6.276-4.91-.95 1.14a.753.753 0 0 1-.483.265l-3.124.39a.25.25 0 0 0-.219.248v4.734c0 .126.094.233.219.249l3.124.39a.752.752 0 0 1 .483.264l.95 1.14a.25.25 0 0 0 .192.09h.782a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25h-.782a.25.25 0 0 0-.192.09Z"></path>
+                        </svg>
+                        Expansion
+                    </div>
+                    <h2 class="serif m-b-20">Expand your website easily</h2>
+                    <div class="spacer-md">PHPFusion Infusions are apps designed to help you build a powerful website with ease. Choose from a wide range of apps to enhance your website and provide your users with a seamless experience.</div>
+                    <div>
+                        <a href="#" class="display-inline-block btn btn-default">
+                            <div class="go-item-link">Find apps<?php echo ARROW ?></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="image">
+                    <div class="cover"><img src="<?php echo IMAGES ?>assets/bg2.jpg"></div>
                 </div>
             </div>
         </div>
     </div>
+
 
 <?php
 

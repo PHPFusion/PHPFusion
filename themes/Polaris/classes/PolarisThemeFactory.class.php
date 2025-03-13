@@ -16,13 +16,13 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-fusion_load_script( INCLUDES . "fonts/PHPFusion/font.min.css?v2", "css" );
+fusion_load_script(INCLUDES . "fonts/PHPFusion/font.min.css?v2", "css");
 
-if ( !defined( 'POLARIS_LOCALE' ) ) {
-    if (file_exists( THEMES . 'Polaris/locale/' . LANGUAGE . '.php' ) ) {
-        define( 'POLARIS_LOCALE', THEMES . 'Polaris/locale/' . LANGUAGE . '.php' );
+if (!defined('POLARIS_LOCALE')) {
+    if (file_exists(THEMES . 'Polaris/locale/' . LANGUAGE . '.php')) {
+        define('POLARIS_LOCALE', THEMES . 'Polaris/locale/' . LANGUAGE . '.php');
     } else {
-        define( 'POLARIS_LOCALE', THEMES . 'Polaris/locale/English.php' );
+        define('POLARIS_LOCALE', THEMES . 'Polaris/locale/English.php');
     }
 }
 
@@ -33,6 +33,7 @@ if (!defined('BOOTSTRAP')) {
 if (!defined('FONTAWESOME')) {
     define('FONTAWESOME', true);
 }
+const ARROW = '<span><svg viewBox="0 0 24 24" fill="none" class="dig-UIIcon dig-UIIcon--standard" width="24" height="24" role="presentation" focusable="false"><path d="M5 11.75h12m-5.25-6.5 6.25 6.5-6.25 6.5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" vector-effect="non-scaling-stroke"></path></svg></span>';
 
 /**
  * PolarisThemeFactory class
@@ -48,8 +49,11 @@ abstract class PolarisThemeFactory
     protected $theme_settings;
 
     protected $siteLinksOptions = [];
+
     protected $content;
+
     protected $left;
+
     protected $right;
 
     // Prohibits cloning of this class
@@ -64,7 +68,7 @@ abstract class PolarisThemeFactory
         $this->left    = ['sm' => 3,  'md' => 2,  'lg' => 2];
         $this->right   = ['sm' => 3,  'md' => 2,  'lg' => 2];
 
-       if (is_constant_set('LEFT')) {
+        if (is_constant_set('LEFT')) {
             $this->content['sm'] = $this->content['sm'] - $this->left['sm'];
             $this->content['md'] = $this->content['md'] - $this->left['md'];
             $this->content['lg'] = $this->content['lg'] - $this->left['lg'];
@@ -117,7 +121,8 @@ abstract class PolarisThemeFactory
     /**
      * Menu fluid class
      */
-    public function setMenuFluid($value) {
+    public function setMenuFluid($value)
+    {
         $this->is_menu_fluid = $value;
     }
 
@@ -130,11 +135,18 @@ abstract class PolarisThemeFactory
      * @param boolean $show_header - show header or not
      * @return void
      */
-    public function setSiteLinksOptions($id = 'main-menu', $nav_class = 'nav navbar-nav primary', $container = NULL,
-    $container_fluid = NULL, $show_header = NULL, $searchbar = NULL,
-    $searchbar_dropdown = NULL, $html_pre_content = NULL, $html_content = NULL, $html_post_content = NULL
-    )
-    {
+    public function setSiteLinksOptions(
+        $id = 'main-menu',
+        $nav_class = 'nav navbar-nav primary',
+        $container = NULL,
+        $container_fluid = NULL,
+        $show_header = NULL,
+        $searchbar = NULL,
+        $searchbar_dropdown = NULL,
+        $html_pre_content = NULL,
+        $html_content = NULL,
+        $html_post_content = NULL
+    ) {
         $settings = fusion_get_settings();
 
         $default_options = [
@@ -159,7 +171,7 @@ abstract class PolarisThemeFactory
             'searchbar'            => $searchbar != NULL ? $searchbar : $default_options['searchbar'],
             'searchbar_dropdown' => $searchbar_dropdown != NULL ? $searchbar_dropdown : $default_options['searchbar_dropdown'],
             'html_post_content' => $html_post_content != NULL ? $html_post_content : $default_options['html_post_content'],
-            'html_content' => $html_content != NULL ? $html_content: $default_options['html_content'],
+            'html_content' => $html_content != NULL ? $html_content : $default_options['html_content'],
             'html_pre_content' => $html_pre_content != NULL ? $html_pre_content : $default_options['html_pre_content']
 
             /*
@@ -180,7 +192,6 @@ abstract class PolarisThemeFactory
             'link_position'        => [2, 3],
             */
         ];
-
     }
 
     /**

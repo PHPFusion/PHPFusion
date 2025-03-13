@@ -51,6 +51,8 @@ class Polaris extends PolarisThemeFactory
         <li>this is the dropdown menu</li>
         </ul></li></ul>';
     }
+    
+
     /**
      * Display theme
      * @return void
