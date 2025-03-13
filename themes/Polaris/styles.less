@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 /**
 Variables
 */
-@global-font: "Roboto", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+@global-font: "Mona Sans", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 @global-font-size: 14px;
 @global-line-height: 1.42857143;
 
 @navbar-brand-height: 26px;
-@navbar-margin-top:-13px;
+@navbar-margin-top: -13px;
 @navbar-font-color: rgba(0, 0, 0, .55);
 @navbar-font-active-color: rgba(0, 0, 0);
 @navbar-font-transition: color .2s cubic-bezier(0.4, 0.8, .75, 1);
@@ -18,7 +17,7 @@ body {
     font-family: @global-font;
     font-size: @global-font-size;
     line-height: @global-line-height;
-    color: #555555;
+    color: rgb(0, 0, 0);
     background-color: #f5f5f5;
 }
 
@@ -45,6 +44,10 @@ hr {
     border-top: 1px solid #eeeeee;
 }
 
+.serif {
+    font-family: "Source Serif 4", Georgia, serif;
+}
+
 h1,
 h2,
 h3,
@@ -57,10 +60,9 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: inherit;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1.1;
-    color: #333333;
+    color: #000;
 }
 
 h1 small,
@@ -90,6 +92,11 @@ h6 .small,
     font-weight: normal;
     line-height: 1;
     color: #999999;
+}
+
+h1 {
+    font-size: 62px;
+
 }
 
 .text-muted {
@@ -3471,7 +3478,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     .navbar-brand {
         img {
             margin-top: @navbar-margin-top;
-            height: @navbar-brand-height;            
+            height: @navbar-brand-height;
         }
     }
 
@@ -5626,4 +5633,93 @@ a.list-group-item-danger.active:focus {
 
 .container-fluid .polaris-col-m {
     padding: 0;
+}
+
+.site-footer-upper {
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 44px 0;
+    row-gap: 20px;
+
+    .site-footer-links {
+        a {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgb(0, 0, 0);
+        }
+    }
+}
+
+.site-footer-logo {
+    margin-left: 20px;
+    height: 28px;
+
+    img {
+        size: cover;
+        height: 28px;
+    }
+}
+
+.site-footer-links {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-column-gap: 16px;
+    -moz-column-gap: 16px;
+    column-gap: 16px;
+    line-height: 20px;
+    list-style: none;
+    row-gap: 12px;
+}
+
+.site-footer-social {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 16px;
+
+    a {
+        width: 18px;
+        height: 18px;
+        color: #0d0c22;
+    }
+}
+
+.site-footer-lower {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 32px 0;
+    color: #6e6d7a;
+    font-size: 14px;
+    line-height: 20px;
+    row-gap: 8px;
+}
+
+@media (min-width:920px) {
+    .site-footer-upper {
+        flex-direction: row;
+        padding: 72px 0 44px;
+        row-gap: 0;
+    }
+}
+
+@media (min-width:768px) {
+    .site-footer-lower {
+        -ms-flex-direction: row;
+        flex-direction: row;
+        padding: 44px 0;
+        row-gap: 0;
+    }
 }

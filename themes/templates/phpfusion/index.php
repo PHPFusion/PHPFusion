@@ -24,117 +24,62 @@
  */
 function display_home($info)
 {
-    fusion_load_script(TEMPLATES . 'phpfusion/assets/styles/index.css', 'css');
-    fusion_load_script(TEMPLATES . 'phpfusion/assets/scripts/index.js');
+
+    $version = '9.10.30';
 
     // Disable all panels on this template. 
     PHPFusion\Panels::getInstance()->hideAll();
     // Add methods to disable the home calculations.
-
 ?>
-    <div class="home-wrapper">
-        <div class="w-100 position-relative">
-            <div class="position-sticky w100 overflow-hidden content-height">
-                <?php
-                // Display the homepage content here.
-                ?>
+    <div class="banner spacer-lg">
+        <div class="display-flex flex-column align-items-center justify-content-center text-center">
+            <h1 class="serif" style="max-width:690px;">Infuse your web presence</h1>
+            <h4 style="max-width:690px;font-weight:400;line-height:1.5;">PHPFusion is an award winning content management system (CMS), which enables you to build websites, as well as web applications.</h4>
+
+            <div class="display-flex flex-row align-items-center justify-content-center spacer-sm">
+                <?php echo form_text('giturl', '', 'https://github.com/PHPFusion/PHPFusion.git', [
+                    'deactivate' => TRUE,
+                    'class' => 'm-0 m-r-15',
+                    'inner_width' => '300px',
+                    'append' => TRUE,
+                    'append_value' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path d="M3.626 3.533a.249.249 0 0 0-.126.217v9.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-9.5a.249.249 0 0 0-.126-.217.75.75 0 0 1 .752-1.298c.541.313.874.89.874 1.515v9.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-9.5c0-.625.333-1.202.874-1.515a.75.75 0 0 1 .752 1.298ZM5.75 1h4.5a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75h-4.5A.75.75 0 0 1 5 4.75v-3A.75.75 0 0 1 5.75 1Zm.75 3h3V2.5h-3Z"></path></svg>',
+
+                ]) ?>
+                <a class="btn btn-primary" href="<?php echo INFUSIONS ?>helpcenter/">Read the docs</a>
+            </div>
+            <div>
+                Currently <strong>v<?php echo $version ?></strong> &middot; <a href="">Download</a> &middot; <a href="">All releases</a>
             </div>
         </div>
     </div>
-    <!--background-->
-    <div class="bg-img overflow-hidden">
-        <div class="bg-img">
-            <img class="bg-img" src="<?php echo IMAGES ?>assets/bg.png" style="transform:scaleX(1.1);">
-        </div>
-    </div>
-    <!--whitebg-->
-    <div class="bg-img overflow-hidden">
-        <div class="opacity-0 absolute w100 h100 -left-10 -top-10 bg-layer" bg-layer="" style="clip-path: inset(50.46% 42.55% round 40px); transition: background 0.3s; background: rgb(245, 245, 245);"></div>
-    </div>
-    <!--clip-bg-->
-    <div class="position-absolute absolute-center overflow-hidden">
-
-
-        <!-- Laptop bg -->
-        <div class="position-absolute absolute-center overflow-hidden w-screen" laptop-bg-position style="width: 1155px;">
-            <!-- Laptop background clip path -->
-            <div class="bg-img overflow-hidden" inner-bg-wrapper style="clip-path: inset(41.65% 29.85% round 0px);height:100%; width:100%;">
-                <div class="bg-img">
-                    <img class="bg-img opacity-0 loaded" src="<?php echo IMAGES ?>assets/bg.png" laptop-bg style="transform: scale(1); opacity: 1;">
-                </div>
-            </div>
-        </div>
-
-        <!-- Devices -->
-        <div class="position-absolute absolute-center overflow-hidden w-screen" style="width: 100vw; height:1862px;">
-
-            <!-- cms logo -->
-            <div class="bg-img opacity-0" cms-text style="width:100vw; height:2000px;">
-                <img class="bg-img cms-logo loaded" src="<?php echo IMAGES ?>assets/cmslogo.png">
-                <div class="bg-img cms-text">Discover the power of PHPFusion, a lightweight yet
-                    powerful CMS designed for simplicity and flexibility.
-                    From dynamic content management to built-in security,
-                    PHPFusion has everything you need to create and
-                    manage your website with ease. Whether you're a beginner or an experienced developer,
-                    PHPFusion is the perfect choice for your next project.
-                </div>
-            </div>
-
-
-            <div class="position-absolute absolute-center overflow-hidden w-screen content-height" style="width:calc(var(--vw, 1vw)* 50.3);height: calc(var(--vw, 1vw)* 30.889);">
-                <!-- Logo -->
-                <div class="bg-img" laptop-transform>
-                    <div class="bg-img" laptop-scale>
-                        <!-- Laptop     -->
-                        <div class="bg-img opacity-0" laptop-opacity>
-                            <img class="bg-img loaded" src="<?php echo IMAGES ?>assets/laptop.png" data-ll-status="loaded">
-                        </div>
-                        <!-- Logo -->
-                        <div class="relative w100 h100" init-enter-os="" style="opacity: 1; transform: translateY(0px);">
-                            <img class="logo-v9 absolute absolute-center" src="<?php echo IMAGES ?>assets/9logo.png">
-                        </div>
-                        <!--Fusion LTE background-->
-                        <div class="relative w100 h100" lte-bg style="opacity:0; transform:scale(0), translateY(0px);">
-                            <img class="admin-v9 position-absolute absolute-center" src="<?php echo IMAGES ?>assets/phpfusion_admin_LTE.png">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-    <div class="home-wrapper mt-spacer">
+    <div class="download spacer-lg">
         <div class="container">
             <div class="row">
-                <div class="col-xs-12">
-                    <div class="hero">
-                        <h3 class="text-success bold">Infusions</h3>
-                        <h2 class="text-dark bold">Expandability with modular applications</h4>
-                            <p style="font-size:1.8rem;color:#202020;">Enhance your PHPFusion experience with modular applications—easily installable extensions that expand system functionality to meet your needs.</p>
-                    </div>
+                <div class="col-xs-12 col-md-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12.876.64V.639l8.25 4.763c.541.313.875.89.875 1.515v9.525a1.75 1.75 0 0 1-.875 1.516l-8.25 4.762a1.748 1.748 0 0 1-1.75 0l-8.25-4.763a1.75 1.75 0 0 1-.875-1.515V6.917c0-.625.334-1.202.875-1.515L11.126.64a1.748 1.748 0 0 1 1.75 0Zm-1 1.298L4.251 6.34l7.75 4.474 7.75-4.474-7.625-4.402a.248.248 0 0 0-.25 0Zm.875 19.123 7.625-4.402a.25.25 0 0 0 .125-.216V7.639l-7.75 4.474ZM3.501 7.64v8.803c0 .09.048.172.125.216l7.625 4.402v-8.947Z"></path>
+                    </svg>
+                    <h4>Install via Github</h4>
+                    <div class="m-b-10">Get PHPFusion directly from GitHub—access the latest version and updates straight from the source.</div>
+                    <div>Install PHPFusion via GitHub and stay up to date with the latest features and improvements. Follow our step-by-step guide to download, set up, and start building your website with ease.</div>
+                    <div class="spacer-sm">
+                    <div class="well">git clone https://github.com/php-fusion/PHPFusion.git</div>
+                    <div class="well">cd PHPFusion</div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <div class="well">
-                        <h3 class="text-success bold">Themes</h3>
-                        <h2 class="text-dark bold">Customizable with themes and templates</h4>
-                            <p style="font-size:1.8rem;color:#202020;">Personalize your site with PHPFusion’s flexible themes and templates—effortless customization to match your style.</p>
 
-                    </div>
+                    <a href="">Read our installation docs</a> for more info on how to install PHPFusion via GitHub.
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-6">
-                    <div class="well">Lightweight</div>
-                    <h2 class="text-dark bold">Fast performant</h4>
-                        <p style="font-size:1.8rem;color:#202020;">Enhance your PHPFusion experience with modular applications—easily installable extensions that expand system functionality to meet your needs.</p>
+                <div class="col-xs-12 col-md-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.25 9.331V.75a.75.75 0 0 1 1.5 0v8.58l1.949-2.11A.75.75 0 1 1 15.8 8.237l-3.25 3.52a.75.75 0 0 1-1.102 0l-3.25-3.52A.75.75 0 1 1 9.3 7.22l1.949 2.111Z"></path>
+                        <path d="M2.5 3.75v11.5c0 .138.112.25.25.25h18.5a.25.25 0 0 0 .25-.25V3.75a.25.25 0 0 0-.25-.25h-5.5a.75.75 0 0 1 0-1.5h5.5c.966 0 1.75.784 1.75 1.75v11.5A1.75 1.75 0 0 1 21.25 17h-6.204c.171 1.375.805 2.652 1.769 3.757A.752.752 0 0 1 16.25 22h-8.5a.75.75 0 0 1-.566-1.243c.965-1.105 1.599-2.382 1.77-3.757H2.75A1.75 1.75 0 0 1 1 15.25V3.75C1 2.784 1.784 2 2.75 2h5.5a.75.75 0 0 1 0 1.5h-5.5a.25.25 0 0 0-.25.25ZM10.463 17c-.126 1.266-.564 2.445-1.223 3.5h5.52c-.66-1.055-1.098-2.234-1.223-3.5Z"></path>
+                    </svg>
+                    <h4>Direct download</h4>
+                    <div>Download PHPFusion directly and start building your website in no time. No complex setup—just grab the latest version and install it with ease. Get started today and explore the powerful features of PHPFusion!</div>
                 </div>
             </div>
         </div>
-
     </div>
-
 
 <?php
 

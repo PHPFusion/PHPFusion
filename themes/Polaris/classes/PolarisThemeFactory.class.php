@@ -64,13 +64,13 @@ abstract class PolarisThemeFactory
         $this->left    = ['sm' => 3,  'md' => 2,  'lg' => 2];
         $this->right   = ['sm' => 3,  'md' => 2,  'lg' => 2];
 
-        if (defined('LEFT') && LEFT) {
+       if (is_constant_set('LEFT')) {
             $this->content['sm'] = $this->content['sm'] - $this->left['sm'];
             $this->content['md'] = $this->content['md'] - $this->left['md'];
             $this->content['lg'] = $this->content['lg'] - $this->left['lg'];
         }
 
-        if (defined('RIGHT') && RIGHT) {
+        if (is_constant_set('RIGHT')) {
             $this->content['sm'] = $this->content['sm'] - $this->right['sm'];
             $this->content['md'] = $this->content['md'] - $this->right['md'];
             $this->content['lg'] = $this->content['lg'] - $this->right['lg'];

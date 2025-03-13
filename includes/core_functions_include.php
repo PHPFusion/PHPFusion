@@ -2549,6 +2549,26 @@ function is_json($string) {
 }
 
 /**
+ * Checks if a given constant is defined and has a non-empty, non-falsy value.
+ * @param string $name The name of the constant to check.
+ * @return bool Returns true if the constant is defined and has a value, otherwise false.
+ */
+function is_constant_set($name)
+{
+    return defined($name) && constant($name);
+}
+
+/**
+ * Checks if a constant is defined, has a value, and is not empty.
+ *
+ * @param string $name The name of the constant to check.
+ * @return bool Returns true if the constant is defined, has a value, and is not empty; otherwise, false.
+ */
+function is_constant_filled($name) {
+    return defined($name) && constant($name) && !empty($name);
+}
+
+/**
  * Cached script loader.
  * This function will cache the path that has been added and avoid duplicates.
  *
@@ -2559,7 +2579,7 @@ function is_json($string) {
  *
  * @return string|null
  */
-function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE) {
+function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE, $remote = FALSE) {
     static $paths = [];
 
     $file_info = pathinfo($file_path);
@@ -2579,7 +2599,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
             $return_file = $m_min_file;
         } else if (is_file($min_file)) { // checks local server
             $return_file = $min_file;
-        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN)) { // checks remote server
+        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN) && $remote === TRUE) { 
             // this is very slow... over 10 seconds on some circumstance
             // if (fusion_get_contents($min_file)) {
             $return_file = $min_file;
