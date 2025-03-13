@@ -28,7 +28,8 @@ class UserGroups {
     private $info = [
         'total_rows'    => 0,
         'rows'          => 0,
-        'group_members' => []
+        'group_members' => [],
+        'group_pagenav' => ''
     ];
 
     /**
@@ -37,7 +38,7 @@ class UserGroups {
      * @return null|static
      */
     public static function getInstance() {
-        if (self::$instance === NULL) {
+        if ( self::$instance === NULL ) {
             self::$instance = new static();
         }
         return self::$instance;
@@ -50,34 +51,32 @@ class UserGroups {
      *
      * @return array
      */
-    protected function setGroupInfo($group_id) {
+    protected function setGroupInfo( $group_id ) {
 
-        $_GET['rowstart'] = (!isset($_GET['rowstart']) || !isnum($_GET['rowstart'])) ? 0 : $_GET['rowstart'];
+        $result = dbquery( "SELECT * FROM " . DB_USER_GROUPS . " WHERE group_id = :groupid", [':groupid' => (int)$group_id] );
 
-        $result = dbquery("SELECT * FROM ".DB_USER_GROUPS." WHERE group_id='".intval($group_id)."'");
-
-        if (dbrows($result) > 0) {
+        if ( dbrows( $result ) ) {
             $members = [];
             $members_per_page = 20;
-            $data = dbarray($result);
+            $data = dbarray( $result );
 
-            set_title($data['group_name']);
+            set_title( $data['group_name'] );
 
-            $rows = dbcount("(user_id)", DB_USERS,
-                (iADMIN ? "user_status>='0'" : "user_status='0'")." AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')");
+            $rows = dbcount( "(user_id)", DB_USERS,
+                ( iADMIN ? "user_status>='0'" : "user_status='0'") . " AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')"
+            );
 
-            $_GET['rowstart'] = (isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $rows ? $_GET['rowstart'] : 0);
+            $rowstart = get_rowstart( "rowstart", $rows );
 
-            $members_query = "
-              SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
-              FROM ".DB_USERS." WHERE ".(iADMIN ? "user_status>='0'" : "user_status='0'")."
-              AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
-              ORDER BY user_level DESC, user_name ASC LIMIT ".intval($_GET['rowstart']).", $members_per_page
-             ";
+            $members_result = dbquery( "SELECT user_id, user_name, user_level, user_status, user_language, user_joined, user_avatar
+                FROM " . DB_USERS . " WHERE " . ( iADMIN ? "user_status >= '0'" : "user_status = '0'" ) . "
+                AND user_groups REGEXP('^\\\.$group_id$|\\\.$group_id\\\.|\\\.$group_id$')
+                ORDER BY user_level DESC, user_name ASC
+                LIMIT " . $rowstart . ", " . $members_per_page . "
+             ");
 
-            $members_result = dbquery($members_query);
-            if (dbrows($members_result) > 0) {
-                while ($mData = dbarray($members_result)) {
+            if ( dbrows( $members_result ) ) {
+                while ( $mData = dbarray( $members_result ) ) {
                     $members[$mData['user_id']] = $mData;
                 }
             }
@@ -86,10 +85,11 @@ class UserGroups {
                 'total_rows'    => $rows,
                 'rows'          => $members_per_page,
                 'group_members' => $members,
+                'group_pagenav' => makepagenav( $rowstart, $members_per_page, $rows, 3, FUSION_SELF . "?group_id=" . $group_id . "&" )
             ];
             $this->info += $data;
         } else {
-            redirect(BASEDIR.'index.php');
+            redirect( BASEDIR . 'index.php' );
         }
 
         return $this->info;
@@ -103,9 +103,9 @@ class UserGroups {
      *
      * @return null|UserGroups|static
      */
-    public function setGroup($group_id, $set_info = TRUE) {
-        $groupID = $group_id;
-        if ($groupID && isnum($groupID) && $set_info === TRUE) {
+    public function setGroup( $group_id, $set_info = TRUE ) {
+        //$groupID = $group_id;
+        if ( $group_id && isnum( $group_id ) && $set_info === TRUE ) {
             $this->info = $this->setGroupInfo($group_id);
         }
         return $this->getInstance();
@@ -115,7 +115,7 @@ class UserGroups {
      * Render the global or custom template
      */
     public function showGroup() {
-        require_once THEMES."templates/global/groups.tpl.php";
-        render_user_group($this->info);
+        require_once THEMES . 'templates/global/groups.tpl.php';
+        render_user_group( $this->info );
     }
 }
