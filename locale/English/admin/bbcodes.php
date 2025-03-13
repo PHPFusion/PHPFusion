@@ -29,6 +29,7 @@ $locale['BBCA_432'] = "BB Code has been Enabled.";
 $locale['BBCA_433'] = "BB Code has been Disabled.";
 $locale['BBCA_444'] = "BB Code has been updated";
 $locale['BBCA_445'] = "BB Code failed to be updated";
+$locale['BBCA_446'] = "Are you sure you want to delete this BB code?";
 
 $locale['BBCA_500'] = "Add Separator";
 $locale['BBCA_501'] = "Separator";
