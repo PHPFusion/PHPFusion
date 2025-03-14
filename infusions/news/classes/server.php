@@ -15,14 +15,22 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\News;
 
-class NewsServer {
+class NewsServer
+{
     protected static $news_settings = [];
     private static $news_instance = NULL;
     private static $news_admin_instance = NULL;
 
-    public static function news() {
+    /**
+     * Get news instance
+     *
+     * @return NewsView
+     */
+    public static function news()
+    {
         if (self::$news_instance === NULL) {
             self::$news_instance = new NewsView();
         }
@@ -30,7 +38,13 @@ class NewsServer {
         return self::$news_instance;
     }
 
-    public static function newsAdmin() {
+    /**
+     * Get news admin instance
+     *
+     * @return NewsAdminView
+     */
+    public static function newsAdmin()
+    {
         if (self::$news_admin_instance === NULL) {
             self::$news_admin_instance = new NewsAdminView();
         }
@@ -38,7 +52,14 @@ class NewsServer {
         return self::$news_admin_instance;
     }
 
-    public static function getNewsSettings($key = NULL) {
+    /**
+     * Get news settings
+     *
+     * @param [type] $key
+     * @return array|null
+     */
+    public static function getNewsSettings($key = NULL)
+    {
         if (empty(self::$news_settings)) {
             self::$news_settings = get_settings("news");
         }
@@ -49,7 +70,8 @@ class NewsServer {
     /**
      * @deprecated use getNewsSettings()
      */
-    public static function get_news_settings($key = NULL) {
+    public static function get_news_settings($key = NULL)
+    {
         return self::getNewsSettings($key);
     }
 }

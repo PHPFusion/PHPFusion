@@ -113,6 +113,54 @@
             color: #fff;
         }
     }
+}
 
+.newscard {
+    background: 0;
 
+    &>a:not(:hover),
+    &>a:not(:focus) {
+        text-decoration: none !important;
+
+        h4,
+        .text-muted {
+            text-decoration: none !important;
+        }
+    }
+
+    &>a:hover,
+    &>a:focus {
+        h4 {
+            text-decoration: underline !important;
+        }
+
+        .text-muted {
+            text-decoration: none !important;
+        }
+    }
+
+    .card-header {
+        border-radius: 12px;
+        height: 0;
+        margin-bottom: 16px;
+        overflow: hidden;
+        padding-bottom: 66.7%;
+        position: relative;
+
+        .card-image-wrapper {
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+    }
+
+    img {
+        border-radius: 8px;
+        -moz-border-radius: 8px;
+        -webkit-border-radius: 8px;
+        width: 100%;
+        object-fit: cover;
+    }
 }

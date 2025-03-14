@@ -21,14 +21,20 @@ namespace PHPFusion\News;
 use PHPFusion\Comments;
 
 abstract class News extends NewsServer {
+    
     protected static $locale = [];
+
     public $info = [];
 
     protected static $news_ratings = [];
+
     protected static $news_comment_count = [];
 
     protected function __construct() {
     }
+
+    // options
+    
 
     /**
      * Executes main page information
@@ -36,6 +42,7 @@ abstract class News extends NewsServer {
      * @return array
      */
     public function setNewsInfo() {
+
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
 
         if (file_exists(INFUSIONS.'rss_feeds_panel/feeds/rss_news.php')) {
@@ -60,9 +67,11 @@ abstract class News extends NewsServer {
             'news_items'        => []
         ];
 
-        $info = array_merge_recursive($info, self::getNewsFilter());
-        $info = array_merge_recursive($info, self::getNewsCategory());
-        $info = array_merge_recursive($info, self::getNewsItem());
+        $info = array_merge_recursive($info, $this->getNewsFilter());
+
+        $info = array_merge_recursive($info, $this->getNewsCategory());
+        
+        $info = array_merge_recursive($info, $this->getNewsItem());
 
         $this->info = $info;
 
@@ -74,7 +83,7 @@ abstract class News extends NewsServer {
      *
      * @return array
      */
-    protected static function getNewsFilter() {
+    protected function getNewsFilter() {
         $array['allowed_filters'] = [
             'recent' => self::$locale['news_0011'],
             'read'   => self::$locale['news_0020']
@@ -102,7 +111,7 @@ abstract class News extends NewsServer {
      *
      * @return array
      */
-    public static function getNewsCategory() {
+    public function getNewsCategory() {
         $array = [];
         $news_cat = [];
         $result = dbquery("SELECT news_cat_id, news_cat_name, news_cat_parent, news_cat_image, news_cat_visibility FROM ".DB_NEWS_CATS." ".(multilang_table("NS") ? "WHERE ".in_group('news_cat_language', LANGUAGE)." AND " : "WHERE ")." news_cat_draft=0 ORDER BY news_cat_sticky DESC, news_cat_id ASC");
@@ -154,24 +163,37 @@ abstract class News extends NewsServer {
      * @return array
      */
     public function getNewsItem($filter = []) {
+
         $info['news_total_rows'] = dbcount("(news_id)", DB_NEWS, groupaccess('news_visibility')." AND (news_start='0'||news_start<='".time()."') AND (news_end='0'||news_end>='".time()."') AND news_draft='0'");
 
         if ($info['news_total_rows']) {
-            $_GET['rowstart'] = isset($_GET['rowstart']) && isnum($_GET['rowstart']) && $_GET['rowstart'] <= $info['news_total_rows'] ? intval($_GET['rowstart']) : 0;
-            $result = dbquery(self::getNewsQuery($filter));
+            
+            $rowstart = get_rowstart('rowstart', $info['news_total_rows']);        
+            $_GET['rowstart'] = $rowstart;
+
+            $query = $this->getNewsQuery($filter);            
+
+            $result = dbquery($query);
+
             $info['news_item_rows'] = dbrows($result);
+            
             if ($info['news_item_rows'] > 0) {
                 $news_count = 0;
                 $news_info = [];
 
-                while ($data = dbarray($result)) {
+                while ($rows = dbarray($result)) {
+                    
                     $news_count++;
+                    
                     if ($news_count == 1) {
-                        $info['news_last_updated'] = showdate('newsdate', $data['news_datestamp']);
+                        $info['news_last_updated'] = showdate('newsdate', $rows['news_datestamp']);
                     }
-                    $newsData = self::getNewsData($data);
+                    
+                    $newsData = self::getNewsData($rows);
+
                     $news_info[$news_count] = $newsData;
                 }
+
                 $info['news_items'] = $news_info;
             }
         }
@@ -184,12 +206,17 @@ abstract class News extends NewsServer {
      *
      * @return string
      */
-    protected static function getNewsQuery(array $filters = []) {
+    public function getNewsQuery(array $filters = []) {
+
         $news_settings = self::getNewsSettings();
+        
         $cat_filter = self::checkNewsFilter();
+        
         $pattern = "SELECT %s(nr.rating_vote) FROM ".DB_RATINGS." AS nr WHERE nr.rating_item_id = n.news_id AND nr.rating_type = 'N'";
+        
         $sql_count = sprintf($pattern, 'COUNT');
         $sql_sum = sprintf($pattern, 'SUM');
+        
         return "SELECT n.*, nc.*, nu.user_id, nu.user_name, nu.user_status, nu.user_avatar , nu.user_level, nu.user_joined,
             ($sql_sum) AS news_sum_rating,
             ($sql_count) AS news_count_votes,
@@ -247,41 +274,73 @@ abstract class News extends NewsServer {
         return (int)self::$news_comment_count[$id]['comments_count'];
     }
 
+    private $allowed_filters = ['recent', 'read', 'comment', 'ratings'];
+
+    /**
+     * Set allowed view filters
+     *
+     * @param [type] $array
+     * @return void
+     */
+    public function setAllowedFIlters(array $array = array()) {
+        $this->allowed_filters = $array;
+    }
+
     /**
      * Sql filter between $_GET['type']
      * most commented
      * most recent news
      * most rated
      */
-    protected static function checkNewsFilter() {
-        /* Filter Construct */
-        $filter = ['recent', 'read', 'comment', 'rating'];
+    protected function checkNewsFilter() {
+        
+        $cat_filter['order'] = 'news_datestamp DESC';
+    
+        $current_filter = get('type');
+    
+        if (isset($current_filter) && in_array($current_filter, $this->allowed_filters)) {
+            
+            $_GET['type'] = $current_filter;
 
-        if (isset($_GET['type']) && in_array($_GET['type'], $filter)) {
-            $current_filter = $_GET['type'];
-            $cat_filter['order'] = 'news_datestamp DESC';
-            if ($current_filter == 'recent') {
-                // order by datestamp.
-                $cat_filter['order'] = 'news_datestamp DESC';
-            } else if ($current_filter == 'read') {
-                // order by datestamp.
-                $cat_filter['order'] = 'news_reads DESC';
-            } else if ($current_filter == 'comment') {
-                // order by comment_count
-                $cat_filter = [
+            match ($current_filter) {
+                'recent' => $cat_filter['order'] = 'news_datestamp DESC',
+                'read' => $cat_filter['order'] = 'news_reads DESC',
+                'comment' => $cat_filter = [
                     'order' => 'comments_count DESC',
-                    //'count' => 'COUNT(td.comment_item_id) AS comments_count,',
-                    //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N'",
-                ];
-            } else if ($current_filter == 'rating') {
-                // order by download_title
-                $cat_filter = [
-                    'order' => 'news_sum_rating DESC',
-                ];
-            }
-        } else {
-            $cat_filter['order'] = 'news_datestamp DESC';
+                    'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N'",
+                    'count' => 'COUNT(td.comment_item_id) AS comments_count,',
+                ],
+                'rating' => $cat_filter['order'] = 'news_sum_rating DESC',
+            };
         }
+
+       
+            
+        //     if ($current_filter == 'recent') {
+        //         // order by datestamp.
+        //         $cat_filter['order'] = 'news_datestamp DESC';
+
+        //     } else if ($current_filter == 'read') {
+        //         // order by datestamp.
+        //         $cat_filter['order'] = 'news_reads DESC';
+
+        //     } else if ($current_filter == 'comment') {
+        //         // order by comment_count
+        //         $cat_filter = [
+        //             'order' => 'comments_count DESC',
+        //             //'count' => 'COUNT(td.comment_item_id) AS comments_count,',
+        //             //'join'  => "LEFT JOIN ".DB_COMMENTS." td ON td.comment_item_id = tn.news_id AND td.comment_type='N'",
+        //         ];
+
+        //     } else if ($current_filter == 'rating') {
+        //         // order by download_title
+        //         $cat_filter = [
+        //             'order' => 'news_sum_rating DESC',
+        //         ];
+        //     }
+        // } else {
+        //     $cat_filter['order'] = 'news_datestamp DESC';
+        // }
 
         return $cat_filter;
     }
@@ -340,7 +399,9 @@ abstract class News extends NewsServer {
      * @return array
      */
     protected static function getNewsData(array $data) {
+
         self::$locale = fusion_get_locale('', NEWS_LOCALE);
+        
         $news_settings = self::getNewsSettings();
 
         if (!empty($data)) {
@@ -369,10 +430,10 @@ abstract class News extends NewsServer {
             }
 
             // Image with link always use the hi-res ones
-            $image = "<img class='img-responsive' src='$imageSource' alt='".$data['news_subject']."' />\n";
+            $image = "<img class='img-responsive' src='$imageSource' alt='".$data['news_subject']."'>";
 
             if (!empty($data['news_extended'])) {
-                $news_image = "<a class='img-link' href='".$info['news_link']."'>$image</a>\n";
+                $news_image = "<a class='img-link' href='".$info['news_link']."'>$image</a>";
             } else {
                 $news_image = $image;
             }

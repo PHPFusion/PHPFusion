@@ -16,6 +16,8 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
+use PHPFusion\News\NewsServer;
+
 /**
  * Display homepage
  *
@@ -135,7 +137,50 @@ function display_home($info)
         </div>
     </div>
 
-
+    <div class="blockwall">
+        <div class="container">
+            <h2 class="serif">PHPFusion Announcements</h2>
+            <?php
+            $news = getNews();
+            if (!empty($news['news_items'])) : ?>
+                <div class="row equal-height">
+                    <?php
+                    foreach ($news['news_items'] as $rows) :
+                    ?>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card newscard">
+                                <a href="<?php echo $rows['news_link'] ?>">
+                                    <div class="card-header">
+                                        <div class="card-image-wrapper"><img src="<?php echo $rows['news_image_optimized'] ?>"></div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-wrap"><?php echo $rows['news_subject'] ?></h4>
+                                        <div class="text-muted"><?php echo showdate('newsdate', $rows['news_last_updated']) ?></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    <?php
+                    endforeach;
+                    ?>
+                </div>
+            <?php
+            endif;
+            ?>
+            <div class="spacer-sm"><a href="<?php echo INFUSIONS.'news/news.php' ?>" class="btn btn-default">View more</a></div>
+        </div>
+    </div>
 <?php
 
+}
+
+
+function getNews()
+{
+
+    require_once INFUSIONS . 'news/classes/autoloader.php';
+
+    $newsClass = NewsServer::news();
+    $newsClass->setAllowedFilters(); // Set a blank filters
+    return $newsClass->getNewsItem(['limit'=>6]);
 }
