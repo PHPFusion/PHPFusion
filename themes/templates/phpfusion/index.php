@@ -147,7 +147,7 @@ function display_home($info)
                     <?php
                     foreach ($news['news_items'] as $rows) :
                     ?>
-                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                             <div class="card newscard">
                                 <a href="<?php echo $rows['news_link'] ?>">
                                     <div class="card-header">
