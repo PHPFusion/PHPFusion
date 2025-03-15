@@ -13,7 +13,7 @@ $locale['GRP_409'] = " Add a user group.";
 $locale['GRP_410'] = "User \"%s\" added to group \"%s\"";
 $locale['GRP_411'] = "User \"%s\" removed from group \"%s\"";
 $locale['GRP_412'] = "\"%s\" users removed from group \"%s\"";
-
+$locale['GRP_413'] = "User \"%s\" is already a member of the \"%s\" group";
 // Edit/Delete Options
 $locale['GRP_420'] = "User Groups";
 $locale['GRP_421'] = "Edit Group";
@@ -52,3 +52,5 @@ $locale['GRP_462'] = "Remove all users";
 $locale['GRP_463'] = "There are no users in this group.";
 // Error Messages
 $locale['GRP_464'] = "Please enter a Group name";
+$locale['GRP_465'] = "Are you sure you want to delete the selected members?";
+$locale['GRP_466'] = "Are you sure you want to delete all members?";
