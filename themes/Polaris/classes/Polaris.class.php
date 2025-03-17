@@ -45,11 +45,28 @@ class Polaris extends PolarisThemeFactory
 
     private function uip()
     {
+        
+        $member_options = array(
+            'profile.php?lookup=' . fusion_get_userdata('user_id') => 'Profile',
+            'messages.php' => 'Messages',
+            'logout.php' => 'Logout',
+        );
+
+        $public_options = [
+            'register.php' => '<strong>Sign up</strong>',
+            'login.php' => 'Login',
+        ];
+        
+        $selected_arr = iMEMBER ? $member_options : $public_options;
+
+        $dropdown_links = '';
+        foreach($selected_arr  as $links => $title) {
+            $dropdown_links .= '<li><a href="' . $links . '">' . $title . '</a></li>';
+        }
+        
         return '<ul class="uip nav navbar-nav"><li class="dropdown">
         <a href="#" class="uip dropdown-toggle" data-toggle="dropdown"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.25" transform="rotate(90 12 12)" stroke-width="1.5" class="stroke"></circle> <path d="M14.75 10.5356C14.75 12.0544 13.5188 13.2856 12 13.2856C10.4812 13.2856 9.25 12.0544 9.25 10.5356C9.25 9.01686 10.4812 7.78564 12 7.78564C13.5188 7.78564 14.75 9.01686 14.75 10.5356Z" stroke-width="1.5" class="stroke"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M18.0627 18.6515C17.1211 16.2223 14.7617 14.5 12 14.5C9.23819 14.5 6.8787 16.2224 5.93713 18.6517C5.53341 18.2835 5.16332 17.879 4.83203 17.4435C6.14128 14.8098 8.85928 13 12 13C15.1406 13 17.8585 14.8097 19.1678 17.4432C18.8365 17.8788 18.4665 18.2833 18.0627 18.6515Z" class="fill"></path></svg></a>
-        <ul class="dropdown-menu">
-        <li>this is the dropdown menu</li>
-        </ul></li></ul>';
+        <ul class="dropdown-menu dropdown-menu-right">'.$dropdown_links.'</ul></li></ul>';
     }
 
 
