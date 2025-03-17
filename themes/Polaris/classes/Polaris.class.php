@@ -247,10 +247,10 @@ class Polaris extends PolarisThemeFactory
                             <img class="footer-img" style="fill:#fff;margin-right:10px;" width="89" height="34" src="<?php echo IMAGES ?>assets/open.svg" alt="Opensource Initiative">
                             <img class="footer-img" style="fill:#fff;" width="89" height="34" src="<?php echo IMAGES ?>assets/cn.svg" alt="Carbon Neutral">
                         </li>
-                    </ul>                 
+                    </ul>
                     <ul class="site-footer-links">
                         <li>Polaris &copy; <?php echo date('Y') . ' ' . $locale['POLARIS_101'] ?> <a href="https://phpfusion.com" target="_blank">PHPFusion</a></li>
-                        <li><a href=""><?php showcopyright('', TRUE) ?></a></li>
+                        <li><a href=""><?php showcopyright() ?></a></li>
                         <li><?php echo showcounter(); ?></li>
                         <?php if ($settings['footer']) : ?>
                             <?php echo parse_text($settings['footer'], ['parse_smileys' => FALSE, 'add_line_breaks' => FALSE]); ?>

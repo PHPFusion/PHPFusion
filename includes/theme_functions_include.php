@@ -15,7 +15,6 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-
 use PHPFusion\Database\DatabaseFactory;
 use PHPFusion\OutputHandler;
 use PHPFusion\Panels;
@@ -157,18 +156,51 @@ function showmemoryusage() {
  *
  * @return string
  */
-function showcopyright($class = "", $nobreak = FALSE) {
-    $link_class = $class ? " class='$class' " : "";
+function showcopyright( $options = [] ) {
 
-    $copyright = "Powered by <a href='https://phpfusion.com' ".$link_class."target='_blank'>PHPFusion</a>. Copyright &copy; ".date("Y")." PHP Fusion Inc. ";
-    $copyright .= $nobreak ? "&nbsp;" : "<br />\n";
-    $license = "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'".$link_class." target='_blank'>GNU Affero GPL</a> v3.";
+    if ( !defined( 'COPYRIGHT' ) ) {
+        $licensetype = fusion_get_settings( 'license' );
 
-    /*if (fusion_get_settings('license') == 'epal') {
-        $license = "Published without warranties under <a href='https://www.phpfusion.com/licensing/?epal' ".$link_class." target='_blank'>EPAL</a>.";
-    }*/
+        if ( is_array( $options ) ) {
+            $options += [
+                'class'   => '', //The class attribute of the link.
+                'nobreak' => TRUE //If true <br> tag will be removed between copyright and license.
+            ];
+        } else {
+            // Old API support
+            $options['class'] = '';
+            $options['nobreak'] = TRUE;
+        }
 
-    return $copyright.$license;
+        $link_class = $options['class'] ? " class='" . $options['class'] . "'" : '';
+
+        $info = "Powered by <a href='https://phpfusion.com'" . $link_class . " target='_blank'>PHPFusion</a>. Copyright &copy; " . date( "Y" ) . " PHP Fusion Inc. ";
+        $info .= $options['nobreak'] ? "&nbsp;" : "<br />\n";
+        $license = "Released as free software without warranties under <a href='https://www.gnu.org/licenses/agpl-3.0.html'" . $link_class . " target='_blank'>GNU Affero GPL</a> v3. ";
+
+        $link = "https://www.phpfusion.com/licensing/?" . $licensetype;
+        if ( $licensetype ) {
+            switch ( $licensetype ) {
+                case "epal":
+                    $license = "Published without warranties under <a href='" . $link . "'" . $link_class . " target='_blank'>EPAL</a>. ";
+                    break;
+                case "crl":
+                    $license = "Released under PHP-Fusion <a href='" . $link . "'" . $link_class . " target='_blank'>Copyright Removal License (CRL)</a>. v1.0. ";
+                    $info = '';
+                    break;
+                case "ccl":
+                    $license = "Released under PHP-Fusion <a href='" . $link . "'" . $link_class . " target='_blank'>Commercial Core License (CCL)</a>. v1.0. ";
+                    $info = '';
+                    break;
+                default:
+                    $license;
+                    break;
+            }
+        }
+        define( 'COPYRIGHT', $info . $license );
+    }
+
+    return COPYRIGHT;
 }
 
 /**

@@ -135,7 +135,7 @@ function render_page() {
                 echo '</div>';
             echo '</div>';
 
-            echo '<div class="text-center" style="margin-top: 30px;">'.showcopyright('', TRUE).showprivacypolicy().'</div>';
+            echo '<div class="text-center" style="margin-top: 30px;">'.showcopyright().showprivacypolicy().'</div>';
             if ($settings['rendertime_enabled'] == 1 || $settings['rendertime_enabled'] == 2) {
                 echo '<div class="text-center">';
                 echo showrendertime();
