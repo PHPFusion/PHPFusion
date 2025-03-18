@@ -49,7 +49,7 @@ class Polaris extends PolarisThemeFactory
         $member_options = array(
             'profile.php?lookup=' . fusion_get_userdata('user_id') => 'Profile',
             'messages.php' => 'Messages',
-            'logout.php' => 'Logout',
+            '?logout=yes' => 'Logout',
         );
 
         $public_options = [

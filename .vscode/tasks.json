@@ -117,5 +117,22 @@
             "problemMatcher": [],
             "detail": "Compile PHPFusion.com Homepage styles to css"
         },
+        {
+            "label": "PHPFusion Login styles",
+            "type": "shell",
+            "command": "lessc",
+            "args": [
+                "--source-map-inline",
+                "--clean-css",
+                "themes/templates/phpfusion/assets/styles/login.less",
+                "themes/templates/phpfusion/assets/styles/login.css",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Compile PHPFusion.com Login styles to css"
+        },
     ]
 }
