@@ -195,7 +195,9 @@ if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
     if (fusion_safe()) {
         $auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
         $userdata = $auth->getUserData();
-        redirect(FUSION_REQUEST);
+        if (!empty($userdata['user_name']) && !empty($userdata['user_id'])) {
+            redirect($_SESSION['redirect_page'] ?? FUSION_REQUEST);
+        }        
     }
 } else if (get('logout') === 'yes') {
     $userdata = Authenticate::logOut();

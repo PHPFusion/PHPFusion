@@ -28,6 +28,17 @@ $info = [];
 
 $login_connectors = [];
 
+
+// Add to sessions previous page
+// Fix for SEF Url Engine
+if (!isset($_SESSION['login_prev_page']) && isset($_SERVER['HTTP_REFERER']) && !stristr($_SERVER['HTTP_REFERER'], 'login.php')) {
+    // check if http_referer is not login.php and also within the same domain
+    if (stristr($_SERVER['HTTP_REFERER'], fusion_get_settings('siteurl')) && !stristr($_SERVER['HTTP_REFERER'], 'login.php')) {
+        $_SESSION['redirect_page'] = $_SERVER['HTTP_REFERER'];
+    }
+}
+
+
 if (!iMEMBER) {
     if (isset($_GET['error']) && isnum($_GET['error'])) {
         $action_url = FUSION_REQUEST;

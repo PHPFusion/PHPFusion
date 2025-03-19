@@ -47,14 +47,14 @@ class Polaris extends PolarisThemeFactory
     {
         
         $member_options = array(
-            'profile.php?lookup=' . fusion_get_userdata('user_id') => 'Profile',
-            'messages.php' => 'Messages',
+            BASEDIR .'profile.php?lookup=' . fusion_get_userdata('user_id') => 'Profile',
+            BASEDIR .'messages.php' => 'Messages',
             '?logout=yes' => 'Logout',
         );
 
         $public_options = [
-            'register.php' => '<strong>Sign up</strong>',
-            'login.php' => 'Login',
+            BASEDIR .'register.php' => '<strong>Sign up</strong>',
+            BASEDIR.'login.php' => 'Login',
         ];
         
         $selected_arr = iMEMBER ? $member_options : $public_options;
