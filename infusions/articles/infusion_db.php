@@ -96,8 +96,7 @@ if (defined('ARTICLES_EXISTS')) {
             LEFT JOIN ".DB_ARTICLE_CATS." AS ac ON ac.article_cat_id = ar.article_cat
             LEFT JOIN ".DB_USERS." AS u ON u.user_id = ar.article_name
             WHERE ar.article_draft = 0
-            AND ".groupaccess('ar.article_visibility')." ".(multilang_table("AR") ? "
-            AND ".in_group('ac.article_cat_language', LANGUAGE) : "")."
+            AND " . groupaccess( 'ar.article_visibility' ) . " AND " . groupaccess( "ac.article_cat_visibility" ) . ( multilang_table( "AR" ) ? " AND " . in_group( 'ac.article_cat_language', LANGUAGE ) : "" ) . "
             ORDER BY ar.article_datestamp DESC LIMIT ".$limit
         );
 

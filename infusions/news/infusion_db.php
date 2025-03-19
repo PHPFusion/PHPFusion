@@ -109,7 +109,7 @@ if (defined('NEWS_EXISTS')) {
             WHERE (".time()." > ns.news_start OR ns.news_start = 0)
             AND ns.news_draft = 0
             AND (".time()." < ns.news_end OR ns.news_end = 0)
-            AND ".groupaccess('ns.news_visibility')." ".(multilang_table("NS") ? "AND ".in_group('news_language', LANGUAGE) : "")."
+            AND " . groupaccess( 'ns.news_visibility' ) . " AND " . groupaccess( "nc.news_cat_visibility" ) . ( multilang_table( "NS" ) ? " AND " . in_group( 'news_language', LANGUAGE ) : "" ) . "
             GROUP BY ns.news_id
             ORDER BY ns.news_datestamp DESC LIMIT ".$limit
         );
