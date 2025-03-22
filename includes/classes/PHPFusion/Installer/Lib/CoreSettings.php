@@ -312,18 +312,6 @@ class CoreSettings {
                     'settings_value' => ''
                 ],
                 [
-                    'settings_name'  => 'links_per_page',
-                    'settings_value' => 8
-                ],
-                [
-                    'settings_name'  => 'links_grouping',
-                    'settings_value' => 0
-                ],
-                [
-                    'settings_name'  => 'link_grouping',
-                    'settings_value' => 8
-                ],
-                [
                     'settings_name'  => 'link_bbcode',
                     'settings_value' => '0',
                 ],

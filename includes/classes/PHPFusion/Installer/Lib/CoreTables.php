@@ -1016,30 +1016,58 @@ class CoreTables
                 'default' => ''
             ], //settings_theme VARCHAR(200) NOT NULL DEFAULT '',
         ];
-        $table_package['site_link_positions'] = [
-            'link_position_id' => [
+        $table_package['site_link_menus'] = [
+            'menu_id' => [
                 'type'           => 'BIGINT',
                 'length'         => 20,
                 'auto_increment' => TRUE,
-                'key'            => 1, //PRIMARY KEY (link_cat_id)
+                'key'            => 1, //PRIMARY KEY (menu_id)
                 'unsigned'       => TRUE,
-            ], //link_position_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            'link_position_name' => [
+            ], //menu_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'menu_name' => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ], //link_position_name VARCHAR(100) NOT NULL DEFAULT '',           
-            'link_position_visibility' => [
+            ], //menu_name VARCHAR(100) NOT NULL DEFAULT '',    
+            'menu_branding' => [
+                'type'    => 'TINYINT',
+                'length'  => 1,
+                'default' => '',
+                'unsigned'       => TRUE,
+            ], //menu_branding TINYINT(1) UNSIGNED NOT NULL DEFAULT '',           
+            'menu_header' => [
+                'type'    => 'VARCHAR',
+                'length'  => 200,
+                'default' => '',                
+            ], //menu_header VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',           
+            'menu_image' => [
+                'type'    => 'VARCHAR',
+                'length'  => 200,
+                'default' => '',
+            ], //menu_image VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',           
+            'menu_visibility' => [
                 'type'    => 'TINYINT',
                 'length'  => 4,
                 'default' => 0,
                 'key' => 2,
-            ], //link_position_visibility TINYINT(4) NOT NULL DEFAULT '0',
-            'link_position_language' => [
+            ], //menu_visibility TINYINT(4) NOT NULL DEFAULT '0',
+            'menu_status' => [
+                'type'    => 'TINYINT',
+                'length'  => 1,
+                'default' => 0,
+                'unsigned' => TRUE,
+            ], //menu_status TINYINT(4) NOT NULL DEFAULT '0',
+            'menu_grouping' => [
+                'type'    => 'SMALLINT',
+                'length'  => 3,
+                'default' => 0,
+                'unsigned' => TRUE,
+            ], //menu_grouping TINYINT(4) NOT NULL DEFAULT '0',
+            'menu_language' => [
                 'type'    => 'VARCHAR',
                 'length'  => 70,
                 'default' => $localeset
-            ] //link_position_language VARCHAR(70) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+            ] //menu_language VARCHAR(70) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
         ];
         $table_package['site_links'] = [
             'link_id'         => [
