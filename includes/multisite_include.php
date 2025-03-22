@@ -43,6 +43,7 @@ const DB_SESSIONS = DB_PREFIX."sessions";
 const DB_SETTINGS = DB_PREFIX."settings";
 const DB_SETTINGS_INF = DB_PREFIX."settings_inf";
 const DB_SETTINGS_THEME = DB_PREFIX."settings_theme";
+const DB_SITE_LINK_MENUS = DB_PREFIX."site_link_menus";
 const DB_SITE_LINKS = DB_PREFIX."site_links";
 const DB_SMILEYS = DB_PREFIX."smileys";
 const DB_SUBMISSIONS = DB_PREFIX."submissions";

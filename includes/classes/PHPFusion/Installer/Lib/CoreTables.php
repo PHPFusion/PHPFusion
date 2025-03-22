@@ -15,9 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+
 namespace PHPFusion\Installer\Lib;
 
-class CoreTables {
+class CoreTables
+{
 
     /**
      * Core table configurations
@@ -26,7 +28,8 @@ class CoreTables {
      *
      * @return array
      */
-    public static function get_core_tables($localeset) {
+    public static function get_core_tables($localeset)
+    {
         /*
          * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
          * rather than maintaining files after files
@@ -194,10 +197,10 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ],//blacklist_email VARCHAR(100) NOT NULL DEFAULT '',
+            ], //blacklist_email VARCHAR(100) NOT NULL DEFAULT '',
             'blacklist_reason'    => [
                 'type' => 'TEXT'
-            ],//blacklist_reason TEXT NOT NULL,
+            ], //blacklist_reason TEXT NOT NULL,
             'blacklist_datestamp' => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -433,7 +436,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ],//comment_name VARCHAR(50) NOT NULL DEFAULT '',
+            ], //comment_name VARCHAR(50) NOT NULL DEFAULT '',
             'comment_subject'   => [
                 'type'    => 'VARCHAR',
                 'length'  => 200,
@@ -732,25 +735,25 @@ class CoreTables {
                 'auto_increment' => TRUE,
                 'key'            => 1, //PRIMARY KEY (rating_id)
                 'unsigned'       => TRUE,
-            ],//rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
+            ], //rating_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'rating_item_id'   => [
                 'type'     => 'BIGINT',
                 'length'   => 20,
                 'unsigned' => TRUE,
                 'default'  => '0'
-            ],//rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            ], //rating_item_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
             'rating_type'      => [
                 'type'    => 'CHAR',
                 'length'  => 4,
                 'default' => ''
-            ],//rating_type CHAR(4) NOT NULL DEFAULT '',
+            ], //rating_type CHAR(4) NOT NULL DEFAULT '',
             'rating_user'      => [
                 'type'     => 'BIGINT',
                 'length'   => 20,
                 'unsigned' => TRUE,
                 'key'      => 2,
                 'default'  => '0'
-            ],//rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            ], //rating_user MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
             'rating_vote'      => [
                 'type'     => 'TINYINT',
                 'length'   => 1,
@@ -1013,6 +1016,31 @@ class CoreTables {
                 'default' => ''
             ], //settings_theme VARCHAR(200) NOT NULL DEFAULT '',
         ];
+        $table_package['site_link_positions'] = [
+            'link_position_id' => [
+                'type'           => 'BIGINT',
+                'length'         => 20,
+                'auto_increment' => TRUE,
+                'key'            => 1, //PRIMARY KEY (link_cat_id)
+                'unsigned'       => TRUE,
+            ], //link_position_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'link_position_name' => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //link_position_name VARCHAR(100) NOT NULL DEFAULT '',           
+            'link_position_visibility' => [
+                'type'    => 'TINYINT',
+                'length'  => 4,
+                'default' => 0,
+                'key' => 2,
+            ], //link_position_visibility TINYINT(4) NOT NULL DEFAULT '0',
+            'link_position_language' => [
+                'type'    => 'VARCHAR',
+                'length'  => 70,
+                'default' => $localeset
+            ] //link_position_language VARCHAR(70) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+        ];
         $table_package['site_links'] = [
             'link_id'         => [
                 'type'           => 'BIGINT',
@@ -1051,8 +1079,8 @@ class CoreTables {
                 'key'     => 2,
             ], //link_visibility TINYINT(4) NOT NULL DEFAULT '0',
             'link_position'   => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
+                'type'     => 'BIGINT',
+                'length'   => 20,
                 'unsigned' => TRUE,
                 'default'  => 1,
                 'key'      => 2
@@ -1064,6 +1092,12 @@ class CoreTables {
                 'default'  => 0,
                 'key'      => 2
             ],
+            'link_columns'     => [
+                'type'     => 'INT',
+                'length'   => 5,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //link_columns INT(5) UNSIGNED NOT NULL DEFAULT '0',
             'link_window'     => [
                 'type'     => 'TINYINT',
                 'length'   => 1,
@@ -1117,14 +1151,14 @@ class CoreTables {
             'submit_type'      => [
                 'type'   => 'CHAR',
                 'length' => 1,
-            ],// submit_type CHAR(1) NOT NULL,
+            ], // submit_type CHAR(1) NOT NULL,
             'submit_user'      => [
                 'type'     => 'BIGINT',
                 'length'   => 20,
                 'unsigned' => TRUE,
                 'default'  => '0',
                 'key'      => 2
-            ],//submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
+            ], //submit_user MEDIUMINT(8) UNSIGNED DEFAULT '0' NOT NULL,
             'submit_datestamp' => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -1217,37 +1251,37 @@ class CoreTables {
                 'auto_increment' => TRUE,
                 'key'            => 1, //PRIMARY KEY (field_cat_id)
                 'unsigned'       => TRUE,
-            ],//field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
+            ], //field_cat_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT ,
             'field_cat_name'  => [
                 'type' => 'TEXT',
-            ],//field_cat_name TEXT NOT NULL,
+            ], //field_cat_name TEXT NOT NULL,
             'field_parent'    => [
                 'type'     => 'MEDIUMINT',
                 'length'   => 8,
                 'unsigned' => TRUE,
                 'default'  => '0'
-            ],//field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
+            ], //field_parent MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0',
             'field_cat_db'    => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ],//field_cat_db VARCHAR(100) NOT NULL,
+            ], //field_cat_db VARCHAR(100) NOT NULL,
             'field_cat_index' => [
                 'type'    => 'VARCHAR',
                 'length'  => 200,
                 'default' => ''
-            ],//field_cat_index VARCHAR(200) NOT NULL,
+            ], //field_cat_index VARCHAR(200) NOT NULL,
             'field_cat_class' => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
                 'default' => ''
-            ],//field_cat_class VARCHAR(50) NOT NULL,
+            ], //field_cat_class VARCHAR(50) NOT NULL,
             'field_cat_order' => [
                 'type'     => 'SMALLINT',
                 'length'   => 5,
                 'key'      => 2, //@noted: changed
                 'unsigned' => TRUE,
-            ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
+            ] //field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
         ];
         $table_package['user_fields'] = [
             'field_id'           => [

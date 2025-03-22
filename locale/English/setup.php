@@ -206,6 +206,9 @@ $locale['setup_3210'] = "Site links";
 $locale['setup_3211'] = "Panels";
 $locale['setup_3212'] = "Forum Ranks";
 $locale['setup_3213'] = "Blog";
+// Sitelink Positions
+$locale['setup_3220'] = "Navigation Panel";
+$locale['setup_3221'] = "Subheader";
 // Step 6 - Navigation Links
 $locale['setup_3300'] = "Home";
 $locale['setup_3302'] = "Downloads";

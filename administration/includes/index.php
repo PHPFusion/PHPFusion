@@ -19,6 +19,8 @@ require_once __DIR__.'/../../maincore.php';
 
 if (iADMIN) {
     $endpoints = [
+        'sitelinks-cat'      => 'sitelinks/sitelinks-get-category.php',
+        'sitelinks-menulist' => 'sitelinks/sitelinks-menulist.php',
         'sitelinks-list'      => 'sitelinks/sitelinks-list.php',
         'sitelinks-order'     => 'sitelinks/sitelinks-order.php',
         'cache-update'        => 'cache_update.php',

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
+@danger-color: #dd4b39;
 html,
 body {
     height: 100%;
@@ -212,7 +212,7 @@ a:focus {
 }
 
 .text-danger {
-    color: #dd4b39;
+    color: @danger-color;
 }
 
 .notices .alert {
@@ -341,8 +341,8 @@ a:focus {
     width: 100% !important;
 }
 
-.panel-title {    
-    font-weight:600;
+.panel-title {
+    font-weight: 600;
     font-size: revert;
 }
 
@@ -1284,27 +1284,41 @@ a:focus {
     height: 20px;
 }
 
+
+
 .dropdown-menu {
     box-shadow: none;
-}
 
-.dropdown-menu>li>a {
-    color: #777;
-}
+    &>li,
+    &>li>a {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
 
-.dropdown-menu>li>a>svg,
-.dropdown-menu>li>a>.glyphicon,
-.dropdown-menu>li>a>.fa {
-    margin-right: 10px;
-}
+    >.divider {
+        background-color: #eee;
+    }
 
-.dropdown-menu>li>a:hover {
-    background-color: #e1e3e9;
-    color: #333;
-}
+    &>li>a {
+        cursor: pointer;
+        color: #777;
 
-.dropdown-menu>.divider {
-    background-color: #eee;
+        &.text-danger {
+            color: @danger-color;
+        }
+
+        >svg,
+        >.glyphicon,
+        >.fa {
+            margin-right: 10px;
+        }
+
+        &:hover {
+            background-color: #e1e3e9;
+            color: #333;
+        }
+    }
 }
 
 .navbar-nav>.messages-menu>.dropdown-menu {
@@ -2439,30 +2453,37 @@ input[type="checkbox"]:checked:before {
 }
 
 .btn {
-    /* border-radius: 0; */
+
+    display: inline-flex;
+    align-items: center;
     box-shadow: none;
     border: 1px solid transparent;
     transition: 0.2s ease-in-out background-color, 0.2s ease-in-out color;
+
+    &.btn-flat {
+        border-radius: 0;
+        box-shadow: none;
+        border-width: 1px;
+    }
+
+    &:active {
+        box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &.btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    >svg {
+        width: 25px;
+    }
 }
 
-.btn.btn-flat {
-    border-radius: 0;
-    box-shadow: none;
-    border-width: 1px;
-}
-
-.btn:active {
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-}
-
-.btn:focus {
-    outline: none;
-}
-
-.btn.btn-file {
-    position: relative;
-    overflow: hidden;
-}
 
 .btn.btn-file>input[type='file'] {
     position: absolute;

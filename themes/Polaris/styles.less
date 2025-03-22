@@ -16,6 +16,13 @@ Variables
 @navbar-font-transition: color .2s cubic-bezier(0.4, 0.8, .75, 1);
 @navbar-item-padding: 22px 10px;
 
+@navbar-inverse-bg: #fff;
+@navbar-inverse-border-color: #e6e6e6;
+@navbar-inverse-text-color: #999999;
+@navbar-inverse-hover-color: #333333;
+@navbar-inverse-disabled-color: #eeeeee;
+@navbar-inverse-form-border: #ededed;
+
 @default-btn: #000;
 @default-btn-bg: transparent;
 @default-btn-bg-hover: rgba(0, 0, 0, 0.1);
@@ -3511,104 +3518,116 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 }
 
 .navbar-inverse {
-    background-color: #fff;
-    border-color: #e6e6e6;
-}
+    background-color: @navbar-inverse-bg;
+    border-color: @navbar-inverse-border-color;
 
-.navbar-inverse .navbar-brand {
-    color: #999999;
-}
+    .navbar-brand {
+        color: @navbar-inverse-text-color;
 
-.navbar-inverse .navbar-brand:hover,
-.navbar-inverse .navbar-brand:focus {
-    color: #333333;
-    background-color: transparent;
-}
+        &:hover,
+        &:focus {
+            color: @navbar-inverse-hover-color;
+            background-color: transparent;
+        }
+    }
 
-.navbar-inverse .navbar-text {
-    color: #999999;
-}
+    .navbar-text {
+        color: @navbar-inverse-text-color;
+    }
 
-.navbar-inverse .navbar-nav>li>a {
-    color: #999999;
-}
+    .navbar-nav {
+        >li>a {
+            color: @navbar-inverse-text-color;
 
-.navbar-inverse .navbar-nav>li>a:hover,
-.navbar-inverse .navbar-nav>li>a:focus {
-    color: #333333;
-    background-color: transparent;
-}
+            &:hover,
+            &:focus {
+                color: @navbar-inverse-hover-color;
+                background-color: transparent;
+            }
+        }
 
-.navbar-inverse .navbar-nav>.active>a,
-.navbar-inverse .navbar-nav>.active>a:hover,
-.navbar-inverse .navbar-nav>.active>a:focus {
-    color: #333333;
-    background-color: transparent;
-}
+        >.active>a,
+        >.active>a:hover,
+        >.active>a:focus {
+            color: @navbar-inverse-hover-color;
+            background-color: transparent;
+        }
 
-.navbar-inverse .navbar-nav>.disabled>a,
-.navbar-inverse .navbar-nav>.disabled>a:hover,
-.navbar-inverse .navbar-nav>.disabled>a:focus {
-    color: #eeeeee;
-    background-color: transparent;
-}
+        >.disabled>a,
+        >.disabled>a:hover,
+        >.disabled>a:focus {
+            color: @navbar-inverse-disabled-color;
+            background-color: transparent;
+        }
 
-.navbar-inverse .navbar-toggle {
-    border-color: #eeeeee;
-}
+        >.open>a,
+        >.open>a:hover,
+        >.open>a:focus {
+            background-color: transparent;
+            color: @navbar-inverse-hover-color;
+        }
+    }
 
-.navbar-inverse .navbar-toggle:hover,
-.navbar-inverse .navbar-toggle:focus {
-    background-color: #eeeeee;
-}
+    .navbar-toggle {
+        border-color: @navbar-inverse-disabled-color;
 
-.navbar-inverse .navbar-toggle .icon-bar {
-    background-color: #999999;
-}
+        &:hover,
+        &:focus {
+            background-color: @navbar-inverse-disabled-color;
+        }
 
-.navbar-inverse .navbar-collapse,
-.navbar-inverse .navbar-form {
-    border-color: #ededed;
-}
+        .icon-bar {
+            background-color: @navbar-inverse-text-color;
+        }
+    }
 
-.navbar-inverse .navbar-nav>.open>a,
-.navbar-inverse .navbar-nav>.open>a:hover,
-.navbar-inverse .navbar-nav>.open>a:focus {
-    background-color: transparent;
-    color: #333333;
+    .navbar-collapse,
+    .navbar-form {
+        border-color: @navbar-inverse-form-border;
+    }
 }
 
 @media (max-width: 767px) {
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.dropdown-header {
-        border-color: #e6e6e6;
-    }
+    .navbar-inverse {
+        .navbar-nav {
+            .open {
+                .dropdown-menu {
+                    >.dropdown-header {
+                        border-color: #e6e6e6;
+                    }
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu .divider {
-        background-color: #e6e6e6;
-    }
+                    .divider {
+                        background-color: #e6e6e6;
+                    }
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
-        color: #999999;
-    }
+                    >li {
+                        >a {
+                            color: #999999;
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover,
-    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a:focus {
-        color: #333333;
-        background-color: transparent;
-    }
+                            &:hover,
+                            &:focus {
+                                color: #333333;
+                                background-color: transparent;
+                            }
+                        }
+                    }
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a,
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:hover,
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.active>a:focus {
-        color: #333333;
-        background-color: transparent;
-    }
+                    >.active>a,
+                    >.active>a:hover,
+                    >.active>a:focus {
+                        color: #333333;
+                        background-color: transparent;
+                    }
 
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a,
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:hover,
-    .navbar-inverse .navbar-nav .open .dropdown-menu>.disabled>a:focus {
-        color: #eeeeee;
-        background-color: transparent;
+                    >.disabled>a,
+                    >.disabled>a:hover,
+                    >.disabled>a:focus {
+                        color: #eeeeee;
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -3639,7 +3658,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 @media (min-width: 768px) {
     #main-menu .navbar-nav>li>a {
         padding: @navbar-item-padding;
-        font-size: 15px;
+        font-size: 15px;        
     }
 }
 
@@ -3677,6 +3696,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 
     .nav-link {
         color: @navbar-font-color;
+        font-weight:600;
         transition: @navbar-font-transition;
 
         &.active {

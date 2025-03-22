@@ -144,78 +144,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
                     $select_db[$options['db']] = $list;
                 }
             }
-            /*
-             * Build opt functions
-             */
-            if (!function_exists('get_form_select_opts')) {
-                // @todo: implement all options settings inherited from dbquery_select_hierarchy
-                function get_form_select_opts($data, $options, $id = 0, $level = 0) {
-                    $list = [];
-                    //array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
-                    if (!empty($data[$id])) {
-                        foreach ($data[$id] as $key => $value) {
-                            // Displays defined pattern
-                            $pattern = "";
-                            if ($options['option_pattern']) {
-                                $pattern = str_repeat($options['option_pattern'], $level)." ";
-                            }
-                            // Build List
-                            if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
-                                if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
-                                    $list[$key] = $pattern.$value[$options['title_col']];
-                                }
-                            } else {
-                                $list[$key] = $pattern.$value[$options['title_col']];
-                            }
-                            // Build Child
-                            if (isset($data[$key])) {
-                                $child = get_form_select_opts($data, $options, $key, $level + 1);
-                                if ($options['optgroup']) {
-                                    $list[$key] = [
-                                        'text'     => $list[$key],
-                                        'children' => $child,
-                                    ];
-                                } else {
-                                    $list = (!empty($list)) ? $list + $child : $child;
-                                }
-                            }
-                        }
-                    } else {
-                        // the list does not start with a root
-                        foreach (array_keys($data) as $id) {
-                            foreach ($data[$id] as $key => $value) {
-                                // Displays defined pattern
-                                $pattern = "";
-                                if ($options['option_pattern']) {
-                                    $pattern = str_repeat($options['option_pattern'], $level)." ";
-                                }
-                                // Build List
-                                if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
-                                    if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
-                                        $list[$key] = $pattern.html_entity_decode($value[$options['title_col']]);
-                                    }
-                                } else {
-                                    $list[$key] = $pattern.html_entity_decode($value[$options['title_col']]);
-                                }
-                                // Build Child
-                                if (isset($data[$key])) {
-                                    $child = get_form_select_opts($data, $options, $key, $level + 1);
-                                    if ($options['optgroup']) {
-                                        $list[$key] = [
-                                            'text'     => $list[$key],
-                                            'children' => $child,
-                                        ];
-                                    } else {
-                                        $list = (!empty($list)) ? $list + $child : $child;
-                                    }
-                                }
-                            }
-                        }
-                    }
 
-                    return (array)$list;
-                }
-            }
             /**
              * Build Chainable Reference
              * array key    current id
@@ -241,6 +170,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
         }
 
         if (!empty($select_db[$options['db']])) {
+
             // Build options and override declared options
             $options['options'] = get_form_select_opts($select_db[$options['db']], $options);
         } else {
@@ -887,4 +817,89 @@ function dropdown_select($db, $id_col, $name_col, $cat_col, $index_values, $filt
     }
 
     return $data;
+}
+
+/*
+* Build opt functions
+*/
+
+// @todo: implement all options settings inherited from dbquery_select_hierarchy
+function get_form_select_opts($data, $options, $id = 0, $level = 0)
+{
+    $locale = fusion_get_locale();
+
+    $list = [];
+
+    $options += [
+        'option_pattern' => '-',
+        'parent_value' => $locale['root'],
+        'value_filter' => array('col'=>'', 'value'=>''),
+        'title_col' => '',
+        'optgroup' => FALSE,               
+    ];
+
+
+    //array('text' => 'Parent Text', 'children' => array(1 => 'Child A' , 2 => 'Child B'));
+    if (!empty($data[$id])) {
+        foreach ($data[$id] as $key => $value) {
+            // Displays defined pattern
+            $pattern = "";
+            if ($options['option_pattern']) {
+                $pattern = str_repeat($options['option_pattern'], $level) . " ";
+            }
+            // Build List
+            if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
+                if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
+                    $list[$key] = $pattern . $value[$options['title_col']];
+                }
+            } else {
+                $list[$key] = $pattern . $value[$options['title_col']];
+            }
+            // Build Child
+            if (isset($data[$key])) {
+                $child = get_form_select_opts($data, $options, $key, $level + 1);
+                if ($options['optgroup']) {
+                    $list[$key] = [
+                        'text'     => $list[$key],
+                        'children' => $child,
+                    ];
+                } else {
+                    $list = (!empty($list)) ? $list + $child : $child;
+                }
+            }
+        }
+    } else {
+        // the list does not start with a root
+        foreach (array_keys($data) as $id) {
+            foreach ($data[$id] as $key => $value) {
+                // Displays defined pattern
+                $pattern = "";
+                if ($options['option_pattern']) {
+                    $pattern = str_repeat($options['option_pattern'], $level) . " ";
+                }
+                // Build List
+                if (!empty($options['value_filter']['col']) && (!empty($options['value_filter']['value']) || $options['value_filter']['value'] !== NULL)) {
+                    if (isset($value[$options['value_filter']['col']]) && $value[$options['value_filter']['col']] == $options['value_filter']['value']) {
+                        $list[$key] = $pattern . html_entity_decode($value[$options['title_col']]);
+                    }
+                } else {
+                    $list[$key] = $pattern . html_entity_decode($value[$options['title_col']]);
+                }
+                // Build Child
+                if (isset($data[$key])) {
+                    $child = get_form_select_opts($data, $options, $key, $level + 1);
+                    if ($options['optgroup']) {
+                        $list[$key] = [
+                            'text'     => $list[$key],
+                            'children' => $child,
+                        ];
+                    } else {
+                        $list = (!empty($list)) ? $list + $child : $child;
+                    }
+                }
+            }
+        }
+    }
+
+    return (array)$list;
 }

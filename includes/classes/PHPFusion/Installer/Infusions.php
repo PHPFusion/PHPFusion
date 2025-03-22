@@ -134,7 +134,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected static function adminpanel_infuse($inf) {
+    public static function adminpanel_infuse($inf) {
 
         $error = FALSE;
 
@@ -434,7 +434,7 @@ class Infusions {
 
         if (is_dir($folder) && file_exists($upgrade_file_path)) {
 
-            include $upgrade_file_path;
+            require $upgrade_file_path;
 
             $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN."images/".$inf_image) ? ADMIN."images/".$inf_image : ADMIN."images/infusion_panel.png";
             if (!empty($inf_image) && file_exists(INFUSIONS.$inf_folder."/".$inf_image)) {
@@ -442,6 +442,7 @@ class Infusions {
             } else {
                 $inf_image = $inf_image_tmp;
             }
+            
 
             $infusion = [
                 'name'            => str_replace('_', ' ', $inf_title),
@@ -600,7 +601,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function dropcol_infuse($inf) {
+    public function dropcol_infuse($inf) {
 
         $error = FALSE;
         if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
@@ -626,7 +627,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function sitelink_infuse($inf) {
+    public function sitelink_infuse($inf) {
 
         $error = FALSE;
         if ($inf['sitelink'] && is_array($inf['sitelink'])) {
@@ -683,7 +684,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function mlt_insertdbrow_infuse($inf) {
+    public function mlt_insertdbrow_infuse($inf) {
 
         $error = FALSE;
         if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
@@ -715,7 +716,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function mlt_adminpanel_infuse($inf) {
+    public function mlt_adminpanel_infuse($inf) {
 
         $error = FALSE;
         if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
@@ -785,7 +786,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function altertable_infuse($inf) {
+    public function altertable_infuse($inf) {
 
         $error = FALSE;
         if ($inf['altertable'] && is_array($inf['altertable'])) {
@@ -808,7 +809,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function updatedbrow_infuse($inf) {
+    public function updatedbrow_infuse($inf) {
 
         $error = FALSE;
 
@@ -831,9 +832,10 @@ class Infusions {
      *
      * @return bool
      */
-    protected function newtable_infuse($inf) {
+    public function newtable_infuse($inf) {
 
         $error = FALSE;
+        
         if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
                 $table_name = fusion_first_words($newtable, 1, '');
@@ -865,7 +867,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function newcol_infuse($inf) {
+    public function newcol_infuse($inf) {
 
         $error = FALSE;
         static $table_schema = [];
@@ -896,7 +898,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function insertdbrow_infuse($inf) {
+    public function insertdbrow_infuse($inf) {
 
         $error = FALSE;
         if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
@@ -924,7 +926,7 @@ class Infusions {
      *
      * @return bool
      */
-    protected function deldbrow_infuse($inf) {
+    public function deldbrow_infuse($inf) {
 
         $error = FALSE;
         if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {

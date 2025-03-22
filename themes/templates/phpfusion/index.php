@@ -97,7 +97,7 @@ function display_home($info)
                         </svg>
                         Features
                     </div>
-                    <h2 class="serif">Discover the Latest PHPFusion CMS</h3>
+                    <h3>Discover the Latest PHPFusion CMS</h3>
                         <div class="spacer-md">PHPFusion offers a wide range of features to help you build a powerful website. From user management to content creation, PHPFusion has everything you need to create a seamless web experience.</div>
                         <div>
                             <a href="#" class="display-inline-block btn btn-default">
@@ -122,7 +122,7 @@ function display_home($info)
                         </svg>
                         Expansion
                     </div>
-                    <h2 class="serif m-b-20">Expand your website easily</h2>
+                    <h3 class="m-b-20">Expand your website easily</h3>
                     <div class="spacer-md">PHPFusion Infusions are apps designed to help you build a powerful website with ease. Choose from a wide range of apps to enhance your website and provide your users with a seamless experience.</div>
                     <div>
                         <a href="#" class="display-inline-block btn btn-default">

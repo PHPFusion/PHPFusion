@@ -467,8 +467,10 @@ class Batch extends InstallCore {
                         foreach ($upgrade_files as $upgrade_file) {
 
                             $filename = rtrim($upgrade_file, 'upgrade.inc');
+                        
 
                             if (version_compare($filename, fusion_get_settings('version'), ">")) {
+                                
                                 /*
                                  * Use Infusions Core to load upgrade statements
                                  */

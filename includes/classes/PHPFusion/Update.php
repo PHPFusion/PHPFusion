@@ -54,14 +54,14 @@ class Update extends Installer\Infusions {
      *
      * @var string
      */
-    private $lang_url = 'https://www.php-fusion.co.uk/translations/tmp/v9/';
+    private $lang_url = 'https://www.phpfusion.com/translations/tmp/v9/';
 
     /**
      * List of available languages
      *
      * @var string
      */
-    private $available_languages = 'https://www.php-fusion.co.uk/translations/languages.php?version=9';
+    private $available_languages = 'https://www.phpfusion.com/translations/languages.php?version=9';
 
     /**
      * @var string
@@ -92,6 +92,7 @@ class Update extends Installer\Infusions {
      * AutoUpdate constructor
      */
     public function __construct() {
+
         $this->locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/upgrade.php');
 
         if (!is_dir($this->temp_dir) && !mkdir($this->temp_dir, 0755, TRUE)) {

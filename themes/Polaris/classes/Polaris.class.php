@@ -48,9 +48,13 @@ class Polaris extends PolarisThemeFactory
         
         $member_options = array(
             BASEDIR .'profile.php?lookup=' . fusion_get_userdata('user_id') => 'Profile',
-            BASEDIR .'messages.php' => 'Messages',
-            '?logout=yes' => 'Logout',
+            BASEDIR .'messages.php' => 'Messages',                        
         );
+        if (iADMIN) {
+            $member_options[ADMIN . 'index.php' . fusion_get_aidlink()] = 'Administration';
+        }
+        $member_options['?logout=yes'] = 'Logout'; 
+
 
         $public_options = [
             BASEDIR .'register.php' => '<strong>Sign up</strong>',

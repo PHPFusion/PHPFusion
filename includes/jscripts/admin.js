@@ -4,31 +4,7 @@
  */
 let slAdmin = {
 
-    /**
-     * Settings
-     */
-    slsettingsJs: function () {
 
-        let $links_grouping = $("#lpp");
-
-        $links_grouping.hide();
-
-        $(document).on('change', '#links_grouping-0, #links_grouping-1', function (e) {
-
-            $links_grouping.hide();
-
-            if ($(this).val() > 0) {
-                $links_grouping.show();
-            }
-
-        });
-
-        if ($('#links_grouping-1').is(':checked')) {
-
-            $('#lpp').show();
-
-        }
-    },
     /**
      * Form
      */
@@ -47,6 +23,23 @@ let slAdmin = {
             if (lpval > 3) {
                 lps.removeAttr('disabled');
                 lps.focus();
+            }
+        });
+    },
+
+    smForm: function () {
+        $(document).on('change', '#menu_branding', function (e) {
+            let val = $(this).val(),
+                header_wrapper = $('#menu_header_wrapper'),
+                image_wrapper = $('#menu_image_wrapper');
+            header_wrapper.hide();
+            image_wrapper.hide();
+            if (val == 1) {
+                header_wrapper.show();
+                image_wrapper.hide();
+            } else if (val == 2) {
+                header_wrapper.hide();
+                image_wrapper.show();
             }
         });
     },
@@ -78,14 +71,14 @@ let slAdmin = {
             $('form#fusion_sltable_form').submit();
         });
 
-        $('#publish').on('click', function (ev) {
+        $('#link_publish').on('click', function (ev) {
             ev.preventDefault();
             // check if any link is clicked
             $('#table_action').val('publish');
             $('form#fusion_sltable_form').submit();
         });
 
-        $('#unpublish').on('click', function (ev) {
+        $('#link_unpublish').on('click', function (ev) {
             ev.preventDefault();
             // check if any link is clicked
             $('#table_action').val('unpublish');
@@ -139,5 +132,46 @@ let slAdmin = {
 
             }
         });
-    }
+    },
+
+    smListing: function (locale) {
+
+        $('#check_all').on('change', function (e) {
+            let check_status = $(this).is(':checked') ? 1 : 0;
+            setChecked('fusion_smtable_form', 'menu_id[]', check_status);
+        });
+
+        // Delete warning link
+        $('body').on('click', '.del-warn', function (ev) {
+            if (!confirm(locale.SL_0081)) {
+                return false;
+            }
+        });
+
+        $('#menu_publish').on('click', function (ev) {
+            ev.preventDefault();
+            // check if any link is clicked
+            $('#table_action').val('menu_publish');
+            $('form#fusion_smtable_form').submit();
+        });
+
+        $('#menu_unpublish').on('click', function (ev) {
+            ev.preventDefault();
+            // check if any link is clicked
+            $('#table_action').val('menu_unpublish');
+            $('form#fusion_smtable_form').submit();
+        });
+
+        // Delete link JS
+        $('#menu_del').on('click', function (ev) {
+            ev.preventDefault();
+            if (confirm(locale.SL_0081)) {
+                $('#table_action').val('menu_del');
+                $('form#fusion_smtable_form').submit();
+            }
+            return false;
+        });
+    },
+
+
 }
