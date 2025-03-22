@@ -1028,23 +1028,23 @@ class CoreTables
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ], //menu_name VARCHAR(100) NOT NULL DEFAULT '',    
+            ], //menu_name VARCHAR(100) NOT NULL DEFAULT '',
             'menu_branding' => [
-                'type'    => 'TINYINT',
-                'length'  => 1,
-                'default' => '',
-                'unsigned'       => TRUE,
-            ], //menu_branding TINYINT(1) UNSIGNED NOT NULL DEFAULT '',           
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => '0',
+                'unsigned' => TRUE,
+            ], //menu_branding TINYINT(1) UNSIGNED NOT NULL DEFAULT '',
             'menu_header' => [
                 'type'    => 'VARCHAR',
                 'length'  => 200,
-                'default' => '',                
-            ], //menu_header VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',           
+                'default' => '',
+            ], //menu_header VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',
             'menu_image' => [
                 'type'    => 'VARCHAR',
                 'length'  => 200,
                 'default' => '',
-            ], //menu_image VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',           
+            ], //menu_image VARCHAR(200) UNSIGNED NOT NULL DEFAULT '',
             'menu_visibility' => [
                 'type'    => 'TINYINT',
                 'length'  => 4,
