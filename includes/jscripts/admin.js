@@ -4,11 +4,10 @@
  */
 let slAdmin = {
 
-
     /**
      * Form
      */
-    slFormJS: function () {
+    slForm: function () {
         let elem = $('#link_position');
         let lps = $('#link_position_id');
         let pos_val = elem.val();

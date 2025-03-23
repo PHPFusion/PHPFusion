@@ -1094,6 +1094,11 @@ class CoreTables
                 'length'  => 100,
                 'default' => ''
             ], //link_name VARCHAR(100) NOT NULL DEFAULT '',
+            'link_description' => [
+                'type'    => 'VARCHAR',
+                'length'  => 200,
+                'default' => ''
+            ], //link_description VARCHAR(100) NOT NULL DEFAULT '',
             'link_url'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 200,

@@ -15,6 +15,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
     private $data = [
         'link_id'          => 0,
         'link_name'        => '',
+        'link_description' => '',
         'link_url'         => '',
         'link_icon'        => '',
         'link_cat'         => 0,
@@ -40,21 +41,31 @@ class SiteLinks extends \PHPFusion\SiteLinks
     ];
 
     private $language_opts;
+
     private $link_index;
 
     private $form_action;
+    
     private $aidlink;
+    
     private $locale;
+    
     private $id;
+    
     private $link_cat;
-
+    
     private $title;
+
     private $refs;
+
     private $section;
+
     private $form_uri;
+
     private $action;
 
     private $link_actions;
+
     private $menu;
 
     /**
@@ -323,6 +334,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
                 "link_name"        => sanitizer('link_name', '', 'link_name'),
                 "link_url"         => sanitizer('link_url', '', 'link_url'),
                 "link_icon"        => sanitizer('link_icon', '', 'link_icon'),
+                'link_description' => sanitizer('link_description', '', 'link_description'),
                 "link_language"    => sanitizer('link_language', LANGUAGE, 'link_language'),
                 "link_visibility"  => sanitizer('link_visibility', 0, 'link_visibility'),
                 "link_position"    => sanitizer('link_position', 0, 'link_position'),
@@ -380,6 +392,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
             'required'   => TRUE,
             'error_text' => $this->locale['SL_0085'],
         ]);
+        echo form_text('link_description', $this->locale['SL_0046'], $this->data['link_description'], ['inline'=>FALSE]);
 
         echo form_text('link_icon', $this->locale['SL_0020a'], $this->data['link_icon'], [
             'max_length' => 100,

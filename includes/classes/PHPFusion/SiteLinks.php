@@ -556,6 +556,8 @@ class SiteLinks
                     $class = "class='" . self::getMenuParam('additional_nav_class') . "'";
                 }
 
+                // if we have a callbackdata of columns in the first one.
+
                 $res .= "<ul $class>\n";
 
                 $res .= $this->showMenuLinks($id, self::getMenuParam('additional_data'));
@@ -864,6 +866,7 @@ class SiteLinks
                     if ($link_is_active) {
                         $li_class[] = "current-link active";
                     }
+
                     $itemlink = '';
                     if (!empty($link_data['link_url'])) {
                         $itemlink = " href='" . BASEDIR . $link_data['link_url'] . "' ";
@@ -888,14 +891,16 @@ class SiteLinks
                         $l_1 = " id='ddlink" . $link_data['link_id'] . "' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' role='presentation'";
                         $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='" . self::getMenuParam('caret_icon') . "'></i>" : "");
+                        
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
+
                     } else {
                         $link_class = (!empty($link_data['link_class']) ? " class='" . $link_data['link_class'] . "'" : '');
                     }
 
                     $li_class = array_filter($li_class);
 
-                    $res .= "<li" . (!empty($li_class) ? " class='" . implode(" ", $li_class) . "'" : '') . " role='presentation'>" . self::getMenuParam('seperator');
+                    $res .= "<li" . (!empty($li_class) ? " class='" . implode(" ", $li_class) . "'" : '') . ">" . self::getMenuParam('seperator');
                     $res .= ($itemlink ? "<a" . $l_1 . $itemlink . $link_target . $link_class . " role='menuitem'>" : "");
                     $res .= (!empty($link_data['link_icon']) ? "<i class='" . $link_data['link_icon'] . " m-r-5'></i>" : "");
                     $res .= $link_data['link_name'] . " " . $l_2;
@@ -903,7 +908,16 @@ class SiteLinks
 
                     if ($has_child) {
 
-                        $res .= "<ul id='menu-" . $link_data['link_id'] . "' aria-labelledby='ddlink" . $link_data['link_id'] . "' class='dropdown-menu'>";
+                        $column_class = '';
+                        $column_styles = '';
+                        if ($link_data['link_columns'] > 1) {
+                            $column_class = ' dropdown-grid-menu';
+                            $column_styles = ' style="grid-template-columns: repeat('.$link_data['link_columns'].', 1fr);"';
+                            // under menu grid add additional css rule in default.less
+                            
+                        }
+
+                        $res .= "<ul id='menu-" . $link_data['link_id'] . "' aria-labelledby='ddlink" . $link_data['link_id'] . "' class='dropdown-menu$column_class' $column_styles>";
                         if (!empty($link_data['link_url']) and $link_data['link_url'] !== "#") {
 
                             $res .= "<li" . (!$itemlink ? " class='no-link'" : '') . ">" . self::getMenuParam('seperator');
@@ -912,8 +926,23 @@ class SiteLinks
                                 'dropdown-toggle' => ''
                             ]);
                             $res .= ($itemlink ? "<a " . $itemlink . $link_target . $link_class . " role='menuitem'>\n" : '');
-                            $res .= (!empty($link_data['link_icon']) ? "<i class='" . $link_data['link_icon'] . " m-r-5'></i>\n" : "");
-                            $res .= $link_data['link_name'];
+                            
+                            $res .= '<div class="display-flex align-items-center gap-15">';
+
+                            if (!empty($link_data['link_icon'])) {
+                                $icon = get_icon($link_data['link_icon']);
+                                if (empty($icon)) {
+                                    $icon = '<i class="'.$link_data['link_icon'].'"></i>';
+                                }                                
+                                $res .= $icon;
+                            }                            
+                            $res .= '<div class="link-meta">'.$link_data['link_name'];
+                            if ($link_data['link_description']) {
+                                $res .= '<div class="link-description">'.$link_data['link_description'].'</div>';
+                            }
+                            $res .= '</div>';
+                            $res .= '</div>';
+
                             $res .= ($itemlink ? "\n</a>\n" : '');
                             $res .= "</li>\n";
                         }

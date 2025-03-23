@@ -36,6 +36,7 @@ if (!db_exists(table: DB_PREFIX . 'site_link_menus', add_prefix: false)) {
 }
 
 if (!column_exists(table: DB_SITE_LINKS, column: 'link_columns', add_prefix: false)) {
+    $inf_altertable[] = DB_SITE_LINKS . " ADD COLUMN link_description VARCHAR(200) NOT NULL DEFAULT '' AFTER link_name";
     $inf_altertable[] = DB_SITE_LINKS . " ADD COLUMN link_columns TINYINT(5) UNSIGNED NOT NULL DEFAULT '1' AFTER link_status";
 }
 

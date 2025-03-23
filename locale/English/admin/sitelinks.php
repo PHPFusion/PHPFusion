@@ -28,8 +28,6 @@ $locale['SL_0024'] = "Link Menus";
 $locale['SL_0025'] = "Link menus not defined. Please add a menu position.";
 $locale['SL_0026'] = "0 automatically set to last ordering";
 $locale['SL_0027'] = "Menu Status";
-//$locale['SL_0026'] = "Navigation panel and Sub-header";
-//$locale['SL_0027'] = "Sub-header only";
 
 $locale['SL_0028'] = "Open link in new window";
 $locale['SL_0029'] = "Link Category";
@@ -48,7 +46,7 @@ $locale['SL_0040'] = "Save Link";
 $locale['SL_0041'] = "Global Settings";
 $locale['SL_0042'] = "Configure your site links navigation settings";
 $locale['SL_0045'] = "Number of links";
-
+$locale['SL_0046'] = 'Link description';
 $locale['SL_0047'] = "Group links when amount of links exceeds menu limit under \"more\"";
 
 // Site Links list
