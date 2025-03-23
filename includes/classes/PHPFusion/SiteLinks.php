@@ -101,7 +101,8 @@ class SiteLinks
         return array();
     }
 
-    public static function getMenuByAlias($value) {
+    public static function getMenuByAlias($value)
+    {
         $query = "SELECT * FROM " . DB_SITE_LINK_MENUS . " " . (multilang_table('SL') ? "WHERE menu_language='" . LANGUAGE . "' AND" : "WHERE") . " menu_alias='" . $value . "'";
         $result = dbquery($query);
         if (dbrows($result)) {
@@ -203,7 +204,8 @@ class SiteLinks
      * @param [type] $key
      * @return void
      */
-    private static function getMenuSettings($id, $key = NULL) {
+    private static function getMenuSettings($id, $key = NULL)
+    {
 
         if (empty(self::$menu_settings) and defined('DB_SITE_LINK_MENUS') and dbconnection() && db_exists('site_link_menus')) {
 
@@ -262,7 +264,7 @@ class SiteLinks
 
             $menu_settings = self::getMenuSettings($menu_id);
 
-            if ( !empty( $menu_settings['menu_id'] ) ) {
+            if (!empty($menu_settings['menu_id'])) {
 
                 $options['links_per_page'] = $menu_settings['menu_grouping'];
 
@@ -288,7 +290,6 @@ class SiteLinks
                 }
 
                 $options['start_page'] = $start_page;
-
             }
 
             self::$instances[$menu_id] = self::getInstance($menu_id);
@@ -891,9 +892,8 @@ class SiteLinks
                         $l_1 = " id='ddlink" . $link_data['link_id'] . "' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' role='presentation'";
                         $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty($id) ? "<i class='" . self::getMenuParam('caret_icon') . "'></i>" : "");
-                        
-                        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
 
+                        $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
                     } else {
                         $link_class = (!empty($link_data['link_class']) ? " class='" . $link_data['link_class'] . "'" : '');
                     }
@@ -912,9 +912,7 @@ class SiteLinks
                         $column_styles = '';
                         if ($link_data['link_columns'] > 1) {
                             $column_class = ' dropdown-grid-menu';
-                            $column_styles = ' style="grid-template-columns: repeat('.$link_data['link_columns'].', 1fr);"';
-                            // under menu grid add additional css rule in default.less
-                            
+                            $column_styles = ' style="grid-template-columns: repeat(' . $link_data['link_columns'] . ', 1fr);"';
                         }
 
                         $res .= "<ul id='menu-" . $link_data['link_id'] . "' aria-labelledby='ddlink" . $link_data['link_id'] . "' class='dropdown-menu$column_class' $column_styles>";
@@ -926,19 +924,19 @@ class SiteLinks
                                 'dropdown-toggle' => ''
                             ]);
                             $res .= ($itemlink ? "<a " . $itemlink . $link_target . $link_class . " role='menuitem'>\n" : '');
-                            
+
                             $res .= '<div class="display-flex align-items-center gap-15">';
 
                             if (!empty($link_data['link_icon'])) {
                                 $icon = get_icon($link_data['link_icon']);
                                 if (empty($icon)) {
-                                    $icon = '<i class="'.$link_data['link_icon'].'"></i>';
-                                }                                
+                                    $icon = '<i class="' . $link_data['link_icon'] . '"></i>';
+                                }
                                 $res .= $icon;
-                            }                            
-                            $res .= '<div class="link-meta">'.$link_data['link_name'];
+                            }
+                            $res .= '<div class="link-meta">' . $link_data['link_name'];
                             if ($link_data['link_description']) {
-                                $res .= '<div class="link-description">'.$link_data['link_description'].'</div>';
+                                $res .= '<div class="link-description">' . $link_data['link_description'] . '</div>';
                             }
                             $res .= '</div>';
                             $res .= '</div>';
