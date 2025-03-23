@@ -1024,6 +1024,11 @@ class CoreTables
                 'key'            => 1, //PRIMARY KEY (menu_id)
                 'unsigned'       => TRUE,
             ], //menu_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            'menu_alias' => [
+                'type'    => 'VARCHAR',
+                'length'  => 200,
+                'default' => ''
+            ], //menu_alias VARCHAR(100) NOT NULL DEFAULT '',   
             'menu_name' => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,

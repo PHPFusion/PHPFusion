@@ -12,7 +12,8 @@ if (!db_exists(table: DB_PREFIX . 'site_link_menus', add_prefix: false)) {
 
     $inf_newtable[] =  DB_SITE_LINK_MENUS . " (
         menu_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-        menu_name VARCHAR(100) NOT NULL DEFAULT '',
+        menu_alias VARCHAR(200) NOT NULL DEFAULT '',
+        menu_name VARCHAR(100) NOT NULL DEFAULT '',        
         menu_branding TINYINT(5) UNSIGNED NOT NULL DEFAULT '0',
         menu_header VARCHAR(200) NOT NULL DEFAULT '',
         menu_image VARCHAR(200) NOT NULL DEFAULT '',
@@ -28,8 +29,8 @@ if (!db_exists(table: DB_PREFIX . 'site_link_menus', add_prefix: false)) {
     $enabled_languages = makefilelist(LOCALE, ".|..", TRUE, "folders");
     if (!empty($enabled_languages)) {
         foreach ($enabled_languages as $language) {
-            $inf_insertdbrow[] = DB_SITE_LINK_MENUS . " (menu_id, menu_name, menu_branding, menu_header, menu_image, menu_visibility, menu_status, menu_grouping, menu_language) VALUES ('1', '" . $locale['setup_3220'] . "', 0, '".$settings['sitename']."', '".$settings['sitebanner']."', 0, '1', '5', '$language')";
-            $inf_insertdbrow[] = DB_SITE_LINK_MENUS . " (menu_id, menu_name, menu_branding, menu_header, menu_image, menu_visibility, menu_status, menu_grouping, menu_language) VALUES ('2', '" . $locale['setup_3221'] . "', 2, '".$settings['sitename']."', '".$settings['sitebanner']."', 0, '1', '5', '$language')";
+            $inf_insertdbrow[] = DB_SITE_LINK_MENUS . " (menu_id, menu_name, menu_branding, menu_header, menu_image, menu_visibility, menu_status, menu_grouping, menu_language) VALUES ('1', 'css-navigation', '" . $locale['setup_3220'] . "', 0, '".$settings['sitename']."', '".$settings['sitebanner']."', 0, '1', '5', '$language')";
+            $inf_insertdbrow[] = DB_SITE_LINK_MENUS . " (menu_id, menu_name, menu_branding, menu_header, menu_image, menu_visibility, menu_status, menu_grouping, menu_language) VALUES ('2', 'subheader', '" . $locale['setup_3221'] . "', 2, '".$settings['sitename']."', '".$settings['sitebanner']."', 0, '1', '5', '$language')";
         }
     }
 }
