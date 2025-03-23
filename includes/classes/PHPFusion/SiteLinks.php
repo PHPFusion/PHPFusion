@@ -206,8 +206,8 @@ class SiteLinks
     private static function getMenuSettings($id, $key = NULL) {
 
         if (empty(self::$menu_settings) and defined('DB_SITE_LINK_MENUS') and dbconnection() && db_exists('site_link_menus')) {
-            
-            self::$menu_settings = isnum($id) ? self::getMenu($id) : self::getMenuByAlias($id);        
+
+            self::$menu_settings = isnum($id) ? self::getMenu($id) : self::getMenuByAlias($id);
         }
 
         return $key === NULL ? self::$menu_settings : (self::$menu_settings[$key] ?? NULL);
@@ -233,7 +233,7 @@ class SiteLinks
             'navbar_class'         => defined('BOOTSTRAP4') ? 'navbar-expand-lg navbar-light' : 'navbar-default',
             'nav_class'            => defined('BOOTSTRAP4') ? 'navbar-nav ml-auto primary' : '',
             'additional_nav_class' => '',
-            'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class            
+            'item_class'           => defined('BOOTSTRAP4') ? 'nav-item' : '', // $class
             'separator'            => '', // $sep
             'links_per_page'       => '',
             'grouping'             => '',
@@ -244,7 +244,7 @@ class SiteLinks
             'searchbar'            => FALSE,
             'search_icon'          => 'fa fa-search',
             'searchbar_btn_class'  => 'btn-primary',
-            'caret_icon'           => defined('BOOTSTRAP4') ? '' : 'caret',            
+            'caret_icon'           => defined('BOOTSTRAP4') ? '' : 'caret',
             'html_pre_content'     => '',
             'html_content'         => '',
             'html_post_content'    => ''
@@ -257,21 +257,21 @@ class SiteLinks
             $settings = fusion_get_settings();
 
             $locale = fusion_get_locale();
-            
+
             $menu_id = $options['id'];
-            
-            $menu_settings = self::getMenuSettings($menu_id);            
-                        
-            if ($menu_settings['menu_id']) {
+
+            $menu_settings = self::getMenuSettings($menu_id);
+
+            if ( !empty( $menu_settings['menu_id'] ) ) {
 
                 $options['links_per_page'] = $menu_settings['menu_grouping'];
-                
+
                 if ($options['links_per_page']) {
                     $options['grouping'] = TRUE;
                 }
 
                 if (!isset($options['callback_data']) && empty($options['callback_data'])) {
-                    $options['callback_data'] = self::getSiteLinksData(['link_position' => $menu_settings['menu_id']]);                    
+                    $options['callback_data'] = self::getSiteLinksData(['link_position' => $menu_settings['menu_id']]);
                 }
 
                 $options['banner'] = $menu_settings['menu_branding'] == 2 ? "<img src='" . IMAGES . $menu_settings['menu_header'] . "' alt='" . $settings['sitename'] . "'/>" : $settings['sitename'];
@@ -288,11 +288,11 @@ class SiteLinks
                 }
 
                 $options['start_page'] = $start_page;
-                
+
             }
 
             self::$instances[$menu_id] = self::getInstance($menu_id);
-            
+
             self::$id = $menu_id;
 
             self::$instances[$menu_id]->menu_options = $options;
@@ -534,7 +534,7 @@ class SiteLinks
             }
 
             $class = ((defined('BOOTSTRAP') && BOOTSTRAP == TRUE) ? " class='nav navbar-nav primary'" : " id='main-menu' class='primary sm sm-simple'");
-            
+
             if (self::getMenuParam('nav_class')) {
                 $class = " class='" . self::getMenuParam('nav_class') . "'";
             }

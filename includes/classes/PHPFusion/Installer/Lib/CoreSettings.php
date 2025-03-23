@@ -1163,6 +1163,32 @@ class CoreSettings {
                 ]
             ]
         ];
+        $table_settings['site_link_menus'] = [
+            'insert' => [
+                [
+                    'menu_alias'      => 'css-navigation',
+                    'menu_name'       => $locale['setup_3220'],
+                    'menu_branding'   => '0',
+                    'menu_header'     => '',
+                    'menu_image'      => '',
+                    'menu_visibility' => '0',
+                    'menu_status'     => '1',
+                    'menu_grouping'   => '5',
+                    'menu_language'   => $localeset
+                ],
+                [
+                    'menu_alias'      => 'subheader',
+                    'menu_name'       => $locale['setup_3221'],
+                    'menu_branding'   => '0',
+                    'menu_header'     => '',
+                    'menu_image'      => '',
+                    'menu_visibility' => '0',
+                    'menu_status'     => '1',
+                    'menu_grouping'   => '5',
+                    'menu_language'   => $localeset
+                ]
+            ]
+        ];
         $table_settings['site_links'] = [
             'insert' => [
                 [
