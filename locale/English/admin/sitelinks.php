@@ -51,6 +51,7 @@ $locale['SL_0047'] = "Group links when amount of links exceeds menu limit under 
 
 // Site Links list
 $locale['SL_0050'] = "Menu Name";
+$locale['SL_0050a'] = "Menu Alias";
 $locale['SL_0051'] = "Menu Visibility";
 $locale['SL_0052'] = "Order";
 $locale['SL_0053'] = "Options";

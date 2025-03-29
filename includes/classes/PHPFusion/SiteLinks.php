@@ -155,7 +155,7 @@ class SiteLinks
     public static function verifyMenu($id)
     {
         if (isnum($id)) {
-            return dbcount("(menu_id)", \DB_SITE_LINK_MENUS, 'menu_id=:menuID', [':menuID' => intval($id)]);
+            return dbcount("(menu_id)", DB_SITE_LINK_MENUS, 'menu_id=:menuID', [':menuID' => intval($id)]);
         }
     }
 
