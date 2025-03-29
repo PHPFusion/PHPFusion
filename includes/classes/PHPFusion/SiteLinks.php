@@ -934,10 +934,7 @@ class SiteLinks
                                 }
                                 $res .= $icon;
                             }
-                            $res .= '<div class="link-meta">' . $link_data['link_name'];
-                            if ($link_data['link_description']) {
-                                $res .= '<div class="link-description">' . $link_data['link_description'] . '</div>';
-                            }
+                            $res .= "<div class='link-meta'" . ( $link_data['link_description'] ? " data-toggle='tooltip' title='" . $link_data['link_description'] . "'" : '') . ">" . $link_data['link_name'];
                             $res .= '</div>';
                             $res .= '</div>';
 
