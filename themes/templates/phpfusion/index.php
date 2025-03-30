@@ -26,16 +26,29 @@ use PHPFusion\News\NewsServer;
  */
 function display_home($info)
 {
-
-    $version = '9.10.30';
     fusion_load_script(TEMPLATES . 'phpfusion/assets/styles/index.css', 'css');
     // Disable all panels on this template. 
     PHPFusion\Panels::getInstance()->hideAll();
     // Add methods to disable the home calculations.
+    if (check_get('section')) {
+        $section = get('section');
+        if ($section == 'os') {
+            return display_cms();
+        }
+    }
+    return display_frontpage();
+}
+
+
+
+function display_frontpage()
+{
+    $version = '9.10.30';
+    $mp_status = 0;
 ?>
     <div class="banner spacer-lg">
         <div class="display-flex flex-column align-items-center justify-content-center text-center">
-            <h1 class="serif" style="max-width:690px;">Infuse your web presence</h1>
+            <h1 style="max-width:690px;">Infuse your web presence</h1>
             <h4 style="max-width:690px;font-weight:400;line-height:1.5;">PHPFusion is an award winning content management system (CMS), which enables you to build websites, as well as web applications.</h4>
 
             <div class="display-flex flex-row align-items-center justify-content-center spacer-sm">
@@ -87,7 +100,18 @@ function display_home($info)
             </div>
         </div><!--container-->
     </div>
-    <div class="blockwall">
+    <div class="intro" style="background:#12162A;">
+        <div class="container" style="padding:80px 0; margin-bottom:30px;">
+            <h5 style="color:#d1ff19; text-transform:uppercase;">Easy Site Design</h5>
+            <h2 style="color:#fff;">Complete Command to Your Website and Brand</h2>
+            <h3 style="color:#cbd5e1;">Create a personalized website and adjust the design settings to seamlessly align with your brand and aesthetic.<br><br>
+                Explore a vast selection of custom themes in our marketplace, or craft your own entirely unique design from the ground up.<br><br>
+                Your brand remains the focal point, while PHPFusion efficiently powers everything behind the scenes.
+            </h3>
+        </div>
+    </div>
+
+    <div class=" blockwall">
         <div class="container">
             <div class="postercard primary">
                 <div class="description">
@@ -98,17 +122,16 @@ function display_home($info)
                         Features
                     </div>
                     <h3>Discover the Latest PHPFusion CMS</h3>
-                        <div class="spacer-md">PHPFusion offers a wide range of features to help you build a powerful website. From user management to content creation, PHPFusion has everything you need to create a seamless web experience.</div>
-                        <div>
-                            <a href="#" class="display-inline-block btn btn-default">
-                                <div class="go-item-link">Explore features<?php echo ARROW ?></div>
-                            </a>
-                        </div>
+                    <div class="spacer-md">PHPFusion offers a wide range of features to help you build a powerful website. From user management to content creation, PHPFusion has everything you need to create a seamless web experience.</div>
+                    <div>
+                        <a href="<?php BASEDIR ?>?section=os" class="display-inline-block btn btn-default">
+                            <div class="go-item-link">Explore features<?php echo ARROW ?></div>
+                        </a>
+                    </div>
                 </div>
                 <div class="image">
-                    <div class="cover"><img src="<?php echo IMAGES ?>assets/bg1.jpg"></div>
+                    <div class="cover"><img src="<?php echo IMAGES ?>assets/home/c4.png"></div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -125,13 +148,18 @@ function display_home($info)
                     <h3 class="m-b-20">Expand your website easily</h3>
                     <div class="spacer-md">PHPFusion Infusions are apps designed to help you build a powerful website with ease. Choose from a wide range of apps to enhance your website and provide your users with a seamless experience.</div>
                     <div>
-                        <a href="#" class="display-inline-block btn btn-default">
-                            <div class="go-item-link">Find apps<?php echo ARROW ?></div>
+
+                        <a href="#" class="display-inline-block btn btn-default disabled">
+                            <?php if ($mp_status == 1) : ?>
+                                <div class="go-item-link">Find apps<?php echo ARROW ?></div>
+                            <?php else: ?>
+                                Reopens Soon
+                            <?php endif ?>
                         </a>
                     </div>
                 </div>
                 <div class="image">
-                    <div class="cover"><img src="<?php echo IMAGES ?>assets/bg2.jpg"></div>
+                    <div class="cover"><img src="<?php echo IMAGES ?>assets/home/c3.png"></div>
                 </div>
             </div>
         </div>
@@ -155,7 +183,7 @@ function display_home($info)
                                     </div>
                                     <div class="card-body">
                                         <h4 class="text-wrap"><?php echo $rows['news_subject'] ?></h4>
-                                        <div class="text-muted"><?php echo showdate('newsdate', $rows['news_last_updated']) ?></div>
+                                        <div class="text-muted"><?php echo showdate('newsdate', $rows['news_datestamp']) ?></div>
                                     </div>
                                 </a>
                             </div>
@@ -167,12 +195,180 @@ function display_home($info)
             <?php
             endif;
             ?>
-            <div class="spacer-sm"><a href="<?php echo INFUSIONS.'news/news.php' ?>" class="btn btn-default">View more</a></div>
+            <div class="spacer-sm"><a href="<?php echo INFUSIONS . 'news/news.php' ?>" class="btn btn-default">View more</a></div>
+        </div>
+    </div>
+<?php
+}
+
+function display_cms()
+{
+    add_to_jquery("$('body').addClass('dark-scheme');");
+    $tab['title'][] = 'Acceleration';
+    $tab['title'][] = 'Precision';
+    $tab['title'][] = 'Automation';
+    $tab['id'][] = 'm1';
+    $tab['id'][] = 'm2';
+    $tab['id'][] = 'm3';
+    $tab_active = tab_active($tab, 0);
+
+?>
+    <div class="banner os-header py-lg p-b-0">
+        <div class="container">
+            <h2 class="text-center">Build and ship your website on a single, cohesive, integrated platform</h2>
+            Tabs here
+        </div>
+        <img class="bg-image" src="<?php echo IMAGES ?>assets/home/os-bg.png">
+    </div>
+    <div class="os-tab">
+        <div class="container">
+            <?php echo opentab(tab_title: $tab, link_active_arrkey: $tab_active, id: 'ostab', class: 'nav-pills',); ?>
+            <?php echo opentabbody($tab['title'][0], $tab['id'][0], $tab_active); ?>
+            <div class="py-sm text-center">
+                <h4>Experience peak performance with PHPFusion’s acceleration features, optimizing speed through intelligent caching, efficient database handling, and streamlined execution—delivering a faster, smoother user experience every time.</h4>
+            </div>
+            <?php echo closetabbody() . opentabbody($tab['title'][1], $tab['id'][1], $tab_active) ?>
+            <div class="py-sm text-center">
+                <h4>PHPFusion delivers unmatched precision with meticulously crafted tools, including robust form validation, intelligent data sanitization, seamless database queries, and dynamic content rendering—ensuring accuracy, security, and flawless execution at every level</h4>
+            </div>
+            <?php echo closetabbody() . opentabbody($tab['title'][2], $tab['id'][2], $tab_active) ?>
+            <div class="py-sm text-center">
+                <h4>PHPFusion ensures consistency with a unified core, where all interactions with it will inherit the same robust methods—automatically enhancing security and accuracy.</h4>
+            </div>
+            <?php echo closetabbody() . closetab() ?>
+        </div>
+    </div>
+
+    <div class="detail-os py-lg">
+        <div class="bdb-1-md py-lg bdt-1-md">
+            <div class="container">
+                <div class="text-center">
+                    <h2>Accelerate production</h2>
+                    <h3 class="text-muted">PHPFusion framework simplifies your tasks for development, and improve your developer experience.</h3>
+                </div>
+            </div>
+        </div>
+        <div class="display-flex bdb-1-md">
+            <div class="bdr-1-md p-20">
+                <h3><strong>Produce faster.</strong><span class="text-muted m-l-10">Increase productivity with ready made third party plugins for the platform's ecosystem.</span></h3>
+                <div class="bg">
+                    <img src="<?php echo IMAGES ?>assets/home/phpf-supervisor.png" class="bg-img">
+                </div>
+            </div>
+            <div class="p-0 col-xs-12 col-md-7 display-flex flex-column">
+                <div class="p-20">
+                    <h3>BBCodes</h3>
+                    <h4 class="text-muted">Enhanced BBCode Parsing for Rich, Dynamic, and Secure Content Formatting.</h4>
+                </div>
+                <div class="bdb-1-md p-20">
+                    <h3>Multilingual</h3>
+                    <h4 class="text-muted">PHPFusion empowers your website with robust multilingual capabilities, ensuring global accessibility and effortless content management across languages.</h4>
+                </div>
+                <div class="bdb-1-md p-20">
+                    <h3>UserFields</h3>
+                    <h4 class="text-muted">PHPFusion User Fields let you tailor profiles effortlessly, adding personalized fields to enhance user interaction and data management.</h4>
+                </div>
+                <div class="bdb-1-md p-20">
+                    <h3>Hooks</h3>
+                    <h4 class="text-muted">PHPFusion Hooks provide seamless extendability, allowing you to inject custom functionality without modifying the core—ensuring smooth upgrades and flexible customization.</h4>
+                </div>
+                <div class="p-20">
+                    <h3>Geo</h3>
+                    <h4 class="text-muted">A comprehensive Location-Based Toolkit for Mapping, Geolocation, and Spatial Insights.</h4>
+                </div>
+            </div>
+        </div>
+        <div class="display-flex bdb-1-md">
+            <div class="p-20 col-xs-12 col-md-6 display-flex flex-column bdr-1-md">
+                <h3>Built in Infusions</h3>
+                <h4 class="text-muted">PHPFusion’s built-in Infusions and Addons provide powerful extensions to enhance functionality, customization, and performance effortlessly</h4>
+                <?php echo opencollapse(id: 'infusions') .
+                    opencollapsebody('News', 'news', 'infusions'); ?>
+                Enhance your site with the News System Addon—streamline publishing, organize articles, and keep your audience informed with ease.
+                <?php echo closecollapsebody() . opencollapsebody('Articles', 'articles', 'infusions'); ?>
+                Publish and organize in-depth content with a structured system designed for easy reading and navigation.
+                <?php echo closecollapsebody() . opencollapsebody('Blog', 'blog', 'infusions'); ?>
+                Write, organize, and showcase your stories with a user-friendly system that supports rich media, categories, and audience engagement.
+                <?php echo closecollapsebody() . opencollapsebody('Forum', 'forum', 'infusions'); ?>
+                Build an interactive community where users can discuss, share ideas, and stay connected in a structured and engaging environment.
+                <?php echo closecollapsebody() . opencollapsebody('Downloads', 'downloads', 'infusions'); ?>
+                Manage and share files effortlessly with a structured system that ensures easy access, organization, and secure distribution.
+                <?php echo closecollapsebody() . opencollapsebody('Weblinks', 'weblinks', 'infusions'); ?>
+                Organize and share valuable resources with a structured system that makes link management easy and accessible.
+                <?php echo closecollapsebody() . opencollapsebody('Gallery', 'gallery', 'infusions'); ?>
+                Showcase and manage images effortlessly with a dynamic gallery designed for seamless organization and display.
+                <?php echo closecollapsebody() . opencollapsebody('Frequent Asked Questions', 'faq', 'infusions'); ?>
+                Provide clear and structured answers to common questions, making information easily accessible for users.
+                <?php echo closecollapsebody();
+                echo closecollapse();
+                ?>
+            </div>
+            <div class="p-20 col-xs-12 col-md-6 display-flex flex-column">
+                picture here
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="bdb-1-md">
+            <div class="text-center">
+                <img src="<?php echo IMAGES?>assets/home/phpf-security.png">
+                <h2>Security</h2>
+                <h3><span class="text-muted">PHPFusion delivers robust security with advanced protections, ensuring a secure and reliable experience for your website and users</span></h3>
+            </div>
+            ...
+        </div>
+        <div class="display-flex bdb-1-md">
+            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                <h3>CSRF Tokens</h3>
+                <h4>Secure Every Request.<span class="text-muted m-l-10">Built-in CSRF token protection safeguards your site against cross-site request forgery, ensuring safe and trusted interactions.</span></h4>
+            </div>
+            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                <h3>Global Sanitization</h3>
+                <h4 class="text-muted">PHPFusion’s Global Sanitization class ensures seamless and consistent data protection, sanitizing everything from text to images with a single method call.</h4>
+            </div>
+            <div class="p-20 col-xs-12 col-md-4">
+                <h3>Database Factory</h3>
+                <h4 class="text-muted">Built-in SQL Handling class simplifies queries and ensures secure, optimized database interactions with ease.</h4>
+            </div>
+        </div>
+        <div class="display-flex bdb-1-md">
+            <div class="bdr-1-md p-20 col-xs-12 col-md-6">
+                <h4>Error Handlers.<span class="text-muted m-l-10">PHPFusion has an advanced error handling ensures smooth operation with detailed logging, clear debug clarity to ensure seamless issue resolution</span></h4>
+            </div>
+            <div class="p-20 col-xs-12 col-md-6">
+                <h4>Cache Engines.<span class="text-muted m-l-10">PHPFusion’s built-in cache engine optimizes speed and efficiency, reducing load times and enhancing user experience effortlessly.</span></h4>
+            </div>
+        </div>
+    </div>
+    <div class="py-md bdb-1-md">
+        <div class="bdb-1-md">
+            <div class="text-center">
+                <div class="container">
+                    <h2>Powerful & Versatile.</h2>
+                    <h3><span class="text-muted m-l-10">Seamless management, optimization, and customization at your fingertips</span></h3>
+                    ...
+                </div>
+            </div>
+        </div>
+        <div class="display-flex bdb-1-md">
+            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                <h3>FusionDynamics</h3><br><br>
+                <h4>PHPFusion Dynamics simplifies UI management with intuitive method calls, covering everything from textboxes and forms to toggles and checkboxes.</h4>
+            </div>
+            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                <h3>FusionInject</h3><br><br>
+                <h4>FusionInject is a smart header and footer management for dynamic asset loading. With a flexible output control your site can seamlessly loading CSS and scripts where needed.</h4>
+            </div>
+            <div class="p-20 col-xs-12 col-md-4">
+                <h3>FusionInsights</h3><br><br>
+                <h4>FusionInsights is a powerful analytics for site owers to make data-driven decisions and performance tracking based on internal data and content activity.</h4>
+            </div>
         </div>
     </div>
 <?php
 
 }
+
 
 
 function getNews()
@@ -182,5 +378,5 @@ function getNews()
 
     $newsClass = NewsServer::news();
     $newsClass->setAllowedFilters(); // Set a blank filters
-    return $newsClass->getNewsItem(['limit'=>6]);
+    return $newsClass->getNewsItem(['limit' => 6]);
 }

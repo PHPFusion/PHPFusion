@@ -1056,19 +1056,13 @@ if (!function_exists('opencollapse')
      *
      * @return string
      */
-    function opencollapsebody($title, $unique_id, $grouping_id, $active = FALSE, $class = NULL, $heading_size = 3) {
+    function opencollapsebody($title, $unique_id, $grouping_id, $active = FALSE, $class = NULL) {
 
-        if ($heading_size && $heading_size < 6) {
-            $heading_size = 'h' . (6 - $heading_size);
-        } else {
-            $heading_size = 'h4';
-        }
         $html = '<div class="panel panel-default '.$class.'">';
-
         $html .= '<div class="panel-heading" role="tab" id="'.$unique_id.'-collapse-heading">';
-        $html .= '<'. $heading_size.' class="panel-title">';
-        $html .= '<a role="button" data-toggle="collapse" data-parent="#'.$grouping_id.'-accordion" href="#'.$unique_id.'-collapse" aria-expanded="true" aria-controls="'.$unique_id.'-collapse">'.$title.'</a>';
-        $html .= '</'. $heading_size.'>';
+        $html .= '<div class="panel-title">';
+        $html .= '<a role="button" data-toggle="collapse"'.($active ? "": " class='collapsed' ").'data-parent="#'.$grouping_id.'-accordion" href="#'.$unique_id.'-collapse" aria-expanded="true" aria-controls="'.$unique_id.'-collapse">'.$title.'</a>';
+        $html .= '</div>';
         $html .= '</div>';
 
         $html .= '<div id="'.$unique_id.'-collapse" class="panel-collapse collapse'.($active ? ' in' : '').'" role="tabpanel" aria-labelledby="'.$unique_id.'-collapse-heading">';

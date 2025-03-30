@@ -61,7 +61,7 @@ class NewsServer
     public static function getNewsSettings($key = NULL)
     {
         if (empty(self::$news_settings)) {
-            self::$news_settings = get_settings("news");
+            self::$news_settings = get_settings('news');
         }
 
         return $key === NULL ? self::$news_settings : (isset(self::$news_settings[$key]) ? self::$news_settings[$key] : NULL);

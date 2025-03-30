@@ -164,3 +164,67 @@
         object-fit: cover;
     }
 }
+
+/**
+OS 
+*/
+.banner.os-header {
+    background-size: inherit;
+    height: 920px;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 10%, rgba(15, 17, 23, 1) 100%);
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .bg-image {
+        position: absolute;
+        left: 0;
+        object-fit: cover;
+        width: 100%;
+        top: 0;
+        z-index: 0;
+    }
+}
+
+.nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    >.nav-pills {
+        display: inline-flex;
+    }
+}
+
+.detail-os {
+    .bg {
+        width:120px;
+        .bg-img {
+                object-fit: cover;
+                    height: 1020px;
+        }
+    }
+}
+
+.panel-group {
+    border: 0;
+
+    .panel-default, .panel-heading {
+        background:transparent;
+        border: 0;
+        padding:10px 0;
+    }
+    .panel-title {
+        font-size:24px;
+        font-weight:600;
+    }
+    .panel-collapse .panel-body {
+        padding:10px 0;        
+        font-size:18px;
+        font-weight:600;
+    }
+}
