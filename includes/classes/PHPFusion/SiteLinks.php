@@ -155,7 +155,7 @@ class SiteLinks
     public static function verifyMenu($id)
     {
         if (isnum($id)) {
-            return dbcount("(menu_id)", \DB_SITE_LINK_MENUS, 'menu_id=:menuID', [':menuID' => intval($id)]);
+            return dbcount("(menu_id)", DB_SITE_LINK_MENUS, 'menu_id=:menuID', [':menuID' => intval($id)]);
         }
     }
 
@@ -934,10 +934,7 @@ class SiteLinks
                                 }
                                 $res .= $icon;
                             }
-                            $res .= '<div class="link-meta">' . $link_data['link_name'];
-                            if ($link_data['link_description']) {
-                                $res .= '<div class="link-description">' . $link_data['link_description'] . '</div>';
-                            }
+                            $res .= "<div class='link-meta'" . ( $link_data['link_description'] ? " data-toggle='tooltip' title='" . $link_data['link_description'] . "'" : '') . ">" . $link_data['link_name'];
                             $res .= '</div>';
                             $res .= '</div>';
 

@@ -30,6 +30,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
 
     private $menu_data = [
         'menu_id' => 0,
+        'menu_alias' => '',
         'menu_name' => '',
         'menu_branding' => '',
         'menu_header' => '',
@@ -45,15 +46,15 @@ class SiteLinks extends \PHPFusion\SiteLinks
     private $link_index;
 
     private $form_action;
-    
+
     private $aidlink;
-    
+
     private $locale;
-    
+
     private $id;
-    
+
     private $link_cat;
-    
+
     private $title;
 
     private $refs;
@@ -146,7 +147,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
                 $this->link_actions .= '<li><a id="link_del" class="text-danger">' . get_image('delete') . $this->locale['SL_0081'] . '</a></li>';
             }
 
-            // use jquery to bind the actions into a hidden form field and submit.        
+            // use jquery to bind the actions into a hidden form field and submit.
             $this->link_actions .= '</ul></div>';
         }
 
@@ -198,9 +199,9 @@ class SiteLinks extends \PHPFusion\SiteLinks
 
                     $this->sitelinksForm();
                 } else {
-                    
+
                     $this->doMenuAction();
-                    
+
                     if ($this->section == 'menu') {
 
                         $this->menuListing();
@@ -226,8 +227,8 @@ class SiteLinks extends \PHPFusion\SiteLinks
 
         if (post("save_settings")) {
 
-            $settings = [                
-                'link_bbcode'    => (post("link_bbcode", FILTER_VALIDATE_INT) ? "1" : "0"),                
+            $settings = [
+                'link_bbcode'    => (post("link_bbcode", FILTER_VALIDATE_INT) ? "1" : "0"),
             ];
 
             if (fusion_safe()) {
@@ -244,7 +245,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
         echo form_checkbox('link_bbcode', $this->locale["SL_0063"].'<div class="small text-normal">'.$this->locale['SL_0064'].'</div>', $settings['link_bbcode'], [
             'inline' => false,
             'type'    => "toggle",
-            'toggle' => TRUE,                                  
+            'toggle' => TRUE,
         ]);
         echo '<hr>';
         echo form_button('save_settings', $this->locale['save_changes'], $this->locale['save_changes'], ['class' => 'btn-primary']);
@@ -268,7 +269,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
                     break;
                 case "del":
                     if (!dbcount("(link_id)", DB_SITE_LINKS, 'link_position=:menuID', array(':menuID' => intval($this->id)))) {
-                        dbquery("DELETE FROM  " . \DB_SITE_LINK_MENUS . " WHERE menu_id=:menuID", [":menuID" => intval($this->id)]);
+                        dbquery("DELETE FROM  " . DB_SITE_LINK_MENUS . " WHERE menu_id=:menuID", [":menuID" => intval($this->id)]);
                         addnotice("success", $this->locale['SL_0069']);
                         redirect(FUSION_SELF . $this->aidlink . "&section=menu&refs=$this->id");
                     } else {
@@ -429,7 +430,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
             $.get('" . ADMIN . "includes/" . fusion_get_aidlink() . "&api=sitelinks-cat', { val: $(this).val() })
                 .done(function (data) {
                     if (data['response'] == 200) {
-                        let linkCat = $('#link_categories');                
+                        let linkCat = $('#link_categories');
 
                         if (!data || !data.data) {
                             console.error('Invalid response format');
@@ -442,8 +443,8 @@ class SiteLinks extends \PHPFusion\SiteLinks
                                 linkCat.append(new Option(value, key, false, false));
                         });
 
-                        // Reinitialize Select2 with new data                  
-                        linkCat.trigger('change');                          
+                        // Reinitialize Select2 with new data
+                        linkCat.trigger('change');
                     }
                 })
                 .fail(function () {
@@ -492,15 +493,16 @@ class SiteLinks extends \PHPFusion\SiteLinks
         if (check_post('save_menu')) {
 
             $data = array(
-                'menu_id' => $this->id,
-                'menu_name' => sanitizer('menu_name', '', 'menu_name'),
-                'menu_branding' => sanitizer('menu_branding', '', 'menu_branding'),
-                'menu_header' => sanitizer('menu_header', '', 'menu_header'),
-                'menu_image' => sanitizer('menu_image', '', 'menu_image'),
-                'menu_grouping' => sanitizer('menu_grouping', '', 'menu_grouping'),
-                'menu_status' => sanitizer('menu_status', '', 'menu_status'),
+                'menu_id'         => $this->id,
+                'menu_alias'      => sanitizer('menu_alias', 'main-menu', 'menu_alias'),
+                'menu_name'       => sanitizer('menu_name', '', 'menu_name'),
+                'menu_branding'   => sanitizer('menu_branding', '', 'menu_branding'),
+                'menu_header'     => sanitizer('menu_header', '', 'menu_header'),
+                'menu_image'      => sanitizer('menu_image', '', 'menu_image'),
+                'menu_grouping'   => sanitizer('menu_grouping', '', 'menu_grouping'),
+                'menu_status'     => sanitizer('menu_status', '', 'menu_status'),
                 'menu_visibility' => sanitizer('menu_visibility', '', 'menu_visibility'),
-                'menu_language' => sanitizer('menu_language', '', 'menu_language'),
+                'menu_language'   => sanitizer('menu_language', '', 'menu_language')
             );
 
             if (fusion_safe()) {
@@ -524,8 +526,13 @@ class SiteLinks extends \PHPFusion\SiteLinks
         echo "<div class='col-xs-12 col-sm-8 col-lg-9'>";
 
         echo form_text('menu_name', $this->locale['SL_0050'], $this->menu_data['menu_name'], [
-            'required' => TRUE,
-            'max_length' => 100,
+            'required'   => TRUE,
+            'max_length' => 100
+        ]);
+        echo form_text('menu_alias', $this->locale['SL_0050a'], $this->menu_data['menu_alias'], [
+            'required'    => TRUE,
+            'max_length'  => 100,
+            'placeholder' => 'main-menu'
         ]);
         openside('');
         echo form_select('menu_branding', $this->locale['SL_0057'], $this->menu_data['menu_branding'], [
@@ -544,10 +551,10 @@ class SiteLinks extends \PHPFusion\SiteLinks
         closeside();
 
         echo form_text('menu_grouping', $this->locale['SL_0055'], $this->menu_data['menu_grouping'], [
-            'type' => 'number',
-            'width' => '200px',
+            'type'        => 'number',
+            'width'       => '200px',
             'inner_width' => '200px',
-            'ext_tip' => $this->locale['SL_0047']
+            'ext_tip'     => $this->locale['SL_0047']
         ]);
 
         echo "</div><div class='col-xs-12 col-sm-4 col-lg-3'>";
@@ -560,12 +567,12 @@ class SiteLinks extends \PHPFusion\SiteLinks
         ]);
 
         echo form_select('menu_visibility', $this->locale['SL_0051'], $this->menu_data['menu_visibility'], [
-            'type' => 'number',
+            'type'    => 'number',
             'options' => self::getLinkVisibility()
         ]);
 
         echo form_select('menu_language', $this->locale['SL_0054'], $this->menu_data['menu_language'], [
-            'inline' => FALSE,
+            'inline'  => FALSE,
             'options' => \fusion_get_enabled_languages()
         ]);
         closeside();
@@ -694,7 +701,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
     {
         add_to_jquery(
             "slAdmin.smListing({
-        'SL_0081' : '" . $this->locale["SL_0081"] . "',            
+        'SL_0081' : '" . $this->locale["SL_0081"] . "',
         });"
         );
 
@@ -744,7 +751,7 @@ class SiteLinks extends \PHPFusion\SiteLinks
      */
     private function doMenuAction()
     {
-        
+
         if ($action = post("table_action")) {
 
             if ($this->section == 'menu') {
