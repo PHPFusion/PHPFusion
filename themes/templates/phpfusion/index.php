@@ -248,95 +248,112 @@ function display_cms()
                 </div>
             </div>
         </div>
-        <div class="display-flex bdb-1-md">
-            <div class="bdr-1-md p-20">
-                <h3><strong>Produce faster.</strong><span class="text-muted m-l-10">Increase productivity with ready made third party plugins for the platform's ecosystem.</span></h3>
-                <div class="bg">
-                    <img src="<?php echo IMAGES ?>assets/home/phpf-supervisor.png" class="bg-img">
-                </div>
-            </div>
-            <div class="p-0 col-xs-12 col-md-7 display-flex flex-column">
-                <div class="p-20">
-                    <h3>BBCodes</h3>
-                    <h4 class="text-muted">Enhanced BBCode Parsing for Rich, Dynamic, and Secure Content Formatting.</h4>
-                </div>
-                <div class="bdb-1-md p-20">
-                    <h3>Multilingual</h3>
-                    <h4 class="text-muted">PHPFusion empowers your website with robust multilingual capabilities, ensuring global accessibility and effortless content management across languages.</h4>
-                </div>
-                <div class="bdb-1-md p-20">
-                    <h3>UserFields</h3>
-                    <h4 class="text-muted">PHPFusion User Fields let you tailor profiles effortlessly, adding personalized fields to enhance user interaction and data management.</h4>
-                </div>
-                <div class="bdb-1-md p-20">
-                    <h3>Hooks</h3>
-                    <h4 class="text-muted">PHPFusion Hooks provide seamless extendability, allowing you to inject custom functionality without modifying the core—ensuring smooth upgrades and flexible customization.</h4>
-                </div>
-                <div class="p-20">
-                    <h3>Geo</h3>
-                    <h4 class="text-muted">A comprehensive Location-Based Toolkit for Mapping, Geolocation, and Spatial Insights.</h4>
+        <div class="bdb-1-md">
+            <div class="section-w">
+                <div class="display-flex">
+                    <div class="bdr-1-md p-20">
+                        <h3><strong>Produce faster.</strong><span class="text-muted m-l-10">Increase productivity with ready made third party plugins for the platform's ecosystem.</span></h3>
+                        <div class="bg">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-supervisor.png" class="bg-img">
+                        </div>
+                    </div>
+                    <div class="p-0 col-xs-12 col-md-7 col-lg-4 display-flex flex-column">
+                        <div class="p-20">
+                            <h3>BBCodes</h3>
+                            <h4 class="text-muted">Enhanced BBCode Parsing for Rich, Dynamic, and Secure Content Formatting.</h4>
+                        </div>
+                        <div class="bdb-1-md p-20">
+                            <h3>Multilingual</h3>
+                            <h4 class="text-muted">PHPFusion empowers your website with robust multilingual capabilities, ensuring global accessibility and effortless content management across languages.</h4>
+                        </div>
+                        <div class="bdb-1-md p-20">
+                            <h3>UserFields</h3>
+                            <h4 class="text-muted">PHPFusion User Fields let you tailor profiles effortlessly, adding personalized fields to enhance user interaction and data management.</h4>
+                        </div>
+                        <div class="bdb-1-md p-20">
+                            <h3>Hooks</h3>
+                            <h4 class="text-muted">PHPFusion Hooks provide seamless extendability, allowing you to inject custom functionality without modifying the core—ensuring smooth upgrades and flexible customization.</h4>
+                        </div>
+                        <div class="p-20">
+                            <h3>Geo</h3>
+                            <h4 class="text-muted">A comprehensive Location-Based Toolkit for Mapping, Geolocation, and Spatial Insights.</h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="display-flex bdb-1-md">
-            <div class="p-20 col-xs-12 col-md-6 display-flex flex-column bdr-1-md">
-                <h3>Built in Infusions</h3>
-                <h4 class="text-muted">PHPFusion’s built-in Infusions and Addons provide powerful extensions to enhance functionality, customization, and performance effortlessly</h4>
-                <?php echo opencollapse(id: 'infusions') .
-                    opencollapsebody('News', 'news', 'infusions'); ?>
-                Enhance your site with the News System Addon—streamline publishing, organize articles, and keep your audience informed with ease.
-                <?php echo closecollapsebody() . opencollapsebody('Articles', 'articles', 'infusions'); ?>
-                Publish and organize in-depth content with a structured system designed for easy reading and navigation.
-                <?php echo closecollapsebody() . opencollapsebody('Blog', 'blog', 'infusions'); ?>
-                Write, organize, and showcase your stories with a user-friendly system that supports rich media, categories, and audience engagement.
-                <?php echo closecollapsebody() . opencollapsebody('Forum', 'forum', 'infusions'); ?>
-                Build an interactive community where users can discuss, share ideas, and stay connected in a structured and engaging environment.
-                <?php echo closecollapsebody() . opencollapsebody('Downloads', 'downloads', 'infusions'); ?>
-                Manage and share files effortlessly with a structured system that ensures easy access, organization, and secure distribution.
-                <?php echo closecollapsebody() . opencollapsebody('Weblinks', 'weblinks', 'infusions'); ?>
-                Organize and share valuable resources with a structured system that makes link management easy and accessible.
-                <?php echo closecollapsebody() . opencollapsebody('Gallery', 'gallery', 'infusions'); ?>
-                Showcase and manage images effortlessly with a dynamic gallery designed for seamless organization and display.
-                <?php echo closecollapsebody() . opencollapsebody('Frequent Asked Questions', 'faq', 'infusions'); ?>
-                Provide clear and structured answers to common questions, making information easily accessible for users.
-                <?php echo closecollapsebody();
-                echo closecollapse();
-                ?>
-            </div>
-            <div class="p-20 col-xs-12 col-md-6 display-flex flex-column">
-                picture here
+        <div class="bdb-1-md">
+            <div class="section-w">
+                <div class="display-flex">
+                    <div class="p-20 col-xs-12 col-md-6 display-flex flex-column bdr-1-md">
+                        <h3>Built in Infusions</h3>
+                        <h4 class="text-muted">PHPFusion’s built-in Infusions and Addons provide powerful extensions to enhance functionality, customization, and performance effortlessly</h4>
+                        <?php echo opencollapse(id: 'infusions') .
+                            opencollapsebody('News', 'news', 'infusions'); ?>
+                        Enhance your site with the News System Addon—streamline publishing, organize articles, and keep your audience informed with ease.
+                        <?php echo closecollapsebody() . opencollapsebody('Articles', 'articles', 'infusions'); ?>
+                        Publish and organize in-depth content with a structured system designed for easy reading and navigation.
+                        <?php echo closecollapsebody() . opencollapsebody('Blog', 'blog', 'infusions'); ?>
+                        Write, organize, and showcase your stories with a user-friendly system that supports rich media, categories, and audience engagement.
+                        <?php echo closecollapsebody() . opencollapsebody('Forum', 'forum', 'infusions'); ?>
+                        Build an interactive community where users can discuss, share ideas, and stay connected in a structured and engaging environment.
+                        <?php echo closecollapsebody() . opencollapsebody('Downloads', 'downloads', 'infusions'); ?>
+                        Manage and share files effortlessly with a structured system that ensures easy access, organization, and secure distribution.
+                        <?php echo closecollapsebody() . opencollapsebody('Weblinks', 'weblinks', 'infusions'); ?>
+                        Organize and share valuable resources with a structured system that makes link management easy and accessible.
+                        <?php echo closecollapsebody() . opencollapsebody('Gallery', 'gallery', 'infusions'); ?>
+                        Showcase and manage images effortlessly with a dynamic gallery designed for seamless organization and display.
+                        <?php echo closecollapsebody() . opencollapsebody('Frequent Asked Questions', 'faq', 'infusions'); ?>
+                        Provide clear and structured answers to common questions, making information easily accessible for users.
+                        <?php echo closecollapsebody();
+                        echo closecollapse();
+                        ?>
+                    </div>
+                    <div class="p-20 col-xs-12 col-md-6 display-flex flex-column">
+                        picture here
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="">
         <div class="bdb-1-md">
             <div class="text-center">
-                <img src="<?php echo IMAGES?>assets/home/phpf-security.png">
+                <img src="<?php echo IMAGES ?>assets/home/phpf-security.png">
                 <h2>Security</h2>
                 <h3><span class="text-muted">PHPFusion delivers robust security with advanced protections, ensuring a secure and reliable experience for your website and users</span></h3>
             </div>
             ...
         </div>
-        <div class="display-flex bdb-1-md">
-            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
-                <h3>CSRF Tokens</h3>
-                <h4>Secure Every Request.<span class="text-muted m-l-10">Built-in CSRF token protection safeguards your site against cross-site request forgery, ensuring safe and trusted interactions.</span></h4>
-            </div>
-            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
-                <h3>Global Sanitization</h3>
-                <h4 class="text-muted">PHPFusion’s Global Sanitization class ensures seamless and consistent data protection, sanitizing everything from text to images with a single method call.</h4>
-            </div>
-            <div class="p-20 col-xs-12 col-md-4">
-                <h3>Database Factory</h3>
-                <h4 class="text-muted">Built-in SQL Handling class simplifies queries and ensures secure, optimized database interactions with ease.</h4>
+        <div class="bdb-1-md">
+            <div class="section-w">
+                <div class="display-flex">
+                    <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <h3>CSRF Tokens</h3>
+                        <h4>Secure Every Request.<span class="text-muted m-l-10">Built-in CSRF token protection safeguards your site against cross-site request forgery, ensuring safe and trusted interactions.</span></h4>
+                    </div>
+                    <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <h3>Global Sanitization</h3>
+                        <h4 class="text-muted">PHPFusion’s Global Sanitization class ensures seamless and consistent data protection, sanitizing everything from text to images with a single method call.</h4>
+                    </div>
+                    <div class="p-20 col-xs-12 col-md-4">
+                        <h3>Database Factory</h3>
+                        <h4 class="text-muted">Built-in SQL Handling class simplifies queries and ensures secure, optimized database interactions with ease.</h4>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="display-flex bdb-1-md">
-            <div class="bdr-1-md p-20 col-xs-12 col-md-6">
-                <h4>Error Handlers.<span class="text-muted m-l-10">PHPFusion has an advanced error handling ensures smooth operation with detailed logging, clear debug clarity to ensure seamless issue resolution</span></h4>
-            </div>
-            <div class="p-20 col-xs-12 col-md-6">
-                <h4>Cache Engines.<span class="text-muted m-l-10">PHPFusion’s built-in cache engine optimizes speed and efficiency, reducing load times and enhancing user experience effortlessly.</span></h4>
+
+        <div class="bdb-1-md">
+            <div class="section-w">
+                <div class="display-flex">
+                    <div class="bdr-1-md p-20 col-xs-12 col-md-6">
+                        <h4>Error Handlers.<span class="text-muted m-l-10">PHPFusion has an advanced error handling ensures smooth operation with detailed logging, clear debug clarity to ensure seamless issue resolution</span></h4>
+                    </div>
+                    <div class="p-20 col-xs-12 col-md-6">
+                        <h4>Cache Engines.<span class="text-muted m-l-10">PHPFusion’s built-in cache engine optimizes speed and efficiency, reducing load times and enhancing user experience effortlessly.</span></h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -350,33 +367,37 @@ function display_cms()
                 </div>
             </div>
         </div>
-        <div class="display-flex bdb-1-md">
-            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
-                <h3>FusionDynamics</h3><br><br>
-                <h4>PHPFusion Dynamics simplifies UI management with intuitive method calls, covering everything from textboxes and forms to toggles and checkboxes.</h4>
+        <div class="bdb-1-md">
+            <div class="section-w">
+                <div class="display-flex">
+                    <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <h3>FusionDynamics</h3><br><br>
+                        <h4>PHPFusion Dynamics simplifies UI management with intuitive method calls, covering everything from textboxes and forms to toggles and checkboxes.</h4>
+                    </div>
+                    <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <h3>FusionInject</h3><br><br>
+                        <h4>FusionInject is a smart header and footer management for dynamic asset loading. With a flexible output control your site can seamlessly loading CSS and scripts where needed.</h4>
+                    </div>
+                    <div class="p-20 col-xs-12 col-md-4">
+                        <h3>FusionInsights</h3><br><br>
+                        <h4>FusionInsights is a powerful analytics for site owers to make data-driven decisions and performance tracking based on internal data and content activity.</h4>
+                    </div>
+                </div>
             </div>
-            <div class="bdr-1-md p-20 col-xs-12 col-md-4">
-                <h3>FusionInject</h3><br><br>
-                <h4>FusionInject is a smart header and footer management for dynamic asset loading. With a flexible output control your site can seamlessly loading CSS and scripts where needed.</h4>
             </div>
-            <div class="p-20 col-xs-12 col-md-4">
-                <h3>FusionInsights</h3><br><br>
-                <h4>FusionInsights is a powerful analytics for site owers to make data-driven decisions and performance tracking based on internal data and content activity.</h4>
             </div>
-        </div>
-    </div>
-<?php
+        <?php
 
-}
+    }
 
 
 
-function getNews()
-{
+    function getNews()
+    {
 
-    require_once INFUSIONS . 'news/classes/autoloader.php';
+        require_once INFUSIONS . 'news/classes/autoloader.php';
 
-    $newsClass = NewsServer::news();
-    $newsClass->setAllowedFilters(); // Set a blank filters
-    return $newsClass->getNewsItem(['limit' => 6]);
-}
+        $newsClass = NewsServer::news();
+        $newsClass->setAllowedFilters(); // Set a blank filters
+        return $newsClass->getNewsItem(['limit' => 6]);
+    }
