@@ -203,7 +203,14 @@ function display_frontpage()
 
 function display_cms()
 {
-    add_to_jquery("$('body').addClass('dark-scheme');");
+    
+    add_to_jquery("
+    $('body').addClass('dark-scheme');
+    $('#main-menu').removeClass('navbar-default').addClass('navbar-inverse');    
+    ");
+
+
+
     $tab['title'][] = 'Acceleration';
     $tab['title'][] = 'Precision';
     $tab['title'][] = 'Automation';
@@ -258,7 +265,7 @@ function display_cms()
                         </div>
                     </div>
                     <div class="p-0 col-xs-12 col-md-7 col-lg-4 display-flex flex-column">
-                        <div class="p-20">
+                        <div class="p-20 bdb-1-md">
                             <h3>BBCodes</h3>
                             <h4 class="text-muted">Enhanced BBCode Parsing for Rich, Dynamic, and Secure Content Formatting.</h4>
                         </div>
@@ -329,21 +336,29 @@ function display_cms()
             <div class="section-w">
                 <div class="display-flex">
                     <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <div style="height:150px;" class="display-flex align-items-center">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-sf.png" width="92px">
+                        </div>
                         <h3>CSRF Tokens</h3>
                         <h4>Secure Every Request.<span class="text-muted m-l-10">Built-in CSRF token protection safeguards your site against cross-site request forgery, ensuring safe and trusted interactions.</span></h4>
                     </div>
                     <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <div style="height:150px;" class="display-flex align-items-center">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-x.png" width="92px">
+                        </div>
                         <h3>Global Sanitization</h3>
                         <h4 class="text-muted">PHPFusion’s Global Sanitization class ensures seamless and consistent data protection, sanitizing everything from text to images with a single method call.</h4>
                     </div>
                     <div class="p-20 col-xs-12 col-md-4">
+                        <div style="height:150px;" class="display-flex align-items-center">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-dbf-x.png" width="92px">
+                        </div>
                         <h3>Database Factory</h3>
                         <h4 class="text-muted">Built-in SQL Handling class simplifies queries and ensures secure, optimized database interactions with ease.</h4>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="bdb-1-md">
             <div class="section-w">
                 <div class="display-flex">
@@ -371,33 +386,42 @@ function display_cms()
             <div class="section-w">
                 <div class="display-flex">
                     <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <div style="height:400px">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-fd-bg.png" width="100%">
+                        </div>
                         <h3>FusionDynamics</h3><br><br>
                         <h4>PHPFusion Dynamics simplifies UI management with intuitive method calls, covering everything from textboxes and forms to toggles and checkboxes.</h4>
                     </div>
                     <div class="bdr-1-md p-20 col-xs-12 col-md-4">
+                        <div style="height:400px">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-fi-bg.png" width="100%">
+                        </div>
                         <h3>FusionInject</h3><br><br>
                         <h4>FusionInject is a smart header and footer management for dynamic asset loading. With a flexible output control your site can seamlessly loading CSS and scripts where needed.</h4>
                     </div>
                     <div class="p-20 col-xs-12 col-md-4">
+                        <div style="height:400px">
+                            <img src="<?php echo IMAGES ?>assets/home/phpf-fs-bg.png" width="100%">
+                        </div>
                         <h3>FusionInsights</h3><br><br>
                         <h4>FusionInsights is a powerful analytics for site owers to make data-driven decisions and performance tracking based on internal data and content activity.</h4>
                     </div>
                 </div>
             </div>
-            </div>
-            </div>
-        <?php
+        </div>
+    </div>
+<?php
 
-    }
+}
 
 
 
-    function getNews()
-    {
+function getNews()
+{
 
-        require_once INFUSIONS . 'news/classes/autoloader.php';
+    require_once INFUSIONS . 'news/classes/autoloader.php';
 
-        $newsClass = NewsServer::news();
-        $newsClass->setAllowedFilters(); // Set a blank filters
-        return $newsClass->getNewsItem(['limit' => 6]);
-    }
+    $newsClass = NewsServer::news();
+    $newsClass->setAllowedFilters(); // Set a blank filters
+    return $newsClass->getNewsItem(['limit' => 6]);
+}
