@@ -241,3 +241,22 @@ OS
     max-width: 1600px;
     justify-self: center;
 }
+
+.bg-collapse-img {
+    opacity:0;
+    max-width:100%;
+    position: absolute;
+    // left: 50%;
+    // transform: translateX(-50%) scale(1.05);
+
+    transition-property: transform, opacity;
+        transition-duration: 1s;
+        transition-timing-function: cubic-bezier(0.5, 0.16, 0.1, 1);
+        transform: scale(1.15);
+        will-change:transform;
+    
+    &.show {
+            opacity: 1;
+                transform: scale(1);
+    }
+}

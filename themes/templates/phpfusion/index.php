@@ -296,7 +296,7 @@ function display_cms()
                         <h3>Built in Infusions</h3>
                         <h4 class="text-muted">PHPFusion’s built-in Infusions and Addons provide powerful extensions to enhance functionality, customization, and performance effortlessly</h4>
                         <?php echo opencollapse(id: 'infusions') .
-                            opencollapsebody('News', 'news', 'infusions'); ?>
+                        opencollapsebody('News', 'news', 'infusions'); ?>
                         Enhance your site with the News System Addon—streamline publishing, organize articles, and keep your audience informed with ease.
                         <?php echo closecollapsebody() . opencollapsebody('Articles', 'articles', 'infusions'); ?>
                         Publish and organize in-depth content with a structured system designed for easy reading and navigation.
@@ -316,14 +316,28 @@ function display_cms()
                         echo closecollapse();
                         ?>
                     </div>
-                    <div class="p-20 col-xs-12 col-md-6 display-flex flex-column">
-                        picture here
+                    <div class="p-0 col-xs-12 col-md-6 display-flex flex-column p-0 overflow-hide">
+                        <img id="accordion-img" src="<?php echo IMAGES ?>assets/home/phpf-inf-news.png" class="bg-collapse-img">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="">
+    <?php
+    add_to_jquery("
+    $(document).on('click', '#infusions-accordion .panel-title > a', function() {
+            var newImage = $(this).attr('href'),
+            imgKey = newImage.split('-')[0].replace('#', '');
+            var srcPath = '".IMAGES."/assets/home/phpf-inf-'+imgKey+'.png';
+            // Change the image source
+            $('#accordion-img').removeClass('show'); // Hide previous image
+            setTimeout(function () {
+                $('#accordion-img').attr('src', srcPath).addClass('show');
+            }, 200); // Delay to allow transition effect
+    });
+    ");
+    ?>
+    <div>
         <div class="bdb-1-md">
             <div class="text-center">
                 <img src="<?php echo IMAGES ?>assets/home/phpf-security.png">
