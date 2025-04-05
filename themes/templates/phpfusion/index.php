@@ -203,7 +203,7 @@ function display_frontpage()
 
 function display_cms()
 {
-    
+
     add_to_jquery("
     $('body').addClass('dark-scheme');
     $('#main-menu').removeClass('navbar-default').addClass('navbar-inverse');    
@@ -296,7 +296,7 @@ function display_cms()
                         <h3>Built in Infusions</h3>
                         <h4 class="text-muted">PHPFusion’s built-in Infusions and Addons provide powerful extensions to enhance functionality, customization, and performance effortlessly</h4>
                         <?php echo opencollapse(id: 'infusions') .
-                        opencollapsebody('News', 'news', 'infusions'); ?>
+                            opencollapsebody('News', 'news', 'infusions', active:true); ?>
                         Enhance your site with the News System Addon—streamline publishing, organize articles, and keep your audience informed with ease.
                         <?php echo closecollapsebody() . opencollapsebody('Articles', 'articles', 'infusions'); ?>
                         Publish and organize in-depth content with a structured system designed for easy reading and navigation.
@@ -325,10 +325,12 @@ function display_cms()
     </div>
     <?php
     add_to_jquery("
+    var srcPath = '" . IMAGES . "/assets/home/phpf-inf-news.png';
+    $('#accordion-img').attr('src', srcPath).addClass('show')
     $(document).on('click', '#infusions-accordion .panel-title > a', function() {
             var newImage = $(this).attr('href'),
             imgKey = newImage.split('-')[0].replace('#', '');
-            var srcPath = '".IMAGES."/assets/home/phpf-inf-'+imgKey+'.png';
+            var srcPath = '" . IMAGES . "/assets/home/phpf-inf-'+imgKey+'.png';
             // Change the image source
             $('#accordion-img').removeClass('show'); // Hide previous image
             setTimeout(function () {
@@ -396,7 +398,7 @@ function display_cms()
                 </div>
             </div>
         </div>
-        <div class="bdb-1-md">
+        <div>
             <div class="section-w">
                 <div class="display-flex">
                     <div class="bdr-1-md p-20 col-xs-12 col-md-4">
@@ -421,6 +423,14 @@ function display_cms()
                         <h4>FusionInsights is a powerful analytics for site owers to make data-driven decisions and performance tracking based on internal data and content activity.</h4>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-md">
+        <div class="container">
+            <div class="text-center">
+                <h2>Welcome to PHPFusion CMS</h2>
+                <h3><span class="text-muted">Whether you're building your first website or managing a dynamic community, PHPFusion gives you the tools to create, customize, and grow. Join a powerful, lightweight CMS trusted by developers worldwide to bring ideas to life—your way.</span></h3>
             </div>
         </div>
     </div>
