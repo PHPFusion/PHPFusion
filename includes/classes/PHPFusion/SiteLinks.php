@@ -395,7 +395,7 @@ class SiteLinks {
             }
         }
 
-        return $key === NULL ? $data : (isset( $data[$key] ) ? $data[$key] : NULL);
+        return $key === NULL ? $data : ($data[$key] ?? NULL);
     }
 
     /**

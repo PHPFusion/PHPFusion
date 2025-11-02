@@ -24,7 +24,7 @@
  *
  * @return string
  */
-function get_bootstrap( $part, $version = '3', $php = FALSE ) {
+function get_bootstrap($part, $version = '3') {
 
     static $framework_paths = [];
 
@@ -40,22 +40,24 @@ function get_bootstrap( $part, $version = '3', $php = FALSE ) {
         // Headers and footers
         require_once __DIR__ . '/' . $version . '/index.php';
 
-        $_dir = __DIR__ . '/' . $version . '/';
+        $_dir = __DIR__ . '/' . $version . '/templates/';
 
         $framework_paths['php'] = [
-            'showsublinks' => ['dir' => $_dir, 'file' => 'navbar.php'],
-            'form_inputs'  => ['dir' => $_dir, 'file' => 'dynamics.php'],
-            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.php']
+            'showsublinks' => ['dir' => $_dir, 'file' => 'navbar.tpl.php', 'callback'=>'render_navbar'],
+            // dynamics_ui
+            'form_inputs'  => ['dir' => $_dir, 'file' => 'dynamics-ui.tpl.php', 'callback'=>'render_dynamic_ui'],
+
+            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.tpl.php']
         ];
 
-        $framework_paths['twig'] = [
-            'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
-            'form_inputs'  => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
-        ];
+//        $framework_paths['twig'] = [
+//            'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
+//            'form_inputs'  => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
+//        ];
 
     }
 
-    $_type = $php ? 'php' : 'twig';
+    $_type = 'php';
 
     return $framework_paths[$_type][$part] ?? '';
 }
@@ -91,7 +93,15 @@ if ( defined( 'BOOTSTRAP' ) ) {
 
         if ( $path = get_bootstrap( $component ) ) {
 
-            return fusion_render( $path['dir'], $path['file'], $info, defined( 'FUSION_TPL_DEBUG') );
+            if (!empty($path['file'])) {
+
+                require_once $path['dir'].$path['file'];
+                return call_user_func($path['callback'], $info);
+
+            } else {
+                print_p($path['callback'].' is invalid');
+            }
+            //return fusion_render( $path['dir'], $path['file'], $info, defined( 'FUSION_TPL_DEBUG') );
 
         } else if ( $path = get_bootstrap( $component, 'auto', TRUE ) ) {
 

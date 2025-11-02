@@ -1,0 +1,20 @@
+@media (prefers-color-scheme: light) {
+  --color: #676a79;
+  --low-emphasis: #00000088;
+  --lighter-color: #14191e;
+  --label-color: #000000bf;
+  --input-color: #000000bf;
+  --input-border-color: #e1e4e6;
+  --input-border-radius: 4px;
+  --input-padding-vertical: 14px;
+  --input-padding-horizontal: 16px;
+  --header-color: #000;
+  --border-color: #00000017;
+  --bg: #eff2f6;
+  --card-header: #fff;
+  --card-radius: 0.4rem;
+  --inner-radius: calc(0.4rem - 1px);
+  --primary-color: #0d6efd;
+  --darker-input-bg: #eef0f2;
+}
+/*# sourceMappingURL=var.light.css.map */

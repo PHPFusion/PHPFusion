@@ -142,7 +142,7 @@ function fusion_render(string $dir_path = THEMES.'templates/', string $file_path
         }
     }
 
-    return "Rendering has encountered an error.";
+    return "Fusion twig rendering has encountered an error.";
 }
 
 /**

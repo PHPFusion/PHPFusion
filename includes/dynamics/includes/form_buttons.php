@@ -25,22 +25,21 @@
  *
  * @return string
  */
-function form_button( $input_name, $label, $input_value, array $options = [] ) {
-    $html = "";
-
-    $input_value = clean_input_value( $input_value );
+function form_button($input_name, $label, $input_value, array $options = [])
+{
+    $input_value = clean_input_value($input_value);
 
     $options += [
-        'input_id'    => clean_input_id( $input_name ),
-        'input_value' => clean_input_name( $input_name ),
-        'class'       => 'btn-default',
-        'icon_class'  => 'm-r-10',
-        'icon'        => '',
-        'deactivate'  => FALSE,
-        'type'        => 'submit',
-        'block'       => FALSE,
-        'alt'         => $label,
-        'data'        => [],
+        'input_id' => clean_input_id($input_name),
+        'input_value' => clean_input_name($input_name),
+        'class' => 'btn-default',
+        'icon_class' => 'm-r-10',
+        'icon' => '',
+        'deactivate' => FALSE,
+        'type' => 'submit',
+        'block' => FALSE,
+        'alt' => $label,
+        'data' => [],
     ];
 
     $options['template_type'] = 'button';
@@ -49,20 +48,20 @@ function form_button( $input_name, $label, $input_value, array $options = [] ) {
         $options['class'] = $options['class'] . " btn-block";
     }
 
-    array_walk( $options['data'], function ( $a, $b ) use ( &$options_data ) {
+    array_walk($options['data'], function ($a, $b) use (&$options_data) {
         $options_data[] = "data-$b='$a'";
-    }, $options_data );
+    }, $options_data);
 
     $options['options_data'] = $options_data;
 
-    ksort( $options );
+    ksort($options);
 
-    return fusion_get_template( 'form_inputs', [
-        "input_name"    => $input_name,
-        "input_label"   => $label,
-        "input_value"   => $input_value,
+    return fusion_get_template('form_inputs', [
+        "input_name" => $input_name,
+        "input_label" => $label,
+        "input_value" => $input_value,
         "input_options" => $options,
-    ] );
+    ]);
 
 }
 
@@ -76,66 +75,67 @@ function form_button( $input_name, $label, $input_value, array $options = [] ) {
  *
  * @return string
  */
-function form_btngroup( $input_name, $label, $input_value = '', array $options = [] ) {
+function form_btngroup($input_name, $label, $input_value = '', array $options = [])
+{
     $locale = fusion_get_locale();
 
-    $title = $label ? stripinput( $label ) : ucfirst( strtolower( str_replace( "_", " ", $input_name ) ) );
+    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
-    $input_value = clean_input_value( $input_value );
+    $input_value = clean_input_value($input_value);
 
     $options += [
-        'options'        => [$locale['disable'], $locale['enable']],
-        'input_name'     => clean_input_name( $input_name ),
-        'input_id'       => clean_input_id( $input_name ),
-        'btn_class'      => 'btn-default', // change from 'class' to 'btn_class'
-        'type'           => 'button',
-        'icon'           => '',
-        'multiple'       => FALSE,
-        'delimiter'      => ',',
-        'deactivate'     => FALSE,
-        'error_text'     => '',
-        'inline'         => FALSE,
-        'safemode'       => FALSE,
-        'required'       => FALSE,
-        'ext_tip'        => '',
+        'options' => [$locale['disable'], $locale['enable']],
+        'input_name' => clean_input_name($input_name),
+        'input_id' => clean_input_id($input_name),
+        'btn_class' => 'btn-default', // change from 'class' to 'btn_class'
+        'type' => 'button',
+        'icon' => '',
+        'multiple' => FALSE,
+        'delimiter' => ',',
+        'deactivate' => FALSE,
+        'error_text' => '',
+        'inline' => FALSE,
+        'safemode' => FALSE,
+        'required' => FALSE,
+        'ext_tip' => '',
         'callback_check' => '',
     ];
 
-    $options['input_name'] = ($options['multiple']) ? str_replace( "[]", "", $input_name ) : $input_name;
+    $options['input_name'] = ($options['multiple']) ? str_replace("[]", "", $input_name) : $input_name;
 
     $options['template_type'] = 'button_group';
 
-    list( $options['error_class'], $options['error_text'] ) = form_errors( $options );
+    list($options['error_class'], $options['error_text']) = form_errors($options);
 
-    set_field_config( [
-        'title'          => $title,
-        'input_name'     => $options['input_name'],
-        'id'             => $options['input_id'],
-        'type'           => 'dropdown',
-        'required'       => $options['required'],
+    set_field_config([
+        'title' => $title,
+        'input_name' => $options['input_name'],
+        'id' => $options['input_id'],
+        'type' => 'dropdown',
+        'required' => $options['required'],
         'callback_check' => $options['callback_check'],
-        'safemode'       => $options['safemode'],
-        'error_text'     => $options['error_text'],
-        'delimiter'      => $options['delimiter'],
-    ] );
+        'safemode' => $options['safemode'],
+        'error_text' => $options['error_text'],
+        'delimiter' => $options['delimiter'],
+    ]);
 
-    add_to_jquery( "    
+    add_to_jquery("    
     $('#" . $options['input_id'] . " button').on('click', function(e){
         $('#" . $options['input_id'] . " button').removeClass('active');
         $(this).toggleClass('active');
         value = $(this).data('value');
         $('#" . $options['input_id'] . "-text').val(value);
     });
-    " );
+    ");
 
-    ksort( $options );
+    ksort($options);
 
-    return fusion_get_template( 'form_inputs', [
-        "input_name"    => $input_name,
-        "input_label"   => $label,
-        "input_value"   => $input_value,
+    return fusion_get_template('form_inputs', [
+        "input_name" => $input_name,
+        "input_label" => $label,
+        "input_value" => $input_value,
         "input_options" => $options,
-    ] );
+    ]);
 
 
 }
