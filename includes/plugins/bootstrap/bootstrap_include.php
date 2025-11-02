@@ -43,18 +43,22 @@ function get_bootstrap($part, $version = '3') {
         $_dir = __DIR__ . '/' . $version . '/templates/';
 
         $framework_paths['php'] = [
+            /**
+             * Menu
+             * @uses render_navbar()
+             */
             'showsublinks' => ['dir' => $_dir, 'file' => 'navbar.tpl.php', 'callback'=>'render_navbar'],
-            // dynamics_ui
+            /**
+             * Dynamics UI
+             * @uses render_dynamic_ui()
+             */
             'form_inputs'  => ['dir' => $_dir, 'file' => 'dynamics-ui.tpl.php', 'callback'=>'render_dynamic_ui'],
-
-            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.tpl.php']
+            /**
+             * Collapse UI
+             * @uses render_collapse()
+             */
+            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.tpl.php', 'callback'=>'render_collapse']
         ];
-
-//        $framework_paths['twig'] = [
-//            'showsublinks' => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'navbar.twig'],
-//            'form_inputs'  => ['dir' => __DIR__ . '/' . $version . '/', 'file' => 'dynamics.twig']
-//        ];
-
     }
 
     $_type = 'php';
