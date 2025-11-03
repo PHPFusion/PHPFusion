@@ -57,7 +57,22 @@ function get_bootstrap($part, $version = '3') {
              * Collapse UI
              * @uses render_collapse()
              */
-            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.tpl.php', 'callback'=>'render_collapse']
+            'collapse'     => ['dir' => $_dir, 'file' => 'collapse.tpl.php', 'callback'=>'render_collapse'],
+            /**
+             * Tabs UI
+             * @uses render_tabs()
+             */
+            'tabs' => ['dir' => $_dir, 'file' => 'tabs.tpl.php', 'callback'=>'render_tabs'],
+            /**
+             * Modal UI
+             * @uses render_modal()
+             */
+            'modal' =>  ['dir' => $_dir, 'file' => 'modal.tpl.php', 'callback'=>'render_modal'],
+            /**
+             * Notice UI
+             * @uses render_notices()
+             */
+            'notices' => ['dir' => $_dir, 'file' => 'notices.tpl.php', 'callback'=>'render_notices'],
         ];
     }
 
@@ -103,9 +118,9 @@ if ( defined( 'BOOTSTRAP' ) ) {
                 return call_user_func($path['callback'], $info);
 
             } else {
-                print_p($path['callback'].' is invalid');
+
+                die($path['callback'].' is invalid');
             }
-            //return fusion_render( $path['dir'], $path['file'], $info, defined( 'FUSION_TPL_DEBUG') );
 
         } else if ( $path = get_bootstrap( $component, 'auto', TRUE ) ) {
 
@@ -120,3 +135,4 @@ if ( defined( 'BOOTSTRAP' ) ) {
     }
 }
 
+fusion_tab();

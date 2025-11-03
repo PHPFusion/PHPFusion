@@ -47,7 +47,7 @@ function display_profile_form( array $info = [] ) {
         }
 
         return fusion_get_function( 'openside', '' )
-            . '<ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0" role="tablist">'
+            . '<ul class="nav nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0" role="tablist">'
             . ($menu ?? '')
             . '</ul>'
             . fusion_get_function( 'closeside' );

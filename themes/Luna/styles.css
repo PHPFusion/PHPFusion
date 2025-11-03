@@ -2333,6 +2333,28 @@ a.stretched:after {
   font-size: 0.9rem !important;
   margin: 0;
 }
+.nav {
+  --bs-nav-link-padding-x: 0.75rem;
+  --bs-nav-link-padding-y: 0.25rem;
+  --bs-nav-link-font-weight: 600;
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-nav-link-hover-color: var(--bs-link-hover-color);
+  --bs-nav-link-disabled-color: var(--bs-gray-500) !important;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav-pills {
+  --bs-nav-pills-border-radius: 0.4rem;
+  --bs-nav-pills-link-active-color: #0d6efd;
+  --bs-nav-pills-link-active-bg: #0d6efd;
+}
+.nav-pills.nav-pills-soft .nav-link.active,
+.nav-pills .nav-pills-soft .show > .nav-link {
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
 .nav-tabs .nav-link {
   color: var(--bs-gray-300);
 }
@@ -2515,10 +2537,11 @@ a.stretched:after {
   text-align: center;
   margin-top: auto;
   margin-bottom: 20px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 .copyright-bottom a {
   font-weight: 600;
+  color: var(--bs-gray-800);
 }
 .copyright-bottom a:hover,
 .copyright-bottom a:focus {
@@ -2526,6 +2549,5 @@ a.stretched:after {
 }
 .copyright-bottom .site-policies a {
   margin-right: 1rem;
-  color: var(--low-emphasis);
 }
 /*# sourceMappingURL=styles.css.map */
