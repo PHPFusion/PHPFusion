@@ -111,13 +111,26 @@ class Forum_Postify extends ForumServer {
         ];
         // Override the class action with the implemented method.
         $class_actions = (isset($implements[$class_actions]) ? $implements[$class_actions] : $class_actions);
-        if (file_exists(FORUM_CLASSES.'postify/'.$class_actions.'.php')) {
-            require_once(FORUM_CLASSES.'postify/'.$class_actions.'.php');
-            $namespace_ = '\\PHPFusion\\Forums\\Postify\\';
-            $prefix_ = 'Postify_';
-            $obj = new \ReflectionClass($namespace_.$prefix_.$class_actions);
-            $this->postify_action[$class_actions] = $obj->newInstance();
+
+        $base_dir = realpath(FORUM_CLASSES . 'postify');
+
+        if ($base_dir === false) {
+            throw new \Exception('Base directory not found');
         }
+
+        $class_actions = preg_replace('/[^a-zA-Z0-9_-]/', '', $class_actions);
+        $real_path = realpath($base_dir . DIRECTORY_SEPARATOR . $class_actions . '.php');
+
+        if ($real_path === false || strpos($real_path, $base_dir) !== 0 || !file_exists($real_path)) {
+            throw new \Exception('Invalid File Path');
+        }
+
+        require_once($real_path);
+        $namespace_ = '\\PHPFusion\\Forums\\Postify\\';
+        $prefix_ = 'Postify_';
+        $obj = new \ReflectionClass($namespace_.$prefix_.$class_actions);
+        $this->postify_action[$class_actions] = $obj->newInstance();
+        
         // Need to execute the implement_method
         if (is_object($this->postify_action[$class_actions])) {
             return (object)$this->postify_action[$class_actions];
