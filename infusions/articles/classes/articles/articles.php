@@ -247,6 +247,7 @@ abstract class Articles extends ArticlesServer {
             // Handle Text
             if (isset($_GET['article_id'])) {
                 $articleText = !empty($data['article_article']) ? $data['article_article'] : $data['article_snippet'];
+				$articleText = !empty($data['article_article']) ? $data['article_article'] : "";
 
                 // Handle Pages
                 $articleText = preg_split("/<!?--\s*pagebreak\s*-->/i", $articleText);
