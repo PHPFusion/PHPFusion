@@ -48,8 +48,7 @@ class WeblinksSubmissionsAdmin extends WeblinksAdminModel {
                 'weblink_visibility'  => sanitizer('weblink_visibility', 0, 'weblink_visibility'),
                 'weblink_status'      => sanitizer('weblink_status', 0, 'weblink_status'),
                 'weblink_count'       => "0",
-                'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language'),
-                'weblink_user_name'   => sanitizer('weblink_user_name', '', 'weblink_user_name'),
+                'weblink_language'    => sanitizer('weblink_language', LANGUAGE, 'weblink_language')
             ];
             // Handle
             if (fusion_safe()) {
