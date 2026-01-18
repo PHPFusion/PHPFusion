@@ -270,6 +270,13 @@ class Admin {
         $atheme = $admin == TRUE ? 'acp_' : '';
         $atheme_ = $admin == TRUE ? 'admin_theme' : 'theme';
 
+        if(!file_exists($folder.$theme_name.'/'.$atheme.'theme.php')) {
+            addnotice('error', "Error: Can't change theme, no mandatory theme.php file exist in theme!");
+        }
+        if(!file_exists($folder.$theme_name.'/'.$atheme.'styles.css')) {
+            //addnotice('error', $locale['theme_success_002']);
+            addnotice('error', "Error: Can't change theme, no mandatory styles.css file exist in theme!");
+        }
         return (
             is_dir($folder.$theme_name) &&
             file_exists($folder.$theme_name.'/'.$atheme.'theme.php') &&
