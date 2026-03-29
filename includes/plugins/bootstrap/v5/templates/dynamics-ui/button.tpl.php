@@ -9,6 +9,7 @@ function render_button_input($input_name, $input_label, $input_value, $options =
         'icon' => '',
         'icon_class' => '',
         'input_id' => '',
+        'iconify' => '',
         'deactivate' => false,
         'options_data' => [],
     ], $options);
@@ -20,7 +21,10 @@ function render_button_input($input_name, $input_label, $input_value, $options =
     if (!empty($options['icon'])) {
         $icon_class = trim($options['icon_class'] ?? '');
         $icon = '<i class="' . htmlspecialchars($options['icon'] . ' ' . $icon_class) . '"></i>';
-    }
+    }elseif (!empty($options['iconify'])) {
+    	$icon_class = " ".trim($options['icon_class'] ?? '');
+    	$icon = "<iconify-icon icon='{$options['iconify']}' class='fs-6{$icon_class}'></iconify-icon>";
+	}
 
     $data_attrs = '';
     if (!empty($options['options_data']) && is_array($options['options_data'])) {

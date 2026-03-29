@@ -41,7 +41,9 @@ function render_dynamic_ui($args)
     $ct_checkbox_class = '';
     $inline_start = $inline_end = '';
     $prepend_checkbox_input = $append_checkbox_input = '';
-
+    $checkbox_label = '';
+    $checkbox_style = '';
+    
     // --- Floating label support ---
     if (!empty($input_options['floating_label']) && !empty($input_options['placeholder'])) {
         $group_class = 'form-floating';
@@ -63,6 +65,7 @@ function render_dynamic_ui($args)
         $ct_checkbox_class = (!empty($input_options['toggle']) ? 'checkbox-switch ' : '') . 'check-group';
 
         $checkbox_label = ' data-checked="' . (!empty($input_value) ? '1' : '0') . '"';
+        
         $checkbox_style = !empty($input_options['inner_width'])
             ? ' style="width:' . htmlspecialchars($input_options['inner_width']) . ';"'
             : '';
@@ -79,8 +82,10 @@ function render_dynamic_ui($args)
     }
 
     // --- LABEL GENERATION ---
+	// This label cannot be used in a checkbox as it requires inline build
     $label_dom = '';
-    if (!empty($input_label)) {
+    if (!empty($input_label) && $template_type != 'checkbox') {
+    	
         if (!empty($input_options['inline'])) {
             $inline_start = '<div class="col-12 col-md-9 clearfix">';
             $inline_end = '</div>';
@@ -96,11 +101,10 @@ function render_dynamic_ui($args)
             $label_class = 'form-check-label';
         }
 
-        $label_dom =
-            '<label for="' . htmlspecialchars($input_options['input_id'] ?? $input_name) . '" class="' . $label_class . '"' .
+        $label_dom = '<label for="' . htmlspecialchars($input_options['input_id'] ?? $input_name) . '" class="' . $label_class . '"' .
             $checkbox_label . $checkbox_style . '>' .
             ($input_options['label_icon'] ?? '') .
-            htmlspecialchars($input_label) .
+            $input_label .
             $required_mark . $ext_tip . $checkbox_tip .
             '</label>';
 

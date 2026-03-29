@@ -35,6 +35,7 @@ function form_button($input_name, $label, $input_value, array $options = [])
         'class' => 'btn-default',
         'icon_class' => 'm-r-10',
         'icon' => '',
+		'iconify' => '',
         'deactivate' => FALSE,
         'type' => 'submit',
         'block' => FALSE,

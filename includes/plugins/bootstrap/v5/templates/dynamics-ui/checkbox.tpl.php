@@ -6,7 +6,9 @@ function checkbox_input($input_name, $input_label, $input_value, $options = [], 
 
     // If multiple options are provided
     if (!empty($options['options']) && count($options['options']) > 0) {
+    	
         foreach ($options['options'] as $key => $value) {
+        	
             $deactivation = isset($options['deactivate_key']) && $options['deactivate_key'] == $key;
             $checked = isset($input_value[$key]) && $input_value[$key] ? 'checked' : '';
             $disabled = $deactivation ? 'disabled' : '';
@@ -49,9 +51,9 @@ function checkbox_input($input_name, $input_label, $input_value, $options = [], 
                 type="' . htmlspecialchars($options['type'] ?? 'checkbox') . '" 
                 ' . $checked . ' ' . $disabled . ' ' . $onclick . '>';
 
-//        if (!empty($input_label)) {
-//            $html .= '<label class="form-check-label" for="' . htmlspecialchars($options['input_id'] ?? $input_name) . '">' . $input_label . '</label>';
-//        }
+        if (!empty($input_label)) {
+            $html .= '<label class="form-check-label text-dark opacity-100 '.$options['label_class'].'" for="' . htmlspecialchars($options['input_id'] ?? $input_name) . '">' . $input_label . '</label>';
+        }
 
         $html .= '</div>';
     }

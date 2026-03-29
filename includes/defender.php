@@ -960,14 +960,14 @@ function session_clean() {
 }
 
 /**
- * Add a value to $_SESSION
+ * Set a value to $_SESSION
  *
  * @param string $key
  * @param mixed $value
  *
  * @return mixed
  */
-function session_add( $key, $value ) {
+function session_set($key, $value ) {
     //global $_SESSION;
     if (is_array( $key )) {
         //  print_p($_SESSION);

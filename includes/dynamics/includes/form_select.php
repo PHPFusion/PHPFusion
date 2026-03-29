@@ -519,12 +519,14 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
 
     ksort( $options );
 
-    return fusion_get_template( 'form_inputs', [
-        'input_name'    => $input_name,
-        'input_label'   => $label,
-        'input_value'   => $options['priority_value'] ?? $input_value,
-        'input_options' => $options,
-    ] );
+    $template_arr = [
+		'input_name'    => $input_name,
+		'input_label'   => $label ?:'',
+		'input_value'   => $options['priority_value'] ?? $input_value,
+		'input_options' => $options,
+	];
+    
+    return fusion_get_template( 'form_inputs', $template_arr );
 
 }
 
@@ -538,7 +540,7 @@ function form_select( $input_name, $label, $input_value, $options = [] ) {
  *
  * @return string
  */
-function form_user_select( $input_name, $label = "", $input_value = FALSE, array $options = [] ) {
+function form_user_select_deprecated( $input_name, $label = "", $input_value = FALSE, array $options = [] ) {
 
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
@@ -663,7 +665,7 @@ function user_search( $users, $delimiter ) {
  * @todo: Select 2 is able to do this now, and this function should be deprecated.
  *
  */
-function form_select_tree( $input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = [], $data = FALSE ) {
+function form_select_tree_deprecated( $input_name, $label, $input_value, array $options, $db, $name_col, $id_col, $cat_col, $self_id = FALSE, $id = FALSE, $level = FALSE, $index = [], $data = FALSE ) {
 
     if (defined('DEVELOPER_MODE')) {
         // Adds developer notice for community to change implementation

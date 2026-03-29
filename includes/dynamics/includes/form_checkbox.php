@@ -40,6 +40,7 @@ function form_checkbox( $input_name, $label = '', $input_value = '0', array $opt
         'required'       => FALSE,
         'deactivate'     => FALSE,
         'class'          => '',
+		'label_class' => '',
         'type'           => 'checkbox',
         'toggle'         => FALSE,
         'options'        => [],

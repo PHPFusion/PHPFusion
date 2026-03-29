@@ -4,13 +4,14 @@
  * Render a Bootstrap 5 dropdown (select or JSON/tags input)
  *
  * @param string $input_name
- * @param string|null $input_label
+ * @param string $input_value
  * @param array $options
  * @return string
  */
 function render_dropdown_input($input_name, $input_value = '', array $options = []): string
 {
     $input_id     = $options['input_id'] ?? uniqid('select_');
+    $input_label = !empty($options['input_label']) ?: '';
     $inner_width  = !empty($options['inner_width']) ? 'style="width:' . htmlspecialchars($options['inner_width']) . ';"' : '';
     $inner_class  = $options['inner_class'] ?? '';
     $is_required  = !empty($options['required']) ? 'required' : '';
@@ -20,6 +21,7 @@ function render_dropdown_input($input_name, $input_value = '', array $options = 
     $onchange     = !empty($options['onchange']) ? 'onchange="' . htmlspecialchars($options['onchange']) . '"' : '';
     $data_options = !empty($options['data_options']) ? implode(' ', (array) $options['data_options']) : '';
     $input_error  = !empty($options['input_error']) ? 'is-invalid' : '';
+    
 //    $input_value  = htmlspecialchars($options['input_value'] ?? '');
     $input_value = htmlspecialchars($input_value);
 
@@ -58,10 +60,9 @@ function render_dropdown_input($input_name, $input_value = '', array $options = 
     $class = $select2_disabled ? 'form-select' : '';
     $multiple = !empty($options['multiple']) ? 'multiple' : '';
 
-    $label_attr = $options['input_label'] ? 'aria-label="' . htmlspecialchars($options['input_label']) . '"' : '';
+    $label_attr = $input_label ? 'aria-label="' . htmlspecialchars($input_label) . '"' : '';
 
     return '
-    
         <select
             name="' . htmlspecialchars($input_name) . '"
             id="' . htmlspecialchars($input_id) . '"

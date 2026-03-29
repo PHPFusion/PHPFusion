@@ -19,9 +19,7 @@ const BASEDIR = '';
 
 const IN_FUSION = TRUE;
 
-const iDEVELOPER = FALSE;
-
-const BOOTSTRAP = 3;
+const BOOTSTRAP = 5;
 
 require_once __DIR__ . '/includes/autoloader.php';
 

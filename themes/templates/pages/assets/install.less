@@ -1,0 +1,279 @@
+/* Global Typography & Resets */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8fafc; /* Optional light background for contrast */
+}
+
+/* Remove default Bootstrap focus rings for the glass inputs */
+input[type="text"], input[type="password"], .btn:focus {
+  outline: none !important;
+  box-shadow: none;
+}
+
+/* Glassmorphism Design Tokens */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-blur: blur(40px);
+  --mac-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.os-window {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  box-shadow: var(--mac-shadow);
+  height: 890px;
+  max-height: 90vh;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+table {
+  pointer-events: none;
+}
+
+/* Custom Scrollbar for inner content */
+.content-scroll::-webkit-scrollbar { width: 6px; }
+.content-scroll::-webkit-scrollbar-track { background: transparent; }
+.content-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+}
+
+.os-titlebar {
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.os-sidebar {
+  background: rgba(255, 255, 255, 0.1);
+  width: 256px;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.os-input {
+  background: rgba(255, 255, 255, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.15s ease-in-out;
+  color: #0f172a !important;
+}
+
+.os-input:focus {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(96, 165, 250, 0.6) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Precise 1:1 Mapping of the Tailwind "Go Back" Button */
+.btn-macos-glass {
+  padding: 0.5rem 1rem !important; /* px-4 py-2 */
+  font-size: 0.875rem !important; /* text-sm */
+  font-weight: 500 !important; /* font-medium */
+  color: #1e293b !important; /* text-slate-800 */
+  background-color: rgba(255, 255, 255, 0.2) !important; /* bg-white/20 */
+  border: 1px solid rgba(255, 255, 255, 0.4) !important; /* border-white/40 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; /* shadow-sm */
+  backdrop-filter: blur(12px) !important; /* backdrop-blur-md */
+  -webkit-backdrop-filter: blur(12px) !important;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important; /* drop-shadow-sm */
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important; /* transition-colors */
+}
+
+/* THE HOVER FIX */
+.btn-macos-glass:hover {
+  background-color: rgba(255, 255, 255, 0.4) !important; /* hover:bg-white/40 */
+  color: #0f172a !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Optional: Active state for tactile feel */
+.btn-macos-glass:active {
+  transform: scale(0.97);
+  background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Primary Button for consistency */
+.btn-macos-primary {
+  padding: 0.425rem .85rem !important; /* px-5 py-2.5 */
+  font-size: 0.875rem !important; /* text-sm */
+  font-weight: 500 !important; /* font-medium */
+  color: #ffffff !important;
+  background: linear-gradient(to bottom, #60a5fa, #3b82f6) !important; /* bg-gradient-to-b from-blue-400 to-blue-500 */
+  border: 1px solid rgba(96, 165, 250, 0.5) !important; /* border-blue-400/50 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1) !important; /* shadow-md */
+  transition: all 0.15s ease-in-out !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-macos-primary:hover {
+  background: linear-gradient(to bottom, #3b82f6, #2563eb) !important; /* hover:from-blue-500 hover:to-blue-600 */
+}
+
+.btn-macos-primary:active {
+  transform: scale(0.98) !important; /* active:scale-[0.98] */
+}
+/* MacOS Ruby Glass Button */
+.btn-macos-danger {
+  background: rgba(255, 59, 48, 0.15); /* iOS System Red at low opacity */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  color: #ff3b30; /* Vivid System Red */
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(255, 59, 48, 0.1);
+}
+
+.btn-macos-danger:hover {
+  background: rgba(255, 59, 48, 0.25);
+  border-color: rgba(255, 59, 48, 0.5);
+  color: #ff3b30;
+  box-shadow: 0 8px 15px -3px rgba(255, 59, 48, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-macos-danger:active {
+  background: rgba(255, 59, 48, 0.4);
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Pulse effect for the truly "Dangerous" actions */
+.btn-danger-pulse {
+  animation: danger-glow 2s infinite;
+}
+
+@keyframes danger-glow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: filter 0.2s;
+}
+.traffic-light:hover { filter: brightness(0.9); cursor: pointer; }
+
+.step-nav { position: relative; z-index: 10; margin-top:1rem; }
+.step-nav::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 16px;
+  bottom: 32px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: -1;
+}
+/* Background Blob Specifics */
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* Behind everything */
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+}
+
+.blob-pink {
+  top: -10%;
+  left: -10%;
+  width: 70vw;
+  height: 70vw;
+  background: rgba(244, 114, 182, 0.5); /* pink-400/50 */
+  filter: blur(120px);
+}
+
+.blob-cyan {
+  bottom: -10%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: rgba(34, 211, 238, 0.5); /* cyan-400/50 */
+  filter: blur(120px);
+}
+
+.blob-amber {
+  top: 20%;
+  left: 20%;
+  width: 50vw;
+  height: 50vw;
+  background: rgba(252, 211, 77, 0.4); /* amber-300/40 */
+  filter: blur(140px);
+}
+
+.form-label {
+  color:#333;
+  font-weight:500;
+  margin-left: .25rem;
+  margin-bottom: .25rem;
+  opacity:.75;
+  font-size:14px;
+}
+
+// Tooltip
+/* Custom MacOS Style Tooltips */
+.tooltip-inner {
+  background: rgba(15, 23, 42, 0.85) !important; /* Dark Slate with transparency */
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 14px !important;
+  font-size: 11px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  line-height: 1.5;
+}
+
+/* Style the arrow to match the tooltip background */
+.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: rgba(15, 23, 42, 0.85) !important;
+}
+
+/* Ensure code tags inside tooltips are legible */
+.tooltip-inner code {
+  background: rgba(255, 255, 255, 0.1);
+  color: #93c5fd;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.fusion-ico {
+  width: 120px;
+  position: absolute;
+  left: 120px;
+  top: 15px;
+  /* The gradient goes from fully opaque (black) to fully transparent */
+  -webkit-mask-image:linear-gradient(190deg, black 30%, transparent 70%);
+  mask-image: linear-gradient(190deg, black 30%, transparent 70%);
+}

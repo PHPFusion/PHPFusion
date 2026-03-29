@@ -33,7 +33,7 @@ class DatabaseSetup extends InstallCore {
      * @return false|string
      */
     public function view() {
-        return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatchTables() : $this->stepForm();
+        return INSTALLER_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatchTables() : $this->stepForm();
     }
 
     /**
@@ -385,8 +385,8 @@ class DatabaseSetup extends InstallCore {
     }
 
     /**
-     * @return string
-     */
+     * @return array
+	 */
     private function stepForm() {
         // Back button prevention
         if (!empty(self::$connection)) {
@@ -402,10 +402,7 @@ class DatabaseSetup extends InstallCore {
             self::$connection = $_SESSION['db_config_connection'];
         }
 
-        $content = "<h4 class='title'>".self::$locale['setup_1200']."</h4><p>".self::$locale['setup_1201']."</p>\n";
-        $content .= "<hr/>\n";
-
-        $content .= rendernotices(getnotices());
+		$content = rendernotices(getnotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], !empty(self::$connection['db_host']) ? self::$connection['db_host'] : 'localhost', [
             'inline'      => TRUE,
             'required'    => TRUE,
@@ -461,7 +458,12 @@ class DatabaseSetup extends InstallCore {
                 'value' => self::STEP_DB_SETTINGS_SAVE
             ]
         ];
-
-        return $content;
+        
+        return [
+        	'title' => self::$locale['setup_1200'],
+			'description' => self::$locale['setup_1201'],
+        	'content' => $content
+		];
+    
     }
 }

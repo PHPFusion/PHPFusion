@@ -26,7 +26,7 @@
  *
  * @return string
  */
-function openform($form_name, $method, $action_url = FORM_REQUEST, array $options = []) {
+function openform($form_name, $method = 'POST', $action_url = FORM_REQUEST, array $options = []) {
 
     $method = (strtolower($method) == 'post') ? 'post' : 'get';
 

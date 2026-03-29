@@ -42,8 +42,8 @@ class Shoutbox {
         $current_path = $site_path.str_replace("/", DIRECTORY_SEPARATOR, $current_path["dirname"].DIRECTORY_SEPARATOR.$current_path["basename"]);
 
         if (!session_get("shout_token_hash") || (session_get("shout_page") !== $current_path) && (FUSION_SELF !== "shoutbox_archive.php")) {
-            session_add("shout_token_hash", "shoutbox_".random_string());
-            session_add("shout_page", $current_path);
+            session_set("shout_token_hash", "shoutbox_".random_string());
+            session_set("shout_page", $current_path);
         }
 
         self::$locale = fusion_get_locale("", SHOUTBOX_LOCALE);

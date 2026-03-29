@@ -18,6 +18,9 @@
 require_once __DIR__ . '/maincore.php';
 $settings = fusion_get_settings();
 
+// Keep the installer step reset here
+$_SESSION['step'] = 1;
+
 if ($settings['site_seo'] && !get( 'aid' )) {
     define( 'IN_PERMALINK', TRUE );
     $router = PHPFusion\Rewrite\Router::getRouterInstance();

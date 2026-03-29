@@ -36,41 +36,46 @@ if ($list = makefilelist( INCLUDES . 'plugins/', '.|..', FALSE, 'folders' )) {
 /**
  * When there are no plugins with get_template enabled during load, then revert system to load template for non-bootstrap version
  */
-
-if (!function_exists( 'fusion_get_template' )) {
-    /**
-     * @param $component
-     * @param $info
-     *
-     * @return false|mixed|string
-     */
-    function fusion_get_template( $component, $info ) {
-
-        $default_path = THEMES . 'templates/utils/';
-
-        if ($path = get_fusion_default_template( $component )) {
-
-            /** @noinspection PhpIncludeInspection */
-            require_once $default_path . $component['file'];
-
-            return call_user_func( $path['arguments'], $info );
-        }
-
-        return 'This template ' . $component . ' is not supported';
-
-    }
-
-    /**
-     * @param $component
-     *
-     * @return string|string[]
-     */
-    function get_fusion_default_template( $component ) {
-        $component_files = [
-            'showsublinks' => ['file' => 'navbar.php', 'arguments' => 'navbar_template']
-        ];
-
-        return $component_files[$component] ?? '';
-    }
-}
+//
+// Development - disable defaults
+//
+//if (!function_exists( 'fusion_get_template' )) {
+//    /**
+//     * @param $component
+//     * @param $info
+//     *
+//     * @return false|mixed|string
+//     */
+//    function fusion_get_template( $component, $info ) {
+//
+//        $default_path = THEMES . 'templates/utils/';
+//
+//        if ($path = get_fusion_default_template( $component )) {
+//
+//            /** @noinspection PhpIncludeInspection */
+//            require_once $default_path . $component['file'];
+//
+//            return call_user_func( $path['arguments'], $info );
+//        }
+//
+//        debug_print_backtrace();
+//
+//        die( 'Template component ' . $component . ' is not supported. Framework is missing.');
+//
+//    }
+//
+//    /**
+//     * @param $component
+//     *
+//     * @return string|string[]
+//     */
+//    function get_fusion_default_template( $component ) {
+//        $component_files = [
+//            'showsublinks' => ['file' => 'navbar.php', 'arguments' => 'navbar_template'],
+//
+//        ];
+//
+//        return $component_files[$component] ?? '';
+//    }
+//}
 

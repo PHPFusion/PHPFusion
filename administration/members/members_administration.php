@@ -151,7 +151,7 @@ class Members_Admin {
                     if ($user = fusion_get_user(self::$user_id)) {
                         if ($user["user_id"]) {
                             if (fusion_get_userdata("user_level") <= $user["user_level"] && fusion_get_userdata("user_id") != $user["user_id"]) {
-                                session_add("login_as", $user["user_id"]);
+                                session_set("login_as", $user["user_id"]);
                                 redirect(BASEDIR.$settings["opening_page"]);
                             }
                         }

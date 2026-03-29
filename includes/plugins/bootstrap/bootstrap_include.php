@@ -24,7 +24,7 @@
  *
  * @return string
  */
-function get_bootstrap($part, $version = '3') {
+function get_bootstrap($part, $version = '5') {
 
     static $framework_paths = [];
 
@@ -109,12 +109,13 @@ if ( defined( 'BOOTSTRAP' ) ) {
      * @return string
      */
     function fusion_get_template( $component, $info ) {
-
+		
         if ( $path = get_bootstrap( $component ) ) {
-
+    
             if (!empty($path['file'])) {
-
+            	
                 require_once $path['dir'].$path['file'];
+                
                 return call_user_func($path['callback'], $info);
 
             } else {
@@ -131,8 +132,6 @@ if ( defined( 'BOOTSTRAP' ) ) {
             }
         }
 
-        return 'This template ' . $component . ' is not supported';
+        return 'Bootstrap component ' . $component . ' is not supported';
     }
 }
-
-fusion_tab();

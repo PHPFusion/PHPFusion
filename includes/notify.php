@@ -24,23 +24,7 @@
  * @return string The notices formatted as HTML.
  */
 function rendernotices($notices) {
-    $messages = "";
-
-    foreach ($notices as $status => $notice) {
-        if ($status == "success") {
-            // Success messages can be auto closed
-            $messages .= "<div id='close-message'>\n";
-        }
-        $messages .= "<div class='admin-message alert alert-".$status." alert-dismissible' role='alert'>";
-        $messages .= "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span></button>";
-        $messages .= implode("<br/>", $notice);
-        $messages .= "</div>\n";
-        if ($status == "success") {
-            $messages .= "</div>\n";
-        }
-    }
-
-    return $messages;
+	return fusion_get_template( 'notices', $notices);
 }
 
 /**
