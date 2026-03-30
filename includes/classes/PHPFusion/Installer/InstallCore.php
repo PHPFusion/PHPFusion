@@ -35,7 +35,7 @@ ini_set('display_errors', 1);
  */
 class InstallCore extends Infusions
 {
-	
+
 	const STEP_INTRO = 1;
 	const STEP_PERMISSIONS = 2;
 	const STEP_DB_SETTINGS_FORM = 3;
@@ -64,7 +64,7 @@ class InstallCore extends Infusions
 			//  'next' => FALSE,
 			//  'previous' => FALSE,
 		];
-	
+
 	protected static $connection
 		= [
 			'db_host'         => '',
@@ -78,7 +78,7 @@ class InstallCore extends Infusions
 			'secret_key'      => NULL,
 			'db_driver'       => NULL,
 		];
-	
+
 	protected static $site_data
 		= [
 			'sitename'          => '',
@@ -86,7 +86,7 @@ class InstallCore extends Infusions
 			'enabled_languages' => '',
 			'siteusername'      => '',
 		];
-	
+
 	protected static $user_data
 		= [
 			'user_name'       => '',
@@ -97,7 +97,7 @@ class InstallCore extends Infusions
 			'admin_password1' => '',
 			'admin_password2' => '',
 		];
-	
+
 	/*
 	 * Verify the requirements that allows you to run the installer before boot up.
 	 * Due to the support for PHPFusion 9 in many uses of empty() as a condition
@@ -107,76 +107,76 @@ class InstallCore extends Infusions
 	 */
 	protected static $locale_files = [];
 	protected static $document;
-	
+
 	/*
 	 * Defining the steps and ensure that there are no field left blank
 	 */
 	private static $setup_instance = NULL;
-	
+
 	/*
 	 * Accessors and Mutators method implementation of the base of
 	 * installer and subsequently to replace on output.
 	 */
 	private static $config = [];
-	
+
 	protected function __construct()
 	{
-	
+
 	}
-	
+
 	/**
 	 * @return null|static
 	 */
 	public static function getInstallInstance()
 	{
 		$settings = fusion_get_settings();
-		
+
 		if (self::$setup_instance == NULL) {
-			
+
 			self::$setup_instance = new static();
-			
+
 			// ALWAYS reset config to config_temp.php
 			if (file_exists(BASEDIR . 'config.php')) {
 				@rename(BASEDIR . 'config.php', BASEDIR . 'config_temp.php');
 				@chmod(BASEDIR . 'config_temp.php', 0755);
 				maintenance_mode();
 			}
-			
+
 			session_start();
-			
+
 			//require_once BASEDIR.'includes/autoloader.php';
 			require_once DB_HANDLERS . "all_functions_include.php";
 			require_once BASEDIR . "includes/defender.php";
 			require_once BASEDIR . 'includes/dynamics.php';
-			
+
 			Dynamics::getInstance();
-			
+
 			self::installerStep();
 			self::verifyRequirements();
-			
+
 			define('iMEMBER', FALSE);
 			define("FUSION_QUERY", $_SERVER['QUERY_STRING'] ?? "");
 			define("FUSION_SELF", basename($_SERVER['PHP_SELF']));
 			define("FUSION_ROOT", '');
 			define("FUSION_REQUEST", isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != "" ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME']);
-			
+
 			self::$localeset = filter_input(INPUT_GET, 'localeset') ?: ($settings['locale'] ?? 'English');
 			define('LANGUAGE', is_dir(LOCALE . self::$localeset) ? self::$localeset : 'English');
 			define('LOCALESET', LANGUAGE . "/");
 			self::$locale = fusion_get_locale('', [LOCALE . LOCALESET . "global.php", LOCALE . LOCALESET . "setup.php"]);
 			self::$locale_files = fusion_get_detected_languages();
 			define('PHPFUSION_VERSION', self::BUILD_VERSION);
-			
+
 			self::detectSystemUpgrade();
-			
+
 			// set timezone for PDO
 			date_default_timezone_set('Europe/London');
-			
+
 		}
-		
+
 		return self::$setup_instance;
 	}
-	
+
 	/**
 	 * Set the current installer steps.
 	 *
@@ -184,12 +184,12 @@ class InstallCore extends Infusions
 	 */
 	protected static function installerStep($step = 'auto')
 	{
-		if (isset($_GET['session'])) {
-			$_SESSION['step'] = $_GET['session'];
+		if (isset($_GET['step'])) {
+			$_SESSION['step'] = $_GET['step'];
 		}
-		
+
 		if ($step == 'auto') {
-			
+
 			if (!defined('INSTALLER_STEP')) {
 				$_SESSION['step'] = (!isset($_SESSION['step']) ? self::STEP_INTRO : $_SESSION['step']);
 				// current session
@@ -204,7 +204,7 @@ class InstallCore extends Infusions
 			$_SESSION['step'] = $step;
 		}
 	}
-	
+
 	/**
 	 * Check the server minimum requirements
 	 */
@@ -219,58 +219,58 @@ class InstallCore extends Infusions
 			exit();
 		}
 	}
-	
+
 	/**
 	 * Detect system upgrade
 	 */
 	private static function detectSystemUpgrade()
 	{
-		
+
 		// Read the config_temp.php
 		self::setEmptyPrefix();
-		
+
 		if (self::$connection = self::fusionGetConfig(BASEDIR . 'config_temp.php')) {
-			
+
 			if (empty(self::$connection['db_driver'])) {
 				self::$connection['db_driver'] = FALSE;
 			}
-			
+
 			require_once(INCLUDES . 'multisite_include.php');
-			
+
 			$validation = Requirements::getSystemValidation();
-			
+
 			$version = fusion_get_settings('version');
-			
+
 			if (!empty($version)) {
-				
+
 				if (isset($validation[3])) {
-					
+
 					if (version_compare(self::BUILD_VERSION, $version, ">")) {
-						
+
 						$_GET['upgrade'] = TRUE;
-						
+
 						if (!defined('COOKIE_PREFIX') && !empty(self::$connection['COOKIE_PREFIX'])) {
-							
+
 							define('COOKIE_PREFIX', self::$connection['COOKIE_PREFIX']);
 						}
-						
+
 						if (!defined('DB_PREFIX') && !empty(self::$connection['DB_PREFIX'])) {
-							
+
 							define('DB_PREFIX', self::$connection['DB_PREFIX']);
 						}
-						
+
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Set empty prefix
 	 */
 	protected static function setEmptyPrefix()
 	{
-		
+
 		$default_init = [
 			'db_host'       => '',
 			'db_port'       => '',
@@ -280,33 +280,33 @@ class InstallCore extends Infusions
 			'db_prefix'     => '',
 			'cookie_prefix' => '',
 		];
-		
-		
+
+
 		if (is_file(BASEDIR . 'config_temp.php') && filesize(BASEDIR . 'config_temp.php') > 0) {   // config_temp might be blank
 			self::$connection = self::fusionGetConfig(BASEDIR . "config_temp.php");                // All fields must be not empty
 		}
-		
+
 		self::$connection = self::$connection + $default_init;
-		
+
 		if (empty(self::$connection['db_prefix'])) {
 			self::$connection['db_prefix'] = 'fusion' . self::createRandomPrefix() . '_';
 		}
-		
+
 		if (empty(self::$connection['cookie_prefix'])) {
 			self::$connection['cookie_prefix'] = 'fusion' . self::createRandomPrefix() . '_';
 		}
-		
+
 		if (empty(self::$connection['secret_key'])) {
 			self::$connection['secret_key'] = self::createRandomPrefix(32);
 		}
-		
+
 		if (empty(self::$connection['secret_key_salt']) && !defined('SECRET_KEY_SALT')) {
 			self::$connection['secret_key_salt'] = self::createRandomPrefix(32);
 		}
-		
-		
+
+
 	}
-	
+
 	/**
 	 * @param string $config_path
 	 *
@@ -352,10 +352,10 @@ class InstallCore extends Infusions
 			}
 			self::$config = $default_path;
 		}
-		
+
 		return self::$config;
 	}
-	
+
 	/**
 	 * @param int $length
 	 *
@@ -370,89 +370,89 @@ class InstallCore extends Infusions
 			$type = mt_rand(0, 1);
 			$prefix .= substr($chars[$type], mt_rand(0, $count[$type]), 1);
 		}
-		
+
 		return $prefix;
 	}
-	
+
 	/**
 	 * Install PHPFusion
 	 */
 	public function installPhpfusion()
 	{
-		
+
 		$content = $this->getInstallerContent();
-		
+
 		echo strtr(Console::getConsoleInstance()->getLayout(), [
 			'{%__TITLE__%}'       => $content['title'],
 			'{%__DESCRIPTION__%}' => $content['description'],
 			'{%__CONTENT__%}'     => $content['content'],
 		]);
 	}
-	
+
 	/**
 	 * @return array
 	 */
 	private function getInstallerContent()
 	{
-		
+
 		if ($step_next = post('reset')) {
 			if ($step_next == 9) {
 				self::installerStep(self::STEP_EXIT);
 				redirect(FUSION_REQUEST);
 			}
 		}
-		
-		
+
+
 		// Instead of using INSTALLATION STEP, we let each file control
 		switch (INSTALLER_STEP) {
 			case self::STEP_INTRO:
 			default:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
 				return Introduction::servePage()->view();
-			
+
 			case self::STEP_PERMISSIONS:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
-				
+
 				return Permissions::servePage()->view();
-			
+
 			case self::STEP_DB_SETTINGS_SAVE:
 			case self::STEP_DB_SETTINGS_FORM:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
-				
+
 				return DatabaseSetup::servePage()->view();
-			
+
 			case self::STEP_SITE_FORM:
 			case self::STEP_TRANSFER:
 			case self::STEP_PRIMARY_ADMIN_SAVE:
 			case self::STEP_PRIMARY_ADMIN_FORM:
 			case self::STEP_LANGUAGE_FORM:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
-				
+
 				return AdminSetup::servePage()->view();
-			
+
 			case self::STEP_INFUSIONS:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
-				
+
 				return InfusionsSetup::servePage()->view();
-			
+
 			case self::STEP_SETUP_COMPLETE:
 			case self::STEP_EXIT:
-				
+
 				if (file_exists(BASEDIR . 'config_temp.php')) {
 					@rename(BASEDIR . 'config_temp.php', BASEDIR . 'config.php');
 					@chmod(BASEDIR . 'config.php', 0644);
 				}
 				maintenance_mode(FALSE);
-				
+
 				session_remove('step');
-				
+
 				redirect(BASEDIR . 'index.php');
 				break;
 		}
-		
+
 		return [];
 	}
-	
+
 	/**
 	 * @return static
 	 */
@@ -461,10 +461,10 @@ class InstallCore extends Infusions
 		if (empty(self::$document)) {
 			self::$document = new static();
 		}
-		
+
 		return self::$document;
 	}
-	
+
 	/**
 	 * Installer system checks
 	 * Redirect to step 1 if the database has been intentionally dropped during the installation.
@@ -482,7 +482,7 @@ class InstallCore extends Infusions
 		}
 		return FALSE;
 	}
-	
+
 	private function __clone()
 	{
 	}
