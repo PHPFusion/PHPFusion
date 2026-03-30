@@ -177,6 +177,9 @@ class LegalDocs {
 
         $locale = fusion_get_locale();
         $settings = fusion_get_settings();
+        
+        dbquery("UPDATE ".DB_TOS." SET policy_content=:content WHERE policy_name=:name AND policy_language=:lang", [':content'=> $locale['pol_302'], ':name' => $locale['pol_300'], ':lang' => LANGUAGE] );
+        
         $result = dbquery( "SELECT * FROM " . DB_TOS . " WHERE policy_name=:name AND policy_language=:lang", [':name' => $locale['pol_300'], ':lang' => LANGUAGE] );
 
         if (dbrows( $result )) {
@@ -194,8 +197,7 @@ class LegalDocs {
 
         return [];
     }
-
-
+    
     /**
      * User Agreement
      *

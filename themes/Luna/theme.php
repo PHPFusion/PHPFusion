@@ -20,7 +20,7 @@ use PHPFusion\LegalDocs;
 
 const BOOTSTRAP = 5;
 const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
-
+fusion_load_script('https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js');
 
 // Autoload template
 $file_path = THEME . 'templates/' . preg_replace( '(.php)', '.luna.php', basename( $_SERVER['PHP_SELF'] ) );
@@ -145,8 +145,6 @@ function render_page() {
 }
 
 // show the error logs
-
-
 function showpolicies() {
 
     fusion_get_locale( '', LOCALE . LOCALESET . 'policies.php' );
@@ -167,7 +165,6 @@ function showpolicies() {
 
     return $html;
 }
-
 
 function opentable( $title = '', $class = '' ) {
     echo '<div class="card mb-4' . whitespace( $class ?? '' ) . '">';

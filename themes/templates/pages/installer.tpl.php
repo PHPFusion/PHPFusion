@@ -77,7 +77,12 @@ function __base_layout($row)
 						<h2 class='fw-bold text-dark tracking-tight'>{%__TITLE__%}</h2>
 						<p class='text-muted small'>{%__DESCRIPTION__%}</p>
 					</div>
+					" . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
+						[
+							'class' => 'd-flex flex-column gap-4',
+						]) . "
 					{%__CONTENT__%}
+					" . __button($row['steps']) . "
 				";
 	else:
 		
@@ -87,16 +92,14 @@ function __base_layout($row)
 					<h1 class="h4 fw-bold text-dark mb-2 tracking-tight">{%__TITLE__%}</h1>
 					<p class="small text-muted mb-5 fw-light leading-relaxed">{%__DESCRIPTION__%}</p>
 					' . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
-					[
-						'class' => 'd-flex flex-column gap-4',
-					]) . '
+				[
+					'class' => 'd-flex flex-column gap-4',
+				]) . '
 					{%__CONTENT__%}
-					' . __button($row['steps']) . '
-					' . closeform();
-					
+					' . __button($row['steps']);
 	endif;
 	
-	$html .= '
+	$html .= closeform().'
 							</div>
 						</div>
 					</div>
@@ -198,39 +201,56 @@ function __step_icon()
 function __button($steps, $exit = FALSE)
 {
 	
-//	if (!empty($steps)) {
+	if ((string)INSTALLER_STEP == 6.1 && defined('RECOVERY_CONSOLE') && $exit) {
 		
-		if (INSTALLER_STEP == 8 && $exit == TRUE || defined('RECOVERY_CONSOLE')) {
+		$btn = openform('exitFrm', 'POST', FUSION_REQUEST, ['class' => 'w-100 mt-auto']);
+		$btn .= '<button type="submit" name="reset" class="btn btn-macos-glass w-100 d-flex align-items-center" value="1">
+						Back to Recovery Menu
+				</button>';
+		$btn .= closeform();
+		return $btn;
+	}
+	
+	elseif (INSTALLER_STEP == 8 && $exit == TRUE || defined('RECOVERY_CONSOLE') && $exit) {
+		if (INSTALLER_STEP == 1) {
 			$btn = openform('exitFrm', 'POST', FUSION_REQUEST, ['class' => 'w-100']);
 			$btn .= '<button type="submit" name="reset" class="btn btn-macos-glass w-100 d-flex align-items-center" value="9">
 					<iconify-icon icon="solar:logout-linear" class="fs-3 me-2" style="font-size:1.15rem !important;"></iconify-icon>
 						Finish and Exit
 					</button>';
 			$btn .= closeform();
-			
-		} elseif (!empty($steps) && INSTALLER_STEP > 1 && INSTALLER_STEP < 8) {
-			
-			$btn = '<button type="submit" name="reset" class="btn btn-macos-glass" value="' . (INSTALLER_STEP - 1) . '">Go Back</button>';
+		} else {
+			$btn = openform('exitFrm', 'POST', FUSION_REQUEST, ['class' => 'w-100 mt-auto']);
+			$btn .= '<button type="submit" name="reset" class="btn btn-macos-glass w-100 d-flex align-items-center" value="1">
+						Back to Recovery Menu
+				</button>';
+			$btn .= closeform();
 		}
+
 		
-		if (!empty($steps) && INSTALLER_STEP < 8) {
-			
-			$btn = '<span></span>';
-			foreach ($steps as $button_prop) :
-				$btn .= '<button id="' . $button_prop['name'] . '" type="submit" name="' . $button_prop['name'] . '" value="' . $button_prop['value'] . '" class="btn btn-macos-primary">
+	} elseif (!empty($steps) && INSTALLER_STEP > 1 && INSTALLER_STEP < 8 && !defined('RECOVERY_CONSOLE')) {
+		
+		$btn = '<button type="submit" name="reset" class="btn btn-macos-glass" value="' . (INSTALLER_STEP - 1) . '">Go Back</button>';
+	}
+	
+	if (!empty($steps) && INSTALLER_STEP < 8 || (defined('RECOVERY_CONSOLE') && !empty($steps) && !$exit)) {
+		
+		$btn = '<span></span>';
+		foreach ($steps as $button_prop) :
+			$btn .= '<button id="' . $button_prop['name'] . '" type="submit" name="' . $button_prop['name'] . '" value="' . $button_prop['value'] . '" class="btn btn-macos-primary">
 				Continue
 				<iconify-icon icon="solar:alt-arrow-right-linear" style="font-size: 1rem;"></iconify-icon>
 			</button>';
-			endforeach;
-		}
-		
-		if (!empty($btn)) :
-			return '<div class="mt-auto pt-4 d-flex justify-content-between align-items-center w-100 mx-auto" style="max-width:600px;">' . $btn . '</div>';
-		endif;
-		
+		endforeach;
+	}
+	
+	if (!empty($btn)) :
+		return '<div class="mt-auto pt-4 d-flex justify-content-between align-items-center w-100 mx-auto" style="max-width:600px;">' . $btn . '</div>';
+	endif;
+
 //	}
 	return '';
-
+	
 }
 
 

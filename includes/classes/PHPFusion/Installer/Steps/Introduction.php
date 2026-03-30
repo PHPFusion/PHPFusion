@@ -19,6 +19,7 @@
 namespace PHPFusion\Installer\Steps;
 
 use PHPFusion\Installer\InstallCore;
+use PHPFusion\Installer\Lib\CoreTables;
 use PHPFusion\Installer\Requirements;
 
 /**
@@ -30,7 +31,7 @@ class Introduction extends InstallCore
 {
 	
 	/**
-	 * @return string
+	 * @return array
 	 */
 	public function view()
 	{
@@ -43,7 +44,8 @@ class Introduction extends InstallCore
 			
 			return $mode;
 		}
-		return "";
+		
+		return [];
 	}
 	
 	/**
@@ -109,10 +111,13 @@ class Introduction extends InstallCore
 		if (post('step') == 1) {
 			
 			if (check_post('license')) {
-				session_set('installer_step', self::STEP_PERMISSIONS);
+				
+				$this->installerStep(self::STEP_PERMISSIONS);
+		
 				redirect(FUSION_SELF . "?localeset=" . LANGUAGE . '&step=' . self::STEP_PERMISSIONS);
 			} else {
-				session_set('installer_step', self::STEP_INTRO);
+				$this->installerStep(self::STEP_INTRO);
+				
 				redirect(FUSION_SELF . "?error=license&localeset=" . LANGUAGE);
 			}
 		}
@@ -183,7 +188,7 @@ class Introduction extends InstallCore
 	 */
 	private function recoveryConsole()
 	{
-		define('RECOVERY_CONSOLE', true);
+		define('RECOVERY_CONSOLE', TRUE);
 		
 		if (check_post("htaccess")) {
 			
@@ -196,7 +201,7 @@ class Introduction extends InstallCore
 		}
 		
 		if (check_post("uninstall")) {
-			$coretables = \PHPFusion\Installer\Lib\CoreTables::get_core_tables(self::$localeset);
+			$coretables = CoreTables::get_core_tables(self::$localeset);
 			$i = 0;
 			foreach (array_keys($coretables) as $table) {
 				$result = dbquery("DROP TABLE IF EXISTS " . self::$connection['db_prefix'] . $table);
@@ -212,14 +217,18 @@ class Introduction extends InstallCore
 			// go back to the installer
 			$_SESSION['step'] = self::STEP_INTRO;
 			addnotice('danger', "<strong>" . self::$locale['setup_0125'] . "</strong>");
-			$content .= rendernotices(getnotices());
+			
 			if ($i == count($coretables)) {
 				redirect(filter_input(INPUT_SERVER, 'REQUEST_URI'), 6);
 			}
 		} else {
-
-			$content = "<div class='d-flex flex-column gap-3'>";
-
+			
+			if (!defined('FORM_REQUEST')) {
+				define('FORM_REQUEST', FUSION_REQUEST);
+			}
+			$content = rendernotices(getnotices());
+			$content .= "<div class='d-flex flex-column gap-3'>";
+			$content .= openform('recoverFrm', 'POST', FUSION_REQUEST);
 			// --- ACTION ITEM: Primary Admin (Primary Utility) ---
 			$content .= self::renderRecoveryCard(
 				'solar:user-speak-rounded-linear',
@@ -227,7 +236,6 @@ class Introduction extends InstallCore
 				self::$locale['setup_1012'],
 				form_button('step', self::$locale['setup_1013'], self::STEP_TRANSFER, ['class' => 'btn-macos-primary btn-sm'])
 			);
-
 			// --- ACTION ITEM: Infusions (Core System) ---
 			$content .= self::renderRecoveryCard(
 				'solar:box-minimalistic-linear',
@@ -235,7 +243,7 @@ class Introduction extends InstallCore
 				self::$locale['setup_1009'],
 				form_button('step', self::$locale['setup_1010'], self::STEP_INFUSIONS, ['class' => 'btn-macos-primary btn-sm'])
 			);
-
+			
 			// --- ACTION ITEM: Rebuild .htaccess ---
 			if (isset(self::$connection['db_prefix'])) {
 				$content .= self::renderRecoveryCard(
@@ -245,7 +253,7 @@ class Introduction extends InstallCore
 					form_button('htaccess', self::$locale['setup_1014'], 'htaccess', ['class' => 'btn-macos-primary btn-sm'])
 				);
 			}
-
+			
 			// --- ACTION ITEM: Exit (Safe Action) ---
 //			$content .= self::renderRecoveryCard(
 //				'solar:logout-linear',
@@ -254,29 +262,28 @@ class Introduction extends InstallCore
 //				form_button('step', self::$locale['setup_1019'], self::STEP_EXIT, ['class' => 'btn-macos-glass text-success btn-sm']),
 //				'border-success'
 //			);
-
+			
 			// --- ACTION ITEM: Uninstall (Danger Zone) ---
 			$content .= "<div class='flex-grow-0 p-3 p-3 transition-all border-opacity-25'>
 				<div class='d-flex align-items-start gap-3'>
 					<div class='text-danger pt-1'><iconify-icon icon='solar:bomb-minimalistic-linear' class='fs-3'></iconify-icon></div>
 					<div class='flex-grow-1'>
-						<h6 class='fw-bold text-danger mb-1'>".self::$locale['setup_1004']."</h6>
-						<p class='small text-muted mb-3'>".self::$locale['setup_1005']."</p>
+						<h6 class='fw-bold text-danger mb-1'>" . self::$locale['setup_1004'] . "</h6>
+						<p class='small text-muted mb-3'>" . self::$locale['setup_1005'] . "</p>
 						<div class='p-2 mb-3'>
-							<p class='small text-danger m-0 fw-medium'><iconify-icon icon='solar:danger-triangle-linear' class='me-1'></iconify-icon> ".self::$locale['setup_1006']."</p>
+							<p class='small text-danger m-0 fw-medium'><iconify-icon icon='solar:danger-triangle-linear' class='me-1'></iconify-icon> " . self::$locale['setup_1006'] . "</p>
 						</div>
-						
-						".form_button('uninstall', self::$locale['setup_1007'], 'uninstall', [
-
-							'class' => 'btn-macos-glass',
-							'iconify' => 'solar:trash-bin-trash-bold'
-						])."
+						" . form_button('uninstall', self::$locale['setup_1007'], 'uninstall', [
+							'class'   => 'btn-macos-glass',
+							'iconify' => 'solar:trash-bin-trash-bold',
+						]) . "
 					</div>
 				</div>
 			</div>";
 			
 			$content .= "</div>"; // End gap-3
 			$content .= "</div>"; // End container
+			$content .= closeform();
 		}
 		
 		return [
@@ -286,7 +293,8 @@ class Introduction extends InstallCore
 		];
 	}
 	
-	private static function renderRecoveryCard($icon, $title, $desc, $button, $extraClass = '') {
+	private static function renderRecoveryCard($icon, $title, $desc, $button, $extraClass = '')
+	{
 		return "
     <div class='p-3 transition-all $extraClass'>
         <div class='d-flex align-items-center justify-content-between gap-3'>

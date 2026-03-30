@@ -132,6 +132,7 @@ $locale['setup_1510'] = "Website Email address:";
 $locale['setup_1511'] = "Select Website Region:";
 $locale['setup_1512'] = "Site Language";
 $locale['setup_1513'] = "Site Owner Name";
+$locale['setup_1514'] = "Recover Super Admin Account";
 // Progress Reports
 $locale['setup_1600'] = "Installing ";
 $locale['setup_1601'] = "Updating table structure on ";

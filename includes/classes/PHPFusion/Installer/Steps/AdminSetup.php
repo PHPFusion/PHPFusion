@@ -26,36 +26,52 @@ use PHPFusion\PasswordAuth;
 class AdminSetup extends InstallCore
 {
 	
-	
 	/**
 	 * @return array
 	 */
 	public function view()
 	{
 		if (!is_writable(BASEDIR . 'config_temp.php')) {
-			$_SESSION['step'] = self::STEP_PERMISSIONS;
+			
+			$this->installerStep(self::STEP_PERMISSIONS);
 			die('Unable to create config_temp.php. Please check CHMOD for root directory (' . $_SERVER['DOCUMENT_ROOT'] . ') and try again.');
 		}
 		
 		self::$connection = self::fusionGetConfig(BASEDIR . 'config_temp.php');
 		require_once(INCLUDES . 'multisite_include.php');
+		
 		$validation = Requirements::getSystemValidation();
+		
 		if (isset($validation[3])) {
+			
 			if ($this->tableCheck()) {
-				print_p(INSTALLER_STEP);
-				return match (INSTALLER_STEP) {
-					self::STEP_TRANSFER => $this->transfer(),
-					self::STEP_SITE_FORM => $this->siteSettings(),
-					self::STEP_PRIMARY_ADMIN_FORM => $this->adminSettings(),
-					self::STEP_LANGUAGE_FORM => $this->languageSettings(),
-					default => NULL,
+				
+				return match ((string)INSTALLER_STEP) {
+					(string)self::STEP_SITE_FORM => $this->siteSettings(),
+					(string)self::STEP_PRIMARY_ADMIN_FORM => $this->adminSettings(),
+					(string)self::STEP_TRANSFER => $this->transfer(),
+					(string)self::STEP_LANGUAGE_FORM => $this->languageSettings(),
+					default => [
+						'title'       => 'Switch Error',
+						'description' => '',
+						'content'     => '',
+					],
 				};
 			}
+			
 		} else {
-			return NULL;
+			return [
+				'title'       => 'Error',
+				'description' => '',
+				'content'     => '',
+			];
 		}
 		
-		return NULL;
+		return [
+			'title'       => 'Error',
+			'description' => '',
+			'content'     => '',
+		];
 	}
 	
 	/**
@@ -63,65 +79,79 @@ class AdminSetup extends InstallCore
 	 */
 	private function transfer()
 	{
+		define('RECOVERY_CONSOLE', TRUE);
 		
-		$content = "";
+	
 		
-		if (isset($_POST['transfer'])) {
+		if (check_post('reset')) {
+			$this->installerStep(self::STEP_INTRO);
+			redirect(FUSION_REQUEST);
+		}
+		
+		if (check_post('transfer')) {
 			
 			self::$user_data = $this->validateUserData();
 			self::$user_data['user_id'] = 1;
+			
+			$password = sanitizer('password1', '', 'password1');
+			$password1 = sanitizer('password2', '', 'password2');
 			
 			if (self::$user_data['password1'] == self::$user_data['admin_password1']) {
 				addnotice('danger', self::$locale['setup_5016']);
 				fusion_stop();
 			}
 			
-			if (fusion_safe()) {
-				$user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-				$user_auth->inputNewPassword = self::$user_data['password1'];
-				$user_auth->inputNewPassword2 = self::$user_data['password2'];
-				switch ($user_auth->isValidNewPassword()) {
-					default:
-						self::$user_data['user_password'] = $user_auth->getNewHash();
-						self::$user_data['user_salt'] = $user_auth->getNewSalt();
-						break;
-					case 2:
-						addnotice('danger', self::$locale['setup_5012']);
-						fusion_stop();
-						break;
-					case 3:
-						addnotice('danger', self::$locale['setup_5013']);
-						fusion_stop();
-						break;
-				}
-				$admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
-				$admin_auth->inputNewPassword = self::$user_data['admin_password1'];
-				$admin_auth->inputNewPassword2 = self::$user_data['admin_password2'];
-				switch ($admin_auth->isValidNewPassword()) {
-					default:
-						self::$user_data['user_admin_password'] = $admin_auth->getNewHash();
-						self::$user_data['user_admin_salt'] = $admin_auth->getNewSalt();
-						break;
-					case 2:
-						addnotice('danger', self::$locale['setup_5015']);
-						fusion_stop();
-						break;
-					case 3:
-						addnotice('danger', self::$locale['setup_5017']);
-						fusion_stop();
-						break;
-				}
-				
-				if (fusion_safe()) {
-					dbquery_insert(DB_PREFIX . "users", self::$user_data, 'update');
-					addnotice('success', self::$locale['setup_1217']);
-					
-					require_once(INCLUDES . "multisite_include.php");
-					self::installerStep(self::STEP_INTRO);
-					new \Authenticate(self::$user_data['user_name'], self::$user_data['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
-					
-				}
+			// User password
+			$user_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+			$user_auth->inputNewPassword = $password;   //self::$user_data['password1'];
+			$user_auth->inputNewPassword2 = $password1; //self::$user_data['password2'];
+			
+			switch ($user_auth->isValidNewPassword()) {
+				default:
+					self::$user_data['user_password'] = $user_auth->getNewHash();
+					self::$user_data['user_salt'] = $user_auth->getNewSalt();
+					break;
+				case 2:
+					addnotice('danger', self::$locale['setup_5012']);
+					fusion_stop();
+					break;
+				case 3:
+					addnotice('danger', self::$locale['setup_5013']);
+					fusion_stop();
+					break;
 			}
+			
+			$admin_password = sanitizer('admin_password1', '', 'admin_password1');
+			$admin_password1 = sanitizer('admin_password2', '', 'admin_password2');
+			
+			$admin_auth = new \PasswordAuth(self::INSTALLER_ALGO);
+			$admin_auth->inputNewPassword = $admin_password;   //self::$user_data['admin_password1'];
+			$admin_auth->inputNewPassword2 = $admin_password1; //self::$user_data['admin_password2'];
+			
+			switch ($admin_auth->isValidNewPassword()) {
+				default:
+					self::$user_data['user_admin_password'] = $admin_auth->getNewHash();
+					self::$user_data['user_admin_salt'] = $admin_auth->getNewSalt();
+					break;
+				case 2:
+					addnotice('danger', self::$locale['setup_5015']);
+					fusion_stop();
+					break;
+				case 3:
+					addnotice('danger', self::$locale['setup_5017']);
+					fusion_stop();
+					break;
+			}
+			
+			if (fusion_safe()) {
+				dbquery_insert(DB_PREFIX . "users", self::$user_data, 'update');
+				addnotice('success', self::$locale['setup_1217']);
+				
+				require_once(INCLUDES . "multisite_include.php");
+				self::installerStep(self::STEP_INTRO);
+				new \Authenticate(self::$user_data['user_name'], self::$user_data['user_password'], TRUE, filter_input(INPUT_SERVER, 'REQUEST_URI'));
+			}
+			
 		}
 		
 		$result = dbquery("SELECT * FROM " . DB_USERS . " WHERE user_id='1'");
@@ -130,40 +160,49 @@ class AdminSetup extends InstallCore
 			
 			self::$user_data = dbarray($result);
 			
+			$content = rendernotices(getnotices());
 			$content .= form_hidden('transfer', '', '1');
 			$content .= form_hidden('user_rights', '', self::$user_data['user_rights']);
 			$content .= form_text('user_name', self::$locale['setup_1504'], self::$user_data['user_name'],
 				[
 					'required'       => TRUE,
-					'inline'         => TRUE,
 					'maxlength'      => 30,
 					'error_text'     => self::$locale['setup_5010'],
 					'callback_check' => 'username_check',
+					'class'          => 'mb-3',
 				]
 			);
-			$content .= form_text('user_email', self::$locale['setup_1509'], self::$user_data['user_email'], ['required' => TRUE, 'inline' => TRUE, 'type' => 'email', 'error_text' => self::$locale['setup_5020']]);
-			$content .= form_text('password1', self::$locale['setup_1505'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-			$content .= form_text('password2', self::$locale['setup_1506'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-			$content .= form_text('admin_password1', self::$locale['setup_1507'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
-			$content .= form_text('admin_password2', self::$locale['setup_1508'], '', ['required' => TRUE, 'inline' => TRUE, 'maxlength' => 64, 'type' => 'password']);
+			$content .= form_text('user_email', self::$locale['setup_1509'], self::$user_data['user_email'], [
+				'required' => TRUE, 'type' => 'email', 'class' => 'mb-3', 'error_text' => self::$locale['setup_5020'],
+			]);
+			$content .= form_text('password1', self::$locale['setup_1505'], '', [
+				'required'  => TRUE,
+				'maxlength' => 64, 'class' => 'mb-3', 'type' => 'password',
+			]);
+			$content .= form_text('password2', self::$locale['setup_1506'], '', [
+				'required'  => TRUE,
+				'maxlength' => 64, 'class' => 'mb-3', 'type' => 'password',
+			]);
+			$content .= form_text('admin_password1', self::$locale['setup_1507'], '', [
+				'required'  => TRUE,
+				'maxlength' => 64, 'class' => 'mb-3', 'type' => 'password',
+			]);
+			$content .= form_text('admin_password2', self::$locale['setup_1508'], '', [
+				'required'  => TRUE,
+				'maxlength' => 64, 'class' => 'mb-3', 'type' => 'password',
+			]);
 		}
 		
 		self::$step = [
-			1 => [
+			(string)self::STEP_TRANSFER => [
 				'name'  => 'step',
 				'label' => self::$locale['setup_0121'],
-				'value' => self::STEP_TRANSFER,
-			],
-			2 => [
-				'name'  => 'step',
-				'class' => 'm-l-15 btn-default',
-				'label' => self::$locale['setup_0124'],
-				'value' => self::STEP_INTRO,
+				'value' => (string)self::STEP_TRANSFER,
 			],
 		];
 		
 		return [
-			'title'       => self::$locale['setup_1500'],
+			'title'       => self::$locale['setup_1514'],
 			'description' => self::$locale['setup_1501'],
 			'content'     => $content,
 		];
@@ -302,13 +341,13 @@ class AdminSetup extends InstallCore
 		];
 	}
 	
-	
 	private function adminSettings()
 	{
 		
 		$this->update();
 		
 		$content = rendernotices(getnotices());
+		
 		$content .= form_text('user_name', self::$locale['setup_1504'], self::$user_data['user_name'],
 			[
 				'required'       => TRUE,
@@ -371,7 +410,6 @@ class AdminSetup extends InstallCore
 				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['siteusername'] . "' WHERE settings_name='siteusername'");
 				
 				
-				
 				if (fusion_safe()) {
 					require_once BASEDIR . "config_temp.php";
 					require_once INCLUDES . "multisite_include.php";
@@ -383,8 +421,7 @@ class AdminSetup extends InstallCore
 				redirect(FUSION_REQUEST);
 			}
 			
-		}
-		elseif (check_post('user_name')) {
+		} elseif (check_post('user_name')) {
 			
 			function username_check($username)
 			{
@@ -457,13 +494,15 @@ class AdminSetup extends InstallCore
 						dbquery_insert(DB_PREFIX . 'user_settings', self::$user_data, 'save', ['no_primary' => TRUE, 'primary_key' => 'user_id']);
 					}
 					
-					self::installerStep(self::STEP_LANGUAGE_FORM);
+					$this->installerStep(self::STEP_LANGUAGE_FORM);
+					redirect(FUSION_REQUEST);
+					
 					//new \Authenticate(self::$userData['user_name'], self::$userData['user_password'], TRUE, FUSION_REQUEST);
 				} else {
-					self::installerStep(self::STEP_PRIMARY_ADMIN_FORM);
+					
+					$this->installerStep(self::STEP_PRIMARY_ADMIN_FORM);
+					redirect(FUSION_REQUEST);
 				}
-				
-				redirect(FUSION_REQUEST);
 			}
 			
 		} elseif (check_post('language_settings')) {
@@ -557,8 +596,8 @@ class AdminSetup extends InstallCore
 			} else {
 				self::installerStep(self::STEP_LANGUAGE_FORM);
 			}
-			
 			redirect(FUSION_REQUEST);
+			
 		}
 	}
 	

@@ -399,7 +399,10 @@ class InstallCore extends Infusions
 			if ($step_next == 9) {
 				self::installerStep(self::STEP_EXIT);
 				redirect(FUSION_REQUEST);
-			}
+			} else  {
+				self::installerStep($step_next);
+				redirect(FUSION_REQUEST);
+		   }
 		}
 		
 		
@@ -427,7 +430,7 @@ class InstallCore extends Infusions
 			case self::STEP_PRIMARY_ADMIN_FORM:
 			case self::STEP_LANGUAGE_FORM:
 				defined('COOKIE_PREFIX') || define('COOKIE_PREFIX', 'installer_');
-				
+			
 				return AdminSetup::servePage()->view();
 			
 			case self::STEP_INFUSIONS:
@@ -443,9 +446,7 @@ class InstallCore extends Infusions
 					@chmod(BASEDIR . 'config.php', 0644);
 				}
 				maintenance_mode(FALSE);
-				
 				session_remove('step');
-				
 				redirect(BASEDIR . 'index.php');
 				break;
 		}
