@@ -68,7 +68,7 @@ if (!function_exists('display_user_info_panel')) {
 
                     if (!empty($info['submissions'])) {
                         echo '<li>';
-                            echo '<a data-toggle="collapse" data-parent="#navigation-user" href="#uipcollapse" aria-expanded="false" aria-controls="#uipcollapse">'.$locale['UM089'].' <i class="fa fa-cloud-upload fa-pull-right"></i></a>';
+                            echo '<a data-bs-toggle="collapse" data-parent="#navigation-user" href="#uipcollapse" aria-expanded="false" aria-controls="#uipcollapse">'.$locale['UM089'].' <i class="fa fa-cloud-upload fa-pull-right"></i></a>';
 
                             echo '<ul id="uipcollapse" class="panel-collapse collapse block">';
                                 foreach ($info['submissions'] as $modules) {

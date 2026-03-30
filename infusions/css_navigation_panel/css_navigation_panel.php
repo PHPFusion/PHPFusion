@@ -26,7 +26,7 @@ if (!function_exists('show_nav_sublinks')) {
 
         if (empty($id)) {
             $data = dbquery_tree_full(DB_SITE_LINKS, "link_id", "link_cat",
-                "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")." 
+                "WHERE link_position <= 2".(multilang_table("SL") ? " AND link_language='".LANGUAGE."'" : "")."
                 AND ".groupaccess('link_visibility')." AND link_status=1 ORDER BY link_cat, link_order");
 
             $res = show_nav_links($id, $data);
@@ -109,7 +109,7 @@ if (!function_exists('show_nav_links')) {
                     if (isset($data[$link_id])) {
                         $has_child = TRUE;
                         $link_class = " class='display-block p-5 p-l-0 p-r-0 dropdown-toggle'";
-                        $l_1 = " id='nav_ddlink".$link_data['link_id']."' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
+                        $l_1 = " id='nav_ddlink".$link_data['link_id']."' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'";
                         $l_1 .= (empty($id) && $has_child ? " data-submenu " : "");
                         $l_2 = (empty($id) ? "<span class='fa fa-caret-down'></i>" : "");
                         $li_class[] = (!empty($id) ? "dropdown-submenu" : "dropdown");
