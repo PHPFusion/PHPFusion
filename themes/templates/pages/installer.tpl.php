@@ -5,9 +5,9 @@ use PHPFusion\OutputHandler;
 function __base_layout($row)
 {
 	$locale = fusion_get_locale();
-	
+
 	fusion_apply_hook('fusion_header_include', $custom_file ?? '');
-	
+
 	$head_tags = OutputHandler::$pageHeadTags;
 	$core_css_files = fusion_filter_hook("fusion_core_styles");
 	if (is_array($core_css_files)) {
@@ -19,7 +19,7 @@ function __base_layout($row)
 			}
 		}
 	}
-	
+
 	$html = "<!DOCTYPE html>";
 	$html .= "<html lang='" . $locale['setup_0011'] . "' dir='" . $locale['setup_0012a'] . "'>";
 	$html .= "<head>";
@@ -44,7 +44,7 @@ function __base_layout($row)
 			</div>
 			<div class="container d-flex align-items-center justify-content-center vh-100">
 				<div class="os-window w-100 d-flex flex-column overflow-hidden" style="max-width:1000px;">
-					
+
 					<div class="os-titlebar d-flex align-items-center px-3 border-bottom border-white-50 flex-shrink-0 position-relative">
 						<div class="d-flex gap-2 position-absolute start-0 ms-3">
 							<div class="traffic-light" style="background: #FF5F56;"></div>
@@ -63,12 +63,12 @@ function __base_layout($row)
 							<nav class="step-nav d-flex flex-column gap-2">' . __nav() . '</nav>
 							' . __button($row['steps'], TRUE) . '
 						</div>
-			
+
 						<div class="flex-grow-1 p-4 p-md-5 d-flex flex-column content-scroll overflow-auto">
 							<div class="mx-auto w-100 pb-4" style="max-width:600px;">';
-	
+
 	if (defined('RECOVERY_CONSOLE')) :
-		
+
 		$html .= "<div class='recovery-container mx-auto' style='max-width: 700px;'>
 					<div class='text-center mb-5'>
 						<div class='d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 mb-3' style='width: 64px; height: 64px;'>
@@ -85,7 +85,7 @@ function __base_layout($row)
 					" . __button($row['steps']) . "
 				";
 	else:
-		
+
 		$html .= '<div class="d-flex align-items-center justify-content-center rounded-4 bg-white bg-opacity-50 border border-white mb-3 shadow-sm" style="width: 48px; height: 48px;">
 					' . __step_icon() . '
 					</div>
@@ -98,14 +98,14 @@ function __base_layout($row)
 					{%__CONTENT__%}
 					' . __button($row['steps']);
 	endif;
-	
+
 	$html .= closeform().'
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>';
-	
+
 	$fusion_jquery_tags = OutputHandler::$jqueryCode;
 	if (!empty($fusion_jquery_tags)) {
 		$html .= "<script>$(function() {
@@ -117,14 +117,14 @@ function __base_layout($row)
             " . $fusion_jquery_tags . "
             });</script>";
 	}
-	
+
 	$html .= OutputHandler::$pageFooterTags;
-	
+
 	fusion_filter_hook('fusion_footer_include');
-	
+
 	$html .= "</body>";
 	$html .= "</html>";
-	
+
 	return $html;
 }
 
@@ -132,7 +132,7 @@ function __nav()
 {
 	$locale = fusion_get_locale();
 	$current_step = intval(INSTALLER_STEP);
-	
+
 	$steps = [
 		1 => $locale['setup_0101'],  // introduction & license
 		2 => $locale['setup_0102'], //system requirement
@@ -143,19 +143,19 @@ function __nav()
 		7 => $locale['setup_1512'],
 		8 => $locale['setup_0105'] // done
 	];
-	
+
 	if (defined('RECOVERY_CONSOLE')) {
 		$steps = [
 			1 => $locale['setup_1002'],
 		];
 	}
-	
+
 	$html = '';
 	foreach ($steps as $step_num => $step_title) {
-		
+
 		$is_active = ($current_step === $step_num);
 		$is_completed = ($current_step > $step_num);
-		
+
 		if ($is_completed) {
 			$html .= '<div class="d-flex align-items-center gap-3 p-2 rounded text-dark opacity-75">';
 			$html .= ' <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white shadow-sm" style="width: 20px; height: 20px; font-size: 10px;">';
@@ -170,17 +170,17 @@ function __nav()
 			$html .= '<div class="d-flex align-items-center gap-3 p-2 text-muted opacity-50">';
 			$html .= '<div class="rounded-circle border border-white bg-white bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 11px;">' . $step_num . '</div>';
 		}
-		
+
 		$html .= '<span class="small">' . $step_title . '</span>
 		</div>';
 	}
-	
+
 	return $html;
 }
 
 function __step_icon()
 {
-	
+
 	$steps_icons = [
 		1 => 'solar:document-text-linear',
 		2 => 'solar:shield-check-linear',
@@ -191,7 +191,7 @@ function __step_icon()
 		7 => 'solar:settings-minimalistic-linear',
 		8 => 'solar:settings-minimalistic-linear',
 	];
-	
+
 	if (isset($steps_icons[INSTALLER_STEP])) {
 		return '<iconify-icon icon="' . $steps_icons[INSTALLER_STEP] . '" class="fs-4 text-primary"></iconify-icon>';
 	}
@@ -200,9 +200,9 @@ function __step_icon()
 
 function __button($steps, $exit = FALSE)
 {
-	
+
 	if ((string)INSTALLER_STEP == 6.1 && defined('RECOVERY_CONSOLE') && $exit) {
-		
+
 		$btn = openform('exitFrm', 'POST', FUSION_REQUEST, ['class' => 'w-100 mt-auto']);
 		$btn .= '<button type="submit" name="reset" class="btn btn-macos-glass w-100 d-flex align-items-center" value="1">
 						Back to Recovery Menu
@@ -210,9 +210,9 @@ function __button($steps, $exit = FALSE)
 		$btn .= closeform();
 		return $btn;
 	}
-	
+
 	elseif (INSTALLER_STEP == 8 && $exit == TRUE || defined('RECOVERY_CONSOLE') && $exit) {
-		if (INSTALLER_STEP == 1) {
+		if (INSTALLER_STEP == 8) {
 			$btn = openform('exitFrm', 'POST', FUSION_REQUEST, ['class' => 'w-100']);
 			$btn .= '<button type="submit" name="reset" class="btn btn-macos-glass w-100 d-flex align-items-center" value="9">
 					<iconify-icon icon="solar:logout-linear" class="fs-3 me-2" style="font-size:1.15rem !important;"></iconify-icon>
@@ -227,14 +227,14 @@ function __button($steps, $exit = FALSE)
 			$btn .= closeform();
 		}
 
-		
+
 	} elseif (!empty($steps) && INSTALLER_STEP > 1 && INSTALLER_STEP < 8 && !defined('RECOVERY_CONSOLE')) {
-		
+
 		$btn = '<button type="submit" name="reset" class="btn btn-macos-glass" value="' . (INSTALLER_STEP - 1) . '">Go Back</button>';
 	}
-	
+
 	if (!empty($steps) && INSTALLER_STEP < 8 || (defined('RECOVERY_CONSOLE') && !empty($steps) && !$exit)) {
-		
+
 		$btn = '<span></span>';
 		foreach ($steps as $button_prop) :
 			$btn .= '<button id="' . $button_prop['name'] . '" type="submit" name="' . $button_prop['name'] . '" value="' . $button_prop['value'] . '" class="btn btn-macos-primary">
@@ -243,14 +243,14 @@ function __button($steps, $exit = FALSE)
 			</button>';
 		endforeach;
 	}
-	
+
 	if (!empty($btn)) :
 		return '<div class="mt-auto pt-4 d-flex justify-content-between align-items-center w-100 mx-auto" style="max-width:600px;">' . $btn . '</div>';
 	endif;
 
 //	}
 	return '';
-	
+
 }
 
 
