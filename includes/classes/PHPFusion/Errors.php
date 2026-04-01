@@ -185,7 +185,7 @@ class Errors {
 
         $html = "<tr id='rmd-".$data['error_id']."'>";
         $html .= "<td class='word-break' style='text-align:left;'>";
-        $html .= "<a data-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' aria-expanded='false' aria-controls='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
+        $html .= "<a data-bs-toggle='collapse' data-target='#err_rmd-".$data['error_id']."' href='#err_rmd-".$data['error_id']."' aria-expanded='false' aria-controls='#err_rmd-".$data['error_id']."' class='accordion-toggle strong' title='".$locale['show']."' style='font-size:15px;'>".$link_title."</a><br/>\n";
         $html .= "<code class='error_page'>".$data['error_page']." <span class='label label-success'>**</span></code><br/>\n";
         $html .= "<strong>".$locale['ERROR_415']." ".$data['error_line']."</strong><br/>\n";
         $html .= "<small>".timer($data['error_timestamp'])."</small>\n";
@@ -302,7 +302,7 @@ class Errors {
             <div class='m-t-10'>
                 <div class='display-inline-block m-r-20'>
                     <i class='fa fa-file-code-o'></i> <strong><?php echo $locale['ERROR_411']; ?></strong>:
-                    <a data-toggle="tab" data-target="#src-file" role="tab" href='<?php echo FUSION_SELF.$aidlink."&rowstart=".$_GET['rowstart']."&error_id=".$data['error_id'] ?>#src-file' title='<?php echo $data['error_page'] ?>'>
+                    <a data-bs-toggle="tab" data-target="#src-file" role="tab" href='<?php echo FUSION_SELF.$aidlink."&rowstart=".$_GET['rowstart']."&error_id=".$data['error_id'] ?>#src-file' title='<?php echo $data['error_page'] ?>'>
                         <?php echo self::getMaxFolders($data['error_page'], 3); ?>
                     </a>
                 </div>
