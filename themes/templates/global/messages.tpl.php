@@ -71,7 +71,7 @@ if (!function_exists('display_inbox')) {
                             echo '</div>';
                         } else {
                             echo '<div class="dropdown display-inline-block m-r-10">';
-                                echo '<a id="ddactions" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i><span class="caret m-l-5"></span></a>';
+                                echo '<a id="ddactions" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle"><i id="chkv" class="fa fa-square-o"></i><span class="caret m-l-5"></span></a>';
                                 echo '<ul class="dropdown-menu" aria-labelledby="ddactions">';
                                     foreach ($info['actions_form']['check'] as $id => $title) {
                                         echo '<li class="dropdown-item"><a id="'.$id.'" data-action="check" class="pointer">'.$title.'</a></li>';
@@ -89,7 +89,7 @@ if (!function_exists('display_inbox')) {
                             echo '</div>';
 
                             echo '<div class="dropdown display-inline-block m-r-10">';
-                                echo '<a id="ddactions2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle">'.$locale['444'].'&hellip; <span class="caret"></span></a>';
+                                echo '<a id="ddactions2" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default btn-sm dropdown-toggle">'.$locale['444'].'&hellip; <span class="caret"></span></a>';
                                 echo '<ul class="dropdown-menu" aria-labelledby="ddactions2">';
                                     echo '<li class="dropdown-item">'.$info['actions_form']['mark_all'].'</li>';
                                     echo '<li class="dropdown-item">'.$info['actions_form']['mark_read'].'</li>';
@@ -160,7 +160,7 @@ if (!function_exists('display_pm_inbox')) {
                     }
                 }
 
-                echo '<h4><a data-target="#unread_inbox" class="pointer text-dark" data-toggle="collapse" aria-expanded="false" aria-controls="unread_inbox">'.$locale['446'].' <span class="caret"></span></a></h4>';
+                echo '<h4><a data-target="#unread_inbox" class="pointer text-dark" data-bs-toggle="collapse" aria-expanded="false" aria-controls="unread_inbox">'.$locale['446'].' <span class="caret"></span></a></h4>';
                 echo '<div id="unread_inbox" class="collapse in">';
                     if (!empty($unread)) {
                         echo '<div class="table-responsive"><table id="unread_tbl" class="table table-hover table-striped">';
@@ -184,7 +184,7 @@ if (!function_exists('display_pm_inbox')) {
                     }
                 echo '</div>';
 
-                echo '<h4><a data-target="#read_inbox" class="pointer text-dark" data-toggle="collapse" aria-expanded="false" aria-controls="read_inbox">'.$locale['447'].' <span class="caret"></span></a></h4>';
+                echo '<h4><a data-target="#read_inbox" class="pointer text-dark" data-bs-toggle="collapse" aria-expanded="false" aria-controls="read_inbox">'.$locale['447'].' <span class="caret"></span></a></h4>';
                 echo '<div id="read_inbox" class="collapse in">';
                     if (!empty($read)) {
                         echo '<div class="table-responsive"><table id="read_tbl" class="table table-hover table-striped">';
