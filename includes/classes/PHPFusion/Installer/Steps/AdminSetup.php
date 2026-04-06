@@ -405,7 +405,6 @@ class AdminSetup extends InstallCore
 				// Update Site Settings
 				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['sitename'] . "' WHERE settings_name='sitename'");
 				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['siteemail'] . "' WHERE settings_name='siteemail'");
-				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['enabled_languages'] . "' WHERE settings_name='enabled_languages'");
 				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['timeoffset'] . "' WHERE settings_name='timeoffset'");
 				dbquery("UPDATE " . DB_PREFIX . "settings SET settings_value='" . self::$site_data['siteusername'] . "' WHERE settings_name='siteusername'");
 
@@ -487,7 +486,6 @@ class AdminSetup extends InstallCore
 						dbquery_insert(DB_PREFIX . 'user_settings', self::$user_data, 'update', ['no_primary' => TRUE, 'primary_key' => 'user_id']);
 
 					} else {
-						print_p(self::$user_data);
 
 						self::$user_data['user_id'] = dbquery_insert(DB_PREFIX . "users", self::$user_data, 'save');
 
@@ -509,6 +507,7 @@ class AdminSetup extends InstallCore
 			self::$site_data = $this->validateSiteData();
             $enabled_lang = explode( '.', self::$site_data['enabled_languages'] );
             $batch_core = Batch::getInstance();
+			dbquery( "UPDATE " . DB_PREFIX . "settings SET settings_value = '" . self::$site_data['enabled_languages'] . "' WHERE settings_name='enabled_languages'" );
 			if ( strpos( self::$site_data['enabled_languages'], '.' ) ) {
 
 				// Update all existing panel and update new enabled language values
@@ -597,7 +596,6 @@ class AdminSetup extends InstallCore
 				self::installerStep(self::STEP_INFUSIONS);
 			}
 			redirect(FUSION_REQUEST);
-
 		}
 	}
 
