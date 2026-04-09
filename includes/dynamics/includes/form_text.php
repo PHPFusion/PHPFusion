@@ -161,11 +161,10 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
                 $options['append_button'] = TRUE;
                 $options['append_type'] = "button";
                 $options['append_form_value'] = 'show';
-                $options['append_class'] = 'btn-default password-toggle';
+                $options['append_class'] = 'btn-secondary password-toggle';
                 $options['append_value'] = $locale['show'];
                 $options['append_button_name'] = $options['input_id'] . '_pwdToggle';
                 $options['append_button_id'] = $options['input_id'] . '_pwdToggle';
-
                 add_to_jquery( "
                     $('#" . $options['input_id'] . "_pwdToggle').on('click', function(e) {
                         togglePasswordInput('" . $options['input_id'] . "_pwdToggle', '" . $options['input_id'] . "');
@@ -220,8 +219,7 @@ function form_text( $input_name, $label = "", $input_value = "", array $options 
         if (defined('BOOTSTRAP') && isnum(BOOTSTRAP) && BOOTSTRAP < 5) {
             $ui_rules = 'bootstrap'.BOOTSTRAP.' : true,';
         }
-
-
+        
         add_to_jquery( "
             i18next.init({            
                 lng: '" . $locale['password_strength'] . "',resources: {" . $locale['password_strength'] . ": {translation: pwstrength_locale}}

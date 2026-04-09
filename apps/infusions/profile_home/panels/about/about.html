@@ -1,0 +1,37 @@
+<div class="panel panel-profile">
+	<div class="panel-body">
+
+
+		<div class="clearfix m-b-20">
+			<div class="overflow-hide">
+				<h4 class="text-white">{%user_tagline%}</h4>
+				<p>{%user_gender%}</p>
+			</div>
+		</div>
+		<div class="profile-details">
+			<div><i class="fad fa-bell m-r-10"></i><span class="text-white">{%user_birthdate%}</span></div>
+			<div><i class="fad fa-location-arrow m-r-10"></i><span class="text-white">{%user_location%}</span></div>
+			<div><i class="fad fa-globe-europe m-r-10"></i><span class="text-white">Fusioneer for {%user_joined%}</span>
+			</div>
+		</div>
+		<div class="profile-details">
+			<div>
+				<i class="fad fa-link m-r-10"></i>
+				<a href="{%user_web%}" rel="nofollow" class="text-white">{%user_web%}</a>
+			</div>
+		</div>
+		<div class="profile-details m-t-20">
+			<h6 class="text-uppercase">My Bio</h6>
+			<div class="profile-fields collapsed">
+				<p>{%user_bio%}</p>
+				{bio_block.{
+				<hr>
+				<h6 class="text-uppercase">{%block_title%}</h6>
+				<p>{%block_value%}</p>
+				}}
+			</div>
+			<div class="text-uppercase strong text-center">
+				<small><a href="#" data-toggle="showhide" class="text-toggle">Show More</a></small></div>
+		</div>
+	</div>
+</div>

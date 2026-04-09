@@ -1,0 +1,503 @@
+[08-Jan-2021 17:52:59 UTC] PHP Parse error:  syntax error, unexpected 'ORDER' (T_STRING), expecting ',' or ')' in /home/phpfusion/public_html/infusions/wiki/templates/wiki.php on line 257
+[08-Jan-2021 17:53:35 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/phpfusion/public_html/infusions/wiki/templates/wiki.php on line 287
+[08-Jan-2021 17:54:44 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/phpfusion/public_html/infusions/wiki/templates/wiki.php on line 257
+[08-Jan-2021 17:54:45 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/phpfusion/public_html/infusions/wiki/templates/wiki.php on line 257
+[08-Jan-2021 17:54:46 UTC] PHP Parse error:  syntax error, unexpected ')', expecting ']' in /home/phpfusion/public_html/infusions/wiki/templates/wiki.php on line 257
+[10-Jan-2021 09:01:41 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(26): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/index.php(106): render_wiki(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 09:01:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(113): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/documentation.php(129): render_wiki_article(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 09:10:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(113): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/documentation.php(129): render_wiki_article(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 09:18:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(26): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/index.php(106): render_wiki(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 10:01:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(26): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/index.php(106): render_wiki(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 10:05:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(26): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/index.php(106): render_wiki(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[10-Jan-2021 10:06:46 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ThemePack\Fusion\fusion_render() in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php:28
+Stack trace:
+#0 /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/theme.php(162): ThemePack\Fusion\Components::opentable('', '')
+#1 /home/phpfusion/public_html/themes/templates/render_functions.php(51): opentable('')
+#2 /home/phpfusion/public_html/infusions/wiki/templates/wiki.php(26): fusion_get_function('opentable', '')
+#3 /home/phpfusion/public_html/infusions/wiki/index.php(106): render_wiki(Array)
+#4 {main}
+  thrown in /home/phpfusion/public_html/themes/FusionTheme/themepack/fusion/components.php on line 28
+[11-Jan-2021 12:55:03 UTC] PHP Fatal error:  Cannot redeclare set_user_level() (previously declared in /home/phpfusion/public_html/includes/core/theme_includes.php:132) in /home/phpfusion/public_html/includes/core/dependencies/core_includes.php on line 123
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 63
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 64
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 66
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 68
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  session_cache_limiter(): Session cache limiter cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 70
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  session_name(): Session name cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 71
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  session_set_save_handler(): Session save handler cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 82
+[11-Jan-2021 12:55:11 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/phpfusion/public_html/includes/core_functions_include.php:1906) in /home/phpfusion/public_html/maincore.php on line 98
+[11-Jan-2021 12:55:11 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function auto_file() in /home/phpfusion/public_html/themes/templates/layout.php:214
+Stack trace:
+#0 /home/phpfusion/public_html/themes/templates/footer.php(42): require_once()
+#1 /home/phpfusion/public_html/infusions/wiki/index.php(108): require_once('/home/phpfusion...')
+#2 {main}
+  thrown in /home/phpfusion/public_html/themes/templates/layout.php on line 214
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 63
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 64
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 66
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 68
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  session_cache_limiter(): Session cache limiter cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 70
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  session_name(): Session name cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 71
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  session_set_save_handler(): Session save handler cannot be changed after headers have already been sent in /home/phpfusion/public_html/maincore.php on line 82
+[11-Jan-2021 12:55:25 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/phpfusion/public_html/includes/core_functions_include.php:1906) in /home/phpfusion/public_html/maincore.php on line 98
+[11-Jan-2021 12:55:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function auto_file() in /home/phpfusion/public_html/themes/templates/layout.php:214
+Stack trace:
+#0 /home/phpfusion/public_html/themes/templates/footer.php(42): require_once()
+#1 /home/phpfusion/public_html/infusions/wiki/documentation.php(137): require_once('/home/phpfusion...')
+#2 {main}
+  thrown in /home/phpfusion/public_html/themes/templates/layout.php on line 214
+[15-Jan-2021 00:22:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:12 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:13 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:14 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:14 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:14 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:15 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:15 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:15 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:16 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:16 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:23 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:23 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:23 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:23 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:24 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:24 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:25 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:25 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:25 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:25 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:29 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:29 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:29 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:29 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:30 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:31 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:31 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:31 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:32 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:32 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:34 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:34 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:34 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:34 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:34 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:35 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:35 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:35 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:35 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:35 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:36 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:36 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:36 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:36 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:36 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:37 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:37 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:37 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:38 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:38 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:38 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:38 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:39 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:39 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:39 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:39 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:40 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:40 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:40 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:41 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:41 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:41 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:41 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:41 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:42 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:42 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:42 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:42 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:43 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:43 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:43 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:43 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:43 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:44 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:44 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:44 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:44 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:45 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:45 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:45 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:46 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:46 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:46 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:46 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:46 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:47 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:47 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:47 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:49 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:49 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:49 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:49 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:50 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:50 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:50 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:50 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:51 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:51 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:51 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:51 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:51 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:52 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:52 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:52 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:52 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:52 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:53 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:53 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:53 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:53 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:54 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:54 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:54 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:54 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:55 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:55 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:55 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:56 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:56 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:56 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:56 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:57 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:57 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:57 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:57 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:58 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:58 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:58 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:59 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:59 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:59 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:22:59 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:00 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:00 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:00 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:00 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:01 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:01 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:01 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:02 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:02 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:02 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:02 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:03 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:03 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:03 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:03 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:03 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:04 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:04 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:04 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:05 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:05 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:05 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:05 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:06 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:06 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:06 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:06 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:07 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:07 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:07 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:08 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:08 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:08 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:08 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:09 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:09 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:09 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:09 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:10 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[15-Jan-2021 00:23:11 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[18-Jan-2021 23:01:48 UTC] PHP Warning:  Undefined array key "error_logging_enabled" in /home/phpfusion/public_html/maincore.php on line 46
+[20-Jan-2021 14:04:42 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "LOCALESET" in /home/phpfusion/public_html/includes/core_functions_include.php:1515
+Stack trace:
+#0 /home/phpfusion/public_html/includes/custom_includes.php(6): makefilelist('../../includes/...')
+#1 /home/phpfusion/public_html/includes/autoloader.php(125): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once('/home/phpfusion...')
+#3 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#4 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#5 {main}
+  thrown in /home/phpfusion/public_html/includes/core_functions_include.php on line 1515
+[20-Jan-2021 14:05:04 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:05:56 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:06:38 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:07:25 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:07:44 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:08:29 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:08:59 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:09:48 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:10:09 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:10:27 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:10:49 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/index.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:11:03 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:11:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:12:22 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:12:36 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:13:42 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:14:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:14:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/index.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:14:51 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:15:15 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:15:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:16:39 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:17:31 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:17:54 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:18:56 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:19:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:19:47 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116
+[20-Jan-2021 14:20:10 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/phpfusion/public_html/includes/deprecated.php' (include_path='.:/opt/cpanel/ea-php80/root/usr/share/pear') in /home/phpfusion/public_html/includes/autoloader.php:116
+Stack trace:
+#0 /home/phpfusion/public_html/includes/core_resources_include.php(23): require_once()
+#1 /home/phpfusion/public_html/maincore.php(33): require_once('/home/phpfusion...')
+#2 /home/phpfusion/public_html/infusions/wiki/documentation.php(10): require_once('/home/phpfusion...')
+#3 {main}
+  thrown in /home/phpfusion/public_html/includes/autoloader.php on line 116

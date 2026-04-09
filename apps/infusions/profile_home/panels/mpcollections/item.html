@@ -1,0 +1,31 @@
+<div class="row equal-height mp-gallery">
+	{item.{
+	<div class="{[col(100,50,50,33)]}">
+		<div class="panel panel-addons">
+			<a href="{%link%}">
+				<div class="overflow-hide" style="max-height:180px;">
+					{%image%}
+				</div>
+				<div class="panel-body">
+					<h5 class="title">{%title%}</h5>
+					<p class="description">
+						{%description%}
+					</p>
+				</div>
+				<div class="panel-footer">
+					<div class="meta">
+						{%price%}<br/>
+						<img src="{%store_logo_path%}" class="icon-xs m-r-5">{%profile_link%}
+					</div>
+					<div class="info">
+						{%ratings_text%}<br/>
+						{%download_text%}<br/>
+						{%collection_text%}<br/>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	}}
+</div>
+

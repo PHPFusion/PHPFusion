@@ -1,0 +1,24 @@
+<div class="spacer-sm">
+    <img class="img-responsive img-rounded" alt="Stripe" style="max-width:50px;" src="{{ logo }}"/>
+    <h4>Stripe Gateway Configuration</h4>
+    <div class="well">
+        <ul class="block">
+            <li>File - stripe/readme.md for test card information</li>
+        </ul>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{ form.open|raw }}
+            {{ form.field_1|raw }}
+            {{ form.field_2|raw }}
+            {{ form.field_3|raw }}
+            {{ form.field_4|raw }}
+            {{ form.field_5|raw }}
+            <hr/>
+            {{ form.field_6|raw }}
+            {{ form.field_7|raw }}
+            {{ form.field_8|raw }}
+            {{ form.close|raw }}
+        </div>
+    </div>
+</div>

@@ -168,12 +168,12 @@ echo '<link rel="stylesheet" href="'.$_styles_path.'?v='.$filetime.'" defer>';
     }
 }*/
 
-$theme_css_files = fusion_filter_hook( "fusion_css_styles" );
+$theme_css_files = fusion_filter_hook( 'fusion_css_styles' );
 if (is_array( $theme_css_files )) {
     $theme_css_files = array_filter( $theme_css_files );
     foreach ($theme_css_files as $css_file) {
         if (is_file( $css_file )) {
-            echo fusion_load_script( $css_file, "css", TRUE );
+            echo fusion_load_script( $css_file, 'css', TRUE );
         }
     }
 }
@@ -245,7 +245,6 @@ if (defined( 'BOOTSTRAP' ) && BOOTSTRAP < 5) {
     // Fix select2 on modal - http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error/15856139#15856139
     $jquery_tags .= "$.fn.modal.Constructor.prototype.enforceFocus = function () {};";
 }
-
 // Output lines added with add_to_jquery()
 $fusion_jquery_tags = OutputHandler::$jqueryCode;
 if (!empty( $fusion_jquery_tags )) {

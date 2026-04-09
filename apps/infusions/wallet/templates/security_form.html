@@ -1,0 +1,52 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Security Settings
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12 col-sm-2">
+                {%avatar%}<br/>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3"><p>Login Account User Name:</p></div>
+                    <div class="col-xs-12 col-sm-9"><p>{%user_name%}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3"><p>Wallet Account ID:</p></div>
+                    <div class="col-xs-12 col-sm-9"><p>{%user_id%}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3"><p>Registration Time:</p></div>
+                    <div class="col-xs-12 col-sm-9"><p>{%user_joined%}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3"><p>Verification:</p></div>
+                    <div class="col-xs-12 col-sm-9"><p>{%verification_status%}</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Wallet deactivation
+    </div>
+    <div class="panel-body">
+        {%dac_openform%}
+        <div class="col-xs-12 col-sm-2">
+            <strong>Delete Account</strong>
+        </div>
+        <div class="col-xs-12 col-sm-10">
+            <div class="row">
+                <div class="col-xs-12 col-sm-10">
+                    {%dac_checkbox%}
+                </div>
+                <div class="col-xs-12 col-sm-2 text-right">
+                    {%dac_button%}
+                </div>
+            </div>
+        </div>
+        {%dac_closeform%}
+    </div>
+</div>

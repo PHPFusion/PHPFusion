@@ -23,12 +23,14 @@
  */
 class Dynamics {
 
-    private static $instance = NULL;
+    private static ?Dynamics $instance = NULL;
 
     private function __construct() {
     }
 
-    public static function getInstance() {
+    public static function getInstance()
+	: static
+	{
         if (self::$instance === NULL) {
             self::$instance = new static();
             self::$instance->__load_dynamic_components();
@@ -39,11 +41,10 @@ class Dynamics {
 
     private function __load_dynamic_components() {
         $dynamic_folder = makefilelist(DYNAMICS.'includes/', '.|..|.htaccess|index.php|._DS_Store|.tmp');
-
-        if (!empty($dynamic_folder)) {
-            foreach ($dynamic_folder as $folder) {
+        if (!empty($dynamic_folder)) :
+            foreach ($dynamic_folder as $folder) :
                 require_once DYNAMICS."includes/".$folder;
-            }
-        }
+            endforeach;
+        endif;
     }
 }

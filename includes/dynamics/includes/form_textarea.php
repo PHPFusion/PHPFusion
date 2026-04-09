@@ -135,29 +135,29 @@ function form_textarea( $input_name, $label = '', $input_value = '', array $opti
             add_to_head( "<script src='" . INCLUDES . "elFinder/js/tinymceElfinder.min.js'></script>" );
 
             add_to_jquery( '
-                const mceElf = new tinymceElfinder({
-                    // connector URL (Set your connector)
-                    url: "' . fusion_get_settings( 'siteurl' ) . 'includes/elFinder/php/connector.php' . fusion_get_aidlink() . '",
-                    // upload target folder hash for this tinyMCE
-                    uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
-                    // elFinder dialog node id
-                    nodeId: "elfinder", // Any ID you decide
-                        ui: ["toolbar", "tree", "path", "stat"],
-                        uiOptions: {
-                            toolbar: [
-                                ["home", "back", "forward", "up", "reload"],
-                                ["mkdir", "mkfile", "upload"],
-                                ["open"],
-                                ["copy", "cut", "paste", "rm", "empty"],
-                                ["duplicate", "rename", "edit", "resize", "chmod"],
-                                ["quicklook", "info"],
-                                ["extract", "archive"],
-                                ["search"],
-                                ["view", "sort"],
-                                ["preference", "help"]
-                            ]
-                        }
-                });
+			const mceElf = new tinymceElfinder({
+				// connector URL (Set your connector)
+				url: "' . fusion_get_settings( 'siteurl' ) . 'includes/elFinder/php/connector.php' . fusion_get_aidlink() . '",
+				// upload target folder hash for this tinyMCE
+				uploadTargetHash: "l1_lw", // Hash value on elFinder of writable folder
+				// elFinder dialog node id
+				nodeId: "elfinder", // Any ID you decide
+					ui: ["toolbar", "tree", "path", "stat"],
+					uiOptions: {
+						toolbar: [
+							["home", "back", "forward", "up", "reload"],
+							["mkdir", "mkfile", "upload"],
+							["open"],
+							["copy", "cut", "paste", "rm", "empty"],
+							["duplicate", "rename", "edit", "resize", "chmod"],
+							["quicklook", "info"],
+							["extract", "archive"],
+							["search"],
+							["view", "sort"],
+							["preference", "help"]
+						]
+					}
+			});
             ' );
 
             define( 'tinymce', TRUE );
@@ -340,30 +340,36 @@ function form_textarea( $input_name, $label = '', $input_value = '', array $opti
                 " );
                 break;
         }
+        
     } else {
+		
+    	$options['type'] = 'bbcode';
+    	
+    	
+    	
+  
+//        if ($options['type'] == 'bbcode' || $options['bbcode']) {
+//            if (!defined( 'TT_BBCODE' )) {
+//                define( 'TT_BBCODE', TRUE );
+//                add_to_footer( '<script src="' . INCLUDES . 'jscripts/bbcode.min.js" defer></script>' );
+//            }
+//        }
 
-        if ($options['type'] == 'bbcode' || $options['bbcode']) {
-            if (!defined( 'TT_BBCODE' )) {
-                define( 'TT_BBCODE', TRUE );
-                add_to_footer( '<script src="' . INCLUDES . 'jscripts/bbcode.min.js" defer></script>' );
-            }
-        }
-
-        if ($options['bbcode']) {
-            $options['type'] = 'bbcode';
-        } else if ($options['html']) {
-            $options['type'] = 'html';
-        }
-
-        if ($options['autosize'] || defined( 'AUTOSIZE' )) {
-
-            if (!defined( 'TT_AUTOSIZE' )) {
-                define( 'TT_AUTOSIZE', TRUE );
-                add_to_footer( '<script src="' . DYNAMICS . 'assets/autosize/autosize.min.js"></script>' );
-            }
-
-            add_to_jquery( "autosize($('#" . $options['input_id'] . "'));" );
-        }
+//        if ($options['bbcode']) {
+//            $options['type'] = 'bbcode';
+//        } else if ($options['html']) {
+//            $options['type'] = 'html';
+//        }
+//
+//        if ($options['autosize'] || defined( 'AUTOSIZE' )) {
+//
+//            if (!defined( 'TT_AUTOSIZE' )) {
+//                define( 'TT_AUTOSIZE', TRUE );
+//                add_to_footer( '<script src="' . DYNAMICS . 'assets/autosize/autosize.min.js"></script>' );
+//            }
+//
+//            add_to_jquery( "autosize($('#" . $options['input_id'] . "'));" );
+//        }
     }
 
     list( $options['error_class'], $options['error_text'] ) = form_errors( $options );
@@ -371,78 +377,78 @@ function form_textarea( $input_name, $label = '', $input_value = '', array $opti
     if ($options['type'] == 'html' or $options['type'] == 'bbcode') {
 
         // Load editor plugin
-        if (!defined('TEXT_EDITOR')) {
-            define('TEXT_EDITOR', true);
-            add_to_footer('<script src="'.INCLUDES.'jquery/texteditor.min.js"></script>');
-        }
+//        if (!defined('TEXT_EDITOR')) {
+//            define('TEXT_EDITOR', true);
+//            add_to_footer('<script src="'.INCLUDES.'jquery/texteditor.min.js"></script>');
+//        }
 
         // Preview buttons
-        if ($options['preview']) {
-            $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='far fa-eye m-r-10'></i><span class='preview-text'>" . $locale['preview'] . "</span></span></button>";
-            add_to_jquery( "
-            $(document).on('click', '[data-action=\"preview\"]', function(e) {
-                e.preventDefault();
-                let preview_tab = $('#prw-" . $options['input_id'] . "'),
-                editor_tab = $('#txt-" . $options['input_id'] . "'),
-                placeholder = $(this).find('.preview-text');
-
-                if ( editor_tab.is(':visible') ) {
-                    $(this).addClass('active');
-                    placeholder.text('Hide Preview');
-    
-                    let text = $('#" . $options['input_id'] . "').val(),
-                    format = '" . ($options['type'] == "bbcode" ? 'bbcode' : 'html') . "',
-                    data = {
-                        " . (defined( 'ADMIN_PANEL' ) ? "'mode': 'admin', " : "") . "
-                        'text' : text,
-                        'editor' : format,
-                        'url' : '" . $_SERVER['REQUEST_URI'] . "',
-                        'form_id' : 'prw-" . $options['form_name'] . "',
-                        'fusion_token' : '" . fusion_get_token( "prw-" . $options['form_name'], 30 ) . "'
-                    },
-                    sendData = $(this).closest('form').serialize() + '&' + $.param(data);
-    
-                    $.ajax({
-                        url: '" . FUSION_ROOT . INCLUDES . "dynamics/assets/preview/preview.ajax.php',
-                        type: 'POST',
-                        dataType: 'html',
-                        data : sendData,
-                        success: function(result) {
-                            console.log(result);
-                            preview_tab.html(result).addClass('in active');
-                            editor_tab.removeClass('in active');
-    
-                        },
-                        error: function(result) {
-                            alert('" . $locale['error_preview'] . "' + '\\n" . $locale['error_preview_text'] . "');
-                        }
-                    });
-    
-                } else {
-                    $(this).removeClass('active');
-                    placeholder.text('Preview');
-                    preview_tab.removeClass('in active');
-                    editor_tab.addClass('in active');
-                }
-            });
-        " );
-        }
+//        if ($options['preview']) {
+//            $preview_button = "<button type='button' class='bbcode' data-action='preview'><span class='bbcode-icon-wrap p-l-5 p-r-5'><i class='far fa-eye m-r-10'></i><span class='preview-text'>" . $locale['preview'] . "</span></span></button>";
+//            add_to_jquery( "
+//            $(document).on('click', '[data-action=\"preview\"]', function(e) {
+//                e.preventDefault();
+//                let preview_tab = $('#prw-" . $options['input_id'] . "'),
+//                editor_tab = $('#txt-" . $options['input_id'] . "'),
+//                placeholder = $(this).find('.preview-text');
+//
+//                if ( editor_tab.is(':visible') ) {
+//                    $(this).addClass('active');
+//                    placeholder.text('Hide Preview');
+//
+//                    let text = $('#" . $options['input_id'] . "').val(),
+//                    format = '" . ($options['type'] == "bbcode" ? 'bbcode' : 'html') . "',
+//                    data = {
+//                        " . (defined( 'ADMIN_PANEL' ) ? "'mode': 'admin', " : "") . "
+//                        'text' : text,
+//                        'editor' : format,
+//                        'url' : '" . $_SERVER['REQUEST_URI'] . "',
+//                        'form_id' : 'prw-" . $options['form_name'] . "',
+//                        'fusion_token' : '" . fusion_get_token( "prw-" . $options['form_name'], 30 ) . "'
+//                    },
+//                    sendData = $(this).closest('form').serialize() + '&' + $.param(data);
+//
+//                    $.ajax({
+//                        url: '" . FUSION_ROOT . INCLUDES . "dynamics/assets/preview/preview.ajax.php',
+//                        type: 'POST',
+//                        dataType: 'html',
+//                        data : sendData,
+//                        success: function(result) {
+//                            console.log(result);
+//                            preview_tab.html(result).addClass('in active');
+//                            editor_tab.removeClass('in active');
+//
+//                        },
+//                        error: function(result) {
+//                            alert('" . $locale['error_preview'] . "' + '\\n" . $locale['error_preview_text'] . "');
+//                        }
+//                    });
+//
+//                } else {
+//                    $(this).removeClass('active');
+//                    placeholder.text('Preview');
+//                    preview_tab.removeClass('in active');
+//                    editor_tab.addClass('in active');
+//                }
+//            });
+//        " );
+//        }
 
     }
 
     // we do not need form_name any longer, because we can use plugin and Id
     if ($options['type'] == "bbcode" && $options['form_name']) {
 
-        display_smiley_options();
+//        display_smiley_options();
 
-        $options['toolbar'] = '<div class="bbcode_input">'.display_bbcodes( '100%', $options['input_id'], $options['form_name'], $options['input_bbcode'] ).'</div>';
-        $options['toolbar_1'] = ($preview_button ?? '');
+//        $options['toolbar'] = '<div class="bbcode_input">'.display_bbcodes( '100%', $options['input_id'], $options['form_name'], $options['input_bbcode'] ).'</div>';
+//        $options['toolbar_1'] = ($preview_button ?? '');
 
     } else if ($options['type'] == "html" && $options['form_name']) {
 
         // @todo: Develop a new set of wysiwyg html editor.
-        $options['toolbar'] = display_html( $options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path'] );
-        $options['toolbar_1'] = ($preview_button ?? '');
+//        $options['toolbar'] = display_html( $options['form_name'], $options['input_id'], TRUE, TRUE, TRUE, $options['path'] );
+//        $options['toolbar_1'] = ($preview_button ?? '');
     }
 
 //    if ($options['inline_editing'] == TRUE) {
@@ -454,7 +460,7 @@ function form_textarea( $input_name, $label = '', $input_value = '', array $opti
     if (($options['type'] == "html" || $options['type'] == "bbcode") && $options['char_count'] != FALSE) {
 
         // depends on texteditor.js
-        add_to_jquery( "$('#" . $options['input_id'] . "').charCounter();");
+//        add_to_jquery( "$('#" . $options['input_id'] . "').charCounter();");
 
 
 //        $html .= "</div>\n<div class='panel-footer clearfix'>\n";

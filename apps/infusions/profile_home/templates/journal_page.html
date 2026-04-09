@@ -1,0 +1,69 @@
+<div class="journal">
+	<div class="{[col(100,100,60,80)]}">
+		<div style="max-width:800px; margin:0 auto;">
+			<div class="journal-hero">
+				<h2>{%journal_subject%}</h2>
+				<div class="meta">
+					{%time%} <span class="m-l-15 m-r-15">|</span> <i class="fad fa-clock m-r-10"></i> {%read_time%}
+				</div>
+			</div>
+			<div class="journal-actions">
+				<div class="left display-flex-row">
+					<a href="{%comment_link%}"><i class="far fa-comment fa-lg"></i></a>
+<!--					<a href="{%share_action%}"><i class="far fa-users fa-lg"></i></a>-->
+					<span class="dropup">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="far fa-share fa-lg"></i></a>
+						<ul class="dropdown-menu">
+							<li>
+								<div>Share on Social</div>
+								<div class="display-flex-row spacer-sm space-between">
+									<a class="social-icons" href="{%fb_share_link%}" target="popup" onclick="window.open('{%fb_share_link%}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><span class="fas fa-stack fa-2x" style="vertical-align: top;"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i></span></a>
+									<a class="social-icons" href="{%twitter_share_link%}" target="popup" onclick="window.open('{%twitter_share_link%}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><span class="fas fa-stack fa-2x" style="vertical-align: top;"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-twitter fa-stack-1x fa-inverse"></i></span></a>
+									<a class="social-icons" href="{%tumblr_share_link%}" target="popup" onclick="window.open('{%tumblr_share_link%}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><span class="fas fa-stack fa-2x" style="vertical-align: top;"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-tumblr fa-stack-1x fa-inverse"></i></span></a>
+									<a class="social-icons" href="{%pinterest_share_link%}" target="popup" onclick="window.open('{%pinterest_share_link%}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><span class="fas fa-stack fa-2x" style="vertical-align: top;"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-pinterest-p fa-stack-1x fa-inverse"></i></span></a>
+								</div>
+								<div class="spacer-sm">
+									<span class="current-link">{%current_link%}</span>
+								</div>
+							</li>
+						</ul>
+					</span>
+				</div>
+				{journal_admin.{
+				<div class="right m-l-a">
+					<a href="{%trash_link%}" class="text-primary"><i class="far fa-trash fa-lg"></i></a>
+					<a href="{%edit_link%}" class="'text-primary"><i class="far fa-pencil fa-lg"></i></a>
+				</div>
+				}}
+			</div>
+			<div class="journal-meta">
+				<div class="left">
+					<div class="pull-left m-r-10">{%avatar%}</div>
+					<small class="text-uppercase">by</small>
+					{%profile_link%}
+				</div>
+				<div class="text-right m-l-a">
+					<div>
+						<span class="m-r-20"><i title="Collections" class="fad fa-star" data-toggle="tooltip"></i> {%journal_collections%}</span>
+						<span class="m-r-20"><i title="Journal Comments" data-toggle="tooltip" class="fad fa-comment"></i> {%journal_comments%}</span>
+						<i title="Journal Views" data-toggle="tooltip" class="fad fa-eye"></i> {%journal_reads%}
+					</div>
+					Published: {%datestamp%}
+				</div>
+			</div>
+			<div class="journal-cat"><a href="{%category_link%}">{%category%}</a></div>
+			<div class="journal-text">
+				{%journal_text%}
+			</div>
+			<div class="journal-comments">
+				{%comments%}
+			</div>
+		</div>
+	</div>
+	<div class="{[col(100,100,40,20)]}">
+		<div class="spacer-lg">
+			<small class="text-lighter text-uppercase">Recommended Posts</small>
+		</div>
+		{%recommended%}
+	</div>
+</div>

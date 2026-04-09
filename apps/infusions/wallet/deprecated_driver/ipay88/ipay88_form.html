@@ -1,0 +1,37 @@
+<h1 class="text-light">Credit Card Details</h1>
+<p class="text-dark">Please check your billing credit card details information.</p>
+<div class="spacer-md">
+    {%form_head%}
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            {field_block.{
+            {%input_field%}
+            }}
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <div class="list-group-item">
+                <h4 class="text-light">Your order</h4>
+                <table class="table">
+                    <tr>
+                        <th>Product</th><th>Total</th>
+                    </tr>
+                    {product_block.{
+                    <tr><td class="text-bigger">{%title%}</td><td class="text-bigger">{%amount%}</td></tr>
+                    }}
+                    <tr>
+                        <td><strong>Subtotal</strong></td>
+                        <td><strong>{%subtotal%}</strong></td>
+                    </tr>
+                    <tfoot>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>{%gtotal%}</strong></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="spacer-sm">{%button%}</div>
+        </div>
+    </div>
+    </form>
+</div>

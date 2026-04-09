@@ -1,0 +1,37 @@
+<h1>Transaction details</h1>
+<hr/>
+<div class="text-dark">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8">
+            <p><strong>{%title%}</strong><label class="label label-primary m-l-15">{%type%}</label></p>
+            <p>{%fulldate%} {%server_offset%} <span class="pull-right">| Transaction ID: PFU{%transaction_id%}</span></p>
+            <p>Payment Status<label class="label label-bordered label-primary m-l-15">{%status%}</label></p>
+        </div>
+        <div class="col-xs-12 col-sm-4 text-right">
+            Gross Amount<br/><h3 class="m-0">{%transaction_gross%}</h3>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="well strong row">Payment Details</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-3"><strong>Gross Amount</strong></div>
+    <div class="col-xs-12 col-sm-9">{%transaction_gross%}</div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-3"><strong>PHP-Fusion Charges</strong></div>
+    <div class="col-xs-12 col-sm-9">{%transaction_charge%}</div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-3"><strong>Net Amount</strong></div>
+    <div class="col-xs-12 col-sm-9"><hr class="m-5"/>{%transaction_amount%}</div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-xs-12 col-sm-3"><strong>Paid by</strong></div>
+    <div class="col-xs-12 col-sm-9">{%payee%}</div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-3"><strong>Memo</strong></div>
+    <div class="col-xs-12 col-sm-9">{%details%}</div>
+</div>

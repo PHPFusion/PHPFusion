@@ -5,7 +5,7 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: custom_pages.php
-| Author: Core Development Team
+| Author: Core Development Team (coredevs@phpfusion.com)
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+pageAccess("CP");
 require_once THEMES.'templates/admin_header.php';
-pageaccess('CP');
-PHPFusion\Page\PageAdmin::getComposerAdminInstance()->displayPage();
+PHPFusion\Page\PageAdmin::getComposerAdminInstance()->display_page();
 require_once THEMES.'templates/footer.php';

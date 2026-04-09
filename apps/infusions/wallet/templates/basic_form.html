@@ -1,0 +1,74 @@
+<div class="m-b-50">
+    {%openform%}
+    {[$opentable(Basic Information)]}
+    <div class="row">
+        <div class="{[col(100,100,100,80)]}">
+            <div class="row m-0">
+                <div class="{[col(100,100,25)]}">
+                    <div class="control-label m-0">Membership :</div>
+                </div>
+                <div class="{[col(100,100,75)]}">
+                    <div class="p-5">
+                        {%type%}<br/>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            {individual.{
+            <div class="row m-0">
+                <div class="{[col(100,100,25)]}">
+                    <div class="control-label m-0">Name:<span class="required">*</span></div>
+                </div>
+                <div class="{[col(100,100,75)]}">
+                    <div class="row">
+                        <div class="{[col(50]}">{%first_name%}</div>
+                        <div class="{[col(50]}">{%last_name%}</div>
+                    </div>
+                </div>
+            </div>
+            }}
+            {%email%}
+            {%job_title%}
+            {%web%}
+        </div><div class="{[col(100,100,20)]}">
+        <div class="well">If you want to change membership type, please use the Real Identity Verification form.</div>
+        </div>
+    </div>
+    {[$closetable()]}
+
+    {company.{
+    {[$opentable(Company Information)]}
+    <div class="row">
+        <div class="{[col(100,100,100,80)]}">
+            {%company%}
+            {%company_industry%}
+            {%company_product%}
+            {%company_period%}
+            {%company_employees%}
+        </div>
+    </div>
+    {[$closetable()]}
+    }}
+
+    {[$opentable(Billing Information)]}
+    <div class="row">
+        <div class="{[col(100,100,100,80)]}">
+            {%geo%}
+        </div>
+    </div>
+    {[$closetable()]}
+
+    {[$opentable(Contact Information)]}
+    <div class="row">
+        <div class="{[col(100,100,100,80)]}">
+            {%mobile%}
+            {%phone%}
+            {%fax%}
+        </div>
+    </div>
+    {[$closetable()]}
+
+    {%button%}
+
+    {%closeform%}
+</div>

@@ -970,7 +970,7 @@ function fusion_table($table_id, array $options = []) {
  */
 function u_load_check($info) {
     if (!defined('COPYRIGHT') || !stristr(COPYRIGHT, $info) && !defined('iDEVELOPER')) {
-        echo '<div class="phpfusion-copyright" style="display:none;">'.showcopyright().'</div>';
+        add_to_footer('<div class="phpfusion-copyright" style="display:none;">'.showcopyright().'</div>');
     }
 
     return $info;

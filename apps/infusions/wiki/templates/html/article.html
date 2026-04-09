@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-2 main-wiki-nav">
+        {%navigation%}
+
+        <div class="list-group">
+            <div class="list-group-item"><div class="list-group-item-heading m-b-0"><i class="fa fa-users"></i> {[wiki_314]}</div></div>
+            {contributors.{
+                <div class="list-group-item clearfix">
+                    <small>{%user_name%} {%log%}</small>
+                </div>
+            }}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
+        <div class="wiki-top-content">
+            <div class="row"><div class="col-xs-12 col-sm-6 col-sm-offset-3">{%wiki_search%}</div></div>
+            <div class="clearfix m-b-20">
+                <div class="btn-group btn-group-sm pull-right">{%admin_links%}</div>
+                {%versions%}
+            </div>
+            <article><p>{%article%}</p></article>
+        </div>
+
+        <div class="row">
+            <div class="col-md-9 col-lg-9">
+                <section class="sections-content">
+                    {sections.{
+                        <div class="p-15" id="page{%id%}">
+                            {%admin_links%}
+                            <h1>{%name%}</h1>
+                            {%content%}
+                        </div>
+                    }}
+                </section>
+            </div>
+            <div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="position:sticky;top:0;max-height:99vh;overflow-y:auto;">
+                <!--<div id="scrollspy">-->
+                    <ul class="nav wiki-scrollpy-nav" role="tablist">
+                        {sections_nav.{
+                            <li><a href="#page{%id%}">{%name%}</a></li>
+                        }}
+                    </ul>
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+{submission.{
+    <div id="submit_wiki"><a class="btn-success" href="{%submit_link%}" target="_blank" title="{[wiki_submit]}"><i class="fa fa-plus"></i></a></div>
+}}
+-->

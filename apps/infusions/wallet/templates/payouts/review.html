@@ -1,0 +1,21 @@
+<h3 class="strong m-b-20">Review</h3>
+<table class="table">
+    <tr>
+        <td class="strong  text-uppercase">From</td>
+        <td class="text-right"><h4>{%from%}</h4></td>
+    </tr>
+    <tr>
+        <td class="strong  text-uppercase">To</td>
+        <td class="text-right"><h4>{%to%}</h4></td>
+    </tr>
+    <tr>
+        <td class="strong text-uppercase">Amount</td>
+        <td class="text-right"><h4>{%amount%}</h4></td>
+    </tr>
+    {process_time_block.{
+    <tr>
+        <td colspan="2"><i class="fa fa-calendar-o fa-lg fa-fw m-r-10 text-red"></i> <i>Processing time takes 3-5 business days</i></td>
+    </tr>
+    }}
+</table>
+<div class="spacer-md">{%form%}</div>

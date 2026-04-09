@@ -1,0 +1,122 @@
+<div class="bill-view">
+    <div class="container">
+        <div class="m-b-20"><strong><i class="far fa-angle-left m-r-5"></i><a href="{{ WALLET_SECTION_TABLE_LINK }}">Back to Profile</a></strong></div>
+        <div id="invoice-print">
+            <div class="panel panel-default no-shadow">
+                <div class="panel-heading">
+                    <div class="flex flex-row">
+                        <h4>Transaction details</h4>
+                        <span class="m-l-a m-r-10"><a href="#" class="print-invoice"><i class="fad fa-print m-r-5"></i>Print</a></span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-9">
+                            <h5>{{ transaction.transaction_nature }}</h5>
+                            <div class="flex flex-row flex-space-between">
+                                {{ transaction.transaction_datestamp_time }}
+                                <span>| Transaction ID: {{ transaction.transaction_ref }}</span>
+                            </div>
+                            {% set label = '<label class="label label-default label-bordered">Pending</label>' %}
+                            {% if transaction.transaction_status == TRANSACTION_PAID %}
+                                {% set label = '<label class="label label-bordered label-success">Completed</label>' %}
+                            {% endif %}
+                            {% if transaction.transaction_status == TRANSACTION_FAILED %}
+                                {% set label = '<label class="label label-danger label-bordered">Failed</label>' %}
+                            {% endif %}
+                            {% if transaction.transaction_status == TRANSACTION_CLOSED %}
+                                {% set label = '<label class="label label-warning label-bordered">Failed</label>' %}
+                            {% endif %}
+                            Payment Status: {{ label|raw }}<br/>
+                            Payment Type: {{ transaction.transaction_description }} ({{ transaction.transaction_type }})
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                            <div class="text-right">
+                                Gross amount
+                                <h4>${{ transaction.transaction_item_total|number_format(2) }}  {{ transaction.transaction_currency }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <h5>Billing address</h5>
+                            {{ transaction.transaction_user_address|raw }}
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <h5>Shipping address</h5>
+                            {{ transaction.transaction_user_address|raw }}
+                        </div>
+                    </div>
+                    <hr/>
+                    <h5>Payment details</h5>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">Gross Amount</div>
+                        <div class="col-xs-12 col-sm-9">${{ transaction.transaction_item_total|number_format(2) }} {{ transaction.transaction_currency }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">Tax Amount</div>
+                        <div class="col-xs-12 col-sm-9">${{ transaction.transaction_tax|number_format(2) }} {{ transaction.transaction_currency }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">Net Amount</div>
+                        <div class="col-xs-12 col-sm-9">${{ transaction.transaction_amount|number_format(2) }} {{ transaction.transaction_currency }}</div>
+                    </div>
+                    <hr/>
+                    <h5>Delivery and Item Particulars</h5>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">Paid by</div>
+                        <div class="col-xs-12 col-sm-9">{{ transaction.transaction_paid_name }}
+                            {% if transaction.transaction_paid_user %}
+                                <br/>UserID: {{ transaction.transaction_paid_user }}, {{ transaction.transaction_paid_username }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-3">Payment Sent to</div>
+                        <div class="col-xs-12 col-sm-9">{{ transaction.store_name }}</div>
+                    </div>
+                    <hr/>
+                    {% if orders %}
+                        {% for order in orders %}
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-3">
+                                    <h5>{{ order.order_title }}</h5>
+                                    {{ order.order_description }}
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    {{ order.order_item_quantity }} x ${{ order.order_item_value|number_format(2) }} {{ order.order_currency }}
+                                    <br/>
+                                    <small>
+                                        Tax: ${{ order.order_total_tax|number_format(2) }} {{ order.order_currency }} -
+                                        Delivery: ${{ order.order_total_shipping|number_format(2) }} {{ order.order_currency }}
+                                    </small><br/>
+                                    {% set complete_status = '<label class="label label-inverse label-bordered">Pending</label>' %}
+                                    {% if order.order_completed == 1 %}
+                                        {% set complete_status = '<label class="label label-default label-bordered">Delivered</label>' %}
+                                    {% endif %}
+                                    <small>
+                                        {{ complete_status|raw }}
+                                    </small>
+
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    ${{ order.order_total|number_format(2) }} {{ order.order_currency }}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-9 text-right">
+                                <strong>Subtotal</strong>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <strong>${{ transaction.transaction_amount|number_format(2) }} {{ transaction.transaction_currency }}</strong>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

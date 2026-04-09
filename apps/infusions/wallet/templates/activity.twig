@@ -1,0 +1,55 @@
+<h3><strong><i class="far fa-credit-card m-r-10"></i>Overview</strong></h3>
+<div class="m-b-20">For funds to be added to your wallet, please top up your account.</div>
+<div class="row equal-height">
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="m-b-0 text-dark"><i class="fad fa-coins fa-lg m-r-10"></i>My Account Balance</div>
+                <h2 class="m-b-20 m-t-0">{{balance|number_format(4)}}</h2>
+            </div>
+            <div class="panel-body">
+                <a href="{{ top_up_link }}" title="Top Up Wallet Account" class="btn btn-primary"><i class="fad fa-badge-dollar fa-lg m-r-10"></i>Top up coins</a>
+            </div>
+        </div>
+        {#        Account Completion#}
+        {#        {% if completion_score < 90 %}#}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="m-b-0 text-dark"><i class="fad fa-id-card fa-lg m-r-10"></i>My Wallet Profile</div>
+            </div>
+            <div class="panel-body">
+                Your wallet information is used to validate your identity during purchases. Please ensure your information is filled in correctly.
+                <div class="display-flex-row m-b-20">
+                    <div class="completion-text display-flex-column" style="justify-items: center; width:90%;padding:0;">
+                        <div class="display-block" style="padding:0;">
+                            <h4 class="text-dark strong">Your profile is currently {{ completion_score|number_format(0) }}% completed</h4>
+                            <a class="btn btn-success spacer-xs" role="button" aria-label="button" href="{{ account_link }}"><i class="fad fa-id-card-alt m-r-10 fa-lg"></i>Complete Your Profile</a>
+                        </div>
+                    </div>
+                    <div class="chart" style="height:130px; width:220px; text-align:center; padding:0;">
+                        {{ completion_chart_id|raw }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#        {% endif %}#}
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="text-dark"><i class="far fa-comment-alt-dollar fa-lg m-r-10"></i>My Balance Transfer</div>
+            </div>
+            <div class="panel-body">
+                {{ table.transfer|raw }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="text-dark"><i class="far fa-envelope-open-dollar m-r-10 fa-lg"></i>My Wallet Transactions</div>
+    </div>
+    <div class="panel-body">
+        {{ table.transactions|raw }}
+    </div>
+</div>

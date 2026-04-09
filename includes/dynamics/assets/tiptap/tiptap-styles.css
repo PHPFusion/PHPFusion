@@ -1,0 +1,123 @@
+.tiptap-wrapper .control-group {
+  align-items: center;
+  gap: 0.25rem;
+  display: flex;
+  padding: 0.5rem;
+  background: #1A1A1D;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.tiptap-wrapper .control-group.tiptap-bubble-menu {
+  border: 1px solid rgba(232, 232, 253, 0.08);
+  background: #19191C;
+  border-radius: 15px;
+  padding: 8px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 48px 0px, rgba(0, 0, 0, 0.24) 0px 12px 24px 0px, rgba(0, 0, 0, 0.22) 0px 6px 8px 0px, rgba(0, 0, 0, 0.12) 0px 2px 3px 0px;
+}
+.tiptap-wrapper .tiptap-separator[data-orientation=vertical] {
+  width: 1px;
+  height: 1.5rem;
+  background-color: rgba(238, 238, 246, 0.11);
+}
+.tiptap-wrapper .button-group {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+.tiptap-wrapper .tiptap-button {
+  /* Base reset to kill PHPFusion/Bootstrap defaults */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  border: none;
+  outline: none !important;
+  cursor: pointer;
+  user-select: none;
+  padding: 6px;
+  margin: 0;
+  font-weight: 500;
+  background: transparent;
+  border-radius: 0.595rem;
+  color: #53565a;
+  /* Use your LESS/SASS variable */
+  transition: all 0.2s ease;
+  /* --- GHOST STYLE --- */
+  /* Disabled State */
+}
+.tiptap-wrapper .tiptap-button .tiptap-button-icon {
+  width: 16px;
+  height: 16px;
+  /* Default dim color for inactive icons */
+  color: rgba(247, 247, 253, 0.45);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"] {
+  /* --- ACTIVE STATES (Toggled by your JS) --- */
+  /* We target both your data-attribute and the .is-active class */
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"]:hover:not([disabled]):not(.is-active) {
+  background-color: #2d2d2f !important;
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"]:hover:not([disabled]):not(.is-active) .tiptap-button-icon {
+  color: rgba(247, 247, 253, 0.8) !important;
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"][data-active-state="on"],
+.tiptap-wrapper .tiptap-button[data-style="ghost"].is-active {
+  background-color: rgba(231, 231, 243, 0.07) !important;
+  /* Purple Emphasized State (for Headings, Paragraph, etc.) */
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"][data-active-state="on"] .tiptap-button-icon,
+.tiptap-wrapper .tiptap-button[data-style="ghost"].is-active .tiptap-button-icon {
+  /* Bright white/blue for standard bold/italic active state */
+  color: rgba(247, 247, 253, 0.95) !important;
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"][data-active-state="on"][data-appearance="emphasized"],
+.tiptap-wrapper .tiptap-button[data-style="ghost"].is-active[data-appearance="emphasized"] {
+  background-color: rgba(231, 231, 243, 0.12) !important;
+}
+.tiptap-wrapper .tiptap-button[data-style="ghost"][data-active-state="on"][data-appearance="emphasized"] .tiptap-button-icon,
+.tiptap-wrapper .tiptap-button[data-style="ghost"].is-active[data-appearance="emphasized"] .tiptap-button-icon {
+  color: #7a52ff !important;
+  /* Your specific Purple */
+}
+.tiptap-wrapper .tiptap-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.tooltip.tiptap-tooltip .tooltip-inner {
+  background-color: #1a1a1a;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.tooltip.tiptap-tooltip .tooltip-arrow::before {
+  border-top-color: #1a1a1a;
+}
+.color-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem !important;
+  border-radius: 0.775rem;
+}
+.color-swatch > span {
+  display: block;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(229 231 235 / 0.35);
+  border-radius: 50%;
+}
+.color-swatch:hover {
+  background: #2d2d2f;
+}
+/*# sourceMappingURL=tiptap-styles.css.map */

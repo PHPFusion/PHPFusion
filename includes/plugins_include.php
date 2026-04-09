@@ -20,10 +20,10 @@ if ($list = makefilelist( INCLUDES . 'plugins/', '.|..', FALSE, 'folders' )) {
 
     foreach ($list as $folders) {
         $plugin_folder = INCLUDES . 'plugins/' . $folders . '/';
-
+		
         if (is_file( $plugin_folder . $folders . '_include.php' )) {
             require_once $plugin_folder . $folders . '_include.php';
-            // load the
+            
             if (isset( $plugin_files )) {
                 foreach ($plugin_files as $files) {
                     require_once $plugin_folder . $files;

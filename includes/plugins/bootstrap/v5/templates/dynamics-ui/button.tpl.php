@@ -19,9 +19,12 @@ function render_button_input($input_name, $input_label, $input_value, $options =
 
     $icon = '';
     if (!empty($options['icon'])) {
+    	
         $icon_class = trim($options['icon_class'] ?? '');
         $icon = '<i class="' . htmlspecialchars($options['icon'] . ' ' . $icon_class) . '"></i>';
+        
     }elseif (!empty($options['iconify'])) {
+    	
     	$icon_class = " ".trim($options['icon_class'] ?? '');
     	$icon = "<iconify-icon icon='{$options['iconify']}' class='fs-6{$icon_class}'></iconify-icon>";
 	}
@@ -49,6 +52,7 @@ function render_button_input($input_name, $input_label, $input_value, $options =
 
         // Button type
     } else {
+    	
         $btn_type = ($options['type'] === 'submit') ? 'submit' : 'button';
 
         $html = sprintf(

@@ -135,7 +135,7 @@ class InfusionsSetup extends InstallCore {
 						$content .= "        <div class='mt-auto'>\n";
 						$content .= "            <div class='d-flex align-items-center gap-2 mb-3'>\n";
 						$content .= "                <div class='rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center' style='width: 32px; height: 32px;'>\n";
-						$content .= "                    <iconify-icon icon='solar:user-circle-linear' class='text-primary'></iconify-icon>\n";
+						$content .= "                    <iconify-icon icon='solar:user-circle-linear' class='text-primary'></iconify-icon>";
 						$content .= "                </div>\n";
 						$content .= "                <div class='small'>\n";
 						$content .= "                    <span class='d-block fw-semibold text-dark'>" . (!empty($inf['developer']) ? $inf['developer'] : $locale['INF_410']) . "</span>\n";

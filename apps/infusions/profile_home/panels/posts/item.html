@@ -1,0 +1,31 @@
+{item.{
+<div class="panel panel-addons">
+	<a href="{%link%}">
+		<div class="panel-body" style="padding-top:200px;">
+			<h3 class="strong text-white">{%title%}</h3>
+			<div class="spacer-xs text-sm text-white">{%datestamp%}</div>
+			<p class="description" style="height:150px;">
+				{%description%}
+			</p>
+		</div>
+		<div class="panel-footer" style="height: 110px;padding-bottom: 30px;">
+			<div class="meta">
+				<span class="m-r-10">{%avatar%}</span>{%profile_link%}
+			</div>
+			<div class="info">
+				{%ratings_text%}<br/>
+				{%collection_text%}<br/>
+			</div>
+		</div>
+	</a>
+</div>
+}}
+{no_item.{
+<div class="panel panel-profile">
+	<div class="text-center"><h4>Nothing to Show Here Yet</h4>
+		<p>Once you post something on your journal, they will appear here.</p>
+		<a href="{%link%}" class="text-success small text-uppercase strong">Post a Journal</a>
+	</div>
+</div>
+}}
+

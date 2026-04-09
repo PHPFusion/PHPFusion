@@ -17,6 +17,7 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
+const APPS = BASEDIR.'apps/';
 const ADMIN = BASEDIR.'administration/';
 const CLASSES = BASEDIR.'includes/classes/';
 const DYNAMICS = BASEDIR.'includes/dynamics/';

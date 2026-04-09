@@ -1,0 +1,156 @@
+<div class="wallet" style="overflow:hidden;">
+    <div class="checkout">
+        <div class="row equal">
+            <div class="{[col(100,100,50,70)]}" style=" min-height:100vh; ">
+                <div class="form-wrapper" style="padding-right:35px; padding-left:20px; background:#fff; height:100%;">
+                    <div class="row">
+                        <div class="{[col(100,100,100,60)]} col-lg-offset-3">
+                            <div class="spacer-lg m-t-20">
+                                <a title="{%sitename%}" href="{%siteurl%}"><img style="margin-left:-40px;" alt="{%sitename%}" src="{%php-fusion-logo-alt.png%}"/></a>
+                                <span class="text-uppercase">Checkout</span>
+                                {%breadcrumb%}
+                                <hr/>
+                                <div class="spacer-md">
+                                    {notices.{
+                                    <div class="spacer-md">{%content%}</div>
+                                    }}
+                                    <h4 class="m-b-0">Billing address</h4><small>Note: All fields are required.</small><br/><br/>
+                                    {non_member_field_block.{
+                                    <div class="well no-shadow">
+                                        <div class="text-center"><a href="{%link%}">{%title%}</a></div>
+                                    </div>
+                                    }}
+                                    {member_field_block.{
+                                    <div class="clearfix">
+                                        <div class="row">
+                                            <div class="{[col(100,100,100,100)]}">
+                                                {%name_field%}
+                                            </div>
+                                        </div>
+                                        <hr class="m-t-0 m-b-10"/>
+                                        <div class="row">
+                                            <div class="{[col(100,100,100,100)]}">
+                                                {%email_field%}
+                                            </div>
+                                        </div>
+                                        <hr class="m-t-0 m-b-10"/>
+                                        <div class="row">
+                                            <div class="{[col(100,100,100,100)]}">
+                                                {%address_field%}
+                                            </div>
+                                        </div>
+                                        <hr class="m-t-0 m-b-10"/>
+                                        <div class="row">
+                                            <div class="{[col(100,100,100,100)]}">
+                                                {%phone_field%}
+                                                <hr class="m-t-0 m-b-10"/>
+                                                {%fax_field%}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }}
+                                    {credit_card.{
+                                    <h4 class="spacer-sm">
+                                        Credit card details
+                                    </h4>
+                                    <div>
+                                        {%card_openform%}
+                                        {%card_holder%}
+                                        {%card_no%}
+                                        <div class="row">
+                                            <div class="{[col(100,100,100,50)]}">
+                                                {%card_exp%}
+                                            </div>
+                                            <div class="{[col(100,100,100,50)]}">
+                                                {%card_cvv%}
+                                            </div>
+                                        </div>
+                                        {%card_closeform%}
+                                    </div>
+                                    }}
+                                    {form.{
+                                        {%content%}
+                                    }}
+                                    <div class="spacer-lg text-center">
+                                        <p class="text-lighter">
+                                            If you have confirmed your order then place your order
+                                            and we'll process it.
+                                        </p>
+                                        <h5 class="text-uppercase m-t-20">Order Total</h5>
+                                        <h1 class="text-dark strong m-0 price">{%currency%} {%order_total%}</h1>
+                                        <div class="spacer-md">
+                                            <button id="pay" type="submit" class="btn btn-success btn-pop btn-bordered btn-md">
+                                                <strong class="text-uppercase">Pay Online</strong>
+                                            </button>
+                                            {payment_message.{
+                                            <div class="spacer-md"><small class="text-lighter">
+                                                {%text%}
+                                            </small>
+                                            </div>
+                                            }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="{[col(100,100,50,30)]} p-r-20">
+                <div class="spacer-md m-b-0">
+                    <!--items for #{%payment_id%}-->
+                    <div class="list-group">
+                    {single_item_block.{
+                        <div class="list-group-item m-b-10">
+                            <strong>{%order_title%}</strong>
+                            <p>{%order_description%}</p>
+                            <div class="row">
+                                <div class="{[col(100,100,100,30)]} strong">Item Id/SKU</div>
+                                <div class="{[col(100,100,100,70)]}">{%order_item_id%}</div>
+                            </div>
+                            <div class="row">
+                                <div class="{[col(100,100,100,30)]} strong">Amount:</div>
+                                <div class="{[col(100,100,100,70)]}">
+                                    <strong class="strong price">{%currency%} {%order_item_value%}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    }}
+                    </div>
+                    <div class="row">
+                        <div class="clearfix">
+                            <span class="{[col(100,100,100,30)]}">Subtotal</span>
+                            <span class="{[col(100,100,100,70)]} strong text-right price">{%currency%} {%order_subtotal%}</span>
+                        </div>
+                        <div class="clearfix">
+                            <span class="{[col(100,100,100,30)]}">Shipping</span>
+                            <span class="{[col(100,100,100,70)]} strong text-right price">{%currency%} {%order_total_shipping%}</span>
+                        </div>
+                        <div class="clearfix">
+                            <span class="{[col(100,100,100,30)]}">Discount</span>
+                            <span class="{[col(100,100,100,70)]} strong text-right price">{%currency%} 0.00</span>
+                        </div>
+                        <div class="clearfix">
+                            <span class="{[col(100,100,100,30)]}">Tax</span>
+                            <span class="{[col(100,100,100,70)]} strong text-right price">{%currency%} {%order_total_tax%}</span>
+                        </div>
+                        <hr/>
+                        <div class="clearfix">
+                            <span class="{[col(100,100,100,30)]}"><h3 class="m-0">Total</h3></span>
+                            <span class="{[col(100,100,100,70)]} strong text-right">
+                                <h3 class="m-0 strong"><small class="m-r-20">{%currency%}</small><span class="display-inline price strong">{%order_total%}</span></h3>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="m-t-10 text-right"><small>Import duties are not included (if any)</small></div>
+                    <hr/>
+                    <h4 class="spacer-sm">Payment Method</h4>
+                    {payment_method.{
+                    <strong>{%payment_title%}<small class="text-uppercase">checkout</small></strong><br/>
+                    {%payment_image%}
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

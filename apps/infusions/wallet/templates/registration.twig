@@ -1,0 +1,65 @@
+<h4>First Time Activation</h4>
+<div class="alert alert-warning">
+    <strong class="text-dark">Fusion Wallet Account Registration</strong>: Please complete the following information in order to activate your Fusion Coin Account.
+</div>
+<div class="clearfix">
+    <div class="spacer-md">
+        <div class="row">
+            <div class="col-xs-12 col-sm-9" style="max-width:800px;">
+                {{ form.openform|raw }}
+                <div class="no-shadow">
+                    <div class="panel-body">
+                        {{ form.email|raw }}
+                    </div>
+                    <div class="panel-body">
+                        {{ form.type|raw }}
+                        <div id="company-container"  style="display:none;">
+                            {{ form.company|raw }}
+                            {{ form.company_period|raw }}
+                            {{ form.company_employees|raw }}
+                            {{ form.company_industry|raw }}
+                            {{ form.company_product|raw }}
+                        </div>
+                        <div id="individual-container" style="display:none;">
+                            {{ form.first_name|raw }}
+                            {{ form.last_name|raw }}
+                        </div>
+                        {{ form.job_title|raw }}
+                        {{ form.web|raw }}
+                        <hr/>
+                        {{ form.geo|raw }}
+                        {{ form.mobile|raw }}
+                        {{ form.phone|raw }}
+                        {{ form.fax|raw }}
+                        <hr/>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-offset-3">
+                                {{ form.newsletter|raw }}
+                                {{ form.tou|raw }}
+
+                            </div>
+                        </div>
+                       <hr/>
+                        {{ form.button|raw }}
+                    </div>
+                </div>
+                {{ form.closeform|raw }}
+            </div>
+            <div class="col-xs-12 col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Why does PHP-Fusion require my billing information?</h4>
+                    </div>
+                    <div class="panel-body">
+                        As each different country and state has different tax laws, we therefore request your
+                        billing information to be used exclusively to be used for tax assessment, to settle accounts and
+                        issue electronic invoices. Your billing information will only be used for such purposes and will not be
+                        shared
+                        with any other third party or used for other purposes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

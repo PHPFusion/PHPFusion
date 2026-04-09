@@ -1,0 +1,9 @@
+<div class="paypal">
+    {{ form.rform|raw }}
+    {{ form.openform|raw }}
+    {% for fields in form.order_items %}
+    {{ fields|raw }}
+    {% endfor %}
+    {{ form.submit|raw }}
+    {{ form.closeform|raw }}
+</div>

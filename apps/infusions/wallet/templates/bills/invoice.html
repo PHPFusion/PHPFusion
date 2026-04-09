@@ -1,0 +1,64 @@
+<div class="bill-wrapper box">
+    <div class="invoice">
+        <div class="bill-header">
+            <div class="logo">
+                <div class="logo-wrapper">
+                    <img src="{%logo%}" class="img-circle img-bordered"/>
+                </div>
+            </div>
+        </div>
+        <div class="bill-subheader">
+            <div class="container">
+                <h3>Invoice from PHPFusion, Inc.</h3>
+                <div class="bill-issued">
+                    Billed to <strong>{%name%}</strong>
+                </div>
+                <div class="text-lighter">Invoice Number #{%bill_no%}</div>
+            </div>
+        </div>
+        <div class="bill-form">
+            {message.{
+            <h4>Dear {%name%}</h4>
+            {%title%}
+            }}
+            <h4>{%order_total%} due on {%order_datestamp%}</h4>
+            {wallet.{
+            Choose how you'd like to pay:<br/>
+            <div class="text-left spacer-sm">
+                {%display%}
+            </div>
+            }}
+            {wallet_link.{
+            <a href="{%link%}" class="btn btn-pop btn-primary btn-rounded spacer-sm  small text-expanded text-uppercase">Pay this invoice here</a>
+            }}
+        </div>
+        <div class="bill-contents">
+            <h4>Bill Summary</h4>
+            <table>
+                <tbody>
+                {wallet_order.{
+                <tr>
+                    <td>{%order_item%}</td>
+                    <td>{%order_amount%}</td>
+                </tr>
+                }}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>Amount Total</td>
+                    <td>{%order_total%}</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <hr/>
+        <div class="bill-footer">
+            {footer.{
+            <h4 class="display-inline"><strong>{%text%}</strong></h4>
+            }}
+            <hr/>
+            <small><i class="far fa-building m-r-5"></i><strong>PHP-Fusion Sdn Bhd</strong> &middot; {%address%}</small><br/>
+            <small>Application Name: {%source_program%}, Transaction ID: {%transaction_ref%}</small>
+        </div>
+    </div>
+</div>

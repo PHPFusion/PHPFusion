@@ -1,0 +1,93 @@
+<div class="site-form-wrapper">
+    <div class="section-wrap form-section">
+        <div class="container">
+            {% if package %}
+
+                <h3>Choose a Package</h3>
+                <div class="select-grid">
+
+                    {% for item in package %}
+
+                        {{ openside(item.title)|raw }}
+                        {# {{ item.img }} #}
+                        <h4><sup>MYR</sup>{{ item.price }}</h4>
+                        <ul>
+                            {% for description in item.description %}
+                                <li>{{ description }}</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{{ item.link|raw }}" class="btn btn-md btn-primary btn-block">Get Package<i class="far fa-angle-right"></i></a>
+                        {{ closeside()|raw }}
+
+                    {% endfor %}
+                </div>
+
+            {% elseif form %}
+
+                <h3>Your listing details</h3>
+                <div class="form-listing-tab">
+                    {{ openform|raw }}
+                    {% for item in form %}
+
+                        {% set class= "" %}
+
+                        {% if loop.first %}
+                            {% set class  = " active" %}
+                        {% endif %}
+
+                        <div class="form-tab-selection{{ class }}" id="{{ item.id }}">
+                            <div class="form-tab-section">
+                                <div class="form-heading">
+                                    <div class="title">
+                                        <i class="{{ item.icon }}"></i>
+                                        <h5>{{ item.title }}</h5>
+                                    </div>
+                                </div>
+                                <div class="form-body">
+                                    {% for field in item.field %}
+                                        <div class="form-fieldset">
+                                            {{ field|raw }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {{ closeform|raw }}
+
+                    {# Scrollspy navigation #}
+                    <div class="listing-nav">
+                        <ul id="listing-nav" role="tablist">
+                            {% for item in form %}
+                                <li id="{{ item.id }}-nav">
+                                    <a href="#{{ item.id }}">
+                                        <i><span></span></i>
+                                        {{ item.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <h3>Create a listing</h3>
+                <h5>What type of listing would you like to add?</h5>
+                <div class="select-grid">
+                    {% if item_type %}
+                        {% for item in item_type %}
+                            <a href="{{ item.link|raw }}" class="item-add-block">
+                                <div class="face {{ item.class }}">
+                                    <div class="icon"><i class="{{ item.icon }}"></i></div>
+                                    <span>{{ item.title }}</span>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

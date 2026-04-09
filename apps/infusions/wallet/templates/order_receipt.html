@@ -1,0 +1,82 @@
+<div class="clearfix">
+    <div class="row equal-height">
+        <div class="{[col(100, 50, 50, 50)]} m-b-20">
+            <h4 class="text-dark strong">Order Summary:</h4>
+
+                <p class="text-dark"><strong>Order</strong> #{%invoice_ref%}</p>
+                <p class="text-dark"><strong>Order Date:</strong> {%date%}</p>
+                <p class="text-dark"><strong>Order Total:</strong> ${%amount%} {%currency%}</p>
+                <p class="text-dark"><strong>Payment Status:</strong> {%payment_status%}</p>
+
+        </div>
+        <div class="{[col(100, 50, 50, 50)]} m-b-20">
+            <h4 class="text-dark strong">Shipping Address</h4>
+            <p class="text-dark">
+                {name.{
+                <strong>{%first_name%} {%last_name%},</strong><br/>
+                }}
+                {company.{
+                    {%company%} ({%company_no%})<br/>
+                }}
+                {add.{
+                <strong>Address</strong><br/>
+                    {%address%},<br/>{%address_2%}<br/>
+                    {%postcode%} {%region%}, {%country%}<br/>
+                }}
+                {mobile.{
+                <strong>Mobile:</strong> {%mobile_cc%} {%mobile%}<br/>
+                }}
+                {email.{
+                <strong>Email:</strong> {%email%}
+                }}
+            </p>
+        </div>
+    </div>
+    <hr/>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Particulars</th>
+            <th class="{[col(30,30,30,30)]}">Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {items.{
+        <tr>
+            <td class="{[col(50)]}">
+                <h5 class="m-0 text-dark strong">{%order_title%}</h5>
+                <span>{%order_description%}</span><br/>
+
+                <div class="clearfix spacer-sm">
+                    <span class="pull-left m-r-20">
+                    <strong>Quantity</strong><br/>
+                    {%order_item_quantity%}
+                </span>
+                    <span class="pull-left m-r-20">
+                    <strong>Unit Price</strong><br/>
+                    ${%order_item_value%} {%order_currency%}
+                </span>
+                </div>
+                <small class="text-lighter">
+                    <strong>Tax ({%order_item_tax_rate%}%):</strong> {%order_total_tax%} {%order_currency%}
+                    <br/><strong>Shipping:</strong> ${%order_total_shipping%} {%order_currency%}
+                </small>
+            </td>
+            <td><h5 class="text-dark strong price">${%order_total%} {%order_currency%}</h5></td>
+        </tr>
+        }}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2" class="text-right">
+                <h5 class="strong text-dark">Sub-total Amount: ${%item_amount%} {%currency%}</h5>
+                <h5 class="strong text-dark">+ Total Tax: ${%tax_amount%} {%currency%}</h5>
+                {shipping_amount.{
+                <h5 class="strong text-dark">+ Total Shipping: ${%text%} {%currency%}</h5>
+                }}
+                <h4 class="strong text-dark">Total: ${%amount%} {%currency%}</h4>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>

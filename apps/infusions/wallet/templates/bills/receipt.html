@@ -1,0 +1,69 @@
+<div class="bill-wrapper box">
+    <div class="bill">
+        <div class="bill-header">
+            <div class="logo">
+                <div class="logo-wrapper">
+                    <img src="{%logo%}" class="img-circle img-bordered"/>
+                </div>
+            </div>
+            <div class="stripes stripes-primary"></div>
+        </div>
+        <div class="bill-subheader">
+            <div class="container">
+                <h3>Receipt from PHPFusion, Inc.</h3>
+                <div class="text-lighter">Receipt #{%bill_no%}</div>
+                <div class="bill-issued">
+                    Hello <strong>{%name%}</strong>
+                    <br/>
+                    {payment_success.{
+                    <p class="strong text-warning">You made a payment of {%order_total%}</p>
+                    }}
+                    {payment_error.{
+                    <p class="strong text-danger">Payment Failed</p>
+                    }}
+                </div>
+                <hr/>
+                <div class="bill-partition">
+                    <div class="bill-parts">
+                        <span>Amount Paid</span>
+                        {%order_total%}
+                    </div>
+                    <div class="bill-parts">
+                        <span>Date Paid</span>
+                        {%order_datestamp%}
+                    </div>
+                    <div class="bill-parts">
+                        <span>Payment Method</span>
+                        {%order_method%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bill-contents">
+            <h4>Bill Summary</h4>
+            <table>
+                <tbody>
+                {wallet_order.{
+                <tr>
+                    <td>{%order_item%}</td>
+                    <td>{%order_amount%}</td>
+                </tr>
+                }}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>Amount paid</td>
+                    <td>{%order_total%}</td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="bill-footer">
+            <h4>If you have any questions, contact us at {%merchant_email%}</h4>
+            <p>Something wrong ith the email? {%browser_link%}</p>
+            <p>You're receiving this email because you made a purhcase at {%sitename%}, to provide secure invoicing and payments processing.</p>
+            <p>{%address%}</p>
+            <p>Application Name: {%source_program%}, Transaction ID: {%transaction_ref%}</p>
+        </div>
+    </div>
+</div>

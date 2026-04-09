@@ -1,0 +1,79 @@
+<style>
+	.sitehome-viewer {
+		background: #101319;
+		padding-bottom:50px;
+	}
+	.sitehome-filters {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: flex-start;
+		margin:40px 0;
+	}
+	.sitehome-filters > * {
+		margin-right:40px;
+		font-size: 16px;
+	}
+	.sitehome-filters .dropdown .dropdown-toggle {
+		color:#f2f2f2;
+	}
+	.sitehome-filters .dropdown .dropdown-menu {
+		border-radius: 0;
+		background:#fff;
+		padding:0;
+		margin-top:10px;
+	}
+	.sitehome-filters .dropdown .dropdown-menu a {
+		color:#06070D;
+		font-size:15px;
+		padding: 11px 24px;
+		display: flex;
+		align-items: center;
+		text-overflow: ellipsis;
+	}
+	.sitehome-filters .dropdown .dropdown-menu .active > a {
+		background: none;
+		font-weight:700;
+	}
+	.sitehome-filters .dropdown .dropdown-menu a:hover {
+		background: linear-gradient(225deg, rgba(0, 255, 119, 0.18), rgba(49, 151, 239, 0.18));
+	}
+</style>
+{%menu%}
+<div class="sitehome-viewer">
+	<div class="container">
+		<div class="sitehome-filters">
+			<div class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>Recommended for You </strong><i class="fas fa-angle-down"></i></a>
+				<ul class="dropdown-menu">
+					<li class="active"><a href="">Recommended for you</a></li>
+					<li><a href="">What's Hot</a></li>
+					<li><a href="">Undiscovered</a></li>
+					<li><a href="">Most Recent</a></li>
+					<li><a href="">Popular 24 hours</a></li>
+					<li><a href="">Popular 1 week</a></li>
+					<li><a href="">Popular 1 month</a></li>
+					<li><a href="">Popular All Time</a></li>
+				</ul>
+			</div>
+			<div class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">All Categories <i class="fas fa-angle-down"></i></a>
+				<ul class="dropdown-menu">
+					<li class="active"><a href="">All Categories</a></li>
+					<li><a href="">What's Hot</a></li>
+					<li><a href="">Undiscovered</a></li>
+					<li><a href="">Most Recent</a></li>
+					<li><a href="">Popular 24 hours</a></li>
+					<li><a href="">Popular 1 week</a></li>
+					<li><a href="">Popular 1 month</a></li>
+					<li><a href="">Popular All Time</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="sitehome-content">
+		{%content%}
+		</div>
+	</div>
+</div>
+

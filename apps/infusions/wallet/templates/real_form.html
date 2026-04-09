@@ -1,0 +1,57 @@
+<div class="m-b-50">
+    {%openform%}
+    {[$opentable(Real Identity Verification)]}
+    {in_verification.{
+    <div class="alert alert-success">Your last submitted information to us is currently being verified. If you submit a new information to us, the previous information will be discarded.</div>
+    }}
+    {fail_verification.{
+    <div class="alert alert-danger"><strong>You recent verification application was unsuccessful due to the following reason(s);</strong><p><strong>{%reason%}</strong><br/>{%admin_notes%}</p></div>
+    }}
+    <div class="row">
+        <div class="{[col(100,100,80)]}">
+            {%type%}<hr/>
+            <div id="company-container"  style="display:none;">
+                {%company_name%}
+                {%company_no%}
+            </div>
+            <div id="individual-container"  style="display:none;">
+                {%first_name%}
+                {%last_name%}
+                {%identity_no%}
+            </div>
+        </div>
+    </div>
+    {[$closetable()]}
+
+    {[$opentable(Primary Contact Information)]}
+    <div class="row">
+        <div class="{[col(100,100,80)]}">
+            {%mobile%} {%phone%} {%geo%}
+        </div>
+    </div>
+    {[$closetable()]}
+
+    {[$opentable(Document Verification)]}
+    <div class="row">
+        <div class="{[col(100,100,80)]}">
+            <p>{%fileinput_text%}</p>
+            {img_attach.{
+            <div class="spacer-sm">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-3 text-right">Previous Uploaded Image:</div>
+                    <div class="col-xs-12 col-sm-9">
+                        {%image%}
+                    </div>
+                </div>
+            </div>
+            }}
+            {%fileinput%}
+            <hr/>
+            {%tou%}
+        </div>
+    </div>
+    {[$closetable()]}
+    <hr/>
+    {%submit%}
+    {%closeform%}
+</div>

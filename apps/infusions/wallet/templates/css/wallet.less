@@ -1,0 +1,1005 @@
+.bill-view {
+    padding: 50px 0;
+    color: #0a0a0a;
+
+}
+
+/*checkout page*/
+.wallet .checkout {
+    background: #F8FAFB;
+}
+
+/* CSS for Credit Card Payment form */
+.credit-card-box .panel-title {
+    display: inline;
+    font-weight: bold;
+}
+
+.credit-card-box .form-control.error {
+    border-color: red;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+.credit-card-box label.error {
+    font-weight: bold;
+    color: red;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
+.credit-card-box .payment-errors {
+    font-weight: bold;
+    color: red;
+    padding: 2px 8px;
+    margin-top: 2px;
+}
+
+.credit-card-box label {
+    display: block;
+}
+
+/* The old "center div vertically" hack */
+.credit-card-box .display-table {
+    display: table;
+}
+
+.credit-card-box .display-tr {
+    display: table-row;
+}
+
+.credit-card-box .display-td {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
+}
+
+/* Just looks nicer */
+.credit-card-box .panel-heading img {
+    min-width: 180px;
+}
+
+.customwidth {
+    max-width: 480px
+}
+
+section.wallet-banner {
+    background: url(../images/payments_bg_3.jpg);
+    background-repeat: no-repeat;
+    background-position: center top;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
+
+article.wallet-banner p {
+    color: #d6d6d6;
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05)
+}
+
+article.wallet-banner h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    color: #fd8d08;
+}
+
+article.wallet-banner h2 {
+    font-size: 1.6em;
+    font-weight: 500;
+    color: #fd8d08;
+}
+
+article.wallet-banner h3 {
+    font-size: 1.2em;
+    font-weight: 400;
+    color: #ffffff;
+}
+
+article.wallet-banner p {
+    font-size: 1em;
+    font-weight: 400;
+    color: #d6d6d6;
+    line-height: 150%;
+    margin-top: 2%;
+    width: 48%;
+}
+
+section.wallet-tips {
+    width: 100%;
+    background-color: #0d0d0d;
+    background: rgba(13, 13, 13, 0.8);
+    min-height: 60px;
+}
+
+section.wallet-tips h1 {
+    font-size: 1.5em;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 400;
+}
+
+.walletbox {
+    width: 85%;
+    margin: 2% auto 0;
+}
+
+#2co a img {
+    max-width: 180px;
+    padding-bottom: 5px;
+}
+
+.green {
+    color: #6ECC5C;
+}
+
+.blue {
+    color: #FFFFFF;
+    background-color: #39ACE6;
+}
+
+.sidebar .widget {
+    color: #AAAAAA;
+    padding: 0 15px 25px;
+    border-bottom: 1px dashed #BFBFBF;
+    margin-bottom: 35px;
+    border-radius: 4px;
+    transition: color .2s;
+}
+
+/*conflicts with edit_profile top up*/
+/*.panel-heading {*/
+/*padding: 0 !important;*/
+/*border: none !important;*/
+/*border-top-left-radius: 4px !important;*/
+/*border-top-right-radius: 4px !important;*/
+/*transition: background .2s !important;*/
+/*}*/
+
+/*.panel-heading h4 a {*/
+/*font-size: 18px !important;*/
+/*color: #FFFFFF !important;*/
+/*letter-spacing: -0.25px !important;*/
+/*text-decoration: none !important;*/
+/*display: block !important;*/
+/*padding: 10px 18px 16px !important;*/
+/*}*/
+
+/*.panel-heading h4 a:hover,*/
+/*.panel-heading h4 a:focus {*/
+/*text-decoration: none !important;*/
+/*}*/
+
+/*.panel-heading h4 a i {*/
+/*font-size: 24px !important;*/
+/*position: relative !important;*/
+/*top: 5px !important;*/
+/*}*/
+
+em.panel-separator {
+    font-style: normal !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.panel-group .panel-heading + .panel-collapse > .panel-body,
+.panel-group .panel-heading + .panel-collapse > .list-group {
+    border-top: none !important;
+}
+
+.panel-body {
+    margin-bottom: 0 !important;
+}
+
+.panel-title {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: 15px !important;
+    color: inherit !important;
+}
+
+
+.red {
+    color: red;
+}
+
+.wait {
+    width: auto;
+    /* height: 72px; */
+    position: relative;
+    top: 45%;
+    left: 52%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.loader {
+    width: 100px;
+    height: 20px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    & > div {
+        content: " ";
+        width: 15px;
+        height: 15px;
+        background: #2196F3;
+        border-radius: 100%;
+        position: absolute;
+        -webkit-animation: shift 2s linear infinite;
+        animation: shift 2s linear infinite;
+    }
+
+    & > div:nth-of-type(1) {
+        -webkit-animation-delay: -.4s;
+        animation-delay: -.4s;
+    }
+
+    & > div:nth-of-type(2) {
+        -webkit-animation-delay: -.8s;
+        animation-delay: -.8s;
+    }
+
+    & > div:nth-of-type(3) {
+        -webkit-animation-delay: -1.2s;
+        animation-delay: -1.2s;
+    }
+
+    & > div:nth-of-type(4) {
+        -webkit-animation-delay: -1.6s;
+        animation-delay: -1.6s;
+    }
+}
+
+.wallet-block {
+
+    & > .wallet-block {
+        border: 0;
+    }
+
+    .col-lg-9 {
+        padding-right: 0;
+    }
+
+    .control-label {
+
+        position: relative;
+        width: 100%;
+        display: flex !important;
+        flex-direction: row;
+
+        & > div {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding-right: 0;
+        }
+    }
+
+    input[type=radio] {
+        position: relative;
+        float: left;
+        top: 12px;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .wallet-opts {
+        float: left;
+        position: relative;
+        width: 100%;
+        padding-left: 10px;
+        color: #87888E;
+    }
+
+    .radio {
+        padding: 15px;
+        margin: 0;
+        border-radius: 4px;
+        background-size: 100% 200%;
+        background-image: linear-gradient(to bottom, transparent 50%, white 50%);
+        -webkit-transition: background-position .3s;
+        -moz-transition: background-position .3s;
+        transition: background-position .3s;
+
+        &.active {
+            background-position: 0 -100%;
+        }
+
+        &.checked {
+            background: #fff;
+        }
+    }
+
+    label {
+        width: 100%;
+    }
+
+    input[type='radio'] {
+        margin-top: 3px;
+    }
+
+    h4 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: #111B28;
+    }
+}
+
+
+@-webkit-keyframes shift {
+    0% {
+        left: -60px;
+        opacity: 0;
+        background-color: yellow;
+    }
+    10% {
+        left: 0;
+        opacity: 1;
+    }
+    90% {
+        left: 100px;
+        opacity: 1;
+    }
+    100% {
+        left: 160px;
+        background-color: red;
+        opacity: 0;
+    }
+}
+
+@keyframes shift {
+    0% {
+        left: -60px;
+        opacity: 0;
+        background-color: yellow;
+    }
+    10% {
+        left: 0;
+        opacity: 1;
+    }
+    90% {
+        left: 100px;
+        opacity: 1;
+    }
+    100% {
+        left: 160px;
+        background-color: red;
+        opacity: 0;
+    }
+}
+
+
+.wallet-opts img {
+    width: 78px;
+    max-width: none;
+}
+
+.wallet .checkout-error {
+    background: url(../../../images/404.jpeg) center center;
+    background-size: cover;
+    height: 1271px;
+    margin-top: -100px;
+    padding-top: 300px;
+}
+
+#wallet_menu {
+    margin-top: -30px;
+    border: 1px solid #ccc;
+}
+
+.panel-default.block {
+    background-color: #fff;
+    border-radius: 4px;
+    border: 0;
+    box-shadow: 0 1px 8px 0 rgba(59, 59, 88, .15);
+    color: #333;
+    font-size: 15px;
+}
+
+.panel-default.block ul.block > li.active > a,
+.panel-default.block ul.block > li.active > a:hover,
+.panel-default.block ul.block > li.active > a:focus {
+    background-color: #0070ba;
+    color: #fff;
+}
+
+.panel-default.block ul.block > li > a {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #6d859e;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    font-weight: 400;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    height: 48px;
+}
+
+.panel-default.block ul.block > li > a:hover,
+.panel-default.block ul.block > li > a:focus {
+    background-color: #f4f9fd;
+    color: #4c6072;
+}
+
+.panel-default.block > .panel-body .well {
+    height: 30px;
+    padding: 4px 1em;
+}
+
+.panel-default.block > .panel-body {
+    background: transparent;
+    padding: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.panel-default > .panel-body > .panel-left {
+    background-color: #fff;
+    border-right: 1px solid #d8e0ea;
+    padding-top: 35px;
+    width: 290px;
+}
+
+.panel-left > ul > li.sub.active > a {
+    background-color: #f4f9fd !important;
+    color: #4c6072 !important;
+}
+
+.panel-default > .panel-body > .panel-left .title {
+    color: #4c6072;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #4c6072;
+    font-weight: 700;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.panel-default > .panel-body .panel-section > h3 {
+    color: #000;
+    margin-bottom: 20px;
+    margin-top: 0;
+    line-height: 0;
+    font-weight: 300;
+    font-size: 30px;
+}
+
+.panel-default > .panel-body .panel-section > h3 span {
+    display: inline-block;
+}
+
+.panel-default > .panel-body > .panel-right {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.panel-default.block > .panel-body .panel-section {
+    border-bottom: 1px solid #d8e0ea;
+    padding: 35px;
+    border-radius: 4px 4px 0 0;
+}
+
+.topup {
+    display: block;
+    position: relative;
+    transition: all .3s ease-in-out;
+}
+
+.topup:hover {
+    transform: translateY(-8px);
+}
+
+.coin {
+    cursor: pointer;
+    content: "";
+    width: 90px;
+    height: 90px;
+    display: inline-block;
+    position: relative;
+    margin: 5px;
+    top: 6px;
+    border-radius: 50px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, .1);
+}
+
+.coin h3, .coin p {
+    color: #673C1F;
+}
+
+.coin h3 {
+    font-size: 50px;
+    font-weight: 600;
+    position: absolute;
+    z-index: 1;
+    margin: -8px 0 0;
+}
+
+.coin h3 span {
+    text-transform: uppercase;
+    color: #673C1F;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    line-height: 4px;
+}
+
+.coin:before {
+    content: "";
+    width: 82px;
+    height: 82px;
+    display: block;
+    position: absolute;
+    border-radius: 50px;
+}
+
+.coin:after {
+    content: "";
+    width: 82px;
+    height: 82px;
+    display: block;
+    top: 4px;
+    left: 4px;
+    position: absolute;
+    border-radius: 50px;
+}
+
+.coin.bronze p {
+    color: rgba(223, 182, 103, 1);
+}
+
+.coin.silver p {
+    color: rgba(160, 160, 160, 1);
+}
+
+.coin.gold p {
+    color: rgba(242, 215, 50, 1);
+}
+
+.topup:hover .coin {
+    top: -1px;
+    transition: all .5s ease-in-out;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, .2);
+    text-decoration: none;
+}
+
+.coin.bronze {
+    background: linear-gradient(45deg, rgba(223, 182, 103, 1) 0%, rgba(249, 243, 232, 1) 56%, rgba(231, 192, 116, 1) 96%);
+}
+
+.coin.bronze:before {
+    background: linear-gradient(135deg, #d19c35 0%, #f7e6c5 50%, #e8b558 100%);
+    border: 1px solid #e6b86a;
+}
+
+.coin.bronze:after {
+    background: linear-gradient(45deg, rgba(223, 182, 103, 1) 0%, rgba(249, 243, 232, 1) 56%, rgba(231, 192, 116, 1) 96%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(209, 156, 53, 0.3);
+    border-right: 1px solid rgba(209, 156, 53, 0.5);
+    box-shadow: inset 0px 0px 2px 2px rgba(153, 106, 26, .05);
+}
+
+.coin.bronze:hover:after {
+    background: linear-gradient(45deg, rgba(223, 182, 103, 1) 0%, rgba(249, 243, 232, 1) 41%, rgba(231, 192, 116, 1) 96%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(209, 156, 53, 0.3);
+    border-right: 1px solid rgba(209, 156, 53, 0.5);
+    box-shadow: inset 0px 0px 2px 2px rgba(153, 106, 26, .05);
+}
+
+.coin.silver {
+    background: linear-gradient(45deg, rgba(160, 160, 160, 1) 0%, rgba(232, 232, 232, 1) 56%);
+}
+
+.coin.silver:before {
+    background: linear-gradient(45deg, rgba(181, 181, 181, 1) 0%, rgba(252, 252, 252, 1) 56%, rgba(232, 232, 232, 1) 96%);
+    border: 1px solid rgba(181, 181, 181, 1);
+}
+
+.coin.silver:after {
+    background: linear-gradient(45deg, rgba(181, 181, 181, 1) 0%, rgba(252, 252, 252, 1) 56%, rgba(232, 232, 232, 1) 96%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(160, 160, 160, 0.3);
+    border-right: 1px solid rgba(160, 160, 160, 0.5);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.coin.silver:hover:after {
+    background: linear-gradient(45deg, rgba(181, 181, 181, 1) 0%, rgba(252, 252, 252, 1) 38%, rgba(232, 232, 232, 1) 96%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(160, 160, 160, 0.3);
+    border-right: 1px solid rgba(160, 160, 160, 0.5);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.coin.gold {
+    background: linear-gradient(45deg, rgba(242, 215, 12, 1) 0%, rgba(255, 255, 255, 1) 56%, rgba(252, 235, 0, 1) 96%);
+}
+
+.coin.gold:before {
+    background: linear-gradient(45deg, rgba(242, 215, 12, 1) 0%, rgba(255, 255, 255, 1) 56%, rgba(252, 235, 0, 1) 96%);
+    border: 1px solid rgba(242, 215, 12, 1);
+}
+
+.coin.gold:after {
+    background: linear-gradient(45deg, rgba(242, 215, 12, 1) 0%, rgba(255, 255, 255, 1) 56%, rgba(252, 235, 0, 1) 96%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(242, 215, 12, 0.3);
+    border-right: 1px solid rgba(242, 215, 12, 0.3);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.coin.gold:hover:after {
+    background: linear-gradient(45deg, rgba(242, 215, 12, 1) 3%, rgba(255, 255, 255, 1) 39%, rgba(252, 235, 0, 1) 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(242, 215, 12, 0.3);
+    border-right: 1px solid rgba(242, 215, 12, 0.3);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.topup .ribbon {
+    font-size: 16px !important;
+    z-index: 1;
+    width: 125px;
+    position: relative;
+    margin: -30px auto 15px; /* Based on 24px vertical rhythm. 48px bottom margin - normally 24 but the ribbon 'graphics' take up 24px themselves so we double it. */
+}
+
+.topup .ribbon:before, .topup .ribbon:after {
+    content: "";
+    position: absolute;
+    display: block;
+    bottom: 18px;
+    border: 12px solid #986794;
+    z-index: -1;
+}
+
+.topup .ribbon:before {
+    left: -21px;
+    border-right-width: 24px;
+    border-left-color: transparent;
+}
+
+.topup .ribbon:after {
+    right: -20px;
+    border-left-width: 24px;
+    border-right-color: transparent;
+}
+
+.topup .ribbon .ribbon-content:before, .topup .ribbon .ribbon-content:after {
+    content: "";
+    position: absolute;
+    display: block;
+    border-style: solid;
+    border-color: transparent transparent #804f7c transparent;
+    bottom: 28px;
+}
+
+.topup .ribbon .ribbon-content:before {
+    left: 0;
+    border-width: 15px 0px 15px 15px;
+}
+
+.topup .ribbon .ribbon-content:after {
+    right: 0;
+    border-width: 15px 15px 15px 0;
+}
+
+.topup .ribbon .ribbon-content {
+    font-size: 22px;
+    text-shadow: 2px 1px 0 rgba(0, 0, 0, .5);
+    background: #ba89b6;
+    display: block;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    padding: 3px 10px;
+}
+
+.topup:hover,
+.topup:focus {
+    text-decoration: none;
+}
+
+.credit-checkout {
+    background-color: #F8F8F8;
+}
+
+.checkout .breadcrumb {
+    background: none;
+    margin: 10px -15px;
+}
+
+.display-wallet-block {
+    padding: 15px;
+    border: 1px solid #E5E3DC;
+}
+
+#topup-Modal {
+
+    .modal-content {
+        h5 {
+            margin-bottom: 50px;
+        }
+
+        .modal-header {
+            background: rgb(231, 236, 242);
+            background: linear-gradient(90deg, rgba(231, 236, 242, 1) 0%, rgba(212, 221, 228, 1) 100%);
+            border-bottom: 1px solid rgba(0, 0, 0, .2);
+        }
+
+        .modal-body .display-wallet-block {
+            backdrop-filter: blur(31px);
+            border: 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+        }
+
+        .wallet-label {
+            position: relative;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 15%, #fff 30%, #fff 70%, rgba(255, 255, 255, 0) 86%);
+            display: grid;
+            grid-template-columns: 16px auto;
+            align-items: center;
+            justify-content: center;
+            column-gap: 8px;
+            padding: 2px 15px;
+            min-width: 121px;
+            max-width: 158px;
+            margin: -20px auto 20px;
+            font-size: 18px;
+            text-align: left;
+            font-weight: 500;
+            border-radius: 10px;
+            color: #000;
+            box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.05), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+        }
+
+        .wave-wrapper {
+            top: 0;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+            position: absolute;
+            background: rgb(231, 236, 242);
+            background: linear-gradient(90deg, rgba(231, 236, 242, 1) 0%, rgba(212, 221, 228, 1) 100%);
+
+            .wave-1 {
+                position: absolute;
+                top: 67%;
+                width: 150%;
+                min-height: 400px;
+                clip-path: url(#clip);
+                transform-origin: left top;
+                background: #fff;
+                transform: scale(1.5);
+            }
+
+            .wave-2 {
+                position: absolute;
+                top: 42%;
+                width: 150%;
+                min-height: 400px;
+                clip-path: url(#clip);
+                transform-origin: left top;
+                background: #ffbc78;
+                background: linear-gradient(90deg, #ffbc78 0%, #dc91b2 20%, #b279da 35%, #67abd0 83%, #53cfcb 100%);
+                transform: scale(1.5);
+            }
+
+            .wave-3 {
+                position: absolute;
+                top: 37%;
+                width: 40%;
+                min-height: 400px;
+                clip-path: url(#clip);
+                transform-origin: left top;
+                background: rgb(255, 188, 120);
+                background: linear-gradient(90deg, rgba(255, 188, 120, .3) 0%, rgba(220, 145, 178, 1) 20%, rgba(178, 121, 218, 1) 35%, rgba(103, 171, 208, .4) 83%, rgba(83, 207, 203, 1) 100%);
+                transform: scale(2.5);
+            }
+        }
+
+        .wallet-icon {
+            border-radius: 50%;
+            background: linear-gradient(60deg, #ffbc78 0%, #dc91b2 30%, #b279da 35%, #67abd0 63%, #53cfcb 60%);
+            height: 100px;
+            width: 100px;
+            margin: 20px auto 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .wallet-icon-inner {
+                margin: 0 auto;
+                background: linear-gradient(#0E2859 100%, rgba(0, 0, 0, .3) 30%);
+                border-radius: 50%;
+                height: 85px;
+                width: 85px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                    max-height: 55px;
+                    transform: rotate3d(20.5, 0.66, 0, 44deg) rotateZ(-72deg);
+                    box-shadow: -27.1px 12.5px 35px 25px rgba(50, 50, 93, 0.5), -16.2px 37.5px 75px -37.5px rgb(0 0 0);
+                }
+            }
+
+        }
+    }
+}
+
+/**
+Confirmation
+ */
+.wallet-confirmation {
+    background: #F6F9FC;
+
+    .confirmation-box {
+        background: #fff;
+        position: relative;
+        margin: 0;
+    }
+
+    .confirmation-content {
+        position: relative;
+        padding: 100px 150px;
+    }
+
+    .confirmation-footer {
+        padding: 20px 0;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        font-size: 15px;
+
+        & > div:last-of-type {
+            text-align: right;
+        }
+    }
+
+    .confirmation-status {
+        display: grid;
+        grid-template-columns: auto auto;
+
+        & > div:last-of-type {
+            text-align: right;
+        }
+    }
+
+    .confirmation-table {
+        padding: 50px;
+        background: #fff;
+        box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+        border-radius: 15px;
+
+        table {
+            border: 0;
+
+            tr {
+                th {
+                    border: 0;
+                    padding: 0;
+
+                    &:nth-child(even) {
+                        padding-left: 15px;
+                    }
+
+
+                    &.dtl {
+                        color: #717D99;
+                        font-size: 15px;
+                        padding: 10px 0 25px;
+                        vertical-align: top !important;
+
+                        &:first-of-type {
+                            max-width: 350px;
+                            white-space: normal;
+                        }
+
+                        &:nth-child(even) {
+                            padding-left: 15px;
+                        }
+                    }
+                }
+
+                td {
+                    border: 0;
+                    padding-left: 0;
+                    padding-right: 0;
+
+                }
+            }
+        }
+    }
+
+    .wave-wrapper {
+        top: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        overflow: hidden;
+        position: absolute;
+        background: rgb(231, 236, 242);
+        background: linear-gradient(90deg, rgba(231, 236, 242, 1) 0%, rgba(212, 221, 228, 1) 100%);
+
+        .wave-1 {
+            position: absolute;
+            bottom: 0;
+            width: 150%;
+            clip-path: url(#clip);
+            transform-origin: left top;
+            background: #fff;
+            transform: scale(1.5);
+            min-height: 38%;
+        }
+
+        .wave-2 {
+            position: absolute;
+            top: 42%;
+            width: 150%;
+            min-height: 30%;
+            clip-path: url(#clip);
+            transform-origin: left top;
+            background: #ffbc78;
+            background: linear-gradient(90deg, #ffbc78 0%, #dc91b2 20%, #b279da 35%, #67abd0 83%, #53cfcb 100%);
+            transform: scale(1.5);
+        }
+
+        .wave-3 {
+            position: absolute;
+            top: 37%;
+            width: 40%;
+            min-height: 263px;
+            clip-path: url(#clip);
+            transform-origin: left top;
+            background: rgb(255, 188, 120);
+            background: linear-gradient(90deg, rgba(255, 188, 120, .3) 0%, rgba(220, 145, 178, 1) 20%, rgba(178, 121, 218, 1) 35%, rgba(103, 171, 208, .4) 83%, rgba(83, 207, 203, 1) 100%);
+            transform: scale(2.5);
+        }
+
+        @media screen and (min-width: 2280px) {
+            .wave-1,
+            .wave-2 {
+                transform: scale(2.5);
+            }
+        }
+    }
+}
+
+

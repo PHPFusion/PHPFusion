@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="spacer-md">
+    {{ opentable('Login required') }}
+        <h4 class="text-dark">You need to login to make payment.</h4>
+        <div class="spacer-xs">
+            <a href="{{ login_link }}" class="btn btn-primary btn-pop btn-md">{{ locale.login }} to PHPFusion</a>
+        </div>
+        <small>Do not have account? <a href="{{ register_link }}">{{ locale.register }}</a></small>
+    {{ closetable() }}
+    </div>
+</div>

@@ -1,0 +1,4 @@
+[08-May-2020 11:54:54 UTC] PHP Fatal error:  Uncaught Error: Class 'PHPFusion\Infusions\Facebook_Connect\Facebook_Connect' not found in /home/phpfusion/public_html/infusions/facebook_connect/index.php:5
+Stack trace:
+#0 {main}
+  thrown in /home/phpfusion/public_html/infusions/facebook_connect/index.php on line 5

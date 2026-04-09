@@ -1,0 +1,44 @@
+<h3>Transaction Details</h3>
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <strong>Withdrew Funds</strong> to {%to%}<br/>
+        <div class="row" style="font-size:15px;">
+            <div class="col-xs-12 col-sm-6">
+                {%longdate%}<br/>
+                Payment Status:<span class="label label-bordered label-primary m-l-15">{%status%}</span>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                Transaction ID: {%transaction_id%}<br/>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        Gross amount<br/>
+        <h2 class="m-0">{%total_amount%}</h2>
+    </div>
+</div>
+<hr/>
+<h4>Your Payment</h4>
+<table class="table">
+    <tr>
+        <td><strong>Gross Amount</strong></td>
+        <td>{%total_amount%}</td>
+    </tr>
+    <tr>
+        <td><strong>PHP-Fusion Transaction Fee</strong></td>
+        <td>{%tax%}</td>
+    </tr>
+    <tr>
+        <td><strong>Net Amount</strong></td>
+        <td>{%nett_amount%}</td>
+    </tr>
+    <tr>
+        <td><strong>Paid from</strong></td>
+        <td>{%from%}</td>
+    </tr>
+    <tr>
+        <td><strong>Paid to</strong></td>
+        <td>{%to%}</td>
+    </tr>
+</table>
+<a href="{%back_link%}" class="btn btn-success btn-bordered">Back to Dashboard</a>

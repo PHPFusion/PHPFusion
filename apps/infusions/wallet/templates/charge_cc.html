@@ -1,0 +1,30 @@
+{charge_amount.{
+<h1 class="text-light">Charge with Credit Card</h1>
+<p class="text-dark">Charge any amount to your wallet account with your credit card.</p>
+<div class="spacer-md">
+    {%openform%}
+    {%fields%}
+    <div class="spacer-md">
+        {%button%}
+    </div>
+    {%closeform%}
+</div>
+<div class="well">{%text%}</div>
+}}
+
+{charge_confirm.{
+<h1 class="text-light">Finalize Credit Card Charging</h1>
+<p class="text-dark">Please confirm the charge amount and enter your credit card details.</p>
+<div class="spacer-md">
+    <h5>Charge Amount:</h5>
+    <h3 class='strong m-t-0'>{%charge_amount%}</h3>
+    <hr/>
+    {%form%}
+    <hr/>
+</div>
+<div class="clearfix"><a href="{%back_link%}" class="btn btn-default">Cancel</a></div>
+<hr/>
+<div class="well">{%text%}</div>
+}}
+
+

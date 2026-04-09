@@ -20,7 +20,9 @@ use PHPFusion\LegalDocs;
 
 const BOOTSTRAP = 5;
 const WEBICON = ['fa6', 'phpfusion-icons', 'bootstrap-icons', 'entypo'];
+add_to_head('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">');
 fusion_load_script('https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js');
+fusion_load_script('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', 'css');
 
 // Autoload template
 $file_path = THEME . 'templates/' . preg_replace( '(.php)', '.luna.php', basename( $_SERVER['PHP_SELF'] ) );

@@ -29,13 +29,13 @@ function __base_layout($row)
 	$html .= "<meta http-equiv='X-UA-Compatible' content='IE=edge'>";
 	$html .= "<meta name='viewport' content='width=device-width, initial-scale=1.0' />";
 	$html .= "<script src='" . INCLUDES . "jquery/jquery.min.js'></script>";
+	$html .= "<script src='https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js'></script>";
 	$html .= $head_tags;
 	$html .= "<link rel='stylesheet' href='" . THEMES . "templates/default.min.css?v=" . filemtime(THEMES . 'templates/default.min.css') . "'>";
 	$html .= "<link rel='stylesheet' href='" . THEMES . "templates/pages/assets/install.css'>";
 	$html .= "<link rel='stylesheet' href='" . INCLUDES . "fonts/font-awesome-5/css/all.min.css'>";
 	$html .= '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">';
-	$html .= '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-			<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>';
+	$html .= '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">';
 	$html .= "</head><body" . (isset($_GET['upgrade']) ? " class='upgrade'" : '') . ">";
 	$html .= '<div class="bg-blobs">
 				<div class="blob blob-pink"></div>
@@ -67,39 +67,40 @@ function __base_layout($row)
 						<div class="flex-grow-1 p-4 p-md-5 d-flex flex-column content-scroll overflow-auto">
 							<div class="mx-auto w-100 pb-4" style="max-width:600px;">';
 
-	if (defined('RECOVERY_CONSOLE')) :
+							if (defined('RECOVERY_CONSOLE')) :
 
-		$html .= "<div class='recovery-container mx-auto' style='max-width: 700px;'>
-					<div class='text-center mb-5'>
-						<div class='d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 mb-3' style='width: 64px; height: 64px;'>
-							<iconify-icon icon='solar:shield-warning-bold-duotone' class='text-danger fs-1'></iconify-icon>
-						</div>
-						<h2 class='fw-bold text-dark tracking-tight'>{%__TITLE__%}</h2>
-						<p class='text-muted small'>{%__DESCRIPTION__%}</p>
-					</div>
-					" . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
-						[
-							'class' => 'd-flex flex-column gap-4',
-						]) . "
-					{%__CONTENT__%}
-					" . __button($row['steps']) . "
-				";
-	else:
+								$html .= "
+								<div class='recovery-container mx-auto' style='max-width: 700px;'>
+									<div class='text-center mb-5'>
+										<div class='d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 mb-3' style='width: 64px; height: 64px;'>
+											<iconify-icon icon='solar:shield-warning-bold-duotone' class='text-danger fs-1'></iconify-icon>
+										</div>
+										<h2 class='fw-bold text-dark tracking-tight'>{%__TITLE__%}</h2>
+										<p class='text-muted small'>{%__DESCRIPTION__%}</p>
+									</div>
+									" . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
+										[
+											'class' => 'd-flex flex-column gap-4',
+										]) . "
+									{%__CONTENT__%}
+									" . __button($row['steps']);
+							else:
 
-		$html .= '<div class="d-flex align-items-center justify-content-center rounded-4 bg-white bg-opacity-50 border border-white mb-3 shadow-sm" style="width: 48px; height: 48px;">
-					' . __step_icon() . '
-					</div>
-					<h1 class="h4 fw-bold text-dark mb-2 tracking-tight">{%__TITLE__%}</h1>
-					<p class="small text-muted mb-5 fw-light leading-relaxed">{%__DESCRIPTION__%}</p>
-					' . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
-				[
-					'class' => 'd-flex flex-column gap-4',
-				]) . '
-					{%__CONTENT__%}
-					' . __button($row['steps']);
-	endif;
-
-	$html .= closeform().'
+								$html .= '
+								<div class="d-flex align-items-center justify-content-center rounded-4 bg-white bg-opacity-50 border border-white mb-3 shadow-sm" style="width: 48px; height: 48px;">
+										' . __step_icon() . '
+										</div>
+										<h1 class="h4 fw-bold text-dark mb-2 tracking-tight">{%__TITLE__%}</h1>
+										<p class="small text-muted mb-5 fw-light leading-relaxed">{%__DESCRIPTION__%}</p>
+										' . openform('setupform', 'post', FUSION_SELF . '?localeset=' . LANGUAGE,
+									[
+										'class' => 'd-flex flex-column gap-4',
+									]) . '
+									{%__CONTENT__%}
+									' . __button($row['steps']);
+							endif;
+							
+								$html .= closeform().'
 							</div>
 						</div>
 					</div>

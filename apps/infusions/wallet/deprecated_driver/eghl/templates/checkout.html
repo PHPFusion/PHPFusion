@@ -1,0 +1,135 @@
+<div class="wallet">
+    <div class="checkout">
+        <div class="stripes stripes-warning" style="height:1000px; left:0; top:0;">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="container">
+            <div class="list-group-item spacer-lg">
+                <div class="spacer-md">
+                    <h2 class="text-center strong m-0">Order Confirmation</h2>
+                    <hr/>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-7">
+                        <h4 class="strong">Order Details</h4>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4"><p class="text-dark">Payment ID:</p></div>
+                            <div class="col-xs-12 col-sm-8">{%payment_id%}</div>
+                        </div>
+                        {single_item_block.{
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4"><p class="text-dark">Order Item:</p></div>
+                            <div class="col-xs-12 col-sm-8"><h4 class="strong">{%order_title%}</h4></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4"><p class="text-dark">Description:</p></div>
+                            <div class="col-xs-12 col-sm-8">{%order_description%}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4"><p class="text-dark">Item ID:</p></div>
+                            <div class="col-xs-12 col-sm-8">#{%order_item_id%}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4"><p class="text-dark">Amount:</p></div>
+                            <div class="col-xs-12 col-sm-8"><strong>${%order_item_value%}</strong></div>
+                        </div>
+                        }}
+
+                        {item_header.{
+                        <h4 class="strong spacer-sm">{%text%}</h4>
+                        }}
+
+                        {item_block.{
+                        <div class="no-shadow clearfix">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <h4 class="strong m-0">{%order_title%}</h4>
+                                    {%order_description%}
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    <strong>USD${%order_item_value%} x {%order_item_quantity%}</strong>
+                                </div>
+                                <div class="col-xs-12 col-sm-3">
+                                    <strong>USD${%order_total%}</strong>
+                                </div>
+                            </div>
+                        </div><hr/>
+                        }}
+
+                        <h4 class="strong spacer-sm"><i class="fa fa-lock m-r-10"></i>Personal Information</h4>
+                        {non_member_field_block.{
+                        <div class="well no-shadow">
+                            <div class="text-center"><a href="{%link%}">{%title%}</a></div>
+                        </div>
+                        }}
+                        {member_field_block.{
+                        <div class="clearfix">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12">
+                                    {%name_field%}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {%email_field%}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {%address_field%}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    {%phone_field%}
+                                    {%fax_field%}
+                                    {%dob_field%}
+                                </div>
+                            </div>
+                        </div>
+
+                        }}
+                    </div>
+                    <div class="col-xs-12 col-sm-offset-1 col-sm-4">
+                        <h4 class="strong spacer-sm">Estimation</h4>
+                        <div class="no-shadow row">
+                            <div><span class="col-xs-12 col-sm-4">Order</span><span class="col-xs-12 col-sm-8 strong text-right">${%order_subtotal%}</span></div>
+                            <div><span class="col-xs-12 col-sm-4">Shipping</span><span class="col-xs-12 col-sm-8 strong text-right">${%order_total_shipping%}</span></div>
+                            <div><span class="col-xs-12 col-sm-4">Discount</span><span class="col-xs-12 col-sm-8 strong text-right">$0.00</span></div>
+                            <div><span class="col-xs-12 col-sm-4">Tax</span><span class="col-xs-12 col-sm-8 strong text-right">${%order_total_tax%}</span></div>
+                            <div class="col-xs-12 text-right">
+                                <hr/>
+                                <h4 class="strong text-uppercase text-dark m-0">Total</h4><h2 class="text-success strong m-0">${%order_total%}</h2>
+                                <hr/>
+                            </div>
+                        </div>
+                        <h4 class="strong spacer-sm">Payment Method</h4>
+                        <img src="{%card_image%}"><br/>
+                        <strong>Payment Card</strong> card ending in {%card_ending%}
+                    </div>
+                </div>
+                <div class="spacer-lg text-center">
+                    <p class="text-lighter">If you have confirmed your order then place your order and we'll process it.</p>
+                    <h5 class="text-uppercase strong">Order Total</h5>
+                    <h1 class="text-success strong m-0">${%order_total%}</h1>
+
+                    {%eGHL_openform%}
+                    <div class="spacer-md">
+                        <button type="submit" class="btn btn-success btn-bordered btn-md"><strong class="text-uppercase">Complete order</strong></button>
+                        {%eGHL_fields%}
+                    </div>
+                    {%eGHL_closeform%}
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+

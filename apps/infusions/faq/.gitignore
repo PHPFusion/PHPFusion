@@ -1,0 +1,7 @@
+.idea
+*.xml
+*.iml
+*.db
+.DS_Store
+*.config
+/.github/

@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {%title%}
+    </div>
+    <div class="panel-body">
+        <div id='payment_status' class='spacer-xs' style='display:none;'><div id='payment_results'></div></div>
+        <div class="list-group">
+            <div class="list-group-item" style="background:#69A2B9; padding:5px 15px;">
+                <img style="width:30px; margin-right:10px;" src="{%wallet.svg%}"><h4
+                    class="display-inline-block text-white text-shadow">My Wallet</h4>
+            </div>
+            <div class="list-group-item" style="background:#F3F8F9;">
+                <div class="row">
+                    <div class="col-xs-6" style="border-right:1px solid #69A2B9">
+                        <h4>Account</h4>
+                        {%email%}
+                    </div>
+                    <div class="col-xs-5 col-sm-offset-1">
+                        {description.{
+                        <h4>Coin Balance</h4>
+                        <h3 class="text-primary m-t-0">{%text%}</h3>
+                        }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading position-relative">
+        <ul class="nav nav-pills br-b-0 pull-right nav-sm" style="border-bottom:0; position: absolute; right: 15px; bottom: -1px;">
+            {nav.{
+            <li role="presentation" {%class%}><a href="{%link%}">{%title%}</a></li>
+            }}
+        </ul>
+       Recent Transactions
+    </div>
+    <div class="panel-body">
+        {%table%}
+    </div>
+</div>

@@ -1,0 +1,153 @@
+// --- Variables: Official Tiptap Palette ---
+@tt-gray-100: #f4f4f5; // Active Background
+@tt-gray-200: #eaeaeb; // Hover Background
+@tt-gray-600: #53565a; // Default Icon/Text
+@tt-gray-900: #222325; // Hover/Active Text
+@tt-purple-100: #dedbff; // Emphasized Background (e.g. Paragraph)
+@tt-purple-600: #5400e5; // Emphasized Text/Icon
+
+// --- Mixins for cleaner code ---
+.transition-standard() {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tiptap-wrapper {
+
+  .control-group {
+    align-items: center;
+    gap: .25rem;
+    display: flex;
+    padding: 0.5rem;
+    background:#1A1A1D; //rgba(255, 255, 255, 0.05); // Subtle wrapper background
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: sticky;
+    top: 0;
+    z-index:2;
+    //overflow-x: auto;
+    &.tiptap-bubble-menu {
+      border:1px solid rgba(232, 232, 253, 0.08);
+      background: #19191C;
+      border-radius:15px;
+      padding: 8px;
+      box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 48px 0px, rgba(0, 0, 0, 0.24) 0px 12px 24px 0px, rgba(0, 0, 0, 0.22) 0px 6px 8px 0px, rgba(0, 0, 0, 0.12) 0px 2px 3px 0px;
+    }
+  }
+
+  .tiptap-separator[data-orientation=vertical] {
+    width: 1px;
+    height: 1.5rem;
+    background-color:rgba(238, 238, 246, 0.11);
+  }
+
+  .button-group {
+    display: flex;
+    align-items: center;
+    gap: .125rem;
+  }
+
+  .tiptap-button {
+    /* Base reset to kill PHPFusion/Bootstrap defaults */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    border: none;
+    outline: none !important;
+    cursor: pointer;
+    user-select: none;
+    padding: 6px;
+    margin: 0;
+    font-weight: 500;
+    background: transparent;
+    border-radius: 0.595rem;
+    color: @tt-gray-600; /* Use your LESS/SASS variable */
+    transition: all 0.2s ease;
+
+    .tiptap-button-icon {
+      width: 16px;
+      height: 16px;
+      /* Default dim color for inactive icons */
+      color: rgba(247, 247, 253, 0.45);
+      flex-shrink: 0;
+      transition: color 0.2s ease;
+    }
+
+    /* --- GHOST STYLE --- */
+    &[data-style="ghost"] {
+
+      &:hover:not([disabled]):not(.is-active) {
+        background-color: rgb(45, 45, 47) !important;
+        .tiptap-button-icon {
+          color: rgba(247, 247, 253, 0.8) !important;
+        }
+      }
+
+      /* --- ACTIVE STATES (Toggled by your JS) --- */
+      /* We target both your data-attribute and the .is-active class */
+      &[data-active-state="on"],
+      &.is-active {
+        background-color: rgba(231, 231, 243, 0.07) !important;
+
+        .tiptap-button-icon {
+          /* Bright white/blue for standard bold/italic active state */
+          color: rgba(247, 247, 253, 0.95) !important;
+        }
+
+        /* Purple Emphasized State (for Headings, Paragraph, etc.) */
+        &[data-appearance="emphasized"] {
+          background-color: rgba(231, 231, 243, 0.12) !important;
+          .tiptap-button-icon {
+            color: rgb(122, 82, 255) !important; /* Your specific Purple */
+          }
+        }
+      }
+    }
+
+    /* Disabled State */
+    &[disabled] {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+}
+
+// --- Tooltip Override ---
+// Matches the dark, sleek look of the official tooltips
+.tooltip.tiptap-tooltip {
+  .tooltip-inner {
+    background-color: #1a1a1a;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .tooltip-arrow::before {
+    border-top-color: #1a1a1a;
+  }
+}
+
+.color-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem !important;
+  border-radius: 0.775rem;
+  & > span {
+    display:block;
+    color:#fff;
+    width:20px;
+    height:20px;
+    border:1px solid rgba(229 231 235 / .35);
+    border-radius:50%;
+  }
+
+  &:hover {
+    background:rgb(45, 45, 47);
+  }
+
+}

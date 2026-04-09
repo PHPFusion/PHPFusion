@@ -1,0 +1,22 @@
+<div class="row"><div class="col-xs-12 col-sm-6 col-sm-offset-3">{%wiki_search%}</div></div>
+<div class="container-fluid">
+    <h2 class="text-center">PHPFusion WIKI</h2>
+
+    <p class="text-center p-25" style="font-size: larger;">Find manuals, functions, SDKs, APIs and guides to use PHP-Fusion CMS.</p>
+</div>
+
+<hr>
+
+<div class="categories m-t-20 row equal-height">
+    {categories.{
+        <div class="col-xs-12 col-sm-6"><div style="height: 100%;">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4 class="m-t-0"><a href="{%link%}">{%name%}</a></h4>
+                    <p class="text-smaller">{%description%}</p>
+                </div>
+                <div class="panel-footer"><a class="display-block" href="{%link%}">{[view]} <i class="fa fa-arrow-right"></i></a></div>
+            </div>
+        </div></div>
+    }}
+</div>

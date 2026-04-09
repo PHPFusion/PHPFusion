@@ -96,7 +96,7 @@ function render_text_input($input_name, $input_label, $input_value, $options = [
 
     // --- Input field ---
     $html .= sprintf(
-        '<input type="%s" data-type="%s" class="form-control bg-light %s%s" name="%s" id="%s" value="%s" %s>',
+        '<input type="%s" data-type="%s" class="form-control %s%s" name="%s" id="%s" value="%s" %s>',
         htmlspecialchars($options['input_type']),
         htmlspecialchars($options['input_type']),
         htmlspecialchars(trim('textbox ' . $options['inner_class'])),
@@ -126,12 +126,15 @@ function render_text_input($input_name, $input_label, $input_value, $options = [
             htmlspecialchars(trim(($options['append_size'] ?? '') . ' ' . ($options['append_class'] ?? ''))),
             $options['append_value']
         );
+        
     } elseif (!empty($options['append_value'])) {
+    	
         $html .= sprintf(
             '<span class="input-group-text" id="%s">%s</span>',
             htmlspecialchars($options['append_id']),
             $options['append_value']
         );
+        
     }
 
     // --- Feedback icon (Bootstrap 5 has no .form-control-feedback) ---

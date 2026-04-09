@@ -1,0 +1,151 @@
+<div class="wallet">
+    <div class="checkout">
+        <div class="stripes stripes-primary" style="height:70%">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="container">
+            <div class="spacer-lg">
+                {alerts.{
+                {%alert%}
+                }}
+                <div class="list-group-item no-shadow">
+                    <div class="spacer-sm text-center">
+                        <h2>Order Confirmation</h2>
+                    </div>
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-7">
+                            <h4>Order Details</h4>
+                            <hr/>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4"><p class="text-dark">Payment ID No:</p></div>
+                                <div class="col-xs-12 col-sm-8">{%payment_id%}</div>
+                            </div>
+
+
+                            {single_item_block.{
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4"><p class="text-dark">Order for:</p></div>
+                                <div class="col-xs-12 col-sm-8"><h4 class="strong">{%order_title%}</h4></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4"><p class="text-dark">Description:</p></div>
+                                <div class="col-xs-12 col-sm-8">{%order_description%}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4"><p class="text-dark">Item ID:</p></div>
+                                <div class="col-xs-12 col-sm-8">{%order_item_id%}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-4"><p class="text-dark">Amount:</p></div>
+                                <div class="col-xs-12 col-sm-8"><strong>${%order_item_value%}</strong></div>
+                            </div>
+                            }}
+
+                            {item_header.{
+                            <h4 class="strong spacer-sm">{%text%}</h4>
+                            <hr/>
+                            }}
+
+                            {item_block.{
+                            <div class="no-shadow clearfix">
+                                <div class="pull-left m-r-10"><img src=""></div>
+                                <div class="overflow-hide">
+                                    <h4 class="strong m-0">{%order_item_title%}</h4>
+                                    <strong>${%order_item_value%} x {%order_item_quantity%}</strong>
+                                </div>
+                            </div>
+                            }}
+
+                            <h4 class="spacer-sm">Billing Information</h4>
+                            <hr/>
+                            {non_member_field_block.{
+                            <div class="well no-shadow">
+                                <div class="text-center"><a href="{%link%}">{%title%}</a></div>
+                            </div>
+                            }}
+                            {member_field_block.{
+                            <div class="clearfix">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12">
+                                        {%name_field%}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {%email_field%}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {%address_field%}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {%phone_field%}
+                                        {%fax_field%}
+                                    </div>
+                                </div>
+                            </div>
+                            }}
+                        </div>
+                        <div class="col-xs-12 col-sm-offset-1 col-sm-4">
+                            <div class="panel panel-home">
+                                <div class="panel-heading">Estimation</div>
+                                <div class="panel-body">
+                                    <div class="no-shadow row">
+                                        <div><span class="col-xs-12 col-sm-4">Order</span><span
+                                                class="col-xs-12 col-sm-8 strong text-right">${%order_subtotal%}</span>
+                                        </div>
+                                        <div><span class="col-xs-12 col-sm-4">Shipping</span><span
+                                                class="col-xs-12 col-sm-8 strong text-right">${%order_total_shipping%}</span>
+                                        </div>
+                                        <div><span class="col-xs-12 col-sm-4">Discount</span><span
+                                                class="col-xs-12 col-sm-8 strong text-right">$0.00</span></div>
+                                        <div><span class="col-xs-12 col-sm-4">Tax</span><span
+                                                class="col-xs-12 col-sm-8 strong text-right">${%order_total_tax%}</span>
+                                        </div>
+                                        <div class="col-xs-12 text-right">
+                                            <hr/>
+                                            <h4 class="strong text-uppercase text-dark m-0">Total</h4>
+                                            <h2 class="text-success strong m-0">${%order_total%}</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="strong spacer-sm">Payment Method</h4>
+                            <img style='max-width: 120px; position: relative; margin-top: -40px; margin-bottom: -20px;' src="{%card_image%}"><br/>
+                            <strong><i style="color:#193881;">Pay</i><i style="color:#129ADA;">Pal</i>
+                                <small class="text-uppercase">checkout</small>
+                            </strong>
+                            <p>The payment form will be redirected to Paypal for completion. You may need to login to paypal to complete the ordering process.</p>
+                        </div>
+                    </div>
+                    <div class="spacer-lg text-center">
+                        <p class="text-lighter">If you have confirmed your order then place your order and we'll process
+                            it.</p>
+                        <h5 class="text-uppercase strong">Order Total</h5>
+                        <h1 class="text-success strong m-0">${%order_total%}</h1>
+                        {%paypal_openform%}
+                        <div class="spacer-md">
+                            <button type="submit" class="btn btn-success btn-bordered btn-md{%paypal_button_class%}">
+                                <strong class="text-uppercase">Complete Order</strong>
+                            </button>
+                            {%paypal_fields%}
+                        </div>
+                        {%paypal_closeform%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+<br/>

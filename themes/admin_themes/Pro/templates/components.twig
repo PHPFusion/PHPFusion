@@ -1,0 +1,47 @@
+{# Macro component for openside #}
+{% macro side_component(value, collapse, class, mode) %}
+    {% if mode == 'open' %}
+        <aside class="pf-side{{ whitespace(class)|raw }}">
+        {% if value or collapse %}
+            <div class="pf-side-header">
+                <div class="side-header-title">{{ value|raw }}</div>
+                {% if collapse %}
+                    {% if collapse == 1 %}
+                        <button class="side-header-btn" data-toggle="sidex"><span>Expand</span></button>
+                    {% elseif collapse %}
+                        {{ collapse|raw }}
+                    {% else %}
+                        {% set side_body_class = 'style="display:block !important;"' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if collapse == false and side_body_class is null %}
+            {% set side_body_class = 'style="display:block !important;margin-top:0;"' %}
+        {% endif %}
+        <div class="pf-side-body" {{ side_body_class|raw }}>
+    {% endif %}
+    {% if mode == 'close' %}
+        </div>
+        </aside>
+    {% endif %}
+{% endmacro %}
+
+{% macro grid_component(value, class, mode) %}
+    {% if mode == 'open' %}
+    <div class="pf-grid{{ whitespace(class) }}" style="grid-template-columns: repeat({{ value }}, 1fr);">
+    {% elseif mode == 'close' %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+
+{% if macro == 'openside' %}
+    {{ _self.side_component(value, collapse, class, 'open') }}
+{% elseif macro == 'closeside' %}
+    {{ _self.side_component('', '', class, 'close') }}
+{% elseif macro == 'opengrid' %}
+    {{ _self.grid_component(value, class, 'open') }}
+{% elseif macro == 'closegrid' %}
+    {{ _self.grid_component('','', 'close') }}
+{% endif %}

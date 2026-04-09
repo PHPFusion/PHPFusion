@@ -5,7 +5,8 @@
 | https://phpfusion.com/
 +--------------------------------------------------------+
 | Filename: theme.php
-| Author: Core Development Team
+| Author: Frederick MC Chan (Chan)
+| Co-Author: PHPFusion Development Team
 +--------------------------------------------------------+
 | This program is released as free software under the
 | Affero GPL license. You can redistribute it and/or
@@ -16,40 +17,36 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 require_once __DIR__.'/../maincore.php';
+pageAccess('TS');
 require_once THEMES.'templates/admin_header.php';
-pageaccess('TS');
-
 $locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/theme.php');
 $theme_admin = new \PHPFusion\Atom\Admin();
 
 opentable($locale['theme_1000']);
-switch (get('action')) {
+switch ($_GET['action']) {
     case "manage":
-        if (check_get('theme')) {
-            $theme_admin::displayThemeEditor(get('theme'));
+        if (isset($_GET['theme'])) {
+            echo "<div class='m-t-20'>\n";
+            $theme_admin::display_theme_editor($_GET['theme']);
+            echo "</div>\n";
         }
         break;
     default:
-        $tabs['title'][] = $locale['theme_1010'];
-        $tabs['id'][] = 'list';
-        $tabs['icon'][] = '';
-
-        $tabs['title'][] = $locale['theme_1011a'];
-        $tabs['id'][] = 'admin_themes';
-        $tabs['icon'][] = '';
-
-        $allowed_sections = ['list', 'admin_themes'];
-        $section = in_array(get('section'), $allowed_sections) ? get('section') : 'list';
-
-        echo opentab($tabs, $section, 'theme_tab', TRUE);
-        switch ($section) {
-            case 'admin_themes':
-                $theme_admin::adminThemesList();
-                break;
-            default:
-                $theme_admin::displayThemeList();
-                break;
-        }
+        $tab_title['title'] = [$locale['theme_1010'], $locale['theme_1011']];
+        $tab_title['id'] = ["list", "upload"];
+        $active_set = isset($_POST['upload']) ? 1 : 0;
+        $active_tab = tab_active($tab_title, $active_set);
+        echo opentab($tab_title, $active_tab, 'theme_tab');
+        echo opentabbody($tab_title['title'][0], $tab_title['id'][0], $active_tab);
+        echo "<div class='m-t-20'>\n";
+        $theme_admin::display_theme_list();
+        echo "</div>\n";
+        echo closetabbody();
+        echo opentabbody($tab_title['title'][1], $tab_title['id'][1], $active_tab);
+        echo "<div class='m-t-20'>\n";
+        $theme_admin::theme_uploader();
+        echo "</div>\n";
+        echo closetabbody();
         echo closetab();
         break;
 }

@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading">Top Up PHPFusion Coins</div>
+    <div class="panel-body">
+        <p>Choose the amount of Coin you wish to purchase.</p>
+        <div class="row">
+            {coin.{
+            <div class="col-xs-12 col-md-6 col-lg-3 text-center spacer-sm">
+                <a class="topup" data-package="{%package_id%}" href="#">
+                    <div class="coin bronze">
+                        <h3 class="center-xy">P<span>coin</span></h3>
+                    </div>
+                    <div class="ribbon">
+                        <strong class="ribbon-content">{%package_coin_quantity%}</strong>
+                    </div>
+                    {%package_bonus%}
+                    <h4>{%package_currency%} <strong>{%package_price%}</strong></h4>
+                </a>
+            </div>
+            }}
+        </div>
+        <small>By using this coin store you agree to our <a href='".BASEDIR."legal/privacy.php' target='_blank' >Privacy Policy</a> &amp; <a href='".BASEDIR."legal/tos.php' target='_blank'>Terms of Service</a>.</small>
+    </div>
+</div>

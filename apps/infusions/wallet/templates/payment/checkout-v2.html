@@ -1,0 +1,105 @@
+<style>
+    .wallet {
+        background: #F6F6F6;
+        min-height: 100vh;
+    }
+
+    .checkout-page {
+        padding: 100px 0;
+    }
+
+    .checkout-page .list-group-item {
+        padding: 50px;
+    }
+</style>
+<div class="wallet">
+    <div class="checkout-page">
+        <div class="container">
+
+            {notices.{
+            {%content%}
+            }}
+
+            {payment_message.{
+            <h3 class="text-alt text-dark strong spacer-md">{%text%}</h3>
+            }}
+
+            <div class="row">
+                <div class="{[col(100,100,70)]}">
+                    <div class="list-group-item m-b-20 no-shadow">
+                        <h4 class="text-dark m-b-0 text-alt strong">Billing Information</h4>
+                        <small>Note: All fields are required.</small>
+                        <br/><br/>
+                        {non_member_field_block.{
+                        <div class="well no-shadow">
+                            <div class="text-center"><a href="{%link%}">{%title%}</a></div>
+                        </div>
+                        }}
+                        {member_field_block.{
+                        {%name_field%}
+                        {%email_field%}
+                        {%address_field%}
+                        {%phone_field%}
+                        {%fax_field%}
+                        }}
+                        {credit_card.{
+                        <h4 class="spacer-sm text-dark m-b-0 text-alt strong">
+                            Credit card details
+                        </h4>
+                        <div>
+                            {%card_openform%}
+                            {%card_holder%}
+                            {%card_no%}
+                            <div class="row">
+                                <div class="{[col(100,100,100,50)]}">
+                                    {%card_exp%}
+                                </div>
+                                <div class="{[col(100,100,100,50)]}">
+                                    {%card_cvv%}
+                                </div>
+                            </div>
+                            {%card_closeform%}
+                        </div>
+                        }}
+
+                        {form.{
+                        {%content%}
+                        }}
+                    </div>
+                </div>
+                <div class="{[col(100,100,30)]}">
+                    <div class="clearfix">
+                        <div class="list-group-item m-b-20 no-shadow">
+                            <h4 class="text-dark text-alt strong">Order Summary</h4>
+                            <p>The total cost consist of the tax, insurance and the shipping charge.</p>
+                            <hr/>
+                            <div class="clearfix">
+                                <span class="price strong pull-right">$ 59.99</span>
+                                Shipping
+                            </div>
+                            <div class="clearfix">
+                                <span class="price strong pull-right">$ 5.99</span>
+                                Tax
+                            </div>
+                            <div class="clearfix">
+                                <span class="price strong pull-right">$ 129</span>
+                                Insurance
+                            </div>
+                            <hr/>
+                            <div class="text-right">
+                                <h3 class="text-success strong">$ 76.99</h3>
+                            </div>
+                        </div>
+                        <div class="list-group-item m-b-20">
+
+                        </div>
+                        <div class="spacer-md">
+                            <a href="#" class="btn btn-success btn-md btn-pop small text-expanded btn-block">Proceed Checkout</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

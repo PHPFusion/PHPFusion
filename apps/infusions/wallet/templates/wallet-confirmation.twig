@@ -1,0 +1,228 @@
+<div class="wallet-confirmation hidden-print">
+    {# <div class="text-right p-t-20"> #}
+    {# <div class="container"> #}
+    {# <a class="btn btn-default" href="{{ BASEDIR }}edit_profile.php">Go to Your Profile</a> #}
+    {# <a class="btn btn-default" href={{ BASEDIR }}index.php">Go to Main Page</a> #}
+    {# <a class="btn btn-inverse" id="print-invoice-link" href="#"><i class="fas fa-print m-r-10"></i>Print this Confirmation</a> #}
+    {# </div> #}
+    {# </div> #}
+    <svg style="position: absolute;">
+        <clipPath id="clip">
+            <path d="M1175.65 35.7644C962.846 -46.1285 865.751 35.6288 643.768 54.6084C421.786 73.588 391.68 33.0436 226.292 14.4975C60.9034 -4.0486 11.1228 90.8729 -67.9998 110.654C-67.9998 198.586 -67.9998 516 -67.9998 516L1508.19 516L1508.19 8.45359C1508.19 8.45359 1388.84 117.807 1175.65 35.7644Z"></path>
+        </clipPath>
+    </svg>
+    <div class="confirmation-box">
+        <div class="wave-wrapper">
+            <div class="wave-2"></div>
+            <div class="wave-3"></div>
+            <div class="wave-1"></div>
+        </div>
+        <div class="container">
+            <div class="confirmation-content">
+                <h2 class="text-center">
+                    <strong>
+                        Order Confirmation
+                    </strong>
+                </h2>
+                <div class="confirmation-hero">
+                    <div class="confirmation-status">
+                        <div>
+                            <span class="text-uppercase bold">Receipt for</span><br/>
+                            <h4 class="text-uppercase strong m-0">{{ wallet.user_firstname }} {{ wallet.user_lastname }}</h4>
+                        </div>
+                        <div>
+                            <h4 class="text-uppercase strong">{{ transaction.transaction_currency }} {{ transaction.transaction_amount|number_format(2) }}</h4>
+                        </div>
+                    </div>
+                    <div class="spacer-md">Your PHPFusion order
+{#                        <a href="" class="strong">{{ transaction.transaction_ref }}</a> has successfully been placed. You'll find all the details about your order below, and we'll send you a delivery confirmation email as soon as the system processes it.#}
+                        <span class="strong">{{ transaction.transaction_ref }}</span> has successfully been placed. You'll find all the details about your order below, and we'll send you a delivery confirmation email as soon as the system processes it.
+                    </div>
+                </div>
+                <div class="confirmation-table">
+                    <table class="table">
+                        <tbody>
+{#                        <tr>#}
+{#                            <th colspan="2"><strong>Estimated Delivery Completion Time</strong></th>#}
+{#                        </tr>#}
+{#                        <tr>#}
+{#                            <th colspan="2" class="dtl">{{ transaction.eta_date }}</th>#}
+{#                        </tr>#}
+{#                        <tr>#}
+                            <th colspan="2"><strong>Payment Status</strong></th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="dtl">{{ payment_status }}</th>
+                        </tr>
+                        <tr>
+                            <th class="strong">Order Number</th>
+                            <th class="strong">Order Date</th>
+                        </tr>
+                        <tr>
+                            <th class="dtl">{{ transaction.transaction_ref }}</th>
+                            <th class="dtl">{{ transaction.date }}</th>
+                        </tr>
+                        <tr>
+                            <th class="strong">Shipping Address</th>
+                            <th class="strong">Billing Address</th>
+                        </tr>
+                        <tr>
+                            <th class="dtl" style="white-space: normal;width:48%;">
+                                {{ wallet.street }}{{ whitespace(wallet.street2) }}, {{ wallet.city }}, {{ wallet.region }}, {{ wallet.country }}
+                                <br/>{{ wallet.postcode }}
+                            </th>
+                            <th class="dtl" style="white-space: normal;">{{ wallet.street }}{{ whitespace(wallet.street2) }}, {{ wallet.city }}, {{ wallet.region }}, {{ wallet.country }}
+                                <br/>{{ wallet.postcode }}
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="spacer-md">
+                    <div>
+                        <h5 class="text-uppercase strong m-0 text-white">Your Items</h5>
+                    </div>
+                </div>
+                <div class="confirmation-table">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th colspan="3" class="p-b-20">{{ transaction.date }}</th>
+                        </tr>
+                        {% if transaction.transaction_orders is not empty %}
+                            {% for order in transaction.transaction_orders %}
+                                {% set complete_status = "Pending delivery" %}
+                                {% if order.order_completed %}
+                                    {% set complete_status = "Delivered" %}
+                                {% endif %}
+                                <tr>
+                                    <th class="dtl">
+                                        {{ order.order_title }}<br/>{{ order.order_description }}
+                                        <br/><label class="label label-bordered label-inverse" style="font-size:13px;">{{ complete_status }}</label>
+                                    </th>
+                                    <th class="dtl">
+                                        {{ order.order_item_quantity }} x {{ order.order_currency }}{{ order.order_item_value|number_format(2) }}
+                                    </th>
+                                    <th class="dtl">
+                                        {{ order.order_currency }} {{ order.order_total|number_format(2) }}
+                                    </th>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3">No orders found.</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-right p-r-15">Amount paid</th>
+                            <th class="strong">{{ transaction.transaction_currency }} {{ transaction.transaction_amount|number_format(2) }}</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+            <div class="confirmation-content">
+                <div class="confirmation-footer">
+                    <div>
+                        <div class="flex flex-row m-b-20">
+                            <h5 class="bold">Printing this Copy</h5>
+                        </div>
+                        We recommend you to print this page now using the button on the top menu bar above, and store it with you for your use in case you need it.
+                        You have been sent an email with a copy of this confirmed order details. Any further instructional emails will also be sent to you.
+                    </div>
+                    <div>
+                        <a class="strong" href="{{ BASEDIR }}legal/tos.php?Returns-Policy" target="_blank">Read our return policy</a>
+                    </div>
+                </div>
+                <div class="text-sm text-light"><strong>{{ store.name }}</strong>
+                <br/>{{ store.address|raw }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="invoice-print" class="visible-print" style="font-size:.3em;">
+    <div class="print-body" style="padding:10% 15%;">
+
+        <img src="{{ IMAGES ~"phpfusion-logo.svg" }}" alt="">
+        <div class="text-sm" style="width:50%;display:block;">
+            <strong>{{ store.name }}</strong>
+        </div>
+
+        <h4 class="strong" style="padding-top:20px;padding-bottom:20px;">Order Confirmation</h4>
+        <div style="padding-bottom:20px;">Your PHPFusion order
+            {{ transaction.transaction_ref }} has successfully been placed. You'll find all the details about your order below, and we'll send you a delivery confirmation email as soon as the system processes it.
+        </div>
+        <table class="table table-striped" style="font-size:14px;">
+            <tr>
+                <th>Receipt for</th>
+                <th>{{ wallet.user_firstname }} {{ wallet.user_lastname }}</th>
+            </tr>
+            <tr>
+                <th>Billing Address</th>
+                <th>{{ wallet.user_firstname }} {{ wallet.user_lastname }}</th>
+            </tr>
+            <tr>
+                <th>Bill Total</th>
+                <th>{{ transaction.transaction_currency }} {{ transaction.transaction_amount|number_format(2) }}</th>
+            </tr>
+            <tr>
+                <th>Payment Status</th>
+                <th>{{ payment_status }}</th>
+            </tr>
+            <tr>
+                <th>Order Number</th>
+                <th>{{ transaction.transaction_ref }}</th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>{{ transaction.date }}</th>
+            </tr>
+            <tr>
+                <th>Billing Address</th>
+                <th>{{ wallet.street }}<br/>
+                    {{ whitespace(wallet.street2) }},<br/>
+                    {{ wallet.city }}, {{ wallet.region }}, {{ wallet.country }}
+                    <br/>{{ wallet.postcode }}</th>
+            </tr>
+        </table>
+        <table class="table table-striped">
+            {% if transaction.transaction_orders is not empty %}
+                {% for order in transaction.transaction_orders %}
+                    {% set complete_status = "Pending delivery" %}
+                    {% if order.order_completed %}
+                        {% set complete_status = "Delivered" %}
+                    {% endif %}
+                    <tr>
+                        <th style="padding:10px;">
+                            <h5>{{ order.order_title }}</h5>
+                            {{ order.order_description }}
+                            <br/>
+                            <label class="label label-bordered label-inverse" style="font-size:13px;">{{ complete_status }}</label>
+                            <br/>
+                            {{ order.order_item_quantity }} x {{ order.order_currency }}{{ order.order_item_value|number_format(2) }}
+                        </th>
+                        <th class="text-right" style="padding:10px;">
+                            {{ order.order_currency }} {{ order.order_total|number_format(2) }}
+                        </th>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No orders found.</td>
+                </tr>
+            {% endif %}
+        </table>
+        <h6 class="spacer-sm">
+            Please keep this bill for your record purposes. If you wish to know your order referenced,
+            you can go to your account profile settings and get the details under your wallet transactions.
+        </h6>
+        <div>
+            <strong>Return policy</strong> https://phpfusion.com/legal/tos.php?Returns-Policy
+        </div>
+
+    </div>
+</div>
