@@ -590,7 +590,7 @@ class AdminSetup extends InstallCore
 			}
 
 			if (fusion_safe()) {
-				self::installerStep(self::STEP_LANGUAGE_FORM);
+				self::installerStep(self::STEP_INFUSIONS);
 
 			} else {
 				self::installerStep(self::STEP_INFUSIONS);
