@@ -279,7 +279,7 @@ class DatabaseSetup extends InstallCore {
                     if (!empty($to_upgrade)) {
                         self::installerStep(self::STEP_INFUSIONS);
                     } else {
-                        self::installerStep(self::STEP_PRIMARY_ADMIN_FORM);
+                        self::installerStep(self::STEP_SITE_FORM);
                     }
                     redirect(FUSION_REQUEST);
                 } else {
@@ -458,12 +458,12 @@ class DatabaseSetup extends InstallCore {
                 'value' => self::STEP_DB_SETTINGS_SAVE
             ]
         ];
-        
+
         return [
         	'title' => self::$locale['setup_1200'],
 			'description' => self::$locale['setup_1201'],
         	'content' => $content
 		];
-    
+
     }
 }
