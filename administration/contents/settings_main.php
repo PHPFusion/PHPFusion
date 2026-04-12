@@ -16,7 +16,7 @@
 | written permission from the original author(s).
 +--------------------------------------------------------*/
 
-use PHPFusion\QuantumFields;
+use PHPFusion\Quantum\QuantumHelper;
 
 defined('IN_FUSION') || exit;
 
@@ -42,53 +42,55 @@ $contents = [
 function pf_post() {
 
     $locale = fusion_get_locale();
-
+    
+    // To split and change to use the unified routing approach
     $inputData = [
-        'siteintro'          => form_sanitizer(addslashes($_POST['siteintro']), '', 'siteintro'),
-        'sitename'           => form_sanitizer($_POST['sitename'], '', 'sitename'),
-        'sitebanner'         => form_sanitizer($_POST['sitebanner'], '', 'sitebanner'),
-        'siteemail'          => form_sanitizer($_POST['siteemail'], '', 'siteemail'),
-        'siteusername'       => form_sanitizer($_POST['siteusername'], '', 'siteusername'),
-        'footer'             => form_sanitizer(addslashes($_POST['footer']), '', 'footer'),
-        'site_protocol'      => form_sanitizer($_POST['site_protocol'], '', 'site_protocol'),
-        'site_host'          => form_sanitizer($_POST['site_host'], '', 'site_host'),
-        'site_path'          => form_sanitizer($_POST['site_path'], '', 'site_path'),
-        'site_port'          => form_sanitizer($_POST['site_port'], '', 'site_port'),
-        'description'        => form_sanitizer($_POST['description'], '', 'description'),
-        'keywords'           => form_sanitizer($_POST['keywords'], '', 'keywords'),
-        'opening_page'       => form_sanitizer($_POST['opening_page'], '', 'opening_page'),
-        'default_search'     => form_sanitizer($_POST['default_search'], '', 'default_search'),
-        'exclude_left'       => form_sanitizer($_POST['exclude_left'], '', 'exclude_left'),
-        'exclude_upper'      => form_sanitizer($_POST['exclude_upper'], '', 'exclude_upper'),
-        'exclude_aupper'     => form_sanitizer($_POST['exclude_aupper'], '', 'exclude_aupper'),
-        'exclude_lower'      => form_sanitizer($_POST['exclude_lower'], '', 'exclude_lower'),
-        'exclude_blower'     => form_sanitizer($_POST['exclude_blower'], '', 'exclude_blower'),
-        'exclude_right'      => form_sanitizer($_POST['exclude_right'], '', 'exclude_right'),
-        'exclude_user1'      => form_sanitizer($_POST['exclude_user1'], '', 'exclude_user1'),
-        'exclude_user2'      => form_sanitizer($_POST['exclude_user2'], '', 'exclude_user2'),
-        'exclude_user3'      => sanitizer('exclude_user3', '', 'exclude_user3'),
-        'exclude_user4'      => sanitizer('exclude_user4', '', 'exclude_user4'),
-        'logoposition_xs'    => sanitizer('logoposition_xs', '', 'logoposition_xs'),
-        'logoposition_sm'    => sanitizer('logoposition_sm', '', 'logoposition_sm'),
-        'logoposition_md'    => sanitizer('logoposition_md', '', 'logoposition_md'),
-        'logoposition_lg'    => sanitizer('logoposition_lg', '', 'logoposition_lg'),
-        'domain_server'      => sanitizer('domain_server', '', 'domain_server'),
-        'privacy_policy'     => form_sanitizer($_POST['privacy_policy'], '', 'privacy_policy', count(fusion_get_enabled_languages()) > 1),
-        'license_agreement'  => form_sanitizer($_POST['license_agreement'], '', 'license_agreement', count(fusion_get_enabled_languages()) > 1),
-        'license_lastupdate' => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
-    ];
+		'siteintro'          => sanitizer('siteintro', '', 'siteintro'),
+		'sitename'           => sanitizer('sitename', '', 'sitename'),
+		'sitebanner'         => sanitizer('sitebanner', '', 'sitebanner'),
+		'siteemail'          => sanitizer('siteemail', '', 'siteemail'),
+		'siteusername'       => sanitizer('siteusername', '', 'siteusername'),
+		'footer'             => sanitizer('footer', '', 'footer'),
+		'site_protocol'      => sanitizer('site_protocol', '', 'site_protocol'),
+		'site_host'          => sanitizer('site_host', '', 'site_host'),
+		'site_path'          => sanitizer('site_path', '', 'site_path'),
+		'site_port'          => sanitizer('site_port', '', 'site_port'),
+		'description'        => sanitizer('description', '', 'description'),
+		'keywords'           => sanitizer('keywords', '', 'keywords'),
+		'opening_page'       => sanitizer('opening_page', '', 'opening_page'),
+		'default_search'     => sanitizer('default_search', '', 'default_search'),
+		'exclude_left'       => sanitizer('exclude_left', '', 'exclude_left'),
+		'exclude_upper'      => sanitizer('exclude_upper', '', 'exclude_upper'),
+		'exclude_aupper'     => sanitizer('exclude_aupper', '', 'exclude_aupper'),
+		'exclude_lower'      => sanitizer('exclude_lower', '', 'exclude_lower'),
+		'exclude_blower'     => sanitizer('exclude_blower', '', 'exclude_blower'),
+		'exclude_right'      => sanitizer('exclude_right', '', 'exclude_right'),
+		'exclude_user1'      => sanitizer('exclude_user1', '', 'exclude_user1'),
+		'exclude_user2'      => sanitizer('exclude_user2', '', 'exclude_user2'),
+		'exclude_user3'      => sanitizer('exclude_user3', '', 'exclude_user3'),
+		'exclude_user4'      => sanitizer('exclude_user4', '', 'exclude_user4'),
+		'logoposition_xs'    => sanitizer('logoposition_xs', '', 'logoposition_xs'),
+		'logoposition_sm'    => sanitizer('logoposition_sm', '', 'logoposition_sm'),
+		'logoposition_md'    => sanitizer('logoposition_md', '', 'logoposition_md'),
+		'logoposition_lg'    => sanitizer('logoposition_lg', '', 'logoposition_lg'),
+		'domain_server'      => sanitizer('domain_server', '', 'domain_server'),
+		'privacy_policy'     => sanitizer('privacy_policy', '', 'privacy_policy', count(fusion_get_enabled_languages()) > 1),
+		'license_agreement'  => sanitizer('license_agreement', '', 'license_agreement', count(fusion_get_enabled_languages()) > 1),
+		'license_lastupdate' => ($_POST['license_agreement'] != fusion_get_settings('license_agreement') ? time() : fusion_get_settings('license_lastupdate'))
+	];
 
     $inputData += getServerConfig($inputData);
 
     if (fusion_safe()) {
-
+		dbquery("BEGIN");
         foreach ($inputData as $settings_name => $settings_value) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                 ':settings_value' => $settings_value,
                 ':settings_name'  => $settings_name
             ]);
         }
-        add_notice('success', $locale['900']);
+        dbquery("COMMIT");
+        addnotice('success', $locale['900']);
         redirect(FUSION_REQUEST);
     }
 
@@ -126,10 +128,11 @@ function pf_view() {
 
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
-
-    echo openform('settingsFrm', 'POST');
+    
     echo '<h6>Site Information</h6>';
     openside('Title & description<small>The details used to identify your publication around the web</small>', TRUE);
+	echo openform('settingsFrm');
+	echo form_hidden('form_action', '', 'post');
     echo form_text('sitename', $locale['402'], $settings['sitename'], [
             'required'   => TRUE,
             'inline'     => FALSE,
@@ -149,8 +152,7 @@ function pf_view() {
             'error_text' => $locale['error_value']
         ]);
     closeside();
-
-
+	
     openside('Site credentials<small>Set the server information</small>', TRUE);
     echo form_text('siteusername', $locale['406'], $settings['siteusername'], [
             'required'   => TRUE,
@@ -226,7 +228,7 @@ function pf_view() {
     closeside();
 
     openside($locale['401a'].'<small>'.$locale['401b'].'</small>', TRUE);
-    echo "<div class='spacer-xs'>\n";
+    echo "<div class='spacer-xs'>";
     echo "<i class='fa fa-external-link m-r-10'></i>";
     echo "<span id='display_protocol'>".$settings['site_protocol']."</span>://";
     echo "<span id='display_host'>".$settings['site_host']."</span>";
@@ -241,7 +243,7 @@ function pf_view() {
         'options'    => [
             'http'             => 'http://',
             'https'            => 'https://',
-            'invalid_protocol' => $locale['445']
+            'invalid_protocol' => 'No protocol'
         ]
     ]);
     echo form_text('site_host', $locale['427'], $settings['site_host'], [
@@ -276,6 +278,7 @@ function pf_view() {
         'inline'   => FALSE,
         'autosize' => TRUE, 'placeholder' => "example1.com\nexample2.com\n"]);
     closeside();
+    
     openside('Panel Restrictions<small>Set panel display restrictions and exclusions</small>', TRUE);
     echo '<div class="spacer-sm">'.$locale['424'].'</div>';
     echo form_textarea('exclude_left', $locale['420'], $settings['exclude_left'], [
@@ -295,7 +298,7 @@ function pf_view() {
     echo '<h6>Policy</h6>';
     openside('Privacy Policy Settings<small>Site policy license</small>', TRUE);
     if (count(fusion_get_enabled_languages()) > 1) {
-        echo QuantumFields::form_multilocale('privacy_policy', $locale['820'], $settings['privacy_policy'], [
+        echo QuantumHelper::quantumMultilocaleFields('privacy_policy', $locale['820'], $settings['privacy_policy'], [
             'autosize'  => 1,
             'form_name' => 'settingsform',
             'function'  => 'form_textarea'
@@ -309,7 +312,8 @@ function pf_view() {
     closeside();
     openside('Membership Terms<small>Terms of Use and license agreement for new user registration</small>', TRUE);
     if (count(fusion_get_enabled_languages()) > 1) {
-        echo QuantumFields::form_multilocale('license_agreement', $locale['559'], $settings['license_agreement'], [
+    	
+        echo QuantumHelper::quantumMultilocaleFields('license_agreement', $locale['559'], $settings['license_agreement'], [
             'form_name' => 'settingsform',
             'input_id'  => 'enable_license_agreement',
             'autosize'  => TRUE,
@@ -338,7 +342,7 @@ function pf_view() {
  */
 function pf_button() {
     $locale = fusion_get_locale();
-    return form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
+    return form_button('savesettings', 'Save Settings', 'savesettings', ['class' => 'btn-primary']);
 }
 
 /*

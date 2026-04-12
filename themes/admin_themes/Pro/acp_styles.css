@@ -14,7 +14,7 @@ body {
 .expanded {
   line-height: 2;
 }
-[class^='col-'] {
+[class^="col-"] {
   padding: 5px 15px;
 }
 a {
@@ -198,10 +198,8 @@ h6 {
   color: #e8ebed;
 }
 .pf-viewport button {
-  padding: 0;
   outline: none;
   border: none;
-  background: transparent;
   box-shadow: none;
   line-height: inherit;
 }
@@ -605,7 +603,7 @@ h6 {
   position: relative;
   flex-grow: 1;
   padding: 0 48px 48px;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   max-width: 1320px;
   /* Master form-control */
 }
@@ -1339,23 +1337,30 @@ select:focus {
 }
 /* Buttons */
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   outline: none;
-  background: #1c1e21;
-  color: #e8ebed;
+  background: #e8ebed;
+  color: #1c1e21;
+  fill: #111213;
   text-decoration: none !important;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  fill: #111213;
   font-weight: 500;
-  height: 46px;
+  height: 38px;
   border-radius: 3px;
   transition: all 0.2s ease;
   transition-property: color, border-color, background, width, height, box-shadow;
   -webkit-font-smoothing: subpixel-antialiased;
-  padding: 0;
+  padding: 0 1rem;
+}
+.btn:hover,
+.btn:focus {
+  opacity: 0.85;
+  background: rgba(232 235 237 / 0.8);
+  color: #1c1e21;
 }
 .btn.disabled {
   opacity: 0.1;
@@ -1540,7 +1545,7 @@ select:focus {
   background: #2B2D31;
   border: 1px solid #2B2D31;
   border-radius: 4px;
-  font-size: 1.5rem;
+  font-size: 16px;
   height: 37px !important;
   color: #e8ebed;
   display: flex;
@@ -2590,5 +2595,8 @@ input ~ .input-group-text .btn {
   border-radius: 0.375rem;
   height: 26px;
   border: 0;
+}
+.footer-errors {
+  color: #fafafb;
 }
 /*# sourceMappingURL=acp_styles.css.map */

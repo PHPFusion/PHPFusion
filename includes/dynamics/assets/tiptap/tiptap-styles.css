@@ -19,7 +19,8 @@
   background: #19191C;
   border-radius: 15px;
   padding: 8px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 48px 0px, rgba(0, 0, 0, 0.24) 0px 12px 24px 0px, rgba(0, 0, 0, 0.22) 0px 6px 8px 0px, rgba(0, 0, 0, 0.12) 0px 2px 3px 0px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 16px 48px 0px, rgba(0, 0, 0, 0.24) 0px 12px 24px 0px, rgba(0, 0, 0, 0.22) 0px 6px 8px 0px, rgba(0, 0, 0, 0.12) 0px 2px 3px 0;
+  position: absolute;
 }
 .tiptap-wrapper .tiptap-separator[data-orientation=vertical] {
   width: 1px;
@@ -53,8 +54,8 @@
   /* Disabled State */
 }
 .tiptap-wrapper .tiptap-button .tiptap-button-icon {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   /* Default dim color for inactive icons */
   color: rgba(247, 247, 253, 0.45);
   flex-shrink: 0;

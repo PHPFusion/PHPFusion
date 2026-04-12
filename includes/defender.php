@@ -636,14 +636,14 @@ class Defender {
      * @return null
      */
     public static function stop( $notice = '' ) {
-        //debug_print_backtrace();
+        
         if (!defined( 'FUSION_NULL' )) {
             define( 'FUSION_NULL', TRUE );
             if ($notice) {
                 addnotice( 'danger', $notice );
                 define( 'STOP_REDIRECT', TRUE );
             }
-            //addNotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
+            addnotice('danger', '<strong>'.fusion_get_locale('error_request', LOCALE.LOCALESET.'defender.php').'</strong>');
         }
         return NULL;
     }

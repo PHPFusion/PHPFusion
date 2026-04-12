@@ -2732,3 +2732,85 @@ function is_homepage() {
 
     return $settings['opening_page'] == 'index.php' && $file_path == '/' || $file_path == '/' . $settings['opening_page'];
 }
+
+/**
+ * PHPFusion 10 - Unified API Request Wrapper
+ * * @param string $route  The target API route (e.g., 'admin/settings/update')
+ * @param string $method The HTTP verb (GET, POST, PUT, DELETE)
+ * @param array  $data   The payload for the request body
+ * @return array         The decoded JSON response
+ */
+function fusion_request($route, $method = 'GET', $data = []) {
+	// 1. Build the internal URL
+	$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+	$host = $_SERVER['HTTP_HOST'];
+	$path = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+	$url = "$protocol://$host$path/api.php?route=" . ltrim($route, '/');
+	
+	$ch = curl_init();
+	
+	// 2. Set Basic cURL Options
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
+	curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Don't hang the server if API is slow
+	
+	// 3. Set standard API Headers
+	$headers = [
+		'Content-Type: application/json',
+		'Accept: application/json',
+		'X-Requested-With: XMLHttpRequest'
+	];
+	
+	// 4. Attach Payload
+	if (!empty($data) && in_array(strtoupper($method), ['POST', 'PUT', 'DELETE'])) {
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+	}
+	
+	// 5. Session Forwarding (CRITICAL)
+	// We pass the current user's cookies so the Middleware recognizes the Admin
+	$cookie_string = "";
+	if (!empty($_COOKIE)) {
+		foreach ($_COOKIE as $name => $value) {
+			$cookie_string .= "$name=$value; ";
+		}
+	}
+	// Also include the current Session ID if it's started
+	if (session_id()) {
+		$cookie_string .= session_name() . "=" . session_id() . ";";
+	}
+	
+	if ($cookie_string) {
+		curl_setopt($ch, CURLOPT_COOKIE, $cookie_string);
+	}
+	
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	
+	// 6. Execute and Clean up
+	$response = curl_exec($ch);
+	$error = curl_error($ch);
+	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+	
+	if ($error) {
+		return [
+			'status' => 'error',
+			'code' => 500,
+			'message' => 'Fusion Request Error: ' . $error
+		];
+	}
+	
+	$decoded = json_decode($response, true);
+	
+	// If the response isn't valid JSON, return the raw body for debugging
+	if (json_last_error() !== JSON_ERROR_NONE) {
+		return [
+			'status' => 'error',
+			'code' => $http_code,
+			'message' => 'Invalid JSON response from API',
+			'raw' => $response
+		];
+	}
+	
+	return $decoded;
+}

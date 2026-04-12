@@ -22,6 +22,8 @@ function textarea($input_name, $input_value, $options)
 	$html = '
 	<div class="tiptap-wrapper" id="wrapper_' . $js_id . '">
 		
+		<textarea id="'.$options['input_id'].'" name="'.$options['input_name'].'" style="display: none;">'.$options['input_value'].'</textarea>
+		
 		<div class="tiptap-bubble-menu control-group" style="opacity:0;">
 			<div class="button-group">
 				<button class="tiptap-button" data-bs-toggle="tooltip" title="Undo" data-appearance="emphasized" data-tooltip-state="closed" data-style="ghost" type="button" onclick="window.editors[\'' . $js_id . '\'].chain().focus().undo().run()" data-cmd="undo" aria-label="Undo" aria-pressed="false" tabindex="-1">
@@ -361,8 +363,7 @@ function textarea($input_name, $input_value, $options)
 //				<button type="button" onclick="window.editors[\'' . $js_id . '\'].chain().focus().setHorizontalRule().run()">Horizontal rule</button>
 //				<button type="button" onclick="window.editors[\'' . $js_id . '\'].chain().focus().setHardBreak().run()">Hard break</button>
 //				';
-	$html .= '
-			</div>
+	$html .= '</div>
 		</div>
 		<div id="editor_' . $js_id . '" class="tiptap-editor"></div>
 	</div>
@@ -485,13 +486,11 @@ function textarea($input_name, $input_value, $options)
 					},
 					onTransaction({ editor }) { syncUI(editor); },
 					onUpdate({ editor }) {
-						const target = document.getElementById('target_' + id);
+						const target = document.getElementById(id);
 						if (target) target.value = editor.getHTML();
 						syncUI(editor);
 					}
 				});
-	
-				
 	
 				// Initialize Bootstrap 5 Tooltips for this specific toolbar
 				const toolWrapper = document.querySelector('#wrapper_' + id);

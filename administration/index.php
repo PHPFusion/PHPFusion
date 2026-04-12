@@ -19,7 +19,6 @@
 require_once __DIR__ . '/../maincore.php';
 
 define('ADMIN_DIR', ADMIN . fusion_get_aidlink());
-
 define('ADMIN_CURRENT_DIR', ADMIN_DIR . ( check_get('p') ? '&p=' . get('p') : '' ));
 
 const ADMIN_ERROR_DIR = ADMIN_DIR . '&p=404';
@@ -48,7 +47,6 @@ if ( isset($contents['title']) && isset($contents['link']) ) {
     if ( isset($contents['settings']) ) {
         add_breadcrumb([ 'link' => ADMIN . fusion_get_aidlink() . '&s=settings', 'title' => 'Settings' ]);
     }
-    //https://firstcamp.test/administration/?aid=5d7df8bfa0034f6a&p=erro
     add_breadcrumb([ 'link' => $contents['link'], 'title' => $contents['title'] ]);
     add_to_title($contents['title']);
 }
@@ -63,7 +61,7 @@ if ( $filter = fusion_filter_hook('pf_admin_data') ) {
 /* Run POST hook */
 if ( isset($contents['actions']['post']) ) {
     if ( is_array($contents['actions']['post']) ) {
-        foreach ( $contents['actions']['post'] as $button_name => $form_id ) { // savesettings, clearcache
+    	foreach ( $contents['actions']['post'] as $button_name => $form_id ) {
             if ( post('form_id') == $form_id ) {
                 fusion_apply_hook('pf_admin_post');
             }
@@ -149,7 +147,6 @@ function admin_exit() {
  */
 function admin_post($key)
 : bool {
-
     return ( post('form_action') === $key );
 }
 
