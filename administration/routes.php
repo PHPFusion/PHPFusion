@@ -5,5 +5,6 @@ use PHPFusion\Rest\Router;
 
 // Strictly Admin-only Group
 Router::group(['prefix' => 'admin', 'middleware' => [AdminAuth::class]], function() {
-	Router::post('/settings/update', [SettingsController::class, 'update']);
+	// Remove the leading slash here
+	Router::post('settings/update', [SettingsController::class, 'update']);
 });

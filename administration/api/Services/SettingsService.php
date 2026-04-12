@@ -1,17 +1,21 @@
 <?php
 namespace PHPFusion\Administration\Api\Services;
 
+use Exception;
+
 class SettingsService {
 	
 	/**
 	 * Update main system settings
 	 * @param array $data Sanitized key-value pairs
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public function updateMainSettings(array $data) {
+	public function updateMainSettings(array $data)
+	: bool {
+		
 		if (empty($data)) {
-			throw new \Exception("No settings data provided.");
+			throw new Exception("No settings data provided.");
 		}
 		
 		dbquery("BEGIN");
@@ -24,12 +28,14 @@ class SettingsService {
 				]);
 				
 				if (!$result) {
-					throw new \Exception("Failed to update setting: $name");
+					throw new Exception("Failed to update setting: $name");
 				}
 			}
 			dbquery("COMMIT");
+			
 			return true;
-		} catch (\Exception $e) {
+			
+		} catch (Exception $e) {
 			dbquery("ROLLBACK");
 			throw $e;
 		}

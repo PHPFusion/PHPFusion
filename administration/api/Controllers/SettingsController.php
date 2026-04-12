@@ -9,6 +9,7 @@ class SettingsController {
 	 * This handles the POST request from your Mobile App
 	 */
 	public function update($request) {
+		
 		// 1. In a mobile request, data comes in the body
 		$data = $request['body'] ?? [];
 		
@@ -23,7 +24,9 @@ class SettingsController {
 				'status' => 'success',
 				'message' => 'Settings updated successfully via Mobile API'
 			];
+			
 		} catch (\Exception $e) {
+			
 			return Router::errorResponse($e->getMessage(), 400);
 		}
 	}

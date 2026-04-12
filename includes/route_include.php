@@ -4,16 +4,19 @@
  */
 
 // Get the current route from the GET parameter
-$current_route = isset($_GET['route']) ? $_GET['route'] : '';
+$current_route = $_GET['route'] ?? '';
+if (isset($route)) {
+	$current_route = $route;
+}
+$current_route = trim($current_route, '/');
 
 // --- SECTION A: ADMINISTRATION ROUTES ---
 // Only load these if the route explicitly targets the admin namespace
-if (strpos($current_route, 'admin/') === 0) {
-	if (file_exists(ADMINISTRATION . "routes.php")) {
-		require_once ADMINISTRATION . "routes.php";
-	}
-}
+// This works
+if (str_starts_with($current_route, 'admin/') && file_exists(ADMIN."routes.php")) {
 
+	require_once ADMIN . "routes.php";
+}
 // --- SECTION B: PUBLIC & INFUSION ROUTES ---
 else {
 	// Load Core Public Routes (e.g., login, site info)
