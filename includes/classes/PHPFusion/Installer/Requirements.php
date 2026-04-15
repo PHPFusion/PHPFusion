@@ -243,11 +243,11 @@ class Requirements extends InstallCore {
             // Override key values
             $check_arr[$key] = (file_exists($key) && is_writable($key)) or (file_exists($key) && function_exists("chmod") && @chmod($key, 0777) || @chmod($key, 0755) && is_writable($key));
             if (!$check_arr[$key]) {
-                $requirements['files_check']['sub'][$key] = self::$locale['setup_0136'];
+                $requirements['files_check']['sub'][$key] = [self::$locale['setup_0136'], TRUE];
                 $requirements['files_check']['severability'] = -10;
                 $chmod .= '<br/>'.$key.' - '.self::$locale['setup_0136'];
             } else {
-                $requirements['files_check']['sub'][$key] = self::$locale['setup_0137'];
+                $requirements['files_check']['sub'][$key] = [self::$locale['setup_0137'], FALSE];
             }
         }
 
