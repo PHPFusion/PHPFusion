@@ -723,6 +723,7 @@ class SiteLinks
                 "link_icon"     => "",
                 "link_class"    => $linkclass,
                 "link_active"   => '',
+                "link_columns"  => 0,
                 "link_title"    => FALSE, // true to add dropdown-header class to li.
                 "link_disabled" => FALSE, // true to disable link
                 "link_window"   => FALSE,
