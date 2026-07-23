@@ -1177,7 +1177,7 @@ class CoreSettings {
                     'menu_language'   => $localeset
                 ],
                 [
-                    'menu_alias'      => 'subheader',
+                    'menu_alias'      => 'main-menu',
                     'menu_name'       => $locale['setup_3221'],
                     'menu_branding'   => '0',
                     'menu_header'     => '',
