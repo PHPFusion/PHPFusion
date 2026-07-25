@@ -1786,7 +1786,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     $res = '';
 
     if ($cur_page != $idx_fst) {
-        $res .= sprintf($tpl_page, $idx_fst, $link.$getname, $idx_fst, '<i class="fas fa-angle-left m-r-5"></i> '.$locale['first']);
+        $res .= sprintf($tpl_page, 0, $link.$getname, 0, '<i class="fas fa-angle-left m-r-5"></i> '.$locale['first']);
         $res .= sprintf($tpl_page, $idx_back, $link.$getname, $idx_back, '<i class="fas fa-angle-double-left m-r-5"></i>'.$locale['previous']);
     }
 
@@ -1819,8 +1819,8 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     }
 
     if ($cur_page != $idx_lst) {
-        $res .= sprintf($tpl_page, $idx_next, $link.$getname, $idx_next, $locale['next'].'<i class="fas fa-angle-double-right m-l-5"></i>');
-        $res .= sprintf($tpl_page, $idx_lst, $link.$getname, $idx_lst, $locale['last'].'<i class="fas fa-angle-right m-l-5"></i>');
+        $res .= sprintf( $tpl_page, $idx_next, $link . $getname, $idx_next, $locale['next'] . '<i class="fas fa-angle-double-right m-l-5"></i>' );
+        $res .= sprintf( $tpl_page, ($pg_cnt - 1) * $count, $link . $getname, ($pg_cnt - 1) * $count, $locale['last'] . '<i class="fas fa-angle-right m-l-5"></i>' );
     }
 
     // Upon pressing enter key, redirect
@@ -2599,7 +2599,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
             $return_file = $m_min_file;
         } else if (is_file($min_file)) { // checks local server
             $return_file = $min_file;
-        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN) && $remote === TRUE) { 
+        } else if (filter_var($min_file, FILTER_VALIDATE_DOMAIN) && $remote === TRUE) {
             // this is very slow... over 10 seconds on some circumstance
             // if (fusion_get_contents($min_file)) {
             $return_file = $min_file;
