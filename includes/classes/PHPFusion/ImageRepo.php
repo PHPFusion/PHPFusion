@@ -322,11 +322,12 @@ class ImageRepo {
      *
      * @return string
      */
-    public static function getIcon(string $name, string $class = "", string $tooltip = "") {
-        $icon = (self::$glyphicons[$name]) ?? $name;
-        $tooltip = $tooltip ? 'data-toggle="tooltip" title="'.$tooltip.'"' : '';
+    public static function getIcon( string $name, string $class = "", string $tooltip = "", string $style = "" ) {
+        $icon = ( self::$glyphicons[$name] ) ?? $name;
+        $style = $style ? ' style="' . $style . '"' : '';
+        $tooltip = $tooltip ? 'data-toggle="tooltip" title="' . $tooltip . '"' : '';
 
-        return '<i class="'.$icon.whitespace($class).'" '.$tooltip.'></i>';
+        return '<i class="' . $icon . whitespace( $class ) . '"' . $style . $tooltip . '></i>';
     }
 
     public static function setIcon($name, $value) {
