@@ -498,10 +498,23 @@ class CoreTables {
                 'length'  => 200,
                 'default' => ''
             ], // error_page varchar(200) NOT NULL,
+            'error_user_id'      => [
+                'type'   => 'BIGINT',
+                'length'   => 20,
+                'unsigned' => TRUE,
+                'key'      => 2,
+                'default'  => '0'
+            ], //error_user_id MEDIUMINT(8) UNSIGNED NOT NULL default '0',
             'error_user_level'   => [
                 'type'   => 'TINYINT',
                 'length' => 4,
             ], //error_user_level TINYINT(4) NOT NULL,
+            'error_user_count'   => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ] //error_user_count int(10) UNSIGNED NOT NULL default '0',
             'error_user_ip'      => [
                 'type'    => 'VARCHAR',
                 'length'  => 45,
@@ -512,12 +525,33 @@ class CoreTables {
                 'length'  => 1,
                 'default' => 4
             ], //error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-            'error_status'       => [
+            'error_browser'      => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //error_browser varchar(100) NOT NULL default '',
+            'error_os'                => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //error_os varchar(100) NOT NULL default '',
+            'error_count'             => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ] //error_count int(10) UNSIGNED NOT NULL default '0',
+            'error_status'            => [
                 'type'    => 'TINYINT',
                 'length'  => 1,
                 'default' => '0'
             ], //error_status tinyint(1) NOT NULL default '0',
-            'error_timestamp'    => [
+            'error_updated_datestamp' => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+            ] //error_updated_datestamp int(10) NOT NULL,
+            'error_timestamp'         => [
                 'type'     => 'INT',
                 'length'   => 10,
                 'unsigned' => TRUE,
