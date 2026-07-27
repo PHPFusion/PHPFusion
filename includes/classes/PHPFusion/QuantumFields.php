@@ -231,11 +231,12 @@ class QuantumFields extends QuantumFactory {
     private function getAvailableModules() {
 
         $this->locale = fusion_get_locale();
-        $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_log, field_registration, field_order, field_cat_name
-                    FROM ".DB_USER_FIELDS." tuf
-                    INNER JOIN ".DB_USER_FIELD_CATS." tufc ON (tuf.field_cat = tufc.field_cat_id)
-                    WHERE field_type = 'file'
-                    ORDER BY field_cat_order, field_order");
+        $result = dbquery( "SELECT field_id, field_name, field_cat, field_required, field_options, field_log, field_registration, field_order, field_cat_name
+            FROM " . DB_USER_FIELDS . " AS tuf
+            INNER JOIN " . DB_USER_FIELD_CATS . " AS tufc ON (tuf.field_cat = tufc.field_cat_id)
+            WHERE field_type = 'file'
+            ORDER BY field_cat_order, field_order
+        " );
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $this->enabled_fields[] = $data['field_name'];
@@ -632,6 +633,7 @@ class QuantumFields extends QuantumFactory {
             'error_text'           => $data['field_error'], // sets the field error text
             'required'             => (bool)$data['field_required'], // input must be filled when validate
             'placeholder'          => $data['field_default'], // helper text in field value
+            'options'              => $data['field_options'], // sets the field options text
             'plugin_folder'        => $this->plugin_folder, // The folder's path where the field's source files are
             'plugin_locale_folder' => $this->plugin_locale_folder, // The folder's path where the field's locale files are
             'debug'                => FALSE // Show some information to debug
@@ -1226,6 +1228,7 @@ class QuantumFields extends QuantumFactory {
         $user_field_dbname = '';
         $user_field_group = 0;
         $user_field_dbinfo = '';
+        $user_field_options = '';
 
         if ($this->module_debug == TRUE) {
             $this->debug = TRUE;
@@ -1335,7 +1338,7 @@ class QuantumFields extends QuantumFactory {
                 'field_registration' => check_post('field_registration') ? 1 : 0,
                 'field_log'          => check_post('field_log') ? 1 : 0,
                 'field_order'        => sanitizer('field_order', '0', 'field_order'),
-                'field_options'      => '',
+                'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
                 'field_config'       => ''
             ];
 
@@ -1377,6 +1380,7 @@ class QuantumFields extends QuantumFactory {
             'field_parent');
 
         echo form_text('field_order', $this->locale['fields_0414'], $this->field_data['field_order'], ['type' => 'number', 'inner_width' => '100px']);
+        echo form_text( 'field_options', $this->locale['options'], $this->field_data['field_options'], [] );
 
         if (!empty($user_field_dbinfo)) {
             if (version_compare($user_field_api_version, "1.01.00", ">=")) {
@@ -1391,7 +1395,7 @@ class QuantumFields extends QuantumFactory {
         echo form_hidden('field_name', '', $user_field_dbname);
         echo form_hidden('field_title', '', $user_field_name);
         echo form_hidden('field_default', '', $user_field_default ?? '');
-        echo form_hidden('field_options', '', $user_field_options ?? '');
+        //echo form_hidden('field_options', '', $user_field_options ?? '');
         echo form_hidden('field_error', '', $user_field_error ?? '');
         echo form_hidden('field_config', '', $user_field_config ?? '');
         echo form_hidden('field_id', '', $this->field_data['field_id']);

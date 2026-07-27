@@ -18,7 +18,7 @@
 defined('IN_FUSION') || exit;
 
 // Variation Customization
-$gen_set = defined('UF_GEN_SET') ? UF_GEN_SET : 2; // 0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.
+//$gen_set = defined('UF_GEN_SET') ? UF_GEN_SET : 2; // 0 = Just text; 1 = Icon + text; 2 = text + image; 3 = Just images.
 $with_secret = defined('UF_GEN_SECRET') ? UF_GEN_SECRET : FALSE; // Set true for additional unspecified option
 $input_type = 'form_checkbox'; // form_select or form_checkbox (up to you)
 
@@ -48,15 +48,15 @@ $gen_options = [
 $gen_opts = [];
 
 for ($i = 0; $i < count($gen_options); $i++) {
-    switch ($gen_set) {
+    switch ($option_list[0]) {
         case 3:
-            $value = "<img src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/>";
+            $value = "<img src='".IMAGES."user_fields/gender/".$img[$option_list[0]][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/>";
             break;
         case 1:
-            $value = "<i class='m-l-5 ".$img[$gen_set][$i]."'></i> ".$gen_options[$i];
+            $value = "<i class='m-l-5 ".$img[$option_list[0]][$i]."'></i> ".$gen_options[$i];
             break;
         case 2:
-            $value = "<img class='m-l-5' style='width: 16px;' src='".IMAGES."user_fields/gender/".$img[$gen_set][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/> ".$gen_options[$i];
+            $value = "<img class='m-l-5' style='width: 16px;' src='".IMAGES."user_fields/gender/".$img[$option_list[0]][$i].".png' alt='".$gen_options[$i]."' title='".$gen_options[$i]."'/> ".$gen_options[$i];
             break;
         default:
             $value = $gen_options[$i];
@@ -74,6 +74,7 @@ if ($profile_method == "input") {
             'inline'     => TRUE,
             'error_text' => $locale['uf_gender_error'],
             'options'    => $gen_opts,
+            'ext_tip'    => defined('ADMIN_PANEL') ? $locale['uf_gender_04'] : '',
         ] + $options;
 
     $user_fields = $input_type('user_gender', $locale['uf_gender'], $field_value, $options);

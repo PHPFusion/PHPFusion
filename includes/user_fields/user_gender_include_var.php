@@ -25,6 +25,6 @@ $user_field_dbname = "user_gender";
 $user_field_group = 2;
 $user_field_dbinfo = "VARCHAR(1) NOT NULL DEFAULT '0'";
 $user_field_default = 0;
-$user_field_options = '';
+$user_field_options = 1;
 $user_field_error = '';
 $user_field_config = '';
