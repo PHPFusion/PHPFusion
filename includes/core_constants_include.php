@@ -21,9 +21,16 @@ const APPS = BASEDIR.'apps/';
 const ADMIN = BASEDIR.'administration/';
 const CLASSES = BASEDIR.'includes/classes/';
 const DYNAMICS = BASEDIR.'includes/dynamics/';
-const INFUSIONS = BASEDIR.'infusions/';
-const IMAGES = BASEDIR.'images/';
+const INFUSIONS = BASEDIR.'apps/infusions/';
+const IMAGES = BASEDIR.'assets/images/';
+const IMAGES_G = IMAGES . "groups/";
+const IMAGES_G_T = IMAGES . "groups/thumbs/";
+const AUDIO = BASEDIR . 'assets/audio/';
+const VIDEOS = BASEDIR . 'assets/videos/';
+
 const INCLUDES = BASEDIR.'includes/';
+const HELPERS = BASEDIR . "includes/helpers/";
+
 const LOCALE = BASEDIR.'locale/';
 const THEMES = BASEDIR.'themes/';
 const TEMPLATES = BASEDIR.'themes/templates/';
