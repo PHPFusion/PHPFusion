@@ -514,7 +514,7 @@ class CoreTables {
                 'length'   => 10,
                 'unsigned' => TRUE,
                 'default'  => '0'
-            ] //error_user_count int(10) UNSIGNED NOT NULL default '0',
+            ], //error_user_count int(10) UNSIGNED NOT NULL default '0',
             'error_user_ip'      => [
                 'type'    => 'VARCHAR',
                 'length'  => 45,
@@ -540,7 +540,7 @@ class CoreTables {
                 'length'   => 10,
                 'unsigned' => TRUE,
                 'default'  => '0'
-            ] //error_count int(10) UNSIGNED NOT NULL default '0',
+            ], //error_count int(10) UNSIGNED NOT NULL default '0',
             'error_status'            => [
                 'type'    => 'TINYINT',
                 'length'  => 1,
@@ -550,7 +550,7 @@ class CoreTables {
                 'type'     => 'INT',
                 'length'   => 10,
                 'unsigned' => TRUE,
-            ] //error_updated_datestamp int(10) NOT NULL,
+            ], //error_updated_datestamp int(10) NOT NULL,
             'error_timestamp'         => [
                 'type'     => 'INT',
                 'length'   => 10,
