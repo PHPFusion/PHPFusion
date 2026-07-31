@@ -7,6 +7,7 @@
 function render_modal($options): string
 {
 
+    $locale = fusion_get_locale();
     $options += [
         'id' => '', //The modal ID (without "-Modal" suffix)
         "header_content" => '', //HTML header title (optional)
@@ -26,9 +27,9 @@ function render_modal($options): string
 
     $id = $options['id'];
     $modal = $options['modal'];
-    $options = $options['options'];
     $header_content = $options['header_content'];
     $footer_content = $options['footer_content'];
+    $options = $options['options'];
     $dismiss = !$options['static'];
     $class = $options['class'];
 
