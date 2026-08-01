@@ -15,10 +15,9 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+defined( 'IN_FUSION' ) || exit;
 
-defined('IN_FUSION') || exit;
-
-$locale = fusion_get_locale('', LOCALE . LOCALESET . 'admin/settings.php');
+$locale = fusion_get_locale( '', LOCALE . LOCALESET . 'admin/settings.php' );
 
 $settings = fusion_get_settings();
 
@@ -43,33 +42,33 @@ function pf_post() {
 
     $locale = fusion_get_locale();
 
-        if (admin_post('savesettings')) {
+    if ( admin_post( 'savesettings' ) ) {
         $inputData = [
-            'pm_inbox_limit'   => form_sanitizer($_POST['pm_inbox_limit'], '20', 'pm_inbox_limit'),
-            'pm_outbox_limit'  => form_sanitizer($_POST['pm_outbox_limit'], '20', 'pm_outbox_limit'),
-            'pm_archive_limit' => form_sanitizer($_POST['pm_archive_limit'], '20', 'pm_archive_limit'),
-            'pm_email_notify'  => form_sanitizer($_POST['pm_email_notify'], '1', 'pm_email_notify'),
-            'pm_save_sent'     => form_sanitizer($_POST['pm_save_sent'], '1', 'pm_save_sent'),
+            'pm_inbox_limit'   => sanitizer( 'pm_inbox_limit', '20', 'pm_inbox_limit' ),
+            'pm_outbox_limit'  => sanitizer( 'pm_outbox_limit', '20', 'pm_outbox_limit' ),
+            'pm_archive_limit' => sanitizer( 'pm_archive_limit', '20', 'pm_archive_limit' ),
+            'pm_email_notify'  => sanitizer( 'pm_email_notify', '1', 'pm_email_notify' ),
+            'pm_save_sent'     => sanitizer( 'pm_save_sent', '1', 'pm_save_sent' )
         ];
 
-        if ( \defender::safe() ) {
+        if ( fusion_safe() ) {
+            dbquery( "BEGIN" );
             foreach ( $inputData as $settings_name => $settings_value ) {
-                dbquery("UPDATE " . DB_SETTINGS . " SET settings_value=:settings_value WHERE settings_name=:settings_name",
-                        [
-                            ':settings_value' => $settings_value,
-                            ':settings_name'  => $settings_name
-                        ]);
+                dbquery( "UPDATE " . DB_SETTINGS . " SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+                    ':settings_value' => $settings_value,
+                    ':settings_name'  => $settings_name
+                ] );
             }
-
-            add_notice('success', $locale['900']);
-            redirect(FUSION_REQUEST);
+            dbquery( "COMMIT" );
+            addnotice( 'success', $locale['900'] );
+            redirect( FUSION_REQUEST );
         }
     }
 
-        if (admin_post('deletepm')) {
-        dbquery("TRUNCATE TABLE " . DB_MESSAGES);
-        add_notice('success', $locale['712']);
-        redirect(FUSION_REQUEST);
+    if ( admin_post( 'deletepm' ) ) {
+        dbquery( "TRUNCATE TABLE " . DB_MESSAGES );
+        addnotice( 'success', $locale['712'] );
+        redirect( FUSION_REQUEST );
     }
 }
 
@@ -78,46 +77,38 @@ function pf_view() {
     $locale = fusion_get_locale();
     $settings = fusion_get_settings();
 
-    echo openform('delFrm', 'POST').closeform();
+    echo openform( 'delFrm' ) . form_hidden( 'form_action', '', 'post' ) . closeform();
 
 
-    echo openform('settingsFrm', 'POST');
+    echo openform( 'settingsFrm' );
+	echo form_hidden( 'form_action', '', 'post' );
     echo '<h6>Private Messages</h6>';
     openside('Private Message System<small>Private messaging system configurations</small>', TRUE);
-    echo form_text('pm_inbox_limit',
-                   $locale['701'] . '<small>' . $locale['704'] . '</small>',
-                   $settings['pm_inbox_limit'],
-                   [
-                       'type'        => 'number',
-                       'max_length'  => 2,
-                       'inner_width' => '100px',
-                   ]);
-    echo form_text('pm_outbox_limit',
-                   $locale['702'] . '<small>' . $locale['704'] . '</small>',
-                   $settings['pm_outbox_limit'],
-                   [
-                       'type'        => 'number',
-                       'max_length'  => 2,
-                       'inner_width' => '100px',
-                   ]);
-    echo form_text('pm_archive_limit',
-                   $locale['703'] . '<small>' . $locale['704'] . '</small>',
-                   $settings['pm_archive_limit'],
-                   [
-                       'type'        => 'number',
-                       'max_length'  => 2,
-                       'inner_width' => '100px',
-                   ]);
+    echo form_text( 'pm_inbox_limit', $locale['701'] . '<small>' . $locale['704'] . '</small>', $settings['pm_inbox_limit'], [
+        'type'        => 'number',
+        'max_length'  => 2,
+        'inner_width' => '100px'
+    ] );
+    echo form_text( 'pm_outbox_limit', $locale['702'] . '<small>' . $locale['704'] . '</small>', $settings['pm_outbox_limit'], [
+        'type'        => 'number',
+        'max_length'  => 2,
+        'inner_width' => '100px'
+    ] );
+    echo form_text( 'pm_archive_limit', $locale['703'] . '<small>' . $locale['704'] . '</small>', $settings['pm_archive_limit'], [
+        'type'        => 'number',
+        'max_length'  => 2,
+        'inner_width' => '100px'
+    ] );
     closeside();
-    openside('Messaging Notification<small>Notification configurations for private messages</small>', TRUE);
-    echo form_select('pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
+    openside( 'Messaging Notification<small>Notification configurations for private messages</small>', TRUE );
+    echo form_select( 'pm_email_notify', $locale['709'], $settings['pm_email_notify'], [
         'options' => [ '1' => $locale['no'], '2' => $locale['yes'] ],
         'width'   => '100%'
-    ]);
-    echo form_select('pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
+    ] );
+    echo form_select( 'pm_save_sent', $locale['710'], $settings['pm_save_sent'], [
         'options' => [ '1' => $locale['no'], '2' => $locale['yes'] ],
         'width'   => '100%'
-    ]);
+    ] );
     closeside();
 
     echo '<noscript>';

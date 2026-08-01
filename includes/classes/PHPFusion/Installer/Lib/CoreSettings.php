@@ -174,6 +174,8 @@ class CoreSettings {
                 ['settings_name' => 'blacklist_site', 'settings_value' => 'http://www.google.com/'],
                 ['settings_name' => 'license', 'settings_value' => 'agpl'],
                 ['settings_name' => 'license_key', 'settings_value' => ''],
+                ['settings_name' => 'admin_timeout', 'settings_value' => '1'],
+                ['settings_name' => 'admin_timeout_period', 'settings_value' => '60'],
             ]
         ];
         $table_settings['mlt_tables'] = [
