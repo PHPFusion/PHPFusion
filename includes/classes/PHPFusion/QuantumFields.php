@@ -631,7 +631,7 @@ class QuantumFields extends QuantumFactory {
             'error_text'           => $data['field_error'], // sets the field error text
             'required'             => (bool)$data['field_required'], // input must be filled when validate
             'placeholder'          => $data['field_default'], // helper text in field value
-            'options'              => $data['field_options'], // sets the field error text
+            'options'              => $data['field_options'], // sets the field options text
             'plugin_folder'        => $this->plugin_folder, // The folder's path where the field's source files are
             'plugin_locale_folder' => $this->plugin_locale_folder, // The folder's path where the field's locale files are
             'debug'                => FALSE // Show some information to debug
