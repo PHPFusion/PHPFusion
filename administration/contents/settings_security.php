@@ -294,7 +294,7 @@ function pf_view() {
     closeside();
     echo '</div>';
 
-    echo '<h6>Very dangerous situation</h6>';
+    /*echo '<h6>Very dangerous situation</h6>';
     openside( $locale['694'] . '<small>' . $locale['695'] . '</small>', TRUE );
     echo form_select( 'allow_php_exe', $locale['694'], $settings['allow_php_exe'], [
         'options' => [
@@ -302,7 +302,7 @@ function pf_view() {
             1 => $locale['enable']
         ]
     ] );
-    closeside();
+    closeside();*/
     echo "</div>\n</div>\n";
 
     echo '<noscript>';
