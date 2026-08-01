@@ -231,12 +231,11 @@ class QuantumFields extends QuantumFactory {
     private function getAvailableModules() {
 
         $this->locale = fusion_get_locale();
-        $result = dbquery( "SELECT field_id, field_name, field_cat, field_required, field_options, field_log, field_registration, field_order, field_cat_name
-            FROM " . DB_USER_FIELDS . " AS tuf
-            INNER JOIN " . DB_USER_FIELD_CATS . " AS tufc ON (tuf.field_cat = tufc.field_cat_id)
-            WHERE field_type = 'file'
-            ORDER BY field_cat_order, field_order
-        " );
+        $result = dbquery("SELECT field_id, field_name, field_cat, field_required, field_options, field_log, field_registration, field_order, field_cat_name
+                    FROM ".DB_USER_FIELDS." tuf
+                    INNER JOIN ".DB_USER_FIELD_CATS." tufc ON (tuf.field_cat = tufc.field_cat_id)
+                    WHERE field_type = 'file'
+                    ORDER BY field_cat_order, field_order");
         if (dbrows($result)) {
             while ($data = dbarray($result)) {
                 $this->enabled_fields[] = $data['field_name'];
@@ -610,7 +609,6 @@ class QuantumFields extends QuantumFactory {
      * @return array|bool|string False on failure, string if $method 'display' or array if $method is 'input'
      */
     public function displayFields(array $data, $callback_data, $method = 'input', array $options = []) {
-
         unset($callback_data['user_algo']);
         unset($callback_data['user_salt']);
         unset($callback_data['user_password']);
@@ -633,7 +631,7 @@ class QuantumFields extends QuantumFactory {
             'error_text'           => $data['field_error'], // sets the field error text
             'required'             => (bool)$data['field_required'], // input must be filled when validate
             'placeholder'          => $data['field_default'], // helper text in field value
-            'options'              => $data['field_options'], // sets the field options text
+            'options'              => $data['field_options'], // sets the field error text
             'plugin_folder'        => $this->plugin_folder, // The folder's path where the field's source files are
             'plugin_locale_folder' => $this->plugin_locale_folder, // The folder's path where the field's locale files are
             'debug'                => FALSE // Show some information to debug
@@ -1338,7 +1336,7 @@ class QuantumFields extends QuantumFactory {
                 'field_registration' => check_post('field_registration') ? 1 : 0,
                 'field_log'          => check_post('field_log') ? 1 : 0,
                 'field_order'        => sanitizer('field_order', '0', 'field_order'),
-                'field_options'      => sanitizer( 'field_options', '', 'field_options' ),
+                'field_options'      => sanitizer('field_options', '', 'field_options'),
                 'field_config'       => ''
             ];
 
@@ -1369,10 +1367,10 @@ class QuantumFields extends QuantumFactory {
 
         echo form_select_tree('field_cat',
             $this->locale['fields_0410'],
-            empty( $this->field_data['field_cat'] ) ? in_array($user_field_group, array_keys($this->page_list) ) ? 0 : $user_field_group : $this->field_data['field_cat'],
+            empty( $this->field_data['field_cat'] ) ? in_array( $user_field_group, array_keys( $this->cat_list ) ) ? $user_field_group : 0 : $this->field_data['field_cat'],
             [
                 'no_root'      => 1,
-                'disable_opts' => array_keys($this->page_list),
+                'disable_opts' => array_keys( $this->page_list ),
             ],
             DB_USER_FIELD_CATS,
             'field_cat_name',
@@ -1380,7 +1378,7 @@ class QuantumFields extends QuantumFactory {
             'field_parent');
 
         echo form_text('field_order', $this->locale['fields_0414'], $this->field_data['field_order'], ['type' => 'number', 'inner_width' => '100px']);
-        echo form_text( 'field_options', $this->locale['options'], $this->field_data['field_options'], [] );
+        echo form_text('field_options[]', $this->locale['options'], ( empty( $this->field_data['field_cat'] ) ? $user_field_options : $this->field_data['field_options'] ), []);
 
         if (!empty($user_field_dbinfo)) {
             if (version_compare($user_field_api_version, "1.01.00", ">=")) {
