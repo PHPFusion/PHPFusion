@@ -156,7 +156,6 @@ function pf_view() {
     ] );
     echo '</div>';
     closeside();
-    print_p(form_btngroup( 'form_tokens', '', $settings['form_tokens'], ['options' => range( 0, 10 )] ));
     openside( $locale['security_008'] . '<small>' . $locale['security_009'] . '</small>', TRUE );
     echo form_btngroup( 'form_tokens', '', $settings['form_tokens'], ['options' => range( 0, 10 )] );
     closeside();
