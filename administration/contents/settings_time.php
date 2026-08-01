@@ -15,9 +15,11 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-defined('IN_FUSION') || exit;
+defined( 'IN_FUSION' ) || exit;
 
-$locale = fusion_get_locale('', LOCALE.LOCALESET.'admin/settings.php');
+$locale = fusion_get_locale( '', LOCALE.LOCALESET.'admin/settings.php' );
+
+$settings = fusion_get_settings();
 
 $contents = [
     'post'        => 'pf_post',
@@ -31,34 +33,34 @@ $contents = [
     'actions'     => ['post' => ['savesettings'=>'settingsFrm']]
 ];
 
-$settings = fusion_get_settings();
-
 function pf_post() {
     $locale = fusion_get_locale();
 
-    if (isset($_POST['savesettings'])) {
+    if ( admin_post( 'savesettings' ) ) {
         $inputData = [
-            'shortdate'        => sanitizer('shortdate', '', 'shortdate'),
-            'longdate'         => sanitizer('longdate', '', 'longdate'),
-            'forumdate'        => sanitizer('forumdate', '', 'forumdate'),
-            'newsdate'         => sanitizer('newsdate', '', 'newsdate'),
-            'subheaderdate'    => sanitizer('subheaderdate', '', 'subheaderdate'),
-            'timeoffset'       => sanitizer('timeoffset', '', 'timeoffset'),
-            'serveroffset'     => sanitizer('serveroffset', '', 'serveroffset'),
-            'default_timezone' => sanitizer('default_timezone', '', 'default_timezone'),
-            'week_start'       => sanitizer('week_start', 0, 'week_start')
+            'shortdate'        => sanitizer( 'shortdate', '', 'shortdate' ),
+            'longdate'         => sanitizer( 'longdate', '', 'longdate' ),
+            'forumdate'        => sanitizer( 'forumdate', '', 'forumdate' ),
+            'newsdate'         => sanitizer( 'newsdate', '', 'newsdate' ),
+            'subheaderdate'    => sanitizer( 'subheaderdate', '', 'subheaderdate' ),
+            'timeoffset'       => sanitizer( 'timeoffset', '', 'timeoffset' ),
+            'serveroffset'     => sanitizer( 'serveroffset', '', 'serveroffset' ),
+            'default_timezone' => sanitizer( 'default_timezone', '', 'default_timezone' ),
+            'week_start'       => sanitizer( 'week_start', 0, 'week_start' )
         ];
 
-        if (fusion_safe()) {
-            foreach ($inputData as $settings_name => $settings_value) {
-                dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
+        if ( fusion_safe() ) {
+		    dbquery( "BEGIN" );
+            foreach ( $inputData as $settings_name => $settings_value ) {
+                dbquery( "UPDATE ".DB_SETTINGS." SET settings_value=:settings_value WHERE settings_name=:settings_name", [
                     ':settings_value' => $settings_value,
                     ':settings_name'  => $settings_name
-                ]);
+                ] );
             }
 
-            add_notice("success", $locale['900']);
-            redirect(FUSION_REQUEST);
+            dbquery( "COMMIT" );
+            addnotice( "success", $locale['900'] );
+            redirect( FUSION_REQUEST );
         }
     }
 }
@@ -145,58 +147,58 @@ function pf_view() {
       "Pacific/Tongatapu": "Nuku\'alofa"
     }', TRUE);
     $timezone_array = [];
-    foreach ($timezones_json as $zone => $zone_city) {
-        $offset = (new DateTime(NULL, new DateTimeZone($zone)))->getOffset() / 3600;
-        $timezone_array[$zone] = '(GMT'.($offset < 0 ? $offset : '+'.$offset).') '.$zone_city;
+    foreach ( $timezones_json as $zone => $zone_city ) {
+        $offset = ( new DateTime( NULL, new DateTimeZone( $zone ) ) )->getOffset() / 3600;
+        $timezone_array[$zone] = '(GMT' . ( $offset < 0 ? $offset : '+' . $offset ) . ') ' . $zone_city;
     }
 
-    $weekdayslist = explode("|", $locale['weekdays']);
+    $weekdayslist = explode( "|", $locale['weekdays'] );
 
     $date_opts = [];
-    foreach ($locale['dateformats'] as $dateformat) {
-        $date_opts[$dateformat] = showdate($dateformat, time());
+    foreach ( $locale['dateformats'] as $dateformat ) {
+        $date_opts[$dateformat] = showdate( $dateformat, time() );
     }
 
     $settings = fusion_get_settings();
 
-    echo openform('settingsFrm', 'POST');
-    openside('Site timezone<small>Set the time and date configurations', TRUE);
-
+	echo openform( 'settingsFrm' );
+	echo form_hidden( 'form_action', '', 'post' );
+    openside( 'Site timezone<small>Set the time and date configurations</small>', TRUE );
+    openside( $locale['458'] );
+    echo '<div class="row flexbox m-0"><span>' . $locale['459'] . '</span><span class="m-l-a">' . showdate( $settings['longdate'], time(), ['tz_override' => $settings['serveroffset']] ) . '</span></div>';
+    echo '<div class="row flexbox m-0"><span>' . $locale['460'] . '</span><span class="m-l-a">' . ( column_exists( 'users', 'user_timezone' ) ? showdate( $settings['longdate'], time(), ['tz_override' => fusion_get_userdata( 'user_timezone' )] ) : $locale['na']) . '</span></div>';
+    echo '<div class="row flexbox m-0"><span>' . $locale['461'] . '</span><span class="m-l-a">' . showdate( $settings['longdate'], time(), ['tz_override' => $settings['timeoffset']] ) . '</span></div>';
+    echo '<div class="row flexbox m-0"><span>' . $locale['466'] . '</span><span class="m-l-a">' . showdate( $settings['longdate'], time(), ['tz_override' => $settings['default_timezone']] ) . '</span></div>';
     closeside();
-    openside($locale['458']);
-    echo '<div class="row flexbox m-0"><span>'.$locale['459'].'</span><span class="m-l-a">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['serveroffset']]).'</span></div>';
-    echo '<div class="row flexbox m-0"><span>'.$locale['460'].'</span><span class="m-l-a">'.(column_exists('users', 'user_timezone') ? showdate($settings['longdate'], time(), ['tz_override' => fusion_get_userdata('user_timezone')]) : $locale['na']).'</span></div>';
-    echo '<div class="row flexbox m-0"><span>'.$locale['461'].'</span><span class="m-l-a">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['timeoffset']]).'</span></div>';
-    echo '<div class="row flexbox m-0"><span>'.$locale['466'].'</span><span class="m-l-a">'.showdate($settings['longdate'], time(), ['tz_override' => $settings['default_timezone']]).'</span></div>';
     closeside();
-    openside('Time Settings<small>'.$locale['time_description'].'</small>', TRUE);
-    echo form_select('shortdate', $locale['451'], $settings['shortdate'], [
+    openside( 'Time Settings<small>' . $locale['time_description'] . '</small>', TRUE );
+    echo form_select( 'shortdate', $locale['451'], $settings['shortdate'], [
         'options'     => $date_opts,
         'placeholder' => $locale['455']
-    ]);
-    echo form_select('longdate', $locale['452'], $settings['longdate'], [
+    ] );
+    echo form_select( 'longdate', $locale['452'], $settings['longdate'], [
         'options'     => $date_opts,
         'placeholder' => $locale['455']
-    ]);
-    echo form_select('forumdate', $locale['453'], $settings['forumdate'], [
+    ] );
+    echo form_select( 'forumdate', $locale['453'], $settings['forumdate'], [
         'options'     => $date_opts,
         'placeholder' => $locale['455']
-    ]);
-    echo form_select('newsdate', $locale['457'], $settings['newsdate'], [
+    ] );
+    echo form_select( 'newsdate', $locale['457'], $settings['newsdate'], [
         'options'     => $date_opts,
         'placeholder' => $locale['455']
-    ]);
-    echo form_select('subheaderdate', $locale['454'], $settings['subheaderdate'], [
+    ] );
+    echo form_select( 'subheaderdate', $locale['454'], $settings['subheaderdate'], [
         'options'     => $date_opts,
         'placeholder' => $locale['455'],
         'width'       => '100%'
-    ]);
+    ] );
     closeside();
-    openside('Offset Settings<small>The configuration settings for offset on Time and Date system</small>', TRUE);
-    echo form_select('serveroffset', $locale['463'], $settings['serveroffset'], ['options' => $timezone_array, 'inner_width' => '100%']);
-    echo form_select('timeoffset', $locale['456'], $settings['timeoffset'], ['options' => $timezone_array, 'inner_width' => '100%']);
-    echo form_select('default_timezone', $locale['464'], $settings['default_timezone'], ['options' => $timezone_array, 'inner_width' => '100%']);
-    echo form_select('week_start', $locale['465'], $settings['week_start'], ['options' => $weekdayslist, 'inner_width' => '100%']);
+    openside( 'Offset Settings<small>The configuration settings for offset on Time and Date system</small>', TRUE );
+    echo form_select( 'serveroffset', $locale['463'], $settings['serveroffset'], ['options' => $timezone_array, 'inner_width' => '100%'] );
+    echo form_select( 'timeoffset', $locale['456'], $settings['timeoffset'], ['options' => $timezone_array, 'inner_width' => '100%'] );
+    echo form_select( 'default_timezone', $locale['464'], $settings['default_timezone'], ['options' => $timezone_array, 'inner_width' => '100%'] );
+    echo form_select( 'week_start', $locale['465'], $settings['week_start'], ['options' => $weekdayslist, 'inner_width' => '100%'] );
     closeside();
 
     echo '<noscript>';
@@ -210,5 +212,5 @@ function pf_view() {
 
 function pf_button() {
     $locale = fusion_get_locale();
-    return form_button('savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary']);
+    return form_button( 'savesettings', $locale['750'], $locale['750'], ['class' => 'btn-primary'] );
 }
