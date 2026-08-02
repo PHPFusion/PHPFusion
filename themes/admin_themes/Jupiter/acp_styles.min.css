@@ -1,0 +1,3746 @@
+/**
+ * Jupiter administration theme
+ *
+ * PHPFusion's shared Tailwind framework owns utilities, component behavior,
+ * and compatibility aliases. Jupiter owns semantic tokens and direct `tw-*`
+ * component customization only. Keep selectors framework-neutral and scoped.
+ */
+:root {
+  color-scheme: dark;
+  --jupiter-canvas: #090D10;
+  --jupiter-nav: #0B1117;
+  --jupiter-topbar: #0B1015;
+  --jupiter-card: #0B1117;
+  --jupiter-card-nested: #0D151E;
+  --jupiter-surface: #0D151E;
+  --jupiter-surface-raised: #151E28;
+  --jupiter-row-hover: #10171F;
+  --jupiter-surface-strong: #19242E;
+  --jupiter-border: #151E28;
+  --jupiter-border-strong: #22303D;
+  --jupiter-text: #F1F5F9;
+  --jupiter-text-mid: #CAD5E2;
+  --jupiter-text-muted: #90A1B9;
+  --jupiter-text-faint: #67778E;
+  --jupiter-description: #6F85A6;
+  --jupiter-primary: #C7F284;
+  --jupiter-primary-hover: #D7F8A5;
+  --jupiter-primary-active: #AED66D;
+  --jupiter-primary-foreground: #11170F;
+  --jupiter-secondary: #A8B4C4;
+  --jupiter-secondary-hover: #CAD5E2;
+  --jupiter-default: #19242E;
+  --jupiter-default-hover: #253443;
+  --jupiter-muted: #111A23;
+  --jupiter-muted-hover: #19242E;
+  --jupiter-info: #38BDF8;
+  --jupiter-info-hover: #67D1FA;
+  --jupiter-info-rgb: 56, 189, 248;
+  --jupiter-success: #3CE3AB;
+  --jupiter-success-hover: #67EBC0;
+  --jupiter-success-rgb: 60, 227, 171;
+  --jupiter-warning: #F2C94C;
+  --jupiter-warning-hover: #F6D873;
+  --jupiter-warning-rgb: 242, 201, 76;
+  --jupiter-danger: #F23674;
+  --jupiter-danger-hover: #F65F91;
+  --jupiter-danger-rgb: 242, 54, 116;
+  --jupiter-primary-rgb: 199, 242, 132;
+  --jupiter-focus: 0 0 0 3px rgba(199, 242, 132, 0.16);
+  --jupiter-menu-shadow: 0 16px 44px rgba(0, 0, 0, 0.38);
+  --jupiter-modal-shadow: 0 28px 80px rgba(0, 0, 0, 0.56);
+  --ui-background: var(--jupiter-canvas);
+  --ui-foreground: var(--jupiter-text);
+  --ui-card: var(--jupiter-card);
+  --ui-card-foreground: var(--jupiter-text-mid);
+  --ui-muted: var(--jupiter-muted);
+  --ui-muted-foreground: var(--jupiter-text-muted);
+  --ui-border: var(--jupiter-border);
+  --ui-input: var(--jupiter-border-strong);
+  --ui-ring: var(--jupiter-primary);
+  --ui-primary: var(--jupiter-primary);
+  --ui-primary-foreground: var(--jupiter-primary-foreground);
+  --ui-secondary: var(--jupiter-default);
+  --ui-accent: var(--jupiter-surface-raised);
+  --ui-destructive: var(--jupiter-danger);
+  --ui-success: var(--jupiter-success);
+  --ui-warning: var(--jupiter-warning);
+  --ui-info: var(--jupiter-info);
+  --bs-body-bg: var(--jupiter-canvas);
+  --bs-body-color: var(--jupiter-text-mid);
+  --bs-border-color: var(--jupiter-border);
+  --bs-link-color: var(--jupiter-text-mid);
+  --bs-link-hover-color: var(--jupiter-primary);
+  --bs-primary: var(--jupiter-primary);
+  --bs-primary-rgb: var(--jupiter-primary-rgb);
+  --bs-info: var(--jupiter-info);
+  --bs-info-rgb: var(--jupiter-info-rgb);
+  --bs-success: var(--jupiter-success);
+  --bs-success-rgb: var(--jupiter-success-rgb);
+  --bs-warning: var(--jupiter-warning);
+  --bs-warning-rgb: var(--jupiter-warning-rgb);
+  --bs-danger: var(--jupiter-danger);
+  --bs-danger-rgb: var(--jupiter-danger-rgb);
+  --tblr-body-bg: var(--jupiter-canvas);
+  --tblr-body-color: var(--jupiter-text-mid);
+  --tblr-bg-surface: var(--jupiter-surface);
+  --tblr-border-color: var(--jupiter-border);
+  --tblr-primary: var(--jupiter-primary);
+}
+/* Component rules stay outside Tailwind layers so dynamic PHPFusion/Tabler
+   selectors are never removed by content scanning. */
+html,
+body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  min-height: 100vh;
+}
+::-moz-selection {
+  color: var(--jupiter-primary-foreground);
+  background: var(--jupiter-primary);
+}
+::selection {
+  color: var(--jupiter-primary-foreground);
+  background: var(--jupiter-primary);
+}
+a,
+a:link,
+a:visited {
+  color: var(--jupiter-text-mid);
+  text-decoration: none !important;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+a:hover,
+a:focus-visible {
+  color: var(--jupiter-primary);
+  text-decoration: none !important;
+}
+a *,
+a:hover *,
+a:focus-visible * {
+  text-decoration: none !important;
+}
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 0;
+  box-shadow: var(--jupiter-focus);
+}
+.jupiter-skip-link {
+  position: fixed;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 2000;
+  border-radius: 0.375rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(199 242 132 / var(--tw-bg-opacity, 1));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(9 13 16 / var(--tw-text-opacity, 1));
+  transform: translateY(-160%);
+}
+.jupiter-skip-link:focus {
+  transform: translateY(0);
+}
+/* Application shell */
+.pf-admin,
+.pf-app,
+.pf-viewport {
+  min-height: 100vh;
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-viewport {
+  display: flex;
+  width: 100%;
+}
+.pf-admin .pf-nav {
+  position: fixed;
+  z-index: 40;
+  display: flex;
+  width: 242px;
+  border-radius: 0.75rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+  inset: 5px auto 5px 5px;
+  box-shadow: none;
+}
+.pf-admin .pf-nav-column {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+}
+.pf-admin .pf-nav-menu {
+  margin: 0.25rem;
+  display: flex;
+  height: 52px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.pf-admin .pf-nav-details {
+  min-width: 0px;
+  flex: 1 1 0%;
+}
+.pf-admin .pf-nav-details .brand,
+.pf-admin .pf-nav-details .title {
+  display: flex;
+  height: 2.5rem;
+  min-width: 0px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  line-height: 1.25;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-nav-details .brand img {
+  display: block;
+  height: 1.75rem;
+  width: 1.75rem;
+  flex-shrink: 0;
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+.pf-admin .pf-nav-details .brand {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.625rem;
+}
+.pf-admin .jupiter-brand-name {
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-brand-switch {
+  display: inline-flex;
+  height: 2rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.pf-admin .search-btn,
+.pf-admin .pf-admin-settings,
+.pf-admin .jupiter-icon-button,
+.pf-admin .jupiter-mobile-nav-toggle {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.pf-admin .search-btn:hover,
+.pf-admin .pf-admin-settings:hover,
+.pf-admin .jupiter-icon-button:hover,
+.pf-admin .jupiter-mobile-nav-toggle:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 36 46 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-nav-search {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.pf-admin .pf-nav-menu .search-btn {
+  display: none;
+}
+.pf-admin .jupiter-mobile-nav-toggle {
+  display: none;
+}
+.pf-admin .nav-body {
+  display: flex;
+  min-height: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+}
+.pf-admin .nav-top {
+  min-height: 0px;
+  flex: 1 1 0%;
+  overflow-y: auto;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.75rem;
+  padding-top: 1.5rem;
+  scrollbar-color: var(--jupiter-border-strong) transparent;
+  scrollbar-width: thin;
+}
+.pf-admin .nav-top ul {
+  margin: 0px;
+  list-style-type: none;
+  padding: 0px;
+}
+.pf-admin .nav-top .main {
+  margin-bottom: 0.5rem;
+}
+.pf-admin .nav-top .main > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.125rem * var(--tw-space-y-reverse));
+}
+.pf-admin .nav-top .sections > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.125rem * var(--tw-space-y-reverse));
+}
+.pf-admin .jupiter-nav-label {
+  margin-bottom: 0.375rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 10px;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.pf-admin .nav-top .main > li > a,
+.pf-admin .nav-top .sections > li > a,
+.pf-admin .menu-container a {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  border-radius: 7px;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.pf-admin .nav-top .main > li > a:hover,
+.pf-admin .nav-top .sections > li > a:hover,
+.pf-admin .menu-container a:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.pf-admin .nav-top a.tw-active,
+.pf-admin .nav-top li.is-open > .section-menu {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+  box-shadow: none;
+}
+.pf-admin .sections > li {
+  position: relative;
+}
+.pf-admin .sections > li > .section-view {
+  position: absolute;
+  right: 0.25rem;
+  top: 0px;
+  z-index: 10;
+  height: 2rem;
+  width: 2rem;
+  justify-content: center;
+  padding: 0px;
+}
+.pf-admin .sections > li > .section-menu {
+  padding-right: 2.25rem;
+}
+.pf-admin .section-view .ico {
+  margin: 0px;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.pf-admin .sections > li.is-open .section-view .ico {
+  transform: rotate(90deg);
+}
+.pf-admin .menu-container {
+  margin-top: 0.125rem;
+}
+.pf-admin .menu-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0px * var(--tw-space-y-reverse));
+}
+.pf-admin .menu-container {
+  border-left-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  padding-left: 0.625rem;
+  margin-left: 17px !important;
+}
+.pf-admin .menu-container a {
+  min-height: 30px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.pf-admin .admin-ico {
+  display: inline-flex;
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+.pf-admin iconify-icon {
+  font-size: 18px;
+}
+.pf-admin .nav-bottom {
+  flex-shrink: 0;
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+  padding: 0.5rem;
+}
+.pf-admin .nav-bottom-wrapper {
+  width: 100%;
+  padding: 0px;
+}
+.pf-admin .nav-bottom-items {
+  display: flex;
+  align-items: center;
+}
+.pf-admin .nav-bottom-items > .tw-dropdown {
+  min-width: 0px;
+  flex: 1 1 0%;
+}
+.pf-admin .pf-admin-flex {
+  display: flex;
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  text-align: left;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.pf-admin .pf-admin-flex:hover,
+.pf-admin .pf-admin-flex[aria-expanded="true"] {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-admin-avatar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pf-admin .jupiter-account-copy {
+  display: flex;
+  min-width: 0px;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: center;
+}
+.pf-admin .jupiter-account-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1rem;
+}
+.pf-admin .jupiter-account-copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 14px;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-account-action {
+  margin-left: auto;
+  display: inline-flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+  color: inherit;
+}
+.pf-admin .pf-admin-flex:hover .jupiter-account-action,
+.pf-admin .pf-admin-flex[aria-expanded="true"] .jupiter-account-action {
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-account-chevron {
+  height: 1rem;
+  width: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.pf-admin .jupiter-resource-links {
+  margin: 0px;
+  margin-bottom: 0.5rem;
+  list-style-type: none;
+}
+.pf-admin .jupiter-resource-links > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.125rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.125rem * var(--tw-space-y-reverse));
+}
+.pf-admin .jupiter-resource-links {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  padding: 0px;
+  padding-bottom: 0.5rem;
+}
+.pf-admin .jupiter-resource-links a {
+  display: flex;
+  height: 2rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 7px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.pf-admin .jupiter-resource-links a:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-nav-avatar {
+  height: 1.75rem;
+  width: 1.75rem;
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.pf-admin .status-badge {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  height: 11px;
+  width: 11px;
+  border-radius: 9999px;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(13 21 30 / var(--tw-border-opacity, 1));
+}
+.pf-admin .status-badge.on {
+  --tw-bg-opacity: 1;
+  background-color: rgb(60 227 171 / var(--tw-bg-opacity, 1));
+}
+.pf-admin .pf-admin-flex:hover .status-badge,
+.pf-admin .pf-admin-flex[aria-expanded="true"] .status-badge {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+}
+.pf-admin .pf-main {
+  min-height: 100vh;
+  min-width: 0px;
+  flex: 1 1 0%;
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  margin-left: 247px;
+}
+.pf-admin .pf-canvas {
+  min-height: 100vh;
+  width: 100%;
+}
+.pf-admin .pf-canvas-header {
+  position: sticky;
+  top: 0px;
+  z-index: 30;
+  display: grid;
+  min-height: 60px;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background: var(--jupiter-topbar);
+}
+.pf-admin .pf-canvas-header h2 {
+  grid-column-start: 2;
+  margin: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-canvas-header h2 a {
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.pf-admin .pf-canvas-header h2 a:hover {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin .pf-canvas-header h2 svg {
+  height: 1rem;
+  width: 1rem;
+}
+.pf-admin .pf-canvas-header h2 svg path {
+  fill: var(--jupiter-text-faint);
+}
+.pf-admin .jupiter-topbar-context {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  display: flex;
+  min-width: 0px;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-context-icon {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: rgba(199, 242, 132, 0.1);
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-topbar-context > iconify-icon {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.pf-admin .jupiter-topbar-actions {
+  grid-column-start: 3;
+  grid-row-start: 1;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.pf-admin .admin-buttons {
+  display: flex;
+  height: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.pf-admin .pf-view-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 40px 64px 64px;
+}
+.pf-admin .pf-view-notices {
+  margin-bottom: 1rem;
+}
+.pf-admin-dropup {
+  position: fixed;
+  bottom: 60px;
+  left: 0.5rem;
+  z-index: 1050;
+  display: none;
+  width: 216px;
+  list-style-type: none;
+  border-radius: 0.625rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding: 0.375rem;
+  --tw-shadow: 0 16px 44px rgba(0, 0, 0, 0.38);
+  --tw-shadow-colored: 0 16px 44px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.pf-admin-dropup.is-open {
+  display: block;
+}
+.pf-admin-dropup li {
+  margin: 0px;
+  padding: 0px;
+}
+.pf-admin-dropup a {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.pf-admin-dropup a:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin-dropup .tw-divider {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+  height: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+}
+.pf-admin-dropup .group-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+.pf-admin-dropup .group-heading .tw-avatar img {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 9999px;
+}
+.pf-admin-dropup .user-info {
+  min-width: 0px;
+}
+.pf-admin-dropup .user-info h4 {
+  margin: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.pf-admin-dropup .user-info .email {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+/* Buttons */
+.jupiter-button-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-inline-end: 8px;
+  vertical-align: -2px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 999px;
+  animation: jupiter-spin 700ms linear infinite;
+}
+@keyframes jupiter-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.tw-btn {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.tw-btn:hover,
+.tw-btn:focus,
+.tw-btn.tw-show {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 36 46 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-btn > span {
+  display: inline;
+  height: auto;
+  padding: 0;
+  overflow: visible;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+.tw-btn:active,
+.tw-btn.tw-active {
+  transform: translateY(1px);
+}
+.tw-btn:disabled,
+.tw-btn.tw-disabled {
+  pointer-events: none;
+  opacity: 0.45;
+}
+.tw-btn-sm,
+.tw-btn-group-sm > .tw-btn {
+  min-height: 2rem;
+  border-radius: 0.375rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.tw-btn-lg,
+.tw-btn-group-lg > .tw-btn {
+  min-height: 2.75rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.tw-btn-primary {
+  --tw-border-opacity: 1;
+  border-color: rgb(199 242 132 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(199 242 132 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(9 13 16 / var(--tw-text-opacity, 1));
+}
+.tw-btn-primary:hover,
+.tw-btn-primary:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(215 248 165 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(215 248 165 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(9 13 16 / var(--tw-text-opacity, 1));
+}
+.tw-btn-primary:active,
+.tw-btn-primary.tw-active {
+  border-color: var(--jupiter-primary-active);
+  background: var(--jupiter-primary-active);
+}
+.tw-btn-secondary,
+.tw-btn-outline-secondary {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(168 180 196 / var(--tw-text-opacity, 1));
+}
+.tw-btn-secondary:hover,
+.tw-btn-outline-secondary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-btn-default,
+.tw-btn-dark,
+.tw-btn-light {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-btn-default:hover,
+.tw-btn-dark:hover,
+.tw-btn-light:hover {
+  background: var(--jupiter-default-hover);
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-btn-muted {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-btn-muted:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-btn-info,
+.tw-btn-outline-info {
+  color: var(--jupiter-info);
+  border-color: rgba(var(--jupiter-info-rgb), 0.3);
+  background: rgba(var(--jupiter-info-rgb), 0.12);
+}
+.tw-btn-info:hover,
+.tw-btn-outline-info:hover {
+  color: var(--jupiter-info-hover);
+  border-color: rgba(var(--jupiter-info-rgb), 0.48);
+  background: rgba(var(--jupiter-info-rgb), 0.2);
+}
+.tw-btn-success,
+.tw-btn-outline-success,
+.tw-btn.saving {
+  color: var(--jupiter-success);
+  border-color: rgba(var(--jupiter-success-rgb), 0.3);
+  background: rgba(var(--jupiter-success-rgb), 0.12);
+}
+.tw-btn-success:hover,
+.tw-btn-outline-success:hover {
+  color: var(--jupiter-success-hover);
+  border-color: rgba(var(--jupiter-success-rgb), 0.48);
+  background: rgba(var(--jupiter-success-rgb), 0.2);
+}
+.tw-btn-warning,
+.tw-btn-outline-warning {
+  color: var(--jupiter-warning);
+  border-color: rgba(var(--jupiter-warning-rgb), 0.3);
+  background: rgba(var(--jupiter-warning-rgb), 0.12);
+}
+.tw-btn-warning:hover,
+.tw-btn-outline-warning:hover {
+  color: var(--jupiter-warning-hover);
+  border-color: rgba(var(--jupiter-warning-rgb), 0.48);
+  background: rgba(var(--jupiter-warning-rgb), 0.2);
+}
+.tw-btn-danger,
+.tw-btn-outline-danger {
+  color: var(--jupiter-danger);
+  border-color: rgba(var(--jupiter-danger-rgb), 0.3);
+  background: rgba(var(--jupiter-danger-rgb), 0.12);
+}
+.tw-btn-danger:hover,
+.tw-btn-outline-danger:hover {
+  color: var(--jupiter-danger-hover);
+  border-color: rgba(var(--jupiter-danger-rgb), 0.48);
+  background: rgba(var(--jupiter-danger-rgb), 0.2);
+}
+.tw-btn-link {
+  border-color: transparent;
+  background-color: transparent;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.tw-btn-link:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  color: var(--jupiter-primary);
+}
+.tw-btn-close {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  opacity: 0.7;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  filter: invert(1) grayscale(1);
+}
+.tw-btn-close:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  opacity: 1;
+}
+.tw-btn-group > .tw-btn {
+  border-radius: 0px;
+}
+.tw-btn-group > .tw-btn:first-child {
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.tw-btn-group > .tw-btn:last-child {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+/* Forms and search */
+.tw-form-group {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+.tw-input-group {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+.tw-input-group > :is(.tw-form-control, .tw-form-select, select, textarea) {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.tw-input-group > :not(:first-child) {
+  margin-inline-start: -1px;
+  border-start-start-radius: 0 !important;
+  border-end-start-radius: 0 !important;
+}
+.tw-input-group > :not(:last-child) {
+  border-start-end-radius: 0 !important;
+  border-end-end-radius: 0 !important;
+}
+.tw-input-group-addon,
+.tw-input-group-text,
+.tw-input-group-append,
+.tw-input-group-prepend,
+.tw-input-group-btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+.tw-form-label,
+label {
+  margin-bottom: 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-form-control,
+.tw-form-select,
+select,
+textarea {
+  min-height: 2rem;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 13px;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+textarea.tw-form-control {
+  min-height: 6rem;
+}
+.tw-form-control:hover,
+.tw-form-select:hover,
+select:hover,
+textarea:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+}
+.tw-form-control:focus,
+.tw-form-select:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--jupiter-primary) !important;
+  background: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-focus) !important;
+  color: var(--jupiter-text);
+}
+.tw-form-control::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: var(--jupiter-text-faint) !important;
+  opacity: 1;
+}
+.tw-form-control::placeholder,
+textarea::placeholder {
+  color: var(--jupiter-text-faint) !important;
+  opacity: 1;
+}
+.tw-form-control:disabled,
+.tw-form-select:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.tw-form-text,
+.input-tip,
+.tw-help-block {
+  margin-top: 0.25rem;
+  font-size: 11px;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.tw-input-group-text {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-form-check-input {
+  height: 1rem;
+  width: 1rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-form-check-input:checked {
+  border-color: var(--jupiter-primary);
+  background-color: var(--jupiter-primary);
+}
+.tw-form-check-input:focus {
+  border-color: var(--jupiter-primary);
+  box-shadow: var(--jupiter-focus);
+}
+body.jupiter-admin-shell .tw-form-switch {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px;
+  min-height: 20px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .tw-form-switch .tw-form-check-input {
+  --tblr-form-check-bg-image: none;
+  --tblr-form-switch-bg: none;
+  width: 36px !important;
+  height: 20px !important;
+  min-width: 36px;
+  margin: 0 !important;
+  float: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  cursor: pointer;
+  vertical-align: middle;
+  background-color: var(--jupiter-surface-raised) !important;
+  background-image: radial-gradient(circle, var(--jupiter-text) 0 7px, transparent 7.5px) !important;
+  background-repeat: no-repeat !important;
+  background-position: left 1px center !important;
+  background-size: 18px 18px !important;
+  border: 1px solid var(--jupiter-border-strong) !important;
+  border-radius: 999px !important;
+  box-shadow: none;
+  transition: background-color 160ms ease, background-position 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+body.jupiter-admin-shell .tw-form-switch .tw-form-check-input:checked {
+  background-color: var(--jupiter-text) !important;
+  background-image: radial-gradient(circle, var(--jupiter-canvas) 0 7px, transparent 7.5px) !important;
+  background-position: right 1px center !important;
+  border-color: var(--jupiter-text) !important;
+}
+body.jupiter-admin-shell .tw-form-switch .tw-form-check-input:focus-visible {
+  border-color: var(--jupiter-primary) !important;
+  box-shadow: var(--jupiter-focus) !important;
+  outline: 0;
+}
+body.jupiter-admin-shell .tw-form-switch .tw-form-check-input:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+body.jupiter-admin-shell .profile-global-admin-switch {
+  display: inline-flex !important;
+  width: auto !important;
+  flex: 0 0 auto;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .profile-global-admin-switch > .tw-form-check {
+  margin: 0 !important;
+}
+.tw-is-invalid,
+.tw-form-control.tw-is-invalid,
+.tw-form-select.tw-is-invalid {
+  border-color: var(--jupiter-danger) !important;
+}
+.tw-invalid-feedback {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(242 54 116 / var(--tw-text-opacity, 1));
+}
+.tw-is-valid,
+.tw-form-control.tw-is-valid,
+.tw-form-select.tw-is-valid {
+  border-color: var(--jupiter-success) !important;
+}
+.tw-valid-feedback {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(60 227 171 / var(--tw-text-opacity, 1));
+}
+/* Tiptap rich-text field */
+body.jupiter-admin-shell :is(.tiptap-editor-wrapper, .tiptap-bubble-menu) {
+  --tiptap-surface: var(--jupiter-surface);
+  --tiptap-foreground: var(--jupiter-text-mid);
+  --tiptap-heading: var(--jupiter-text);
+  --tiptap-muted-foreground: var(--jupiter-text-muted);
+  --tiptap-placeholder: var(--jupiter-text-faint);
+  --tiptap-border: var(--jupiter-border-strong);
+  --tiptap-ring: var(--jupiter-primary);
+  --tiptap-focus-ring: rgba(var(--jupiter-primary-rgb), 0.16);
+  --tiptap-hover-surface: var(--jupiter-surface-raised);
+  --tiptap-row-hover: var(--jupiter-row-hover);
+  --tiptap-active-surface: var(--jupiter-surface-strong);
+  --tiptap-code-surface: var(--jupiter-surface-raised);
+  --tiptap-code-foreground: var(--jupiter-primary);
+  --tiptap-pre-surface: var(--jupiter-canvas);
+  --tiptap-primary: var(--jupiter-primary);
+  --tiptap-menu-shadow-color: rgba(0, 0, 0, 0.38);
+  --tiptap-scrollbar-track: var(--jupiter-surface);
+  --tiptap-scrollbar-thumb: var(--jupiter-border-strong);
+  --tiptap-scrollbar-thumb-hover: var(--jupiter-text-faint);
+}
+.jupiter-command-search {
+  display: inline-flex;
+  height: 2rem;
+  width: 220px;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.jupiter-command-search:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-search:focus-visible {
+  --tw-border-opacity: 1;
+  border-color: rgb(199 242 132 / var(--tw-border-opacity, 1));
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--jupiter-focus);
+}
+.jupiter-command-search > iconify-icon {
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
+}
+.jupiter-command-search .jupiter-search-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+.jupiter-command-search kbd {
+  margin-left: auto;
+  display: inline-flex;
+  height: 1.25rem;
+  min-width: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  font-family: Geist Mono, ui-monospace, SFMono-Regular, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+/* Cards, sides, panels */
+.tw-card,
+.pf-side,
+.tw-panel,
+.tw-well,
+.tw-list-group,
+.codebox,
+.tiptap-wrapper {
+  border-radius: 0.875rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-card-header,
+.tw-card-footer,
+.pf-side-header,
+.tw-panel-heading,
+.tw-panel-footer {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.tw-card-header,
+.pf-side-header,
+.tw-panel-heading {
+  border-bottom-width: 1px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-card-footer,
+.tw-panel-footer {
+  border-top-width: 1px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.tw-card-body,
+.pf-side-body,
+.tw-panel-body,
+.tw-well {
+  padding: 1.25rem;
+}
+.tw-card-title {
+  margin: 0px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-card-subtitle {
+  font-size: 13px;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(111 133 166 / var(--tw-text-opacity, 1));
+}
+/* Badges, labels, alerts, toasts */
+.tw-badge,
+.tw-label {
+  display: inline-flex;
+  min-height: 1rem;
+  align-items: center;
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-badge.tw-bg-primary,
+.tw-badge-primary,
+.tw-label-primary {
+  color: var(--jupiter-primary) !important;
+  border-color: rgba(var(--jupiter-primary-rgb), 0.28) !important;
+  background: rgba(var(--jupiter-primary-rgb), 0.1) !important;
+}
+.tw-badge.tw-bg-secondary,
+.tw-badge-secondary,
+.tw-label-default {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-badge.tw-bg-info,
+.tw-badge-info,
+.tw-label-info {
+  color: var(--jupiter-info) !important;
+  border-color: rgba(var(--jupiter-info-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-info-rgb), 0.12) !important;
+}
+.tw-badge.tw-bg-success,
+.tw-badge-success,
+.tw-label-success {
+  color: var(--jupiter-success) !important;
+  border-color: rgba(var(--jupiter-success-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-success-rgb), 0.12) !important;
+}
+.tw-badge.tw-bg-warning,
+.tw-badge-warning,
+.tw-label-warning {
+  color: var(--jupiter-warning) !important;
+  border-color: rgba(var(--jupiter-warning-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-warning-rgb), 0.12) !important;
+}
+.tw-badge.tw-bg-danger,
+.tw-badge-danger,
+.tw-label-danger {
+  color: var(--jupiter-danger) !important;
+  border-color: rgba(var(--jupiter-danger-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-danger-rgb), 0.12) !important;
+}
+.tw-alert,
+.tw-toast {
+  border-radius: 0.625rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding: 0.75rem;
+  font-size: 13px;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-alert-primary {
+  color: var(--jupiter-primary);
+  border-color: rgba(var(--jupiter-primary-rgb), 0.3);
+  background: rgba(var(--jupiter-primary-rgb), 0.1);
+}
+.tw-alert-info {
+  color: var(--jupiter-info);
+  border-color: rgba(var(--jupiter-info-rgb), 0.3);
+  background: rgba(var(--jupiter-info-rgb), 0.1);
+}
+.tw-alert-success {
+  color: var(--jupiter-success);
+  border-color: rgba(var(--jupiter-success-rgb), 0.3);
+  background: rgba(var(--jupiter-success-rgb), 0.1);
+}
+.tw-alert-warning {
+  color: var(--jupiter-warning);
+  border-color: rgba(var(--jupiter-warning-rgb), 0.3);
+  background: rgba(var(--jupiter-warning-rgb), 0.1);
+}
+.tw-alert-danger {
+  color: var(--jupiter-danger);
+  border-color: rgba(var(--jupiter-danger-rgb), 0.3);
+  background: rgba(var(--jupiter-danger-rgb), 0.1);
+}
+.tw-toast {
+  box-shadow: var(--jupiter-menu-shadow);
+}
+.tw-toast-header {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+/* Dropdowns and popovers */
+.tw-dropdown-menu,
+.ui-autocomplete,
+.tw-popover {
+  min-width: 208px;
+  border-radius: 0.625rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding: 0.375rem;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  box-shadow: var(--jupiter-menu-shadow);
+}
+.tw-dropdown-menu:not(.tw-show) {
+  display: none;
+}
+.tw-dropdown-menu.tw-show {
+  display: block;
+}
+.tw-dropdown-header {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.tw-dropdown-item,
+.ui-menu-item {
+  display: flex;
+  min-height: 2rem;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.375rem;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.tw-dropdown-item:hover,
+.tw-dropdown-item:focus,
+.ui-menu-item:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 23 31 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-dropdown-item.tw-active,
+.tw-dropdown-item:active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-dropdown-divider {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+}
+.tw-popover-header {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-popover-body {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-tooltip .tw-tooltip-inner {
+  border-radius: 0.375rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 36 46 / var(--tw-bg-opacity, 1));
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 11px;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  box-shadow: var(--jupiter-menu-shadow);
+}
+/* Tabs, pills, breadcrumbs */
+.tw-nav-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+}
+.tw-nav-tabs .tw-nav-link {
+  position: relative;
+  margin-bottom: -1px;
+  min-height: 2.5rem;
+  white-space: nowrap;
+  border-radius: 0px;
+  border-width: 0px;
+  background-color: transparent;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-nav-tabs .tw-nav-link:hover {
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-nav-tabs .tw-nav-link.tw-active,
+.tw-nav-tabs .tw-nav-item.tw-show .tw-nav-link {
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  box-shadow: inset 0 -2px 0 var(--jupiter-primary);
+}
+.tw-nav-pills {
+  display: flex;
+  gap: 0.25rem;
+}
+.tw-nav-pills .tw-nav-link {
+  min-height: 2rem;
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-nav-pills .tw-nav-link:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-nav-pills .tw-nav-link.tw-active,
+.tw-nav-pills .tw-show > .tw-nav-link {
+  background-color: rgba(199, 242, 132, 0.1);
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+  border-color: rgba(var(--jupiter-primary-rgb), 0.3);
+}
+.tw-tab-content {
+  padding-top: 1rem;
+}
+.tw-breadcrumb {
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background-color: transparent;
+  padding: 0px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.tw-breadcrumb-item,
+.tw-breadcrumb-item a {
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.tw-breadcrumb-item.tw-active {
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-breadcrumb-item + .tw-breadcrumb-item::before {
+  color: var(--jupiter-text-faint);
+}
+.jupiter-content-breadcrumbs {
+  margin-bottom: 1.75rem;
+  display: flex;
+  min-height: 1.25rem;
+  align-items: center;
+}
+.jupiter-content-breadcrumbs nav {
+  margin: 0px;
+  width: 100%;
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb {
+  font-size: 13px;
+  line-height: 1.25rem;
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-item a {
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-item a:hover {
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-item.tw-active {
+  font-weight: 400;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-list {
+  font-size: 13px;
+  line-height: 1.25rem;
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-link {
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-link:hover {
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-page {
+  font-weight: 400;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.jupiter-content-breadcrumbs .tw-breadcrumb-separator {
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+/* Accordions */
+.tw-accordion,
+.tw-accordion-item {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+}
+.tw-accordion-item {
+  overflow: hidden;
+  border-radius: 0.625rem;
+  border-width: 1px;
+}
+.tw-accordion-item + .tw-accordion-item {
+  margin-top: 0.5rem;
+}
+.tw-accordion-button {
+  min-height: 2.5rem;
+  background-color: transparent;
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  font-size: 13px;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.tw-accordion-button:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-accordion-button:not(.tw-collapsed) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-accordion-button::after {
+  filter: invert(1) grayscale(1);
+  opacity: 0.65;
+}
+.tw-accordion-button:focus {
+  border-color: var(--jupiter-primary);
+  box-shadow: var(--jupiter-focus);
+}
+.tw-accordion-body {
+  border-top-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  padding-bottom: 1rem;
+  padding-top: 0.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+/* Tables and DataTables */
+.tw-table,
+table.dataTable {
+  margin-bottom: 0px;
+  width: 100%;
+  border-collapse: separate;
+  --tw-border-spacing-x: 0px;
+  --tw-border-spacing-y: 0px;
+  border-spacing: var(--tw-border-spacing-x) var(--tw-border-spacing-y);
+  background-color: transparent;
+  font-size: 13px;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.tw-table > :not(caption) > * > *,
+table.dataTable th,
+table.dataTable td {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  vertical-align: middle;
+  box-shadow: none;
+}
+.tw-table > thead > tr > th,
+table.dataTable thead th {
+  height: 2.5rem;
+  white-space: nowrap;
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.tw-table > tbody > tr,
+table.dataTable tbody > tr {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 160ms;
+}
+.tw-table-hover > tbody > tr:hover > *,
+table.dataTable tbody > tr:hover > * {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-table-striped > tbody > tr:nth-of-type(odd) > * {
+  background: rgba(30, 39, 33, 0.32);
+  color: var(--jupiter-text-mid);
+}
+.tw-table-active > *,
+.tw-table > tbody > tr.tw-table-active > * {
+  background: rgba(var(--jupiter-primary-rgb), 0.08);
+  box-shadow: inset 3px 0 0 var(--jupiter-primary);
+}
+.tw-table-responsive {
+  border-radius: 0.625rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+}
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.dataTables_wrapper .dataTables_filter input {
+  margin-left: 0.5rem;
+}
+/* Modal and offcanvas */
+.tw-modal {
+  color: var(--jupiter-text-mid);
+}
+.tw-modal-backdrop.tw-show {
+  background: #03070A;
+  opacity: 0.78;
+  backdrop-filter: blur(8px);
+}
+.tw-modal-content,
+.tw-offcanvas {
+  overflow: hidden;
+  border-radius: 0.875rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  box-shadow: var(--jupiter-modal-shadow);
+}
+.tw-modal-dialog:not(.tw-modal-sm):not(.tw-modal-lg):not(.tw-modal-xl) {
+  max-width: 450px;
+}
+.tw-modal-dialog.tw-modal-sm {
+  max-width: 380px;
+}
+.tw-modal-dialog.tw-modal-lg {
+  max-width: 760px;
+}
+.tw-modal-dialog.tw-modal-xl {
+  max-width: 1040px;
+}
+.tw-modal-header,
+.tw-modal-footer,
+.tw-offcanvas-header {
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+.tw-modal-header,
+.tw-offcanvas-header {
+  border-bottom-width: 1px;
+}
+.tw-modal-footer {
+  border-top-width: 1px;
+}
+.tw-modal-title,
+.tw-offcanvas-title {
+  font-size: 15px;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-modal-body,
+.tw-offcanvas-body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  padding: 1.5rem;
+}
+/* List groups, pagination, progress */
+.tw-list-group {
+  overflow: hidden;
+}
+.tw-list-group-item {
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-top-width: 0px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  font-size: 13px;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.tw-list-group-item:last-child {
+  border-bottom-width: 0px;
+}
+.tw-list-group-item:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(16 23 31 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-list-group-item.tw-active {
+  background-color: rgba(199, 242, 132, 0.1);
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+  border-color: rgba(var(--jupiter-primary-rgb), 0.2);
+}
+.tw-pagination {
+  display: flex;
+  gap: 0.25rem;
+}
+.tw-page-link {
+  display: flex;
+  height: 2rem;
+  min-width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  background-color: transparent;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.tw-page-link:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 48 61 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.tw-page-item.tw-active .tw-page-link {
+  background-color: rgba(199, 242, 132, 0.1);
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+  border-color: rgba(var(--jupiter-primary-rgb), 0.32);
+}
+.tw-page-item.tw-disabled .tw-page-link {
+  background-color: transparent;
+  opacity: 0.4;
+}
+.tw-progress {
+  height: 0.375rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+}
+.tw-progress-bar {
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(199 242 132 / var(--tw-bg-opacity, 1));
+}
+.tw-progress-bar.tw-bg-info {
+  background: var(--jupiter-info) !important;
+}
+.tw-progress-bar.tw-bg-success {
+  background: var(--jupiter-success) !important;
+}
+.tw-progress-bar.tw-bg-warning {
+  background: var(--jupiter-warning) !important;
+}
+.tw-progress-bar.tw-bg-danger {
+  background: var(--jupiter-danger) !important;
+}
+/* Semantic helpers override Tabler defaults */
+.tw-text-primary {
+  color: var(--jupiter-primary) !important;
+}
+.tw-text-secondary,
+.tw-text-muted {
+  color: var(--jupiter-text-muted) !important;
+}
+.tw-text-info {
+  color: var(--jupiter-info) !important;
+}
+.tw-text-success {
+  color: var(--jupiter-success) !important;
+}
+.tw-text-warning {
+  color: var(--jupiter-warning) !important;
+}
+.tw-text-danger {
+  color: var(--jupiter-danger) !important;
+}
+.tw-bg-primary {
+  background-color: var(--jupiter-primary) !important;
+}
+.tw-bg-secondary,
+.tw-bg-dark {
+  background-color: var(--jupiter-surface-raised) !important;
+}
+.tw-bg-light {
+  background-color: var(--jupiter-surface) !important;
+}
+.tw-bg-info {
+  background-color: var(--jupiter-info) !important;
+}
+.tw-bg-success {
+  background-color: var(--jupiter-success) !important;
+}
+.tw-bg-warning {
+  background-color: var(--jupiter-warning) !important;
+}
+.tw-bg-danger {
+  background-color: var(--jupiter-danger) !important;
+}
+/* Command palette */
+.jupiter-command-palette {
+  position: fixed;
+  inset: 0px;
+  z-index: 2000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+}
+.jupiter-command-palette.is-open {
+  display: flex;
+}
+.jupiter-command-dialog {
+  width: 100%;
+  max-width: 672px;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  max-height: calc(100vh - 32px);
+  box-shadow: var(--jupiter-modal-shadow);
+}
+.jupiter-command-field {
+  display: flex;
+  height: 52px;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.jupiter-command-field iconify-icon {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-field input {
+  height: 100%;
+  min-width: 0px;
+  flex: 1 1 0%;
+  border-width: 0px;
+  background-color: transparent;
+  padding: 0px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.jupiter-command-field input:focus {
+  box-shadow: none !important;
+}
+.jupiter-command-close {
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 30 40 / var(--tw-bg-opacity, 1));
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-family: Geist Mono, ui-monospace, SFMono-Regular, monospace;
+  font-size: 10px;
+  --tw-text-opacity: 1;
+  color: rgb(144 161 185 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-results {
+  max-height: calc(100vh - 86px);
+  overflow-y: auto;
+  padding: 0px;
+}
+.jupiter-command-empty {
+  display: none;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-empty.is-visible {
+  display: block;
+}
+.jupiter-command-item {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 13px;
+  font-weight: 500;
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+  text-decoration-line: none;
+}
+.jupiter-command-item:hover,
+.jupiter-command-item:focus,
+.jupiter-command-item.is-active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 36 46 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-item iconify-icon,
+.jupiter-command-item .admin-ico {
+  --tw-text-opacity: 1;
+  color: rgb(103 119 142 / var(--tw-text-opacity, 1));
+}
+.jupiter-command-item:hover iconify-icon,
+.jupiter-command-item:hover .admin-ico {
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+/* Login */
+.jupiter-admin-login {
+  min-height: 100vh;
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(202 213 226 / var(--tw-text-opacity, 1));
+}
+.jupiter-login-panel {
+  --tw-bg-opacity: 1;
+  background-color: rgb(9 13 16 / var(--tw-bg-opacity, 1));
+}
+.jupiter-login-aside {
+  border-left-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(11 17 23 / var(--tw-bg-opacity, 1));
+}
+.jupiter-login-card {
+  border-radius: 0.875rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding: 1.5rem;
+}
+.jupiter-login-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(21 30 40 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 21 30 / var(--tw-bg-opacity, 1));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  --tw-text-opacity: 1;
+  color: rgb(199 242 132 / var(--tw-text-opacity, 1));
+}
+.footer-errors {
+  margin: 1.25rem;
+  border-radius: 0.625rem;
+  border-width: 1px;
+  border-color: rgba(242, 54, 116, 0.3);
+  background-color: rgba(242, 54, 116, 0.1);
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(242 54 116 / var(--tw-text-opacity, 1));
+}
+/* Final bridge overrides intentionally outrank the legacy Jupiter LESS bundle. */
+body.jupiter-admin-shell .pf-admin .pf-canvas-header h2 {
+  display: flex !important;
+  height: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: -moz-max-content !important;
+  min-width: max-content !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  font-weight: 600 !important;
+  overflow: visible !important;
+}
+body.jupiter-admin-shell .tw-btn,
+body.jupiter-admin-login .tw-btn {
+  box-sizing: border-box !important;
+  min-height: 34px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 8px !important;
+  padding: 5px 14px !important;
+  font: 600 13px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  box-shadow: none !important;
+}
+body.jupiter-admin-shell .tw-btn-primary,
+body.jupiter-admin-login .tw-btn-primary {
+  color: var(--jupiter-primary-foreground) !important;
+  border-color: var(--jupiter-primary) !important;
+  background: var(--jupiter-primary) !important;
+}
+body.jupiter-admin-shell .tw-btn-primary:hover,
+body.jupiter-admin-login .tw-btn-primary:hover {
+  color: var(--jupiter-primary-foreground) !important;
+  border-color: var(--jupiter-primary-hover) !important;
+  background: var(--jupiter-primary-hover) !important;
+}
+body.jupiter-admin-login {
+  min-height: 100vh !important;
+  margin: 0 !important;
+  overflow-x: hidden;
+  color: var(--jupiter-text-mid) !important;
+  background: var(--jupiter-canvas) !important;
+  font: 400 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-login .lockscreen-bg {
+  position: fixed !important;
+  z-index: 0 !important;
+  inset: 0 !important;
+  pointer-events: none;
+  background: var(--jupiter-canvas) !important;
+}
+body.jupiter-admin-login .lockscreen-wrapper {
+  position: relative !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  height: auto !important;
+  gap: 40px !important;
+  padding: 32px 16px 24px !important;
+}
+body.jupiter-admin-login .lockscreen-wrapper > .tw-card {
+  width: min(100%, 400px) !important;
+  max-width: 400px !important;
+  margin: 0 !important;
+  overflow: hidden;
+  color: var(--jupiter-text-mid) !important;
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.jupiter-admin-login .lockscreen-wrapper > .tw-card > .tw-card-body {
+  padding: 24px !important;
+  background: transparent !important;
+  text-align: center;
+}
+body.jupiter-admin-login .lockscreen-logo img {
+  display: block;
+  width: 84px !important;
+  max-height: 32px;
+  margin-inline: auto;
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+body.jupiter-admin-login .lockscreen-wrapper .tw-h1 {
+  margin: 16px 0 20px !important;
+  color: var(--jupiter-text) !important;
+  font: 650 22px/28px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  letter-spacing: -0.025em;
+}
+body.jupiter-admin-login .lockscreen-credentials {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating {
+  display: flex !important;
+  position: relative !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  margin: 0 !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control {
+  order: 2;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 10px 12px !important;
+  color: var(--jupiter-text) !important;
+  border: 1px solid var(--jupiter-border-strong) !important;
+  border-radius: 8px !important;
+  background: var(--jupiter-surface) !important;
+  font: 400 14px/22px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  box-shadow: none !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control:hover {
+  background: var(--jupiter-surface-raised) !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control:focus {
+  border-color: var(--jupiter-primary) !important;
+  background: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-focus) !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control::-moz-placeholder {
+  color: transparent !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control::placeholder {
+  color: transparent !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control:not(:-moz-placeholder) ~ label {
+  position: static !important;
+  order: 1;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--jupiter-text-mid) !important;
+  font: 600 13px/18px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-align: left;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > label,
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control:focus ~ label,
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control:not(:placeholder-shown) ~ label {
+  position: static !important;
+  order: 1;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--jupiter-text-mid) !important;
+  font: 600 13px/18px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-align: left;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > label::after {
+  display: none !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-form-text,
+body.jupiter-admin-login .lockscreen-credentials .tw-invalid-feedback {
+  position: static !important;
+  order: 3;
+  margin: 0 !important;
+  color: var(--jupiter-text-muted) !important;
+  font: 400 12px/18px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-align: left;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-invalid-feedback,
+body.jupiter-admin-login #admin-login-notice {
+  color: var(--jupiter-danger) !important;
+}
+body.jupiter-admin-login #admin-login-notice {
+  margin: 0 !important;
+}
+body.jupiter-admin-login .lockscreen-credentials .tw-btn {
+  width: 100% !important;
+  min-height: 40px !important;
+}
+body.jupiter-admin-login .lockscreen-wrapper .m-t-20 {
+  margin-top: 18px !important;
+}
+body.jupiter-admin-login .lockscreen-footer {
+  width: min(100%, 720px);
+  color: var(--jupiter-text-muted) !important;
+  font: 400 12px/18px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-align: center;
+}
+body.jupiter-admin-login .lockscreen-footer .display-flex {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 8px 24px !important;
+  margin-bottom: 14px !important;
+}
+body.jupiter-admin-login .lockscreen-footer small {
+  color: var(--jupiter-text-muted) !important;
+  font: inherit !important;
+}
+body.jupiter-admin-login .lockscreen-footer strong {
+  color: var(--jupiter-text-mid);
+  font-weight: 600;
+}
+body.jupiter-admin-shell :is(.tw-btn-secondary, .tw-btn-outline-secondary) {
+  color: var(--jupiter-secondary) !important;
+  border-color: var(--jupiter-border-strong) !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-default, .tw-btn-dark, .tw-btn-light) {
+  color: var(--jupiter-text-mid) !important;
+  border-color: var(--jupiter-border-strong) !important;
+  background: var(--jupiter-default) !important;
+}
+body.jupiter-admin-shell .tw-btn-muted {
+  color: var(--jupiter-text-muted) !important;
+  border-color: var(--jupiter-border) !important;
+  background: var(--jupiter-muted) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-info, .tw-btn-outline-info) {
+  color: var(--jupiter-info) !important;
+  border-color: rgba(var(--jupiter-info-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-info-rgb), 0.12) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-success, .tw-btn-outline-success, .tw-btn.saving) {
+  color: var(--jupiter-success) !important;
+  border-color: rgba(var(--jupiter-success-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-success-rgb), 0.12) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-warning, .tw-btn-outline-warning) {
+  color: var(--jupiter-warning) !important;
+  border-color: rgba(var(--jupiter-warning-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-warning-rgb), 0.12) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-danger, .tw-btn-outline-danger) {
+  color: var(--jupiter-danger) !important;
+  border-color: rgba(var(--jupiter-danger-rgb), 0.3) !important;
+  background: rgba(var(--jupiter-danger-rgb), 0.12) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-secondary, .tw-btn-outline-secondary, .tw-btn-default, .tw-btn-dark, .tw-btn-light, .tw-btn-muted):hover {
+  color: var(--jupiter-text) !important;
+  border-color: var(--jupiter-border-strong) !important;
+  background: var(--jupiter-default-hover) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-info, .tw-btn-outline-info):hover {
+  color: var(--jupiter-info-hover) !important;
+  background: rgba(var(--jupiter-info-rgb), 0.2) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-success, .tw-btn-outline-success):hover {
+  color: var(--jupiter-success-hover) !important;
+  background: rgba(var(--jupiter-success-rgb), 0.2) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-warning, .tw-btn-outline-warning):hover {
+  color: var(--jupiter-warning-hover) !important;
+  background: rgba(var(--jupiter-warning-rgb), 0.2) !important;
+}
+body.jupiter-admin-shell :is(.tw-btn-danger, .tw-btn-outline-danger):hover {
+  color: var(--jupiter-danger-hover) !important;
+  background: rgba(var(--jupiter-danger-rgb), 0.2) !important;
+}
+body.jupiter-admin-shell :is(.tw-form-control, .tw-form-select, select, textarea) {
+  min-height: 40px !important;
+  color: var(--jupiter-text-mid) !important;
+  border: 1px solid var(--jupiter-border-strong) !important;
+  border-radius: 8px !important;
+  background-color: var(--jupiter-surface) !important;
+  box-shadow: none !important;
+}
+body.jupiter-admin-shell :is(.tw-form-control, .tw-form-select, select, textarea):focus {
+  color: var(--jupiter-text) !important;
+  border-color: var(--jupiter-primary) !important;
+  background-color: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-focus) !important;
+}
+body.jupiter-admin-shell .tw-badge {
+  min-height: 16px !important;
+  border-radius: 999px !important;
+  padding: 2px 6px !important;
+  font: 600 10px/12px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-shell .pf-admin .nav-top :is(.main, .sections, .menu-container) a {
+  min-height: 32px !important;
+  border-radius: 7px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+  font: 500 13px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-shell .pf-admin .menu-container a {
+  min-height: 30px !important;
+  font-size: 13px !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup {
+  bottom: 60px !important;
+  left: 8px !important;
+  width: 216px !important;
+  min-width: 216px !important;
+  margin: 0 !important;
+  padding: 6px !important;
+  border: 1px solid var(--jupiter-border-strong) !important;
+  border-radius: 10px !important;
+  background: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-menu-shadow) !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup .group-heading {
+  min-height: 48px !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup .user-info h4 {
+  margin: 0 !important;
+  font: 600 12px/16px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  color: var(--jupiter-text) !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup .user-info .email {
+  font: 400 10px/14px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  color: var(--jupiter-text-faint) !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup a {
+  min-height: 32px !important;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  font: 500 12px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  color: var(--jupiter-text-muted) !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup a:hover,
+body.jupiter-admin-shell .pf-admin-dropup a:focus {
+  background: var(--jupiter-surface-raised) !important;
+  color: var(--jupiter-text) !important;
+}
+body.jupiter-admin-shell .pf-admin-dropup .tw-divider {
+  height: 1px !important;
+  margin: 6px 0 !important;
+  border: 0 !important;
+  background: var(--jupiter-border) !important;
+}
+body.jupiter-admin-shell :is(code, pre, kbd, samp, .tw-font-monospace, .tw-form-control[readonly], [data-metric], [data-value]),
+body.jupiter-admin-login :is(code, pre, kbd, samp, .tw-font-monospace) {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, monospace !important;
+  font-variant-numeric: tabular-nums;
+}
+body.jupiter-admin-shell :is(.tw-table, .dataTable) :is(.tw-text-end, [data-sort], [data-value]) {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  font-variant-numeric: tabular-nums;
+}
+body.jupiter-admin-shell {
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+/* Hard shell contract: override the original 420px `.nav-content` flex rule
+   and remove the duplicate sidebar offset from the main workspace. */
+body.jupiter-admin-shell .pf-admin > .pf-viewport {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  overflow: hidden !important;
+  background: var(--jupiter-canvas) !important;
+}
+body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav,
+body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav.nav-content {
+  position: fixed !important;
+  inset: 5px auto 5px 5px !important;
+  z-index: 40 !important;
+  display: flex !important;
+  flex: 0 0 242px !important;
+  width: 242px !important;
+  min-width: 242px !important;
+  max-width: 242px !important;
+  height: calc(100vh - 10px) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 12px !important;
+  background: var(--jupiter-nav) !important;
+  overflow: hidden !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .pf-nav-column {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  background: var(--jupiter-nav) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .pf-nav-column > header.pf-nav-menu {
+  display: flex !important;
+  flex: 0 0 52px !important;
+  width: auto !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  margin: 4px !important;
+  padding: 0 12px !important;
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 8px !important;
+  background: var(--jupiter-nav) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav-details .brand {
+  display: flex !important;
+  min-width: 0 !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav-details .brand img {
+  display: block !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  -o-object-fit: contain !important;
+  object-fit: contain !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-brand-name {
+  overflow: hidden !important;
+  min-width: 0 !important;
+  color: var(--jupiter-text) !important;
+  font: 600 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav :is(.nav-body, .nav-top, .nav-bottom, .nav-bottom-wrapper) {
+  background: var(--jupiter-nav) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-body {
+  min-height: 0 !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top {
+  margin: 0 !important;
+  padding: 24px 8px 12px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-bottom {
+  margin: 0 !important;
+  padding: 8px !important;
+  border-top: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-main {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  flex: none !important;
+  width: calc(100% - 247px) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  margin: 0 0 0 247px !important;
+  padding: 0 !important;
+  transform: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: var(--jupiter-canvas) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-canvas {
+  position: relative !important;
+  inset: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  background: var(--jupiter-canvas) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-canvas-header {
+  position: sticky !important;
+  inset: 0 0 auto !important;
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+  width: 100% !important;
+  height: 60px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
+  margin: 0 !important;
+  padding-right: 24px !important;
+  padding-left: 24px !important;
+  border-color: var(--jupiter-border) !important;
+  background: var(--jupiter-topbar) !important;
+  align-items: center !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-canvas-header > * {
+  grid-row: 1 !important;
+  align-self: center !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-canvas-header > h2 {
+  display: flex !important;
+  height: 100% !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-topbar-context,
+body.jupiter-admin-shell .pf-admin .jupiter-topbar-actions,
+body.jupiter-admin-shell .pf-admin .admin-buttons {
+  height: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-items: center !important;
+}
+body.jupiter-admin-shell .pf-admin .admin-buttons > *,
+body.jupiter-admin-shell .pf-admin .admin-buttons .tw-form-group,
+body.jupiter-admin-shell .pf-admin .admin-buttons .tw-btn,
+body.jupiter-admin-shell .pf-admin .admin-buttons .tw-btn-group {
+  align-self: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-view-container {
+  flex: 1 0 auto !important;
+  width: 100% !important;
+  max-width: 1440px !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  padding-top: 40px !important;
+  background: var(--jupiter-canvas) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav :is(a, button, strong, small, .jupiter-nav-label),
+body.jupiter-admin-shell .pf-admin .pf-canvas-header,
+body.jupiter-admin-shell .pf-admin .pf-view-container :is(
+    a, button, input, select, textarea, label, p, h1, h2, h3, h4, h5, h6,
+    table, thead, tbody, tfoot, th, td, .tw-card, .tw-subheader, .tw-h1, .tw-h2, .tw-h3,
+    .dataTables_info, .dataTables_length, .dataTables_filter, .dataTables_paginate
+) {
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  font-synthesis: none;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top :is(.main, .sections, .menu-container) a {
+  min-height: 32px !important;
+  padding: 5px 10px !important;
+  font-size: 13px !important;
+  line-height: 20px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a {
+  display: flex !important;
+  width: 100% !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  color: var(--jupiter-text) !important;
+  font: 500 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+  text-decoration: none !important;
+  transition: background-color 160ms ease, color 160ms ease !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a:hover,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a:focus-visible,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu:hover,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu:focus-visible,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a:hover,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a:focus-visible,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a:hover,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a:focus-visible,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top a.tw-active,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top li.is-open > .section-menu {
+  background: var(--jupiter-surface-raised) !important;
+  color: var(--jupiter-primary) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a .admin-ico,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu .admin-ico,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a .admin-ico,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a .admin-ico,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a svg,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu svg,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a svg,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a svg,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a i,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu i,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a i,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a i,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .main > li > a iconify-icon,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .sections > li > .section-menu iconify-icon,
+body.jupiter-admin-shell .pf-admin .pf-nav .nav-top .menu-container a iconify-icon,
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-resource-links a iconify-icon {
+  color: currentColor !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .admin-ico {
+  display: inline-flex !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .admin-ico :is(svg, i, iconify-icon),
+body.jupiter-admin-shell .pf-admin .pf-nav iconify-icon.admin-ico {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li {
+  position: relative !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li > .section-menu {
+  padding-right: 36px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li > .section-view {
+  position: absolute !important;
+  inset: 0 2px auto auto !important;
+  z-index: 2 !important;
+  display: inline-flex !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 7px !important;
+  background: transparent !important;
+  color: var(--jupiter-text) !important;
+  cursor: pointer !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li:hover > .section-view,
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li.is-open > .section-view,
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li > .section-view:hover,
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li > .section-view:focus-visible {
+  color: var(--jupiter-primary) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .section-view .ico {
+  display: inline-flex !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  transition: transform 160ms ease !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .sections > li.is-open > .section-view .ico {
+  transform: rotate(90deg) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .menu-container {
+  position: relative !important;
+  width: calc(100% - 15px) !important;
+  margin: -1px 0 4px 15px !important;
+  padding: 4px 0 2px 9px !important;
+  border: 0 !important;
+  border-left: 1px solid var(--jupiter-border-strong) !important;
+  overflow: hidden !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .menu-container > li {
+  width: 100% !important;
+  margin: 0 0 2px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .menu-container > li:last-child {
+  margin-bottom: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin #jupiter-admin-navigation .menu-container > li > a {
+  width: calc(100% - 18px) !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 4px 8px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-nav .jupiter-nav-label {
+  margin: 0 0 6px !important;
+  padding: 0 10px !important;
+  font-size: 11px !important;
+  line-height: 16px !important;
+  font-weight: 600 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-view-container :is(
+    code, pre, kbd, samp, .tw-font-monospace, [data-metric], [data-value]
+) {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, monospace !important;
+  font-variant-numeric: tabular-nums;
+}
+body.jupiter-admin-shell .pf-admin .nav-bottom {
+  width: 100% !important;
+  border: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-resource-links {
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .nav-bottom-wrapper,
+body.jupiter-admin-shell .pf-admin .nav-bottom-items,
+body.jupiter-admin-shell .pf-admin .nav-bottom-items > .tw-dropdown {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-flex {
+  display: flex !important;
+  width: 100% !important;
+  height: 50px !important;
+  min-height: 50px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 6px 8px !important;
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 8px !important;
+  background: var(--jupiter-surface) !important;
+  color: var(--jupiter-text) !important;
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-flex:hover,
+body.jupiter-admin-shell .pf-admin .pf-admin-flex[aria-expanded="true"] {
+  border-color: var(--jupiter-border-strong) !important;
+  background: var(--jupiter-surface-raised) !important;
+  color: var(--jupiter-primary) !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-avatar {
+  position: relative !important;
+  display: block !important;
+  flex: 0 0 32px !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  border: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-avatar :is(.tw-avatar, img),
+body.jupiter-admin-shell .pf-admin .pf-admin-avatar .pf-nav-avatar {
+  display: block !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  border-radius: 999px !important;
+  -o-object-fit: cover !important;
+  object-fit: cover !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-avatar .status-badge {
+  position: absolute !important;
+  right: -1px !important;
+  bottom: -1px !important;
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  min-height: 11px !important;
+  border: 2px solid var(--jupiter-surface) !important;
+  border-radius: 999px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-flex:hover .status-badge,
+body.jupiter-admin-shell .pf-admin .pf-admin-flex[aria-expanded="true"] .status-badge {
+  border-color: var(--jupiter-surface-raised) !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-account-copy {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-account-copy strong {
+  overflow: hidden !important;
+  color: inherit !important;
+  font: 600 14px/16px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-account-copy small {
+  overflow: hidden !important;
+  color: var(--jupiter-text-muted) !important;
+  font: 500 11px/14px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-account-action {
+  display: inline-flex !important;
+  flex: 0 0 24px !important;
+  width: 24px !important;
+  height: 24px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  border-radius: 6px !important;
+  color: inherit !important;
+  transition: color 160ms ease !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-admin-flex:hover .jupiter-account-action,
+body.jupiter-admin-shell .pf-admin .pf-admin-flex[aria-expanded="true"] .jupiter-account-action {
+  color: var(--jupiter-primary) !important;
+}
+body.jupiter-admin-shell .pf-admin .jupiter-account-chevron {
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  color: currentColor !important;
+  font-size: 16px !important;
+}
+body.jupiter-admin-shell .pf-admin .footer-errors {
+  flex: 0 0 auto !important;
+  margin: 0 64px 24px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-view-container > :is(footer, .footer):last-child {
+  margin-top: auto !important;
+  margin-bottom: 24px !important;
+}
+body.jupiter-admin-shell .pf-admin .pf-view-container:has(> footer:last-child),
+body.jupiter-admin-shell .pf-admin .pf-view-container:has(> .footer:last-child) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+body.jupiter-admin-shell :is(.tw-card, .pf-side, .tw-panel, .tw-well) {
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 12px !important;
+  background: var(--jupiter-card) !important;
+  box-shadow: none !important;
+}
+body.jupiter-admin-shell :is(.tw-card, .pf-side, .tw-panel, .tw-well) :is(.tw-card, .pf-side, .tw-panel, .tw-well) {
+  border-color: var(--jupiter-border-strong) !important;
+  background: var(--jupiter-card-nested) !important;
+}
+body.jupiter-admin-shell :is(.tw-card-header, .pf-side-header, .tw-panel-heading) {
+  padding: 16px 20px !important;
+  border-color: var(--jupiter-border) !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell :is(.tw-card-header, .pf-side-header, .tw-panel-heading) :is(.tw-card-title, h1, h2, h3, h4, h5, h6) {
+  margin: 0 !important;
+  color: var(--jupiter-text) !important;
+  font: 600 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+body.jupiter-admin-shell :is(.tw-card-header, .pf-side-header, .tw-panel-heading) :is(.tw-card-subtitle, .description, .tw-subheader, p, .tw-text-muted) {
+  color: var(--jupiter-description) !important;
+  font: 400 13px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+}
+body.jupiter-admin-shell :is(.tw-card-header, .pf-side-header, .tw-panel-heading) :is(.tw-card-subtitle, .description, .tw-subheader, p) {
+  margin: 4px 0 0 !important;
+}
+body.jupiter-admin-shell :is(.tw-card-body, .pf-side-body, .tw-panel-body) {
+  padding: 20px !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell :is(.tw-card-footer, .tw-panel-footer) {
+  padding: 12px 16px !important;
+  border-color: var(--jupiter-border) !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell :is(.tw-dropdown-menu, .ui-autocomplete) {
+  min-width: 240px !important;
+  max-width: 320px;
+  margin: 0 !important;
+  padding: 6px !important;
+  border: 1px solid var(--jupiter-border-strong) !important;
+  border-radius: 8px !important;
+  background: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-menu-shadow) !important;
+}
+body.jupiter-admin-shell .tw-dropdown-toggle {
+  box-sizing: border-box !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  gap: 8px !important;
+  padding: 7px 10px !important;
+  font: 600 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-shell .tw-dropdown-toggle::after {
+  content: "" !important;
+  display: block !important;
+  width: 6px !important;
+  height: 6px !important;
+  flex: 0 0 6px;
+  margin: -3px 1px 0 auto !important;
+  border: solid currentColor !important;
+  border-width: 0 1px 1px 0 !important;
+  transform: rotate(45deg);
+}
+body.jupiter-admin-shell .tw-dropdown-toggle > span {
+  height: auto !important;
+  padding: 0 !important;
+  font: inherit !important;
+  line-height: inherit !important;
+}
+body.jupiter-admin-shell .tw-dropdown-menu {
+  list-style: none !important;
+}
+body.jupiter-admin-shell .tw-dropdown-menu > li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.jupiter-admin-shell .tw-dropdown-item,
+body.jupiter-admin-shell .ui-menu-item {
+  display: flex !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 32px !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 6px 10px !important;
+  color: var(--jupiter-text-mid) !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  font: 500 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+  text-decoration: none !important;
+}
+body.jupiter-admin-shell :is(.tw-dropdown-toggle, .tw-dropdown-item) > :is(svg, iconify-icon, .profile-global-icon, .ico) {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px;
+  margin: 0 !important;
+  color: var(--jupiter-description) !important;
+  stroke: currentColor;
+}
+body.jupiter-admin-shell :is(.tw-dropdown-item:hover, .tw-dropdown-item:focus, .tw-dropdown-item.tw-active, .tw-dropdown-item:active),
+body.jupiter-admin-shell .ui-menu-item:hover {
+  color: var(--jupiter-text) !important;
+  background: var(--jupiter-row-hover) !important;
+}
+body.jupiter-admin-shell :is(.tw-dropdown-item:hover, .tw-dropdown-item:focus, .tw-dropdown-item.tw-active, .tw-dropdown-item:active) > :is(svg, iconify-icon, .profile-global-icon, .ico) {
+  color: var(--jupiter-text-mid) !important;
+}
+body.jupiter-admin-shell .tw-dropdown-item.tw-active,
+body.jupiter-admin-shell .tw-dropdown-item:active {
+  color: var(--jupiter-text) !important;
+  background: var(--jupiter-row-hover) !important;
+}
+body.jupiter-admin-shell .dynamics-combobox {
+  --combobox-background: var(--jupiter-surface);
+  --combobox-foreground: var(--jupiter-text);
+  --combobox-muted: var(--jupiter-muted);
+  --combobox-muted-foreground: var(--jupiter-text-muted);
+  --combobox-border: var(--jupiter-border-strong);
+  --combobox-ring: var(--jupiter-primary);
+  --combobox-accent: var(--jupiter-surface-raised);
+  --combobox-destructive: var(--jupiter-danger);
+  --combobox-control-shadow-color: rgba(0, 0, 0, 0.04);
+}
+body.jupiter-admin-shell .dynamics-combobox__panel {
+  --combobox-background: var(--jupiter-surface);
+  --combobox-foreground: var(--jupiter-text);
+  --combobox-muted: var(--jupiter-card-nested);
+  --combobox-muted-foreground: var(--jupiter-text-muted);
+  --combobox-border: var(--jupiter-border-strong);
+  --combobox-ring: var(--jupiter-primary);
+  --combobox-accent: var(--jupiter-surface-raised);
+  --combobox-destructive: var(--jupiter-danger);
+  --combobox-menu-shadow-color: rgba(0, 0, 0, 0.38);
+}
+/* Reusable searchable filter-dropdown anatomy. */
+body.jupiter-admin-shell .jupiter-filter-dropdown {
+  width: 320px;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 6px !important;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-search {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  color: var(--jupiter-text-faint);
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-search > :is(svg, iconify-icon, .profile-global-icon, .ico) {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px;
+  color: var(--jupiter-text-faint) !important;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-search-input {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0;
+  color: var(--jupiter-text);
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 400 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-search-input::-moz-placeholder {
+  color: var(--jupiter-text-faint);
+  opacity: 1;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-search-input::placeholder {
+  color: var(--jupiter-text-faint);
+  opacity: 1;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-options {
+  max-height: min(320px, calc(100vh - 190px));
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  scrollbar-width: thin;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-options > li {
+  margin: 0;
+  padding: 0;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-check {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  color: var(--jupiter-text-mid);
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-check[hidden],
+body.jupiter-admin-shell .jupiter-filter-dropdown-empty[hidden] {
+  display: none !important;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-empty {
+  padding: 12px 10px;
+  color: var(--jupiter-text-muted);
+  font: 400 13px/20px "Geist", ui-sans-serif, system-ui, sans-serif;
+  text-align: center;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-footer {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 6px 4px 0;
+  color: var(--jupiter-text-faint);
+  border-top: 1px solid var(--jupiter-border);
+  font: 400 12px/18px "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-clear {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  color: var(--jupiter-text-mid);
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font: 500 12px/18px "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-clear:hover,
+body.jupiter-admin-shell .jupiter-filter-dropdown-clear:focus-visible {
+  color: var(--jupiter-text);
+  background: var(--jupiter-row-hover);
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-clear:focus-visible {
+  outline: 0;
+  box-shadow: var(--jupiter-focus);
+}
+body.jupiter-admin-shell .jupiter-filter-dropdown-clear:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+/* Profile Fields composes reusable Jupiter controls without owning their palette. */
+body.jupiter-admin-shell .pf-view-container:has(> .profile-global-admin) > .jupiter-content-breadcrumbs {
+  width: 100%;
+  max-width: 1180px;
+  margin-right: auto;
+  margin-left: auto;
+}
+body.jupiter-admin-shell .profile-global-admin-category-trigger,
+body.jupiter-admin-shell .profile-global-admin-category-trigger:hover,
+body.jupiter-admin-shell .profile-global-admin-category-trigger:focus,
+body.jupiter-admin-shell .profile-global-admin-category-trigger[aria-expanded="true"] {
+  color: var(--jupiter-text-mid) !important;
+  border-color: var(--jupiter-border-strong) !important;
+  background: transparent !important;
+  font: 600 14px/20px "Geist", ui-sans-serif, system-ui, sans-serif !important;
+}
+body.jupiter-admin-shell .profile-global-admin-category-trigger:focus-visible {
+  border-color: var(--jupiter-primary) !important;
+  box-shadow: var(--jupiter-focus) !important;
+}
+body.jupiter-admin-shell .profile-global-admin-list {
+  border: 0 !important;
+  background: transparent !important;
+}
+body.jupiter-admin-shell .profile-global-admin-item-card {
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 8px !important;
+  background: var(--jupiter-card-nested) !important;
+}
+body.jupiter-admin-shell .profile-global-admin-item-card:hover,
+body.jupiter-admin-shell .profile-global-admin-item-card:focus-within {
+  border-color: var(--jupiter-border-strong) !important;
+  background: var(--jupiter-row-hover) !important;
+}
+body.jupiter-admin-shell .profile-global-admin-module-description {
+  color: var(--jupiter-text-muted) !important;
+}
+body.jupiter-admin-shell .profile-global-admin-availability-control {
+  padding: 3px 5px 3px 9px;
+  color: var(--jupiter-text-muted);
+  border: 1px solid var(--jupiter-border);
+  border-radius: 8px;
+  background: var(--jupiter-surface);
+}
+body.jupiter-admin-shell .tw-modal-content {
+  border: 1px solid var(--jupiter-border) !important;
+  border-radius: 14px !important;
+  background: var(--jupiter-surface) !important;
+  box-shadow: var(--jupiter-modal-shadow) !important;
+}
+body.jupiter-admin-shell :is(.tw-modal-header, .tw-modal-body, .tw-modal-footer) {
+  border-color: var(--jupiter-border) !important;
+  background: var(--jupiter-surface) !important;
+}
+body.jupiter-admin-shell :is(.tw-modal-header, .tw-modal-body) {
+  padding: 24px !important;
+}
+body.jupiter-admin-shell .tw-modal-footer {
+  padding: 16px 24px 24px !important;
+}
+body.jupiter-admin-shell .tw-modal .tw-btn-close {
+  display: inline-flex !important;
+  width: 32px !important;
+  height: 32px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: -4px -4px 0 auto !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  filter: none !important;
+  color: var(--jupiter-text-muted) !important;
+  opacity: 1 !important;
+}
+body.jupiter-admin-shell .tw-modal .tw-btn-close::before {
+  content: "\00D7";
+  font: 400 22px/1 "Geist", ui-sans-serif, system-ui, sans-serif;
+}
+body.jupiter-admin-shell .tw-modal .tw-btn-close:hover {
+  background: var(--jupiter-surface-raised) !important;
+  color: var(--jupiter-text) !important;
+}
+@media (max-width: 1200px) and (min-width: 801px) {
+  .pf-admin .pf-view-container {
+    padding-right: 32px;
+    padding-left: 32px;
+  }
+}
+@media (max-width: 800px) {
+  .pf-admin .pf-viewport {
+    display: block !important;
+  }
+  .pf-admin .pf-nav {
+    position: fixed !important;
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    transform: none !important;
+    border-right: 0 !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid var(--jupiter-border);
+  }
+  .pf-admin .pf-nav-column {
+    width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+  }
+  .pf-admin .pf-nav-menu {
+    width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+  }
+  .pf-admin .nav-body {
+    position: fixed !important;
+    inset: 56px 0 auto 0 !important;
+    display: none !important;
+    width: 100% !important;
+    max-height: calc(100vh - 56px) !important;
+    overflow-y: auto !important;
+    border-bottom: 1px solid var(--jupiter-border) !important;
+    background: var(--jupiter-nav) !important;
+    box-shadow: var(--jupiter-menu-shadow) !important;
+  }
+  .pf-admin .pf-nav.is-mobile-open .nav-body {
+    display: flex !important;
+  }
+  .pf-admin .nav-bottom {
+    display: none !important;
+  }
+  .pf-admin .jupiter-mobile-nav-toggle {
+    display: inline-flex !important;
+  }
+  .pf-admin .pf-main {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    padding-top: 56px !important;
+  }
+  .pf-admin .pf-canvas {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .pf-admin .pf-canvas-header {
+    min-height: 56px;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+  }
+  .pf-admin .jupiter-topbar-context {
+    display: none !important;
+  }
+  .pf-admin .pf-canvas-header h2 {
+    grid-column: 1 / 3 !important;
+    justify-self: start !important;
+    max-width: calc(100vw - 150px);
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+  .pf-admin .jupiter-topbar-actions {
+    grid-column: 3 !important;
+  }
+  .pf-admin .pf-view-container {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 12px !important;
+  }
+  .pf-admin .admin-buttons {
+    max-width: 48%;
+    overflow-x: auto;
+  }
+  .jupiter-command-search {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .jupiter-command-search .jupiter-search-label,
+  .jupiter-command-search kbd {
+    display: none;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport {
+    min-height: 100vh !important;
+    overflow: visible !important;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav,
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav.nav-content {
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    border-width: 0 0 1px !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav > .pf-nav-column,
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav > .pf-nav-column > header.pf-nav-menu {
+    width: 100% !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav .nav-body {
+    position: fixed !important;
+    inset: 56px 0 auto 0 !important;
+    display: none !important;
+    width: 100% !important;
+    max-height: calc(100vh - 56px) !important;
+    overflow-y: auto !important;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-nav.is-mobile-open .nav-body {
+    display: flex !important;
+  }
+  body.jupiter-admin-shell .pf-admin > .pf-viewport > .pf-main {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    margin-left: 0 !important;
+    padding-top: 56px !important;
+    overflow: visible !important;
+  }
+  body.jupiter-admin-shell .pf-admin .pf-canvas-header {
+    height: 56px !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+  }
+  body.jupiter-admin-shell .pf-admin .footer-errors {
+    margin: 0 12px 16px !important;
+  }
+}
+@media (max-width: 575.98px) {
+  .tw-modal-dialog {
+    margin: 12px;
+  }
+  .tw-modal-header,
+  .tw-modal-footer,
+  .tw-modal-body {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+  .tw-btn {
+    min-height: 40px;
+  }
+  body.jupiter-admin-login .lockscreen-wrapper {
+    justify-content: flex-start !important;
+    gap: 28px !important;
+    padding: 24px 12px 20px !important;
+  }
+  body.jupiter-admin-login .lockscreen-wrapper > .tw-card {
+    width: 100% !important;
+  }
+  body.jupiter-admin-login .lockscreen-wrapper > .tw-card > .tw-card-body {
+    padding: 20px !important;
+  }
+  body.jupiter-admin-login .lockscreen-credentials .tw-form-floating > .tw-form-control {
+    font-size: 16px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+/*# sourceMappingURL=acp_styles.min.css.map */

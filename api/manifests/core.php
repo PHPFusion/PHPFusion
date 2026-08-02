@@ -20,7 +20,7 @@ $legacy = static function (
     ];
 };
 
-return [
+$endpoints = [
     'core.username-check' => $legacy('username_validation.php', 'users/username-check', ['GET', 'POST'], ['username-check']),
     'core.userpass-check' => $legacy('userpass_validation.php', 'users/password-check', ['POST'], ['userpass-check']),
     'core.calling-codes' => $legacy('calling_codes.php', 'geo/calling-codes', ['GET'], ['calling-codes']),
@@ -56,3 +56,10 @@ return [
         'channels' => ['http', 'direct'],
     ],
 ];
+
+$adminManifest = __DIR__.'/admin.php';
+if (is_file($adminManifest)) {
+    $endpoints = array_replace($endpoints, (array)require $adminManifest);
+}
+
+return $endpoints;
