@@ -49,11 +49,11 @@ function fusion_get_current_page()
  */
 function fusion_get_currency($iso = NULL, $description = TRUE)
 {
-	
+
 	$locale = fusion_get_locale('', LOCALE . LOCALESET . "currency.php");
-	
+
 	static $__currency = [];
-	
+
 	if (empty($__currency)) {
 		// Euro Exceptions list
 		$currency_exceptions = ["ADF" => "EUR", "ATS" => "EUR", "BEF" => "EUR", "CYP" => "EUR", "DEM" => "EUR", "EEK" => "EUR", "ESP" => "EUR", "FIM" => "EUR", "FRF" => "EUR", "GRD" => "EUR", "IEP" => "EUR", "ITL" => "EUR", "KZT" => "EUR", "LTL" => "EUR", "LUF" => "EUR", "LVL" => "EUR", "MCF" => "EUR", "MTL" => "EUR", "NLG" => "EUR", "PTE" => "EUR", "RUB" => "EUR", "SIT" => "EUR", "SKK" => "EUR", "SML" => "EUR", "VAL" => "EUR", "DDM" => "EUR", "ESA" => "EUR", "ESB" => "EUR",];
@@ -64,7 +64,7 @@ function fusion_get_currency($iso = NULL, $description = TRUE)
 			$__currency[$country_iso] = $description ? $c_text . " ($c_symbol)" : $c_symbol;
 		}
 	}
-	
+
 	return $iso === NULL ? $__currency : (isset($__currency[$iso]) ? $__currency[$iso] : NULL);
 }
 
@@ -77,11 +77,11 @@ function fusion_get_currency($iso = NULL, $description = TRUE)
  */
 function theme_exists($theme)
 {
-	
+
 	if ($theme == "Default") {
 		$theme = fusion_get_settings('theme');
 	}
-	
+
 	return is_string($theme) and preg_match("/^([a-z0-9_-]){2,50}$/i", $theme) and file_exists(THEMES . $theme . "/theme.php") and file_exists(THEMES . $theme . "/styles.css");
 }
 
@@ -92,38 +92,38 @@ function theme_exists($theme)
  */
 function set_theme($theme)
 {
-	
+
 	$locale = fusion_get_locale();
 	if (defined("THEME")) {
 		return;
 	}
 	if (theme_exists($theme)) {
 		define("THEME", THEMES . ($theme == "Default" ? fusion_get_settings('theme') : $theme) . "/");
-		
+
 		return;
 	}
 	foreach (new GlobIterator(THEMES . '*') as $dir) {
 		if ($dir->isDir() and theme_exists($dir->getBasename())) {
 			define("THEME", $dir->getPathname() . "/");
-			
+
 			return;
 		}
 	}
 	// Don't stop if we are in admin panel since we use different themes now
 	$no_theme_message = str_replace("[SITE_EMAIL]", fusion_get_settings("siteemail"), $locale['global_301']);
-	
+
 	if (preg_match("/\/administration\//i", $_SERVER['PHP_SELF'])) {
-		
+
 		addnotice('danger', "<strong>" . $theme . " - " . $locale['global_300'] . ".</strong><br /><br />\n" . $no_theme_message);
-		
+
 	} else {
-		
+
 		echo "<strong>" . $theme . " - " . $locale['global_300'] . ".</strong><br /><br />\n";
-		
+
 		echo $no_theme_message;
-		
+
 		die();
-		
+
 	}
 }
 
@@ -136,7 +136,7 @@ function set_theme($theme)
  */
 function set_admin_pass($password)
 {
-	
+
 	return Authenticate::setAdminCookie($password);
 }
 
@@ -149,7 +149,7 @@ function set_admin_pass($password)
  */
 function check_admin_pass($password)
 {
-	
+
 	return Authenticate::validateAuthAdmin($password);
 }
 
@@ -211,25 +211,25 @@ function compress($buffer)
  */
 function set_status_header($code = 200)
 {
-	
+
 	if (headers_sent()) {
 		return FALSE;
 	}
-	
+
 	$protocol = $_SERVER['SERVER_PROTOCOL'];
-	
+
 	if ('HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol) {
 		$protocol = 'HTTP/1.0';
 	}
-	
+
 	$desc = [
 		100 => 'Continue', 101 => 'Switching Protocols', 102 => 'Processing', 200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content', 207 => 'Multi-Status', 226 => 'IM Used', 300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 306 => 'Reserved', 307 => 'Temporary Redirect', 400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Timeout', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Long', 415 => 'Unsupported Media Type', 416 => 'Requested Range Not Satisfiable', 417 => 'Expectation Failed', 422 => 'Unprocessable Entity', 423 => 'Locked', 424 => 'Failed Dependency', 426 => 'Upgrade Required', 500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Timeout', 505 => 'HTTP Version Not Supported', 506 => 'Variant Also Negotiates', 507 => 'Insufficient Storage', 510 => 'Not Extended',
 	];
-	
+
 	$desc = !empty($desc[$code]) ? $desc[$code] : '';
-	
+
 	header("$protocol $code $desc");
-	
+
 	return TRUE;
 }
 
@@ -242,20 +242,20 @@ function set_status_header($code = 200)
  */
 function get_http_response_code($url)
 {
-	
+
 	if (function_exists('curl_init')) {
 		$handle = curl_init($url);
 		curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_exec($handle);
 		$http_code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 		curl_close($handle);
-		
+
 		return $http_code;
 	} else {
 		stream_context_set_default(['ssl' => ['verify_peer' => FALSE, 'verify_peer_name' => FALSE],]);
-		
+
 		$headers = @get_headers($url);
-		
+
 		return substr($headers[0], 9, 3);
 	}
 }
@@ -269,10 +269,10 @@ function get_http_response_code($url)
  */
 function cleanurl($url)
 {
-	
+
 	$bad_entities = ["&", "\"", "'", '\"', "\'", "<", ">", "", "", "*"];
 	$safe_entities = ["&amp;", "", "", "", "", "", "", "", "", ""];
-	
+
 	return str_replace($bad_entities, $safe_entities, $url);
 }
 
@@ -285,17 +285,17 @@ function cleanurl($url)
  */
 function stripinput($text)
 {
-	
+
 	if (!is_array($text) && !is_null($text)) {
 		return str_replace('\\', '&#092;', htmlspecialchars(stripslashes(trim($text)), ENT_QUOTES));
 	}
-	
+
 	if (is_array($text) && !is_null($text)) {
 		foreach ($text as $i => $item) {
 			$text[$i] = stripinput($item);
 		}
 	}
-	
+
 	return $text;
 }
 
@@ -308,7 +308,7 @@ function stripinput($text)
  */
 function stripget($check_url)
 {
-	
+
 	if (is_array($check_url)) {
 		foreach ($check_url as $value) {
 			if (stripget($value) == TRUE) {
@@ -321,7 +321,7 @@ function stripget($check_url)
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -334,9 +334,9 @@ function stripget($check_url)
  */
 function stripfilename($filename)
 {
-	
+
 	$patterns = ['/\s+/' => '_', '/[^a-z0-9_-]|^\W/i' => '', '/([_-])\1+/' => '$1'];
-	
+
 	return preg_replace(array_keys($patterns), $patterns, strtolower($filename)) ?: (string)time();
 }
 
@@ -350,7 +350,7 @@ function stripfilename($filename)
  */
 function phpentities($text)
 {
-	
+
 	return str_replace('\\', '&#092;', htmlspecialchars($text, ENT_QUOTES));
 }
 
@@ -364,7 +364,7 @@ function phpentities($text)
  */
 function trimlink($text, $length)
 {
-	
+
 	if (strlen($text) > $length) {
 		if (function_exists('mb_substr')) {
 			$text = mb_substr($text, 0, ($length - 3), 'UTF-8') . "...";
@@ -372,7 +372,7 @@ function trimlink($text, $length)
 			$text = substr($text, 0, ($length - 3)) . "...";
 		}
 	}
-	
+
 	return $text;
 }
 
@@ -387,9 +387,9 @@ function trimlink($text, $length)
  */
 function fusion_first_words($text, $limit, $suffix = '&hellip;')
 {
-	
+
 	$text = preg_replace('/[\r\n]+/', '', $text);
-	
+
 	return preg_replace('~^(\s*\w+' . str_repeat('\W+\w+', $limit - 1) . '(?(?=[?!:;.])[[:punct:]]\s*))\b(.+)$~isxu', '$1' . $suffix, strip_tags($text));
 }
 
@@ -403,16 +403,16 @@ function fusion_first_words($text, $limit, $suffix = '&hellip;')
  */
 function trim_text($str, $length = 300)
 {
-	
+
 	for ($i = $length; $i <= strlen($str); $i++) {
 		$spacetest = substr("$str", $i, 1);
 		if ($spacetest == " ") {
 			$spaceok = substr("$str", 0, $i);
-			
+
 			return ($spaceok . "...");
 		}
 	}
-	
+
 	return ($str);
 }
 
@@ -425,11 +425,11 @@ function trim_text($str, $length = 300)
  */
 function normalize($value)
 {
-	
+
 	$table = [
 		'&amp;' => 'and', '@' => 'at', '©' => 'c', '®' => 'r', 'À' => 'a', '(' => '', ')' => '', '.' => '', 'Á' => 'a', 'Â' => 'a', 'Ä' => 'a', 'Å' => 'a', 'Æ' => 'ae', 'Ç' => 'c', 'È' => 'e', 'É' => 'e', 'Ë' => 'e', 'Ì' => 'i', 'Í' => 'i', 'Î' => 'i', 'Ï' => 'i', 'Ò' => 'o', 'Ó' => 'o', 'Ô' => 'o', 'Õ' => 'o', 'Ö' => 'o', 'Ø' => 'o', 'Ù' => 'u', 'Ú' => 'u', 'Û' => 'u', 'Ü' => 'u', 'Ý' => 'y', 'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 'p', 'ÿ' => 'y', 'Ā' => 'a', 'ā' => 'a', 'Ă' => 'a', 'ă' => 'a', 'Ą' => 'a', 'ą' => 'a', 'Ć' => 'c', 'ć' => 'c', 'Ĉ' => 'c', 'ĉ' => 'c', 'Ċ' => 'c', 'ċ' => 'c', 'Č' => 'c', 'č' => 'c', 'Ď' => 'd', 'ď' => 'd', 'Đ' => 'd', 'đ' => 'd', 'Ē' => 'e', 'ē' => 'e', 'Ĕ' => 'e', 'ĕ' => 'e', 'Ė' => 'e', 'ė' => 'e', 'Ę' => 'e', 'ę' => 'e', 'Ě' => 'e', 'ě' => 'e', 'Ĝ' => 'g', 'ĝ' => 'g', 'Ğ' => 'g', 'ğ' => 'g', 'Ġ' => 'g', 'ġ' => 'g', 'Ģ' => 'g', 'ģ' => 'g', 'Ĥ' => 'h', 'ĥ' => 'h', 'Ħ' => 'h', 'ħ' => 'h', 'Ĩ' => 'i', 'ĩ' => 'i', 'Ī' => 'i', 'ī' => 'i', 'Ĭ' => 'i', 'ĭ' => 'i', 'Į' => 'i', 'į' => 'i', 'İ' => 'i', 'ı' => 'i', 'Ĳ' => 'ij', 'ĳ' => 'ij', 'Ĵ' => 'j', 'ĵ' => 'j', 'Ķ' => 'k', 'ķ' => 'k', 'ĸ' => 'k', 'Ĺ' => 'l', 'ĺ' => 'l', 'Ļ' => 'l', 'ļ' => 'l', 'Ľ' => 'l', 'ľ' => 'l', 'Ŀ' => 'l', 'ŀ' => 'l', 'Ł' => 'l', 'ł' => 'l', 'Ń' => 'n', 'ń' => 'n', 'Ņ' => 'n', 'ņ' => 'n', 'Ň' => 'n', 'ň' => 'n', 'ŉ' => 'n', 'Ŋ' => 'n', 'ŋ' => 'n', 'Ō' => 'o', 'ō' => 'o', 'Ŏ' => 'o', 'ŏ' => 'o', 'Ő' => 'o', 'ő' => 'o', 'Œ' => 'oe', 'œ' => 'oe', 'Ŕ' => 'r', 'ŕ' => 'r', 'Ŗ' => 'r', 'ŗ' => 'r', 'Ř' => 'r', 'ř' => 'r', 'Ś' => 's', 'ś' => 's', 'Ŝ' => 's', 'ŝ' => 's', 'Ş' => 's', 'ş' => 's', 'Š' => 's', 'š' => 's', 'Ţ' => 't', 'ţ' => 't', 'Ť' => 't', 'ť' => 't', 'Ŧ' => 't', 'ŧ' => 't', 'Ũ' => 'u', 'ũ' => 'u', 'Ū' => 'u', 'ū' => 'u', 'Ŭ' => 'u', 'ŭ' => 'u', 'Ů' => 'u', 'ů' => 'u', 'Ű' => 'u', 'ű' => 'u', 'Ų' => 'u', 'ų' => 'u', 'Ŵ' => 'w', 'ŵ' => 'w', 'Ŷ' => 'y', 'ŷ' => 'y', 'Ÿ' => 'y', 'Ź' => 'z', 'ź' => 'z', 'Ż' => 'z', 'ż' => 'z', 'Ž' => 'z', 'ž' => 'z', 'ſ' => 'z', 'Ə' => 'e', 'ƒ' => 'f', 'Ơ' => 'o', 'ơ' => 'o', 'Ư' => 'u', 'ư' => 'u', 'Ǎ' => 'a', 'ǎ' => 'a', 'Ǐ' => 'i', 'ǐ' => 'i', 'Ǒ' => 'o', 'ǒ' => 'o', 'Ǔ' => 'u', 'ǔ' => 'u', 'Ǖ' => 'u', 'ǖ' => 'u', 'Ǘ' => 'u', 'ǘ' => 'u', 'Ǚ' => 'u', 'ǚ' => 'u', 'Ǜ' => 'u', 'ǜ' => 'u', 'Ǻ' => 'a', 'ǻ' => 'a', 'Ǽ' => 'ae', 'ǽ' => 'ae', 'Ǿ' => 'o', 'ǿ' => 'o', 'ə' => 'e', 'Ё' => 'jo', 'Є' => 'e', 'І' => 'i', 'Ї' => 'i', 'А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ж' => 'zh', 'З' => 'z', 'И' => 'i', 'Й' => 'j', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n', 'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u', 'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sch', 'Ъ' => '-', 'Ы' => 'y', 'Ь' => '-', 'Э' => 'je', 'Ю' => 'ju', 'Я' => 'ja', 'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch', 'ъ' => '-', 'ы' => 'y', 'ь' => '-', 'э' => 'je', 'ю' => 'ju', 'я' => 'ja', 'ё' => 'jo', 'є' => 'e', 'і' => 'i', 'ї' => 'i', 'Ґ' => 'g', 'ґ' => 'g', 'א' => 'a', 'ב' => 'b', 'ג' => 'g', 'ד' => 'd', 'ה' => 'h', 'ו' => 'v', 'ז' => 'z', 'ח' => 'h', 'ט' => 't', 'י' => 'i', 'ך' => 'k', 'כ' => 'k', 'ל' => 'l', 'ם' => 'm', 'מ' => 'm', 'ן' => 'n', 'נ' => 'n', 'ס' => 's', 'ע' => 'e', 'ף' => 'p', 'פ' => 'p', 'ץ' => 'C', 'צ' => 'c', 'ק' => 'q', 'ר' => 'r', 'ש' => 'w', 'ת' => 't', '™' => 'tm', 'ء' => 'a', 'ا' => 'a', 'آ' => 'a', 'ب' => 'b', 'پ' => 'p', 'ت' => 't', 'ث' => 's', 'ج' => 'j', 'چ' => 'ch', 'ح' => 'h', 'خ' => 'kh', 'د' => 'd', 'ر' => 'r', 'ز' => 'z', 'ژ' => 'zh', 'س' => 's', 'ص' => 's', 'ض' => 'z', 'ط' => 't', 'ظ' => 'z', 'غ' => 'gh', 'ف' => 'f', 'ق' => 'q', 'ک' => 'k', 'گ' => 'g', 'ل' => 'l', 'م' => 'm', 'ن' => 'n', 'و' => 'w', 'ه' => 'h', 'ی' => 'y ',
 	];
-	
+
 	return strtr($value, $table);
 }
 
@@ -443,7 +443,7 @@ function normalize($value)
  */
 function random_string($length = 6, $letters_only = FALSE)
 {
-	
+
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	if ($letters_only) {
 		$characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -453,7 +453,7 @@ function random_string($length = 6, $letters_only = FALSE)
 	for ($i = 0; $i < $length; $i++) {
 		$random_string .= $characters[rand(0, $characters_length - 1)];
 	}
-	
+
 	return $random_string;
 }
 
@@ -468,12 +468,12 @@ function random_string($length = 6, $letters_only = FALSE)
  */
 function isnum($value, $decimal = FALSE, $negative = FALSE)
 {
-	
+
 	if ($negative == TRUE) {
 		return is_numeric($value);
 	} else {
 		$float = $decimal ? '(.{0,1})[0-9]*' : '';
-		
+
 		return !is_array($value) and preg_match("/^[0-9]+" . $float . "$/", $value);
 	}
 }
@@ -488,7 +488,7 @@ function isnum($value, $decimal = FALSE, $negative = FALSE)
  */
 function preg_check($expression, $value)
 {
-	
+
 	return !is_array($value) and preg_match($expression, $value);
 }
 
@@ -505,35 +505,35 @@ function preg_check($expression, $value)
  */
 function clean_request($request_addition = '', $filter_array = [], $keep_filtered = TRUE)
 {
-	
+
 	$fusion_query = [];
-	
+
 	if (fusion_get_settings("site_seo") && defined('IN_PERMALINK') && !isset($_GET['aid'])) {
 		global $filepath;
-		
+
 		$url['path'] = $filepath;
 		if (!empty($_GET)) {
 			$fusion_query = $_GET;
 		}
 	} else {
-		
+
 		$url = ((array)parse_url(htmlspecialchars_decode($_SERVER['REQUEST_URI']))) + ['path' => '', 'query' => ''];
-		
+
 		if ($url['query']) {
 			parse_str($url['query'], $fusion_query); // this is original.
 		}
 	}
-	
+
 	if ($keep_filtered) {
 		$fusion_query = array_intersect_key($fusion_query, array_flip($filter_array));
 	} else {
 		$fusion_query = array_diff_key($fusion_query, array_flip($filter_array));
 	}
-	
+
 	if ($request_addition) {
-		
+
 		$request_addition_array = [];
-		
+
 		if (is_array($request_addition)) {
 			$fusion_query = $fusion_query + $request_addition;
 		} else {
@@ -541,9 +541,9 @@ function clean_request($request_addition = '', $filter_array = [], $keep_filtere
 			$fusion_query = $fusion_query + $request_addition_array;
 		}
 	}
-	
+
 	$prefix = $fusion_query ? '?' : '';
-	
+
 	return $url['path'] . $prefix . http_build_query($fusion_query, 'flags_', '&amp;');
 }
 
@@ -554,7 +554,7 @@ function clean_request($request_addition = '', $filter_array = [], $keep_filtere
  */
 function cache_smileys()
 {
-	
+
 	return ImageRepo::cacheSmileys();
 }
 
@@ -567,7 +567,7 @@ function cache_smileys()
  */
 function parsesmileys($message)
 {
-	
+
 	if (!preg_match("#(\[code\](.*?)\[/code\]|\[geshi=(.*?)\](.*?)\[/geshi\]|\[php\](.*?)\[/php])#si", $message)) {
 		foreach (cache_smileys() as $smiley) {
 			$smiley_code = preg_quote($smiley['smiley_code'], '#');
@@ -576,7 +576,7 @@ function parsesmileys($message)
 			$message = preg_replace("#$smiley_code#s", $smiley_image, $message);
 		}
 	}
-	
+
 	return $message;
 }
 
@@ -590,7 +590,7 @@ function parsesmileys($message)
  */
 function displaysmileys($textarea, $form = "inputform")
 {
-	
+
 	$smileys = "";
 	$i = 0;
 	foreach (cache_smileys() as $smiley) {
@@ -601,7 +601,7 @@ function displaysmileys($textarea, $form = "inputform")
 		$img = get_image("smiley_" . $smiley['smiley_text']);
 		$smileys .= "<img class='smiley m-2' style='width:20px;height:20px;' src='" . $img . "' alt='" . $smiley['smiley_text'] . "' title='" . $smiley['smiley_text'] . "' onclick=\"insertText('" . $textarea . "', '" . $smiley['smiley_code'] . "', '" . $form . "');\">\n";
 	}
-	
+
 	return $smileys;
 }
 
@@ -626,7 +626,7 @@ function fusion_parse_user($user_name, $tooltip = '')
 			$data = dbarray($result);
 			return render_user_tags($data, $tooltip);
 		}
-		
+
 		return $user_name[0];
 	}, $user_name);
 }
@@ -638,7 +638,7 @@ function fusion_parse_user($user_name, $tooltip = '')
  */
 function cache_bbcode()
 {
-	
+
 	static $bbcode_cache = [];
 	if (empty($bbcode_cache)) {
 		$bbcode_cache = [];
@@ -647,7 +647,7 @@ function cache_bbcode()
 			$bbcode_cache[] = $data['bbcode_name'];
 		}
 	}
-	
+
 	return $bbcode_cache;
 }
 
@@ -662,9 +662,9 @@ function cache_bbcode()
  */
 function parse_image_dir($data, $prefix_ = "")
 {
-	
+
 	$str = str_replace("../", "", $data);
-	
+
 	return (string)$prefix_ ? str_replace("images/", $prefix_, $str) : str_replace("images/", IMAGES, $str);
 }
 
@@ -687,9 +687,9 @@ function parse_text($value, $options = [])
 		'descript'             => TRUE, // Sanitize text.
 		'parse_users'          => TRUE // Create user @tags.
 	];
-	
+
 	$options += $default_options;
-	
+
 	$charset = fusion_get_locale('charset');
 	$value = stripslashes($value);
 	if ($options['descript']) {
@@ -715,7 +715,7 @@ function parse_text($value, $options = [])
 		$value = html_entity_decode(html_entity_decode($value, ENT_QUOTES, $charset));
 		$value = encode_code($value);
 	}
-	
+
 	return (string)$value;
 }
 
@@ -730,25 +730,25 @@ function parse_text($value, $options = [])
  */
 function parseubb($text, $selected = "", $descript = TRUE)
 {
-	
+
 	if ($descript) {
 		$text = descript($text, FALSE);
 	}
-	
+
 	$bbcode_cache = cache_bbcode();
 	$bbcodes = [];
 	foreach ($bbcode_cache as $bbcode) {
 		$bbcodes[$bbcode] = $bbcode;
 	}
-	
+
 	if (!empty($bbcodes['code'])) {
 		$move_to_top = $bbcodes['code'];
 		unset($bbcodes['code']);
 		array_unshift($bbcodes, $move_to_top);
 	}
-	
+
 	$sel_bbcodes = [];
-	
+
 	if ($selected) {
 		$sel_bbcodes = explode("|", $selected);
 	}
@@ -763,9 +763,9 @@ function parseubb($text, $selected = "", $descript = TRUE)
 			\PHPFusion\Locale::setLocale($locale_file);
 		}
 	}
-	
+
 	$locale = fusion_get_locale();
-	
+
 	foreach ($bbcodes as $bbcode) {
 		if ($selected && in_array($bbcode, $sel_bbcodes)) {
 			if (file_exists(INCLUDES . "bbcodes/" . $bbcode . "_bbcode_include.php")) {
@@ -777,10 +777,10 @@ function parseubb($text, $selected = "", $descript = TRUE)
 			}
 		}
 	}
-	
+
 	// Added to fix code sniffer reported error
 	unset($locale);
-	
+
 	return $text;
 }
 
@@ -797,7 +797,7 @@ function parseubb($text, $selected = "", $descript = TRUE)
  */
 function hide_email($email, $title = "", $subject = "")
 {
-	
+
 	if (preg_match("/^[-0-9A-Z_.]{1,50}@([-0-9A-Z_.]+\.){1,50}([0-9A-Z]){2,4}$/i", $email)) {
 		$enc_email = '';
 		$parts = explode("@", $email);
@@ -805,13 +805,13 @@ function hide_email($email, $title = "", $subject = "")
 		for ($i = 0; $i < strlen($email); $i++) {
 			$enc_email .= '&#' . ord($email[$i]) . ';';
 		}
-		
+
 		$MailLink = "<a href='mailto:" . $enc_email;
 		if ($subject != "") {
 			$MailLink .= "?subject=" . urlencode($subject);
 		}
 		$MailLink .= "'>" . (!empty($title) ? $title : $enc_email) . "</a>";
-		
+
 		$MailLetters = "";
 		for ($i = 0; $i < strlen($MailLink); $i++) {
 			$l = substr($MailLink, $i, 1);
@@ -828,9 +828,9 @@ function hide_email($email, $title = "", $subject = "")
 			$index += 48;
 			$MailIndexes .= chr($index);
 		}
-		
+
 		$id = 'e' . rand(1, 99999999);
-		
+
 		$MailIndexes = str_replace("\\", "\\\\", $MailIndexes);
 		$MailIndexes = str_replace("\"", "\\\"", $MailIndexes);
 		$res = "<span id='" . $id . "'></span>";
@@ -844,7 +844,7 @@ function hide_email($email, $title = "", $subject = "")
 		$res .= "OT+=ML.charAt(MI.charCodeAt(j)-48);";
 		$res .= "}var e=document.getElementById('" . $id . "');e.innerHTML += OT;";
 		$res .= "</script>";
-		
+
 		return $res;
 	} else {
 		return $email;
@@ -860,14 +860,14 @@ function hide_email($email, $title = "", $subject = "")
  */
 function encode_code($text)
 {
-	
+
 	preg_match_all("#<code>(.*?)</code>#is", $text, $codes);
 	$replace = [];
 	foreach ($codes[1] as $key => $codeblock) {
 		$replace[$key] = htmlentities($codeblock, ENT_QUOTES, 'UTF-8', FALSE);
 	}
 	unset($key, $codeblock);
-	
+
 	if (!empty($codes[0])) {
 		if (!defined('PRISMJS')) {
 			define('PRISMJS', TRUE);
@@ -875,14 +875,14 @@ function encode_code($text)
 			add_to_footer('<script src="' . INCLUDES . 'bbcodes/code/prism.js"></script>');
 		}
 	}
-	
+
 	foreach ($codes[0] as $key => $replacer) {
 		$code = str_replace('&lt;br /&gt;', '', $replace[$key]);
 		$code = format_code($code);
 		$text = str_replace($replacer, '<pre><code class="language-php">' . $code . '</code></pre>', $text);
 	}
 	unset($key, $replacer, $replace);
-	
+
 	return $text;
 }
 
@@ -895,11 +895,11 @@ function encode_code($text)
  */
 function format_code($code)
 {
-	
+
 	$code = htmlentities($code, ENT_QUOTES, 'UTF-8', FALSE);
-	
+
 	$code = str_replace(["  ", "  ", "\t", "[", "]"], ["&nbsp; ", " &nbsp;", "&nbsp; &nbsp;", "&#91;", "&#93;"], $code);
-	
+
 	return preg_replace("/^ {1}/m", "&nbsp;", $code);
 }
 
@@ -917,9 +917,9 @@ function format_code($code)
  */
 function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ",", $round = TRUE, $acryonym = TRUE)
 {
-	
+
 	$array = [13 => $acryonym ? "t" : "trillion", 10 => $acryonym ? "b" : "billion", 7 => $acryonym ? "m" : "million", 4 => $acryonym ? "k" : "thousand"];
-	
+
 	if (is_numeric($value)) {
 		if ($round === TRUE) {
 			foreach ($array as $length => $rounding) {
@@ -928,15 +928,15 @@ function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ","
 					if ($value > $power && $length > 4 && $decimals === NULL) {
 						$decimals = 2;
 					}
-					
+
 					return number_format(($value / $power), $decimals, $dec_point, $thousand_sep) . $rounding;
 				}
 			}
 		}
-		
+
 		return number_format($value, $decimals, $dec_point, $thousand_sep);
 	}
-	
+
 	return $value;
 }
 
@@ -949,7 +949,7 @@ function format_num($value, $decimals = 0, $dec_point = ".", $thousand_sep = ","
  */
 function format_float($value)
 {
-	
+
 	return floatval(preg_replace('/[^\d.]/', '', $value));
 }
 
@@ -963,14 +963,14 @@ function format_float($value)
  */
 function highlight_words($words, $subject)
 {
-	
+
 	for ($i = 0, $l = count($words); $i < $l; $i++) {
 		$word[$i] = str_replace(["\\", "+", "*", "?", "[", "^", "]", "$", "(", ")", "{", "}", "=", "!", "<", ">", "|", ":", "#", "-", "_"], "", $words[$i]);
 		if (!empty($words[$i])) {
 			$subject = preg_replace("#($words[$i])(?![^<]*>)#i", "<span style='background-color:yellow;color:#333;font-weight:bold;padding-left:2px;padding-right:2px;'>\${1}</span>", $subject);
 		}
 	}
-	
+
 	return $subject;
 }
 
@@ -985,30 +985,30 @@ function highlight_words($words, $subject)
  */
 function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE)
 {
-	
+
 	if (is_array($text) || is_null($text)) {
 		return $text;
 	}
-	
+
 	$text = html_entity_decode($text, ENT_QUOTES, fusion_get_locale('charset'));
 	$text = preg_replace('/&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});/i', '', $text);
-	
+
 	// Convert problematic ascii characters to their true values
 	$patterns = ['#(&\#x)([0-9A-F]+);*#si' => '', '#(/\bon\w+=\S+(?=.*>))#is' => '', '#([a-z]*)=([\`\'\"]*)script:#iU' => '$1=$2nojscript...', '#([a-z]*)=([\`\'\"]*)javascript:#iU' => '$1=$2nojavascript...', '#([a-z]*)=([\'\"]*)vbscript:#iU' => '$1=$2novbscript...', '#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU' => "$1>", '#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU' => "$1>"];
-	
+
 	foreach (array_merge(['(', ')', ':'], range('A', 'Z'), range('a', 'z')) as $chr) {
 		$patterns["#(&\#)(0*" . ord($chr) . "+);*#si"] = $chr;
 	}
-	
+
 	if ($strip_tags) {
 		do {
 			$count = 0;
 			$text = preg_replace('#</*(applet|meta|xml|blink|link|style|script|object|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $text, -1, $count);
 		} while ($count);
 	}
-	
+
 	$text = preg_replace(array_keys($patterns), $patterns, $text);
-	
+
 	$preg_patterns = [// Fix &entity\n
 					  '!(&#0+[0-9]+)!'                                                                                                                                                                                => '$1;', '/(&#*\w+)[\x00-\x20]+;/u' => '$1;>', '/(&#x*[0-9A-F]+);*/iu' => '$1;', // Remove any attribute starting with "on" or xml name space
 					  '#(<[^>]+?[\x00-\x20"\'])(?:on|xmlns)[^>]*+>#iu'                                                                                                                                                => '$1>', // Remove any xss injected without a closing tag
@@ -1017,15 +1017,15 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE)
 					  '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?expression[\x00-\x20]*\([^>]*+>#i'                                                                                                           => '$1>', '#(<[^>]+?)style[\x00-\x20]*=[\x00-\x20]*[`\'"]*.*?s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:*[^>]*+>#iu' => '$1>', // namespace elements
 					  '#</*\w+:\w[^>]*+>#i'                                                                                                                                                                           => '',
 	];
-	
+
 	if ($strip_scripts) {
 		$preg_patterns += ['#<script(.*?)>(.*?)</script>#is' => ''];
 	}
-	
+
 	foreach ($preg_patterns as $pattern => $replacement) {
 		$text = preg_replace($pattern, $replacement, $text);
 	}
-	
+
 	return htmlspecialchars($text, ENT_QUOTES, 'UTF-8', FALSE);
 }
 
@@ -1038,7 +1038,7 @@ function descript($text, $strip_tags = TRUE, $strip_scripts = TRUE)
  */
 function verify_image($file)
 {
-	
+
 	$txt = file_get_contents($file);
 	$patterns = ['#\<\?php#i', '#&(quot|lt|gt|nbsp);#i', '#&\#x([0-9a-f]+);#i', '#&\#([0-9]+);#i', "#([a-z]*)=([\`\'\"]*)script:#iU", "#([a-z]*)=([\`\'\"]*)javascript:#iU", "#([a-z]*)=([\'\"]*)vbscript:#iU", "#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", "#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", "#</*(applet|link|style|script|iframe|frame|frameset)[^>]*>#i"];
 	foreach ($patterns as $pattern) {
@@ -1046,7 +1046,7 @@ function verify_image($file)
 			return FALSE;
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -1061,7 +1061,7 @@ function verify_image($file)
 function censorwords($text)
 {
 	$settings = fusion_get_settings();
-	
+
 	if ($settings['bad_words_enabled'] && !empty($settings['bad_words'])) {
 		//$words = preg_quote(trim($settings['bad_words']), "/");
 		//$words = preg_replace("/\\s+/", "|", $words);
@@ -1069,7 +1069,7 @@ function censorwords($text)
 		$words = str_replace("\n", "|", $words);
 		$text = preg_replace("/" . $words . "/si", $settings['bad_word_replace'], $text);
 	}
-	
+
 	return $text;
 }
 
@@ -1082,10 +1082,10 @@ function censorwords($text)
  */
 function getuserlevel($userlevel)
 {
-	
+
 	$locale = fusion_get_locale();
 	$userlevels = [USER_LEVEL_MEMBER => $locale['user1'], USER_LEVEL_ADMIN => $locale['user2'], USER_LEVEL_SUPER_ADMIN => $locale['user3']];
-	
+
 	return $userlevels[$userlevel] ?? NULL;
 }
 
@@ -1099,13 +1099,13 @@ function getuserlevel($userlevel)
  */
 function getuserstatus($userstatus, $join_timestamp = 0)
 {
-	
+
 	$locale = fusion_get_locale();
-	
+
 	if ($join_timestamp) {
 		return ($userstatus >= 0 and $userstatus <= 8) ? $locale['status' . $userstatus] : NULL;
 	}
-	
+
 	return $locale['status_pending'];
 }
 
@@ -1124,7 +1124,7 @@ function checkrights($rights)
 		return TRUE;
 	}
 	return FALSE;
-	
+
 }
 
 /**
@@ -1135,7 +1135,7 @@ function checkrights($rights)
  */
 function pageaccess($rights, $debug = FALSE)
 {
-	
+
 	$error = [];
 	if ($debug) {
 		print_p('Admin Panel mode');
@@ -1176,7 +1176,7 @@ function pageaccess($rights, $debug = FALSE)
  */
 function checkgroup($group, $delim = ',')
 {
-	
+
 	if (strpos($group, $delim) !== FALSE) {
 		foreach (explode($delim, $group) as $group_) {
 			if (iSUPERADMIN) {
@@ -1193,7 +1193,7 @@ function checkgroup($group, $delim = ',')
 		}
 		return FALSE;
 	}
-	
+
 	if (iSUPERADMIN) {
 		return TRUE;
 	} else if (iADMIN && ($group == 0 || $group == USER_LEVEL_MEMBER || $group == USER_LEVEL_ADMIN)) {
@@ -1205,7 +1205,7 @@ function checkgroup($group, $delim = ',')
 	} else if (iMEMBER && $group && in_array($group, explode('.', iUSER_GROUPS))) {
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -1221,7 +1221,7 @@ function checkgroup($group, $delim = ',')
  */
 function checkusergroup($group, $user_level, $user_groups, $delim = ',')
 {
-	
+
 	if (strpos($group, $delim) !== FALSE) {
 		foreach (explode($delim, $group) as $group_) {
 			if ($user_level == USER_LEVEL_SUPER_ADMIN) {
@@ -1249,7 +1249,7 @@ function checkusergroup($group, $user_level, $user_groups, $delim = ',')
 			return TRUE;
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -1268,7 +1268,7 @@ function cache_groups()
 			$groups_cache[$data["group_id"]] = $data;
 		}
 	}
-	
+
 	return $groups_cache;
 }
 
@@ -1279,7 +1279,7 @@ function cache_groups()
  */
 function getusergroups()
 {
-	
+
 	$locale = fusion_get_locale();
 	$groups_array = [[USER_LEVEL_PUBLIC, $locale['user0'], $locale['user0'], 'fa fa-user'], [USER_LEVEL_MEMBER, $locale['user1'], $locale['user1'], 'fa fa-user'], [USER_LEVEL_ADMIN, $locale['user2'], $locale['user2'], 'fa fa-user'], [USER_LEVEL_SUPER_ADMIN, $locale['user3'], $locale['user3'], 'fa fa-user']];
 	$groups_cache = cache_groups();
@@ -1288,7 +1288,7 @@ function getusergroups()
 		$group_user_count = format_word($group['group_user_count'], $locale['fmt_user']);
 		$groups_array[] = [$group['group_id'], $group['group_name'], $group['group_description'], $group_icon, $group_user_count];
 	}
-	
+
 	return $groups_array;
 }
 
@@ -1303,13 +1303,13 @@ function getusergroups()
  */
 function getgroupname($group_id, $return_desc = FALSE, $return_icon = FALSE)
 {
-	
+
 	foreach (getusergroups() as $group) {
 		if ($group_id == $group[0]) {
 			return ($return_desc ? ($group[2] ?: '-') : (!empty($group[3]) && $return_icon ? "<i class='" . $group[3] . "'></i> " : "") . $group[1]);
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -1324,11 +1324,11 @@ function fusion_get_groups($remove = [])
 {
 	$visibility_opts = [];
 	$groups = array_diff_key(getusergroups(), array_flip($remove));
-	
+
 	foreach ($groups as $group) {
 		$visibility_opts[$group[0]] = $group[1];
 	}
-	
+
 	return $visibility_opts;
 }
 
@@ -1341,11 +1341,11 @@ function fusion_get_groups($remove = [])
  */
 function users_groupaccess($group_id)
 {
-	
+
 	if (preg_match("(^\.$group_id$|\.$group_id\.|\.$group_id$)", fusion_get_userdata('user_groups'))) {
 		return TRUE;
 	}
-	
+
 	return FALSE;
 }
 
@@ -1359,7 +1359,7 @@ function users_groupaccess($group_id)
  */
 function groupaccess($field, $delim = ',')
 {
-	
+
 	$res = '';
 	if (iGUEST) {
 		$res = $field . " in (" . USER_LEVEL_PUBLIC . ")";
@@ -1370,7 +1370,7 @@ function groupaccess($field, $delim = ',')
 	} else if (iMEMBER) {
 		$res = $field . " in (" . USER_LEVEL_PUBLIC . ", " . USER_LEVEL_MEMBER . ")";
 	}
-	
+
 	if (iUSER_GROUPS != "" && !iSUPERADMIN) {
 		$groups = explode('.', iUSER_GROUPS);
 		$groups_ = [];
@@ -1380,7 +1380,7 @@ function groupaccess($field, $delim = ',')
 		$group_sql = implode(' OR ', $groups_);
 		$res = "(" . $res . " OR " . $group_sql . ")";
 	}
-	
+
 	return $res;
 }
 
@@ -1393,13 +1393,13 @@ function groupaccess($field, $delim = ',')
  */
 function getgroupdata($group_id)
 {
-	
+
 	foreach (getusergroups() as $group) {
 		if ($group_id == $group[0]) {
 			return $group;
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -1412,7 +1412,7 @@ function getgroupdata($group_id)
  */
 function blacklist($field)
 {
-	
+
 	if (column_exists('users', 'user_blacklist')) {
 		$user_id = fusion_get_userdata('user_id');
 		if (!empty($user_id)) {
@@ -1420,18 +1420,18 @@ function blacklist($field)
 			if (dbrows($result) > 0) {
 				$i = 0;
 				$sql = '';
-				
+
 				while ($data = dbarray($result)) {
 					$sql .= ($i > 0) ? "AND $field !='" . $data['user_id'] . "'" : "($field !='" . $data['user_id'] . "'";
 					$i++;
 				}
 				$sql .= $sql ? ")" : '1=1';
-				
+
 				return $sql;
 			}
 		}
 	}
-	
+
 	return '';
 }
 
@@ -1445,7 +1445,7 @@ function blacklist($field)
  */
 function user_blacklisted($user_id, $me = FALSE)
 {
-	
+
 	if (column_exists('users', 'user_blacklist')) {
 		$my_id = fusion_get_userdata('user_id');
 		if ($me && !empty(fusion_get_userdata('user_blacklist'))) {
@@ -1468,7 +1468,7 @@ function user_blacklisted($user_id, $me = FALSE)
 			}
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -1485,14 +1485,14 @@ function user_blacklisted($user_id, $me = FALSE)
  */
 function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext_filter = "")
 {
-	
+
 	$res = [];
-	
+
 	$default_filters = '.|..|.htaccess|index.php|._DS_STORE|.tmp';
 	if ($filter === FALSE) {
 		$filter = $default_filters;
 	}
-	
+
 	$filter = explode("|", $filter);
 	if ($type == "files" && !empty($ext_filter)) {
 		$ext_filter = explode("|", strtolower($ext_filter));
@@ -1520,14 +1520,14 @@ function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext
 		if ($sort) {
 			natsort($res);
 		}
-		
+
 	} else {
 		$error_log = debug_backtrace()[1];
 		$function = (isset($error_log['class']) ? $error_log['class'] : '') . (isset($error_log['type']) ? $error_log['type'] : '') . (isset($error_log['function']) ? $error_log['function'] : '');
 		$error_log = strtr(fusion_get_locale('err_103', LOCALE . LOCALESET . 'errors.php'), ['{%folder%}' => $folder, '{%function%}' => (!empty($function) ? '<code class=\'m-r-10\'>' . $function . '</code>' : '')]);
 		set_error(2, $error_log, debug_backtrace()[1]['file'], debug_backtrace()[1]['line']);
 	}
-	
+
 	return $res;
 }
 
@@ -1546,7 +1546,7 @@ function makefilelist($folder, $filter = "", $sort = TRUE, $type = "files", $ext
  */
 function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname = "rowstart", $button = FALSE)
 {
-	
+
 	$locale = fusion_get_locale();
 	/* Bootstrap may be disabled in theme (see Gillette for example) without settings change in DB.
 	   In such case this function will not work properly.
@@ -1568,7 +1568,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 		$tpl_lastpage = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
 		$tpl_button = "<a class='pagenavlink' data-value='%d' href='%s=%d'>%s</a>\n";
 	}
-	
+
 	if ($link == '') {
 		$link = FUSION_SELF . "?";
 		if (fusion_get_settings("site_seo") && defined('IN_PERMALINK')) {
@@ -1585,7 +1585,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 	}
 	$idx_back = $rowstart - $count;
 	$idx_next = $rowstart + $count;
-	
+
 	if ($button == TRUE) {
 		if ($idx_next >= $total) {
 			return sprintf($tpl_button, 0, $link . $getname, 0, $locale['load_end']);
@@ -1593,23 +1593,23 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 			return sprintf($tpl_button, $idx_next, $link . $getname, $idx_next, $locale['load_more']);
 		}
 	}
-	
+
 	$cur_page = ceil(($rowstart + 1) / $count);
 	$idx_fst = max($cur_page - $range, 1);
 	$idx_lst = min($cur_page + $range, $pg_cnt);
-	
+
 	if ($range == 0) {
 		$idx_fst = 1;
 		$idx_lst = $pg_cnt;
 	}
-	
+
 	$res = '';
-	
+
 	if ($cur_page != $idx_fst) {
 		$res .= sprintf($tpl_page, 0, $link . $getname, 0, get_icon('first') . $locale['first']);
 		$res .= sprintf($tpl_page, $idx_back, $link . $getname, $idx_back, get_icon('previous') . $locale['previous']);
 	}
-	
+
 	if ($idx_back >= 0) {
 		if ($cur_page > ($range + 1)) {
 			$res .= sprintf($tpl_firstpage, $link . $getname);
@@ -1618,7 +1618,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 			}
 		}
 	}
-	
+
 	for ($i = $idx_fst; $i <= $idx_lst; $i++) {
 		$offset_page = ($i - 1) * $count;
 		if ($i == $cur_page) {
@@ -1627,23 +1627,23 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 			$res .= sprintf($tpl_page, $offset_page, $link . $getname, $offset_page, $i);
 		}
 	}
-	
+
 	if ($idx_next < $total) {
 		if ($cur_page < ($pg_cnt - $range)) {
 			if ($cur_page != ($pg_cnt - $range - 1)) {
 				$res .= $tpl_divider;
 			}
-			
+
 			$res .= sprintf($tpl_lastpage, ($pg_cnt - 1) * $count, $link . $getname, ($pg_cnt - 1) * $count, $pg_cnt);
 		}
 	}
-	
+
 	if ($cur_page != $idx_lst) {
-		
+
 		$res .= sprintf($tpl_page, $idx_next, $link . $getname, $idx_next, $locale['next'] . get_icon('next'));
 		$res .= sprintf($tpl_page, ($pg_cnt - 1) * $count, $link . $getname, ($pg_cnt - 1) * $count, $locale['last'] . get_icon('last'));
 	}
-	
+
 	// if there is a request, we can redirect
 	if (check_post($getname . '_pg')) {
 		if ($val = sanitizer($getname . '_pg', '', $getname . '_pg')) {
@@ -1652,9 +1652,9 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
 			redirect(clean_request('', [$getname], FALSE));
 		}
 	}
-	
+
 	$cur_page_field = openform(random_string(5), 'POST', FORM_REQUEST, ['class' => 'display-inline-block']) . form_text($getname . '_pg', '', $cur_page, ['inline' => TRUE, 'inner_class' => 'input-sm']) . closeform();
-	
+
 	return sprintf($tpl_global, "<span>" . $locale['global_092'] . "</span> " . $cur_page_field . " " . $locale['global_093'] . " " . $pg_cnt, $res);
 }
 
@@ -1669,7 +1669,7 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
  */
 function rowstart_count($total, $count, $range = 3)
 {
-	
+
 	if ($total > $count) {
 		$cur_page = ceil(($total + 1) / $count);
 		$pg_cnt = ceil($total / $count);
@@ -1677,10 +1677,10 @@ function rowstart_count($total, $count, $range = 3)
 			return 0;
 		}
 		$row = min($cur_page + $range, $pg_cnt);
-		
+
 		return ($row - 1) * $count;
 	}
-	
+
 	return 0;
 }
 
@@ -1697,9 +1697,9 @@ function rowstart_count($total, $count, $range = 3)
  */
 function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', $http_query = '')
 {
-	
+
 	$locale = fusion_get_locale();
-	
+
 	add_to_jquery("
         var count = $rowstart+1;
         $(window).scroll(function(){
@@ -1724,7 +1724,7 @@ function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', 
           return false;
         }
     ");
-	
+
 	return "
     <div id='scroll_target'></div>
     <div class='infiniteLoader panel panel-default' style='display:none;'><div class='panel-body text-center'>" . $locale['loading'] . "</div></div>
@@ -1742,14 +1742,14 @@ function infinite_scroll($scroll_url, $rowstart, $count, $getname = 'rowstart', 
  */
 function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $getname = "rownav")
 {
-	
+
 	$_GET[$getname] = !empty($_GET[$getname]) && isnum($_GET[$getname]) ? $_GET[$getname] : 0;
-	
+
 	// Recursive fatal protection
 	if (!function_exists('breadcrumb_page_arrays')) {
 		function breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $id)
 		{
-			
+
 			$crumb = [];
 			if (isset($tree_index[get_parent($tree_index, $id)])) {
 				$_name = get_parent_array($tree_full, $id);
@@ -1758,17 +1758,17 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 					return $crumb;
 				}
 				$crumb_1 = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, get_parent($tree_index, $id));
-				
+
 				if (!empty($crumb_1)) {
 					$crumb = array_merge_recursive($crumb, $crumb_1);
 				}
-				
+
 			}
-			
+
 			return $crumb;
 		}
 	}
-	
+
 	// then we make an infinity recursive function to loop/break it out.
 	$crumb = breadcrumb_page_arrays($tree_index, $tree_full, $id_col, $title_col, $getname, $_GET[$getname]);
 	// then we sort in reverse.
@@ -1805,7 +1805,7 @@ function make_page_breadcrumbs($tree_index, $tree_full, $id_col, $title_col, $ge
 function showdate($format, $val, $options = [])
 {
 	$userdata = fusion_get_userdata();
-	
+
 	if (isset($options['tz_override'])) {
 		$tz_client = $options['tz_override'];
 	} else {
@@ -1815,13 +1815,13 @@ function showdate($format, $val, $options = [])
 			$tz_client = fusion_get_settings('timeoffset');
 		}
 	}
-	
+
 	if (empty($tz_client)) {
 		$tz_client = 'Europe/London';
 	}
-	
+
 	$offset = 0;
-	
+
 	try {
 		$client_dtz = new DateTimeZone($tz_client);
 		$client_dt = new DateTime('now', $client_dtz);
@@ -1829,22 +1829,22 @@ function showdate($format, $val, $options = [])
 	} catch (Exception $e) {
 		set_error(E_CORE_ERROR, $e->getMessage(), $e->getFile(), $e->getLine());
 	}
-	
+
 	if (!empty($val)) {
 		$offset = (int)$val + $offset;
 		if (in_array($format, ['shortdate', 'longdate', 'forumdate', 'newsdate'])) {
 			$format = fusion_get_settings($format);
-			
+
 			return format_date($format, $offset);
 		}
-		
+
 		return format_date($format, $offset);
-		
+
 	}
-	
+
 	$format = fusion_get_settings($format);
 	$offset = time() + $offset;
-	
+
 	return format_date($format, $offset);
 }
 
@@ -1860,7 +1860,7 @@ function format_date($format, $timestamp)
 {
 	$locale = fusion_get_locale();
 	$format = str_replace(['%a', '%A', '%d', '%e', '%u', '%w', '%W', '%b', '%h', '%B', '%m', '%y', '%Y', '%D', '%F', '%x', '%n', '%t', '%H', '%k', '%I', '%l', '%M', '%p', '%P', '%r', '%R', '%S', '%T', '%X', '%z', '%Z', '%c', '%s', '%%'], ['D', 'l', 'd', 'j', 'N', 'w', 'W', 'M', 'M', 'F', 'm', 'y', 'Y', 'm/d/y', 'Y-m-d', 'm/d/y', "\n", "\t", 'H', 'G', 'h', 'g', 'i', 'a', 'A', 'h:i:s A', 'H:i', 's', 'H:i:s', 'H:i:s', 'O', 'T', 'D M j H:i:s Y', 'U', '%'], $format);
-	
+
 	$format = preg_replace('/(?<!\\\\)r/', DATE_RFC2822, $format);
 	$new_format = '';
 	$format_length = strlen($format);
@@ -1868,9 +1868,9 @@ function format_date($format, $timestamp)
 	$lcweek = explode('|', $locale['weekdays']);
 	$lcshort = explode('|', $locale['shortmonths']);
 	$lcmerid = explode('|', $locale['meridiem']);
-	
+
 	$date = DateTimeImmutable::createFromFormat('U', $timestamp);
-	
+
 	for ($i = 0; $i < $format_length; $i++) {
 		switch ($format[$i]) {
 			case 'D':
@@ -1905,7 +1905,7 @@ function format_date($format, $timestamp)
 				break;
 		}
 	}
-	
+
 	return $date->format($new_format);
 }
 
@@ -1932,16 +1932,16 @@ function format_date($format, $timestamp)
  */
 function parsebytesize($size, $decimals = 2, $dir = FALSE)
 {
-	
+
 	$locale = fusion_get_locale();
-	
+
 	$kb = 1024;
 	$mb = 1024 * $kb;
 	$gb = 1024 * $mb;
 	$tb = 1024 * $gb;
-	
+
 	$size = (empty($size)) ? "0" : $size;
-	
+
 	if (($size == 0) && ($dir)) {
 		return "0 " . $locale['global_460'];
 	} else if ($size < $kb) {
@@ -1968,7 +1968,7 @@ function parsebytesize($size, $decimals = 2, $dir = FALSE)
  */
 function print_p($data, $modal = FALSE, $print = TRUE)
 {
-	
+
 	ob_start();
 	echo htmlspecialchars(print_r($data, TRUE), ENT_QUOTES, 'utf-8');
 	$debug = ob_get_clean();
@@ -1979,7 +1979,7 @@ function print_p($data, $modal = FALSE, $print = TRUE)
 		$modal .= "</pre>\n";
 		$modal .= closemodal();
 		PHPFusion\OutputHandler::addToFooter($modal);
-		
+
 		return FALSE;
 	}
 	if ($print == TRUE) {
@@ -1987,7 +1987,7 @@ function print_p($data, $modal = FALSE, $print = TRUE)
 		echo $debug;
 		echo "</pre>\n";
 	}
-	
+
 	return $debug;
 }
 
@@ -2000,7 +2000,7 @@ function print_p($data, $modal = FALSE, $print = TRUE)
  */
 function fusion_get_settings($key = NULL)
 {
-	
+
 	// It is initialized only once because of 'static'
 	static $settings = [];
 	if (empty($settings) and defined('DB_SETTINGS') and dbconnection() && db_exists('settings')) {
@@ -2009,7 +2009,7 @@ function fusion_get_settings($key = NULL)
 			$settings[$data['settings_name']] = $data['settings_value'];
 		}
 	}
-	
+
 	return $key === NULL ? $settings : ($settings[$key] ?? NULL);
 }
 
@@ -2030,18 +2030,18 @@ function fusion_get_username($user_id)
  */
 function fusion_set_user()
 {
-	
+
 	static $userdata = [
 		'user_level'  => 0,
 		'user_rights' => '',
 		'user_groups' => '',
 	];
-	
-	if (check_post('login')) {
-		
-		sanitizer('user_name', '', 'user_name');
-		sanitizer('user_pass', '', 'user_pass');
-		
+
+    if (check_post('login') && check_post('user_name') && check_post('user_pass')) {
+
+		//sanitizer('user_name', '', 'user_name');
+		//sanitizer('user_pass', '', 'user_pass');
+
 		if (fusion_safe()) {
 			$auth = new Authenticate(post('user_name'), post('user_pass'), check_post('remember_me'));
 			if ($auth->authRedirection()) {
@@ -2055,15 +2055,15 @@ function fusion_set_user()
 			}
 		}
 	} else if (get('logout') === 'yes') {
-		
+
 		$userdata = Authenticate::logOut();
 		redirect(BASEDIR . fusion_get_settings('opening_page'));
-		
+
 	} elseif (empty($userdata['user_id'])) {
-		
+
 		$userdata = Authenticate::validateAuthUser();
 	}
-	
+
 	return $userdata;
 }
 
@@ -2078,12 +2078,12 @@ function fusion_set_user()
 function fusion_get_userdata($key = NULL)
 {
 	$userdata = fusion_set_user();
-	
+
 	if (empty($userdata)) {
 		$userdata = ["user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => 'Default', "user_ip" => USER_IP];
 	}
 	$userdata = $userdata + ["user_id" => 0, "user_name" => fusion_get_locale("user_guest"), "user_status" => 1, "user_level" => 0, "user_rights" => "", "user_groups" => "", "user_theme" => fusion_get_settings("theme"),];
-	
+
 	return $key === NULL ? $userdata : ($userdata[$key] ?? NULL);
 }
 
@@ -2097,7 +2097,7 @@ function fusion_get_userdata($key = NULL)
  */
 function fusion_get_user($user_id, $key = NULL)
 {
-	
+
 	static $user = [];
 	if (!isset($user[$user_id]) && isnum($user_id)) {
 		$user[$user_id] = dbarray(dbquery("SELECT * FROM " . DB_USERS . " WHERE user_id='" . intval($user_id) . "'"));
@@ -2105,7 +2105,7 @@ function fusion_get_user($user_id, $key = NULL)
 	if (!isset($user[$user_id])) {
 		return NULL;
 	}
-	
+
 	return $key === NULL ? $user[$user_id] : ($user[$user_id][$key] ?? NULL);
 }
 
@@ -2116,12 +2116,12 @@ function fusion_get_user($user_id, $key = NULL)
  */
 function fusion_get_aidlink()
 {
-	
+
 	$aidlink = '';
 	if (defined('iADMIN') && iADMIN && defined('iAUTH')) {
 		$aidlink = '?aid=' . iAUTH;
 	}
-	
+
 	return $aidlink;
 }
 
@@ -2135,7 +2135,7 @@ function fusion_get_aidlink()
  */
 function fusion_get_token($form_id, $max_tokens = 5)
 {
-	
+
 	return Token::generate_token($form_id, $max_tokens);
 }
 
@@ -2149,7 +2149,7 @@ function fusion_get_token($form_id, $max_tokens = 5)
  */
 function user_pm_settings($user_id, $key = NULL)
 {
-	
+
 	return PrivateMessages::getPmSettings($user_id, $key);
 }
 
@@ -2160,7 +2160,7 @@ function user_pm_settings($user_id, $key = NULL)
  */
 function define_site_language($lang)
 {
-	
+
 	if (valid_language($lang)) {
 		define('LANGUAGE', $lang);
 		define('LOCALESET', $lang . '/');
@@ -2176,7 +2176,7 @@ function define_site_language($lang)
  */
 function get_language_code($language_pack)
 {
-	
+
 	$locale = [];
 	try {
 		include LOCALE . $language_pack . '/global.php';
@@ -2194,7 +2194,7 @@ function get_language_code($language_pack)
  */
 function set_language($lang)
 {
-	
+
 	$userdata = fusion_get_userdata();
 	if (valid_language($lang)) {
 		if (iMEMBER) {
@@ -2224,7 +2224,7 @@ function set_language($lang)
  */
 function valid_language($lang, $file_check = FALSE)
 {
-	
+
 	$enabled_languages = fusion_get_enabled_languages(TRUE);
 	if (preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && ($file_check ? file_exists(LOCALE . $lang . "/global.php") : isset($enabled_languages[$lang]))) {
 		return TRUE;
@@ -2243,7 +2243,7 @@ function valid_language($lang, $file_check = FALSE)
 function check_language($lang)
 {
 	return preg_match("/^([a-z0-9_-]){2,50}$/i", $lang) && is_file(LOCALE . $lang . "/global.php");
-	
+
 }
 
 /**
@@ -2253,7 +2253,7 @@ function check_language($lang)
  */
 function fusion_get_language_switch()
 {
-	
+
 	static $language_switch = [];
 	if (empty($language_link)) {
 		$enabled_languages = fusion_get_enabled_languages();
@@ -2262,7 +2262,7 @@ function fusion_get_language_switch()
 			$language_switch[$language] = ["language_name" => $language_name, "language_icon_s" => BASEDIR . "locale/$language/$language-s.png", "language_icon" => BASEDIR . "locale/$language/$language.png", "language_link" => $link,];
 		}
 	}
-	
+
 	return $language_switch;
 }
 
@@ -2273,10 +2273,10 @@ function fusion_get_language_switch()
  */
 function fusion_get_enabled_languages($skip_translate = FALSE)
 {
-	
+
 	$settings = fusion_get_settings();
 	$enabled_languages = [];
-	
+
 	if (isset($settings['enabled_languages'])) {
 		$values = explode('.', $settings['enabled_languages']);
 		foreach ($values as $language_name) {
@@ -2293,7 +2293,7 @@ function fusion_get_enabled_languages($skip_translate = FALSE)
  */
 function fusion_get_detected_languages()
 {
-	
+
 	static $detected_languages = NULL;
 	if ($detected_languages === NULL) {
 		$all_languages = makefilelist(LOCALE, ".svn|.|..", TRUE, "folders");
@@ -2301,7 +2301,7 @@ function fusion_get_detected_languages()
 			$detected_languages[$language_name] = translate_lang_names($language_name);
 		}
 	}
-	
+
 	return $detected_languages;
 }
 
@@ -2310,7 +2310,7 @@ function fusion_get_detected_languages()
  */
 function fusion_run_installer()
 {
-	
+
 	if (is_file("install.php")) {
 		redirect("install.php");
 	} else {
@@ -2325,12 +2325,12 @@ function fusion_run_installer()
  */
 function fusion_detect_installation()
 {
-	
+
 	$config_path = dirname(__DIR__) . '/config.php';
 	if (!is_file($config_path) or !filesize($config_path)) {
 		fusion_run_installer();
 	}
-	
+
 	return $config_path;
 }
 
@@ -2344,7 +2344,7 @@ function fusion_detect_installation()
  */
 function save_user_log($user_id, $column_name, $new_value, $old_value)
 {
-	
+
 	$data = ["userlog_id" => 0, "userlog_user_id" => $user_id, "userlog_field" => $column_name, "userlog_value_new" => $new_value, "userlog_value_old" => $old_value, "userlog_timestamp" => time(),];
 	dbquery_insert(DB_USER_LOG, $data, "save", ["keep_session" => TRUE]);
 }
@@ -2358,9 +2358,9 @@ function save_user_log($user_id, $column_name, $new_value, $old_value)
  */
 function jsminify($code)
 {
-	
+
 	$minifier = new JS($code);
-	
+
 	return $minifier->minify();
 }
 
@@ -2379,7 +2379,7 @@ function jsminify($code)
  */
 function write_file($file, $data, $flags = NULL)
 {
-	
+
 	if ($flags === NULL) {
 		$bytes = file_put_contents($file, $data);
 	} else {
@@ -2388,7 +2388,7 @@ function write_file($file, $data, $flags = NULL)
 	if (function_exists('opcache_invalidate')) {
 		opcache_invalidate($file, TRUE);
 	}
-	
+
 	return $bytes;
 }
 
@@ -2425,7 +2425,7 @@ function calculate_byte($total_bit)
 			return (int)$byte;
 		}
 	}
-	
+
 	return 1048576;
 }
 
@@ -2441,17 +2441,17 @@ function parse_byte($value)
 	$units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
 	$number = substr($value, 0, -2);
 	$suffix = strtoupper(substr($value, -2));
-	
+
 	//B or no suffix
 	if (is_numeric(substr($suffix, 0, 1))) {
 		return preg_replace('/[^\d]/', '', $value);
 	}
-	
+
 	$exponent = array_flip($units)[$suffix] ?? NULL;
 	if ($exponent === NULL) {
 		return NULL;
 	}
-	
+
 	return $number * (1024 ** $exponent);
 }
 
@@ -2462,7 +2462,7 @@ function parse_byte($value)
  */
 function rrmdir($dir)
 {
-	
+
 	if (is_dir($dir)) {
 		$objects = scandir($dir);
 		foreach ($objects as $object) {
@@ -2487,7 +2487,7 @@ function rrmdir($dir)
  */
 function fusion_rename($origin, $target)
 {
-	
+
 	if ($origin != "." && $origin != ".." && !is_dir($origin)) {
 		if (TRUE !== @rename($origin, $target)) {
 			copy($origin, $target);
@@ -2505,7 +2505,7 @@ function fusion_rename($origin, $target)
  */
 function fusion_get_contents($url)
 {
-	
+
 	if (function_exists('curl_init')) {
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -2517,7 +2517,7 @@ function fusion_get_contents($url)
 	} else {
 		$data = @file_get_contents($url);
 	}
-	
+
 	return $data;
 }
 
@@ -2530,9 +2530,9 @@ function fusion_get_contents($url)
  */
 function is_json($string)
 {
-	
+
 	json_decode($string);
-	
+
 	return (json_last_error() == JSON_ERROR_NONE);
 }
 
@@ -2550,11 +2550,11 @@ function is_json($string)
 function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $cached = TRUE)
 {
 	static $paths = [];
-	
+
 	$file_info = pathinfo($file_path);
-	
+
 	if (isset($file_info['dirname']) && isset($file_info['basename']) && isset($file_info['extension']) && isset($file_info['filename'])) {
-		
+
 		$mtime = 0;
 		$file = $file_info['dirname'] . '/' . $file_info['basename'];
 		$min_file = $file_info['dirname'] . '/' . $file_info['filename'] . (!stristr($file_info['filename'], '.min') ? '.min.' : '.') . $file_info['extension'];
@@ -2563,7 +2563,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
 		// inspect only on min file
 		$siteurl = fusion_get_settings('siteurl') ?? $_SERVER['HTTP_HOST'];
 		$m_min_file = str_replace($siteurl, BASEDIR, $min_file);
-		
+
 		if (is_file($m_min_file)) { // fixes https:// on local server
 			$return_file = $m_min_file;
 		} else if (is_file($min_file)) { // checks local server
@@ -2574,29 +2574,29 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
 			$return_file = $min_file;
 			// }
 		}
-		
+
 		if (is_file($return_file)) {
 			$mtime = filemtime($return_file);
 		}
-		
+
 		$file_path = $return_file . "?v=" . $mtime;
 		if (!$cached) {
 			$file_path = $return_file;
 		}
 	}
-	
+
 	if ($file_path && empty($paths[$file_path])) {
-		
+
 		$paths[$file_path] = $file_path;
-		
+
 		if ($file_type == "script") {
-			
+
 			$html_tag = "<script src='$file_path'></script>";
 			if ($html === TRUE) {
 				return $html_tag;
 			}
 			add_to_footer($html_tag);
-			
+
 		} else if ($file_type == "css") {
 			$html_tag = "<link rel='stylesheet' href='$file_path' type='text/css' media='all'>";
 			if ($html === TRUE) {
@@ -2605,7 +2605,7 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
 			add_to_head($html_tag);
 		}
 	}
-	
+
 	return NULL;
 }
 
@@ -2616,14 +2616,14 @@ function fusion_load_script($file_path, $file_type = "script", $html = FALSE, $c
  */
 function max_server_upload()
 {
-	
+
 	// select maximum upload size
 	$max_upload = convert_to_bytes(ini_get('upload_max_filesize'));
 	// select post limit
 	$max_post = convert_to_bytes(ini_get('post_max_size'));
 	// select memory limit
 	$memory_limit = convert_to_bytes(ini_get('memory_limit'));
-	
+
 	// return the smallest of them, this defines the real limit
 	return min($max_upload, $max_post, $memory_limit);
 }
@@ -2637,7 +2637,7 @@ function max_server_upload()
  */
 function convert_to_bytes($val)
 {
-	
+
 	$val = trim($val);
 	$last = strtolower($val[strlen($val) - 1]);
 	$kb = 1024;
@@ -2654,7 +2654,7 @@ function convert_to_bytes($val)
 			$val = (int)$val * $kb;
 			break;
 	}
-	
+
 	return (int)$val;
 }
 
@@ -2665,11 +2665,11 @@ function convert_to_bytes($val)
  */
 function get_current_url()
 {
-	
+
 	$s = (empty($_SERVER["HTTPS"]) ? "" : ($_SERVER["HTTPS"] == "on")) ? "s" : "";
 	$protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/") . $s;
 	$port = ($_SERVER["SERVER_PORT"] == "80" || ($_SERVER['SERVER_PORT'] == "443" && $s == "s")) ? "" : (":" . $_SERVER["SERVER_PORT"]);
-	
+
 	return $protocol . "://" . $_SERVER['SERVER_NAME'] . $port . (str_replace(basename(cleanurl($_SERVER['PHP_SELF'])), "", $_SERVER['REQUEST_URI']));
 }
 
@@ -2681,7 +2681,7 @@ function get_current_url()
  */
 function strleft($s1, $s2)
 {
-	
+
 	return substr($s1, 0, strpos($s1, $s2));
 }
 
@@ -2694,11 +2694,11 @@ function strleft($s1, $s2)
  */
 function whitespace($value)
 {
-	
+
 	if (!empty($value)) {
 		return " " . $value;
 	}
-	
+
 	return "";
 }
 
@@ -2722,20 +2722,20 @@ function fusion_set_cookie($name, $value, $expires = 86400, $path = '', $domain 
 		trigger_error("Cookie '$name' could not be set. Output started in $file on line $line", E_USER_NOTICE);
 		return FALSE;
 	}
-	
+
 	// 2. Default Path
 	$path = $path ?: '/';
-	
+
 	// 3. The "Localhost" Fix: If no domain is provided, leave it empty.
 	// Explicitly setting "localhost" as a domain string often fails in Chrome.
 	$domain = $domain ?: '';
-	
+
 	// 4. Calculate Expiry (Unix Timestamp)
 	$expiry_timestamp = ($expires > 0) ? time() + (int)$expires : 0;
-	
+
 	// 5. Handle SameSite Logic for modern browsers
 	$samesite = in_array(strtolower($samesite), ['lax', 'none', 'strict']) ? ucfirst(strtolower($samesite)) : 'Lax';
-	
+
 	// 6. Execution
 	if (PHP_VERSION_ID < 70300) {
 		$header = "Set-Cookie: " . rawurlencode($name) . "=" . rawurlencode($value);
@@ -2747,7 +2747,7 @@ function fusion_set_cookie($name, $value, $expires = 86400, $path = '', $domain 
 		if ($secure) $header .= "; secure";
 		if ($httponly) $header .= "; httponly";
 		if ($samesite) $header .= "; samesite=$samesite";
-		
+
 		header($header, FALSE);
 	} else {
 		setcookie($name, (string)$value, [
@@ -2771,24 +2771,24 @@ function fusion_set_cookie($name, $value, $expires = 86400, $path = '', $domain 
  */
 function maintenance_mode($maintenance = TRUE)
 {
-	
+
 	$file = BASEDIR . '.maintenance';
-	
+
 	if ($maintenance) {
 		if (!($fp = @fopen($file, 'w'))) {
 			return FALSE;
 		}
-		
+
 		@fwrite($fp, '<?php $mt_mode_start = ' . time() . '; ?>');
 		@fclose($fp);
 		@chmod($file, 0644);
-		
+
 		return is_readable($file);
 	} else {
 		if (file_exists($file)) {
 			return @unlink($file);
 		}
-		
+
 		return NULL;
 	}
 }
@@ -2805,13 +2805,13 @@ function maintenance_mode($maintenance = TRUE)
  */
 function in_array_r($needle, $haystack, $strict = FALSE)
 {
-	
+
 	foreach ($haystack as $item) {
 		if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
 			return TRUE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -2822,9 +2822,9 @@ function in_array_r($needle, $haystack, $strict = FALSE)
  */
 function is_homepage()
 {
-	
+
 	$settings = fusion_get_settings();
-	
+
 	if ($settings['site_seo']) {
 		$params = http_build_query(\PHPFusion\Rewrite\Router::getRouterInstance()->getFileParams());
 		$path = \PHPFusion\Rewrite\Router::getRouterInstance()->getFilePath();
@@ -2832,7 +2832,7 @@ function is_homepage()
 	} else {
 		$file_path = '/' . PERMALINK_CURRENT_PATH;
 	}
-	
+
 	return $settings['opening_page'] == 'index.php' && $file_path == '/' || $file_path == '/' . $settings['opening_page'];
 }
 
@@ -2848,7 +2848,7 @@ function fusion_get_enabled_infusions()
 		// inf_folder is the directory name in /infusions/
 		// inf_title is the display name
 		$result = dbquery("SELECT inf_folder, inf_title FROM " . DB_INFUSIONS . " ORDER BY inf_title ASC");
-		
+
 		if (dbrows($result) > 0) {
 			while ($data = dbarray($result)) {
 				$infusions[] = [
@@ -2858,7 +2858,7 @@ function fusion_get_enabled_infusions()
 			}
 		}
 	endif;
-	
+
 	return $infusions;
 }
 
@@ -2874,30 +2874,30 @@ function fusion_get_enabled_infusions()
 function fusion_api_request($route, $method = 'GET', $data = [])
 {
 	$settings = fusion_get_settings();
-	
+
 	// Use the system defined site URL as the base
 	$base_url = rtrim($settings['siteurl'], '/');
 	$url = $base_url . "/api.php?route=" . ltrim($route, '/');
-	
+
 	$ch = curl_init();
 	// 2. Set Basic cURL Options
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 	curl_setopt($ch, CURLOPT_TIMEOUT, 10); // Don't hang the server if API is slow
-	
+
 	// 3. Set standard API Headers
 	$headers = [
 		'Content-Type: application/json',
 		'Accept: application/json',
 		'X-Requested-With: XMLHttpRequest',
 	];
-	
+
 	// 4. Attach Payload
 	if (!empty($data) && in_array(strtoupper($method), ['POST', 'PUT', 'DELETE'])) {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 	}
-	
+
 	// 5. Session Forwarding (CRITICAL)
 	// We pass the current user's cookies so the Middleware recognizes the Admin
 	$cookie_string = "";
@@ -2910,32 +2910,32 @@ function fusion_api_request($route, $method = 'GET', $data = [])
 	if (session_id()) {
 		$cookie_string .= session_name() . "=" . session_id() . ";";
 	}
-	
+
 	if ($cookie_string) {
 		curl_setopt($ch, CURLOPT_COOKIE, $cookie_string);
 	}
-	
+
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-	
+
 	$verbose = fopen('php://temp', 'w+');
 	curl_setopt($ch, CURLOPT_VERBOSE, true);
 	curl_setopt($ch, CURLOPT_STDERR, $verbose);
 	// Only do this in development!
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-	
+
 	// 6. Execute and Clean up
 	$response = curl_exec($ch);
 	$error = curl_error($ch);
 	$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	curl_close($ch);
-	
+
 	if ($response === false) {
 		rewind($verbose);
 		$verboseLog = stream_get_contents($verbose);
 		echo "cURL Verbose Log: <pre>" . htmlspecialchars($verboseLog) . "</pre>";
 	}
-	
+
 	if ($error) {
 		return [
 			'status'  => 'error',
@@ -2943,9 +2943,9 @@ function fusion_api_request($route, $method = 'GET', $data = [])
 			'message' => 'Fusion Request Error: ' . $error,
 		];
 	}
-	
+
 	$decoded = json_decode($response, TRUE);
-	
+
 	// If the response isn't valid JSON, return the raw body for debugging
 	if (json_last_error() !== JSON_ERROR_NONE) {
 		return [
@@ -2955,6 +2955,6 @@ function fusion_api_request($route, $method = 'GET', $data = [])
 			'raw'     => $response,
 		];
 	}
-	
+
 	return $decoded;
 }
