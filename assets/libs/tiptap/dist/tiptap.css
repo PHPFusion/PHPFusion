@@ -1,0 +1,252 @@
+/* Project-owned Tiptap presentation.
+ *
+ * This stylesheet owns component anatomy and interaction. Active themes supply
+ * only the --tiptap-* color roles, with semantic UI tokens as a fallback.
+ */
+.tiptap-editor-wrapper {
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+  border: 1px solid var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color))));
+  border-radius: 8px;
+  background: var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg))));
+  color: var(--tiptap-foreground, var(--ui-card-foreground, var(--tblr-body-color, var(--bs-body-color))));
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+.tiptap-editor-wrapper:hover {
+  background: var(--tiptap-hover-surface, var(--ui-accent, var(--tblr-active-bg, var(--bs-tertiary-bg))));
+}
+.tiptap-editor-wrapper:focus-within {
+  border-color: var(--tiptap-ring, var(--ui-ring, var(--tblr-primary, var(--bs-primary))));
+  background: var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg))));
+  box-shadow: 0 0 0 3px var(--tiptap-focus-ring, color-mix(in srgb, var(--ui-ring, var(--tblr-primary, var(--bs-primary))) 16%, transparent));
+}
+.tiptap-editor-wrapper .tiptap {
+  min-height: 200px;
+  padding: 14px 14px 44px;
+  outline: 0;
+  color: inherit;
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.tiptap-editor-wrapper .tiptap > :first-child {
+  margin-top: 0;
+}
+.tiptap-editor-wrapper .tiptap > :last-child {
+  margin-bottom: 0;
+}
+.tiptap-editor-wrapper .tiptap :is(h1, h2, h3) {
+  margin: 1.25rem 0 0.5rem;
+  color: var(--tiptap-heading, var(--ui-foreground, var(--tblr-body-color, var(--bs-heading-color))));
+  font-weight: 600;
+  line-height: 1.25;
+}
+.tiptap-editor-wrapper .tiptap h1 {
+  font-size: 1.25rem;
+}
+.tiptap-editor-wrapper .tiptap h2 {
+  font-size: 1.1rem;
+}
+.tiptap-editor-wrapper .tiptap h3 {
+  font-size: 1rem;
+}
+.tiptap-editor-wrapper .tiptap :is(ul, ol) {
+  margin: 0.75rem 0;
+  padding-inline-start: 1.5rem;
+}
+.tiptap-editor-wrapper .tiptap blockquote {
+  margin: 0.75rem 0;
+  border-inline-start: 2px solid var(--tiptap-border, var(--ui-border, var(--tblr-border-color, var(--bs-border-color))));
+  padding-inline-start: 0.75rem;
+  color: var(--tiptap-muted-foreground, var(--ui-muted-foreground, var(--tblr-secondary-color, var(--bs-secondary-color))));
+}
+.tiptap-editor-wrapper .tiptap :is(code, pre) {
+  font-family: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+}
+.tiptap-editor-wrapper .tiptap code {
+  border-radius: 4px;
+  background: var(--tiptap-code-surface, var(--ui-muted, var(--tblr-bg-surface-secondary, var(--bs-tertiary-bg))));
+  padding: 0.125rem 0.25rem;
+  color: var(--tiptap-code-foreground, var(--ui-primary, var(--tblr-primary, var(--bs-primary))));
+}
+.tiptap-editor-wrapper .tiptap pre {
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--tiptap-pre-surface, var(--ui-background, var(--tblr-body-bg, var(--bs-body-bg))));
+  padding: 0.75rem;
+  color: var(--tiptap-foreground, var(--ui-card-foreground, var(--tblr-body-color, var(--bs-body-color))));
+}
+.tiptap-editor-wrapper .tiptap pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+.tiptap-editor-wrapper .tiptap p.is-editor-empty:first-child::before {
+  float: left;
+  height: 0;
+  color: var(--tiptap-placeholder, var(--ui-muted-foreground, var(--tblr-secondary-color, var(--bs-secondary-color))));
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+.tiptap-editor-wrapper .tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.tiptap-editor-wrapper .tiptap ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.tiptap-editor-wrapper .tiptap ul[data-type="taskList"] input {
+  accent-color: var(--tiptap-primary, var(--ui-primary, var(--tblr-primary, var(--bs-primary))));
+}
+.tiptap-bubble-menu {
+  z-index: 1100;
+  display: flex;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(100vw - 1rem);
+  min-height: 40px;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color))));
+  border-radius: 10px;
+  background: var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg))));
+  padding: 4px;
+  color: var(--tiptap-foreground, var(--ui-card-foreground, var(--tblr-body-color, var(--bs-body-color))));
+  box-shadow: 0 16px 44px var(--tiptap-menu-shadow-color, transparent);
+  white-space: nowrap;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container {
+  position: relative;
+  flex: 0 0 auto;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu {
+  position: absolute !important;
+  z-index: 1;
+  top: calc(100% + 6px);
+  right: auto;
+  bottom: auto;
+  left: 0;
+  box-sizing: border-box;
+  min-width: 15rem;
+  max-height: min(20rem, calc(100vh - 1rem));
+  margin: 0;
+  overflow-y: auto;
+  scrollbar-color: var(--tiptap-scrollbar-thumb, var(--tiptap-border, var(--ui-border, var(--tblr-border-color, var(--bs-border-color))))) var(--tiptap-scrollbar-track, var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg)))));
+  scrollbar-width: thin;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu::-webkit-scrollbar {
+  width: 10px;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: var(--tiptap-scrollbar-track, var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg)))));
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu::-webkit-scrollbar-thumb {
+  border: 2px solid var(--tiptap-scrollbar-track, var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg)))));
+  border-radius: 999px;
+  background: var(--tiptap-scrollbar-thumb, var(--tiptap-border, var(--ui-border, var(--tblr-border-color, var(--bs-border-color)))));
+  background-clip: padding-box;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--tiptap-scrollbar-thumb-hover, var(--tiptap-muted-foreground, var(--ui-muted-foreground, var(--tblr-secondary-color, var(--bs-secondary-color)))));
+  background-clip: padding-box;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu:not(.show) {
+  display: none;
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > .dropdown-menu.show {
+  display: block;
+}
+.tiptap-bubble-menu > .vr {
+  height: 18px;
+  flex: 0 0 1px;
+  margin-inline: 0 !important;
+}
+.tiptap-bubble-menu > button.menu-btn[data-command],
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger {
+  display: inline-flex;
+  box-sizing: border-box;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  padding: 0;
+  color: var(--tiptap-muted-foreground, var(--ui-muted-foreground, var(--tblr-secondary-color, var(--bs-secondary-color))));
+  box-shadow: none;
+  line-height: 1;
+  transform: none;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+.tiptap-bubble-menu > button.menu-btn[data-command] {
+  width: 32px;
+}
+.tiptap-bubble-menu > button.menu-btn[data-command]:hover,
+.tiptap-bubble-menu > button.menu-btn[data-command]:focus-visible,
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger:hover,
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger:focus-visible {
+  background: var(--tiptap-row-hover, var(--ui-accent, var(--tblr-active-bg, var(--bs-tertiary-bg))));
+  color: var(--tiptap-heading, var(--ui-foreground, var(--tblr-body-color, var(--bs-body-color))));
+  box-shadow: none;
+  transform: none;
+}
+.tiptap-bubble-menu > button.menu-btn[data-command][data-state="on"],
+.tiptap-bubble-menu > button.menu-btn[data-command][aria-current="true"],
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger[aria-expanded="true"] {
+  border-color: var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color))));
+  background: var(--tiptap-active-surface, var(--ui-secondary, var(--tblr-bg-surface-secondary, var(--bs-secondary-bg))));
+  color: var(--tiptap-primary, var(--ui-primary, var(--tblr-primary, var(--bs-primary))));
+}
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger {
+  width: auto;
+  min-width: 68px;
+  justify-content: space-between;
+  gap: 6px;
+  padding-inline: 9px;
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+.tiptap-bubble-menu > button.menu-btn[data-command] > .tiptap-button-icon,
+.tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+@media (max-width: 767.98px) {
+  .tiptap-editor-wrapper .tiptap {
+    min-height: 220px;
+    padding: 14px 14px 52px;
+    font-size: 16px;
+  }
+  .tiptap-bubble-menu > button.menu-btn[data-command] {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger {
+    height: 40px;
+    min-height: 40px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tiptap-editor-wrapper,
+  .tiptap-bubble-menu > button.menu-btn[data-command],
+  .tiptap-bubble-menu > .tiptap-dropdown-container > button.tiptap-dropdown-trigger {
+    transition: none;
+  }
+}
