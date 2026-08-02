@@ -64,7 +64,7 @@ function pf_post() {
         ];
 
         // Validate extra fields
-        if ( $inputData['captcha'] == 'grecaptcha' || $inputData['captcha'] == 'grecaptcha3' ) {
+        if ( $inputData['display_validation'] == TRUE && $inputData['captcha'] == 'grecaptcha' || $inputData['captcha'] == 'grecaptcha3' ) {
             // appends captcha settings
             $inputData += [
                 'recaptcha_public'  => sanitizer( 'recaptcha_public', '', 'recaptcha_public' ),
