@@ -1,5 +1,4 @@
 <?php
-
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
@@ -1951,10 +1950,10 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     add_to_jquery("
     $('#" . $getname . "_pg').on('keydown', function(e) {
         if (e.keyCode === 13) {
-            let v = $(this).val();                
-            if ($.isNumeric(v)) {                               
+            let v = $(this).val();
+            if ($.isNumeric(v)) {
                document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
-            }            
+            }
         }
     });
     ");

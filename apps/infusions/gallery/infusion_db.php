@@ -25,8 +25,8 @@ define('GALLERY_ADMIN_LOCALE', fusion_get_inf_locale_path('gallery_admin.php', I
 
 // Paths
 const GALLERY = INFUSIONS."gallery/";
-const IMAGES_G = INFUSIONS."gallery/photos/";
-const IMAGES_G_T = INFUSIONS."gallery/photos/thumbs/";
+//const IMAGES_G = INFUSIONS."gallery/photos/";
+//const IMAGES_G_T = INFUSIONS."gallery/photos/thumbs/";
 
 //  Database
 const DB_PHOTO_ALBUMS = DB_PREFIX."photo_albums";
