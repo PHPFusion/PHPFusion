@@ -18,6 +18,7 @@ return [
     'order'           => 10,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'policies'        => [
         'public_profile_access' => [
             'field'          => 'user_display',

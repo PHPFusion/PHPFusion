@@ -18,6 +18,7 @@ return [
     'order'           => 20,
     'default_enabled' => TRUE,
     'public'          => TRUE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'header'          => FALSE,
     'field' => [
         'name'        => 'user_sig',

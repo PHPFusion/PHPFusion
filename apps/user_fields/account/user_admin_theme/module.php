@@ -22,6 +22,7 @@ return [
     'order'           => 50,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'audience'        => 'administrator',
     'success_message' => $locale['ato_103'],
     'option_providers' => [

@@ -22,6 +22,7 @@ return [
     'order'           => 40,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'success_message' => $locale['uth_103'],
     'option_providers' => [
         'account.site-theme.options' => [ThemeOptions::class, 'options'],

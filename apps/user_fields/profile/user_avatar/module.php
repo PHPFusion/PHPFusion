@@ -21,6 +21,7 @@ return [
     'default_enabled' => TRUE,
     'essential'       => TRUE,
     'public'          => TRUE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'header'          => TRUE,
     'header_slot'     => 'avatar',
     'class'           => \PHPFusion\Apps\UserFields\Profile\Avatar\AvatarModule::class,

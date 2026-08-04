@@ -22,6 +22,7 @@ return [
     'order'           => 12,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'option_providers' => [
         'account.location.countries' => [CountryOptions::class, 'options'],
     ],

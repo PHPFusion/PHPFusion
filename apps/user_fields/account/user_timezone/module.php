@@ -22,6 +22,7 @@ return [
     'order'           => 10,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'option_providers' => [
         'account.timezone.options' => [TimezoneOptions::class, 'options'],
     ],

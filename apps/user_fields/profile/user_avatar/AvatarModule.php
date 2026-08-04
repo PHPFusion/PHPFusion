@@ -5,6 +5,7 @@ namespace PHPFusion\Apps\UserFields\Profile\Avatar;
 use PHPFusion\ProfileGlobal\ProfileContext;
 use PHPFusion\ProfileGlobal\ProfileModuleInterface;
 use PHPFusion\ProfileGlobal\ProfileRepository;
+use PHPFusion\Core\Profile\ProfileAvatar;
 
 final class AvatarModule implements ProfileModuleInterface
 {
@@ -113,11 +114,7 @@ final class AvatarModule implements ProfileModuleInterface
 
     private function avatarUrl(string $filename = ''): string
     {
-        if ($filename === '') {
-            return function_exists('get_image') ? (string)get_image('noavatar') : IMAGES . 'avatars/default-avatar.png';
-        }
-
-        return IMAGES . 'avatars/' . rawurlencode($filename) . '?v=' . time();
+        return ProfileAvatar::url($filename);
     }
 
     private function removeFile(string $filename): void

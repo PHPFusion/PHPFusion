@@ -5,7 +5,7 @@ defined('IN_FUSION') || exit;
 $localePath = USER_FIELDS . 'security/user_hide_email/locale/';
 $localeFile = $localePath . trim(LOCALESET, '/\\') . '.php';
 $locale = fusion_get_locale('', [
-    is_file($localeFile) ? $localeFile : $localePath . 'English.php',
+    file_exists($localeFile) ? $localeFile : $localePath . 'English.php',
     $localePath . 'English.php',
 ]);
 
@@ -18,6 +18,7 @@ return [
     'order'           => 20,
     'default_enabled' => TRUE,
     'public'          => FALSE,
+    'endpoint_handler' => require __DIR__ . '/endpoint.php',
     'policies'        => [
         'public_field_visibility' => [
             'target'               => 'email',
