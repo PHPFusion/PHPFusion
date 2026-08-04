@@ -86,7 +86,7 @@ class LostPassword extends PasswordAuth {
                 $this->userEmail = $email;
                 $data = dbarray($result);
                 $this->userName = $data['user_name'];
-                $this->newPassword = $this->getNewPassword();
+                $this->newPassword = $this->getRandomHash();
                 $this->setNewHash($this->newPassword);
                 $this->sendNewPassword();
 
@@ -162,7 +162,7 @@ class LostPassword extends PasswordAuth {
 
             return TRUE;
         } else {
-            return FALSE;
+            addnotice('success', 'Please check your email to reset your password.');            
         }
     }
 }

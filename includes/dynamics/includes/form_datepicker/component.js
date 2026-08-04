@@ -1,0 +1,840 @@
+(function () {
+    'use strict';
+
+    const instances = new WeakMap();
+    const registry = new Map();
+
+    function parseConfig(source) {
+        let config = {};
+        try {
+            config = JSON.parse(source.getAttribute('data-dynamics-datepicker') || '{}');
+        } catch (error) {
+            config = {};
+        }
+
+        config.callbacks = config.callbacks && typeof config.callbacks === 'object' ? config.callbacks : {};
+        config.strings = Object.assign({
+            open: 'Open calendar',
+            previousMonth: 'Previous month',
+            nextMonth: 'Next month',
+            backToCalendar: 'Back to calendar',
+            chooseTime: 'Choose time',
+            done: 'Done'
+        }, config.strings || {});
+        config.disabledWeekdays = Array.isArray(config.disabledWeekdays) ? config.disabledWeekdays.map(Number) : [];
+        config.disableDates = Array.isArray(config.disableDates) ? config.disableDates : [];
+        config.enableDates = Array.isArray(config.enableDates) ? config.enableDates : [];
+        config.range = Boolean(config.range);
+        config.enableTime = Boolean(config.enableTime);
+        config.timeOnly = Boolean(config.timeOnly);
+        config.joinExclusive = config.joinExclusive !== false;
+        return config;
+    }
+
+    function icon(paths) {
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            paths.map(function (path) { return '<path d="' + path + '"></path>'; }).join('') +
+            '</svg>';
+    }
+
+    function resolveCallback(path) {
+        if (!path || !/^[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*$/.test(path)) {
+            return null;
+        }
+        return path.split('.').reduce(function (value, key) {
+            return value == null ? null : value[key];
+        }, window);
+    }
+
+    function localeConfig(config) {
+        const localeName = config.locale || 'default';
+        const locale = window.flatpickr && window.flatpickr.l10ns
+            ? (window.flatpickr.l10ns[localeName] || window.flatpickr.l10ns.default)
+            : null;
+        return Object.assign({}, locale || {}, {
+            firstDayOfWeek: Math.min(6, Math.max(0, Number(config.weekStart || 0))),
+            rangeSeparator: config.rangeSeparator || ' to '
+        });
+    }
+
+    function addDays(value, amount) {
+        if (!(value instanceof Date)) {
+            return null;
+        }
+        const date = new Date(value.getTime());
+        date.setDate(date.getDate() + amount);
+        return date;
+    }
+
+    class DynamicsDatepicker {
+        constructor(source) {
+            this.source = source;
+            this.config = parseConfig(source);
+            this.wrapper = source.closest('.dynamics-datepicker') || source.parentElement;
+            this.toggleButton = this.wrapper ? this.wrapper.querySelector('.dynamics-datepicker__toggle') : null;
+            this.interactionInput = null;
+            this.timeView = null;
+            this.openedBy = null;
+            this.keyboardAdjusting = false;
+            this.segmentBuffer = '';
+            this.segmentBufferIndex = -1;
+            this.segmentBufferTime = 0;
+            this.build();
+            this.bind();
+            registry.set(source.id, this);
+            window.queueMicrotask(syncAllJoinedPickers);
+        }
+
+        build() {
+            const disabled = this.config.disableDates.slice();
+            if (this.config.disabledWeekdays.length) {
+                disabled.push((date) => this.config.disabledWeekdays.includes(date.getDay()));
+            }
+
+            const options = {
+                allowInput: this.config.allowInput !== false,
+                altFormat: this.config.displayFormat || 'd / m / Y',
+                altInput: true,
+                altInputClass: this.source.className,
+                clickOpens: false,
+                closeOnSelect: !this.config.range && !this.config.enableTime,
+                dateFormat: this.config.dateFormat || 'Y-m-d',
+                defaultDate: this.parseValue(this.config.initialValue),
+                disableMobile: true,
+                enableSeconds: Boolean(this.config.enableSeconds),
+                enableTime: this.config.enableTime,
+                ignoredFocusElements: this.toggleButton ? [this.toggleButton] : [],
+                locale: localeConfig(this.config),
+                minuteIncrement: Math.max(1, Number(this.config.minuteIncrement || 5)),
+                mode: this.config.range ? 'range' : 'single',
+                monthSelectorType: 'static',
+                nextArrow: icon(['m9 18 6-6-6-6']),
+                noCalendar: this.config.timeOnly,
+                positionElement: this.wrapper || this.source,
+                prevArrow: icon(['m15 18-6-6 6-6']),
+                time_24hr: true,
+                onReady: [(dates, value, picker) => this.onReady(picker)],
+                onOpen: [(dates, value, picker) => this.handleEvent('open', dates, value, picker)],
+                onClose: [(dates, value, picker) => this.handleClose(dates, value, picker)],
+                onChange: [(dates, value, picker) => this.handleChange(dates, value, picker)]
+            };
+
+            if (disabled.length) {
+                options.disable = disabled;
+            }
+            if (this.config.enableDates.length) {
+                options.enable = this.config.enableDates;
+            }
+
+            this.picker = window.flatpickr(this.source, options);
+        }
+
+        bind() {
+            if (this.toggleButton) {
+                this.onToggleClick = (event) => {
+                    event.preventDefault();
+                    this.openedBy = this.toggleButton;
+                    this.picker.toggle();
+                };
+                this.toggleButton.addEventListener('click', this.onToggleClick);
+            }
+
+            this.onInputPointer = () => {
+                this.openedBy = this.interactionInput;
+            };
+            this.onInputClick = () => this.selectSegmentAtCaret();
+            this.onInputKeydown = (event) => this.handleInputKeydown(event);
+            this.onInputBeforeInput = (event) => {
+                if (event.data && (/[a-z]/i.test(event.data) || (this.interactionInput.value && !/^\d+$/.test(event.data)))) {
+                    event.preventDefault();
+                }
+            };
+            this.onInputPaste = (event) => this.handleInputPaste(event);
+            this.onInputBlur = () => this.resetSegmentBuffer();
+            this.interactionInput.addEventListener('pointerdown', this.onInputPointer);
+            this.interactionInput.addEventListener('click', this.onInputClick);
+            this.interactionInput.addEventListener('keydown', this.onInputKeydown, true);
+            this.interactionInput.addEventListener('beforeinput', this.onInputBeforeInput);
+            this.interactionInput.addEventListener('paste', this.onInputPaste);
+            this.interactionInput.addEventListener('blur', this.onInputBlur);
+        }
+
+        onReady(picker) {
+            const calendar = picker.calendarContainer;
+            calendar.classList.add('dynamics-datepicker__calendar');
+            calendar.dataset.mode = this.config.range ? 'range' : (this.config.timeOnly ? 'time' : (this.config.enableTime ? 'datetime' : 'date'));
+            calendar.id = this.source.id + '-calendar';
+            calendar.setAttribute('role', 'dialog');
+            calendar.setAttribute('aria-modal', 'false');
+            calendar.setAttribute('aria-label', this.config.label || this.config.strings.open);
+
+            this.interactionInput = picker.altInput || this.source;
+            if (this.interactionInput !== this.source) {
+                this.interactionInput.id = this.source.id + '-display';
+                this.interactionInput.placeholder = this.config.displayPlaceholder || 'dd / mm / yyyy';
+                this.interactionInput.setAttribute('autocomplete', 'off');
+                this.interactionInput.setAttribute('inputmode', 'numeric');
+                ['aria-describedby', 'aria-required', 'aria-invalid'].forEach((attribute) => {
+                    if (this.source.hasAttribute(attribute)) {
+                        this.interactionInput.setAttribute(attribute, this.source.getAttribute(attribute));
+                    }
+                });
+                if (this.wrapper) {
+                    const label = Array.from(this.wrapper.querySelectorAll('label[for]')).find((candidate) => candidate.htmlFor === this.source.id);
+                    if (label) {
+                        label.setAttribute('for', this.interactionInput.id);
+                    }
+                }
+            }
+
+            if (this.toggleButton) {
+                this.toggleButton.setAttribute('aria-controls', calendar.id);
+                this.toggleButton.setAttribute('aria-expanded', 'false');
+                this.toggleButton.setAttribute('aria-haspopup', 'dialog');
+            }
+
+            const previous = calendar.querySelector('.flatpickr-prev-month');
+            const next = calendar.querySelector('.flatpickr-next-month');
+            this.prepareNavigationButton(previous, this.config.strings.previousMonth);
+            this.prepareNavigationButton(next, this.config.strings.nextMonth);
+
+            if (this.config.enableTime) {
+                if (this.config.timeOnly) {
+                    calendar.classList.add('dynamics-datepicker__calendar--time-only');
+                    this.buildTimeOnlyFooter(picker);
+                } else {
+                    this.buildTimeView(picker);
+                }
+            }
+        }
+
+        prepareNavigationButton(button, label) {
+            if (!button) {
+                return;
+            }
+            button.setAttribute('role', 'button');
+            button.setAttribute('tabindex', '0');
+            button.setAttribute('aria-label', label);
+            button.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    button.click();
+                }
+            });
+        }
+
+        formatTokens() {
+            return (this.config.displayFormat || 'd / m / Y').match(/[YymndjHhGgiSs]/g) || [];
+        }
+
+        numericSegments(value) {
+            const segments = [];
+            const matcher = /\d+/g;
+            let match;
+            while ((match = matcher.exec(value)) !== null) {
+                segments.push({start: match.index, end: match.index + match[0].length});
+            }
+            return segments;
+        }
+
+        selectedSegment(segments) {
+            const start = this.interactionInput.selectionStart == null ? 0 : this.interactionInput.selectionStart;
+            const end = this.interactionInput.selectionEnd == null ? start : this.interactionInput.selectionEnd;
+            let index = segments.findIndex((segment) => start <= segment.end && end >= segment.start);
+            if (index >= 0) {
+                return index;
+            }
+            index = segments.findIndex((segment) => segment.start > start);
+            return index >= 0 ? index : segments.length - 1;
+        }
+
+        resetSegmentBuffer() {
+            this.segmentBuffer = '';
+            this.segmentBufferIndex = -1;
+            this.segmentBufferTime = 0;
+        }
+
+        selectSegment(index) {
+            const segment = this.numericSegments(this.interactionInput.value)[index];
+            if (!segment) {
+                return;
+            }
+            this.interactionInput.setSelectionRange(segment.start, segment.end);
+        }
+
+        focusSegment(index) {
+            this.resetSegmentBuffer();
+            this.selectSegment(index);
+            window.requestAnimationFrame(() => this.selectSegment(index));
+        }
+
+        selectSegmentAtCaret() {
+            const segments = this.numericSegments(this.interactionInput.value);
+            if (!segments.length) {
+                return;
+            }
+            const index = this.selectedSegment(segments);
+            this.resetSegmentBuffer();
+            this.selectSegment(index);
+        }
+
+        segmentLimit(token, date) {
+            if (token === 'd' || token === 'j') {
+                return {minimum: 1, maximum: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(), length: 2};
+            }
+            if (token === 'm' || token === 'n') {
+                return {minimum: 1, maximum: 12, length: 2};
+            }
+            if (token === 'Y' || token === 'y') {
+                return {minimum: 1, maximum: 9999, length: token === 'y' ? 2 : 4};
+            }
+            if (token === 'H' || token === 'G' || token === 'h') {
+                return {minimum: 0, maximum: token === 'h' ? 12 : 23, length: 2};
+            }
+            if (token === 'i' || token === 'S' || token === 's') {
+                return {minimum: 0, maximum: 59, length: 2};
+            }
+            return null;
+        }
+
+        applySegmentValue(date, token, value) {
+            if (token === 'd' || token === 'j') {
+                date.setDate(value);
+            } else if (token === 'm' || token === 'n') {
+                const day = date.getDate();
+                date.setDate(1);
+                date.setMonth(value - 1);
+                date.setDate(Math.min(day, new Date(date.getFullYear(), value, 0).getDate()));
+            } else if (token === 'Y' || token === 'y') {
+                const month = date.getMonth();
+                const day = date.getDate();
+                date.setDate(1);
+                date.setFullYear(token === 'y' ? 2000 + value : value);
+                date.setMonth(month);
+                date.setDate(Math.min(day, new Date(date.getFullYear(), month + 1, 0).getDate()));
+            } else if (token === 'H' || token === 'G' || token === 'h') {
+                date.setHours(value);
+            } else if (token === 'i') {
+                date.setMinutes(value);
+            } else if (token === 'S' || token === 's') {
+                date.setSeconds(value);
+            }
+        }
+
+        commitSegmentDigits(segmentIndex, digits, append) {
+            const tokens = this.formatTokens();
+            const segments = this.numericSegments(this.interactionInput.value);
+            if (!tokens.length || !segments[segmentIndex]) {
+                return false;
+            }
+
+            const dateIndex = this.config.range ? Math.floor(segmentIndex / tokens.length) : 0;
+            const token = tokens[segmentIndex % tokens.length];
+            const dates = this.parseDisplayDates(this.interactionInput.value).map((date) => new Date(date.getTime()));
+            const date = dates[dateIndex];
+            if (!date) {
+                return false;
+            }
+
+            const now = Date.now();
+            if (!append || this.segmentBufferIndex !== segmentIndex || now - this.segmentBufferTime > 1200) {
+                this.segmentBuffer = '';
+            }
+            this.segmentBufferIndex = segmentIndex;
+            this.segmentBufferTime = now;
+
+            const limit = this.segmentLimit(token, date);
+            if (!limit) {
+                return false;
+            }
+
+            this.segmentBuffer = (this.segmentBuffer + digits).slice(-limit.length);
+            let value = Number.parseInt(this.segmentBuffer, 10);
+            if (value > limit.maximum) {
+                this.segmentBuffer = digits.slice(-limit.length);
+                value = Number.parseInt(this.segmentBuffer, 10);
+            }
+            if (!Number.isFinite(value) || value < limit.minimum || value > limit.maximum) {
+                this.selectSegment(segmentIndex);
+                return true;
+            }
+
+            this.applySegmentValue(date, token, value);
+            if (!this.picker.isEnabled(date)) {
+                this.selectSegment(segmentIndex);
+                return true;
+            }
+
+            this.keyboardAdjusting = true;
+            try {
+                this.picker.setDate(this.config.range ? dates : date, true, this.config.dateFormat);
+            } finally {
+                this.keyboardAdjusting = false;
+            }
+            const targetIndex = this.segmentBuffer.length >= limit.length && segmentIndex < segments.length - 1
+                ? segmentIndex + 1
+                : segmentIndex;
+            if (targetIndex !== segmentIndex) {
+                this.resetSegmentBuffer();
+            }
+            this.selectSegment(targetIndex);
+            window.requestAnimationFrame(() => this.selectSegment(targetIndex));
+            return true;
+        }
+
+        handleInputPaste(event) {
+            const text = event.clipboardData ? event.clipboardData.getData('text') : '';
+            if (/[a-z]/i.test(text)) {
+                event.preventDefault();
+                return;
+            }
+            if (/^\d+$/.test(text) && this.interactionInput.value) {
+                const segments = this.numericSegments(this.interactionInput.value);
+                const index = this.selectedSegment(segments);
+                if (this.commitSegmentDigits(index, text, false)) {
+                    event.preventDefault();
+                }
+            } else if (this.interactionInput.value && text !== '') {
+                event.preventDefault();
+            }
+        }
+
+        handleInputKeydown(event) {
+            if (event.ctrlKey || event.metaKey || event.altKey) {
+                return;
+            }
+            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                this.resetSegmentBuffer();
+                this.handleSegmentStep(event);
+                return;
+            }
+            if (event.key === 'Tab' && this.interactionInput.value) {
+                const segments = this.numericSegments(this.interactionInput.value);
+                const current = this.selectedSegment(segments);
+                const target = current + (event.shiftKey ? -1 : 1);
+                if (target >= 0 && target < segments.length) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    this.focusSegment(target);
+                } else {
+                    this.resetSegmentBuffer();
+                }
+                return;
+            }
+            if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && this.interactionInput.value) {
+                const segments = this.numericSegments(this.interactionInput.value);
+                const current = this.selectedSegment(segments);
+                const target = Math.min(segments.length - 1, Math.max(0, current + (event.key === 'ArrowRight' ? 1 : -1)));
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.resetSegmentBuffer();
+                this.selectSegment(target);
+                return;
+            }
+            if (/^\d$/.test(event.key) && this.interactionInput.value) {
+                const segments = this.numericSegments(this.interactionInput.value);
+                const index = this.selectedSegment(segments);
+                if (this.commitSegmentDigits(index, event.key, true)) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                }
+                return;
+            }
+            if (event.key.length === 1 && (/[a-z]/i.test(event.key) || this.interactionInput.value)) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            } else if (['Tab', 'Enter', 'Escape', 'Backspace', 'Delete', 'Home', 'End'].includes(event.key)) {
+                this.resetSegmentBuffer();
+            }
+        }
+
+        shiftMonth(date, amount) {
+            const day = date.getDate();
+            date.setDate(1);
+            date.setMonth(date.getMonth() + amount);
+            date.setDate(Math.min(day, new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()));
+        }
+
+        shiftYear(date, amount) {
+            const month = date.getMonth();
+            const day = date.getDate();
+            date.setDate(1);
+            date.setFullYear(date.getFullYear() + amount);
+            date.setMonth(month);
+            date.setDate(Math.min(day, new Date(date.getFullYear(), month + 1, 0).getDate()));
+        }
+
+        parseDisplayDates(value) {
+            const separator = this.picker.l10n.rangeSeparator || this.config.rangeSeparator || ' to ';
+            const parts = this.config.range ? value.split(separator) : [value];
+            const dates = parts.map((part) => this.picker.parseDate(part.trim(), this.config.displayFormat || 'd / m / Y'));
+            return dates.every((date) => date instanceof Date && !Number.isNaN(date.getTime())) ? dates : [];
+        }
+
+        handleSegmentStep(event) {
+            if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            if (!this.interactionInput.value) {
+                return;
+            }
+
+            const segments = this.numericSegments(this.interactionInput.value);
+            const tokens = this.formatTokens();
+            if (!segments.length || !tokens.length) {
+                return;
+            }
+
+            const segmentIndex = this.selectedSegment(segments);
+            const dateIndex = this.config.range ? Math.floor(segmentIndex / tokens.length) : 0;
+            const token = tokens[segmentIndex % tokens.length];
+            const dates = this.parseDisplayDates(this.interactionInput.value).map((date) => new Date(date.getTime()));
+            const date = dates[dateIndex];
+            if (!date) {
+                return;
+            }
+
+            const amount = event.key === 'ArrowUp' ? 1 : -1;
+            if (token === 'd' || token === 'j') {
+                date.setDate(date.getDate() + amount);
+            } else if (token === 'm' || token === 'n') {
+                this.shiftMonth(date, amount);
+            } else if (token === 'Y' || token === 'y') {
+                this.shiftYear(date, amount);
+            } else if (token === 'H' || token === 'G' || token === 'h') {
+                date.setHours(date.getHours() + amount);
+            } else if (token === 'i') {
+                date.setMinutes(date.getMinutes() + amount * Math.max(1, Number(this.config.minuteIncrement || 1)));
+            } else if (token === 'S' || token === 's') {
+                date.setSeconds(date.getSeconds() + amount);
+            } else {
+                return;
+            }
+
+            if (!this.picker.isEnabled(date)) {
+                return;
+            }
+
+            this.keyboardAdjusting = true;
+            try {
+                this.picker.setDate(this.config.range ? dates : date, true, this.config.dateFormat);
+            } finally {
+                this.keyboardAdjusting = false;
+            }
+
+            const restoreSelection = () => {
+                const updated = this.numericSegments(this.interactionInput.value)[segmentIndex];
+                if (updated) {
+                    this.interactionInput.setSelectionRange(updated.start, updated.end);
+                }
+            };
+            restoreSelection();
+            window.requestAnimationFrame(restoreSelection);
+        }
+
+        buildTimeView(picker) {
+            if (!picker.timeContainer || this.timeView) {
+                return;
+            }
+
+            const view = document.createElement('div');
+            view.className = 'dynamics-datepicker__time-view';
+            view.setAttribute('aria-label', this.config.strings.chooseTime);
+
+            const header = document.createElement('div');
+            header.className = 'dynamics-datepicker__time-header';
+            const back = document.createElement('button');
+            back.type = 'button';
+            back.className = 'dynamics-datepicker__time-back';
+            back.setAttribute('aria-label', this.config.strings.backToCalendar);
+            back.innerHTML = icon(['m15 18-6-6 6-6']);
+            back.addEventListener('click', () => this.showCalendarView(true));
+            this.timeTitle = document.createElement('span');
+            this.timeTitle.className = 'dynamics-datepicker__time-title';
+            this.timeTitle.textContent = this.config.strings.chooseTime;
+            header.append(back, this.timeTitle);
+
+            const actions = document.createElement('div');
+            actions.className = 'dynamics-datepicker__time-actions';
+            const done = document.createElement('button');
+            done.type = 'button';
+            done.className = 'dynamics-datepicker__time-done';
+            done.textContent = this.config.strings.done;
+            done.addEventListener('click', () => picker.close());
+            actions.appendChild(done);
+
+            view.append(header, picker.timeContainer, actions);
+            picker.calendarContainer.appendChild(view);
+            this.timeView = view;
+        }
+
+        buildTimeOnlyFooter(picker) {
+            const actions = document.createElement('div');
+            actions.className = 'dynamics-datepicker__time-actions dynamics-datepicker__time-actions--only';
+            const done = document.createElement('button');
+            done.type = 'button';
+            done.className = 'dynamics-datepicker__time-done';
+            done.textContent = this.config.strings.done;
+            done.addEventListener('click', () => picker.close());
+            actions.appendChild(done);
+            picker.calendarContainer.appendChild(actions);
+        }
+
+        showTimeSelector() {
+            if (!this.timeView || !this.picker.selectedDates.length) {
+                return;
+            }
+            const date = this.picker.selectedDates[this.picker.selectedDates.length - 1];
+            this.timeTitle.textContent = this.picker.formatDate(date, 'F j, Y');
+            this.picker.calendarContainer.classList.add('dynamics-datepicker__calendar--time-active');
+            const hour = this.timeView.querySelector('.flatpickr-hour');
+            window.setTimeout(() => hour && hour.focus(), 140);
+        }
+
+        showCalendarView(focusCalendar) {
+            if (!this.picker || !this.picker.calendarContainer) {
+                return;
+            }
+            this.picker.calendarContainer.classList.remove('dynamics-datepicker__calendar--time-active');
+            if (focusCalendar) {
+                const selected = this.picker.calendarContainer.querySelector('.flatpickr-day.selected, .flatpickr-day.today:not(.flatpickr-disabled), .flatpickr-day:not(.flatpickr-disabled)');
+                window.setTimeout(() => selected && selected.focus(), 140);
+            }
+        }
+
+        handleChange(dates, value, picker) {
+            this.syncJoinedConstraints();
+            const selectionComplete = !this.config.range || dates.length >= 2;
+            if (this.config.enableTime && !this.config.timeOnly && selectionComplete && !this.keyboardAdjusting) {
+                this.showTimeSelector();
+            }
+            this.handleEvent('change', dates, value, picker);
+        }
+
+        handleClose(dates, value, picker) {
+            this.showCalendarView(false);
+            if (this.toggleButton) {
+                this.toggleButton.setAttribute('aria-expanded', 'false');
+            }
+            this.handleEvent('close', dates, value, picker);
+            const focusTarget = this.openedBy;
+            this.openedBy = null;
+            if (focusTarget && document.contains(focusTarget)) {
+                window.setTimeout(() => focusTarget.focus(), 0);
+            }
+        }
+
+        handleEvent(name, dates, value, picker) {
+            if (name === 'open' && !this.config.timeOnly) {
+                this.showCalendarView(false);
+            }
+            if (name === 'open' && this.toggleButton) {
+                this.toggleButton.setAttribute('aria-expanded', 'true');
+            }
+            const detail = {
+                instance: this,
+                picker: picker,
+                selectedDates: dates.slice(),
+                value: value
+            };
+            this.source.dispatchEvent(new CustomEvent('dynamics:datepicker:' + name, {
+                bubbles: true,
+                detail: detail
+            }));
+
+            const callback = resolveCallback(this.config.callbacks[name]);
+            if (typeof callback === 'function') {
+                callback(value, dates.slice(), this, detail);
+            }
+        }
+
+        parseValue(value) {
+            if (value == null || value === '') {
+                return null;
+            }
+            if (this.config.range && typeof value === 'string') {
+                return value.split(this.config.rangeSeparator || ' to ').map((part) => part.trim()).filter(Boolean);
+            }
+            return value;
+        }
+
+        boundary(first) {
+            if (!this.picker || !this.picker.selectedDates.length) {
+                return null;
+            }
+            return first ? this.picker.selectedDates[0] : this.picker.selectedDates[this.picker.selectedDates.length - 1];
+        }
+
+        constrainedDate(date, direction) {
+            return this.config.joinExclusive ? addDays(date, direction) : (date ? new Date(date.getTime()) : null);
+        }
+
+        setMinimum(date) {
+            this.picker.set('minDate', date || null);
+            const selected = this.boundary(true);
+            if (date && selected && selected < date) {
+                this.clear(true);
+            }
+        }
+
+        setMaximum(date) {
+            this.picker.set('maxDate', date || null);
+            const selected = this.boundary(false);
+            if (date && selected && selected > date) {
+                this.clear(true);
+            }
+        }
+
+        syncJoinedConstraints() {
+            if (this.config.joinToId) {
+                const end = registry.get(this.config.joinToId);
+                if (end) {
+                    end.setMinimum(this.constrainedDate(this.boundary(false), 1));
+                    this.setMaximum(end.constrainedDate(end.boundary(true), -1));
+                }
+            }
+            if (this.config.joinFromId) {
+                const start = registry.get(this.config.joinFromId);
+                if (start) {
+                    this.setMinimum(start.constrainedDate(start.boundary(false), 1));
+                    start.setMaximum(this.constrainedDate(this.boundary(true), -1));
+                }
+            }
+        }
+
+        setValue(value, triggerChange) {
+            this.picker.setDate(this.parseValue(value), triggerChange !== false, this.config.dateFormat);
+            this.syncJoinedConstraints();
+            return this;
+        }
+
+        setDate(value, triggerChange) {
+            return this.setValue(value, triggerChange);
+        }
+
+        setTime(value, triggerChange) {
+            return this.setValue(value, triggerChange);
+        }
+
+        getValue() {
+            return this.source.value;
+        }
+
+        open() {
+            this.openedBy = this.interactionInput;
+            this.picker.open();
+            return this;
+        }
+
+        close() {
+            this.picker.close();
+            return this;
+        }
+
+        clear(triggerChange) {
+            this.picker.clear(triggerChange !== false);
+            this.syncJoinedConstraints();
+            return this;
+        }
+
+        destroy() {
+            if (this.toggleButton && this.onToggleClick) {
+                this.toggleButton.removeEventListener('click', this.onToggleClick);
+            }
+            this.interactionInput.removeEventListener('pointerdown', this.onInputPointer);
+            this.interactionInput.removeEventListener('click', this.onInputClick);
+            this.interactionInput.removeEventListener('keydown', this.onInputKeydown, true);
+            this.interactionInput.removeEventListener('beforeinput', this.onInputBeforeInput);
+            this.interactionInput.removeEventListener('paste', this.onInputPaste);
+            this.interactionInput.removeEventListener('blur', this.onInputBlur);
+            registry.delete(this.source.id);
+            instances.delete(this.source);
+            this.picker.destroy();
+        }
+    }
+
+    function syncAllJoinedPickers() {
+        registry.forEach(function (instance) {
+            instance.syncJoinedConstraints();
+        });
+    }
+
+    function enhance(source) {
+        if (!source || instances.has(source) || typeof window.flatpickr !== 'function') {
+            return instances.get(source) || null;
+        }
+        const instance = new DynamicsDatepicker(source);
+        instances.set(source, instance);
+        return instance;
+    }
+
+    function initialize(root) {
+        const scope = root && root.querySelectorAll ? root : document;
+        if (scope.matches && scope.matches('[data-dynamics-datepicker]')) {
+            enhance(scope);
+        }
+        scope.querySelectorAll('[data-dynamics-datepicker]').forEach(enhance);
+    }
+
+    function findInstance(target) {
+        const source = typeof target === 'string'
+            ? document.getElementById(target.replace(/^#/, ''))
+            : target;
+        return source ? (instances.get(source) || enhance(source)) : null;
+    }
+
+    function boot() {
+        initialize(document);
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === 1) initialize(node);
+                });
+            });
+        });
+        observer.observe(document.body, {childList: true, subtree: true});
+    }
+
+    window.FusionDatepicker = {
+        enhance: enhance,
+        initialize: initialize,
+        getInstance: findInstance,
+        setValue: function (target, value, triggerChange) {
+            const instance = findInstance(target);
+            return instance ? instance.setValue(value, triggerChange) : null;
+        },
+        setDate: function (target, value, triggerChange) {
+            const instance = findInstance(target);
+            return instance ? instance.setDate(value, triggerChange) : null;
+        },
+        setTime: function (target, value, triggerChange) {
+            const instance = findInstance(target);
+            return instance ? instance.setTime(value, triggerChange) : null;
+        },
+        clear: function (target, triggerChange) {
+            const instance = findInstance(target);
+            return instance ? instance.clear(triggerChange) : null;
+        },
+        getValue: function (target) {
+            const instance = findInstance(target);
+            return instance ? instance.getValue() : '';
+        },
+        open: function (target) {
+            const instance = findInstance(target);
+            return instance ? instance.open() : null;
+        },
+        close: function (target) {
+            const instance = findInstance(target);
+            return instance ? instance.close() : null;
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot, {once: true});
+    } else {
+        boot();
+    }
+})();

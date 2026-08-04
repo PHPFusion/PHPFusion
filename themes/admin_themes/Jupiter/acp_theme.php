@@ -23,7 +23,7 @@ use PHPFusion\OutputHandler;
 defined('IN_FUSION') || exit;
 
 const UI_FRAMEWORK = 'tailwind';
-define('ADMIN_CSS_FILE', 'acp_styles.min.css?v='.filemtime(__DIR__.'/acp_styles.min.css'));
+define('ADMIN_CSS_FILE', 'acp_styles.css?v='.filemtime(__DIR__.'/acp_styles.css'));
 
 require_once BASEDIR.'assets/libs/iconify/iconify_include.php';
 

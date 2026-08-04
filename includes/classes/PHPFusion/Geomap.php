@@ -62,18 +62,20 @@ class Geomap {
     }
 
     /**
-     * Returns countries
+     * Returns currency information for a given country code. If no country code is provided, it returns an array of all available currencies.
      *
      * @param string $country_code ISO cca2 code / returns array if NULL
      *
      * @return array|null
      */
-    function currency($country_code = NULL) {
+    public function currency($country_code = NULL) {
         $locale = fusion_get_locale("", LOCALE.LOCALESET.'currency.php');
 
         if (empty(self::$currency_list)) {
+            
+            $countries = $this->getCountryResource();
 
-            foreach (self::getCountryResource() as $object) {
+            foreach ($countries as $object) {
                 if ($object->name->common !== 'Antarctica') {
                     if ($country_code == $object->currency[0]) {
                         break;

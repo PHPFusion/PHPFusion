@@ -23,7 +23,8 @@ namespace PHPFusion\Installer;
  *
  * @package PHPFusion\Installer
  */
-class Infusions {
+class Infusions
+{
 
     private static $locale = [];
 
@@ -34,22 +35,22 @@ class Infusions {
     /**
      * Version 7 compatible infusions load constants.
      */
-    public static function loadConfiguration() {
+    public static function loadConfiguration()
+    {
         /*
          * Non-core infusions_db.php inclusion.
          * These files are supposed to be infusion_db.php using Infusion SDK
          * Cannot contain and make it global because it contains dangerous APIs and remote executions.
          */
-        $inf_folder = makefilelist( INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders' );
-        if (!empty( $inf_folder )) {
+        $inf_folder = makefilelist(INFUSIONS, '.|..|.htaccess|index.php|._DS_Store|.tmp', TRUE, 'folders');
+        if (!empty($inf_folder)) {
             foreach ($inf_folder as $folder) {
                 $inf_include = INFUSIONS . $folder . "/infusion_db.php";
-                if (file_exists( $inf_include )) {
+                if (file_exists($inf_include)) {
                     include $inf_include;
                 }
             }
         }
-        add_handler('u_load_check');
     }
 
     /**
@@ -57,12 +58,13 @@ class Infusions {
      *
      * @return null|static
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
 
         if (self::$instance === NULL) {
             self::$instance = new static();
         }
-        self::$locale = fusion_get_locale( '', LOCALE . LOCALESET . "admin/infusions.php" );
+        self::$locale = fusion_get_locale('', LOCALE . LOCALESET . "admin/infusions.php");
 
         return self::$instance;
     }
@@ -74,7 +76,8 @@ class Infusions {
      *
      * @return array|int
      */
-    public static function updateChecker( $return_count = TRUE ) {
+    public static function updateChecker($return_count = TRUE)
+    {
 
         $infusion = [];
         $inf_title = "";
@@ -100,18 +103,19 @@ class Infusions {
         $inf_delfiles = [];
         $inf_newcol = [];
         $inf_dropcol = [];
+        $inf_addindex = [];
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
-        $temp = makefilelist( INFUSIONS, '.|..|index.php', TRUE, 'folders' );
+        $temp = makefilelist(INFUSIONS, '.|..|index.php', TRUE, 'folders');
         $infusions = [];
         $inf_version = '';
 
         foreach ($temp as $folder) {
-            if (is_dir( INFUSIONS . $folder ) && file_exists( INFUSIONS . $folder . "/infusion.php" )) {
+            if (is_dir(INFUSIONS . $folder) && file_exists(INFUSIONS . $folder . "/infusion.php")) {
                 include(INFUSIONS . $folder . '/infusion.php');
                 $infusions[$folder]['version'] = $inf_version ?: '0';
-                $infusions[$folder]['status'] = defined( strtoupper( $folder ) . '_EXISTS' ) ? (version_compare( $infusions[$folder]['version'], constant( strtoupper( $folder ) . '_VERSION' ), ">" ) ? 2 : 1) : 0;
+                $infusions[$folder]['status'] = defined(strtoupper($folder) . '_EXISTS') ? (version_compare($infusions[$folder]['version'], constant(strtoupper($folder) . '_VERSION'), ">") ? 2 : 1) : 0;
             }
         }
 
@@ -125,7 +129,7 @@ class Infusions {
                 }
             }
 
-            return count( $count );
+            return count($count);
         }
 
         return $infusions;
@@ -136,44 +140,46 @@ class Infusions {
      *
      * @return bool
      */
-    protected static function adminpanel_infuse( $inf ) {
+    protected static function adminpanel_infuse($inf)
+    {
 
         $error = FALSE;
 
-        if ($inf['adminpanel'] && is_array( $inf['adminpanel'] )) {
+        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
 
             foreach ($inf['adminpanel'] as $adminpanel) {
                 // auto recovery
-                if (!empty( $adminpanel['rights'] )) {
-                    dbquery( "DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . $adminpanel['rights'] . "'" );
+                if (!empty($adminpanel['rights'])) {
+                    dbquery("DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . $adminpanel['rights'] . "'");
                 }
 
-                $link_prefix = (defined( 'ADMIN_PANEL' ) ? '' : '../') . INFUSIONS . $inf['folder'] . '/';
+                $link_prefix = (defined('ADMIN_PANEL') ? '' : '../') . INFUSIONS . $inf['folder'] . '/';
                 $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
 
-                if (empty( $adminpanel['page'] )) {
+                if (empty($adminpanel['page'])) {
                     $item_page = 5;
                 } else {
-                    $item_page = isnum( $adminpanel['page'] ) ? $adminpanel['page'] : 5;
+                    $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
                 }
 
-                if (!dbcount( "(admin_id)", DB_ADMIN, "admin_rights='" . $adminpanel['rights'] . "'" )) {
+                if (!dbcount("(admin_id)", DB_ADMIN, "admin_rights='" . $adminpanel['rights'] . "'")) {
+
                     $adminpanel += [
-                        'rights'   => '',
-                        'title'    => '',
-                        'panel'    => '',
+                        'rights' => '',
+                        'title' => '',
+                        'panel' => '',
                         'language' => LANGUAGE
                     ];
 
-                    $insert_sql = "INSERT INTO " . DB_ADMIN . " (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('" . $adminpanel['rights'] . "', '" . $link_prefix . $inf_admin_image . "', '" . $adminpanel['title'] . "', '" . $link_prefix . $adminpanel['panel'] . "', '" . $item_page . "', '" . $adminpanel['language'] . "')";
-                    $result = dbquery( $insert_sql );
-                    if (dbrows( $result )) {
-                        $result = dbquery( "SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level <=:admin AND " . in_group( 'user_rights', 'I', '.' ), [':admin' => USER_LEVEL_ADMIN] );
-                        while ($data = dbarray( $result )) {
-                            $user_rights = explode( '.', $data['user_rights'] );
+                    $insert_sql = "INSERT IGNORE INTO " . DB_ADMIN . " (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('" . $adminpanel['rights'] . "', '" . $link_prefix . $inf_admin_image . "', '" . $adminpanel['title'] . "', '" . $link_prefix . $adminpanel['panel'] . "', '" . $item_page . "', '" . $adminpanel['language'] . "')";
+                    $result = dbquery($insert_sql);
+                    if (dbrows($result)) {
+                        $result = dbquery("SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level <=:admin AND " . in_group('user_rights', 'I', '.'), [':admin' => USER_LEVEL_ADMIN]);
+                        while ($data = dbarray($result)) {
+                            $user_rights = explode('.', $data['user_rights']);
 
-                            if (!in_array( $adminpanel['rights'], $user_rights )) {
-                                dbquery( "UPDATE " . DB_USERS . " SET user_rights='" . $data['user_rights'] . "." . $adminpanel['rights'] . "' WHERE user_id='" . $data['user_id'] . "'" );
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE " . DB_USERS . " SET user_rights='" . $data['user_rights'] . "." . $adminpanel['rights'] . "' WHERE user_id='" . $data['user_id'] . "'");
                             }
                         }
                     }
@@ -205,23 +211,28 @@ class Infusions {
      * @uses newcol_infuse
      * @uses insertdbrow_infuse
      * @uses deldbrow_infuse
+     * @uses index_infuse
      */
-    public function infuse( $folder ) {
+    public function infuse($folder)
+    {
 
         $error = FALSE;
-        if ((self::$inf = self::loadInfusion( $folder ))) {
-            $result = dbquery( "SELECT inf_id, inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [':folder' => $folder] );
-            if (dbrows( $result )) {
 
-                $data = dbarray( $result );
+        if ((self::$inf = self::loadInfusion($folder))) {
+
+            $result = dbquery("SELECT inf_id, inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [':folder' => $folder]);
+
+            if (dbrows($result)) {
+
+                $data = dbarray($result);
 
                 if (self::$inf['version'] > $data['inf_version']) {
 
                     $upgrade_folder_path = INFUSIONS . self::$inf['folder'] . "/upgrade/";
 
-                    if (file_exists( $upgrade_folder_path )) {
-                        $upgrade_files = makefilelist( $upgrade_folder_path, ".|..|index.php", TRUE );
-                        if (!empty( $upgrade_files ) && is_array( $upgrade_files )) {
+                    if (file_exists($upgrade_folder_path)) {
+                        $upgrade_files = makefilelist($upgrade_folder_path, ".|..|index.php", TRUE);
+                        if (!empty($upgrade_files) && is_array($upgrade_files)) {
                             foreach ($upgrade_files as $upgrade_file) {
                                 /*
                                  * This will check file names (File name convention) against current infusion version
@@ -238,34 +249,34 @@ class Infusions {
                                  * if the table exist or column exist as renaming a non-existent table could not be performed.
                                  *
                                  */
-                                $filename = rtrim( $upgrade_file, 'upgrade.inc' );
-                                if (version_compare( $filename, $data['inf_version'], ">" )) {
-                                    unset( $upgrades );
-                                    $upgrades = self::loadUpgrade( INFUSIONS . $folder, $upgrade_folder_path . $upgrade_file );
+                                $filename = rtrim($upgrade_file, 'upgrade.inc');
+                                if (version_compare($filename, $data['inf_version'], ">")) {
+                                    unset($upgrades);
+                                    $upgrades = self::loadUpgrade(INFUSIONS . $folder, $upgrade_folder_path . $upgrade_file);
 
                                     foreach ($upgrades as $callback_method => $statement_type) {
 
                                         $method = $callback_method . "_infuse";
-                                        if (method_exists( $this, $method )) {
-                                            $error = $this->$method( $upgrades );
+                                        if (method_exists($this, $method)) {
+                                            $error = $this->$method($upgrades);
                                         }
                                         if ($error) {
                                             // Reports visually which method has error.
-                                            fusion_stop( $callback_method );
-                                            addnotice( 'danger', self::$locale['INF_403'] );
+                                            fusion_stop($callback_method);
+                                            addnotice('danger', self::$locale['INF_403']);
 
                                             return $error;
                                         }
                                     }
+
                                     if ($error === FALSE) {
-                                        dbquery( "UPDATE " . DB_INFUSIONS . " SET inf_version=:version WHERE inf_id=:id",
+                                        dbquery("UPDATE " . DB_INFUSIONS . " SET inf_version=:version WHERE inf_id=:id",
                                             [
                                                 ':version' => self::$inf['version'],
-                                                ':id'      => $data['inf_id'],
-                                            ] );
+                                                ':id' => $data['inf_id'],
+                                            ]);
                                     }
                                 }
-
                             }
                         }
                     }
@@ -277,24 +288,25 @@ class Infusions {
 
                     $method = $callback_method . "_infuse";
 
-                    if (method_exists( $this, $method )) {
-
-                        $error = $this->$method( self::$inf );
+                    if (method_exists($this, $method)) {
+                        $error = $this->$method(self::$inf);
                     }
 
                     if ($error) {
-                        addnotice( 'danger', self::$locale['INF_403'] );
+                        addnotice('danger', self::$locale['INF_403']);
 
                         return $error;
                     }
                 }
 
                 if ($error === FALSE) {
-                    if (dbcount( "(inf_title)", DB_INFUSIONS, "inf_folder='" . self::$inf['folder'] . "'" )) {
-                        dbquery( "DELETE FROM " . DB_INFUSIONS . " WHERE inf_folder='" . self::$inf['folder'] . "'" );
+
+                    if (dbcount("(inf_title)", DB_INFUSIONS, "inf_folder='" . self::$inf['folder'] . "'")) {
+                        dbquery("DELETE FROM " . DB_INFUSIONS . " WHERE inf_folder='" . self::$inf['folder'] . "'");
                     }
-                    addnotice( "success", sprintf( self::$locale['INF_423'], self::$inf['title'] ) );
-                    dbquery( "INSERT INTO " . DB_INFUSIONS . " (inf_title, inf_folder, inf_version) VALUES ('" . self::$inf['title'] . "', '" . self::$inf['folder'] . "', '" . self::$inf['version'] . "')" );
+
+                    addnotice("success", sprintf(self::$locale['INF_423'], self::$inf['title']));
+                    dbquery("INSERT IGNORE INTO " . DB_INFUSIONS . " (inf_title, inf_folder, inf_version) VALUES ('" . self::$inf['title'] . "', '" . self::$inf['folder'] . "', '" . self::$inf['version'] . "')");
                 }
             }
         }
@@ -302,7 +314,6 @@ class Infusions {
         /*if (fusion_safe()) {
             //redirect(FUSION_REQUEST);
         }*/
-
         return NULL;
     }
 
@@ -313,7 +324,8 @@ class Infusions {
      *
      * @return array
      */
-    public static function loadInfusion( $folder ) {
+    public static function loadInfusion($folder)
+    {
 
         $infusion = [];
         $inf_title = "";
@@ -340,50 +352,54 @@ class Infusions {
         $inf_newcol = [];
         $inf_dropcol = [];
         $inf_rights = '';
+        $inf_delindex = [];
+        $inf_addindex = [];
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
-        if (is_dir( INFUSIONS . $folder ) && is_file( INFUSIONS . $folder . "/infusion.php" )) {
+        if (is_dir(INFUSIONS . $folder) && file_exists(INFUSIONS . $folder . "/infusion.php")) {
 
             include(INFUSIONS . $folder . "/infusion.php");
 
-            $inf_image_tmp = !empty( $inf_image ) && file_exists( ADMIN . "images/" . $inf_image ) ? ADMIN . "images/" . $inf_image : ADMIN . "images/infusion_panel.png";
+            $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN . "images/" . $inf_image) ? ADMIN . "images/" . $inf_image : ADMIN . "images/infusion_panel.png";
 
-            if (!empty( $inf_image ) && file_exists( INFUSIONS . $inf_folder . "/" . $inf_image )) {
+            if (!empty($inf_image) && file_exists(INFUSIONS . $inf_folder . "/" . $inf_image)) {
                 $inf_image = INFUSIONS . $inf_folder . "/" . $inf_image;
             } else {
                 $inf_image = $inf_image_tmp;
             }
 
             $infusion = [
-                'name'            => str_replace( '_', ' ', $inf_title ),
-                'title'           => $inf_title,
-                'description'     => $inf_description,
-                'version'         => $inf_version ?: 'beta',
-                'developer'       => $inf_developer ?: 'PHPFusion',
-                'email'           => $inf_email,
-                'url'             => $inf_weburl,
-                'image'           => !empty( $inf_image ) ? $inf_image : 'infusion_panel.png',
-                'folder'          => $inf_folder,
-                'rights'          => $inf_rights,
-                'newtable'        => $inf_newtable,
-                'newcol'          => $inf_newcol,
-                'dropcol'         => $inf_dropcol,
-                'droptable'       => $inf_droptable,
-                'altertable'      => $inf_altertable,
-                'deldbrow'        => $inf_deldbrow,
-                'sitelink'        => $inf_sitelink,
-                'adminpanel'      => $inf_adminpanel,
-                'mlt_adminpanel'  => $mlt_adminpanel,
-                'mlt'             => $inf_mlt,
+                'name' => str_replace('_', ' ', $inf_title),
+                'title' => $inf_title,
+                'description' => $inf_description,
+                'version' => $inf_version ?: 'beta',
+                'developer' => $inf_developer ?: 'PHPFusion',
+                'email' => $inf_email,
+                'url' => $inf_weburl,
+                'image' => !empty($inf_image) ? $inf_image : 'infusion_panel.png',
+                'folder' => $inf_folder,
+                'rights' => $inf_rights,
+                'newtable' => $inf_newtable,
+                'newcol' => $inf_newcol,
+                'dropcol' => $inf_dropcol,
+                'droptable' => $inf_droptable,
+                'altertable' => $inf_altertable,
+                'deldbrow' => $inf_deldbrow,
+                'sitelink' => $inf_sitelink,
+                'adminpanel' => $inf_adminpanel,
+                'mlt_adminpanel' => $mlt_adminpanel,
+                'mlt' => $inf_mlt,
                 'mlt_insertdbrow' => $mlt_insertdbrow,
-                'mlt_deldbrow'    => $mlt_deldbrow,
-                'delfiles'        => $inf_delfiles,
-                'insertdbrow'     => $inf_insertdbrow,
-                'updatedbrow'     => $inf_updatedbrow,
+                'mlt_deldbrow' => $mlt_deldbrow,
+                'delfiles' => $inf_delfiles,
+                'insertdbrow' => $inf_insertdbrow,
+                'updatedbrow' => $inf_updatedbrow,
+                'addindex' => $inf_addindex,
+                'delindex' => $inf_delindex
             ];
 
-            $result = dbquery( "SELECT inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:inf_folder", [':inf_folder' => $folder] );
+            $result = dbquery("SELECT inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
 
             /*
              * Status Remarks
@@ -391,7 +407,7 @@ class Infusions {
              * 1 - Nothing to upgrade
              * 0 - Infusions not found.
              */
-            $infusion['status'] = dbrows( $result ) ? (version_compare( $infusion['version'], dbresult( $result, 0 ), ">" ) ? 2 : 1) : 0;
+            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -405,7 +421,8 @@ class Infusions {
      *
      * @return array
      */
-    public static function loadUpgrade( $folder, $upgrade_file_path ) {
+    public static function loadUpgrade($folder, $upgrade_file_path)
+    {
 
         $infusion = [];
         $inf_title = "";
@@ -431,50 +448,54 @@ class Infusions {
         $inf_delfiles = [];
         $inf_deldbrow = [];
         $mlt_deldbrow = [];
+        $inf_addindex = [];
+        $inf_delindex = [];
         $db_prefix = DB_PREFIX;
         $cookie_prefix = COOKIE_PREFIX;
 
-        if (is_dir( $folder ) && is_file( $upgrade_file_path )) {
+        if (is_dir($folder) && file_exists($upgrade_file_path)) {
 
             include $upgrade_file_path;
 
-            $inf_image_tmp = !empty( $inf_image ) && is_file( ADMIN . "images/" . $inf_image ) ? ADMIN . "images/" . $inf_image : ADMIN . "images/infusion_panel.png";
-            if (!empty( $inf_image ) && is_file( INFUSIONS . $inf_folder . "/" . $inf_image )) {
+            $inf_image_tmp = !empty($inf_image) && file_exists(ADMIN . "images/" . $inf_image) ? ADMIN . "images/" . $inf_image : ADMIN . "images/infusion_panel.png";
+            if (!empty($inf_image) && file_exists(INFUSIONS . $inf_folder . "/" . $inf_image)) {
                 $inf_image = INFUSIONS . $inf_folder . "/" . $inf_image;
             } else {
                 $inf_image = $inf_image_tmp;
             }
 
             $infusion = [
-                'name'            => str_replace( '_', ' ', $inf_title ),
-                'title'           => $inf_title,
-                'description'     => $inf_description,
-                'version'         => $inf_version ?: 'beta',
-                'developer'       => $inf_developer ?: 'PHPFusion',
-                'email'           => $inf_email,
-                'url'             => $inf_weburl,
-                'image'           => !empty( $inf_image ) ? $inf_image : 'infusion_panel.png',
-                'folder'          => $inf_folder,
-                'newtable'        => $inf_newtable,
-                'altertable'      => $inf_altertable,
-                'newcol'          => $inf_newcol,
-                'sitelink'        => $inf_sitelink,
-                'adminpanel'      => $inf_adminpanel,
-                'mlt_adminpanel'  => $mlt_adminpanel,
-                'mlt'             => $inf_mlt,
-                'insertdbrow'     => $inf_insertdbrow,
-                'updatedbrow'     => $inf_updatedbrow,
+                'name' => str_replace('_', ' ', $inf_title),
+                'title' => $inf_title,
+                'description' => $inf_description,
+                'version' => $inf_version ?: 'beta',
+                'developer' => $inf_developer ?: 'PHPFusion',
+                'email' => $inf_email,
+                'url' => $inf_weburl,
+                'image' => !empty($inf_image) ? $inf_image : 'infusion_panel.png',
+                'folder' => $inf_folder,
+                'newtable' => $inf_newtable,
+                'altertable' => $inf_altertable,
+                'newcol' => $inf_newcol,
+                'sitelink' => $inf_sitelink,
+                'adminpanel' => $inf_adminpanel,
+                'mlt_adminpanel' => $mlt_adminpanel,
+                'mlt' => $inf_mlt,
+                'insertdbrow' => $inf_insertdbrow,
+                'updatedbrow' => $inf_updatedbrow,
                 'mlt_insertdbrow' => $mlt_insertdbrow,
-                'deldbrow'        => $inf_deldbrow,
-                'mlt_deldbrow'    => $mlt_deldbrow,
-                'delfiles'        => $inf_delfiles,
-                'dropcol'         => $inf_dropcol,
-                'droptable'       => $inf_droptable,
+                'deldbrow' => $inf_deldbrow,
+                'mlt_deldbrow' => $mlt_deldbrow,
+                'delfiles' => $inf_delfiles,
+                'dropcol' => $inf_dropcol,
+                'droptable' => $inf_droptable,
+                'delindex' => $inf_delindex,
+                'addindex' => $inf_addindex,
             ];
 
-            $folder = str_replace( INFUSIONS, '', $folder );
-            $result = dbquery( "SELECT inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:inf_folder", [':inf_folder' => $folder] );
-            $infusion['status'] = dbrows( $result ) ? (version_compare( $infusion['version'], dbresult( $result, 0 ), ">=" ) ? 2 : 1) : 0;
+            $folder = str_replace(INFUSIONS, '', $folder);
+            $result = dbquery("SELECT inf_version FROM " . DB_INFUSIONS . " WHERE inf_folder=:inf_folder", [':inf_folder' => $folder]);
+            $infusion['status'] = dbrows($result) ? (version_compare($infusion['version'], dbresult($result, 0), ">=") ? 2 : 1) : 0;
         }
 
         return $infusion;
@@ -484,135 +505,190 @@ class Infusions {
      * Defuse
      *
      * @param $folder
+     * @uses index_defuse
      */
-    public function defuse( $folder ) {
+    public function defuse($folder)
+    {
 
-        $result = dbquery( "SELECT inf_folder FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [':folder' => $folder] );
-        $infData = dbarray( $result );
+        $result = dbquery("SELECT inf_folder FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [':folder' => $folder]);
+        $infData = dbarray($result);
 
-        $inf = self::loadInfusion( $folder );
+        $inf = self::loadInfusion($folder);
 
-        if ($inf['adminpanel'] && is_array( $inf['adminpanel'] )) {
+        if ($inf['adminpanel'] && is_array($inf['adminpanel'])) {
+
             foreach ($inf['adminpanel'] as $adminpanel) {
-                dbquery( "DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . ($adminpanel['rights'] ?: "IP") . "' AND admin_link='" . INFUSIONS . $inf['folder'] . "/" . $adminpanel['panel'] . "' AND admin_page='5'" );
-                $result = dbquery( "SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level<=" . USER_LEVEL_ADMIN );
-                while ($data = dbarray( $result )) {
-                    $user_rights = explode( ".", $data['user_rights'] );
-                    if (in_array( $adminpanel['rights'], $user_rights )) {
-                        $key = array_search( $adminpanel['rights'], $user_rights );
-                        unset( $user_rights[$key] );
+                dbquery("DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . ($adminpanel['rights'] ?: "IP") . "' AND admin_link='" . INFUSIONS . $inf['folder'] . "/" . $adminpanel['panel'] . "' AND admin_page='5'");
+                $result = dbquery("SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level<=" . USER_LEVEL_ADMIN);
+                while ($data = dbarray($result)) {
+                    $user_rights = explode(".", $data['user_rights']);
+                    if (in_array($adminpanel['rights'], $user_rights)) {
+                        $key = array_search($adminpanel['rights'], $user_rights);
+                        unset($user_rights[$key]);
                     }
-                    dbquery( "UPDATE " . DB_USERS . " SET user_rights='" . implode( ".", $user_rights ) . "' WHERE user_id='" . $data['user_id'] . "'" );
+                    dbquery("UPDATE " . DB_USERS . " SET user_rights='" . implode(".", $user_rights) . "' WHERE user_id='" . $data['user_id'] . "'");
                 }
             }
         }
 
         foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-            if (isset( $inf['mlt_adminpanel'][$current_language] )) {
-                if ($inf['mlt_adminpanel'] && is_array( $inf['mlt_adminpanel'] )) {
+            if (isset($inf['mlt_adminpanel'][$current_language])) {
+                if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
                     foreach ($inf['mlt_adminpanel'][$current_language] as $adminpanel) {
-                        dbquery( "DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . ($adminpanel['rights'] ?: "IP") . "' AND admin_link='" . INFUSIONS . $inf['folder'] . "/" . $adminpanel['panel'] . "' AND admin_page='5'" );
-                        $result = dbquery( "SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level<=" . USER_LEVEL_ADMIN );
-                        while ($data = dbarray( $result )) {
-                            $user_rights = explode( ".", $data['user_rights'] );
-                            if (in_array( $adminpanel['rights'], $user_rights )) {
-                                $key = array_search( $adminpanel['rights'], $user_rights );
-                                unset( $user_rights[$key] );
+                        dbquery("DELETE FROM " . DB_ADMIN . " WHERE admin_rights='" . ($adminpanel['rights'] ?: "IP") . "' AND admin_link='" . INFUSIONS . $inf['folder'] . "/" . $adminpanel['panel'] . "' AND admin_page='5'");
+                        $result = dbquery("SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level<=" . USER_LEVEL_ADMIN);
+                        while ($data = dbarray($result)) {
+                            $user_rights = explode(".", $data['user_rights']);
+                            if (in_array($adminpanel['rights'], $user_rights)) {
+                                $key = array_search($adminpanel['rights'], $user_rights);
+                                unset($user_rights[$key]);
                             }
-                            dbquery( "UPDATE " . DB_USERS . " SET user_rights='" . implode( ".", $user_rights ) . "' WHERE user_id='" . $data['user_id'] . "'" );
+                            dbquery("UPDATE " . DB_USERS . " SET user_rights='" . implode(".", $user_rights) . "' WHERE user_id='" . $data['user_id'] . "'");
                         }
                     }
                 }
             }
         }
 
-        if ($inf['mlt'] && is_array( $inf['mlt'] )) {
+        if ($inf['mlt'] && is_array($inf['mlt'])) {
             foreach ($inf['mlt'] as $mlt) {
-                dbquery( "DELETE FROM " . DB_LANGUAGE_TABLES . " WHERE mlt_rights='" . $mlt['rights'] . "'" );
+                dbquery("DELETE FROM " . DB_LANGUAGE_TABLES . " WHERE mlt_rights='" . $mlt['rights'] . "'");
             }
         }
 
-        if ($inf['sitelink'] && is_array( $inf['sitelink'] )) {
+        if ($inf['sitelink'] && is_array($inf['sitelink'])) {
             foreach ($inf['sitelink'] as $sitelink) {
-                $result2 = dbquery( "SELECT link_id, link_order FROM " . DB_SITE_LINKS . " WHERE link_url='" . str_replace( "../", "",
-                        INFUSIONS ) . $inf['folder'] . "/" . $sitelink['url'] . "'" );
-                if (dbrows( $result2 )) {
-                    $data2 = dbarray( $result2 );
-                    dbquery( "UPDATE " . DB_SITE_LINKS . " SET link_order=link_order-1 WHERE link_order>'" . $data2['link_order'] . "'" );
-                    dbquery( "DELETE FROM " . DB_SITE_LINKS . " WHERE link_id='" . $data2['link_id'] . "'" );
+                $result2 = dbquery("SELECT link_id, link_order FROM " . DB_SITE_LINKS . " WHERE link_url='" . str_replace("../", "",
+                        INFUSIONS) . $inf['folder'] . "/" . $sitelink['url'] . "'");
+                if (dbrows($result2)) {
+                    $data2 = dbarray($result2);
+                    dbquery("UPDATE " . DB_SITE_LINKS . " SET link_order=link_order-1 WHERE link_order>'" . $data2['link_order'] . "'");
+                    dbquery("DELETE FROM " . DB_SITE_LINKS . " WHERE link_id='" . $data2['link_id'] . "'");
                 }
             }
         }
 
-        if (isset( $inf['deldbrow'] ) && is_array( $inf['deldbrow'] )) {
+        if (isset($inf['deldbrow']) && is_array($inf['deldbrow'])) {
             foreach ($inf['deldbrow'] as $deldbrow) {
-                dbquery( "DELETE FROM " . $deldbrow );
+                dbquery("DELETE FROM " . $deldbrow);
             }
         }
 
-        if ($inf['mlt_deldbrow'] && is_array( $inf['mlt_deldbrow'] )) {
+        if ($inf['mlt_deldbrow'] && is_array($inf['mlt_deldbrow'])) {
             foreach (fusion_get_enabled_languages() as $current_language) {
-                if (isset( $inf['mlt_deldbrow'][$current_language] )) {
+                if (isset($inf['mlt_deldbrow'][$current_language])) {
                     foreach ($inf['mlt_deldbrow'][$current_language] as $mlt_deldbrow) {
-                        dbquery( "DELETE FROM " . $mlt_deldbrow );
+                        dbquery("DELETE FROM " . $mlt_deldbrow);
                     }
                 }
             }
         }
 
-        if (!empty( $inf['delfiles'] ) && is_array( $inf['delfiles'] )) {
+        if (!empty($inf['delfiles']) && is_array($inf['delfiles'])) {
             foreach ($inf['delfiles'] as $folder) {
-                if (file_exists( $folder ) && is_dir( $folder )) {
-                    $files = makefilelist( $folder, ".|..|index.php", TRUE );
-                    if (!empty( $files )) {
+                if (file_exists($folder) && is_dir($folder)) {
+                    $files = makefilelist($folder, ".|..|index.php", TRUE);
+                    if (!empty($files)) {
                         foreach ($files as $filename) {
-                            unlink( $folder . $filename );
+                            unlink($folder . $filename);
                         }
                     }
                 }
             }
         }
 
-        if (isset( $inf['dropcol'] ) && is_array( $inf['dropcol'] )) {
+        if (isset($inf['dropcol']) && is_array($inf['dropcol'])) {
             foreach ($inf['dropcol'] as $dropCol) {
-                if (is_array( $dropCol ) && !empty( $dropCol['table'] ) && !empty( $dropCol['column'] )) {
-                    $columns = fieldgenerator( $dropCol['table'] );
-                    if (in_array( $dropCol['column'], $columns )) {
-                        dbquery( "ALTER TABLE " . $dropCol['table'] . " DROP COLUMN " . $dropCol['column'] );
+                if (is_array($dropCol) && !empty($dropCol['table']) && !empty($dropCol['column'])) {
+                    $columns = fieldgenerator($dropCol['table']);
+                    if (in_array($dropCol['column'], $columns)) {
+                        dbquery("ALTER TABLE " . $dropCol['table'] . " DROP COLUMN " . $dropCol['column']);
                     }
                 }
             }
         }
-        if ($inf['droptable'] && is_array( $inf['droptable'] )) {
+
+        if (isset($inf['delindex']) && is_array($inf['delindex'])) {
+            $this->index_defuse($inf['delindex']);
+        }
+
+        if ($inf['droptable'] && is_array($inf['droptable'])) {
             foreach ($inf['droptable'] as $droptable) {
-                dbquery( "DROP TABLE IF EXISTS " . $droptable );
+                dbquery("DROP TABLE IF EXISTS " . $droptable);
             }
         }
-        dbquery( "DELETE FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [
+        dbquery("DELETE FROM " . DB_INFUSIONS . " WHERE inf_folder=:folder", [
             ':folder' => $infData['inf_folder']
-        ] );
-        addnotice( "success", sprintf( self::$locale['INF_424'], $inf['title'] ) );
-        redirect( FUSION_REQUEST );
+        ]);
+        addnotice("success", sprintf(self::$locale['INF_424'], $inf['title']));
+        redirect(FUSION_REQUEST);
     }
 
     /**
-     * Drop column
+     * Create indexes on database tables based on a provided configuration array.
      *
-     * @param array $inf
+     * This function loops through an array of index definitions
+     * and attempts to create each index using `CREATE INDEX`.
      *
-     * @return bool
+     * @param array $inf Configuration array containing index definitions.
+     *                   Expected structure:
+     *                   [
+     *                       'addindex' => [
+     *                           [
+     *                               'table'   => 'table_name',        // (string) Table to add index on
+     *                               'key'     => 'index_name',        // (string) Name of the index
+     *                               'columns' => ['col1', 'col2']     // (array) One or more columns
+     *                           ],
+     *                           ...
+     *                       ]
+     *                   ]
+     *
+     * @return bool Returns true if there was an error creating at least one index, false otherwise.
+     *
+     * Example:
+     * --------
+     * $inf = [
+     *     'addindex' => [
+     *         [
+     *             'table'   => 'DB_USERS',
+     *             'key'     => 'idx_wallet_status',
+     *             'columns' => ['user_wallet', 'user_status']
+     *         ],
+     *         [
+     *             'table'   => 'DB_USERS',
+     *             'key'     => 'idx_role',
+     *             'columns' => ['user_role']
+     *         ]
+     *     ]
+     * ];
+     *
+     * $result = $this->index_infuse($inf);
+     * if ($result) {
+     *     echo "Some indexes could not be created.";
+     * } else {
+     *     echo "All indexes created successfully.";
+     * }
      */
-    protected function dropcol_infuse( $inf ) {
+    protected function index_infuse($inf)
+    {
+        $error = false;
 
-        $error = FALSE;
-        if (isset( $inf['dropcol'] ) && is_array( $inf['dropcol'] )) {
-            foreach ($inf['dropcol'] as $dropCol) {
-                if (is_array( $dropCol ) && !empty( $dropCol['table'] ) && !empty( $dropCol['column'] )) {
-                    $columns = fieldgenerator( $dropCol['table'] );
-                    if (in_array( $dropCol['column'], $columns )) {
-                        if (!dbquery( "ALTER TABLE " . $dropCol['table'] . " DROP COLUMN " . $dropCol['column'] )) {
-                            $error = TRUE;
-                        }
+        if (isset($inf['addindex']) && is_array($inf['addindex'])) {
+            foreach ($inf['addindex'] as $add_index) {
+                if (
+                    is_array($add_index) &&
+                    !empty($add_index['table']) &&
+                    !empty($add_index['key']) &&
+                    !empty($add_index['columns']) && is_array($add_index['columns'])
+                ) {
+                    // Escape identifiers with backticks
+                    $table = "`" . $add_index['table'] . "`";
+                    $key = "`" . $add_index['key'] . "`";
+                    $cols = "`" . implode("`,`", $add_index['columns']) . "`";
+
+                    $sql = "CREATE INDEX $key ON $table ($cols)";
+                    if (!dbquery($sql)) {
+                        $error = true;
                     }
                 }
             }
@@ -622,48 +698,93 @@ class Infusions {
     }
 
     /**
+     * Drop indexes from database tables based on a provided configuration array.
+     *
+     * @param array $inf Configuration array containing index definitions to drop.
+     *                   Expected structure:
+     *                   [
+     *                       'delindex' => [
+     *                           [
+     *                               'table' => 'table_name',   // (string) Table from which to drop index
+     *                               'key'   => 'index_name'    // (string) Index name
+     *                           ],
+     *                           ...
+     *                       ]
+     *                   ]
+     *
+     * @return bool Returns true if there was an error dropping at least one index, false otherwise.
+     */
+    protected function index_defuse($inf)
+    {
+        $error = false;
+
+        if (isset($inf['delindex']) && is_array($inf['delindex'])) {
+            foreach ($inf['delindex'] as $drop_index) {
+                if (
+                    is_array($drop_index) &&
+                    !empty($drop_index['table']) &&
+                    !empty($drop_index['key'])
+                ) {
+                    // Escape with backticks
+                    $table = "`" . $drop_index['table'] . "`";
+                    $key = "`" . $drop_index['key'] . "`";
+
+                    $sql = "ALTER TABLE $table DROP INDEX $key";
+                    if (!dbquery($sql)) {
+                        $error = true;
+                    }
+                }
+            }
+        }
+
+        return $error;
+    }
+
+
+    /**
      * Add Sitelinks
      *
      * @param array $inf
      *
      * @return bool
      */
-    protected function sitelink_infuse( $inf ) {
+    protected function sitelink_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['sitelink'] && is_array( $inf['sitelink'] )) {
+        if ($inf['sitelink'] && is_array($inf['sitelink'])) {
             $last_id = 0;
 
             foreach ($inf['sitelink'] as $sitelink) {
 
-                $link_order = dbresult( dbquery( "SELECT MAX(link_order) FROM " . DB_SITE_LINKS ), 0 ) + 1;
+                $link_order = dbresult(dbquery("SELECT MAX(link_order) FROM " . DB_SITE_LINKS), 0) + 1;
 
                 $sitelink += [
-                    "cat"        => 0,
-                    "title"      => "",
-                    "url"        => "",
-                    "icon"       => "",
+                    "cat" => 0,
+                    "title" => "",
+                    "url" => "",
+                    "icon" => "",
                     "visibility" => 0,
-                    "status"     => 1,
-                    "position"   => 3,
-                    "language"   => LANGUAGE
+                    "status" => 1,
+                    "position" => 3,
+                    "language" => LANGUAGE
                 ];
 
-                $link_url_path = "" . str_replace( "../", "", INFUSIONS ) . $inf['folder'] . "/";
+                $link_url_path = "" . str_replace("../", "", INFUSIONS) . $inf['folder'] . "/";
 
-                if (!empty( $sitelink['cat'] ) && $sitelink['cat'] == "{last_id}" && !empty( $last_id )) {
+                if (!empty($sitelink['cat']) && $sitelink['cat'] == "{last_id}" && !empty($last_id)) {
 
                     $sitelink['cat'] = $last_id;
 
-                    $result = dbquery( "INSERT INTO " . DB_SITE_LINKS . "
+                    $result = dbquery("INSERT INTO " . DB_SITE_LINKS . "
                     (link_cat, link_name, link_url, link_icon, link_visibility, link_position, link_status, link_window, link_order, link_language)
-                    VALUES ('" . $sitelink['cat'] . "', '" . $sitelink['title'] . "', '" . $link_url_path . $sitelink['url'] . "', '" . $sitelink['icon'] . "', '" . $sitelink['visibility'] . "', '" . $sitelink['position'] . "', '" . $sitelink['status'] . "', '0', '" . $link_order . "', '" . $sitelink['language'] . "')" );
+                    VALUES ('" . $sitelink['cat'] . "', '" . $sitelink['title'] . "', '" . $link_url_path . $sitelink['url'] . "', '" . $sitelink['icon'] . "', '" . $sitelink['visibility'] . "', '" . $sitelink['position'] . "', '" . $sitelink['status'] . "', '0', '" . $link_order . "', '" . $sitelink['language'] . "')");
 
                 } else {
 
-                    $result = dbquery( "INSERT INTO " . DB_SITE_LINKS . "
+                    $result = dbquery("INSERT INTO " . DB_SITE_LINKS . "
                     (link_cat, link_name, link_url, link_icon, link_visibility, link_position, link_status, link_window, link_order, link_language)
-                    VALUES ('" . $sitelink['cat'] . "', '" . $sitelink['title'] . "', '" . $link_url_path . $sitelink['url'] . "', '" . $sitelink['icon'] . "', '" . $sitelink['visibility'] . "', '" . $sitelink['position'] . "', '" . $sitelink['status'] . "', '0', '" . $link_order . "', '" . $sitelink['language'] . "')" );
+                    VALUES ('" . $sitelink['cat'] . "', '" . $sitelink['title'] . "', '" . $link_url_path . $sitelink['url'] . "', '" . $sitelink['icon'] . "', '" . $sitelink['visibility'] . "', '" . $sitelink['position'] . "', '" . $sitelink['status'] . "', '0', '" . $link_order . "', '" . $sitelink['language'] . "')");
 
                     $last_id = dblastid();
                 }
@@ -685,18 +806,19 @@ class Infusions {
      *
      * @return bool
      */
-    protected function mlt_insertdbrow_infuse( $inf ) {
+    protected function mlt_insertdbrow_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['mlt_insertdbrow'] && is_array( $inf['mlt_insertdbrow'] )) {
+        if ($inf['mlt_insertdbrow'] && is_array($inf['mlt_insertdbrow'])) {
             foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-                if (isset( $inf['mlt_insertdbrow'][$current_language] )) {
+                if (isset($inf['mlt_insertdbrow'][$current_language])) {
                     $last_id = 0;
                     foreach ($inf['mlt_insertdbrow'][$current_language] as $insertdbrow) {
-                        if (stristr( $insertdbrow, "{last_id}" ) && !empty( $last_id )) {
-                            $result = dbquery( "INSERT INTO " . str_replace( "{last_id}", $last_id, $insertdbrow ) );
+                        if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+                            $result = dbquery("INSERT INTO " . str_replace("{last_id}", $last_id, $insertdbrow));
                         } else {
-                            $result = dbquery( "INSERT INTO " . $insertdbrow );
+                            $result = dbquery("INSERT INTO " . $insertdbrow);
                             $last_id = dblastid();
                         }
                         if (!$result) {
@@ -717,31 +839,39 @@ class Infusions {
      *
      * @return bool
      */
-    protected function mlt_adminpanel_infuse( $inf ) {
+    protected function mlt_adminpanel_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['mlt_adminpanel'] && is_array( $inf['mlt_adminpanel'] )) {
+        if ($inf['mlt_adminpanel'] && is_array($inf['mlt_adminpanel'])) {
+
             foreach (fusion_get_enabled_languages() as $current_language => $language_translations) {
-                if (isset( $inf['mlt_adminpanel'][$current_language] )) {
+
+                if (isset($inf['mlt_adminpanel'][$current_language])) {
+
                     foreach ($inf['mlt_adminpanel'][$current_language] as $adminpanel) {
-                        $link_prefix = (defined( 'ADMIN_PANEL' ) ? '' : '../') . INFUSIONS . $inf['folder'] . '/';
+
+                        $link_prefix = (defined('ADMIN_PANEL') ? '' : '../') . INFUSIONS . $inf['folder'] . '/';
                         $inf_admin_image = ($adminpanel['image'] ?: "infusion_panel.png");
 
-                        if (empty( $adminpanel['page'] )) {
+                        if (empty($adminpanel['page'])) {
                             $item_page = 5;
                         } else {
-                            $item_page = isnum( $adminpanel['page'] ) ? $adminpanel['page'] : 5;
+                            $item_page = isnum($adminpanel['page']) ? $adminpanel['page'] : 5;
                         }
 
-                        $result = dbquery( "INSERT INTO " . DB_ADMIN . " (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('" . $adminpanel['rights'] . "', '" . $link_prefix . $inf_admin_image . "', '" . $adminpanel['title'] . "', '" . $link_prefix . $adminpanel['panel'] . "', '" . $item_page . "', '" . $adminpanel['language'] . "')" );
+                        $result = dbquery("INSERT INTO " . DB_ADMIN . " (admin_rights, admin_image, admin_title, admin_link, admin_page, admin_language) VALUES ('" . $adminpanel['rights'] . "', '" . $link_prefix . $inf_admin_image . "', '" . $adminpanel['title'] . "', '" . $link_prefix . $adminpanel['panel'] . "', '" . $item_page . "', '" . $adminpanel['language'] . "')");
 
-                        $result2 = dbquery( "SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level <=:admin AND " . in_group( 'user_rights', 'I', '.' ), [':admin' => USER_LEVEL_ADMIN] );
-                        while ($data = dbarray( $result2 )) {
-                            $user_rights = explode( '.', $data['user_rights'] );
+                        $result2 = dbquery("SELECT user_id, user_rights FROM " . DB_USERS . " WHERE user_level <=:admin AND " . in_group('user_rights', 'I', '.'), [':admin' => USER_LEVEL_ADMIN]);
 
-                            if (!in_array( $adminpanel['rights'], $user_rights )) {
-                                dbquery( "UPDATE " . DB_USERS . " SET user_rights='" . $data['user_rights'] . "." . $adminpanel['rights'] . "' WHERE user_id='" . $data['user_id'] . "'" );
+                        while ($data = dbarray($result2)) {
+
+                            $user_rights = explode('.', $data['user_rights']);
+
+                            if (!in_array($adminpanel['rights'], $user_rights)) {
+                                dbquery("UPDATE " . DB_USERS . " SET user_rights='" . $data['user_rights'] . "." . $adminpanel['rights'] . "' WHERE user_id='" . $data['user_id'] . "'");
                             }
+
                         }
 
                         if (!$result) {
@@ -762,15 +892,16 @@ class Infusions {
      *
      * @return bool
      */
-    protected function mlt_infuse( $inf ) {
+    protected function mlt_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['mlt'] && is_array( $inf['mlt'] )) {
+        if ($inf['mlt'] && is_array($inf['mlt'])) {
             foreach ($inf['mlt'] as $mlt) {
-                if (dbcount( "(mlt_rights)", DB_LANGUAGE_TABLES, "mlt_rights = '" . $mlt['rights'] . "'" )) {
-                    dbquery( "DELETE FROM " . DB_LANGUAGE_TABLES . " WHERE mlt_rights='" . $mlt['rights'] . "'" );
+                if (dbcount("(mlt_rights)", DB_LANGUAGE_TABLES, "mlt_rights = '" . $mlt['rights'] . "'")) {
+                    dbquery("DELETE FROM " . DB_LANGUAGE_TABLES . " WHERE mlt_rights='" . $mlt['rights'] . "'");
                 }
-                $result = dbquery( "INSERT INTO " . DB_LANGUAGE_TABLES . " (mlt_rights, mlt_title, mlt_status) VALUES ('" . $mlt['rights'] . "', '" . $mlt['title'] . "', '1')" );
+                $result = dbquery("INSERT INTO " . DB_LANGUAGE_TABLES . " (mlt_rights, mlt_title, mlt_status) VALUES ('" . $mlt['rights'] . "', '" . $mlt['title'] . "', '1')");
                 if (!$result) {
                     $error = TRUE;
                 }
@@ -787,13 +918,14 @@ class Infusions {
      *
      * @return bool
      */
-    protected function altertable_infuse( $inf ) {
+    protected function altertable_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['altertable'] && is_array( $inf['altertable'] )) {
+        if ($inf['altertable'] && is_array($inf['altertable'])) {
             foreach ($inf['altertable'] as $altertable) {
                 $statement = "ALTER TABLE " . $altertable;
-                $result = dbquery( $statement );
+                $result = dbquery($statement);
                 if (!$result) {
                     $error = TRUE;
                 }
@@ -810,13 +942,14 @@ class Infusions {
      *
      * @return bool
      */
-    protected function updatedbrow_infuse( $inf ) {
+    protected function updatedbrow_infuse($inf)
+    {
 
         $error = FALSE;
 
-        if ($inf['updatedbrow'] && is_array( $inf['updatedbrow'] )) {
+        if ($inf['updatedbrow'] && is_array($inf['updatedbrow'])) {
             foreach ($inf['updatedbrow'] as $updatedbrow) {
-                $result = dbquery( "UPDATE " . $updatedbrow );
+                $result = dbquery("UPDATE " . $updatedbrow);
                 if (!$result) {
                     $error = TRUE;
                 }
@@ -833,23 +966,28 @@ class Infusions {
      *
      * @return bool
      */
-    protected function newtable_infuse( $inf ) {
+    protected function newtable_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['newtable'] && is_array( $inf['newtable'] )) {
+        if ($inf['newtable'] && is_array($inf['newtable'])) {
             foreach ($inf['newtable'] as $newtable) {
-                $table_name = fusion_first_words( $newtable, 1, '' );
-                if (!db_exists( $table_name )) {
-                    if (strpos( $newtable, 'ENGINE=MyISAM;' ) == TRUE) {
-                        $db_collation = '';
-                        $newtable = str_replace( 'ENGINE=MyISAM;', 'ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;', $newtable );
-                    } else if (strpos( $newtable, 'CHARSET=UTF8 COLLATE=utf8_unicode_ci' ) == TRUE) {
-                        $db_collation = '';
-                        $newtable = str_replace( 'CHARSET=UTF8 COLLATE=utf8_unicode_ci', 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci', $newtable );
-                    } else {
-                        $db_collation = ' ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+                $table_name = fusion_first_words($newtable, 1, '');
+                if (!db_exists($table_name)) {
+                    // Normalize legacy infusion DDL while keeping explicitly
+                    // declared indexes and unique constraints intact.
+                    if (preg_match('/ENGINE\s*=\s*MyISAM/i', $newtable)) {
+                        $newtable = preg_replace('/ENGINE\s*=\s*MyISAM/i', 'ENGINE=InnoDB', $newtable);
                     }
-                    $result = dbquery( "CREATE TABLE " . $newtable . $db_collation );
+                    if (stripos($newtable, 'CHARSET=UTF8 COLLATE=utf8_unicode_ci') !== FALSE) {
+                        $db_collation = '';
+                        $newtable = str_ireplace('CHARSET=UTF8 COLLATE=utf8_unicode_ci', 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci', $newtable);
+                    } else if (preg_match('/ENGINE\s*=\s*InnoDB/i', $newtable)) {
+                        $db_collation = '';
+                    } else {
+                        $db_collation = ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;';
+                    }
+                    $result = dbquery("CREATE TABLE " . $newtable . $db_collation);
                     if (!$result) {
                         $error = TRUE;
                     }
@@ -867,19 +1005,20 @@ class Infusions {
      *
      * @return bool
      */
-    protected function newcol_infuse( $inf ) {
+    protected function newcol_infuse($inf)
+    {
 
         $error = FALSE;
         static $table_schema = [];
-        if (!empty( $inf['newcol'] ) && is_array( $inf['newcol'] )) {
+        if (!empty($inf['newcol']) && is_array($inf['newcol'])) {
             foreach ($inf['newcol'] as $newCol) {
-                if (is_array( $newCol ) && !empty( $newCol['table'] ) && !empty( $newCol['column'] ) && !empty( $newCol['column_type'] )) {
-                    if (empty( $table_schema[$newCol['table']] )) {
-                        $table_schema[$newCol['table']] = fieldgenerator( $newCol['table'] );
+                if (is_array($newCol) && !empty($newCol['table']) && !empty($newCol['column']) && !empty($newCol['column_type'])) {
+                    if (empty($table_schema[$newCol['table']])) {
+                        $table_schema[$newCol['table']] = fieldgenerator($newCol['table']);
                     }
-                    $count = count( $table_schema[$newCol['table']] );
-                    if (!in_array( $newCol['column'], $table_schema[$newCol['table']] )) {
-                        $result = dbquery( "ALTER TABLE " . $newCol['table'] . " ADD " . $newCol['column'] . " " . $newCol['column_type'] . " AFTER " . $table_schema[$newCol['table']][$count - 1] );
+                    $count = count($table_schema[$newCol['table']]);
+                    if (!in_array($newCol['column'], $table_schema[$newCol['table']])) {
+                        $result = dbquery("ALTER TABLE " . $newCol['table'] . " ADD " . $newCol['column'] . " " . $newCol['column_type'] . " AFTER " . $table_schema[$newCol['table']][$count - 1]);
                         if (!$result) {
                             $error = TRUE;
                         }
@@ -898,16 +1037,17 @@ class Infusions {
      *
      * @return bool
      */
-    protected function insertdbrow_infuse( $inf ) {
+    protected function insertdbrow_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['insertdbrow'] && is_array( $inf['insertdbrow'] )) {
+        if ($inf['insertdbrow'] && is_array($inf['insertdbrow'])) {
             $last_id = 0;
             foreach ($inf['insertdbrow'] as $insertdbrow) {
-                if (stristr( $insertdbrow, "{last_id}" ) && !empty( $last_id )) {
-                    $result = dbquery( "INSERT INTO " . str_replace( "{last_id}", $last_id, $insertdbrow ) );
+                if (stristr($insertdbrow, "{last_id}") && !empty($last_id)) {
+                    $result = dbquery("INSERT IGNORE INTO " . str_replace("{last_id}", $last_id, $insertdbrow));
                 } else {
-                    $result = dbquery( "INSERT INTO " . $insertdbrow );
+                    $result = dbquery("INSERT IGNORE INTO " . $insertdbrow);
                     $last_id = dblastid();
                 }
                 if (!$result) {
@@ -926,12 +1066,13 @@ class Infusions {
      *
      * @return bool
      */
-    protected function deldbrow_infuse( $inf ) {
+    protected function deldbrow_infuse($inf)
+    {
 
         $error = FALSE;
-        if ($inf['deldbrow'] && is_array( $inf['deldbrow'] ) && isset( $inf['status'] ) && $inf['status'] > 0) {
+        if ($inf['deldbrow'] && is_array($inf['deldbrow']) && isset($inf['status']) && $inf['status'] > 0) {
             foreach ($inf['deldbrow'] as $deldbrow) {
-                $result = dbquery( "DELETE FROM " . $deldbrow );
+                $result = dbquery("DELETE FROM " . $deldbrow);
                 if (!$result) {
                     $error = TRUE;
                 }

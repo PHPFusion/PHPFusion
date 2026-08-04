@@ -27,388 +27,12 @@ namespace PHPFusion;
  *
  * @package PHPFusion
  */
-class Locale {
+class Locale
+{
 
     private static $locale_file = [];
     private static $locale = [];
     private static $instances = NULL;
-    private static $translated_langs = [
-        'aa' => 'Afar',
-        'ab' => 'Abkhazian',
-        'ae' => 'Avestan',
-        'af' => 'Afrikaans',
-        'ak' => 'Akan',
-        'am' => 'አማርኛ',
-        'an' => 'Aragonese',
-        'ar' => 'العربية',
-        'as' => 'অসমীয়া',
-        'av' => 'Avaric',
-        'ay' => 'Aymara',
-        'az' => 'Azərbaycan dili',
-        'ba' => 'Bashkir',
-        'be' => 'беларуская',
-        'bg' => 'български',
-        'bi' => 'Bislama',
-        'bm' => 'Bamanakan',
-        'bn' => 'বাংলা',
-        'bo' => 'བོད་སྐད་',
-        'br' => 'Brezhoneg',
-        'bs' => 'Bosanski',
-        'ca' => 'Català',
-        'ce' => 'нохчийн',
-        'ch' => 'Chamorro',
-        'co' => 'Corsican',
-        'cr' => 'Cree',
-        'cs' => 'Čeština',
-        'cu' => 'Church Slavic',
-        'cv' => 'Chuvash',
-        'cy' => 'Cymraeg',
-        'da' => 'Dansk',
-        'de' => 'Deutsch',
-        'dv' => 'Divehi',
-        'dz' => 'རྫོང་ཁ',
-        'ee' => 'Eʋegbe',
-        'el' => 'Ελληνικά',
-        'en' => 'English',
-        'eo' => 'Esperanto',
-        'es' => 'Español',
-        'et' => 'Eesti',
-        'eu' => 'Euskara',
-        'fa' => 'فارسی',
-        'ff' => 'Pulaar',
-        'fi' => 'Suomi',
-        'fj' => 'Fijian',
-        'fo' => 'Føroyskt',
-        'fr' => 'Français',
-        'fy' => 'West-Frysk',
-        'ga' => 'Gaeilge',
-        'gd' => 'Gàidhlig',
-        'gl' => 'Galego',
-        'gn' => 'Guarani',
-        'gu' => 'ગુજરાતી',
-        'gv' => 'Gaelg',
-        'ha' => 'Hausa',
-        'he' => 'עברית',
-        'hi' => 'हिन्दी',
-        'ho' => 'Hiri Motu',
-        'hr' => 'Hrvatski',
-        'ht' => 'Haitian Creole',
-        'hu' => 'Magyar',
-        'hy' => 'հայերեն',
-        'hz' => 'Herero',
-        'ia' => 'Interlingua',
-        'id' => 'Indonesia',
-        'ie' => 'Interlingue',
-        'ig' => 'Igbo',
-        'ii' => 'ꆈꌠꉙ',
-        'ik' => 'Inupiaq',
-        'io' => 'Ido',
-        'is' => 'íslenska',
-        'it' => 'Italiano',
-        'iu' => 'Inuktitut',
-        'ja' => '日本語',
-        'jv' => 'Javanese',
-        'ka' => 'ქართული',
-        'kg' => 'Kongo',
-        'ki' => 'Gikuyu',
-        'kj' => 'Kuanyama',
-        'kk' => 'қазақ тілі',
-        'kl' => 'Kalaallisut',
-        'km' => 'ខ្មែរ',
-        'kn' => 'ಕನ್ನಡ',
-        'ko' => '한국어',
-        'kr' => 'Kanuri',
-        'ks' => 'کٲشُر',
-        'ku' => 'Kurdish',
-        'kv' => 'Komi',
-        'kw' => 'Kernewek',
-        'ky' => 'кыргызча',
-        'la' => 'Latin',
-        'lb' => 'Lëtzebuergesch',
-        'lg' => 'Luganda',
-        'li' => 'Limburgish',
-        'ln' => 'Lingála',
-        'lo' => 'ລາວ',
-        'lt' => 'Lietuvių',
-        'lu' => 'Tshiluba',
-        'lv' => 'Latviešu',
-        'mg' => 'Malagasy',
-        'mh' => 'Marshallese',
-        'mi' => 'Maori',
-        'mk' => 'македонски',
-        'ml' => 'മലയാളം',
-        'mn' => 'монгол',
-        'mr' => 'मराठी',
-        'ms' => 'Bahasa Melayu',
-        'mt' => 'Malti',
-        'my' => 'ဗမာ',
-        'na' => 'Nauru',
-        'nb' => 'Norsk bokmål',
-        'nd' => 'IsiNdebele',
-        'ne' => 'नेपाली',
-        'ng' => 'Ndonga',
-        'nl' => 'Nederlands',
-        'nn' => 'Nynorsk',
-        'no' => 'Norsk',
-        'nr' => 'South Ndebele',
-        'nv' => 'Navajo',
-        'ny' => 'Nyanja',
-        'oc' => 'Occitan',
-        'oj' => 'Ojibwa',
-        'om' => 'Oromoo',
-        'or' => 'ଓଡ଼ିଆ',
-        'os' => 'ирон',
-        'pa' => 'ਪੰਜਾਬੀ',
-        'pi' => 'Pali',
-        'pl' => 'Polski',
-        'ps' => 'پښتو',
-        'pt' => 'Português',
-        'qu' => 'Runasimi',
-        'rm' => 'Rumantsch',
-        'rn' => 'Ikirundi',
-        'ro' => 'Română',
-        'ru' => 'Русский',
-        'rw' => 'Kinyarwanda',
-        'sa' => 'Sanskrit',
-        'sc' => 'Sardinian',
-        'sd' => 'Sindhi',
-        'se' => 'Davvisámegiella',
-        'sg' => 'Sängö',
-        'si' => 'සිංහල',
-        'sk' => 'Slovenčina',
-        'sl' => 'Slovenščina',
-        'sm' => 'Samoan',
-        'sn' => 'ChiShona',
-        'so' => 'Soomaali',
-        'sq' => 'Shqip',
-        'sr' => 'српски',
-        'ss' => 'Swati',
-        'st' => 'Southern Sotho',
-        'su' => 'Sundanese',
-        'sv' => 'Svenska',
-        'sw' => 'Kiswahili',
-        'ta' => 'தமிழ்',
-        'te' => 'తెలుగు',
-        'tg' => 'Tajik',
-        'th' => 'ไทย',
-        'ti' => 'ትግርኛ',
-        'tk' => 'Turkmen',
-        'tn' => 'Tswana',
-        'to' => 'Lea fakatonga',
-        'tr' => 'Türkçe',
-        'ts' => 'Tsonga',
-        'tt' => 'Tatar',
-        'tw' => 'Twi',
-        'ty' => 'Tahitian',
-        'ug' => 'ئۇيغۇرچە',
-        'uk' => 'Українська',
-        'ur' => 'اردو',
-        'uz' => 'O‘zbek',
-        've' => 'Venda',
-        'vi' => 'Tiếng Việt',
-        'vo' => 'Volapük',
-        'wa' => 'Walloon',
-        'wo' => 'Wolof',
-        'xh' => 'Xhosa',
-        'yi' => 'ייִדיש',
-        'yo' => 'Èdè Yorùbá',
-        'za' => 'Zhuang',
-        'zh' => '简体中文',
-        'zu' => 'IsiZulu',
-    ];
-    /**
-     * ISO 639-1 Language Codes
-     * References :
-     * 1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-     * 2. http://blog.xoundboy.com/?p=235
-     * 3. https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-     */
-    private static $language_codes = [
-        'ab' => 'Abkhazian',
-        'aa' => 'Afar',
-        'af' => 'Afrikaans',
-        'ak' => 'Akan',
-        'sq' => 'Albanian',
-        'am' => 'Amharic',
-        'ar' => 'Arabic',
-        'an' => 'Aragonese',
-        'hy' => 'Armenian',
-        'as' => 'Assamese',
-        'av' => 'Avaric',
-        'ae' => 'Avestan',
-        'ay' => 'Aymara',
-        'az' => 'Azerbaijani',
-        'bm' => 'Bambara',
-        'ba' => 'Bashkir',
-        'eu' => 'Basque',
-        'be' => 'Belarusian',
-        'bn' => 'Bengali',
-        'bh' => 'Bihari languages',
-        'bi' => 'Bislama',
-        'bs' => 'Bosnian',
-        'br' => 'Breton',
-        'bg' => 'Bulgarian',
-        'my' => 'Burmese',
-        'ca' => 'Catalan, Valencian',
-        'km' => 'Central Khmer',
-        'ch' => 'Chamorro',
-        'ce' => 'Chechen',
-        'ny' => 'Chichewa, Chewa, Nyanja',
-        'zh' => 'Chinese',
-        'cu' => 'Church Slavonic, Old Bulgarian, Old Church Slavonic',
-        'cv' => 'Chuvash',
-        'kw' => 'Cornish',
-        'co' => 'Corsican',
-        'cr' => 'Cree',
-        'hr' => 'Croatian',
-        'cs' => 'Czech',
-        'da' => 'Danish',
-        'dv' => 'Divehi, Dhivehi, Maldivian',
-        'nl' => 'Dutch, Flemish',
-        'dz' => 'Dzongkha',
-        'en' => 'English',
-        'eo' => 'Esperanto',
-        'et' => 'Estonian',
-        'ee' => 'Ewe',
-        'fo' => 'Faroese',
-        'fj' => 'Fijian',
-        'fi' => 'Finnish',
-        'fr' => 'French',
-        'ff' => 'Fulah',
-        'gd' => 'Gaelic, Scottish Gaelic',
-        'gl' => 'Galician',
-        'lg' => 'Ganda',
-        'ka' => 'Georgian',
-        'de' => 'German',
-        'ki' => 'Gikuyu, Kikuyu',
-        'el' => 'Greek (Modern)',
-        'kl' => 'Greenlandic, Kalaallisut',
-        'gn' => 'Guarani',
-        'gu' => 'Gujarati',
-        'ht' => 'Haitian, Haitian Creole',
-        'ha' => 'Hausa',
-        'he' => 'Hebrew',
-        'hz' => 'Herero',
-        'hi' => 'Hindi',
-        'ho' => 'Hiri Motu',
-        'hu' => 'Hungarian',
-        'is' => 'Icelandic',
-        'io' => 'Ido',
-        'ig' => 'Igbo',
-        'id' => 'Indonesian',
-        'ia' => 'Interlingua (International Auxiliary Language Association)',
-        'ie' => 'Interlingue',
-        'iu' => 'Inuktitut',
-        'ik' => 'Inupiaq',
-        'ga' => 'Irish',
-        'it' => 'Italian',
-        'ja' => 'Japanese',
-        'jv' => 'Javanese',
-        'kn' => 'Kannada',
-        'kr' => 'Kanuri',
-        'ks' => 'Kashmiri',
-        'kk' => 'Kazakh',
-        'rw' => 'Kinyarwanda',
-        'kv' => 'Komi',
-        'kg' => 'Kongo',
-        'ko' => 'Korean',
-        'kj' => 'Kwanyama, Kuanyama',
-        'ku' => 'Kurdish',
-        'ky' => 'Kyrgyz',
-        'lo' => 'Lao',
-        'la' => 'Latin',
-        'lv' => 'Latvian',
-        'lb' => 'Letzeburgesch, Luxembourgish',
-        'li' => 'Limburgish, Limburgan, Limburger',
-        'ln' => 'Lingala',
-        'lt' => 'Lithuanian',
-        'lu' => 'Luba-Katanga',
-        'mk' => 'Macedonian',
-        'mg' => 'Malagasy',
-        'ms' => 'Malay',
-        'ml' => 'Malayalam',
-        'mt' => 'Maltese',
-        'gv' => 'Manx',
-        'mi' => 'Maori',
-        'mr' => 'Marathi',
-        'mh' => 'Marshallese',
-        'ro' => 'Moldovan, Moldavian, Romanian',
-        'mn' => 'Mongolian',
-        'na' => 'Nauru',
-        'nv' => 'Navajo, Navaho',
-        'nd' => 'Northern Ndebele',
-        'ng' => 'Ndonga',
-        'ne' => 'Nepali',
-        'se' => 'Northern Sami',
-        'no' => 'Norwegian',
-        'nb' => 'Norwegian Bokmål',
-        'nn' => 'Norwegian Nynorsk',
-        'ii' => 'Nuosu, Sichuan Yi',
-        'oc' => 'Occitan (post 1500)',
-        'oj' => 'Ojibwa',
-        'or' => 'Oriya',
-        'om' => 'Oromo',
-        'os' => 'Ossetian, Ossetic',
-        'pi' => 'Pali',
-        'pa' => 'Panjabi, Punjabi',
-        'ps' => 'Pashto, Pushto',
-        'fa' => 'Persian',
-        'pl' => 'Polish',
-        'pt' => 'Portuguese',
-        'qu' => 'Quechua',
-        'rm' => 'Romansh',
-        'rn' => 'Rundi',
-        'ru' => 'Russian',
-        'sm' => 'Samoan',
-        'sg' => 'Sango',
-        'sa' => 'Sanskrit',
-        'sc' => 'Sardinian',
-        'sr' => 'Serbian',
-        'sn' => 'Shona',
-        'sd' => 'Sindhi',
-        'si' => 'Sinhala, Sinhalese',
-        'sk' => 'Slovak',
-        'sl' => 'Slovenian',
-        'so' => 'Somali',
-        'st' => 'Sotho, Southern',
-        'nr' => 'South Ndebele',
-        'es' => 'Spanish, Castilian',
-        'su' => 'Sundanese',
-        'sw' => 'Swahili',
-        'ss' => 'Swati',
-        'sv' => 'Swedish',
-        'tl' => 'Tagalog',
-        'ty' => 'Tahitian',
-        'tg' => 'Tajik',
-        'ta' => 'Tamil',
-        'tt' => 'Tatar',
-        'te' => 'Telugu',
-        'th' => 'Thai',
-        'bo' => 'Tibetan',
-        'ti' => 'Tigrinya',
-        'to' => 'Tonga (Tonga Islands)',
-        'ts' => 'Tsonga',
-        'tn' => 'Tswana',
-        'tr' => 'Turkish',
-        'tk' => 'Turkmen',
-        'tw' => 'Twi',
-        'ug' => 'Uighur, Uyghur',
-        'uk' => 'Ukrainian',
-        'ur' => 'Urdu',
-        'uz' => 'Uzbek',
-        've' => 'Venda',
-        'vi' => 'Vietnamese',
-        'vo' => 'Volap_k',
-        'wa' => 'Walloon',
-        'cy' => 'Welsh',
-        'fy' => 'Western Frisian',
-        'wo' => 'Wolof',
-        'xh' => 'Xhosa',
-        'yi' => 'Yiddish',
-        'yo' => 'Yoruba',
-        'za' => 'Zhuang, Chuang',
-        'zu' => 'Zulu'
-    ];
 
     /**
      * Get locale instance by key
@@ -417,35 +41,18 @@ class Locale {
      *
      * @return static
      */
-    public static function getInstance( $key = 'default' ) {
-        if (!isset( self::$instances[$key] )) {
+    public static function getInstance($key = 'default')
+    {
+        if (!isset(self::$instances[$key])) {
             self::$instances[$key] = new static();
         }
 
         return self::$instances[$key];
     }
 
-    public static function getLoadedFiles() {
+    public static function getLoadedFiles()
+    {
         return self::$locale_file;
-    }
-
-    /**
-     * Iinclude a new locale file
-     *
-     * @param string|array $include_file Can be an array or a string
-     */
-    public static function setLocale( $include_file ) {
-        if (!empty( $include_file )) {
-            if (is_array( $include_file )) {
-                foreach ($include_file as $file) {
-                    if (!isset( self::$locale_file[$file] )) {
-                        self::loadLocaleFile( $file );
-                    }
-                }
-            } else if (!isset( self::$locale_file[$include_file] )) {
-                self::loadLocaleFile( $include_file );
-            }
-        }
     }
 
     /**
@@ -453,10 +60,11 @@ class Locale {
      *
      * @param string $filename
      */
-    public static function loadLocaleFile( $filename ) {
+    public static function loadLocaleFile($filename)
+    {
         $locale = [];
 
-        if (is_file( $filename )) {
+        if (file_exists($filename)) {
             include $filename;
         }
 
@@ -464,158 +72,134 @@ class Locale {
         self::$locale_file[$filename] = debug_backtrace();
     }
 
-    /**
-     * Given English as base, find out the localized version
-     *
-     * @param string $country
-     *
-     * @return string
-     */
-    public static function translateCountryNames( $country ) {
-        $translated_countries = [
-            "China"           => "中国",
-            "Czech Republic"  => "Česko",
-            "Denmark"         => "Danmark",
-            "Finland"         => "Suomi",
-            "Germany"         => "Deutschland",
-            "Hong Kong"       => "香港",
-            "Hungary"         => "Magyarország",
-            "Italy"           => "Italia",
-            "Norway"          => "Norge",
-            "Poland"          => "Polska",
-            "Qazaqstan"       => "Казахстан",
-            "Romania"         => "Rom&#226;nia",
-            "Russia"          => "Россия",
-            "Slovakia"        => "Slovensko",
-            "Sweden"          => "Sverige",
-            "Taiwan"          => "台湾",
-            "The Netherlands" => "Nederland",
-            "Ukraine"         => "Україна",
-        ];
-
-        if (!empty( $translated_countries[$country] )) {
-            return $translated_countries[$country];
-        } else {
-            return $country;
-        }
-    }
 
     /**
-     * Helper function to make a list of formatted language array for input fields
+     * Iinclude a new locale file
      *
-     * @return array
+     * @param string|array $include_file Can be an array or a string
      */
-    public static function languageOptions() {
-        $iso_codes = self::getIso();
-        $list = [];
-        foreach ($iso_codes as $_isocode => $standard_name) {
-            if ($translated_name = self::translateLangNames( $_isocode )) {
-                if ($translated_name != $standard_name) {
-                    $standard_name = $standard_name . ' (' . $translated_name . ')';
-                }
-            }
-            $list[$_isocode] = $standard_name;
-        }
-        return $list;
-    }
-
-    /**
-     * ISO-639 translator
-     *
-     * @param null $key
-     * @param bool $iso_to_lang set false to translate iso-folder, default folder-iso
-     *
-     * @return array|int|string|null
-     */
-    public static function getIso( $key = NULL, $iso_to_lang = TRUE ) {
-
-        $iso_codes = array_flip( self::$language_codes );
-        if ($iso_to_lang) {
-            return $key === NULL ? self::$language_codes : (isset( self::$language_codes[$key] ) ? self::translateLangNames( $key ) : NULL);
-        }
-
-        return $key === NULL ? array_flip( $iso_codes ) : ($iso_codes[$key] ?? NULL);
-    }
-
-    /**
-     * Get the language name in current system locale
-     *
-     * In a Malay locale copy, "简体中文" is called "Bahasa Cina".
-     * In event of default, using the locale folder name is even better than "简体中文"
-     *
-     * @param $language_pack - Locale folder
-     */
-    public static function getLangName( $language_pack ) {
-        $key = get_language_code( $language_pack );
-        $locale = self::getLanguageLocale();
-        return ($locale[$key] ?? str_replace( "_", "", $language_pack ));
-    }
-
-    /**
-     * Localized language names in ISO 639-1 list
-     * Attempt to translate Locale Folder Name into Localized language
-     * or return the locale folder name by default.
-     *
-     * If key is not set, return a full array
-     *
-     * @param string|null $key
-     *
-     * @return array|string
-     */
-    public static function translateLangNames( $key, $extended = FALSE ) {
-        $key = get_language_code( $key );
-
-        if ($extended == TRUE) {
-            $_locale = self::getLanguageLocale();
-
-            static $parsed;
-            if (empty( $parsed )) { // prevent appending multiple times with each method call
-                foreach ($_locale as $short_code => $value) {
-                    if (isset( self::$translated_langs[$short_code] )) {
-                        self::$translated_langs[$short_code] = self::$translated_langs[$short_code] . " [$value]";
+    public static function setLocale($include_file)
+    {
+        if (!empty($include_file)) {
+            if (is_array($include_file)) {
+                foreach ($include_file as $file) {
+                    if (!isset(self::$locale_file[$file])) {
+                        self::loadLocaleFile($file);
                     }
                 }
-                $parsed = TRUE;
+            } else if (!isset(self::$locale_file[$include_file])) {
+                self::loadLocaleFile($include_file);
+            }
+        }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return array|mixed|string
+     */
+    public function getLocale($key = NULL)
+    {
+        return empty($key) ? self::$locale : (self::$locale[$key] ?? '');
+    }
+
+    /**
+     * @param $amount
+     * @return string
+     */
+    public static function spellNumbers($amount)
+    {
+        function convertThreeDigit($number, $ones, $teens, $tens)
+        {
+            $result = "";
+
+            // Handle hundreds
+            if ($number >= 100) {
+                $result .= $ones[floor($number / 100)] . " hundred";
+                $number %= 100;
+                if ($number > 0) {
+                    $result .= " ";
+                }
+            }
+
+            // Handle tens and ones
+            $result .= convertTwoDigit($number, $ones, $teens, $tens);
+
+            return $result;
+        }
+
+        function convertTwoDigit($number, $ones, $teens, $tens)
+        {
+            $result = "";
+
+            if ($number >= 10 && $number <= 19) {
+                $result .= $teens[$number - 10];
+            } else {
+                if ($number >= 20) {
+                    $result .= $tens[floor($number / 10)];
+                    $number %= 10;
+                    if ($number > 0) {
+                        $result .= " ";
+                    }
+                }
+                if ($number > 0) {
+                    $result .= $ones[$number];
+                }
+            }
+
+            return $result;
+        }
+
+        if ($amount == 0) {
+            return '';
+        }
+
+        // Split dollars and cents
+        $parts = explode('.', number_format($amount, 2, '.', ''));
+        $dollars = (int)$parts[0];
+        $cents = isset($parts[1]) ? (int)$parts[1] : 0;
+
+        $ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+        $teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+        $tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+
+        $result = "";
+
+        // Process millions
+        if ($dollars >= 1000000) {
+            $millions = floor($dollars / 1000000);
+            $result .= convertThreeDigit($millions, $ones, $teens, $tens) . " million";
+            $dollars %= 1000000;
+            if ($dollars > 0) {
+                $result .= " ";
             }
         }
 
-        return self::$translated_langs[$key];
+        // Process thousands
+        if ($dollars >= 1000) {
+            $thousandsVal = floor($dollars / 1000);
+            $result .= convertThreeDigit($thousandsVal, $ones, $teens, $tens) . " thousand";
+            $dollars %= 1000;
+            if ($dollars > 0) {
+                $result .= " ";
+            }
+        }
+
+        // Process the rest (hundreds, tens, ones)
+        if ($dollars > 0) {
+            $result .= convertThreeDigit($dollars, $ones, $teens, $tens);
+        } else if (empty($result)) {
+            $result = "zero";
+        }
+
+        // Add cents if they exist
+        if ($cents > 0) {
+            $result .= " and cents " . convertTwoDigit($cents, $ones, $teens, $tens);
+        }
+
+        return ucwords($result) . " only";
     }
 
-    /**
-     * Load default language locale file
-     *
-     * @return array
-     */
-    private static function getLanguageLocale() {
-        $locale = [];
-        include LOCALE . LOCALESET . 'language.php';
-        return $locale;
-    }
-
-    /**
-     * Get system translated lang list
-     *
-     * @param null $key
-     *
-     * @return string|string[]|null
-     */
-    public static function getTranslatedLangs( $key = NULL ) {
-        return $key === NULL ? self::$translated_langs : (self::$translated_langs[$key] ?? NULL);
-    }
-
-    /**
-     * @param int $count
-     * @param string $words 'member|members';
-     * @param array $options
-     *
-     * @return string
-     *
-     * @deprecated use format_word()
-     */
-    public static function format_word( $count, $words, $options = [] ) {
-        return self::formatWord( $count, $words, $options );
-    }
 
     /**
      * Returns a grammatical number word.
@@ -626,17 +210,18 @@ class Locale {
      *
      * @return string
      */
-    public static function formatWord( $count, $words, $options = [] ) {
+    public static function formatWord($count, $words, $options = [])
+    {
         $default_options = [
-            'add_count'     => TRUE, // Show number.
-            'html'          => FALSE, // Encase result with html_template, {%count%} {%result%} tags are used for placeholders for result replacements.
+            'add_count' => TRUE, // Show number.
+            'html' => FALSE, // Encase result with html_template, {%count%} {%result%} tags are used for placeholders for result replacements.
             'html_template' => "<span class='fusion_count'>{%count%}</span> <span class='fusion_word'>{%result%}</span>", // HTML template to be used for output.
-            'language'      => LANGUAGE, // Current language.
+            'language' => LANGUAGE, // Current language.
         ];
 
         $options += $default_options;
 
-        if (empty( $count )) {
+        if (empty($count)) {
             $count = "0";
         }
 
@@ -647,27 +232,27 @@ class Locale {
             case 'German':
             case 'Romanian':
                 $form = $count == 1 ? 0 : 1;
-                $words_array = explode( "|", $words );
-                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
+                $words_array = explode("|", $words);
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Czech':
             case 'Slovak':
                 if ($count == 1) {
                     $form = 0;
-                } else if (in_array( $count, [2, 3, 4] )) {
+                } else if (in_array($count, [2, 3, 4])) {
                     $form = 1;
                 } else {
                     $form = 2;
                 }
 
-                $words_array = explode( "|", $words );
-                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
+                $words_array = explode("|", $words);
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             case 'Russian':
             case 'Ukranian':
                 $fcount = $count % 100;
                 $a = $fcount % 10;
-                $b = floor( $fcount / 10 );
+                $b = floor($fcount / 10);
                 $form = 2;
 
                 if ($b != 1) {
@@ -678,19 +263,19 @@ class Locale {
                     }
                 }
 
-                $words_array = explode( "|", $words );
-                $result = !empty( $words_array[$form] ) ? $words_array[$form] : $words_array[0];
+                $words_array = explode("|", $words);
+                $result = !empty($words_array[$form]) ? $words_array[$form] : $words_array[0];
                 break;
             default: // never plural language - i.e. chinese is here
-                $words_array = explode( "|", $words );
+                $words_array = explode("|", $words);
                 $result = $words_array[0];
         }
 
         if ($options['add_count']) {
-            if ($options['html'] && !empty( $options['html_template'] )) {
-                return strtr( $options['html_template'],
+            if ($options['html'] && !empty($options['html_template'])) {
+                return strtr($options['html_template'],
                     [
-                        "{%count%}"  => $count,
+                        "{%count%}" => $count,
                         "{%result%}" => $result
                     ]
                 );
@@ -703,12 +288,258 @@ class Locale {
     }
 
     /**
-     * @param string|null $key
+     * Given English as base, find out the localized version
      *
-     * @return array|mixed|string
+     * @param string $country
+     *
+     * @return string
      */
-    public function getLocale( $key = NULL ) {
-        return empty( $key ) ? self::$locale : (self::$locale[$key] ?? '');
+    public static function translateCountryNames($country)
+    {
+        $translated_countries = [
+            "China" => "中国",
+            "Czech Republic" => "Česko",
+            "Denmark" => "Danmark",
+            "Finland" => "Suomi",
+            "Germany" => "Deutschland",
+            "Hong Kong" => "香港",
+            "Hungary" => "Magyarország",
+            "Italy" => "Italia",
+            "Norway" => "Norge",
+            "Poland" => "Polska",
+            "Qazaqstan" => "Казахстан",
+            "Romania" => "Rom&#226;nia",
+            "Russia" => "Россия",
+            "Slovakia" => "Slovensko",
+            "Sweden" => "Sverige",
+            "Taiwan" => "台湾",
+            "The Netherlands" => "Nederland",
+            "Ukraine" => "Україна",
+        ];
+
+        if (!empty($translated_countries[$country])) {
+            return $translated_countries[$country];
+        } else {
+            return $country;
+        }
+    }
+
+    /**
+     * Attempt to translate Locale Folder Name into Localized language
+     * or return the locale folder name by default.
+     *
+     * If key is not set, return a full array
+     *
+     * @param string $key
+     *
+     * @return array|string
+     */
+    public static function translateLangNames($key = NULL)
+    {
+        $translated_langs = [
+            "Chinese_Simplified" => "中文-简体",
+            "Chinese_Traditional" => "中文-繁体",
+            "Czech" => "Čeština",
+            "Danish" => "Dansk",
+            "Dutch" => "Nederlands",
+            "English" => "English",
+            "French" => "Francais",
+            "German" => "Deutsch",
+            "Hungarian" => "Magyar",
+            "Italian" => "Italiano",
+            "Lithuanian" => "Lietuvių",
+            "Malay" => "Melayu",
+            "Norwegian" => "Norsk",
+            "Persian" => "Persian",
+            "Polish" => "Polski",
+            "Qazaq" => "Qazaq",
+            "Romanian" => "Rom&#226;n&#259;",
+            "Russian" => "Русский",
+            "Slovak" => "Slovenčina",
+            "Spanish" => "Español",
+            "Swedish" => "Svenska",
+            "Turkish" => "Türkçe",
+            "Ukrainian" => "Українська",
+        ];
+
+        return $key === NULL ? $translated_langs : (isset($translated_langs[$key]) ? $translated_langs[$key] : $key);
+    }
+
+    /**
+     * ISO-639 translator
+     *
+     * @param null $key
+     * @param bool $iso_to_lang set false to translate iso-folder, default folder-iso
+     *
+     * @return array|int|string|null
+     */
+    public static function getIso($key = NULL, $iso_to_lang = TRUE)
+    {
+        /**
+         * ISO 639-1 Language Codes
+         * References :
+         * 1. http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+         * 2. http://blog.xoundboy.com/?p=235
+         * 3. https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+         */
+        $language_codes = [
+            'en' => 'English',
+            'aa' => 'Afar',
+            'ab' => 'Abkhazian',
+            'af' => 'Afrikaans',
+            'am' => 'Amharic',
+            'ar' => 'Arabic',
+            'as' => 'Assamese',
+            'ay' => 'Aymara',
+            'az' => 'Azerbaijani',
+            'ba' => 'Bashkir',
+            'be' => 'Byelorussian',
+            'bg' => 'Bulgarian',
+            'bh' => 'Bihari',
+            'bi' => 'Bislama',
+            'bn' => 'Bengali/Bangla',
+            'bo' => 'Tibetan',
+            'br' => 'Breton',
+            'ca' => 'Catalan',
+            'co' => 'Corsican',
+            'cs' => 'Czech',
+            'cy' => 'Welsh',
+            'da' => 'Danish',
+            'de' => 'German',
+            'dz' => 'Bhutani',
+            'el' => 'Greek',
+            'eo' => 'Esperanto',
+            'es' => 'Spanish',
+            'et' => 'Estonian',
+            'eu' => 'Basque',
+            'fa' => 'Persian',
+            'fi' => 'Finnish',
+            'fj' => 'Fiji',
+            'fo' => 'Faeroese',
+            'fr' => 'French',
+            'fy' => 'Frisian',
+            'ga' => 'Irish',
+            'gd' => 'Scots/Gaelic',
+            'gl' => 'Galician',
+            'gn' => 'Guarani',
+            'gu' => 'Gujarati',
+            'ha' => 'Hausa',
+            'hi' => 'Hindi',
+            'hr' => 'Croatian',
+            'hu' => 'Hungarian',
+            'hy' => 'Armenian',
+            'ia' => 'Interlingua',
+            'ie' => 'Interlingue',
+            'ik' => 'Inupiak',
+            'in' => 'Indonesian',
+            'is' => 'Icelandic',
+            'it' => 'Italian',
+            'iw' => 'Hebrew',
+            'ja' => 'Japanese',
+            'ji' => 'Yiddish',
+            'jw' => 'Javanese',
+            'ka' => 'Georgian',
+            'kk' => 'Qazaq',
+            'kl' => 'Greenlandic',
+            'km' => 'Cambodian',
+            'kn' => 'Kannada',
+            'ko' => 'Korean',
+            'ks' => 'Kashmiri',
+            'ku' => 'Kurdish',
+            'ky' => 'Kirghiz',
+            'la' => 'Latin',
+            'ln' => 'Lingala',
+            'lo' => 'Laothian',
+            'lt' => 'Lithuanian',
+            'lv' => 'Latvian/Lettish',
+            'mg' => 'Malagasy',
+            'mi' => 'Maori',
+            'mk' => 'Macedonian',
+            'ml' => 'Malayalam',
+            'mn' => 'Mongolian',
+            'mo' => 'Moldavian',
+            'mr' => 'Marathi',
+            'ms' => 'Malay',
+            'mt' => 'Maltese',
+            'my' => 'Burmese',
+            'na' => 'Nauru',
+            'ne' => 'Nepali',
+            'nl' => 'Dutch',
+            'no' => 'Norwegian',
+            'oc' => 'Occitan',
+            'om' => '(Afan)/Oromoor/Oriya',
+            'pa' => 'Punjabi',
+            'pl' => 'Polish',
+            'ps' => 'Pashto/Pushto',
+            'pt' => 'Portuguese',
+            'qu' => 'Quechua',
+            'rm' => 'Rhaeto-Romance',
+            'rn' => 'Kirundi',
+            'ro' => 'Romanian',
+            'ru' => 'Russian',
+            'rw' => 'Kinyarwanda',
+            'sa' => 'Sanskrit',
+            'sd' => 'Sindhi',
+            'sg' => 'Sangro',
+            'sh' => 'Serbo-Croatian',
+            'si' => 'Singhalese',
+            'sk' => 'Slovak',
+            'sl' => 'Slovenian',
+            'sm' => 'Samoan',
+            'sn' => 'Shona',
+            'so' => 'Somali',
+            'sq' => 'Albanian',
+            'sr' => 'Serbian',
+            'ss' => 'Siswati',
+            'st' => 'Sesotho',
+            'su' => 'Sundanese',
+            'sv' => 'Swedish',
+            'sw' => 'Swahili',
+            'ta' => 'Tamil',
+            'te' => 'Tegulu',
+            'tg' => 'Tajik',
+            'th' => 'Thai',
+            'ti' => 'Tigrinya',
+            'tk' => 'Turkmen',
+            'tl' => 'Tagalog',
+            'tn' => 'Setswana',
+            'to' => 'Tonga',
+            'tr' => 'Turkish',
+            'ts' => 'Tsonga',
+            'tt' => 'Tatar',
+            'tw' => 'Twi',
+            'uk' => 'Ukrainian',
+            'ur' => 'Urdu',
+            'uz' => 'Uzbek',
+            'vi' => 'Vietnamese',
+            'vo' => 'Volapuk',
+            'wo' => 'Wolof',
+            'xh' => 'Xhosa',
+            'yo' => 'Yoruba',
+            'zh' => 'Chinese',
+            'zu' => 'Zulu',
+        ];
+
+        $iso_codes = array_flip($language_codes);
+        if ($iso_to_lang) {
+            return $key === NULL ? $language_codes : (isset($language_codes[$key]) ? self::translateLangNames($language_codes[$key]) : NULL);
+        }
+
+        return $key === NULL ? array_flip($iso_codes) : (isset($iso_codes[$key]) ? $iso_codes[$key] : NULL);
+    }
+
+    /**
+     * @param int $count
+     * @param string $words 'member|members';
+     * @param array $options
+     *
+     * @return string
+     *
+     * @deprecated use format_word()
+     */
+    public static function format_word($count, $words, $options = [])
+    {
+        return self::formatWord($count, $words, $options);
     }
 
     /**
@@ -724,14 +555,15 @@ class Locale {
      *
      * @return string
      */
-    public function getInfLocaleFiles( $locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English' ) {
+    public function getInfLocaleFiles($locale_file, $locale_folder, $localeset_folder = TRUE, $default_lang = 'English')
+    {
         // prune the locale folder and ensures the correct forumat is used
-        $locale_folder = rtrim( $locale_folder, '/' ) . '/';
-        $locale_set = rtrim( LOCALESET, '/' );
+        $locale_folder = rtrim($locale_folder, '/') . '/';
+        $locale_set = rtrim(LOCALESET, '/');
         // this is when the infusion has multiple locale files, typical solution was to store the files in a localeset folder - /English/
         if ($localeset_folder) {
             $locale_path = $locale_folder . $default_lang . '/' . $locale_file;
-            if (is_file( $locale_folder . LOCALESET . $locale_file )) {
+            if (is_file($locale_folder . LOCALESET . $locale_file)) {
                 $locale_path = $locale_folder . LOCALESET . $locale_file;
             }
             return $locale_path;
@@ -740,106 +572,10 @@ class Locale {
         // when there are no folder, typical solution was to store the files in a single locale folder and have the file named as the language - English.php
 
         $locale_path = $locale_folder . $default_lang . '.php';
-        if (is_file( $locale_folder . $locale_set . '.php' )) {
+        if (is_file($locale_folder . $locale_set . '.php')) {
             $locale_path = $locale_folder . $locale_set . '.php';
         }
 
         return $locale_path;
     }
-
-    /**
-     * Parse the correct label language. Requires to be serialized $value.
-     *
-     * @param string $value Serialized
-     *
-     * @return string
-     * NOTE: If your field does not parse properly, check your column length. Set it to TEXT NOT NULL.
-     */
-    public static function parseLabel( $value ) {
-        if (self::isSerialized( $value )) {
-            $value = unserialize( stripslashes( $value ) ); // if anyone can give me an @unserialize($value) withotu E_NOTICE. I'll drop is_serialized function.
-
-            return (string)(isset( $value[LANGUAGE] )) ? $value[LANGUAGE] : '';
-        } else {
-            return (string)$value;
-        }
-    }
-
-    /**
-     * Checks whether a string is serialized
-     *
-     * @param string $value
-     * @param bool|null $result
-     *
-     * @return bool
-     */
-    public static function isSerialized( $value, &$result = NULL ) {
-
-        // A bit of a give away this one
-        if (!is_string( $value )) {
-            return FALSE;
-        }
-        // Serialized FALSE, return TRUE. unserialize() returns FALSE on an
-        // invalid string, or it could return FALSE if the string is serialized
-        // FALSE, eliminate that possibility.
-        if ('b:0;' === $value) {
-            $result = FALSE;
-
-            return TRUE;
-        }
-        $length = strlen( $value );
-        $end = '';
-        if (isset( $value[0] )) {
-            switch ($value[0]) {
-                case 's':
-                    if ('"' !== $value[$length - 2]) {
-                        return FALSE;
-                    }
-                    break;
-                case 'b':
-                case 'i':
-                case 'd':
-                    // This looks odd, but it is quicker than isset()ing
-                    $end .= ';';
-                case 'a':
-                case 'O':
-                    $end .= '}';
-                    if (':' !== $value[1]) {
-                        return FALSE;
-                    }
-                    switch ($value[2]) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                        case 7:
-                        case 8:
-                        case 9:
-                            break;
-                        default:
-                            return FALSE;
-                    }
-                case 'N':
-                    $end .= ';';
-                    if ($value[$length - 1] !== $end[0]) {
-                        return FALSE;
-                    }
-                    break;
-                default:
-                    return FALSE;
-            }
-        }
-
-        if (($result = unserialize( stripslashes( $value ) )) === FALSE) {
-            $result = NULL;
-
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-
 }

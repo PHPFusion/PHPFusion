@@ -1,0 +1,65 @@
+/* Shared, framework-neutral administration page feedback primitives. */
+.fusion-admin-toast-region {
+    position: fixed;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+    z-index: 1085;
+    display: grid;
+    gap: .5rem;
+    width: min(24rem, calc(100vw - 2rem));
+    pointer-events: none;
+}
+
+.fusion-admin-toast {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .75rem;
+    margin: 0;
+    padding: .75rem 1rem;
+    color: var(--ui-fg, var(--tblr-body-color, #172033));
+    background: var(--ui-surface, var(--tblr-bg-surface, #fff));
+    border: 1px solid var(--ui-border, var(--tblr-border-color, #d8dee9));
+    border-radius: var(--ui-radius-md, var(--tblr-border-radius, .5rem));
+    pointer-events: auto;
+}
+
+.fusion-admin-toast.alert-success {
+    border-color: var(--ui-success, var(--tblr-success, #15803d));
+}
+
+.fusion-admin-toast.alert-danger {
+    border-color: var(--ui-danger, var(--tblr-danger, #b91c1c));
+}
+
+.fusion-admin-toast button {
+    flex: 0 0 auto;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+[data-fusion-feedback][data-state="loading"] {
+    color: var(--ui-muted-fg, var(--tblr-muted, #667085));
+}
+
+[data-fusion-feedback][data-state="success"] {
+    color: var(--ui-success, var(--tblr-success, #15803d));
+}
+
+[data-fusion-feedback][data-state="error"],
+[data-fusion-api-form] [aria-invalid="true"] {
+    color: var(--ui-danger, var(--tblr-danger, #b91c1c));
+    border-color: var(--ui-danger, var(--tblr-danger, #b91c1c));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fusion-admin-toast {
+        scroll-behavior: auto;
+        transition: none;
+    }
+}

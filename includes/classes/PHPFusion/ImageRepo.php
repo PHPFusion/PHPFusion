@@ -47,110 +47,7 @@ class ImageRepo {
      */
     private static $smiley_cache = NULL;
 
-    /**
-     * We will go with Font Awesome
-     *
-     * @var string[]
-     */
-    private static $glyphicons = [
-        'plus'              => 'fa-solid fa-plus',
-        'minus'             => 'fa-solid fa-minus',
-        'up'                => 'fa-solid fa-arrow-up',
-        'down'              => 'fa-solid fa-arrow-down',
-        'left'              => 'fa-solid fa-arrow-left',
-        'right'             => 'fa-solid fa-arrow-right',
-        'caret-up'          => 'fa-solid fa-caret-up',
-        'caret-down'        => 'fa-solid fa-caret-down',
-        'caret-left'        => 'fa-solid fa-caret-left',
-        'caret-right'       => 'fa-solid fa-caret-right',
-        'angle-up'          => 'fa-solid fa-angle-up',
-        'angle-down'        => 'fa-solid fa-angle-down',
-        'angle-left'        => 'fa-solid fa-angle-left',
-        'angle-right'       => 'fa-solid fa-angle-right',
-        'apply'             => 'fa-solid fa-check',
-        'cancel'            => 'fa-solid fa-ban',
-        'reset'             => 'fa-solid fa-rotate-left',
-        'undo'              => 'fa-solid fa-rotate-left',
-        'back'              => 'fa-solid fa-rotate-left',
-        'redo'              => 'fa-solid fa-rotate-right',
-        'reply'             => 'fa-solid fa-reply',
-        'forward'           => 'fa-solid fa-share-from-square',
-        'first'             => 'fa-solid fa-angle-left',
-        'last'              => 'fa-solid fa-angle-right',
-        'next'              => 'fa-solid fa-angle-double-right',
-        'previous'          => 'fa-solid fa-angle-double-left',
-        'edit'              => 'fa-solid fa-edit',
-        'delete'            => 'fa-solid fa-trash',
-        'view'              => 'fa-solid fa-eye',
-        'more'              => 'fa-solid fa-ellipsis-v',
-        'filter'            => 'fa-solid fa-filters',
-        'asc'               => 'fa-solid fa-sort-up',
-        'desc'              => 'fa-solid fa-sort-down',
-        'move'              => 'fa-solid fa-up-down-left-right',
-        'maximize'          => 'fa-solid fa-maximize',
-        'minimize'          => 'fa-solid fa-down-left-and-up-right-to-center',
-        'user'              => 'fa-solid fa-user',
-        'admin'             => 'fa-solid fa-user-secret',
-        'profile'           => 'fa-solid fa-id-badge',
-        'user-groups'       => 'fa-solid fa-users-rectangle',
-        'user-active'       => 'fa-solid fa-user-check',
-        'user-joined'       => 'fa-solid fa-calendar-circle-user',
-        'user-banned'       => 'fa-solid fa-user-xmark',
-        'user-inactive'     => 'fa-solid fa-user-clock',
-        'forum-post'        => 'fa-solid fa-messages',
-        'forum-spam'        => 'fa-solid fa-message-xmark',
-        'forum-sticky'      => 'fa-solid fa-message-arrow-up',
-        'forum-question'    => 'fa-solid fa-message-question',
-        'forum-answer'      => 'fa-solid fa-message-check',
-        'forum-quote'       => 'fa-solid fa-message-quote',
-        'forum-attachments' => 'fa-solid fa-message-image',
-        'forum-warning'     => 'fa-solid fa-message-exclamation',
-        'forum-reputation'  => 'fa-solid fa-hundred-points',
-        'forum-upvoted'     => 'fa-solid fa-message-arrow-up',
-        'forum-downvoted'   => 'fa-solid fa-message-arrow-down',
-        'vote'              => 'fa-solid fa-check-to-slot',
-        'unvote'            => 'fa-solid fa-xmark-to-slot',
-        'note'              => 'fa-solid fa-note-sticky',
-        'auto-bot'          => 'fa-solid fa-message-bot',
-        'comments'          => 'fa-solid fa-comments',
-        'comment'           => 'fa-solid fa-comment',
-        'poll'              => 'fa-solid fa-square-poll-vertical',
-        'games'             => 'fa-solid fa-dice',
-        'print'             => 'fa-solid fa-print',
-        'bill'              => 'fa-solid fa-file-invoice',
-        'items'             => 'fa-solid fa-box-heart',
-        'security'          => 'fa-solid fa-shield-cross',
-        'infusion'          => 'fa-solid fa-magnet',
-        'collection'        => 'fa-solid fa-gift',
-        'coins'             => 'fa-solid fa-sack',
-        'location'          => 'fa-solid fa-location-dot',
-        'code'              => 'fa-solid fa-brackets-curly',
-        'star'              => 'fa-regular fa-star',
-        'half-star'         => 'fa-solid fa-half-star',
-        'flag'              => 'fa-regular fa-flag',
-        'clock'             => 'fa-regular fa-clock',
-        'success'           => 'fa-solid fa-badge-check',
-        'warning'           => 'fa-solid fa-triangle-exclamation',
-        'danger'            => 'fa-solid fa-light-emergency-on',
-        'donation'          => 'fa-solid fa-hands-holding-dollar',
-        'import'            => 'fa-solid fa-up-to-line',
-        'export'            => 'fa-solid fa-down-from-line',
-        'time'              => 'fa-solid fa-fa-clock',
-        'duration'          => 'fa-solid fa-clock-rotate-left',
-        'locked'            => 'fa-solid fa-lock',
-        'unlocked'          => 'fa-solid fa-lock-open',
-        'login'             => 'fa-solid fa-right-to-bracket',
-        'logout'            => 'fa-solid fa-right-from-bracket',
-        'tech-support'      => 'fa-solid fa-headset',
-        'maintenance'       => 'fa-solid fa-helmet-safety',
-        'site-links'        => 'fa-solid fa-sitemap',
-        'bug'               => 'fa-solid fa-bug',
-        'contact'           => 'fa-solid fa-square-phone',
-        'covid'             => 'fa-solid fa-virus-covid',
-        'settings'          => 'fa-solid fa-screwdriver-wrench',
-        'download'          => 'fa-solid fa-download',
-        'pen'               => 'fa-solid fa-pen',
-    ];
+    private static $svg_cache = [];
 
     /**
      * Get all imagepaths
@@ -170,11 +67,7 @@ class ImageRepo {
         if (self::$cached) {
             return;
         }
-
         self::$cached = TRUE;
-
-        $settings = fusion_get_settings();
-
         //<editor-fold desc="imagePaths">
         // You need to + sign it, so setImage will work.
         self::$image_paths += [
@@ -193,12 +86,9 @@ class ImageRepo {
             //K
             //L
             "left"          => IMAGES."icons/left.png",
-            "logo"          => $settings['sitebanner'],
             //M
             //N
             "noavatar"      => IMAGES."avatars/no-avatar.jpg",
-            "no-avatar"     => IMAGES."avatars/no-avatar.jpg",
-            "no-cover"      => IMAGES."covers/no-cover.png",
             //O
             //P
             "panel_on"      => IMAGES."icons/panel_on.gif",
@@ -272,24 +162,6 @@ class ImageRepo {
     }
 
     /**
-     * Get all registered icons
-     *
-     * @return string[]
-     */
-    public static function getIconList() {
-        return self::$glyphicons;
-    }
-
-    /**
-     * Get all registered images
-     *
-     * @return string[]
-     */
-    public static function getImageList() {
-        return self::$image_paths;
-    }
-
-    /**
      * Get the imagepath or the html "img" tag
      *
      * @param string $image The name of the image.
@@ -316,24 +188,59 @@ class ImageRepo {
             $url;
     }
 
-    /**
-     * @param        $name
-     * @param string $class
-     *
-     * @return string
-     */
-    public static function getIcon( string $name, string $class = "", string $tooltip = "", string $style = "" ) {
-        $icon = ( self::$glyphicons[$name] ) ?? $name;
-        $style = $style ? ' style="' . $style . '"' : '';
-        $tooltip = $tooltip ? 'data-toggle="tooltip" title="' . $tooltip . '"' : '';
-
-        return '<i class="' . $icon . whitespace( $class ) . '"' . $style . $tooltip . '></i>';
+    public static function setSVG($key, $html) {
+        self::$svg_cache[$key] = $html;
     }
 
-    public static function setIcon($name, $value) {
-        self::$glyphicons[$name] = $value;
+	/**
+	 * Get the SVG code by keycode
+	 * @param $key
+	 * @return mixed|string
+	 */
+    public static function getSVG($key, $size = '', $stroke = '') {
+
+        $svg = isset(self::$svg_cache[$key]) ? '<!--?xml version="1.0" encoding="UTF-8"?-->'.self::$svg_cache[$key] : $key;
+
+        // 1. Clean up old attributes to prevent duplicates or conflicts
+        if ($size) {
+            $svg = preg_replace('/(width|height)="\d+"/', '', $svg);
+        }
+        if ($stroke) {
+            $svg = preg_replace('/stroke-width="[0-9.]*"/', '', $svg);
+        }
+
+        // 2. Build the inline style string
+        $inlineStyles = [];
+        if ($size) {
+            $inlineStyles[] = "width: {$size}px !important";
+            $inlineStyles[] = "height: {$size}px !important";
+        }
+        if ($stroke) {
+            $inlineStyles[] = "stroke-width: {$stroke} !important";
+        }
+
+        // 3. Inject the style attribute if we have styles to add
+        if (!empty($inlineStyles)) {
+            $styleAttribute = 'style="' . implode('; ', $inlineStyles) . ';"';
+
+            // Check if a style attribute already exists to avoid double 'style' tags
+            if (strpos($svg, 'style="') !== false) {
+                $svg = preg_replace('/style="/', $styleAttribute . ' ', $svg);
+            } else {
+                $svg = preg_replace('/<svg/', "<svg $styleAttribute", $svg);
+            }
+        }
+
+        return $svg;
     }
 
+	/**
+	 * Returns all cached SVGs
+	 * @return array
+	 */
+    public static function getCachedSVG() {
+    	return self::$svg_cache;
+	}
 
     /**
      * Set a path of an image
@@ -380,7 +287,7 @@ class ImageRepo {
     public static function cacheSmileys() {
         if (self::$smiley_cache === NULL) {
             self::$smiley_cache = [];
-            $result = cdquery('smileys_cache', "SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
+            $result = cdquery('smileys_cache',"SELECT smiley_code, smiley_image, smiley_text FROM ".DB_SMILEYS);
             while ($data = cdarray($result)) {
                 self::$smiley_cache[] = [
                     'smiley_code'  => $data['smiley_code'],

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Render a Bootstrap 5 dropdown (select or JSON/tags input)
+ * Render a Bootstrap 5 dropdown (select or JSON input).
  *
  * @param string $input_name
  * @param string $input_value
@@ -27,8 +27,8 @@ function render_dropdown_input($input_name, $input_value = '', array $options = 
 
     $options_html = $options['options_html'] ?? '';
 
-    // --- SELECT2 / JSON MODE / TAGS MODE ---
-    if (!empty($options['jsonmode']) || !empty($options['tags'])) {
+    // JSON mode keeps its serialized value in a hidden source input.
+    if (!empty($options['jsonmode'])) {
         $dropdown_class = 'form-select';
         $spinner = '
             <div id="' . $input_id . '-spinner" class="text-center my-2" style="display:none;">
@@ -56,9 +56,7 @@ function render_dropdown_input($input_name, $input_value = '', array $options = 
     }
 
     // --- NORMAL SELECT MODE ---
-    $select2_disabled = $options['select2_disabled'] ?? false;
-    $class = $select2_disabled ? 'form-select' : '';
-    $multiple = !empty($options['multiple']) ? 'multiple' : '';
+    $multiple = (!empty($options['multiple']) || !empty($options['tags'])) ? 'multiple' : '';
 
     $label_attr = $input_label ? 'aria-label="' . htmlspecialchars($input_label) . '"' : '';
 
@@ -66,7 +64,7 @@ function render_dropdown_input($input_name, $input_value = '', array $options = 
         <select
             name="' . htmlspecialchars($input_name) . '"
             id="' . htmlspecialchars($input_id) . '"
-            class="mb-3 ' . $class . ' ' . $inner_class . ' ' . $input_error . '"
+            class="mb-3 form-select ' . $inner_class . ' ' . $input_error . '"
             ' . $inner_width . '
             ' . $placeholder . '
             ' . $autocomplete . '

@@ -28,7 +28,6 @@ module.exports = {
         ]
     },
     safelist: [
-<<<<<<< HEAD
         ...spacing.flatMap((space) =>
             [...marginUtilities, ...paddingUtilities, ...gapUtilities].map((utility) => `tw-${utility}-${space}`)
         ),
@@ -53,19 +52,12 @@ module.exports = {
         ...Array.from({length: 12}, (_, index) => `tw-col-span-${index + 1}`),
         ...breakpoints.flatMap((breakpoint) =>
             Array.from({length: 12}, (_, index) => `${breakpoint}:tw-col-span-${index + 1}`)
-        )
-=======
-        ...[0, 1, 2, 3, 4, 5].flatMap((space) =>
-            ['m', 'mt', 'mb', 'ms', 'me', 'mx', 'my', 'p', 'pt', 'pb', 'ps', 'pe', 'px', 'py', 'gap']
-                .map((utility) => `tw-${utility}-${space}`)
         ),
         ...['', 'sm:', 'md:', 'lg:', 'xl:', '2xl:'].flatMap((breakpoint) => [
             `${breakpoint}tw-col-auto`,
             `${breakpoint}tw-col-start-auto`,
-            ...Array.from({length: 12}, (_, index) => `${breakpoint}tw-col-span-${index + 1}`),
             ...Array.from({length: 11}, (_, index) => `${breakpoint}tw-col-start-${index + 2}`),
         ]),
->>>>>>> 8414028acb29856d694a9dd20b694a0435ef005e
     ],
     prefix: 'tw-',
     darkMode: ['class', '[data-bs-theme="dark"]'],

@@ -30,6 +30,7 @@ function bootstrap_header(string $context = 'site') {
     if (bootstrap_framework_variant() === 'tabler') {
         echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler.min.css">';
         echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/icons-webfont/tabler-icons.min.css">';
+        echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler-adapter.css">';
         return;
     }
 

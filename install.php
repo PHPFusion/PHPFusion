@@ -15,15 +15,15 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
+const UI_FRAMEWORK = 'bootstrap';
+const UI_FRAMEWORK_VERSION = '5';
+const UI_FRAMEWORK_VARIANT = 'tabler';
 const BASEDIR = '';
-
+const COOKIE_PATH = '/';
 const IN_FUSION = TRUE;
 
-const BOOTSTRAP = 5;
-
-require_once __DIR__ . '/includes/autoloader.php';
-
-require_once INCLUDES . 'plugins_include.php';
-
+require_once __DIR__.'/includes/autoloader.php';
+require_once INCLUDES.'frameworks/framework_engine.php';
+fusion_framework_boot('site');
 // Start the installer
 PHPFusion\Installer\InstallCore::getInstallInstance()->installPhpfusion();

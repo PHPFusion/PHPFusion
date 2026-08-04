@@ -1,0 +1,289 @@
+.fusion-fileinput-field {
+  --fusion-fileinput-bg: var(--ui-card, var(--tblr-bg-surface, var(--ds-body-bg, #fff)));
+  --fusion-fileinput-muted: var(--ui-muted, var(--tblr-bg-surface-secondary, var(--ds-secondary-bg, #f4f6f8)));
+  --fusion-fileinput-fg: var(--ui-foreground, var(--tblr-body-color, var(--ds-body-color, #18202a)));
+  --fusion-fileinput-muted-fg: var(--ui-muted-foreground, var(--tblr-secondary-color, var(--ds-secondary-color, #667085)));
+  --fusion-fileinput-border: var(--ui-input, var(--tblr-border-color, var(--ds-border-color, #d8dee6)));
+  --fusion-fileinput-ring: var(--ui-ring, var(--tblr-primary, var(--ds-primary, #2563eb)));
+  --fusion-fileinput-danger: var(--ui-destructive, var(--tblr-danger, var(--ds-danger, #dc2626)));
+  --fusion-fileinput-success: var(--ui-success, var(--tblr-success, var(--ds-success, #15803d)));
+  color: var(--fusion-fileinput-fg);
+}
+.fusion-fileinput {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.fusion-fileinput__native {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+.fusion-fileinput__zone {
+  align-items: center;
+  background: var(--fusion-fileinput-bg);
+  border: 1px dashed var(--fusion-fileinput-border);
+  border-radius: 0.75rem;
+  color: var(--fusion-fileinput-fg);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  justify-content: center;
+  min-height: 8.625rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+.fusion-fileinput__zone:hover,
+.fusion-fileinput[data-dragging="true"] .fusion-fileinput__zone {
+  background: var(--fusion-fileinput-muted);
+  border-color: var(--fusion-fileinput-ring);
+}
+.fusion-fileinput__native:focus-visible + .fusion-fileinput__zone,
+.fusion-fileinput__zone:focus-visible {
+  border-color: var(--fusion-fileinput-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fusion-fileinput-ring) 24%, transparent);
+  outline: 2px solid transparent;
+}
+.fusion-fileinput__native:disabled + .fusion-fileinput__zone {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.fusion-fileinput[data-invalid] .fusion-fileinput__zone,
+.fusion-fileinput[data-state="error"] .fusion-fileinput__zone {
+  border-color: var(--fusion-fileinput-danger);
+}
+.fusion-fileinput__icon {
+  align-items: center;
+  background: var(--fusion-fileinput-muted);
+  border-radius: 999px;
+  color: var(--fusion-fileinput-muted-fg);
+  display: inline-flex;
+  height: 2.5rem;
+  justify-content: center;
+  width: 2.5rem;
+}
+.fusion-fileinput__icon svg {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+.fusion-fileinput__copy {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  line-height: 1.45;
+}
+.fusion-fileinput__copy strong {
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+.fusion-fileinput__copy small,
+.fusion-fileinput__description {
+  color: var(--fusion-fileinput-muted-fg);
+  font-size: 0.75rem;
+}
+.fusion-fileinput__description {
+  margin-top: 0.4rem;
+}
+.fusion-fileinput__status {
+  color: var(--fusion-fileinput-muted-fg);
+  font-size: 0.8125rem;
+  min-height: 0;
+}
+.fusion-fileinput__status:empty {
+  display: none;
+}
+.fusion-fileinput__status[data-kind="error"] {
+  color: var(--fusion-fileinput-danger);
+}
+.fusion-fileinput__status[data-kind="success"] {
+  color: var(--fusion-fileinput-success);
+}
+.fusion-fileinput__files {
+  display: grid;
+  gap: 0.5rem;
+}
+.fusion-fileinput__file {
+  align-items: center;
+  background: var(--fusion-fileinput-bg);
+  border: 1px solid var(--fusion-fileinput-border);
+  border-radius: 0.6rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto auto;
+  min-height: 4.125rem;
+  padding: 0.65rem 0.75rem;
+}
+.fusion-fileinput__file--error {
+  border-color: color-mix(in srgb, var(--fusion-fileinput-danger) 72%, var(--fusion-fileinput-border));
+}
+.fusion-fileinput__preview {
+  align-items: center;
+  background: var(--fusion-fileinput-muted);
+  border: 1px solid var(--fusion-fileinput-border);
+  border-radius: 0.4rem;
+  color: var(--fusion-fileinput-muted-fg);
+  display: flex;
+  height: 2.5rem;
+  justify-content: center;
+  overflow: hidden;
+  width: 2.5rem;
+}
+.fusion-fileinput__preview img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+.fusion-fileinput__preview svg,
+.fusion-fileinput__state svg,
+.fusion-fileinput__remove svg {
+  height: 1.15rem;
+  width: 1.15rem;
+}
+.fusion-fileinput__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.fusion-fileinput__meta strong {
+  font-size: 0.875rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fusion-fileinput__meta small {
+  color: var(--fusion-fileinput-muted-fg);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.fusion-fileinput__file--error .fusion-fileinput__meta small,
+.fusion-fileinput__file--error .fusion-fileinput__state {
+  color: var(--fusion-fileinput-danger);
+}
+.fusion-fileinput__state {
+  color: var(--fusion-fileinput-success);
+  display: inline-flex;
+}
+.fusion-fileinput__remove {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0.45rem;
+  color: var(--fusion-fileinput-fg);
+  display: inline-flex;
+  height: 2.75rem;
+  justify-content: center;
+  padding: 0;
+  width: 2.75rem;
+}
+.fusion-fileinput__remove:hover {
+  background: var(--fusion-fileinput-muted);
+  color: var(--fusion-fileinput-danger);
+}
+.fusion-fileinput__remove:focus-visible,
+.fusion-fileinput__media-item:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--fusion-fileinput-ring) 24%, transparent);
+  outline: 2px solid var(--fusion-fileinput-ring);
+  outline-offset: 1px;
+}
+.fusion-fileinput__error {
+  color: var(--fusion-fileinput-danger);
+  font-size: 0.8125rem;
+  margin-top: 0.4rem;
+}
+.fusion-fileinput__tip {
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: var(--fusion-fileinput-muted-fg);
+  display: inline-flex;
+  font-size: 0.65rem;
+  height: 1rem;
+  justify-content: center;
+  margin-inline-start: 0.3rem;
+  width: 1rem;
+}
+.fusion-fileinput--compact {
+  display: inline-grid;
+}
+.fusion-fileinput--compact .fusion-fileinput__zone {
+  border-style: solid;
+  flex-direction: row;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  width: max-content;
+}
+.fusion-fileinput--compact .fusion-fileinput__icon {
+  background: transparent;
+  height: 1.25rem;
+  width: 1.25rem;
+}
+.fusion-fileinput--compact .fusion-fileinput__copy small {
+  display: none;
+}
+.fusion-fileinput__media {
+  margin-top: 1rem;
+}
+.fusion-fileinput__media-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+}
+.fusion-fileinput__media-item {
+  background: var(--fusion-fileinput-bg);
+  border: 1px solid var(--fusion-fileinput-border);
+  border-radius: 0.6rem;
+  color: var(--fusion-fileinput-fg);
+  display: grid;
+  gap: 0.4rem;
+  min-height: 6rem;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+.fusion-fileinput__media-item[aria-pressed="true"] {
+  border-color: var(--fusion-fileinput-ring);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fusion-fileinput-ring) 20%, transparent);
+}
+.fusion-fileinput__media-item img {
+  height: 4rem;
+  object-fit: contain;
+  width: 100%;
+}
+.fusion-fileinput__media-item span {
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 575.98px) {
+  .fusion-fileinput__zone {
+    min-height: 7.5rem;
+    padding: 1.25rem 1rem;
+  }
+  .fusion-fileinput__file {
+    gap: 0.6rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2.75rem;
+  }
+  .fusion-fileinput__state {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fusion-fileinput__zone {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .fusion-fileinput__zone,
+  .fusion-fileinput__file {
+    border-color: CanvasText;
+  }
+}
+/*# sourceMappingURL=component.css.map */

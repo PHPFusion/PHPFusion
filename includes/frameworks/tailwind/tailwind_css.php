@@ -110,6 +110,7 @@ $tailwind_css = [
     'object-end' => 'tw-object-right',
     'visible' => 'tw-visible',
     'invisible' => 'tw-invisible',
+    'visually-hidden' => 'tw-sr-only',
     'small' => 'tw-text-sm',
     'fs-1' => 'tw-text-5xl',
     'fs-2' => 'tw-text-4xl',
@@ -191,29 +192,6 @@ $tailwind_css = [
     'container-xl' => 'tw-container tw-container-xl',
     'row' => 'tw-row',
     'col' => 'tw-col-span-12',
-<<<<<<< HEAD
-    'col-12' => 'tw-col-span-12',
-    'col-xs-12' => 'tw-col-span-12',
-    'col-sm-2' => 'tw-col-span-12 sm:tw-col-span-2',
-    'col-sm-3' => 'tw-col-span-12 sm:tw-col-span-3',
-    'col-sm-6' => 'tw-col-span-12 sm:tw-col-span-6',
-    'col-sm-8' => 'tw-col-span-12 sm:tw-col-span-8',
-    'col-sm-9' => 'tw-col-span-12 sm:tw-col-span-9',
-    'col-sm-12' => 'tw-col-span-12',
-    'col-md-3' => 'tw-col-span-12 md:tw-col-span-3',
-    'col-md-6' => 'tw-col-span-12 md:tw-col-span-6',
-    'col-md-9' => 'tw-col-span-12 md:tw-col-span-9',
-    'col-lg-3' => 'tw-col-span-12 lg:tw-col-span-3',
-    'col-lg-6' => 'tw-col-span-12 lg:tw-col-span-6',
-    'col-lg-9' => 'tw-col-span-12 lg:tw-col-span-9',
-    'col-xl-3' => 'tw-col-span-12 xl:tw-col-span-3',
-    'col-xl-4' => 'tw-col-span-12 xl:tw-col-span-4',
-    'col-xl-5' => 'tw-col-span-12 xl:tw-col-span-5',
-    'col-xl-6' => 'tw-col-span-12 xl:tw-col-span-6',
-    'col-xl-7' => 'tw-col-span-12 xl:tw-col-span-7',
-    'col-xl-8' => 'tw-col-span-12 xl:tw-col-span-8',
-=======
->>>>>>> 8414028acb29856d694a9dd20b694a0435ef005e
     'card' => 'tw-card',
     'card-header' => 'tw-card-header',
     'card-body' => 'tw-card-body',
@@ -340,7 +318,43 @@ foreach ($spacing_scale as $source_space => $tailwind_space) {
     }
 }
 
-<<<<<<< HEAD
+/*
+ * Complete Bootstrap's grid vocabulary for framework_css(). Keep this
+ * separate from the responsive utility breakpoint map used below.
+ */
+$grid_breakpoints = [
+    '' => '',
+    'xs' => '',
+    'sm' => 'sm:',
+    'md' => 'md:',
+    'lg' => 'lg:',
+    'xl' => 'xl:',
+    'xxl' => '2xl:',
+];
+foreach ($grid_breakpoints as $source_breakpoint => $tailwind_breakpoint) {
+    $source_prefix = $source_breakpoint === '' ? 'col' : 'col-'.$source_breakpoint;
+    $mobile_default = $tailwind_breakpoint === '' ? '' : 'tw-col-span-12 ';
+    if ($source_breakpoint !== '') {
+        $tailwind_css[$source_prefix] = $mobile_default.$tailwind_breakpoint.'tw-col-auto';
+    }
+    $tailwind_css[$source_prefix.'-auto'] = $mobile_default.$tailwind_breakpoint.'tw-col-auto';
+    for ($column = 1; $column <= 12; $column++) {
+        $tailwind_css[$source_prefix.'-'.$column] =
+            $mobile_default.$tailwind_breakpoint.'tw-col-span-'.$column;
+    }
+}
+
+foreach ($grid_breakpoints as $source_breakpoint => $tailwind_breakpoint) {
+    if ($source_breakpoint === 'xs') {
+        continue;
+    }
+    $source_prefix = $source_breakpoint === '' ? 'offset' : 'offset-'.$source_breakpoint;
+    for ($offset = 0; $offset <= 11; $offset++) {
+        $tailwind_css[$source_prefix.'-'.$offset] = $tailwind_breakpoint.
+            ($offset === 0 ? 'tw-col-start-auto' : 'tw-col-start-'.($offset + 1));
+    }
+}
+
 foreach ($margin_utilities as $utility) {
     $tailwind_css[$utility.'-auto'] = 'tw-'.$utility.'-auto';
     foreach ($breakpoints as $breakpoint => $prefix) {
@@ -376,59 +390,6 @@ $responsive_utilities = [
     'object-fit-contain' => 'tw-object-contain', 'object-fit-cover' => 'tw-object-cover',
     'object-fit-fill' => 'tw-object-fill', 'object-fit-scale' => 'tw-object-scale-down',
     'object-fit-none' => 'tw-object-none',
-=======
-/*
- * Complete Bootstrap's grid vocabulary instead of mapping only the handful of
- * column widths used by the first converted page. Shared administration pages
- * may now pass any col-{breakpoint}-{1..12} token through framework_css().
- */
-$breakpoints = [
-    '' => '',
-    'xs' => '',
-    'sm' => 'sm:',
-    'md' => 'md:',
-    'lg' => 'lg:',
-    'xl' => 'xl:',
-    'xxl' => '2xl:',
-];
-foreach ($breakpoints as $sourceBreakpoint => $tailwindBreakpoint) {
-    $sourcePrefix = $sourceBreakpoint === '' ? 'col' : 'col-'.$sourceBreakpoint;
-    $mobileDefault = $tailwindBreakpoint === '' ? '' : 'tw-col-span-12 ';
-    if ($sourceBreakpoint !== '') {
-        $tailwind_css[$sourcePrefix] = $mobileDefault.$tailwindBreakpoint.'tw-col-auto';
-    }
-    $tailwind_css[$sourcePrefix.'-auto'] = $mobileDefault.$tailwindBreakpoint.'tw-col-auto';
-    for ($column = 1; $column <= 12; $column++) {
-        $tailwind_css[$sourcePrefix.'-'.$column] =
-            $mobileDefault.$tailwindBreakpoint.'tw-col-span-'.$column;
-    }
-}
-
-foreach (['' => '', 'sm' => 'sm:', 'md' => 'md:', 'lg' => 'lg:', 'xl' => 'xl:', 'xxl' => '2xl:'] as $sourceBreakpoint => $tailwindBreakpoint) {
-    $sourcePrefix = $sourceBreakpoint === '' ? 'offset' : 'offset-'.$sourceBreakpoint;
-    for ($offset = 0; $offset <= 11; $offset++) {
-        $tailwind_css[$sourcePrefix.'-'.$offset] = $tailwindBreakpoint.
-            ($offset === 0 ? 'tw-col-start-auto' : 'tw-col-start-'.($offset + 1));
-    }
-}
-
-$tailwind_css += [
-    'm-auto' => 'tw-m-auto',
-    'mt-auto' => 'tw-mt-auto',
-    'mb-auto' => 'tw-mb-auto',
-    'ms-auto' => 'tw-ms-auto',
-    'me-auto' => 'tw-me-auto',
-    'mx-auto' => 'tw-mx-auto',
-    'my-auto' => 'tw-my-auto',
-    'flex-sm-column' => 'sm:tw-flex-col',
-    'flex-md-column' => 'md:tw-flex-col',
-    'flex-lg-column' => 'lg:tw-flex-col',
-    'flex-xl-column' => 'xl:tw-flex-col',
-    'flex-sm-row' => 'sm:tw-flex-row',
-    'flex-md-row' => 'md:tw-flex-row',
-    'flex-lg-row' => 'lg:tw-flex-row',
-    'flex-xl-row' => 'xl:tw-flex-row',
->>>>>>> 8414028acb29856d694a9dd20b694a0435ef005e
 ];
 
 foreach ($breakpoints as $breakpoint => $prefix) {

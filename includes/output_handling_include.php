@@ -68,6 +68,14 @@ function add_to_meta($name, $addition = "") {
 }
 
 /**
+ * @param $name
+ * @param string $content
+ */
+function set_og($name, $content = "") {
+	OutputHandler::setOG($name, $content);
+}
+
+/**
  * Add content to the html head
  *
  * @param string $tag
@@ -120,9 +128,10 @@ function handle_output($output) {
  * Add javascript source code to the output
  *
  * @param string $code
+ * @param int    $order
  */
-function add_to_jquery($code = "") {
-    OutputHandler::addToJQuery($code);
+function add_to_jquery($code = "", $order=0) {
+    OutputHandler::addToJQuery($code, $order);
 }
 
 /**

@@ -1,25 +1,18 @@
 <?php
-$locale['u010'] = 'Firstname';
-$locale['u011'] = 'Lastname';
-$locale['u012'] = 'Additional name';
-$locale['u013'] = 'Phone number';
-$locale['u014'] = 'Hide phone number';
-$locale['u015'] = 'Overview';
-
 
 // Items shown in profile
 $locale['u040'] = "Date Joined";
 $locale['u041'] = "Last Visit";
 $locale['u042'] = "Not visited";
-$locale['u043'] = "Send Message";
+$locale['u043'] = "Send Private Message";
 $locale['u044'] = "Contact Information";
 $locale['u045'] = "Miscellaneous Information";
-$locale['u046'] = "Additional Information";
+$locale['u046'] = "Options";
 $locale['u047'] = "Statistics";
 $locale['u048'] = "Admin Information";
 $locale['u049'] = "IP Address";
 $locale['u050'] = "Undefined";
-$locale['u051'] = "Hide Email";
+$locale['u051'] = "Hide Email?";
 $locale['u052'] = " Yes ";
 $locale['u053'] = " No";
 $locale['u054'] = "View Suspension Log";
@@ -35,25 +28,18 @@ $locale['u063'] = "User Level";
 $locale['u064'] = "Email";
 $locale['u066'] = "Date Joined";
 $locale['u067'] = "Last Visit";
-$locale['u068'] = "Username";
+$locale['u068'] = "User Name";
 $locale['u070'] = "Ban";
 $locale['u071'] = "Suspend";
 $locale['u073'] = "Delete this user?";
 $locale['u074'] = "Unban";
-$locale['u075'] = 'You have updated your profile information';
-$locale['u076'] = 'You updated your account %s from %s to %s.';
-$locale['u077'] = 'You updated your account information from %s to %s';
-
 // Profile and register
 $locale['u100'] = "In order to change your password or email address, you must enter your current password.";
 $locale['u101'] = "Register";
 $locale['u102'] = "Edit Profile";
 $locale['u103'] = "Profile";
 $locale['u104'] = "Member Profile";
-$locale['u105'] = "Save changes";
-$locale['u106'] = "The email address will not be shown to others";
-$locale['u107'] = "Hide phone number";
-$locale['u108'] = "The phone number will not be shown to others";
+$locale['u105'] = "Update Profile";
 
 // New UF 1.20
 $locale['uf_100'] = "General Account Settings";
@@ -75,7 +61,6 @@ $locale['u114'] = "User Type";
 $locale['u115'] = "Language";
 $locale['u116'] = "There are no group members.";
 $locale['u117'] = "No user groups.";
-
 // User name and email
 $locale['u119'] = "User name is prohibited.";
 $locale['u120'] = "User name contains invalid characters.";
@@ -87,7 +72,7 @@ $locale['u125'] = "The email address is already registered by another user.";
 $locale['u126'] = "Email address can not be left empty.";
 $locale['u127'] = "User Name";
 $locale['u128'] = "Email Address";
-$locale['u129'] = "Change Passwords";
+$locale['u129'] = "Basic User Information";
 // Passwords
 $locale['u130'] = "Admin passwords";
 $locale['u131'] = "Admin password";
@@ -95,7 +80,7 @@ $locale['u132'] = "Login passwords";
 $locale['u133'] = "Login password";
 $locale['u134'] = "New Password";
 $locale['u134a'] = "Set Password";
-$locale['u134b'] = "Confirm Password";
+$locale['u134b'] = "Repeat Password";
 $locale['u135a'] = "Current Password";
 $locale['u135b'] = "Set New Password";
 $locale['u135c'] = "Repeat New Password";
@@ -103,26 +88,21 @@ $locale['u136'] = "Password can not be left empty.";
 $locale['u137'] = "Your current admin password can not be left empty.";
 $locale['u138'] = "Your current login password can not be left empty.";
 $locale['u139'] = "Login password did not match your current login password.";
-
 $locale['u140'] = "Admin password did not match your current admin password.";
 $locale['u141'] = " can not be the same as ";
 $locale['u142'] = " is too short or contains invalid characters!";
 $locale['u143'] = " does not match!";
 $locale['u143a'] = " can not be left empty.";
 $locale['u144'] = "New admin password";
-$locale['u144a'] = "Current Admin Password";
+$locale['u144a'] = "Current admin password";
 $locale['u145'] = "Confirm admin password";
 $locale['u146'] = " can not be the same as your current ";
-$locale['u147'] = 'Min. length %d chars';
-$locale['u147a'] = 'must contain %s';
-$locale['u147b'] = 'upper and lower case char';
-$locale['u147c'] = 'a number';
-$locale['u147d'] = 'a special char';
-$locale['u148'] = "New Login Passwords are not identical.";
+$locale['u147'] = "Password must be between 8 and 64 chars long.<br/>Allowed symbols are a-z, 0-9 and @!#$%&/()=-_?+*.,:;";
+$locale['u148'] = "New login passwords are not identical.";
 $locale['u148a'] = "New Admin Passwords are not identical.";
-$locale['u149'] = "Your Current Login Password was not specified or is invalid.";
-$locale['u149a'] = "Your Current Admin Password was not specified or is invalid.";
-$locale['u149b'] = "Your Current Login Password was not specified or is invalid.<br/>You can't set your admin password without your correct login password.";
+$locale['u149'] = "Your current login password is invalid.";
+$locale['u149a'] = "Your current admin password was not specified or is invalid.";
+$locale['u149b'] = "Your current admin password was not specified or is invalid.<br/>You can't set your admin password without your correct login password.";
 // Email activation
 $locale['u150'] = "Your registration is almost complete, you will receive an email containing your login details along with a link to verify your account.";
 $locale['u151'] = "Welcome to [SITENAME]";
@@ -147,12 +127,18 @@ $locale['u165'] = "Email has been resended.";
 
 $locale['u167'] = "for the following reason(s):";
 $locale['u168'] = "Please Try Again.";
-
+$locale['u169'] = "Profile updated successfully";
 $locale['u170'] = "Registration successful";
 $locale['u171'] = "Your account has been verified.";
 $locale['u172'] = "Member successfully added.";
 $locale['u173'] = "Back to User Management.";
 $locale['u174'] = "Add another member.";
+$locale['u175'] = "Profile avatar updated successfully";
+$locale['u176'] = "Profile cover updated successfully";
+$locale['u177'] = "Profile cover removed successfully";
+$locale['u178'] = "Profile avatar removed successfully";
+$locale['u179'] = "New username updated successfully";
+
 // Avatar upload
 $locale['u180'] = "There is an error uploading avatar image";
 
@@ -162,14 +148,13 @@ $locale['u186'] = "Click Browse to upload an image";
 // Captcha and terms
 $locale['u190'] = "Validation Code";
 $locale['u191'] = "Enter Validation Code";
-$locale['u193'] = "By checking this, you agree to the [SITENAME] %s";
-
+$locale['u192'] = "Terms of Agreement";
+$locale['u193'] = "I have read the [LINK]Terms of Agreement[/LINK] and I agree with them.";
 $locale['u193a'] = "Updated";
 $locale['u193b'] = "I agree";
-
 $locale['u194'] = "Incorrect validation code.";
 $locale['u195'] = "Captcha code can not be left empty.";
-
+$locale['u196'] = "Verify Email";
 // E-mail Change Confirmation
 $locale['u200'] = "A verify email has been sent to your new email address (%s). Please check your email.";
 $locale['u201'] = "Your email address will be changed when you click the link in the mail.";
@@ -180,46 +165,14 @@ If you really want to change your email address to this one please click the fol
 [EMAIL_VERIFY_LINK]<br/>
 Note: you have to be logged in to proceed.<br/>
 Regards, [SITEUSERNAME]<br/>[SITENAME]";
+
+
 // Checker
 $locale['u300'] = "Password should contain at least 1 special character";
 $locale['u301'] = "Password should contain at least 1 uppercase and 1 lowercase character";
 $locale['u302'] = "Password should contain at least 1 number";
 $locale['u303'] = "Password should be at least 8 characters long";
 
-$locale['u400'] = "Already on [SITENAME]?";
-
-$locale['u500'] = 'Notification';
-$locale['u501'] = 'Preferred settings for all sorts of notifications about the user account.';
-$locale['u502'] = 'Comments and reactions';
-$locale['u503'] = 'Notifications when someone reacted to the contents created, rated or commented on';
-$locale['u504'] = 'Mentions';
-$locale['u505'] = 'Notify when someone mentioned or tagged in the post, article, news or commented on';
-$locale['u506'] = 'Newsletter and Subscriptions';
-$locale['u507'] = 'Notify when there are any newsletter subscriptions and invitations';
-$locale['u508'] = 'Following';
-$locale['u509'] = 'Notify when there are any follow up updates on the articles, posts or any contents that are being tracked';
-$locale['u510'] = 'Private messages';
-$locale['u511'] = 'Notify when there are any new private messages';
-$locale['u512'] = 'Email notifications';
-$locale['u513'] = 'Receive emails for the particular updates';
-$locale['u514'] = 'Follow updates emails';
-$locale['u515'] = 'Feedback emails';
-$locale['u516'] = 'Email Frequency';
-$locale['u517'] = 'Daily';
-$locale['u518'] = 'Weekly';
-$locale['u519'] = 'Periodically';
-$locale['u520'] = 'Off';
-$locale['u521'] = 'Notification settings have been updated';
-
-$locale['u600'] = 'Privacy and safety';
-$locale['u601'] = 'Account access to your account, data storage and account security options';
-$locale['u602'] = 'Two step verification';
-$locale['u603'] = 'Secure your account with two-step verification';
-$locale['u604'] = 'Two step verification gives you additional security by requiring a verification code whenever sign in on a new device.';
-$locale['u605'] = 'Setup Two-step verification';
-$locale['u606'] = 'We sent a code to your email';
-$locale['u607'] = 'Enter the 6-digit verification code sent to [EMAIL]';
-$locale['u608'] = '6-digit code';
-$locale['u609'] = 'If you don\'t see the email in your inbox, check your spam folder.';
-$locale['u610'] = 'You have successfully activated your two-step verification';
-$locale['u611'] = 'Two step verification could not be performed. Please contact system administrator';
+$locale['u350'] = "Username cannot be changed due to system permission settings";
+$locale['u351'] = "Username already exists. Please choose another username";
+$locale['u352'] = "This username is not allowed. Please choose another username";

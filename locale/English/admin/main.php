@@ -1,14 +1,14 @@
 <?php
 // Admin Links
-$locale['200'] = "[SITENAME] Admin Panel";
-$locale['200a'] = "Admin Panel";
-$locale['ac00'] = "Admin Home";
-$locale['ac01'] = "Content Admin";
-$locale['ac02'] = "User Admin";
-$locale['ac03'] = "System Admin";
-$locale['ac04'] = "Settings";
+$locale['200'] = "[SITENAME] Administration";
+$locale['200a'] = "Administration";
+$locale['ac00'] = "Dashboard";
+$locale['ac01'] = "Content";
+$locale['ac02'] = "Account";
+$locale['ac03'] = "System";
+$locale['ac04'] = "Frontend";
 $locale['ac05'] = "Infusions";
-$locale['ac10'] = "Admin Dashboard";
+$locale['ac10'] = "Dashboard";
 $locale['202'] = "User Profile Configuration";
 
 // Pre-defined sections

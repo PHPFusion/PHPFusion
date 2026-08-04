@@ -119,7 +119,7 @@ class AdminPanel
 			<div class="tw-card">
 				<div class="tw-card-body <?= framework_css('text-center') ?>">
 					<div class="lockscreen-logo">
-						<img src="<?= IMAGES ?>elite-x.avif" style="width:100px;" alt="Elite X">
+						<img src="<?= IMAGES ?>phpfusion-logo.svg" style="width:150px;" alt="<?= fusion_get_settings('sitename') ?>">
 					</div>
 					<div class="tw-h1 <?= framework_css('mt-3') ?>">System Login</div>
 					<?php

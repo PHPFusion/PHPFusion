@@ -43,9 +43,12 @@ if (file_exists(INCLUDES."header_includes.php")) {
 
 require_once THEME."theme.php";
 
-require_once INCLUDES."theme_functions_include.php";
+// Page content is rendered before layout.php. Boot the selected framework
+// here so framework helpers are available while that content is generated.
+require_once INCLUDES.'frameworks/framework_engine.php';
+fusion_framework_boot('site');
 
-require_once INCLUDES."plugins_include.php";
+require_once INCLUDES."theme_functions_include.php";
 
 // for compatibility
 if (!defined('THEME_BULLET')) {

@@ -27,7 +27,8 @@ class CoreTables {
      *
      * @return array
      */
-    public static function get_core_tables( $localeset ) {
+    public static function get_core_tables($localeset) {
+
         /*
          * Modeled for compositing table sql comparison for upgrade/reinstall/and install friendly
          * rather than maintaining files after files
@@ -45,11 +46,22 @@ class CoreTables {
                 'length'  => 4,
                 'default' => ''
             ], //admin_rights CHAR(4) NOT NULL DEFAULT '',
+            'admin_idisplay' => [
+                'type'     => 'SMALLINT',
+                'length'   => 5,
+                'default'  => 0,
+                'unsigned' => TRUE,
+            ],
             'admin_image'    => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
             ], //admin_image VARCHAR(50) NOT NULL DEFAULT '',
+            'admin_svg'      => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => '',
+            ],
             'admin_title'    => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
@@ -70,7 +82,13 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 50,
                 'default' => $localeset,
-            ], //admin_language VARCHAR(50) NOT NULL DEFAULT '".$localeset."',
+            ], //admin_language VARCHAR(50) NOT NULL DEFAULT '...';
+            'admin_order'    => [
+                'type'     => 'INT',
+                'length'   => 5,
+                'default'  => 0,
+                'unsigned' => TRUE,
+            ],
         ];
         $table_package['mlt_tables'] = [
             'mlt_rights' => [
@@ -100,7 +118,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 50,
                 'default' => $localeset
-            ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+            ], //user_language VARCHAR(50) NOT NULL DEFAULT '...';
             'user_datestamp' => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -202,8 +220,8 @@ class CoreTables {
             'blacklist_datestamp' => [
                 'type'     => 'INT',
                 'length'   => 10,
-                'default'  => '0',
                 'unsigned' => TRUE,
+                'default'  => '0',
             ] //blacklist_datestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         ];
         $table_package['custom_pages'] = [
@@ -271,7 +289,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 255,
                 'default' => $localeset,
-            ], //page_language VARCHAR(255) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+            ], //page_language VARCHAR(255) NOT NULL DEFAULT '...';
             'page_grid_id'      => [
                 'type'     => 'BIGINT',
                 'length'   => 20,
@@ -425,10 +443,10 @@ class CoreTables {
                 'default' => ''
             ], //comment_type CHAR(4) NOT NULL DEFAULT '',
             'comment_cat'       => [
-                'type'    => 'BIGINT',
-                'length'  => 20,
-                'key'     => 2,
-                'default' => '0'
+                'type'     => 'BIGINT',
+                'length'   => 20,
+                'key'      => 2,
+                'default'  => '0'
             ], //comment_cat MEDIUMINT(8) NOT NULL DEFAULT '0',
             'comment_name'      => [
                 'type'    => 'VARCHAR',
@@ -453,7 +471,7 @@ class CoreTables {
             'comment_ip'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 45,
-                'default' => '0'
+                'default' => ''
             ], //comment_ip VARCHAR(45) NOT NULL DEFAULT '',
             'comment_ip_type'   => [
                 'type'    => 'TINYINT',
@@ -498,23 +516,10 @@ class CoreTables {
                 'length'  => 200,
                 'default' => ''
             ], // error_page varchar(200) NOT NULL,
-            'error_user_id'      => [
-                'type'   => 'BIGINT',
-                'length'   => 20,
-                'unsigned' => TRUE,
-                'key'      => 2,
-                'default'  => '0'
-            ], //error_user_id MEDIUMINT(8) UNSIGNED NOT NULL default '0',
             'error_user_level'   => [
                 'type'   => 'TINYINT',
                 'length' => 4,
             ], //error_user_level TINYINT(4) NOT NULL,
-            'error_user_count'   => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //error_user_count int(10) UNSIGNED NOT NULL default '0',
             'error_user_ip'      => [
                 'type'    => 'VARCHAR',
                 'length'  => 45,
@@ -525,33 +530,12 @@ class CoreTables {
                 'length'  => 1,
                 'default' => 4
             ], //error_user_ip_type TINYINT(1) UNSIGNED NOT NULL DEFAULT '4',
-            'error_browser'      => [
-                'type'    => 'VARCHAR',
-                'length'  => 100,
-                'default' => ''
-            ], //error_browser varchar(100) NOT NULL default '',
-            'error_os'                => [
-                'type'    => 'VARCHAR',
-                'length'  => 100,
-                'default' => ''
-            ], //error_os varchar(100) NOT NULL default '',
-            'error_count'             => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //error_count int(10) UNSIGNED NOT NULL default '0',
-            'error_status'            => [
+            'error_status'       => [
                 'type'    => 'TINYINT',
                 'length'  => 1,
                 'default' => '0'
             ], //error_status tinyint(1) NOT NULL default '0',
-            'error_updated_datestamp' => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'unsigned' => TRUE,
-            ], //error_updated_datestamp int(10) NOT NULL,
-            'error_timestamp'         => [
+            'error_timestamp'    => [
                 'type'     => 'INT',
                 'length'   => 10,
                 'unsigned' => TRUE,
@@ -599,12 +583,6 @@ class CoreTables {
                 'length'  => 10,
                 'default' => '0'
             ], //inf_version VARCHAR(10) NOT NULL DEFAULT '0',
-            'inf_emails'  => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ]
         ];
         $table_package['messages'] = [
             'message_id'        => [
@@ -728,7 +706,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 20,
                 'default' => ''
-            ], //template_key VARCHAR(20) NOT NULL,
+            ], //template_key VARCHAR(10) NOT NULL,
             'template_format'       => [
                 'type'    => 'VARCHAR',
                 'length'  => 10,
@@ -762,30 +740,9 @@ class CoreTables {
             ], //template_sender_email VARCHAR(100) NOT NULL,
             'template_language'     => [
                 'type'    => 'VARCHAR',
-                'length'  => 30,
+                'length'  => 50,
                 'default' => $localeset
             ] //template_language VARCHAR(50) NOT NULL,
-        ];
-        $table_package['policies'] = [
-            'policy_name'     => [
-                'type'   => 'VARCHAR',
-                'length' => 200,
-                'key'    => 2,
-            ],
-            'policy_content'  => [
-                'type' => 'TEXT',
-            ],
-            'policy_date'     => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'unsigned' => TRUE,
-                'key'      => 2,
-            ],
-            'policy_language' => [
-                'type'    => 'VARCHAR',
-                'length'  => 30,
-                'default' => $localeset
-            ]
         ];
         $table_package['ratings'] = [
             'rating_id'        => [
@@ -838,6 +795,7 @@ class CoreTables {
                 'default'  => 4
             ]
         ];
+
         $table_package['online'] = [
             'online_user'       => [
                 'type'   => 'VARCHAR',
@@ -936,7 +894,6 @@ class CoreTables {
                 'length'  => 200,
                 'default' => $localeset
             ]
-            //panel_languages VARCHAR(200) NOT NULL DEFAULT '".implode('.', filter_input(INPUT_POST, 'enabled_languages', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?: array(LANGUAGE))."',
         ];
         $table_package['permalinks_alias'] = [
             'alias_id'      => [
@@ -1060,6 +1017,93 @@ class CoreTables {
                 'default' => ''
             ], //settings_inf VARCHAR(200) NOT NULL DEFAULT '',
         ];
+
+        /*
+         * CREATE TABLE elite_scheduled_tasks (
+            `id` BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            `task_key` VARCHAR(100) NOT NULL,
+            `payload` JSON NULL,
+            `run_at` DATETIME NOT NULL,
+            `executed_at` DATETIME NULL,
+            `status` ENUM('pending','running','success','failed')
+                NOT NULL DEFAULT 'pending',
+            `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+            `max_attempts` TINYINT UNSIGNED NOT NULL DEFAULT 3,
+            `last_error` TEXT NULL,
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                ON UPDATE CURRENT_TIMESTAMP,
+            INDEX (`run_at`),
+            INDEX (`status`)
+        ) ENGINE=InnoDB;
+         */
+
+        $table_package['scheduled_tasks'] = [
+            'id'           => [
+                'type'           => 'BIGINT',
+                'auto_increment' => TRUE,
+                'key'            => 1, //PRIMARY KEY (rewrite_id)
+                'unsigned'       => TRUE,
+            ],
+            'task_key'     => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ],
+            'payload'      => [
+                'type' => 'JSON',
+                'null' => TRUE,
+            ],
+            'dedupe_key'   => [
+                'type'    => 'VARCHAR',
+                'length'  => 191,
+                'default' => 'NULL',
+                'null'    => TRUE,
+            ],
+            'run_at'       => [
+                'type'    => 'DATETIME',
+            ],
+            'executed_at'  => [
+                'type'    => 'DATETIME',
+                'default' => 'NULL',
+                'null'    => TRUE,
+            ],
+            'status'       => [
+                'type'    => 'ENUM ("pending", "running", "success", "failed")',
+                'default' => 'pending',
+            ],
+            'attempts'     => [
+                'type'    => 'TINYINT',
+                'default' => '0'
+            ],
+            'max_attempts' => [
+                'type'    => 'TINYINT',
+                'default' => '3'
+            ],
+            'last_error'   => [
+                'type' => 'TEXT',
+                'null' => TRUE,
+            ],
+            'created_at'   => [
+                'type'    => 'TIMESTAMP',
+                'default' => 'CURRENT_TIMESTAMP',
+            ],
+            'updated_at'   => [
+                'type'      => 'TIMESTAMP',
+                'default'   => 'CURRENT_TIMESTAMP',
+                'on_update' => 'CURRENT_TIMESTAMP'
+            ],
+            '__indexes'    => [
+                'uq_scheduler_dedupe' => [
+                    'columns' => ['dedupe_key'],
+                    'unique'  => TRUE,
+                ],
+                'idx_scheduler_due' => [
+                    'columns' => ['status', 'run_at'],
+                ],
+            ],
+        ];
+
         $table_package['settings_theme'] = [
             'settings_name'  => [
                 'type'   => 'VARCHAR',
@@ -1143,7 +1187,7 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 70,
                 'default' => $localeset
-            ] //link_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
+            ] //link_language VARCHAR(50) NOT NULL DEFAULT '...';
         ];
         $table_package['smileys'] = [
             'smiley_id'    => [
@@ -1168,6 +1212,140 @@ class CoreTables {
                 'length' => 100,
             ], //smiley_text VARCHAR(100) NOT NULL,
         ];
+        $table_package['social'] = [
+            'social_id'         => [
+                'type'           => 'BIGINT',
+                'length'         => 20,
+                'auto_increment' => TRUE,
+                'key'            => 1,
+                'unsigned'       => TRUE,
+            ],
+            'social_user_id'    => [
+                'type'     => 'BIGINT',
+                'length'   => 20,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            'social_target_id'  => [
+                'type'     => 'BIGINT',
+                'length'   => 20,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            'social_type'       => [
+                'type'    => 'VARCHAR',
+                'length'  => 10,
+                'default' => '',
+            ],
+            'social_status'     => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            'social_datestamp'  => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            '__indexes'          => [
+                'uq_social_relationship' => [
+                    'columns' => ['social_user_id', 'social_target_id', 'social_type'],
+                    'unique'  => TRUE,
+                ],
+                'idx_social_user_type_status' => [
+                    'columns' => ['social_user_id', 'social_type', 'social_status'],
+                ],
+                'idx_social_target_type_status' => [
+                    'columns' => ['social_target_id', 'social_type', 'social_status'],
+                ],
+            ],
+        ];
+        $table_package['social_settings'] = [
+            'social_settings_user_id' => [
+                'type'     => 'BIGINT',
+                'length'   => 20,
+                'unsigned' => TRUE,
+                'key'      => 1,
+            ],
+            'social_friend_privacy' => [
+                'type'    => 'VARCHAR',
+                'length'  => 16,
+                'default' => 'everyone',
+            ],
+            'social_follow_privacy' => [
+                'type'    => 'VARCHAR',
+                'length'  => 16,
+                'default' => 'everyone',
+            ],
+            'social_profile_visibility' => [
+                'type'    => 'VARCHAR',
+                'length'  => 16,
+                'default' => 'members',
+            ],
+            'social_discoverable' => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => '1',
+            ],
+            'social_notify_friend_request' => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => '1',
+            ],
+            'social_notify_friend_accept' => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => '1',
+            ],
+            'social_notify_follow' => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'unsigned' => TRUE,
+                'default'  => '1',
+            ],
+            'social_settings_updated' => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+        ];
+        $table_package['social_rate_limits'] = [
+            'social_rate_user_id' => [
+                'type'     => 'BIGINT',
+                'length'   => 20,
+                'unsigned' => TRUE,
+                'key'      => 1,
+            ],
+            'social_rate_action' => [
+                'type'    => 'VARCHAR',
+                'length'  => 32,
+                'key'     => 1,
+                'default' => '',
+            ],
+            'social_rate_window' => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            'social_rate_attempts' => [
+                'type'     => 'SMALLINT',
+                'length'   => 5,
+                'unsigned' => TRUE,
+                'default'  => '0',
+            ],
+            '__indexes' => [
+                'idx_social_rate_window' => [
+                    'columns' => ['social_rate_window'],
+                ],
+            ],
+        ];
         $table_package['submissions'] = [
             'submit_id'        => [
                 'type'           => 'BIGINT',
@@ -1178,7 +1356,7 @@ class CoreTables {
             ], //submit_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
             'submit_type'      => [
                 'type'   => 'CHAR',
-                'length' => 4,
+                'length' => 1,
             ],// submit_type CHAR(1) NOT NULL,
             'submit_user'      => [
                 'type'     => 'BIGINT',
@@ -1311,7 +1489,6 @@ class CoreTables {
                 'unsigned' => TRUE,
             ]//field_cat_order SMALLINT(5) UNSIGNED NOT NULL ,
         ];
-
         $table_package['user_fields'] = [
             'field_id'           => [
                 'type'           => 'BIGINT',
@@ -1377,7 +1554,6 @@ class CoreTables {
                 'type' => 'TEXT'
             ] //field_config TEXT NOT NULL,
         ];
-
         $table_package['user_groups'] = [
             'group_id'          => [
                 'type'           => 'TINYINT',
@@ -1400,15 +1576,8 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => ''
-            ],
-            'group_user_count'  => [
-                'type'     => 'MEDIUMINT',
-                'length'   => 11,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ],
+            ] //group_icon VARCHAR(100) NOT NULL,
         ];
-
         $table_package['user_log'] = [
             'userlog_id'        => [
                 'type'           => 'BIGINT',
@@ -1443,117 +1612,6 @@ class CoreTables {
                 'default'  => '0'
             ], //userlog_timestamp INT(10) UNSIGNED NOT NULL DEFAULT '0',
         ];
-
-        $table_package['user_settings'] = [
-            'user_id'                => [
-                'type'           => 'BIGINT',
-                'length'         => 20,
-                'auto_increment' => TRUE,
-                'key'            => 2, //PRIMARY KEY (user_id),
-                'unsigned'       => TRUE,
-            ],
-            'user_auth'              => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'unsigned' => TRUE,
-                'default'  => 0,
-            ],
-            'user_hide_email'        => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => 1,
-                'unsigned' => TRUE,
-            ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
-            'user_hide_phone'        => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => 1,
-                'unsigned' => TRUE,
-            ],
-            'user_inbox'             => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_inbox SMALLINT(6) unsigned not null default '0',
-            'user_outbox'            => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_outbox SMALLINT(6) unsigned not null default '0',
-            'user_archive'           => [
-                'type'     => 'SMALLINT',
-                'length'   => 6,
-                'unsigned' => TRUE,
-                'default'  => '0'
-            ], //user_archive SMALLINT(6) unsigned not null default '0',
-            'user_pm_save_sent'      => [
-                'type'    => 'TINYINT',
-                'length'  => 1,
-                'default' => '0'
-            ], //user_pm_save_sent TINYINT(1) not null default '0',
-            'user_comments_notify'   => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_tag_notify'        => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_newsletter_notify' => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_follow_notify'     => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_pm_notify'         => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_pm_email'          => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_follow_email'      => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_feedback_email'    => [
-                'type'     => 'TINYINT',
-                'length'   => 1,
-                'default'  => '0',
-                'unsigned' => TRUE,
-            ],
-            'user_email_duration'    => [
-                'type'     => 'TINYINT',
-                'length'   => 2,
-                'default'  => '4',
-                'unsigned' => TRUE,
-            ],
-            'user_language'          => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'default' => $localeset
-            ], //user_language VARCHAR(50) NOT NULL DEFAULT '".filter_input(INPUT_POST, 'localeset')."',
-        ];
-
         $table_package['users'] = [
             'user_id'              => [
                 'type'           => 'BIGINT',
@@ -1569,24 +1627,6 @@ class CoreTables {
                 'full_text' => TRUE, // FULLTEXT (user_name ASC)
                 'default'   => ''
             ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
-            'user_firstname'       => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'key'     => 2,
-                'default' => '',
-            ],
-            'user_lastname'        => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'key'     => 2,
-                'default' => '',
-            ],
-            'user_addname'         => [
-                'type'    => 'VARCHAR',
-                'length'  => 50,
-                'key'     => 2,
-                'default' => '',
-            ],
             'user_algo'            => [
                 'type'    => 'VARCHAR',
                 'length'  => 10,
@@ -1616,24 +1656,24 @@ class CoreTables {
                 'type'    => 'VARCHAR',
                 'length'  => 64,
                 'default' => ''
-            ],
-            'user_phone'           => [
-                'type'    => 'VARCHAR',
-                'length'  => 30,
-                'key'     => 2,
-                'default' => ''
-            ],
+            ], //user_admin_password VARCHAR(64) NOT NULL DEFAULT '',
             'user_email'           => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'key'     => 2,
                 'default' => ''
             ], //user_email VARCHAR(100) NOT NULL DEFAULT '',
-            'user_bio'             => [
+            'user_hide_email'      => [
+                'type'     => 'TINYINT',
+                'length'   => 1,
+                'default'  => 1,
+                'unsigned' => TRUE,
+            ], //user_hide_email TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
+            'user_timezone'        => [
                 'type'    => 'VARCHAR',
-                'length'  => 255,
-                'default' => '',
-            ],
+                'length'  => 50,
+                'default' => 'Europe/London'
+            ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
             'user_avatar'          => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
@@ -1691,6 +1731,34 @@ class CoreTables {
                 'key'      => 2,
                 'default'  => '0'
             ], //user_status TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+            'user_inbox'           => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_inbox SMALLINT(6) unsigned not null default '0',
+            'user_outbox'          => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_outbox SMALLINT(6) unsigned not null default '0',
+            'user_archive'         => [
+                'type'     => 'SMALLINT',
+                'length'   => 6,
+                'unsigned' => TRUE,
+                'default'  => '0'
+            ], //user_archive SMALLINT(6) unsigned not null default '0',
+            'user_pm_email_notify' => [
+                'type'    => 'TINYINT',
+                'length'  => 1,
+                'default' => '0'
+            ], //user_pm_email_notify TINYINT(1) not null default '0',
+            'user_pm_save_sent'    => [
+                'type'    => 'TINYINT',
+                'length'  => 1,
+                'default' => '0'
+            ], //user_pm_save_sent TINYINT(1) not null default '0',
             'user_actiontime'      => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -1702,22 +1770,16 @@ class CoreTables {
                 'length'  => 170,
                 'default' => ''
             ],
-            'user_auth_pin'        => [
-                'type'    => 'VARCHAR',
-                'length'  => 10,
-                'default' => "",
-            ],
-            'user_auth_actiontime' => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'unsigned' => TRUE,
-                'default'  => 0,
-            ],
             'user_theme'           => [
                 'type'    => 'VARCHAR',
                 'length'  => 100,
                 'default' => 'Default'
             ], //user_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
+            'user_admin_theme'     => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => 'Default'
+            ], //user_admin_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
             'user_location'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
@@ -1742,60 +1804,76 @@ class CoreTables {
                 'length'  => 200,
                 'default' => '',
             ], //user_web VARCHAR(200) NOT NULL DEFAULT '',
+            'user_twitter'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => '',
+            ], //user_twitter VARCHAR(100) NOT NULL DEFAULT '',
+            'user_linkedin'        => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => '',
+            ], //user_linkedin VARCHAR(100) NOT NULL DEFAULT '',
+            'user_discord'         => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => '',
+            ], //user_discord VARCHAR(100) NOT NULL DEFAULT '',
             'user_sig'             => [
                 'type' => 'TEXT'
             ], //user_sig TEXT NOT NULL,
-            'user_timezone'        => [
+            'user_language'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
-                'default' => 'Europe/London'
-            ], //user_timezone VARCHAR(50) NOT NULL DEFAULT 'Europe/London',
+                'default' => $localeset
+            ], //user_language VARCHAR(50) NOT NULL DEFAULT '...';
         ];
 
-        $table_package['user_sessions'] = [
-            'user_session_id' => [
+        $table_package['user_logins'] = [
+            'login_id' => [
                 'type'           => 'BIGINT',
                 'length'         => 20,
                 'auto_increment' => TRUE,
-                'key'            => 1,
+                'key'            => 1, // PRIMARY KEY
                 'unsigned'       => TRUE,
             ],
-            'user_id'      => [
+            'user_id' => [
                 'type'           => 'BIGINT',
                 'length'         => 20,
-                'key'            => 2,
                 'unsigned'       => TRUE,
-            ], // user_id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-            'user_session'         => [
-                'type'    => 'VARCHAR',
-                'length'  => 170,
-                'default' => ''
+                'key'            => 2, // INDEX for quick user lookups
+                'default'        => '0'
             ],
-            'user_ip'      => [
-                'type'    => 'VARCHAR',
-                'length'  => 45,
-                'default' => '0.0.0.0'
-            ], //user_name VARCHAR(30) NOT NULL DEFAULT '',
-            'user_device' => [
-                'type'    => 'VARCHAR',
-                'length'  => 70,
-                'default' => '',
+            'login_provider' => [
+                'type'           => 'VARCHAR',
+                'length'         => 50,
+                'default'        => 'google',
+                'key'            => 3, // Part of a composite index
             ],
-            'user_os'      => [
-                'type'    => 'VARCHAR',
-                'length'  => 70,
-                'default' => '',
+            'login_uid' => [
+                'type'           => 'VARCHAR',
+                'length'         => 255,
+                'default'        => '',
+                'key'            => 3, // Unique identifier from provider (e.g., Google sub)
             ],
-            'user_browser' => [
-                'type'    => 'VARCHAR',
-                'length'  => 70,
-                'default' => '',
+            'login_email' => [
+                'type'           => 'VARCHAR',
+                'length'         => 255,
+                'default'        => ''
             ],
-            'user_logintime' => [
-                'type'     => 'INT',
-                'length'   => 10,
-                'default'  => '0',
-                'unsigned' => TRUE,
+            'login_token' => [
+                'type'           => 'TEXT',
+                'default'        => ''
+            ],
+            'login_refresh_token' => [
+                'type'           => 'TEXT',
+                'default'        => ''
+            ],
+            'login_datestamp' => [
+                'type'           => 'INT',
+                'length'         => 10,
+                'unsigned'       => TRUE,
+                'default'        => '0'
             ]
         ];
 
@@ -1844,6 +1922,7 @@ class CoreTables {
                 'type' => 'TEXT'
             ]
         ];
+
         /*$table_package['user_notify'] = [
             'notice_id'        => [
                 'type'           => 'MEDIUMINT',
@@ -1889,6 +1968,92 @@ class CoreTables {
             ]
         ];*/
 
+        // Add the new notifications table schema here
+        $table_package['notifications'] = [
+            'notification_id' => [
+                'type' => 'BIGINT',
+                'length' => '20',
+                'auto_increment' => TRUE,
+                'key' => 1, // PRIMARY KEY
+                'unsigned' => TRUE,
+            ],
+            'notification_user_id' => [
+                'type' => 'INT',
+                'length' => '10',
+                'unsigned' => TRUE,
+                'default' => '0',
+                'key' => 2,
+            ],
+            'notification_sender_id' => [
+                'type' => 'INT',
+                'length' => '10',
+                'unsigned' => TRUE,
+                'default' => '0',
+                'key' => 2,
+            ],
+            'notification_infusion' => [
+                'type' => 'VARCHAR',
+                'length' => '255',
+                'default' => ''
+            ],
+            'notification_type' => [
+                'type' => 'VARCHAR',
+                'length' => '50',
+                'default' => 'info'
+            ],
+            'notification_title' => [
+                'type' => 'VARCHAR',
+                'length' => '255',
+                'default' => ''
+            ],
+            'notification_message' => [
+                'type' => 'TEXT',
+                'length' => NULL,
+            ],
+            'notification_link' => [
+                'type' => 'VARCHAR',
+                'length' => '255',
+                'default' => ''
+            ],
+            'notification_icon' => [
+                'type' => 'VARCHAR',
+                'length' => '100',
+                'default' => ''
+            ],
+            'notification_key' => [
+                'type' => 'VARCHAR',
+                'length' => '100',
+                'default' => 'NULL',
+                'null' => TRUE,
+            ],
+            'notification_status' => [
+                'type' => 'TINYINT',
+                'length' => '1',
+                'default' => '0',
+                'unsigned' => TRUE
+            ],
+            'notification_created_at' => [
+                'type' => 'TIMESTAMP',
+                'default' => 'CURRENT_TIMESTAMP',
+            ],
+            'notification_updated_at' => [
+                'type' => 'TIMESTAMP',
+                'default' => 'CURRENT_TIMESTAMP',
+                'on_update' => 'CURRENT_TIMESTAMP',
+            ],
+            '__indexes' => [
+                'uq_notification_user_key' => [
+                    'columns' => ['notification_user_id', 'notification_key'],
+                    'unique'  => TRUE,
+                ],
+                'idx_notification_unread' => [
+                    'columns' => ['notification_user_id', 'notification_status', 'notification_created_at'],
+                ],
+            ],
+        ];
+
+
         return $table_package;
     }
+
 }

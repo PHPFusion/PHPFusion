@@ -1,5 +1,5 @@
 <?php
-$locale['ME_400'] = 'User Management';
+$locale['ME_400'] = 'Members';
 $locale['ME_401'] = 'Search User...';
 $locale['ME_402'] = 'Display Filters';
 $locale['ME_403'] = 'Add a new User';

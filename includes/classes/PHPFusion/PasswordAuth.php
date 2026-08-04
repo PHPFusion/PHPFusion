@@ -19,9 +19,24 @@ namespace PHPFusion;
 /**
  * Class PasswordAuth
  *
+ * Manually build the password salt, hash and algo:
+ *
+ * $passAuth = new PasswordAuth();
+ * $new_password = $passAuth->generateUserPassword();
+ * $passAuth->setNewPassword($new_password);
+ * $row =[
+ *  'user_salt' => $passAuth->getNewSalt(), // salt and hash is always empty. why
+    'user_algo' => $passAuth->getNewAlgo(),
+    'user_password' => $passAuth->getNewHash(),
+ * ];
+ * if($passAuth->checkPasswordIntegrity($new_password, $row['user_password'], $row['user_salt'], $row['user_algo'])) {
+ *   // password is OK
+ * }
+ *
  * @package PHPFusion
  */
 class PasswordAuth {
+
     public $currentAlgo = "";
     public $currentSalt = "";
     public $currentPasswordHash = "";
@@ -55,6 +70,7 @@ class PasswordAuth {
      */
     public function isValidCurrentPassword($createNewHash = FALSE) {
         $inputPasswordHash = $this->hashPassword($this->inputPassword, $this->currentAlgo, $this->currentSalt);
+
         if ($inputPasswordHash == $this->currentPasswordHash) {
             if ($createNewHash === TRUE) {
                 $this->setNewHash($this->inputPassword);
@@ -67,20 +83,18 @@ class PasswordAuth {
     }
 
     /**
-     * Strengh settings check
-     *
+     * Strength settings check
      * @param string $value
-     *
      * @return bool
      */
-    public function checkInputPassword($value) {
+    public function checkInputPassword($value, $input_name) {
         $locale = fusion_get_locale();
 
         if ($value) {
-            //$currentPassCheckLength
+            // Length check
             $regex = self::passwordStrengthOpts($this->currentPassCheckLength, FALSE);
             if (!preg_match('/'.$regex.'/', $value)) {
-                $this->error = $locale['u303'];
+                fusion_input_error($input_name, $locale['u303']);
                 return FALSE;
             }
 
@@ -88,7 +102,7 @@ class PasswordAuth {
                 // Check contains number
                 $regex = self::passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum);
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = $locale['u302'];
+                    fusion_input_error($input_name, $locale['u302']);
                     return FALSE;
                 }
             }
@@ -97,7 +111,7 @@ class PasswordAuth {
                 // Check contains at least 1 upper and 1 lowercase
                 $regex = self::passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum, $this->currentPassCheckCase);
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = $locale['u301'];
+                    fusion_input_error($input_name, $locale['u301']);
                     return FALSE;
                 }
             }
@@ -105,9 +119,8 @@ class PasswordAuth {
             if ($this->currentPassCheckSpecialchar) {
                 // Must contain at least 1 special char
                 $regex = self::passwordStrengthOpts($this->currentPassCheckLength, $this->currentPassCheckNum, $this->currentPassCheckCase, $this->currentPassCheckSpecialchar);
-
                 if (!preg_match('/'.$regex.'/', $value)) {
-                    $this->error = $locale['u300'];
+                    fusion_input_error($input_name, $locale['u300']);
                     return FALSE;
                 }
             }
@@ -176,7 +189,7 @@ class PasswordAuth {
      * @return string
      */
     public static function getNewRandomSalt($length = 12) {
-        return sha1(self::getNewPassword($length));
+        return sha1(self::getRandomHash($length));
     }
 
     /**
@@ -186,7 +199,7 @@ class PasswordAuth {
      *
      * @return string
      */
-    public static function getNewPassword($length = 12) {
+    public static function getRandomHash($length = 12) {
         $chars = ["abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ", "123456789", "@!#$%&/()=-_?+*.,:;"];
         $count = [(strlen($chars[0]) - 1), (strlen($chars[1]) - 1), (strlen($chars[2]) - 1)];
         if ($length > 64) {
@@ -206,6 +219,47 @@ class PasswordAuth {
         return $this->error;
     }
 
+    function generateUserPassword($count = 2) {
+
+        function generateRandomWord($length = 5) {
+            $letters = 'abcdefghijklmnopqrstuvwxyz';
+            $word = '';
+            for ($i = 0; $i < $length; $i++) {
+                $word .= $letters[rand(0, strlen($letters) - 1)];
+            }
+            return ucfirst($word); // Capitalize first letter
+        }
+
+        // Generate 3 random words
+        $words = [];
+        for ($i = 0; $i < $count; $i++) {
+            $words[] = generateRandomWord(rand(4, 7)); // word length 4–7
+        }
+
+        // Join words with random symbols
+        $symbols = ['!', '@', '#', '$', '%', '&', '*'];
+        $password = implode($symbols[array_rand($symbols)], $words);
+
+        // Add a random number at the end
+        $password .= rand(10, 99);
+
+        return $password;
+    }
+
+    /**
+     * Checks if the password passes the integrity check
+     *
+     * @param $password - Plain letter password
+     * @param $hash - the encrypted hash
+     * @param $salt - salt
+     * @param $algo - algo
+     * @return bool
+     */
+    public function checkPasswordIntegrity($password, $hash, $salt, $algo) {
+        $password_hash = $this->hashPassword($password, $algo, $salt);
+        return ($password_hash == $hash);
+    }
+
     /**
      * Get hash, salt, and algo
      *
@@ -214,13 +268,18 @@ class PasswordAuth {
      * @return array
      */
     public function setNewPassword($user_password) {
-        $salt = self::getNewRandomSalt();
 
-        return [
-            "salt" => $salt,
+        $this->newSalt = self::getNewRandomSalt();
+
+        $this->newPasswordHash =  $this->hashPassword($user_password, $this->newAlgo, $this->newSalt);
+
+        $password_set = [
+            "salt" => $this->newSalt,
             "algo" => $this->newAlgo,
-            "hash" => $this->hashPassword($user_password, $this->newAlgo, $salt)
+            "hash" => $this->newPasswordHash
         ];
+
+        return $password_set;
     }
 
     /**

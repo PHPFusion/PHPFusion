@@ -1,0 +1,1173 @@
+(function () {
+    'use strict';
+
+    const instances = new WeakMap();
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    let sequence = 0;
+
+    const defaultStrings = {
+        search: 'Search options...',
+        resetSearch: 'Reset search',
+        clear: 'Clear',
+        selected: 'selected',
+        empty: 'No options found.',
+        typeMore: 'Type to search.',
+        loading: 'Loading options...',
+        error: 'Unable to load options. Try again.',
+        create: 'Create',
+        remove: 'Remove'
+    };
+
+    function decodeText(value) {
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = String(value == null ? '' : value);
+        return textarea.value;
+    }
+
+    function icon(name, className) {
+        const svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.classList.add(className || 'dynamics-combobox__icon');
+
+        const paths = {
+            check: ['M20 6 9 17l-5-5'],
+            chevron: ['m6 9 6 6 6-6'],
+            search: ['m21 21-4.35-4.35', 'M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16'],
+            x: ['M18 6 6 18', 'm6 6 12 12'],
+            plus: ['M12 5v14', 'M5 12h14']
+        };
+
+        (paths[name] || []).forEach(function (definition) {
+            const path = document.createElementNS(SVG_NS, 'path');
+            path.setAttribute('d', definition);
+            svg.appendChild(path);
+        });
+
+        return svg;
+    }
+
+    function normalizeItem(raw, group) {
+        if (raw == null) {
+            return null;
+        }
+        if (typeof raw !== 'object') {
+            raw = {id: raw, text: raw};
+        }
+
+        const id = raw.id != null ? raw.id : (raw.value != null ? raw.value : (raw.key != null ? raw.key : raw.code));
+        const primary = raw.text != null
+            ? raw.text
+            : (raw.label != null
+                ? raw.label
+                : (raw.name != null ? raw.name : (raw.title != null ? raw.title : raw.tex)));
+        if (id == null || primary == null) {
+            return null;
+        }
+
+        const text = decodeText(primary);
+        const label = raw.text != null && raw.label != null && String(raw.label) !== String(raw.text)
+            ? decodeText(raw.label)
+            : '';
+
+        return {
+            id: String(id),
+            text: text,
+            label: label,
+            group: decodeText(group || raw.group || ''),
+            disabled: Boolean(raw.disabled),
+            flag: raw.flag == null ? '' : String(raw.flag),
+            avatar: raw.avatar == null ? '' : String(raw.avatar),
+            level: raw.level == null ? '' : decodeText(raw.level),
+            raw: raw
+        };
+    }
+
+    function normalizeCollection(data, group) {
+        const items = [];
+        (Array.isArray(data) ? data : []).forEach(function (entry) {
+            if (entry && typeof entry === 'object' && Array.isArray(entry.children)) {
+                const groupName = entry.text != null ? entry.text : (entry.label != null ? entry.label : group);
+                items.push.apply(items, normalizeCollection(entry.children, groupName));
+                return;
+            }
+            const item = normalizeItem(entry, group);
+            if (item) {
+                items.push(item);
+            }
+        });
+        return items;
+    }
+
+    function parseConfig(source) {
+        let parsed = {};
+        try {
+            parsed = JSON.parse(source.getAttribute('data-dynamics-combobox') || '{}');
+        } catch (error) {
+            parsed = {};
+        }
+
+        parsed.remote = parsed.remote && typeof parsed.remote === 'object' ? parsed.remote : {};
+        parsed.strings = Object.assign({}, defaultStrings, parsed.strings || {});
+        parsed.searchThreshold = Math.max(0, Number(parsed.searchThreshold == null ? 5 : parsed.searchThreshold));
+        parsed.maxSelect = Math.max(0, Number(parsed.maxSelect || 0));
+        parsed.delimiter = String(parsed.delimiter || ',');
+        parsed.multiple = source instanceof HTMLSelectElement ? source.multiple : Boolean(parsed.multiple);
+        parsed.tags = Boolean(parsed.tags);
+        parsed.allowClear = Boolean(parsed.allowClear);
+        parsed.floatingLabel = Boolean(parsed.floatingLabel && parsed.label);
+        parsed.required = Boolean(parsed.required);
+        parsed.initialItems = Array.isArray(parsed.initialItems) ? parsed.initialItems : [];
+        return parsed;
+    }
+
+    function safeAssetUrl(base, filename) {
+        if (!base || !filename || /(^|[\\/])\.\.([\\/]|$)/.test(filename) || /[<>"'`]/.test(filename)) {
+            return '';
+        }
+        try {
+            return new URL(String(base) + String(filename).replace(/\\/g, '/'), document.baseURI).href;
+        } catch (error) {
+            return '';
+        }
+    }
+
+    class DynamicsCombobox {
+        constructor(source) {
+            this.source = source;
+            this.config = parseConfig(source);
+            this.items = [];
+            this.remoteItems = [];
+            this.selected = new Map();
+            this.query = '';
+            this.activeIndex = -1;
+            this.visibleItems = [];
+            this.opened = false;
+            this.loading = false;
+            this.loadError = false;
+            this.remoteLoaded = false;
+            this.abortController = null;
+            this.searchTimer = null;
+            this.syncing = false;
+            this.id = source.id || 'dynamics-combobox-' + (++sequence);
+            this.panelId = this.id + '-combobox-listbox';
+
+            this.readSourceItems();
+            this.readSelection();
+            this.build();
+            this.bind();
+            this.render();
+            this.updateDisabled();
+            this.syncSource(false);
+        }
+
+        readSourceItems() {
+            if (this.source instanceof HTMLSelectElement) {
+                const items = [];
+                Array.from(this.source.children).forEach(function (node) {
+                    if (node instanceof HTMLOptGroupElement) {
+                        Array.from(node.children).forEach(function (option) {
+                            const raw = Object.assign({}, option.dataset, {
+                                id: option.value,
+                                text: option.textContent,
+                                disabled: option.disabled || node.disabled
+                            });
+                            const item = normalizeItem(raw, node.label);
+                            if (item && item.id !== '') {
+                                items.push(item);
+                            }
+                        });
+                    } else if (node instanceof HTMLOptionElement) {
+                        const raw = Object.assign({}, node.dataset, {
+                            id: node.value,
+                            text: node.textContent,
+                            disabled: node.disabled
+                        });
+                        const item = normalizeItem(raw, '');
+                        if (item && item.id !== '') {
+                            items.push(item);
+                        }
+                    }
+                });
+                this.items = items;
+            } else {
+                this.items = normalizeCollection(this.config.initialItems);
+            }
+        }
+
+        readSelection() {
+            const previousSelection = new Map(this.selected);
+            this.selected.clear();
+            if (this.source instanceof HTMLSelectElement) {
+                Array.from(this.source.selectedOptions).forEach((option) => {
+                    if (option.value === '') {
+                        return;
+                    }
+                    let item = this.findItem(option.value) || previousSelection.get(String(option.value));
+                    if (!item) {
+                        item = normalizeItem(Object.assign({}, option.dataset, {id: option.value, text: option.textContent}), '');
+                    }
+                    if (item) {
+                        this.selected.set(item.id, item);
+                    }
+                });
+                return;
+            }
+
+            const values = String(this.source.value || '').split(this.config.delimiter).filter(Boolean);
+            values.forEach((value) => {
+                let item = this.findItem(value) || previousSelection.get(String(value));
+                if (!item) {
+                    item = normalizeItem({id: value, text: value}, '');
+                }
+                if (item) {
+                    this.selected.set(item.id, item);
+                }
+            });
+        }
+
+        findItem(id) {
+            id = String(id);
+            return this.remoteItems.concat(this.items, Array.from(this.selected.values())).find(function (item) {
+                return item.id === id;
+            }) || null;
+        }
+
+        build() {
+            this.source.classList.add('dynamics-combobox__native');
+            this.source.hidden = true;
+            this.source.setAttribute('tabindex', '-1');
+            this.source.setAttribute('aria-hidden', 'true');
+
+            this.root = document.createElement('div');
+            this.root.className = 'dynamics-combobox';
+            this.root.dataset.multiple = this.config.multiple ? 'true' : 'false';
+            this.root.classList.toggle('dynamics-combobox--floating', this.config.floatingLabel);
+
+            if (this.config.multiple) {
+                this.control = document.createElement('div');
+                this.control.className = 'dynamics-combobox__control dynamics-combobox__control--multiple';
+
+                if (this.config.floatingLabel) {
+                    this.control.appendChild(this.makeFloatingLabel());
+                }
+
+                this.chips = document.createElement('div');
+                this.chips.className = 'dynamics-combobox__chips';
+                this.control.appendChild(this.chips);
+
+                this.inlineSearch = document.createElement('input');
+                this.inlineSearch.type = 'search';
+                this.inlineSearch.className = 'dynamics-combobox__inline-search';
+                this.inlineSearch.placeholder = this.config.placeholder;
+                this.inlineSearch.setAttribute('aria-label', this.config.placeholder || this.config.strings.search);
+                this.inlineSearch.setAttribute('role', 'combobox');
+                this.inlineSearch.setAttribute('aria-haspopup', 'listbox');
+                this.inlineSearch.setAttribute('aria-expanded', 'false');
+                this.inlineSearch.setAttribute('aria-controls', this.panelId);
+                this.inlineSearch.setAttribute('aria-autocomplete', 'list');
+                this.inlineSearch.setAttribute('autocomplete', 'off');
+                this.control.appendChild(this.inlineSearch);
+
+                this.inlineReset = this.makeResetButton();
+                this.inlineReset.classList.add('dynamics-combobox__inline-reset');
+                this.control.appendChild(this.inlineReset);
+                if (this.config.allowClear) {
+                    this.selectionClearButton = this.makeSelectionClearButton('dynamics-combobox__selection-clear--multiple');
+                    this.selectionClearButton.setAttribute('data-fusion-no-framework-aliases', '');
+                    this.control.appendChild(this.selectionClearButton);
+                }
+                this.root.appendChild(this.control);
+                this.focusTarget = this.inlineSearch;
+                this.ariaControl = this.inlineSearch;
+            } else {
+                this.control = document.createElement('button');
+                this.control.type = 'button';
+                this.control.className = 'dynamics-combobox__control dynamics-combobox__trigger';
+                this.control.setAttribute('role', 'combobox');
+                this.control.setAttribute('aria-haspopup', 'listbox');
+                this.control.setAttribute('aria-expanded', 'false');
+                this.control.setAttribute('aria-controls', this.panelId);
+
+                this.valueStack = document.createElement('span');
+                this.valueStack.className = 'dynamics-combobox__value-stack';
+                if (this.config.floatingLabel) {
+                    this.valueStack.appendChild(this.makeFloatingLabel());
+                }
+
+                this.value = document.createElement('span');
+                this.value.className = 'dynamics-combobox__value';
+                this.valueStack.appendChild(this.value);
+                this.control.appendChild(this.valueStack);
+                this.control.appendChild(icon('chevron'));
+
+                this.singleControl = document.createElement('div');
+                this.singleControl.className = 'dynamics-combobox__single-control';
+                this.singleControl.appendChild(this.control);
+
+                if (this.config.allowClear) {
+                    this.selectionClearButton = this.makeSelectionClearButton();
+                    this.singleControl.appendChild(this.selectionClearButton);
+                }
+
+                this.root.appendChild(this.singleControl);
+                this.focusTarget = this.control;
+                this.ariaControl = this.control;
+            }
+
+            this.status = document.createElement('span');
+            this.status.className = 'dynamics-combobox__sr-status';
+            this.status.setAttribute('role', 'status');
+            this.status.setAttribute('aria-live', 'polite');
+            this.root.appendChild(this.status);
+            this.source.insertAdjacentElement('afterend', this.root);
+
+            this.panel = document.createElement('div');
+            this.panel.className = 'dynamics-combobox__panel';
+            this.panel.id = this.panelId;
+            this.panel.hidden = true;
+
+            if (!this.config.multiple) {
+                this.searchWrap = document.createElement('div');
+                this.searchWrap.className = 'dynamics-combobox__search-wrap';
+                this.searchWrap.appendChild(icon('search'));
+
+                this.searchInput = document.createElement('input');
+                this.searchInput.type = 'search';
+                this.searchInput.className = 'dynamics-combobox__search';
+                this.searchInput.placeholder = this.config.strings.search;
+                this.searchInput.setAttribute('aria-label', this.config.strings.search);
+                this.searchInput.setAttribute('aria-autocomplete', 'list');
+                this.searchInput.setAttribute('autocomplete', 'off');
+                this.searchWrap.appendChild(this.searchInput);
+                this.searchReset = this.makeResetButton();
+                this.searchWrap.appendChild(this.searchReset);
+                this.panel.appendChild(this.searchWrap);
+            }
+
+            this.list = document.createElement('div');
+            this.list.className = 'dynamics-combobox__list';
+            this.list.setAttribute('role', 'listbox');
+            if (this.config.multiple) {
+                this.list.setAttribute('aria-multiselectable', 'true');
+            }
+            this.panel.appendChild(this.list);
+
+            this.footer = document.createElement('div');
+            this.footer.className = 'dynamics-combobox__footer';
+            this.selectionCount = document.createElement('span');
+            this.footer.appendChild(this.selectionCount);
+            this.clearButton = document.createElement('button');
+            this.clearButton.type = 'button';
+            this.clearButton.className = 'dynamics-combobox__clear';
+            this.clearButton.appendChild(icon('x'));
+            this.clearButton.appendChild(document.createTextNode(this.config.strings.clear));
+            this.footer.appendChild(this.clearButton);
+            this.panel.appendChild(this.footer);
+            document.body.appendChild(this.panel);
+
+            const label = this.source.id ? document.querySelector('label[for="' + CSS.escape(this.source.id) + '"]') : null;
+            if (label) {
+                if (!label.id) {
+                    label.id = this.id + '-label';
+                }
+                this.focusTarget.setAttribute('aria-labelledby', label.id);
+                this.label = label;
+                if (this.config.floatingLabel) {
+                    this.label.classList.add('dynamics-combobox__source-label--floating');
+                }
+            }
+        }
+
+        makeFloatingLabel() {
+            const label = document.createElement('span');
+            label.className = 'dynamics-combobox__floating-label';
+            label.textContent = this.config.label;
+            if (this.config.required) {
+                const required = document.createElement('span');
+                required.className = 'dynamics-combobox__required';
+                required.setAttribute('aria-hidden', 'true');
+                required.textContent = ' *';
+                label.appendChild(required);
+            }
+            return label;
+        }
+
+        makeSelectionClearButton(modifier) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'dynamics-combobox__selection-clear';
+            if (modifier) {
+                button.classList.add(modifier);
+            }
+            button.setAttribute('aria-label', this.config.strings.clear);
+            button.hidden = true;
+            button.appendChild(icon('x'));
+            return button;
+        }
+
+        makeResetButton() {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'dynamics-combobox__search-reset';
+            button.setAttribute('aria-label', this.config.strings.resetSearch);
+            button.hidden = true;
+            button.appendChild(icon('x'));
+            return button;
+        }
+
+        bind() {
+            this.onControlClick = (event) => {
+                if (event.target.closest('.dynamics-combobox__chip-remove, .dynamics-combobox__search-reset')) {
+                    return;
+                }
+                if (!this.config.multiple && this.opened) {
+                    this.close(false);
+                    return;
+                }
+                this.open();
+                if (this.config.multiple) {
+                    this.inlineSearch.focus();
+                }
+            };
+            this.control.addEventListener('click', this.onControlClick);
+
+            this.onControlKeydown = (event) => this.handleKeydown(event);
+            this.control.addEventListener('keydown', this.onControlKeydown);
+
+            if (this.selectionClearButton) {
+                this.selectionClearButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.clearSelection();
+                    this.focusTarget.focus();
+                });
+            }
+
+            if (this.config.multiple) {
+                this.inlineSearch.addEventListener('input', () => this.setQuery(this.inlineSearch.value));
+                this.inlineSearch.addEventListener('keydown', (event) => {
+                    if (event.key === 'Backspace' && !this.inlineSearch.value && this.selected.size) {
+                        const last = Array.from(this.selected.keys()).pop();
+                        this.toggle(last, false);
+                    }
+                });
+                this.inlineReset.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    this.resetSearch();
+                    this.inlineSearch.focus();
+                });
+            } else {
+                this.searchInput.addEventListener('input', () => this.setQuery(this.searchInput.value));
+                this.searchInput.addEventListener('keydown', (event) => this.handleKeydown(event));
+                this.searchReset.addEventListener('click', () => {
+                    this.resetSearch();
+                    this.searchInput.focus();
+                });
+            }
+
+            this.clearButton.addEventListener('click', () => this.clearSelection());
+            this.onSourceChange = () => {
+                if (!this.syncing) {
+                    this.readSourceItems();
+                    this.readSelection();
+                    this.render();
+                }
+            };
+            this.source.addEventListener('change', this.onSourceChange);
+
+            this.observer = new MutationObserver(() => {
+                if (!this.syncing) {
+                    this.readSourceItems();
+                    this.readSelection();
+                    this.updateDisabled();
+                    this.render();
+                }
+            });
+            this.observer.observe(this.source, {childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'selected']});
+
+            this.onDocumentPointer = (event) => {
+                if (this.opened && !this.root.contains(event.target) && !this.panel.contains(event.target)) {
+                    this.close(false);
+                }
+            };
+            document.addEventListener('pointerdown', this.onDocumentPointer);
+
+            this.onViewportChange = () => {
+                if (this.opened) {
+                    this.positionPanel();
+                }
+            };
+            window.addEventListener('resize', this.onViewportChange);
+            window.addEventListener('scroll', this.onViewportChange, true);
+
+            if (this.label) {
+                this.onLabelClick = (event) => {
+                    event.preventDefault();
+                    this.focusTarget.focus();
+                    this.open();
+                };
+                this.label.addEventListener('click', this.onLabelClick);
+            }
+        }
+
+        searchEnabled() {
+            return Boolean(this.config.tags || this.config.remote.url || this.items.length >= this.config.searchThreshold);
+        }
+
+        open() {
+            if (this.source.disabled || this.opened) {
+                return;
+            }
+            this.opened = true;
+            this.panel.hidden = false;
+            this.ariaControl.setAttribute('aria-expanded', 'true');
+            this.positionPanel();
+            this.render();
+
+            if (!this.config.multiple && this.searchEnabled()) {
+                this.searchInput.focus();
+            }
+            if (this.config.remote.url && Number(this.config.remote.minimumInputLength || 0) === 0 && this.config.remote.loadOnOpen !== false && !this.remoteLoaded) {
+                this.loadRemote('');
+            }
+        }
+
+        close(returnFocus) {
+            if (!this.opened) {
+                return;
+            }
+            this.opened = false;
+            this.panel.hidden = true;
+            this.ariaControl.setAttribute('aria-expanded', 'false');
+            this.activeIndex = -1;
+            if (returnFocus !== false) {
+                this.focusTarget.focus();
+            }
+        }
+
+        positionPanel() {
+            const rect = this.control.getBoundingClientRect();
+            const gutter = 8;
+            const viewportWidth = document.documentElement.clientWidth;
+            const width = Math.min(Math.max(rect.width, 216), Math.min(360, viewportWidth - gutter * 2));
+            const left = Math.min(Math.max(gutter, rect.left), Math.max(gutter, viewportWidth - width - gutter));
+            this.panel.style.width = width + 'px';
+            this.panel.style.left = left + 'px';
+
+            const estimatedHeight = Math.min(this.panel.scrollHeight || 320, 360);
+            const below = window.innerHeight - rect.bottom - gutter;
+            if (below < estimatedHeight && rect.top > below) {
+                this.panel.style.top = Math.max(gutter, rect.top - estimatedHeight - 6) + 'px';
+                this.panel.dataset.side = 'top';
+            } else {
+                this.panel.style.top = Math.min(window.innerHeight - gutter, rect.bottom + 6) + 'px';
+                this.panel.dataset.side = 'bottom';
+            }
+        }
+
+        setQuery(value) {
+            this.query = String(value || '');
+            this.activeIndex = -1;
+            if (this.inlineReset) {
+                this.inlineReset.hidden = !this.query;
+            }
+            if (this.searchReset) {
+                this.searchReset.hidden = !this.query;
+            }
+            if (!this.opened) {
+                this.open();
+            }
+
+            const minimum = Number(this.config.remote.minimumInputLength || 0);
+            if (this.config.remote.url && this.query.length >= minimum) {
+                window.clearTimeout(this.searchTimer);
+                const delay = this.config.remote.delay == null ? 250 : Number(this.config.remote.delay);
+                this.searchTimer = window.setTimeout(() => this.loadRemote(this.query), Math.max(0, delay));
+            } else {
+                this.render();
+            }
+        }
+
+        resetSearch() {
+            this.query = '';
+            if (this.inlineSearch) {
+                this.inlineSearch.value = '';
+            }
+            if (this.searchInput) {
+                this.searchInput.value = '';
+            }
+            if (this.inlineReset) {
+                this.inlineReset.hidden = true;
+            }
+            if (this.searchReset) {
+                this.searchReset.hidden = true;
+            }
+            if (this.config.remote.url && Number(this.config.remote.minimumInputLength || 0) === 0) {
+                this.loadRemote('');
+            } else {
+                this.render();
+            }
+        }
+
+        async loadRemote(query) {
+            if (!this.config.remote.url) {
+                return;
+            }
+            if (this.abortController) {
+                this.abortController.abort();
+            }
+            this.abortController = new AbortController();
+            this.loading = true;
+            this.loadError = false;
+            this.render();
+
+            try {
+                const remote = this.config.remote;
+                const params = Object.assign({}, remote.params || {});
+                params[remote.queryParam || 'q'] = query;
+
+                const method = String(remote.method || 'GET').toUpperCase();
+                const url = new URL(remote.url, document.baseURI);
+                const request = {
+                    method: method,
+                    headers: {'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+                    signal: this.abortController.signal,
+                    credentials: 'same-origin'
+                };
+                if (method === 'POST') {
+                    request.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+                    request.body = new URLSearchParams(params).toString();
+                } else {
+                    Object.keys(params).forEach(function (key) {
+                        if (params[key] != null && typeof params[key] !== 'object') {
+                            url.searchParams.set(key, params[key]);
+                        }
+                    });
+                }
+
+                const response = await fetch(url.href, request);
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                const payload = await response.json();
+                let results = payload;
+                if (!Array.isArray(results) && results && typeof results === 'object') {
+                    results = results[remote.resultsKey || 'results'];
+                    if (!Array.isArray(results) && Array.isArray(payload.data)) {
+                        results = payload.data;
+                    }
+                }
+                this.remoteItems = normalizeCollection(results);
+                this.selected.forEach((selectedItem, id) => {
+                    const remoteItem = this.remoteItems.find((item) => item.id === id);
+                    if (remoteItem) {
+                        this.selected.set(id, remoteItem);
+                    }
+                });
+                this.remoteLoaded = true;
+                this.loading = false;
+                this.render();
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return;
+                }
+                this.loading = false;
+                this.loadError = true;
+                this.render();
+            }
+        }
+
+        filteredItems() {
+            let pool = this.config.remote.url ? this.remoteItems : this.items;
+            const query = this.query.trim().toLocaleLowerCase();
+            if (query && !this.config.remote.url) {
+                pool = pool.filter(function (item) {
+                    return (item.text + ' ' + item.label + ' ' + item.group).toLocaleLowerCase().includes(query);
+                });
+            }
+            return pool;
+        }
+
+        render() {
+            if (!this.root) {
+                return;
+            }
+            this.renderValue();
+            this.renderList();
+            const count = this.selected.size;
+            this.selectionCount.textContent = count + ' ' + this.config.strings.selected;
+            this.clearButton.hidden = count === 0 || (!this.config.multiple && !this.config.allowClear);
+            this.footer.hidden = !this.config.multiple && !this.config.allowClear;
+            if (this.selectionClearButton) {
+                const showImmediateClear = count > 0 && this.config.allowClear;
+                this.selectionClearButton.hidden = !showImmediateClear;
+                this.root.dataset.hasClear = showImmediateClear ? 'true' : 'false';
+            }
+            if (!this.config.multiple && this.searchWrap) {
+                this.searchWrap.hidden = !this.searchEnabled();
+            }
+            this.positionPanelIfOpen();
+        }
+
+        renderValue() {
+            if (!this.config.multiple) {
+                const item = this.selected.values().next().value;
+                this.value.textContent = item ? item.text : this.config.placeholder;
+                this.value.classList.toggle('dynamics-combobox__placeholder', !item);
+                return;
+            }
+
+            this.chips.replaceChildren();
+            this.selected.forEach((item) => {
+                const chip = document.createElement('span');
+                chip.className = 'dynamics-combobox__chip';
+                chip.appendChild(document.createTextNode(item.text));
+                const remove = document.createElement('button');
+                remove.type = 'button';
+                remove.className = 'dynamics-combobox__chip-remove';
+                remove.setAttribute('aria-label', this.config.strings.remove + ' ' + item.text);
+                remove.appendChild(icon('x'));
+                remove.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    this.toggle(item.id, false);
+                    this.inlineSearch.focus();
+                });
+                chip.appendChild(remove);
+                this.chips.appendChild(chip);
+            });
+            this.inlineSearch.placeholder = this.selected.size ? '' : this.config.placeholder;
+        }
+
+        renderList() {
+            this.list.replaceChildren();
+            if (this.loading) {
+                this.renderMessage(this.config.strings.loading, 'loading');
+                return;
+            }
+            if (this.loadError) {
+                this.renderMessage(this.config.strings.error, 'error');
+                return;
+            }
+
+            const minimum = Number(this.config.remote.minimumInputLength || 0);
+            if (this.config.remote.url && this.query.length < minimum) {
+                this.visibleItems = [];
+                this.renderMessage(this.config.strings.typeMore, 'empty');
+                return;
+            }
+
+            this.visibleItems = this.filteredItems();
+            const query = this.query.trim();
+            const exact = this.visibleItems.some(function (item) {
+                return item.text.toLocaleLowerCase() === query.toLocaleLowerCase();
+            });
+            if (this.config.tags && query && !exact) {
+                const tag = normalizeItem({id: query, text: query, tag: true}, '');
+                if (tag) {
+                    tag.create = true;
+                    this.visibleItems = [tag].concat(this.visibleItems);
+                }
+            }
+
+            if (!this.visibleItems.length) {
+                this.renderMessage(this.config.strings.empty, 'empty');
+                return;
+            }
+
+            this.status.textContent = '';
+
+            let currentGroup = null;
+            this.visibleItems.forEach((item, index) => {
+                if (item.group && item.group !== currentGroup) {
+                    currentGroup = item.group;
+                    const group = document.createElement('div');
+                    group.className = 'dynamics-combobox__group-label';
+                    group.setAttribute('role', 'presentation');
+                    group.textContent = currentGroup;
+                    this.list.appendChild(group);
+                }
+                const option = this.renderOption(item, index);
+                this.list.appendChild(option);
+            });
+        }
+
+        renderMessage(message, state) {
+            this.visibleItems = [];
+            const element = document.createElement('div');
+            element.className = 'dynamics-combobox__message dynamics-combobox__message--' + state;
+            element.textContent = message;
+            this.list.appendChild(element);
+            if (this.opened) {
+                this.status.textContent = message;
+            }
+        }
+
+        renderOption(item, index) {
+            const option = document.createElement('div');
+            option.className = 'dynamics-combobox__option';
+            option.id = this.panelId + '-option-' + index;
+            option.setAttribute('role', 'option');
+            option.setAttribute('aria-selected', this.selected.has(item.id) ? 'true' : 'false');
+            option.dataset.index = String(index);
+            if (item.disabled) {
+                option.setAttribute('aria-disabled', 'true');
+            }
+            if (index === this.activeIndex) {
+                option.dataset.active = 'true';
+            }
+
+            if (item.create) {
+                option.appendChild(icon('plus', 'dynamics-combobox__leading-icon'));
+            } else {
+                const media = this.renderMedia(item);
+                if (media) {
+                    option.appendChild(media);
+                }
+            }
+
+            const copy = document.createElement('span');
+            copy.className = 'dynamics-combobox__option-copy';
+            const text = document.createElement('span');
+            text.className = 'dynamics-combobox__option-text';
+            text.textContent = item.create ? this.config.strings.create + ' "' + item.text + '"' : item.text;
+            copy.appendChild(text);
+            const detailText = item.label || item.level;
+            if (detailText) {
+                const detail = document.createElement('span');
+                detail.className = 'dynamics-combobox__option-detail';
+                detail.textContent = detailText;
+                copy.appendChild(detail);
+            }
+            option.appendChild(copy);
+
+            const indicator = document.createElement('span');
+            indicator.className = 'dynamics-combobox__indicator';
+            if (this.selected.has(item.id)) {
+                indicator.appendChild(icon('check'));
+            }
+            option.appendChild(indicator);
+
+            option.addEventListener('pointermove', () => {
+                this.activeIndex = index;
+                this.updateActiveOption();
+            });
+            option.addEventListener('click', () => {
+                if (!item.disabled) {
+                    this.toggle(item.id, !this.selected.has(item.id), item);
+                }
+            });
+            return option;
+        }
+
+        renderMedia(item) {
+            const avatar = safeAssetUrl(this.config.avatarBaseUrl, item.avatar);
+            const flag = safeAssetUrl(this.config.flagBaseUrl, item.flag);
+            const url = avatar || flag;
+            if (!url) {
+                return null;
+            }
+            const image = document.createElement('img');
+            image.className = avatar ? 'dynamics-combobox__avatar' : 'dynamics-combobox__flag';
+            image.src = url;
+            image.alt = '';
+            image.loading = 'lazy';
+            image.addEventListener('error', function () {
+                image.hidden = true;
+            });
+            return image;
+        }
+
+        handleKeydown(event) {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.close(true);
+                return;
+            }
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                if (!this.opened) {
+                    this.open();
+                }
+                const direction = event.key === 'ArrowDown' ? 1 : -1;
+                this.moveActive(direction);
+                return;
+            }
+            if (event.key === 'Home' && this.opened) {
+                event.preventDefault();
+                this.activeIndex = 0;
+                this.updateActiveOption();
+                return;
+            }
+            if (event.key === 'End' && this.opened) {
+                event.preventDefault();
+                this.activeIndex = Math.max(0, this.visibleItems.length - 1);
+                this.updateActiveOption();
+                return;
+            }
+            if (event.key === 'Enter') {
+                if (!this.opened) {
+                    event.preventDefault();
+                    this.open();
+                    return;
+                }
+                const item = this.visibleItems[this.activeIndex];
+                if (item && !item.disabled) {
+                    event.preventDefault();
+                    this.toggle(item.id, !this.selected.has(item.id), item);
+                } else if (this.config.tags && this.query.trim()) {
+                    event.preventDefault();
+                    const tag = normalizeItem({id: this.query.trim(), text: this.query.trim(), tag: true}, '');
+                    this.toggle(tag.id, true, tag);
+                }
+            }
+            if ((event.key === 'Delete' || event.key === 'Backspace') && !this.config.multiple && this.config.allowClear && this.selected.size && event.target === this.control) {
+                event.preventDefault();
+                this.clearSelection();
+                return;
+            }
+            if ((event.key === ' ' || event.key === 'Spacebar') && !this.config.multiple && event.target === this.control && !this.opened) {
+                event.preventDefault();
+                this.open();
+            }
+            if (event.key === 'Tab') {
+                this.close(false);
+            }
+        }
+
+        moveActive(direction) {
+            if (!this.visibleItems.length) {
+                return;
+            }
+            let next = this.activeIndex;
+            for (let attempts = 0; attempts < this.visibleItems.length; attempts += 1) {
+                next = (next + direction + this.visibleItems.length) % this.visibleItems.length;
+                if (!this.visibleItems[next].disabled) {
+                    this.activeIndex = next;
+                    break;
+                }
+            }
+            this.updateActiveOption();
+        }
+
+        updateActiveOption() {
+            const options = this.list.querySelectorAll('[role="option"]');
+            options.forEach((option, index) => {
+                if (index === this.activeIndex) {
+                    option.dataset.active = 'true';
+                    option.scrollIntoView({block: 'nearest'});
+                    this.focusTarget.setAttribute('aria-activedescendant', option.id);
+                } else {
+                    delete option.dataset.active;
+                }
+            });
+        }
+
+        toggle(id, shouldSelect, suppliedItem) {
+            const item = suppliedItem || this.findItem(id);
+            if (!item || item.disabled) {
+                return;
+            }
+            if (shouldSelect) {
+                if (!this.config.multiple) {
+                    this.selected.clear();
+                }
+                if (this.config.maxSelect && !this.selected.has(item.id) && this.selected.size >= this.config.maxSelect) {
+                    return;
+                }
+                this.selected.set(item.id, item);
+            } else {
+                this.selected.delete(String(id));
+            }
+
+            this.syncSource(true);
+            if (this.config.multiple) {
+                this.resetSearch();
+            } else {
+                this.close(true);
+            }
+            this.render();
+        }
+
+        clearSelection() {
+            this.selected.clear();
+            this.syncSource(true);
+            this.resetSearch();
+            this.render();
+        }
+
+        ensureOption(item) {
+            if (!(this.source instanceof HTMLSelectElement)) {
+                return null;
+            }
+            let option = Array.from(this.source.options).find(function (candidate) {
+                return candidate.value === item.id;
+            });
+            if (!option) {
+                option = new Option(item.text, item.id, false, false);
+                ['flag', 'avatar', 'level', 'label'].forEach(function (key) {
+                    if (item[key]) {
+                        option.dataset[key] = item[key];
+                    }
+                });
+                this.source.add(option);
+            }
+            return option;
+        }
+
+        syncSource(emit) {
+            this.syncing = true;
+            if (this.source instanceof HTMLSelectElement) {
+                Array.from(this.source.options).forEach((option) => {
+                    option.selected = this.selected.has(option.value);
+                });
+                this.selected.forEach((item) => {
+                    const option = this.ensureOption(item);
+                    if (option) {
+                        option.selected = true;
+                    }
+                });
+            } else {
+                this.source.value = Array.from(this.selected.keys()).join(this.config.delimiter);
+            }
+            const dummy = this.source.id ? document.getElementById('dummy-' + this.source.id) : null;
+            if (dummy) {
+                dummy.value = this.selected.size ? Array.from(this.selected.keys()).join(this.config.delimiter) : '';
+            }
+            if (emit) {
+                this.source.dispatchEvent(new Event('input', {bubbles: true}));
+                this.source.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+            this.syncing = false;
+        }
+
+        updateDisabled() {
+            const disabled = Boolean(this.source.disabled);
+            this.control.classList.toggle('dynamics-combobox__control--disabled', disabled);
+            this.focusTarget.disabled = disabled;
+            this.control.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+            this.ariaControl.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+            if (disabled) {
+                this.close(false);
+            }
+        }
+
+        positionPanelIfOpen() {
+            if (this.opened) {
+                window.requestAnimationFrame(() => this.positionPanel());
+            }
+        }
+
+        getValue() {
+            const values = Array.from(this.selected.keys());
+            return this.config.multiple ? values : (values[0] || '');
+        }
+
+        getData() {
+            const values = Array.from(this.selected.values()).map(function (item) {
+                return Object.assign({}, item.raw, {id: item.id, text: item.text, label: item.label || item.raw.label});
+            });
+            return this.config.multiple ? values : (values[0] || null);
+        }
+
+        setValue(value) {
+            const values = Array.isArray(value) ? value : (value == null || value === '' ? [] : [value]);
+            const previousSelection = new Map(this.selected);
+            this.selected.clear();
+            values.forEach((id) => {
+                const item = this.findItem(id)
+                    || previousSelection.get(String(id))
+                    || normalizeItem({id: id, text: id}, '');
+                if (item) {
+                    this.selected.set(item.id, item);
+                }
+            });
+            this.syncSource(true);
+            this.render();
+        }
+
+        setData(data) {
+            const entries = data == null ? [] : (Array.isArray(data) ? data : [data]);
+            const items = normalizeCollection(entries);
+            this.selected.clear();
+            items.forEach((item) => this.selected.set(item.id, item));
+            this.syncSource(true);
+            this.render();
+        }
+
+        destroy() {
+            window.clearTimeout(this.searchTimer);
+            if (this.abortController) {
+                this.abortController.abort();
+            }
+            this.observer.disconnect();
+            document.removeEventListener('pointerdown', this.onDocumentPointer);
+            window.removeEventListener('resize', this.onViewportChange);
+            window.removeEventListener('scroll', this.onViewportChange, true);
+            this.source.removeEventListener('change', this.onSourceChange);
+            if (this.label && this.onLabelClick) {
+                this.label.removeEventListener('click', this.onLabelClick);
+            }
+            if (this.label) {
+                this.label.classList.remove('dynamics-combobox__source-label--floating');
+            }
+            this.root.remove();
+            this.panel.remove();
+            this.source.classList.remove('dynamics-combobox__native');
+            this.source.hidden = false;
+            this.source.removeAttribute('aria-hidden');
+            this.source.removeAttribute('tabindex');
+            instances.delete(this.source);
+        }
+    }
+
+    function enhance(source) {
+        if (!source || instances.has(source)) {
+            return instances.get(source) || null;
+        }
+        const instance = new DynamicsCombobox(source);
+        instances.set(source, instance);
+        return instance;
+    }
+
+    function initialize(root) {
+        const scope = root && root.querySelectorAll ? root : document;
+        if (scope.matches && scope.matches('[data-dynamics-combobox]')) {
+            enhance(scope);
+        }
+        scope.querySelectorAll('[data-dynamics-combobox]').forEach(enhance);
+    }
+
+    function boot() {
+        initialize(document);
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
+                    if (node.nodeType === 1) {
+                        initialize(node);
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, {childList: true, subtree: true});
+    }
+
+    window.PHPFusionDynamicsCombobox = {
+        enhance: enhance,
+        initialize: initialize,
+        getInstance: function (element) {
+            return instances.get(element) || null;
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot, {once: true});
+    } else {
+        boot();
+    }
+})();

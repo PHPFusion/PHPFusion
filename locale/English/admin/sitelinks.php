@@ -66,3 +66,17 @@ $locale['SL_0080'] = "Delete this site link?";
 $locale['SL_0085'] = "Please enter a Link Name";
 $locale['SL_0086'] = "Please enter a Link URL";
 $locale['SL_0087'] = "There are no item to update. Please check a site link.";
+
+// Site Links workspace
+$locale['SL_0090'] = "Status";
+$locale['SL_0091'] = "All statuses";
+$locale['SL_0092'] = "All audiences";
+$locale['SL_0093'] = "Link target";
+$locale['SL_0094'] = "All targets";
+$locale['SL_0095'] = "Same window";
+$locale['SL_0096'] = "New window";
+$locale['SL_0097'] = "All languages";
+$locale['SL_0098'] = "Search links by name or URL";
+$locale['SL_0099'] = "Reset";
+$locale['SL_0100'] = "links";
+$locale['SL_0101'] = "Select all links";

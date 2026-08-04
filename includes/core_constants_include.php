@@ -17,26 +17,26 @@
 +--------------------------------------------------------*/
 defined('IN_FUSION') || exit;
 
-const APPS = BASEDIR.'apps/';
 const ADMIN = BASEDIR.'administration/';
 const CLASSES = BASEDIR.'includes/classes/';
 const DYNAMICS = BASEDIR.'includes/dynamics/';
-const INFUSIONS = BASEDIR.'apps/infusions/';
+
 const IMAGES = BASEDIR.'assets/images/';
-const IMAGES_G = IMAGES . "groups/";
-const IMAGES_G_T = IMAGES . "groups/thumbs/";
-const AUDIO = BASEDIR . 'assets/audio/';
-const VIDEOS = BASEDIR . 'assets/videos/';
-
+const IMAGES_GRP = IMAGES . "groups/";
+const IMAGES_GRP_T = IMAGES . "groups/thumbs/";
+const AUDIO = BASEDIR.'assets/audio/';
+const VIDEOS = BASEDIR.'assets/videos/';
 const INCLUDES = BASEDIR.'includes/';
-const HELPERS = BASEDIR . "includes/helpers/";
-
+const HELPERS = BASEDIR."includes/helpers/";
 const LOCALE = BASEDIR.'locale/';
 const THEMES = BASEDIR.'themes/';
 const TEMPLATES = BASEDIR.'themes/templates/';
 const ADMIN_THEMES = BASEDIR.'themes/admin_themes/';
 const DB_HANDLERS = BASEDIR.'includes/db_handlers/';
 const WIDGETS = BASEDIR.'widgets/';
+
+const USER_FIELDS = BASEDIR.'apps/user_fields/';
+const INFUSIONS = BASEDIR.'infusions/';
 
 const FUSION_FOOTER = TEMPLATES.'footer.php';
 const FUSION_HEADER = TEMPLATES.'header.php';
@@ -48,7 +48,7 @@ define('START_TIME', microtime(TRUE));
 define('FUSION_ROOT_DIR', dirname(__DIR__).'/');
 
 // Define user levels
-const USER_LEVEL_SUPER_ADMIN = -103;
-const USER_LEVEL_ADMIN = -102;
-const USER_LEVEL_MEMBER = -101;
-const USER_LEVEL_PUBLIC = 0;
+const USER_LEVEL_SUPER_ADMIN = '-103';
+const USER_LEVEL_ADMIN = '-102';
+const USER_LEVEL_MEMBER = '-101';
+const USER_LEVEL_PUBLIC = '0';

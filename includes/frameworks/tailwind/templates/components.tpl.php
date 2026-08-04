@@ -535,10 +535,10 @@ function tailwind_render_modal(array $input): string
         $footer_rendered = FALSE;
         $trigger = (string)($settings['trigger'] ?? '');
         $hidden = !empty($settings['hidden']) || $trigger !== '';
-        $html = '<div id="'.$id.'-Modal" class="tw-fixed tw-inset-0 tw-z-50 tw-overflow-y-auto tw-bg-black/60 tw-p-4" data-tailwind-modal'.($trigger !== '' ? ' data-tailwind-modal-trigger="'.tailwind_escape($trigger).'"' : '').' role="dialog" aria-modal="true" aria-labelledby="'.$id.'-ModalTitle"'.($hidden ? ' hidden' : '').'><div class="tw-flex tw-min-h-full tw-items-center tw-justify-center"><div class="'.tailwind_class('tw-w-full tw-max-w-2xl tw-overflow-hidden tw-rounded-2xl tw-border tw-border-ui-border tw-bg-ui-card tw-shadow-dialog', $settings['class'] ?? '').'">';
+        $html = '<div id="'.$id.'_Modal" class="tw-fixed tw-inset-0 tw-z-50 tw-overflow-y-auto tw-bg-black/60 tw-p-4" data-tailwind-modal'.($trigger !== '' ? ' data-tailwind-modal-trigger="'.tailwind_escape($trigger).'"' : '').' role="dialog" aria-modal="true" aria-labelledby="'.$id.'_ModalTitle"'.($hidden ? ' hidden' : '').'><div class="tw-flex tw-min-h-full tw-items-center tw-justify-center"><div class="'.tailwind_class('tw-w-full tw-max-w-2xl tw-overflow-hidden tw-rounded-2xl tw-border tw-border-ui-border tw-bg-ui-card tw-shadow-dialog', $settings['class'] ?? '').'">';
         if (!empty($settings['header_content']) || $dismiss) {
             $html .= '<header class="tw-flex tw-items-center tw-justify-between tw-gap-4 tw-border-b tw-border-ui-border tw-px-5 tw-py-4">';
-            if (!empty($settings['header_content'])) $html .= '<h2 id="'.$id.'-ModalTitle" class="tw-text-lg tw-font-semibold tw-text-ui-foreground">'.$settings['header_content'].'</h2>';
+            if (!empty($settings['header_content'])) $html .= '<h2 id="'.$id.'_ModalTitle" class="tw-text-lg tw-font-semibold tw-text-ui-foreground">'.$settings['header_content'].'</h2>';
             if ($dismiss) $html .= '<button type="button" class="tw-inline-flex tw-min-h-11 tw-min-w-11 tw-cursor-pointer tw-items-center tw-justify-center tw-rounded-lg tw-text-ui-muted-foreground hover:tw-bg-ui-accent hover:tw-text-ui-foreground focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring" data-tailwind-modal-close aria-label="'.$close.'">×</button>';
             $html .= '</header>';
         }

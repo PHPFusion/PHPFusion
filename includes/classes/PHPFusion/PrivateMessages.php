@@ -93,10 +93,9 @@ class PrivateMessages {
             ];
             if ($user_id !== $userdata) {
                 $result = dbquery("
-                    SELECT u.*, us.user_inbox, us.user_outbox, us.user_archive, us.user_pm_email, us.user_pm_save_sent
-                    FROM ".DB_USERS." AS u
-                    LEFT JOIN ".DB_USER_SETTINGS." AS us ON us.user_id = u.user_id
-                    WHERE u.user_id=:userid AND user_status=:status", [':userid' => $user_id, ':status' => '0']
+                    SELECT user_inbox, user_outbox, user_archive, user_pm_email_notify, user_pm_save_sent
+                    FROM ".DB_USERS."
+                    WHERE user_id=:userid AND user_status=:status", [':userid' => $user_id, ':status' => '0']
                 );
                 if (dbrows($result)) {
                     $data = dbarray($result);
@@ -454,7 +453,7 @@ class PrivateMessages {
             $data = dbarray($result);
 
             if (!$data["user_id"]) {
-                $data["user_name"] = $this->locale['632'];
+                $data["user_name"] = fusion_get_settings("siteusername");
             }
 
             $data['contact_user'] = [
@@ -502,28 +501,28 @@ class PrivateMessages {
      */
     private function setMessageOptions() {
         $userdata = fusion_get_userdata();
-        if ( check_post( 'save_options' ) ) {
+        if (isset($_POST['save_options'])) {
             $data = [
-                'user_id '          => $userdata['user_id'],
-                'user_pm_email'     => sanitizer('user_pm_email', 0, 'user_pm_email' ),
-                'user_pm_save_sent' => sanitizer('user_pm_save_sent', 0, 'user_pm_save_sent' ),
+                'user_id'              => $userdata['user_id'],
+                'user_pm_email_notify' => form_sanitizer($_POST['pm_email_notify'], 0, 'pm_email_notify'),
+                'user_pm_save_sent'    => form_sanitizer($_POST['pm_save_sent'], 0, 'pm_save_sent'),
             ];
-            dbquery_insert( DB_USER_SETTINGS, $data, 'update', ['primary_key' => 'user_id'] );
-            addnotice( 'success', $this->locale['445'] );
-            redirect( BASEDIR . "messages.php?folder=options" );
+            dbquery_insert(DB_USERS, $data, 'update');
+            addnotice('success', $this->locale['445']);
+            redirect(BASEDIR."messages.php?folder=options");
         }
-        $this->info['options_form'] = openform( 'pm_form', 'post', FUSION_REQUEST );
-        $this->info['options_form'] .= form_select( 'user_pm_email', $this->locale['621'], $userdata['user_pm_email'], ['options' => [
+        $this->info['options_form'] = openform('pm_form', 'post', FUSION_REQUEST);
+        $this->info['options_form'] .= form_select('pm_email_notify', $this->locale['621'], $userdata['user_pm_email_notify'], ['options' => [
             '0' => $this->locale['520'],
             '1' => $this->locale['521'],
             '2' => $this->locale['522'],
-        ]] );
-        $this->info['options_form'] .= form_select( 'user_pm_save_sent', $this->locale['622'], $userdata['user_pm_save_sent'], ['options' => [
+        ]]);
+        $this->info['options_form'] .= form_select('pm_save_sent', $this->locale['622'], $userdata['user_pm_save_sent'], ['options' => [
             '0' => $this->locale['520'],
             '1' => $this->locale['523'],
             '2' => $this->locale['524'],
-        ]] );
-        $this->info['options_form'] .= form_button( 'save_options', $this->locale['623'], $this->locale['623'], ['class' => 'btn btn-primary'] );
+        ]]);
+        $this->info['options_form'] .= form_button('save_options', $this->locale['623'], $this->locale['623'], ['class' => 'btn btn-primary']);
         $this->info['options_form'] .= closeform();
     }
 
@@ -612,7 +611,7 @@ class PrivateMessages {
         $this->info = [
             'folders'       => [
                 'inbox'   => ['link' => BASEDIR."messages.php?folder=inbox", 'title' => $this->locale['402'], 'icon' => 'fa fa-inbox'],
-                'outbox'  => ['link' => BASEDIR."messages.php?folder=outbox", 'title' => $this->locale['403'], 'icon' => 'fa fa-envelope-open'],
+                'outbox'  => ['link' => BASEDIR."messages.php?folder=outbox", 'title' => $this->locale['403'], 'icon' => 'fa fa-envelope-o'],
                 'archive' => ['link' => BASEDIR."messages.php?folder=archive", 'title' => $this->locale['404'], 'icon' => 'fa fa-archive'],
                 'options' => ['link' => BASEDIR."messages.php?folder=options", 'title' => $this->locale['425'], 'icon' => 'fa fa-cog'],
             ],

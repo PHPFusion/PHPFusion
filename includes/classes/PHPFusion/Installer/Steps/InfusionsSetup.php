@@ -23,18 +23,19 @@ use PHPFusion\Installer\Requirements;
 
 class InfusionsSetup extends InstallCore {
     /**
-     * @return array
+     * @return string
      */
     public function view() {
         self::$connection = self::fusionGetConfig(BASEDIR.'config_temp.php');
-		
+
         require_once(INCLUDES.'multisite_include.php');
         require_once(INCLUDES.'infusions_include.php');
 
         $validation = Requirements::getSystemValidation();
 
         $locale = fusion_get_locale('', LOCALE.LOCALESET."admin/infusions.php");
-        
+
+        $content = '';
         if (isset($validation[3])) {
             if ($this->tableCheck()) {
                 /*
@@ -102,69 +103,48 @@ class InfusionsSetup extends InstallCore {
                     }
                 }
                 closedir($temp);
-             
-                $content = rendernotices(getnotices());
-				if ($infs) {
-					// row-cols-1: 1 card on mobile
-					// row-cols-md-2: 2 cards on tablets/desktop
-					// g-4: standard spacing between cards
-					$content .= "<div class='row row-cols-1 row-cols-md-2 g-4'>\n";
-		
-					sort($infs);
-					foreach ($infs as $inf) {
-						$status_label = ($inf['status'] > 0 ? "bg-success" : "bg-secondary");
-						$status_text = ($inf['status'] > 0 ? $locale['INF_415'] : $locale['INF_414']);
-			
-						$content .= "<div class='col'>\n";
-						// .os-window for the glass blur effect
-						$content .= "    <div class='os-window h-100 d-flex flex-column p-4'>\n";
-			
-						// Header
-						$content .= "        <div class='d-flex justify-content-between align-items-center mb-3'>\n";
-						$content .= "            <div>\n";
-						$content .= "                <h5 class='fw-bold text-dark m-0'>" . $inf['name'] . "</h5>\n";
-						$content .= "                <small class='text-muted opacity-75'>" . (!empty($inf['version']) ? "Version ".$inf['version'] : 'v1.0') . "</small>\n";
-						$content .= "            </div>\n";
-						$content .= "            <span class='badge ".$status_label." bg-opacity-10 text-dark border border-white border-opacity-50 px-3 py-2' style='font-size: 11px; backdrop-filter: blur(4px);'>" . $status_text . "</span>\n";
-						$content .= "        </div>\n";
-			
-						// Description - Flexible height
-						$content .= "        <p class='small text-muted mb-4 flex-grow-1' style='line-height: 1.6;'>" . trimlink($inf['description'], 120) . "</p>\n";
-			
-						// Info List (Developer/Email)
-						$content .= "        <div class='mt-auto'>\n";
-						$content .= "            <div class='d-flex align-items-center gap-2 mb-3'>\n";
-						$content .= "                <div class='rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center' style='width: 32px; height: 32px;'>\n";
-						$content .= "                    <iconify-icon icon='solar:user-circle-linear' class='text-primary'></iconify-icon>";
-						$content .= "                </div>\n";
-						$content .= "                <div class='small'>\n";
-						$content .= "                    <span class='d-block fw-semibold text-dark'>" . (!empty($inf['developer']) ? $inf['developer'] : $locale['INF_410']) . "</span>\n";
-						$content .= "                    " . ($inf['url'] ? "<a href='".$inf['url']."' target='_blank' class='text-primary text-decoration-none' style='font-size: 10px;'>Visit Website</a>" : "") . "\n";
-						$content .= "                </div>\n";
-						$content .= "            </div>\n";
-			
-						// Action Buttons
-						if ($inf['status'] > 0) {
-							if ($inf['status'] > 1) {
-								$content .= form_button('infuse', $locale['INF_416'], $inf['folder'],
-									['class' => 'btn-macos-primary w-100 infuse', 'icon' => 'solar:box-minimalistic-linear']);
-							} else {
-								$content .= form_button('defuse', $locale['INF_411'], $inf['folder'],
-									['class' => 'btn-macos-glass w-100 text-danger defuse', 'icon' => 'solar:trash-bin-trash-linear']);
-							}
-						} else {
-							$content .= form_button('infuse', $locale['INF_401'], $inf['folder'],
-								['class' => 'btn-macos-primary w-100 infuse', 'icon' => 'solar:download-square-linear']);
-						}
-						$content .= "        </div>\n";
-						$content .= "    </div>\n"; // End Card
-						$content .= "</div>\n"; // End Col
-					}
-					$content .= "</div>\n"; // End Row
-				} else {
-					$content .= "<div class='os-window p-5 text-center'><p class='text-muted'>".$locale['INF_417']."</p></div>\n";
-				}
-                
+                $content .= "<div>\n";
+                $content .= rendernotices(getnotices());
+
+                if ($infs) {
+                    $content .= "<div class='list-group'>\n";
+                    $content .= "<div class='list-group-item hidden-xs'>\n";
+                    $content .= "<div class='row'>\n";
+                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['INF_419']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs col-sm-6 col-md-4 col-lg-4'>\n<strong>".$locale['INF_400']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>\n<strong>".$locale['INF_418']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>\n<strong>".$locale['INF_420']."</strong></div>\n";
+                    $content .= "<div class='hidden-xs hidden-sm hidden-md col-lg-3'>\n<strong>".$locale['INF_421']."</strong></div>\n";
+                    $content .= "</div>\n</div>\n";
+
+                    sort($infs);
+                    foreach ($infs as $inf) {
+                        $content .= "<div class='list-group-item'>\n";
+                        $content .= "<div class='row'>\n";
+                        $content .= "<div class='col-xs-12 col-sm-3 col-md-2 col-lg-2'>\n";
+                        if ($inf['status'] > 0) {
+                            if ($inf['status'] > 1) {
+                                $content .= form_button('infuse', $locale['INF_416'], $inf['folder'],
+                                    ['class' => 'btn-info m-t-5 btn-sm infuse', 'icon' => 'fa fa-cube']);
+                            } else {
+                                $content .= form_button('defuse', $locale['INF_411'], $inf['folder'],
+                                    ['class' => 'btn-default btn-sm m-t-5 defuse', 'icon' => 'fa fa-trash']);
+                            }
+                        } else {
+                            $content .= form_button('infuse', $locale['INF_401'], $inf['folder'],
+                                ['class' => 'btn-primary btn-sm m-t-5 infuse', 'icon' => 'fa fa-magnet']);
+                        }
+                        $content .= "</div>\n";
+                        $content .= "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-4'><strong>".$inf['name']."</strong><br/>".trimlink($inf['description'], 30)."</div>\n";
+                        $content .= "<div class='hidden-xs col-sm-3 col-md-2 col-lg-2'>".($inf['status'] > 0 ? "<h5 class='m-0'><label class='label label-success'>".$locale['INF_415']."</label></h5>" : "<h5 class='m-0'><label class='label label-default'>".$locale['INF_414']."</label></h5>")."</div>\n";
+                        $content .= "<div class='hidden-xs hidden-sm col-md-2 col-lg-1'>".(!empty($inf['version']) ? $inf['version'] : '')."</div>\n";
+                        $content .= "<div class='col-xs-12 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 col-lg-3'>".($inf['url'] ? "<a href='".$inf['url']."' target='_blank'>" : "")." ".(!empty($inf['developer']) ? $inf['developer'] : $locale['INF_410'])." ".($inf['url'] ? "</a>" : "")." <br/>".($inf['email'] ? "<a href='mailto:".$inf['email']."'>".$locale['INF_409']."</a>" : '')."</div>\n";
+                        $content .= "</div>\n</div>\n";
+                    }
+                } else {
+                    $content .= "<br /><p class='text-center'>".$locale['INF_417']."</p>\n";
+                }
+                $content .= "</div>\n</div>\n";
                 self::$step = [
                     1 => [
                         'class' => 'pull-right btn-success',
@@ -173,19 +153,14 @@ class InfusionsSetup extends InstallCore {
                         'value' => self::STEP_EXIT
                     ],
                 ];
-	
-				return [
-					'title' => $locale['setup_0105'],
-					'description' => '',
-					'content' => $content
-				];
 
             } else {
                 redirect(FUSION_REQUEST);
             }
+
+
         }
 
-        
-    
+        return $content;
     }
 }

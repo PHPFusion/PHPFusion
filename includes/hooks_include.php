@@ -21,15 +21,17 @@ use PHPFusion\Hooks;
 /**
  * Add a hook
  *
- * @param string $name          The name of the hook, this is your identifier.
- * @param string $function      The callback function to run when the filter runs.
- * @param int    $que           Optional, values 1-10, where 1 runs first and 10 runs last.
- * @param array  $default_args  Optional, the default state of parameter during adding hook.
- * @param int    $accepted_args Optional, the limitation of the hook parameters the hook can accept.
+ * @param string $name The name of the hook, this is your identifier.
+ * @param string $function The callback function to run when the filter runs.
+ * @param int $que Optional, values 1-10, where 1 runs first and 10 runs last.
+ * @param array $default_args Optional, the default state of parameter during adding hook.
+ * @param int $accepted_args Optional, the limitation of the hook parameters the hook can accept.
  *
  * @return bool
+ * @uses $function
  */
-function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accepted_args = 1) {
+function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accepted_args = 1)
+{
     // once you need to add hook, we'll poll the instance.
     return Hooks::get_instance($name)->add_hook($name, $function, $que, $default_args, $accepted_args);
 }
@@ -37,12 +39,13 @@ function fusion_add_hook($name, $function, $que = 10, $default_args = [], $accep
 /**
  * Checks if there is a hook by the $name and $function specified registered into the hook instance.
  *
- * @param string $name     The name of the hook, this is your identifier.
+ * @param string $name The name of the hook, this is your identifier.
  * @param string $function It checks if function in that hook exists.
  *
  * @return bool
  */
-function fusion_check_hook($name, $function) {
+function fusion_check_hook($name, $function)
+{
     $hook = Hooks::get_instance($name)->get_hook($name, $function);
     if (!empty($hook)) {
         return TRUE;
@@ -53,13 +56,14 @@ function fusion_check_hook($name, $function) {
 /**
  * Remove hook
  *
- * @param string $name     The name of the hook, this is your identifier.
+ * @param string $name The name of the hook, this is your identifier.
  * @param string $function The callback function to run when the filter runs.
- * @param int    $que
+ * @param int $que
  *
  * @return bool
  */
-function fusion_remove_hook($name, $function = '', $que = 10) {
+function fusion_remove_hook($name, $function = '', $que = 10)
+{
     return PHPFusion\Hooks::get_instance($name)->remove_hook($name, $function, $que);
 }
 
@@ -70,7 +74,8 @@ function fusion_remove_hook($name, $function = '', $que = 10) {
  *
  * @return mixed
  */
-function fusion_apply_hook($name) {
+function fusion_apply_hook($name)
+{
 
     $function_args = func_get_args();
 
@@ -90,7 +95,8 @@ function fusion_apply_hook($name) {
  *
  * @return array
  */
-function fusion_filter_hook($name) {
+function fusion_filter_hook($name)
+{
     return call_user_func_array([Hooks::get_instance($name), 'filter_hook'], func_get_args());
 }
 
@@ -101,7 +107,8 @@ function fusion_filter_hook($name) {
  *
  * @return mixed
  */
-function fusion_filter_current_hook($name) {
+function fusion_filter_current_hook($name)
+{
     return call_user_func_array([Hooks::get_instance($name), 'filter_hook_once'], func_get_args());
 }
 
@@ -112,6 +119,7 @@ function fusion_filter_current_hook($name) {
  *
  * @return mixed
  */
-function fusion_repeat_current_hook($name) {
+function fusion_repeat_current_hook($name)
+{
     return call_user_func_array([Hooks::get_instance($name), 'repeat_hook_once'], func_get_args());
 }

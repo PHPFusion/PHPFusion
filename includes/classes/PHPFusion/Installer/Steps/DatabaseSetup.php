@@ -33,7 +33,7 @@ class DatabaseSetup extends InstallCore {
      * @return false|string
      */
     public function view() {
-        return INSTALLER_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatchTables() : $this->stepForm();
+        return INSTALLATION_STEP == self::STEP_DB_SETTINGS_SAVE ? $this->dispatchTables() : $this->stepForm();
     }
 
     /**
@@ -67,22 +67,14 @@ class DatabaseSetup extends InstallCore {
             self::$connection['db_prefix'] = rtrim(self::$connection['db_prefix'], '_').'_';
             self::$connection['cookie_prefix'] = rtrim(self::$connection['cookie_prefix'], '_').'_';
 
-            if (!defined('DB_PREFIX')) {
+            if (!defined('DB_PREFIX'))
                 define('DB_PREFIX', self::$connection['db_prefix']);
-            }
-
-            if (!defined('COOKIE_PREFIX')) {
+            if (!defined('COOKIE_PREFIX'))
                 define('COOKIE_PREFIX', self::$connection['cookie_prefix']);
-            }
-
-            if (!defined('SECRET_KEY_SALT')) {
+            if (!defined('SECRET_KEY_SALT'))
                 define('SECRET_KEY_SALT', self::createRandomPrefix(32));
-            }
-
-            if (!defined('SECRET_KEY')) {
+            if (!defined('SECRET_KEY'))
                 define('SECRET_KEY', self::createRandomPrefix(32));
-            }
-
 
         } else {
             $db_host = '';
@@ -120,6 +112,10 @@ class DatabaseSetup extends InstallCore {
                 $to_alter_column = Batch::getInstance()->batchRuntime('alter_column');
 
                 $to_add_column = Batch::getInstance()->batchRuntime('add_column');
+
+                $to_alter_table = Batch::getInstance()->batchRuntime('alter_table');
+
+                $to_add_index = Batch::getInstance()->batchRuntime('add_index');
 
                 $to_insert_rows = Batch::getInstance()->batchRuntime('insert'); // must return array to insert with table.
 
@@ -178,6 +174,26 @@ class DatabaseSetup extends InstallCore {
                     }
                 }
 
+                // Convert legacy engines and apply other table-level changes.
+                if (!empty($to_alter_table) && $debug_batching === FALSE && !$debug_process) {
+                    foreach ($to_alter_table as $table_processes) {
+                        foreach ((array) $table_processes as $table_alter) {
+                            $query_count++;
+                            $this->doCoreBatch($table_alter);
+                        }
+                    }
+                }
+
+                // Add or rebuild named, composite and unique indexes.
+                if (!empty($to_add_index) && $debug_batching === FALSE && !$debug_process) {
+                    foreach ($to_add_index as $table_processes) {
+                        foreach ((array) $table_processes as $index_alter) {
+                            $query_count++;
+                            $this->doCoreBatch($index_alter);
+                        }
+                    }
+                }
+
                 // Insert default rows on all required tables
                 if (!empty($to_insert_rows) && $debug_batching === FALSE) {
                     // $message = "<strong>".self::$locale['setup_1603']."...</strong>\n";
@@ -194,7 +210,9 @@ class DatabaseSetup extends InstallCore {
 
                 //Checking for upgrade
                 if ($debug_batching === FALSE) {
-                    $to_upgrade = Batch::getInstance()->checkUpgrades(); // get upgrade queries
+                    $recover_current_upgrade = self::isRecoveryMode()
+                        && !empty($_SESSION['installer_recover_current_upgrade']);
+                    $to_upgrade = Batch::getInstance()->checkUpgrades($recover_current_upgrade); // get upgrade queries
                     if (!empty($to_upgrade)) {
                         $error = FALSE;
                         //$message = "<strong>Building version upgrades...</strong>\n";
@@ -248,6 +266,12 @@ class DatabaseSetup extends InstallCore {
                     if (!empty($to_add_column)) {
                         $sql[] = $this->makeSqlImportLog("Adds Column Table on", $to_add_column);
                     }
+                    if (!empty($to_alter_table)) {
+                        $sql[] = $this->makeSqlImportLog("Alters table", $to_alter_table);
+                    }
+                    if (!empty($to_add_index)) {
+                        $sql[] = $this->makeSqlImportLog("Adds indexes", $to_add_index);
+                    }
                     if (!empty($to_insert_rows)) {
                         $sql[] = $this->makeSqlImportLog("Insert rows into", $to_insert_rows);
                     }
@@ -272,6 +296,8 @@ class DatabaseSetup extends InstallCore {
                     require_once(INCLUDES.'htaccess_include.php');
                     Installer\write_config(self::$connection);
 
+                    unset($_SESSION['installer_recover_current_upgrade']);
+
                     if (!isset($_GET['upgrade']) || !is_file(BASEDIR.'.htaccess')) {
                         write_htaccess();
                     }
@@ -279,7 +305,7 @@ class DatabaseSetup extends InstallCore {
                     if (!empty($to_upgrade)) {
                         self::installerStep(self::STEP_INFUSIONS);
                     } else {
-                        self::installerStep(self::STEP_SITE_FORM);
+                        self::installerStep(self::STEP_PRIMARY_ADMIN_FORM);
                     }
                     redirect(FUSION_REQUEST);
                 } else {
@@ -385,12 +411,15 @@ class DatabaseSetup extends InstallCore {
     }
 
     /**
-     * @return array
-	 */
+     * @return string
+     */
     private function stepForm() {
         // Back button prevention
         if (!empty(self::$connection)) {
-            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), "==")) {
+            if (
+                version_compare(self::BUILD_VERSION, fusion_get_settings('version'), "==")
+                && !(self::isRecoveryMode() && !empty($_SESSION['installer_recover_current_upgrade']))
+            ) {
                 self::installerStep(self::STEP_INTRO);
                 redirect(FUSION_REQUEST);
             }
@@ -402,28 +431,36 @@ class DatabaseSetup extends InstallCore {
             self::$connection = $_SESSION['db_config_connection'];
         }
 
-		$content = rendernotices(getnotices());
+        $content = "<h4 class='title'>".self::$locale['setup_1200']."</h4><p>".self::$locale['setup_1201']."</p>\n";
+        $content .= "<hr/>\n";
+
+        $content .= rendernotices(getnotices());
         $content .= form_text('db_host', self::$locale['setup_1202'], !empty(self::$connection['db_host']) ? self::$connection['db_host'] : 'localhost', [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1225']
         ]);
         $content .= form_text('db_port', self::$locale['setup_1202a'].'<br/><small>'.self::$locale['setup_1202b'].'</small>', self::$connection['db_port'], [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'placeholder' => 3306
         ]);
         $content .= form_text('db_name', self::$locale['setup_1205'], self::$connection['db_name'], [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1220']
         ]);
         $content .= form_text('db_user', self::$locale['setup_1203'], self::$connection['db_user'], [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1221']
         ]);
         $content .= form_text('db_pass', self::$locale['setup_1204'], self::$connection['db_pass'], [
             'type'             => 'text',
+            'class'            => 'mb-2',
             'inline'           => TRUE,
             'required'         => FALSE,
             'placeholder'      => self::$locale['setup_1222'],
@@ -431,11 +468,13 @@ class DatabaseSetup extends InstallCore {
         ]);
         $content .= "<h4 class='title'>".self::$locale['setup_1092']."</h4>";
         $content .= form_text('db_prefix', self::$locale['setup_1206'], self::$connection['db_prefix'], [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1223']
         ]);
         $content .= form_text('cookie_prefix', self::$locale['setup_1207'], self::$connection['cookie_prefix'], [
+            'class'       => 'mb-2',
             'inline'      => TRUE,
             'required'    => TRUE,
             'placeholder' => self::$locale['setup_1224']
@@ -459,11 +498,6 @@ class DatabaseSetup extends InstallCore {
             ]
         ];
 
-        return [
-        	'title' => self::$locale['setup_1200'],
-			'description' => self::$locale['setup_1201'],
-        	'content' => $content
-		];
-
+        return $content;
     }
 }

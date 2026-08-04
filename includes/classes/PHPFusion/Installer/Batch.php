@@ -33,12 +33,13 @@ namespace PHPFusion\Installer;
  * @package PHPFusion\Installer\Lib
  */
 class Batch extends InstallCore {
-    const FUSION_TABLE_COLLATION = "ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+    // Changed ENGINE to INNODB for better features like transactions and row-level locking.
+    const FUSION_TABLE_COLLATION = "ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
 
     const CREATE_TABLE_STATEMENT = "CREATE TABLE {%table%} ({%table_attr%}) {%collation%}";
 
     // Column name and datatypes
-    const TABLE_ATTR_STATEMENT = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}";
+    const TABLE_ATTR_STATEMENT = "{%col_name%}{%type%}{%length%}{%unsigned%}{%null%}{%default%}{%auto_increment%}{%on_update%}"; // Added {%on_update%}
 
     // Adding missing column - we do not need to check column order
     const ADD_COLUMN_STATEMENT = "ALTER TABLE {%table%} ADD COLUMN {%table_attr%} AFTER {%column_before%}"; // we do not need to drop column.
@@ -51,6 +52,7 @@ class Batch extends InstallCore {
     const UPDATE_STATEMENT = "UPDATE {%table%} SET {%values%} WHERE {%where%}";
 
     const ADD_INDEX_STATEMENT = "ALTER TABLE {%table%} ADD INDEX {%column_name%} ({%column_name%})";
+    const ALTER_ENGINE_STATEMENT = "ALTER TABLE {%table%} ENGINE=INNODB";
 
     /*
      * Defines the PHPFusion Package and to be developed with the PHPFusion sql-handler
@@ -71,6 +73,7 @@ class Batch extends InstallCore {
      * - key - 1 for Unique Primary Key (Non-Clustered Index), 2 for Key (Clustered Index)
      * - index - TRUE if index (primary key do not need to be indexed)
      * - unsigned - TRUE if column is unsigned (default no unsigned)
+     * - on_update - The value for ON UPDATE clause (e.g. 'CURRENT_TIMESTAMP')
      */
 
     /*
@@ -173,6 +176,9 @@ class Batch extends InstallCore {
 
             // Iterate checks on every column of the table for consistency
             foreach (self::$table_cols as $col_name => $col_attr) {
+                if ($this->isTableMetadata($col_name)) {
+                    continue;
+                }
 
                 if (!isset($last_column_name)) {
                     $last_column_name = key(self::$table_cols);
@@ -211,8 +217,80 @@ class Batch extends InstallCore {
                 }
                 $last_column_name = $col_name;
             }
+
+            $this->checkExistingIndexes();
+            $this->checkStorageEngine();
         }
 
+    }
+
+    /**
+     * Add or rebuild named indexes declared in the __indexes table metadata.
+     */
+    private function checkExistingIndexes() {
+        $expected = $this->getDeclaredIndexes();
+        if (!$expected) {
+            return;
+        }
+
+        $existing = [];
+        $result = dbquery("SHOW INDEX FROM ".self::$connection['db_prefix'].self::$table_name);
+        while ($row = dbarray($result)) {
+            if ($row['Key_name'] === 'PRIMARY') {
+                continue;
+            }
+            $name = $row['Key_name'];
+            $sequence = (int) $row['Seq_in_index'];
+            $existing[$name]['columns'][$sequence] = $row['Column_name'];
+            $existing[$name]['unique'] = !(bool) $row['Non_unique'];
+            $existing[$name]['type'] = strtoupper($row['Index_type']) === 'FULLTEXT' ? 'FULLTEXT' : 'INDEX';
+        }
+
+        foreach ($existing as &$index) {
+            ksort($index['columns']);
+            $index['columns'] = array_values($index['columns']);
+        }
+        unset($index);
+
+        foreach ($expected as $name => $definition) {
+            $matches = isset($existing[$name])
+                && $existing[$name]['columns'] === $definition['columns']
+                && $existing[$name]['unique'] === $definition['unique']
+                && $existing[$name]['type'] === $definition['type'];
+            if ($matches) {
+                continue;
+            }
+
+            $table = self::$connection['db_prefix'].self::$table_name;
+            $sql = "ALTER TABLE ".$table." ";
+            if (isset($existing[$name])) {
+                $sql .= "DROP INDEX `".$name."`, ";
+            }
+            $sql .= "ADD ".$this->getIndexSql($name, $definition);
+            self::$runtime_results['add_index'][self::$table_name][$name] = $sql;
+        }
+    }
+
+    /**
+     * Convert legacy core tables to InnoDB during installer reconciliation.
+     */
+    private function checkStorageEngine() {
+        $result = dbquery(
+            "SELECT ENGINE
+             FROM information_schema.TABLES
+             WHERE TABLE_SCHEMA=:schema AND TABLE_NAME=:table",
+            [
+                ':schema' => self::$connection['db_name'],
+                ':table'  => self::$connection['db_prefix'].self::$table_name,
+            ]
+        );
+        $row = dbarray($result);
+        if (!empty($row['ENGINE']) && strtoupper($row['ENGINE']) !== 'INNODB') {
+            self::$runtime_results['alter_table'][self::$table_name]['engine'] = strtr(
+                self::ALTER_ENGINE_STATEMENT,
+                ['{%table%}' => self::$connection['db_prefix'].self::$table_name]
+            );
+        }
     }
 
     /**
@@ -245,7 +323,7 @@ class Batch extends InstallCore {
                             $schema['unsigned'] = TRUE;
                         }
 
-                        $regex = "/([a-zA-Z\\s]*)\\((.*)\\)$/iu";
+                        $regex = "/([a-zA-Z\s]*)\((.*)\)$/iu";
                         preg_match($regex, $schema_type[0], $matches);
 
                         if (!empty($matches)) {
@@ -292,17 +370,17 @@ class Batch extends InstallCore {
      */
     private function getTableAttr($col_name, $col_attr) {
 
-        // Register column primary_keys and keys
-        /*if (isset($col_attr['key'])) {
-            $keys[$col_attr['key']] = $col_name;
-        }*/
-
         // Default Attr
         $default_create = '';
         if (array_key_exists('default', $col_attr) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
-            $default_create = 'DEFAULT \'0\'';
+            $default_create = "DEFAULT '0'";
             if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
-                $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
+                // Handle NULL default values correctly
+                if ($col_attr['default'] === 'NULL') {
+                    $default_create = 'DEFAULT NULL';
+                } else {
+                    $default_create = "DEFAULT '".$col_attr['default']."'";
+                }
             }
         }
 
@@ -314,16 +392,23 @@ class Batch extends InstallCore {
                 $auto_increment = 'AUTO_INCREMENT';
             }
         }
+        
+        // Handle ON UPDATE clause
+        $on_update = '';
+        if (isset($col_attr['on_update'])) {
+            $on_update = 'ON UPDATE '.$col_attr['on_update'];
+        }
 
         // Generate lines
         return trim(strtr(self::TABLE_ATTR_STATEMENT, [
             '{%col_name%}'       => $col_name." ",
             '{%type%}'           => $col_attr['type'],
-            '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
+            '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT, BLOB types etc. dont have length
             '{%default%}'        => $default_create." ",
             '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
             '{%unsigned%}'       => $unsigned,
             '{%auto_increment%}' => $auto_increment,
+            '{%on_update%}'      => $on_update,
         ]));
     }
 
@@ -347,60 +432,51 @@ class Batch extends InstallCore {
     private function batchCreateTable() {
         // No table found, just create the table as new
         $line = [];
-        $keys = [];
-        $statement_type = self::TABLE_ATTR_STATEMENT;
+        $primary_keys = [];
+        $legacy_indexes = [];
+        $full_texts = [];
 
         if (!empty(self::$table_cols)) {
 
             foreach (self::$table_cols as $col_name => $col_attr) {
+                if ($this->isTableMetadata($col_name)) {
+                    continue;
+                }
 
                 // Register column primary_keys and keys
                 if (isset($col_attr['key'])) {
-                    $keys[$col_attr['key']] = $col_name;
+                    if ((int) $col_attr['key'] === 1) {
+                        $primary_keys[] = $col_name;
+                    } else {
+                        $legacy_indexes[$col_name] = [
+                            'columns' => [$col_name],
+                            'unique'  => !empty($col_attr['unique']),
+                            'type'    => 'INDEX',
+                        ];
+                    }
                 }
                 // Register column full text
                 if (!empty($col_attr['full_text'])) {
                     $full_texts[] = $col_name;
                 }
 
-                // Default Attr
-                $default_create = '';
-                if (array_key_exists('default', $col_attr) || isset(self::$required_default[$col_attr['type']]) && empty($col_attr['auto_increment'])) {
-                    $default_create = 'DEFAULT \'0\'';
-                    if (array_key_exists('default', $col_attr) && $col_attr['default'] !== NULL) {
-                        $default_create = 'DEFAULT \''.$col_attr['default'].'\'';
-                    }
+                // Generate column attributes
+                $column_definition = $this->getTableAttr($col_name, $col_attr);
+                if (!empty($column_definition)) {
+                    $line[] = trim($column_definition);
                 }
-
-                $unsigned = '';
-                $auto_increment = '';
-                if (!empty($col_attr['unsigned']) || !empty($col_attr['auto_increment'])) {
-                    $unsigned = 'UNSIGNED ';
-                    if (!empty($col_attr['auto_increment'])) {
-                        $auto_increment = 'AUTO_INCREMENT';
-                    }
-                }
-
-                // Generate lines
-                $line[] = trim(strtr($statement_type, [
-                    '{%col_name%}'       => $col_name." ",
-                    '{%type%}'           => $col_attr['type'],
-                    '{%length%}'         => (isset($col_attr['length']) ? "(".$col_attr['length'].") " : ''), // TEXT dont have length
-                    '{%default%}'        => $default_create." ",
-                    '{%null%}'           => (isset($col_attr['null']) && $col_attr['null'] ? ' NULL ' : ' NOT NULL '),
-                    '{%unsigned%}'       => $unsigned,
-                    '{%auto_increment%}' => $auto_increment,
-                ]));
             }
 
-            if (!empty($keys)) {
-                foreach ($keys as $key_type => $key_col_name) {
-                    $line[] = $key_type > 1 ? "KEY $key_col_name ($key_col_name)" : "PRIMARY KEY ($key_col_name)";
-                }
+            if ($primary_keys) {
+                $line[] = "PRIMARY KEY (`".implode('`, `', $primary_keys)."`)";
+            }
+
+            foreach (array_merge($legacy_indexes, $this->getDeclaredIndexes()) as $name => $definition) {
+                $line[] = $this->getIndexSql($name, $definition);
             }
 
             if (!empty($full_texts)) {
-                $line[] = "FULLTEXT(".implode(',', $full_texts).")";
+                $line[] = "FULLTEXT KEY `fulltext_search` (`".implode('`, `', $full_texts)."`)" ;
             }
 
         }
@@ -411,6 +487,44 @@ class Batch extends InstallCore {
             '{%collation%}'  => Batch::FUSION_TABLE_COLLATION
         ]);
 
+    }
+
+    private function isTableMetadata($name) {
+        return str_starts_with((string) $name, '__');
+    }
+
+    /**
+     * Named index metadata:
+     * '__indexes' => [
+     *     'index_name' => ['columns' => ['column_a', 'column_b'], 'unique' => TRUE]
+     * ]
+     */
+    private function getDeclaredIndexes() {
+        $indexes = self::$table_cols['__indexes'] ?? [];
+        $normalized = [];
+
+        foreach ($indexes as $name => $definition) {
+            $columns = array_values(array_filter((array) ($definition['columns'] ?? [])));
+            if (!$columns) {
+                continue;
+            }
+            $normalized[$name] = [
+                'columns' => $columns,
+                'unique'  => !empty($definition['unique']),
+                'type'    => strtoupper($definition['type'] ?? 'INDEX') === 'FULLTEXT' ? 'FULLTEXT' : 'INDEX',
+            ];
+        }
+
+        return $normalized;
+    }
+
+    private function getIndexSql($name, array $definition) {
+        $columns = '`'.implode('`, `', $definition['columns']).'`';
+        if ($definition['type'] === 'FULLTEXT') {
+            return "FULLTEXT KEY `".$name."` (".$columns.")";
+        }
+        $prefix = $definition['unique'] ? 'UNIQUE KEY' : 'KEY';
+        return $prefix." `".$name."` (".$columns.")";
     }
 
     /**
@@ -429,14 +543,24 @@ class Batch extends InstallCore {
                 // get column pattern
                 $key = "`".implode("`, `", array_keys($table_rows['insert'][0]))."`";
                 foreach ($table_rows['insert'] as $inserts) {
-                    $values[] = "('".implode("', '", array_values($inserts))."')";
+                    // Ensure proper quoting for values, especially for NULLs
+                    $formatted_values = [];
+                    foreach ($inserts as $value) {
+                        if ($value === NULL) {
+                            $formatted_values[] = 'NULL';
+                        } else {
+                            $formatted_values[] = addslashes($value); // Simple sanitization, might need improvement
+                        }
+                    }
+                    $values[] = "('".implode("', '", $formatted_values)."')";
                 }
 
                 // return this
                 return strtr(self::INSERT_STATEMENT, [
                     '{%table%}'  => DB_PREFIX.$table_name,
                     '{%key%}'    => "($key)",
-                    '{%values%}' => implode(",\n", array_values($values))
+                    '{%values%}' => implode(",
+", array_values($values))
                 ]);
             }
         }
@@ -449,11 +573,16 @@ class Batch extends InstallCore {
      *
      * @return array
      */
-    public function checkUpgrades() {
+    public function checkUpgrades(bool $recover_current = FALSE) {
 
         if (empty(self::$upgrade_runtime)) {
 
-            if (version_compare(self::BUILD_VERSION, fusion_get_settings('version'), ">")) {
+            $installed_version = (string)fusion_get_settings('version');
+            $upgrade_required = version_compare(self::BUILD_VERSION, $installed_version, ">");
+            $recover_build = $recover_current
+                && version_compare(self::BUILD_VERSION, $installed_version, '==');
+
+            if ($upgrade_required || $recover_build) {
 
                 // find the correct version to do
                 $upgrade_folder_path = BASEDIR."upgrade/";
@@ -468,7 +597,10 @@ class Batch extends InstallCore {
 
                             $filename = rtrim($upgrade_file, 'upgrade.inc');
 
-                            if (version_compare($filename, fusion_get_settings('version'), ">")) {
+                            $newer_upgrade = version_compare($filename, $installed_version, ">");
+                            $current_recovery = $recover_build
+                                && version_compare($filename, self::BUILD_VERSION, '==');
+                            if ($newer_upgrade || $current_recovery) {
                                 /*
                                  * Use Infusions Core to load upgrade statements
                                  */

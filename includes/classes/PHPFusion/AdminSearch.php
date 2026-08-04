@@ -131,7 +131,7 @@ class AdminSearch {
     private function authorizeAid() {
         $aid = (string)filter_input(INPUT_GET, 'aid');
 
-        if (defined('iAUTH') && isset($aid) && iAUTH == $aid) {
+        if (defined('iAUTH') && $aid !== '' && hash_equals(iAUTH, $aid)) {
             return TRUE;
         }
 

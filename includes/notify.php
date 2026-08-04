@@ -23,8 +23,50 @@
  *
  * @return string The notices formatted as HTML.
  */
-function rendernotices($notices) {
-	return fusion_get_template( 'notices', $notices);
+function rendernotices($notices, $options = []) {
+    $messages = "";
+    $default_options = [
+        'container' => TRUE
+    ];
+
+    $options += $default_options;
+
+    if (function_exists('fusion_render_framework_component')
+        && in_array((fusion_framework_active()['key'] ?? ''), ['tailwind', 'bootstrap'], TRUE)) {
+        $framework_notices = fusion_render_framework_component('notices', [
+            'notices' => $notices,
+            'options' => $options,
+        ]);
+        if ($framework_notices !== '') {
+            return $framework_notices;
+        }
+    }
+
+    foreach ($notices as $status => $notice) {
+        if ($status == "success") {
+            // Success messages can be auto closed
+            $messages .= "<div id='close-message'>\n";
+        }
+
+        $messages .= "<div class='admin-message alert alert-{$status} alert-dismissible fade show' role='alert'>";
+        if ($options['container']) {
+            $messages .= "<div class='container-fluid'>";
+            $messages .= "<div>";
+        }
+        $messages .= "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+        $messages .= implode("<br/>", $notice);
+        if ($options['container']) {
+            $messages .= "</div>";
+            $messages .= "</div>";
+        }
+        $messages .= "</div>";
+
+        if ($status == "success") {
+            $messages .= "</div>\n";
+        }
+    }
+
+    return $messages;
 }
 
 /**

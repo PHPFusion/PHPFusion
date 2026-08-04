@@ -16,10 +16,10 @@
 | copyright header is strictly prohibited without
 | written permission from the original author(s).
 +--------------------------------------------------------*/
-require_once __DIR__.'../../../maincore.php';
+require_once __DIR__.'/../../../../maincore.php';
 
 $states = [];
-include INCLUDES."geomap/geomap.inc.php";
+include INCLUDES."geomap/geo.countries.php";
 
 $q = isset($_GET['q']) ? $_GET['q'] : '';
 
@@ -27,17 +27,16 @@ $found = 0;
 
 header('Content-Type: application/json');
 
-foreach (array_keys($states) as $k) { // type the country then output full states
-    if (preg_match('/^'.$q.'/', $k, $matches)) {
-        $states_list = map_country($states, $k);
-        echo json_encode($states_list);
-        $found = 1;
-    }
+foreach($countries as $cca => $country_array) {
+    
+    $country_name = $country_array['name'];
+    $country_code = $cca;
+
+     if (preg_match('/^'.$q.'/', $country_name, $matches)) {
+
+        //$country_id = $country_array['id'];    
+        $country[] = ['id' => $cca, 'text' => $country_name, 'flag' => 'flag_'.str_replace(" ", "_",$country_name).'.png'];
+     }
 }
 
-if (!$found) { // a longer version
-    $region_list = map_region($states);
-    if (array_key_exists($q, $region_list)) {
-        echo json_encode($region_list[$q]);
-    }
-}
+echo json_encode($country);

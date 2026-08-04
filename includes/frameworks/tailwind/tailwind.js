@@ -196,6 +196,11 @@
         'modal-xl': 'tw-modal-xl',
         collapse: 'tw-collapse',
         offcanvas: 'tw-offcanvas',
+        'offcanvas-start': 'tw-offcanvas-start',
+        'offcanvas-end': 'tw-offcanvas-end',
+        'offcanvas-top': 'tw-offcanvas-top',
+        'offcanvas-bottom': 'tw-offcanvas-bottom',
+        'offcanvas-backdrop': 'tw-offcanvas-backdrop',
         'offcanvas-header': 'tw-offcanvas-header',
         'offcanvas-body': 'tw-offcanvas-body',
         'offcanvas-title': 'tw-offcanvas-title',
@@ -335,6 +340,14 @@
         'object-end': 'tw-object-right',
         visible: 'tw-visible',
         invisible: 'tw-invisible',
+        'visually-hidden': 'tw-sr-only',
+        small: 'tw-text-sm',
+        'fs-1': 'tw-text-5xl',
+        'fs-2': 'tw-text-4xl',
+        'fs-3': 'tw-text-3xl',
+        'fs-4': 'tw-text-2xl',
+        'fs-5': 'tw-text-xl',
+        'fs-6': 'tw-text-base',
         'text-start': 'tw-text-start',
         'text-center': 'tw-text-center',
         'text-end': 'tw-text-end',
@@ -407,6 +420,7 @@
         {name: 'phpfusion-community', classes: builtinAliases},
     ];
     const processedAliases = new WeakMap();
+    const aliasOptOutAttribute = 'data-fusion-no-framework-aliases';
     const pendingRoots = new Set();
     let flushQueued = false;
 
@@ -637,12 +651,17 @@
 
     const adaptElement = (element, force = false) => {
         if (!(element instanceof Element)) return;
+        const previous = processedAliases.get(element);
+        if (element.hasAttribute(aliasOptOutAttribute)) {
+            previous?.owned.forEach((className) => element.classList.remove(className));
+            processedAliases.set(element, {signature: `${element.tagName}|framework-alias-opt-out`, owned: new Set()});
+            return;
+        }
         const sourceTokens = Array.from(element.classList).filter(
             (className) => !className.startsWith('tw-') && !className.startsWith('-tw-') &&
                 !className.includes(':tw-') && !className.includes(':-tw-')
         );
         const signature = `${element.tagName}|${sourceTokens.join(' ')}`;
-        const previous = processedAliases.get(element);
         if (!force && previous?.signature === signature) return;
 
         previous?.owned.forEach((className) => element.classList.remove(className));
@@ -692,7 +711,7 @@
             });
         }).observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ['class'],
+            attributeFilter: ['class', aliasOptOutAttribute],
             childList: true,
             subtree: true,
         });
@@ -770,18 +789,86 @@
         }
     };
 
+    const modalOptions = (element, options = {}) => {
+        const dataBackdrop = element?.getAttribute('data-bs-backdrop') ?? element?.getAttribute('data-backdrop');
+        const dataKeyboard = element?.getAttribute('data-bs-keyboard') ?? element?.getAttribute('data-keyboard');
+        return {
+            backdrop: dataBackdrop === 'static' ? 'static' : dataBackdrop === 'false' ? false : true,
+            keyboard: dataKeyboard !== 'false',
+            ...options,
+        };
+    };
+
+    const dispatchBootstrapEvent = (element, name, relatedTarget, cancelable = false) => {
+        const event = new CustomEvent(name, {
+            bubbles: true,
+            cancelable,
+            detail: {relatedTarget},
+        });
+        Object.defineProperty(event, 'relatedTarget', {value: relatedTarget, enumerable: true});
+        element.dispatchEvent(event);
+
+        let jqueryPrevented = false;
+        if (window.jQuery?.fn) {
+            const jqueryEvent = window.jQuery.Event(name, {relatedTarget});
+            window.jQuery(element).trigger(jqueryEvent);
+            jqueryPrevented = jqueryEvent.isDefaultPrevented();
+        }
+        return !event.defaultPrevented && !jqueryPrevented;
+    };
+
+    const dispatchModalEvent = (element, name, relatedTarget) => dispatchBootstrapEvent(
+        element,
+        name,
+        relatedTarget,
+        name === 'show.bs.modal' || name === 'hide.bs.modal'
+    );
+
+    const offcanvasOptions = (element, options = {}) => {
+        const dataBackdrop = element?.getAttribute('data-bs-backdrop') ?? element?.getAttribute('data-backdrop');
+        const dataKeyboard = element?.getAttribute('data-bs-keyboard') ?? element?.getAttribute('data-keyboard');
+        const dataScroll = element?.getAttribute('data-bs-scroll') ?? element?.getAttribute('data-scroll');
+        return {
+            backdrop: dataBackdrop === 'static' ? 'static' : dataBackdrop === 'false' ? false : true,
+            keyboard: dataKeyboard !== 'false',
+            scroll: dataScroll === 'true',
+            ...options,
+        };
+    };
+
+    const dispatchOffcanvasEvent = (element, name, relatedTarget) => dispatchBootstrapEvent(
+        element,
+        name,
+        relatedTarget,
+        name === 'show.bs.offcanvas' || name === 'hide.bs.offcanvas'
+    );
+
     class TailwindModal {
         static instances = new WeakMap();
-        constructor(element) {
+        constructor(element, options = {}) {
             this.element = element;
+            this.options = modalOptions(element, options);
             this.backdrop = null;
+            this.isShown = element.hasAttribute('data-tailwind-modal')
+                ? !element.hidden
+                : element.classList.contains('show') || element.classList.contains('tw-show');
+            this.handleSurfaceClick = (event) => {
+                if (event.target === this.element && this.options.backdrop !== 'static' && this.options.backdrop !== false) {
+                    this.hide();
+                }
+            };
+            this.element.addEventListener('click', this.handleSurfaceClick);
             TailwindModal.instances.set(element, this);
         }
         show(trigger) {
-            if (!this.backdrop) {
+            if (this.isShown || !dispatchModalEvent(this.element, 'show.bs.modal', trigger)) return;
+            this.isShown = true;
+            if (!this.element.hasAttribute('data-tailwind-modal') && this.options.backdrop !== false && !this.backdrop) {
                 this.backdrop = document.createElement('div');
                 this.backdrop.className = 'modal-backdrop tw-modal-backdrop fade tw-fade show tw-show';
-                this.backdrop.addEventListener('click', () => this.hide());
+                this.backdrop.addEventListener('click', () => {
+                    if (this.options.backdrop !== 'static') this.hide();
+                });
                 document.body.appendChild(this.backdrop);
             }
             toggleOpenState(this.element, true);
@@ -790,8 +877,11 @@
             this.element.setAttribute('aria-modal', 'true');
             this.element.removeAttribute('aria-hidden');
             openModal(this.element, trigger);
+            dispatchModalEvent(this.element, 'shown.bs.modal', trigger);
         }
         hide() {
+            if (!this.isShown || !dispatchModalEvent(this.element, 'hide.bs.modal')) return;
+            this.isShown = false;
             toggleOpenState(this.element, false);
             this.element.style.display = 'none';
             this.element.setAttribute('aria-hidden', 'true');
@@ -799,13 +889,26 @@
             this.backdrop?.remove();
             this.backdrop = null;
             closeModal(this.element);
-            this.element.dispatchEvent(new CustomEvent('hidden.bs.modal', {bubbles: true}));
+            dispatchModalEvent(this.element, 'hidden.bs.modal');
+        }
+        toggle(trigger) {
+            if (this.isShown) this.hide();
+            else this.show(trigger);
+        }
+        dispose() {
+            this.backdrop?.remove();
+            this.backdrop = null;
+            this.element.removeEventListener('click', this.handleSurfaceClick);
+            TailwindModal.instances.delete(this.element);
         }
         static getInstance(element) {
             return element ? TailwindModal.instances.get(element) || null : null;
         }
-        static getOrCreateInstance(element) {
-            return element ? TailwindModal.getInstance(element) || new TailwindModal(element) : null;
+        static getOrCreateInstance(element, options = {}) {
+            if (!element) return null;
+            const instance = TailwindModal.getInstance(element) || new TailwindModal(element, options);
+            instance.options = modalOptions(element, {...instance.options, ...options});
+            return instance;
         }
     }
 
@@ -952,34 +1055,87 @@
 
     class TailwindOffcanvas {
         static instances = new WeakMap();
-        constructor(element) {
+        constructor(element, options = {}) {
             this.element = element;
+            this.options = offcanvasOptions(element, options);
+            this.backdrop = null;
+            this.trigger = null;
+            this.originalRole = element.getAttribute('role');
+            this.isShown = element.classList.contains('show') || element.classList.contains('tw-show');
             TailwindOffcanvas.instances.set(element, this);
         }
         show(trigger) {
+            if (this.isShown || !dispatchOffcanvasEvent(this.element, 'show.bs.offcanvas', trigger)) return;
+
+            const open = document.querySelector('.tw-offcanvas.tw-show, .offcanvas.show');
+            if (open && open !== this.element) TailwindOffcanvas.getOrCreateInstance(open)?.hide();
+
+            this.isShown = true;
+            this.trigger = trigger || this.trigger;
             if (trigger) {
                 if (!trigger.id) trigger.id = 'tailwind-offcanvas-trigger-' + Date.now();
                 this.element.dataset.returnFocus = trigger.id;
+                setExpanded(trigger, true);
+            }
+            if (this.options.backdrop !== false && !this.backdrop) {
+                this.backdrop = document.createElement('div');
+                this.backdrop.className = 'offcanvas-backdrop tw-offcanvas-backdrop fade tw-fade show tw-show';
+                this.backdrop.addEventListener('click', () => {
+                    if (this.options.backdrop === 'static') {
+                        dispatchOffcanvasEvent(this.element, 'hidePrevented.bs.offcanvas');
+                    } else {
+                        this.hide();
+                    }
+                });
+                document.body.appendChild(this.backdrop);
             }
             toggleOpenState(this.element, true);
             this.element.hidden = false;
             this.element.style.visibility = 'visible';
+            this.element.setAttribute('aria-modal', 'true');
+            this.element.setAttribute('role', 'dialog');
             this.element.removeAttribute('aria-hidden');
-            document.documentElement.classList.add('tw-overflow-hidden');
-            this.element.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')?.focus();
+            if (!this.options.scroll) document.documentElement.classList.add('tw-overflow-hidden');
+            this.element.querySelector('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')?.focus();
+            dispatchOffcanvasEvent(this.element, 'shown.bs.offcanvas', trigger);
         }
         hide() {
+            if (!this.isShown || !dispatchOffcanvasEvent(this.element, 'hide.bs.offcanvas')) return;
+            this.isShown = false;
             toggleOpenState(this.element, false);
             this.element.hidden = true;
-            this.element.style.visibility = 'hidden';
+            this.element.style.visibility = '';
             this.element.setAttribute('aria-hidden', 'true');
-            document.documentElement.classList.remove('tw-overflow-hidden');
-            const triggerId = this.element.dataset.returnFocus;
-            if (triggerId) document.getElementById(triggerId)?.focus();
-            this.element.dispatchEvent(new CustomEvent('hidden.bs.offcanvas', {bubbles: true}));
+            this.element.removeAttribute('aria-modal');
+            if (this.originalRole == null) this.element.removeAttribute('role');
+            else this.element.setAttribute('role', this.originalRole);
+            this.backdrop?.remove();
+            this.backdrop = null;
+            if (!document.querySelector('.tw-modal.tw-show, .modal.show, .tw-offcanvas.tw-show, .offcanvas.show')) {
+                document.documentElement.classList.remove('tw-overflow-hidden');
+            }
+            setExpanded(this.trigger, false);
+            const returnTarget = this.trigger || document.getElementById(this.element.dataset.returnFocus || '');
+            returnTarget?.focus();
+            dispatchOffcanvasEvent(this.element, 'hidden.bs.offcanvas');
         }
-        static getOrCreateInstance(element) {
-            return element ? TailwindOffcanvas.instances.get(element) || new TailwindOffcanvas(element) : null;
+        toggle(trigger) {
+            if (this.isShown) this.hide();
+            else this.show(trigger);
+        }
+        dispose() {
+            this.backdrop?.remove();
+            this.backdrop = null;
+            TailwindOffcanvas.instances.delete(this.element);
+        }
+        static getInstance(element) {
+            return element ? TailwindOffcanvas.instances.get(element) || null : null;
+        }
+        static getOrCreateInstance(element, options = {}) {
+            if (!element) return null;
+            const instance = TailwindOffcanvas.getInstance(element) || new TailwindOffcanvas(element, options);
+            instance.options = offcanvasOptions(element, {...instance.options, ...options});
+            return instance;
         }
     }
 
@@ -989,6 +1145,67 @@
     window.bootstrap.Dropdown = window.bootstrap.Dropdown || TailwindDropdown;
     window.bootstrap.Toast = window.bootstrap.Toast || TailwindToast;
     window.bootstrap.Offcanvas = window.bootstrap.Offcanvas || TailwindOffcanvas;
+
+    const installJQueryModalAdapter = () => {
+        const jquery = window.jQuery;
+        if (!jquery?.fn || typeof jquery.fn.modal === 'function') return;
+        const previousModal = jquery.fn.modal;
+
+        jquery.fn.modal = function (option, relatedTarget) {
+            return this.each(function () {
+                const options = option && typeof option === 'object' ? option : {};
+                const Modal = window.bootstrap?.Modal || TailwindModal;
+                const instance = typeof Modal.getOrCreateInstance === 'function'
+                    ? Modal.getOrCreateInstance(this, options)
+                    : new Modal(this, options);
+
+                if (typeof option === 'string') {
+                    if (typeof instance[option] === 'function') instance[option](relatedTarget);
+                    return;
+                }
+                if (options.show !== false) instance.show(relatedTarget);
+            });
+        };
+        jquery.fn.modal.Constructor = window.bootstrap?.Modal || TailwindModal;
+        jquery.fn.modal.noConflict = () => {
+            const adapter = jquery.fn.modal;
+            jquery.fn.modal = previousModal;
+            return adapter;
+        };
+    };
+
+    const installJQueryOffcanvasAdapter = () => {
+        const jquery = window.jQuery;
+        if (!jquery?.fn || typeof jquery.fn.offcanvas === 'function') return;
+        const previousOffcanvas = jquery.fn.offcanvas;
+
+        jquery.fn.offcanvas = function (option, relatedTarget) {
+            return this.each(function () {
+                const options = option && typeof option === 'object' ? option : {};
+                const Offcanvas = window.bootstrap?.Offcanvas || TailwindOffcanvas;
+                const instance = typeof Offcanvas.getOrCreateInstance === 'function'
+                    ? Offcanvas.getOrCreateInstance(this, options)
+                    : new Offcanvas(this, options);
+
+                if (typeof option === 'string') {
+                    if (typeof instance[option] === 'function') instance[option](relatedTarget);
+                    return;
+                }
+                if (options.show === true) instance.show(relatedTarget);
+            });
+        };
+        jquery.fn.offcanvas.Constructor = window.bootstrap?.Offcanvas || TailwindOffcanvas;
+        jquery.fn.offcanvas.noConflict = () => {
+            const adapter = jquery.fn.offcanvas;
+            jquery.fn.offcanvas = previousOffcanvas;
+            return adapter;
+        };
+    };
+
+    installJQueryModalAdapter();
+    installJQueryOffcanvasAdapter();
+    window.addEventListener('load', installJQueryModalAdapter, {once: true});
+    window.addEventListener('load', installJQueryOffcanvasAdapter, {once: true});
 
     const syncResponsiveMenus = () => {
         const desktop = window.matchMedia('(min-width: 1024px)').matches;
@@ -1008,7 +1225,7 @@
                 const configuredTrigger = event.target.closest(modal.dataset.tailwindModalTrigger);
                 if (configuredTrigger) {
                     event.preventDefault();
-                    openModal(modal, configuredTrigger);
+                    TailwindModal.getOrCreateInstance(modal)?.show(configuredTrigger);
                     return;
                 }
             } catch (error) {
@@ -1061,12 +1278,16 @@
         const legacyOffcanvasTrigger = event.target.closest('[data-bs-toggle="offcanvas"], [data-toggle="offcanvas"]');
         if (legacyOffcanvasTrigger) {
             event.preventDefault();
-            TailwindOffcanvas.getOrCreateInstance(targetFrom(legacyOffcanvasTrigger))?.show(legacyOffcanvasTrigger);
+            if (legacyOffcanvasTrigger.matches(':disabled, [aria-disabled="true"], .disabled, .tw-disabled')) return;
+            const offcanvas = targetFrom(legacyOffcanvasTrigger);
+            if (!offcanvas?.matches('.tw-offcanvas, .offcanvas')) return;
+            TailwindOffcanvas.getOrCreateInstance(offcanvas)?.toggle(legacyOffcanvasTrigger);
             return;
         }
 
         const legacyOffcanvasClose = event.target.closest('[data-bs-dismiss="offcanvas"], [data-dismiss="offcanvas"]');
         if (legacyOffcanvasClose) {
+            event.preventDefault();
             TailwindOffcanvas.getOrCreateInstance(legacyOffcanvasClose.closest('.tw-offcanvas, .offcanvas'))?.hide();
             return;
         }
@@ -1167,13 +1388,13 @@
         const modalTrigger = event.target.closest('[data-tailwind-modal-open]');
         if (modalTrigger) {
             const modal = document.getElementById(modalTrigger.dataset.tailwindModalOpen);
-            openModal(modal, modalTrigger);
+            TailwindModal.getOrCreateInstance(modal)?.show(modalTrigger);
             return;
         }
 
         const modalClose = event.target.closest('[data-tailwind-modal-close]');
         if (modalClose) {
-            closeModal(modalClose.closest('[data-tailwind-modal]'));
+            TailwindModal.getOrCreateInstance(modalClose.closest('[data-tailwind-modal]'))?.hide();
             return;
         }
 
@@ -1243,17 +1464,21 @@
             return;
         }
 
-        const modal = document.querySelector('[data-tailwind-modal]:not([hidden]), .modal.show, .tw-modal.tw-show');
+        const modal = document.querySelector('[data-tailwind-modal]:not([hidden]):not([aria-hidden="true"]), .modal.show, .tw-modal.tw-show');
         const offcanvas = document.querySelector('.tw-offcanvas.tw-show, .offcanvas.show');
         if (event.key === 'Escape') {
             closeMenus();
             closeCommunityDropdowns();
-            if (modal?.matches('.modal, .reveal, .tw-modal')) {
-                TailwindModal.getOrCreateInstance(modal)?.hide();
-            } else {
-                closeModal(modal);
+            const modalInstance = TailwindModal.getOrCreateInstance(modal);
+            if (modalInstance?.options.keyboard !== false) modalInstance.hide();
+            if (!modal && offcanvas) {
+                const instance = TailwindOffcanvas.getOrCreateInstance(offcanvas);
+                if (instance?.options.keyboard === false) {
+                    dispatchOffcanvasEvent(offcanvas, 'hidePrevented.bs.offcanvas');
+                } else {
+                    instance?.hide();
+                }
             }
-            if (!modal && offcanvas) TailwindOffcanvas.getOrCreateInstance(offcanvas)?.hide();
             return;
         }
 
@@ -1273,22 +1498,23 @@
         }
     });
 
-    window.addEventListener('resize', syncResponsiveMenus);
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
+    const initializeCompatibility = () => {
+        try {
             observeCompatibilityAliases();
             syncResponsiveMenus();
             restoreTailwindTabs();
             if (document.querySelector('[data-tailwind-modal]:not([hidden])')) {
                 document.documentElement.classList.add('tw-overflow-hidden');
             }
-        }, {once: true});
-    } else {
-        observeCompatibilityAliases();
-        syncResponsiveMenus();
-        restoreTailwindTabs();
-        if (document.querySelector('[data-tailwind-modal]:not([hidden])')) {
-            document.documentElement.classList.add('tw-overflow-hidden');
+        } finally {
+            window.FusionUI?.reveal?.();
         }
+    };
+
+    window.addEventListener('resize', syncResponsiveMenus);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCompatibility, {once: true});
+    } else {
+        initializeCompatibility();
     }
 })();
