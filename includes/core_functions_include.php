@@ -884,13 +884,13 @@ function parse_image_dir($data, $prefix_ = "") {
 function parse_text($value, $options = []) {
 
     $default_options = [
-        'smileys'              => FALSE, // Smiley parsing.
-        'bbcode'               => FALSE, // BBCode parsing.
+        'parse_smileys'        => FALSE, // Smiley parsing.
+        'parse_bbcode'         => FALSE, // BBCode parsing.
         'decode'               => TRUE, // Decode HTML entities.
         'default_image_folder' => IMAGES, // Image folder for parse_image_dir().
         'add_line_breaks'      => FALSE, // Allows nl2br().
         'descript'             => FALSE, // Sanitize text.
-        'users'                => FALSE, // Create user @tags.
+        'parse_users'          => FALSE, // Create user @tags.
         'markdown'             => FALSE,
     ];
     $options += $default_options;
