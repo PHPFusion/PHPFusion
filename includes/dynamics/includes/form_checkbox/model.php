@@ -1,4 +1,16 @@
 <?php
+
+function load_form_checkbox_assets(): void
+{
+	static $loaded = FALSE;
+
+	if (!$loaded) {
+		// Refresh the component after a rebuild, including development-mode pages.
+		fusion_load_script(DYNAMICS.'includes/form_checkbox/component.css?v='.filemtime(__DIR__.'/component.css'), 'css');
+		$loaded = TRUE;
+	}
+}
+
 /**
  * @param        $input_name
  * @param string $label
@@ -9,15 +21,17 @@
  */
 function form_checkbox($input_name, $label = '', $input_value = '0', array $options = [])
 {
+	load_form_checkbox_assets();
 	$locale = fusion_get_locale('', LOCALE . LOCALESET . 'global.php');
-	
-	if (check_post($input_name)) {
-		$input_value = post($input_name);
-	}
-	
+	$has_label_reverse = array_key_exists('label_reverse', $options);
+	$has_reverse_label = array_key_exists('reverse_label', $options);
+	$has_box_direction = array_key_exists('box_direction', $options);
+	$has_hyphenated_box_direction = array_key_exists('box-direction', $options);
+
 	$options += [
 		'input_id'       => $input_name,
 		'inline'         => FALSE,
+		'floating_label' => FALSE,
 		'inline_options' => FALSE,
 		'required'       => FALSE,
 		'deactivate'     => FALSE,
@@ -36,21 +50,47 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 		'value'          => 1,
 		'tip'            => '',
 		'ext_tip'        => '',
+		'inner_text'     => '',
 		'inner_width'    => '',
 		'inner_class'    => 'd-inline-block',
 		'tag_indicator'  => '',
+		'label_reverse'  => FALSE,
 		'reverse_label'  => FALSE,
+		'box_direction'  => 'row',
 		'deactivate_key' => NULL,
 		'onclick'        => '',
 	];
+	$options['label_reverse'] = $has_label_reverse
+		? (bool)$options['label_reverse']
+		: ($has_reverse_label ? (bool)$options['reverse_label'] : FALSE);
+	$options['reverse_label'] = $options['label_reverse'];
+	// Keep the presentation flag compatible with the established Box type.
+	if (!empty($options['box_options'])) {
+		$options['type'] = 'box';
+	}
+	$box_direction = $has_box_direction
+		? strtolower(trim((string)$options['box_direction']))
+		: ($has_hyphenated_box_direction ? strtolower(trim((string)$options['box-direction'])) : 'row');
+	$options['box_direction'] = in_array($box_direction, ['row', 'column'], TRUE) ? $box_direction : 'row';
+	if ($options['ext_tip'] !== '') {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
+	$options['delimiter'] = (string)$options['delimiter'] !== '' ? (string)$options['delimiter'] : ',';
+
+	$input_name_var = clean_input_name($input_name);
+	if (check_post($input_name_var)) {
+		$input_value = $options['multiple']
+			? post([$input_name_var])
+			: post($input_name_var);
+	}
 	
 	$real_input_name = $input_name;
 	if ($options['multiple'] && !str_contains($input_name, '[]')) {
 		$real_input_name = $input_name . '[]';
 	}
 	
-	if ($options['multiple'] && !is_array($input_value)) {
-		$input_value = !empty($input_value) ? explode($options['delimiter'], $input_value) : [];
+	if ($options['multiple']) {
+		$input_value = dynamics_multiple_value_list(clean_input_value($input_value), $options['delimiter']);
 	}
 	
 	$options['toggle'] = ($options['type'] == 'toggle');
@@ -59,7 +99,6 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$switch_css_2 = '';
 	if ($options['toggle']) {
 //		$options['class'] .= ' form-switch';
-		$options['reverse_label'] = TRUE;
 		$switch_css_1 = 'ps-0 form-switch';
 		$switch_css_2 = 'w-100';
 	}
@@ -77,6 +116,9 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	$has_multiple_options = !empty($options['options']) && is_array($options['options']);
 	$should_use_inline = $options['inline'] && $label && $has_multiple_options;
 	$deactivated_keys = (array)$options['deactivate_key'];
+	$reverse_class = $options['label_reverse'] ? ' flex-row-reverse dynamics-choice--reverse' : '';
+	$inner_texts = is_array($options['inner_text']) ? $options['inner_text'] : [];
+	$single_inner_text = is_array($options['inner_text']) ? '' : trim((string)$options['inner_text']);
 	
 	$checkbox = '';
 	if ($has_multiple_options) {
@@ -107,19 +149,31 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 			$onclick = $options['onclick'] ? ' onclick="' . $options['onclick'] . '"' : '';
 			
 			// Render ONLY ONE toggle and skip the loop
-			$checkbox .= "<label class='form-check form-switch form-switch-lg' style='cursor:pointer;'>";
+			$checkbox .= "<div class='form-check form-switch form-switch-lg dynamics-choice{$reverse_class}'>";
 			$checkbox .= "<input type='checkbox' name='{$real_input_name}' id='{$input_id}' value='{$on_key}' class='form-check-input' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">";
 			
 			// first one is form-check-label-on , need to sort the key first.
-			$checkbox .= "<span class='form-check-label form-check-label-on'>" . stripinput($on_label) . "</span>";
-			$checkbox .= "<span class='form-check-label form-check-label-off'>" . stripinput($off_label) . "</span>";
+			$on_inner_text = array_key_exists($on_key, $inner_texts) ? trim((string)$inner_texts[$on_key]) : '';
+			$off_inner_text = array_key_exists($off_key, $inner_texts) ? trim((string)$inner_texts[$off_key]) : '';
+			$checkbox .= "<span class='dynamics-choice__content dynamics-choice__state form-check-label-on'>";
+			$checkbox .= "<label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__option-title'>" . stripinput($on_label) . "</span>";
+			$checkbox .= $on_inner_text !== '' ? "<span class='dynamics-choice__description'>{$on_inner_text}</span>" : '';
+			$checkbox .= "</label></span>";
+			$checkbox .= "<span class='dynamics-choice__content dynamics-choice__state form-check-label-off'>";
+			$checkbox .= "<label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__option-title'>" . stripinput($off_label) . "</span>";
+			$checkbox .= $off_inner_text !== '' ? "<span class='dynamics-choice__description'>{$off_inner_text}</span>" : '';
+			$checkbox .= "</label></span>";
 			
-			$checkbox .= "</label>";
+			$checkbox .= "</div>";
 			
 		} else {
 			
 			
 			foreach ($options['options'] as $key => $value) {
+				// Box labels accept [title, trailing text]; scalar labels remain supported.
+				$option_trailing = is_array($value) ? htmlspecialchars((string)($value[1] ?? ''), ENT_QUOTES, 'UTF-8') : '';
+				$value = is_array($value) ? htmlspecialchars((string)($value[0] ?? ''), ENT_QUOTES, 'UTF-8') : $value;
+				$option_inner_text = array_key_exists($key, $inner_texts) ? trim((string)$inner_texts[$key]) : '';
 				
 				if (is_array($input_value)) {
 					$is_checked = in_array((string)$key, array_map('strval', $input_value));
@@ -136,13 +190,15 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 				
 				if ($is_box) {
 					
-					$active_class = $is_checked ? ' active border-primary bg-light' : ' border-light-subtle';
+					$active_class = $is_checked ? ' active' : ' border-light-subtle';
 					
 					$checkbox .= "
-					<input type='{$input_type}' name='{$real_input_name}' id='{$input_id}' value='{$key}' class='d-none' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
-					<label for='{$input_id}' class='form-check-label box-option border rounded {$options['inner_class']}{$disabled_class}{$active_class}' style='cursor:pointer;'>
-						{$value}
-					</label>";
+					<label for='{$input_id}' class='form-check-label box-option{$disabled_class}'>
+						<input type='{$input_type}' name='{$real_input_name}' id='{$input_id}' value='{$key}' class='form-check-input' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
+						<span class='box-option__content'><span class='dynamics-choice__option-title'>{$value}</span>" .
+						($option_inner_text !== '' ? "<span class='dynamics-choice__description'>{$option_inner_text}</span>" : '') . "</span>" .
+						($input_type === 'radio' && $is_checked ? "<span class='box-option__current'>Current</span>" : '') .
+						($option_trailing !== '' ? "<span class='box-option__trailing'>{$option_trailing}</span>" : '') . "</label>";
 					
 				} elseif ($is_tag) {
 					
@@ -153,14 +209,17 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 					<input type='{$input_type}' name='{$real_input_name}' id='{$input_id}' value='{$key}' class='d-none' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
 					<label for='{$input_id}' class='form-check-label tag-option {$options['inner_class']}{$disabled_class}{$active_class}' style='cursor:pointer;' role='{$input_type}' aria-checked='" . ($is_checked ? 'true' : 'false') . "'>
 						<span class='tag-option-indicator'>{$indicator}</span>
-						<span class='tag-option-label'>{$value}</span>
+						<span class='tag-option-label'><span class='dynamics-choice__option-title'>{$value}</span>" .
+						($option_inner_text !== '' ? "<span class='dynamics-choice__description'>{$option_inner_text}</span>" : '') . "</span>
 					</label>";
 					
 				} else {
-					$checkbox .= "<div class='form-{$input_class}" . ($options['inline_options'] ? ' form-check-inline me-3' : '') . "'>";
-					$checkbox .= "<label class='form-check-label' for='{$input_id}'" . ($options['inner_width'] ? " style='width:{$options['inner_width']}'" : '') . ">";
-					$checkbox .= "<input id='{$input_id}' name='{$real_input_name}' value='{$key}' type='{$input_type}' class='form-check-input me-2' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . " />";
-					$checkbox .= $value . "</label></div>";
+					$checkbox .= "<div class='dynamics-choice d-flex gap-2{$reverse_class}" . ($options['inline_options'] ? ' dynamics-choice--inline' : '') . "'>";
+					$checkbox .= "<input id='{$input_id}' name='{$real_input_name}' value='{$key}' type='{$input_type}' class='form-check-input' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . " />";
+					$checkbox .= "<div class='dynamics-choice__content'" . ($options['inner_width'] ? " style='width:{$options['inner_width']}'" : '') . ">";
+					$checkbox .= "<label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__option-title'>{$value}</span>";
+					$checkbox .= $option_inner_text !== '' ? "<span class='dynamics-choice__description'>{$option_inner_text}</span>" : '';
+					$checkbox .= "</label></div></div>";
 				}
 			}
 		}
@@ -177,11 +236,12 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 		$onclick = $options['onclick'] ? ' onclick="' . $options['onclick'] . '"' : '';
 		
 		if ($is_box) {
-			$active_class = $is_checked ? ' active border-primary bg-light' : ' border-light-subtle';
+			$active_class = $is_checked ? ' active' : ' border-light-subtle';
 			$checkbox .= "
-            <input type='checkbox' name='{$real_input_name}' id='{$input_id}' value='{$options['value']}' class='d-none' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
-            <label for='{$input_id}' class='form-check-label d-inline-block box-option border rounded p-3 me-3 text-center{$disabled_class}{$active_class}' style='cursor:pointer; min-width:120px;'>
-                {$label}
+            <label for='{$input_id}' class='form-check-label box-option{$disabled_class}'>
+                <input type='checkbox' name='{$real_input_name}' id='{$input_id}' value='{$options['value']}' class='form-check-input' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
+				<span class='box-option__content'><span class='dynamics-choice__option-title'>{$label}</span>" .
+				($single_inner_text !== '' ? "<span class='dynamics-choice__description'>{$single_inner_text}</span>" : '') . "</span>
             </label>";
 		} elseif ($is_tag) {
 			$active_class = $is_checked ? ' active tag-option--on' : '';
@@ -190,7 +250,8 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
             <input type='checkbox' name='{$real_input_name}' id='{$input_id}' value='{$options['value']}' class='d-none' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">
             <label for='{$input_id}' class='form-check-label tag-option {$options['inner_class']}{$disabled_class}{$active_class}' style='cursor:pointer;' role='checkbox' aria-checked='" . ($is_checked ? 'true' : 'false') . "'>
                 <span class='tag-option-indicator'>{$indicator}</span>
-                <span class='tag-option-label'>{$label}</span>
+				<span class='tag-option-label'><span class='dynamics-choice__option-title'>{$label}</span>" .
+				($single_inner_text !== '' ? "<span class='dynamics-choice__description'>{$single_inner_text}</span>" : '') . "</span>
             </label>";
 		} elseif ($options['toggle']) {
 			
@@ -203,26 +264,40 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 			$onclick = $options['onclick'] ? ' onclick="' . $options['onclick'] . '"' : '';
 			
 			// Render ONLY ONE toggle
-			$checkbox .= "<label class='form-check form-switch form-switch-lg' style='cursor:pointer;'>";
+			$checkbox .= "<div class='form-check form-switch form-switch-lg dynamics-choice{$reverse_class}'>";
 			$checkbox .= "<input type='checkbox' name='{$real_input_name}' id='{$input_id}' value='{$options['value']}' class='form-check-input' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">";
 			
-			// Use the main $label passed to the function
-			if ($label) {
-				$checkbox .= "<span class='form-check-label'>" . stripinput($label) . "</span>";
+			// Keep toggle identity and help together, with descriptive copy below.
+			if ($label || $single_inner_text !== '') {
+				$checkbox .= "<div class='dynamics-choice__content'>";
+				if ($label) {
+					$checkbox .= "<div class='dynamics-choice__title'><label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__option-title'>" . stripinput($label) .
+						($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . "</span>" .
+						($single_inner_text !== '' ? "<span class='dynamics-choice__description'>{$single_inner_text}</span>" : '') .
+						"</label>" . dynamics_field_help($options['tip']) . "</div>";
+				} elseif ($single_inner_text !== '') {
+					$checkbox .= "<label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__description'>{$single_inner_text}</span></label>";
+				}
+				$checkbox .= "</div>";
 			}
 			
-			$checkbox .= "</label>";
+			$checkbox .= "</div>";
 			
 		} else {
-			$checkbox_class = ($options['type'] == 'checkbox') ? 'form-check' : "form-{$options['type']}";
-			$checkbox .= "<div class='{$checkbox_class}'>";
-			$label_tag = "<label class='form-check-label ms-2 {$switch_css_2}' for='{$input_id}'>{$label}" .
-				($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') .
-				($options['tip'] ? " <i class='pointer fa fa-question-circle text-muted' title='{$options['tip']}'></i>" : '') . "</label>";
-			
-			if ($label && $options['reverse_label'] == TRUE) $checkbox .= $label_tag;
+			$checkbox .= "<div class='dynamics-choice d-flex gap-2{$reverse_class}'>";
 			$checkbox .= "<input id='{$input_id}' class='form-check-input' name='{$real_input_name}' value='{$options['value']}' type='{$options['type']}' {$disabled}{$onclick}" . ($is_checked ? ' checked' : '') . ">";
-			if ($label && $options['reverse_label'] == FALSE) $checkbox .= $label_tag;
+			if ($label || $single_inner_text !== '') {
+				$checkbox .= "<div class='dynamics-choice__content'>";
+				if ($label) {
+					$checkbox .= "<div class='dynamics-choice__title'><label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__option-title'>{$label}" .
+						($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . "</span>" .
+						($single_inner_text !== '' ? "<span class='dynamics-choice__description'>{$single_inner_text}</span>" : '') .
+						"</label>" . dynamics_field_help($options['tip']) . "</div>";
+				} elseif ($single_inner_text !== '') {
+					$checkbox .= "<label class='form-check-label dynamics-choice__label' for='{$input_id}'><span class='dynamics-choice__description'>{$single_inner_text}</span></label>";
+				}
+				$checkbox .= "</div>";
+			}
 			$checkbox .= "</div>";
 		}
 	}
@@ -235,22 +310,38 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
 	}
 	
 	// HTML Wrapper
-	$html = "<div id='{$options['input_id']}-field' class='w-100" .
+	$html = "<div id='{$options['input_id']}-field' class='dynamics-choice-field w-100" .
 		($should_use_inline ? ' row' : '') .
 		(!empty($error_class) ? $error_class : '') .
 		(trim($options['class']) ? ' ' . $options['class'] : '') . "'{$data_attrs}>";
 	
 	if ($has_multiple_options && !empty($label)) {
-		$html .= "<label class='form-label {$switch_css_1} {$options['label_class']} " . ($should_use_inline ? 'col-sm-12 col-md-3 col-lg-3' : '') . "' for='{$options['input_id']}'>" .
+		$html .= "<div class='dynamics-choice__group-label form-label {$switch_css_1} {$options['label_class']} " . ($should_use_inline ? 'col-sm-12 col-md-3 col-lg-3' : '') . "' id='{$options['input_id']}-label'>" .
 			$label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') .
-			($options['tip'] ? " <i class='pointer fa fa-question-circle text-muted' title='{$options['tip']}'></i>" : '') . "</label>";
+			dynamics_field_help($options['tip']) . "</div>";
 	}
 	
 	$html .= $should_use_inline ? "<div class='col-sm-12 col-md-9 col-lg-9'>" : "";
-	$html .= $checkbox;
+	if ($has_multiple_options) {
+		if ($options['type'] === 'box') {
+			$options_layout = ' dynamics-choice__options--box-' . $options['box_direction'];
+			$options_reverse = $options['label_reverse']
+				? ($options['box_direction'] === 'column' ? ' flex-column-reverse' : ' flex-row-reverse')
+				: '';
+		} else {
+			$options_layout = ($options['inline_options'] || $options['type'] === 'tag') ? ' dynamics-choice__options--inline' : '';
+			$options_reverse = $options['label_reverse'] && $options['type'] === 'tag' ? ' flex-row-reverse' : '';
+		}
+		$checkbox = "<div class='dynamics-choice__options{$options_layout}{$options_reverse}' role='group' aria-labelledby='{$options['input_id']}-label'>{$checkbox}</div>";
+	}
+	$html .= $options['floating_label'] && !$options['inline'] ? "<div class='dynamics-choice--floating'>{$checkbox}</div>" : $checkbox;
+	if (!$has_multiple_options && in_array($options['type'], ['box', 'tag'], TRUE)) {
+		$html .= dynamics_field_help($options['tip']);
+		$html .= $options['required'] ? "<span class='required'>&nbsp;*</span>" : '';
+	}
 	if ($should_use_inline) $html .= "</div>";
 	
-	$html .= $options['ext_tip'] ? "<div class='form-text'>{$options['ext_tip']}</div>" : "";
+	$html .= $options['ext_tip'] ? "<div class='dynamics-choice__group-description form-text'>{$options['ext_tip']}</div>" : "";
 	
 	if (class_exists('Defender') && Defender::inputHasError($input_name)) {
 		$html .= "<div class='invalid-feedback d-block'>{$options['error_text']}</div>";
@@ -296,12 +387,14 @@ function form_checkbox($input_name, $label = '', $input_value = '0', array $opti
                 var \$el = $(this);
                 
                 var \$label = \$container.find('label[for=\"' + \$el.attr('id') + '\"]');
+                // Box state follows native inputs through CSS, including keyboard changes.
+                if (\$label.hasClass('box-option')) return;
                 
                 if (\$el.is(':checked')) {
-                    \$label.addClass('active border-primary bg-light tag-option--on').removeClass('border-light-subtle');
+					\$label.addClass('active tag-option--on').removeClass('border-light-subtle');
                     \$label.attr('aria-checked', 'true');
                 } else {
-                    \$label.removeClass('active border-primary bg-light tag-option--on').addClass('border-light-subtle');
+					\$label.removeClass('active tag-option--on').addClass('border-light-subtle');
                     \$label.attr('aria-checked', 'false');
                 }
             });

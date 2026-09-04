@@ -1,4 +1,5 @@
 <?php
+
 /*-------------------------------------------------------+
 | PHPFusion Content Management System
 | Copyright (C) PHP Fusion Inc
@@ -25,7 +26,7 @@ use PHPFusion\PrivateMessages;
 use PHPFusion\QuantumFields;
 use PHPFusion\TaskDispatcher;
 use PHPFusion\Scheduler;
-use PHPFusion\Rewrite\Router;
+
 /**
  * Get currency symbol by using a 3-letter ISO 4217 currency code
  * Note that if INTL pecl package is not installed, signs will degrade to ISO4217 code itself
@@ -167,8 +168,8 @@ function check_admin_pass($password) {
  * @param int    $code     HTTP status code to send.
  */
 function redirect($location, $delay = FALSE, $script = FALSE, $code = 200) {
-// 	define('STOP_REDIRECT', true);
-// 	debug_print_backtrace();
+	// define('STOP_REDIRECT', true);
+	// debug_print_backtrace();
 
     if ( ! defined('STOP_REDIRECT') ) {
         if ( isnum($delay) ) {
@@ -884,13 +885,13 @@ function parse_image_dir($data, $prefix_ = "") {
 function parse_text($value, $options = []) {
 
     $default_options = [
-        'smileys'              => FALSE, // Smiley parsing.
-        'bbcode'               => FALSE, // BBCode parsing.
+        'parse_smileys'        => FALSE, // Smiley parsing.
+        'parse_bbcode'         => FALSE, // BBCode parsing.
         'decode'               => TRUE, // Decode HTML entities.
         'default_image_folder' => IMAGES, // Image folder for parse_image_dir().
         'add_line_breaks'      => FALSE, // Allows nl2br().
         'descript'             => FALSE, // Sanitize text.
-        'users'                => FALSE, // Create user @tags.
+        'parse_users'          => FALSE, // Create user @tags.
         'markdown'             => FALSE,
     ];
     $options += $default_options;
@@ -1950,10 +1951,10 @@ function makepagenav($rowstart, $count, $total, $range = 3, $link = "", $getname
     add_to_jquery("
     $('#" . $getname . "_pg').on('keydown', function(e) {
         if (e.keyCode === 13) {
-            let v = $(this).val();
-            if ($.isNumeric(v)) {
+            let v = $(this).val();                
+            if ($.isNumeric(v)) {                               
                document.location.href = decodeURIComponent(cleanRequest('$getname='+(v * $count - $count), ['$getname']));
-            }
+            }            
         }
     });
     ");
@@ -2295,6 +2296,27 @@ function fusion_get_userdata($key = NULL) {
             "user_groups" => "",
             "user_theme"  => fusion_get_settings("theme"),
         ];
+
+    if ( $userdata['user_id'] ) {
+        if (infusion_exists('school')) {
+            $staff_res = dbquery("SELECT *, staff_name AS name 
+                        FROM " . DB_PREFIX . "staffs WHERE staff_user=:uid",
+                                 [ ':uid' => $userdata['user_id'] ]);
+            if ( dbrows($staff_res) ) {
+                $userdata += dbarray($staff_res);
+            }
+            else {
+                $student_res = dbquery("SELECT
+                    *, student_name AS name 
+                    FROM " . DB_PREFIX . "students WHERE student_user=:uid",
+                                       [ ':uid' => (int)$userdata['user_id'] ]);
+                if ( dbrows($student_res) ) {
+                    $userdata += dbarray($student_res);
+                }
+            }
+        }
+    }
+
 
     return $key === NULL ? $userdata : ( $userdata[ $key ] ?? NULL );
 }

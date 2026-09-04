@@ -26,6 +26,8 @@
  *
  * @return string
  */
+require_once __DIR__.'/field-help.php';
+
 function openform($form_name, $method = 'post', string $action_url = FORM_REQUEST, array $options = []) {
 
     $method = (strtolower($method) == 'post') ? 'POST' : 'GET';
@@ -109,11 +111,65 @@ function clean_input_value($value) {
             return stripinput($value);
         }
         if (is_array($value)) {
-            return array_map('stripinput', $value);
+            return array_map('clean_input_value', $value);
         }
     }
 
     return $value;
+}
+
+/**
+ * Normalize a Dynamics multiple-value callback or POST payload.
+ *
+ * Multiple controls use a flat delimiter-separated string at their public
+ * boundary and a one-dimensional array only while rendering/selecting items.
+ * Nested arrays are flattened defensively so malformed input cannot leak an
+ * array into a form callback or SQL-bound sanitizer result.
+ *
+ * @param mixed  $value
+ * @param string $delimiter
+ *
+ * @return array
+ */
+function dynamics_multiple_value_list($value, string $delimiter = ','): array {
+    $delimiter = $delimiter !== '' ? $delimiter : ',';
+    $values = [];
+
+    $append = static function ($item) use (&$append, &$values, $delimiter): void {
+        if (is_array($item)) {
+            foreach ($item as $nested_item) {
+                $append($nested_item);
+            }
+            return;
+        }
+
+        if (!is_scalar($item) && $item !== NULL) {
+            return;
+        }
+
+        foreach (explode($delimiter, (string)($item ?? '')) as $part) {
+            $part = trim($part);
+            if ($part !== '') {
+                $values[] = $part;
+            }
+        }
+    };
+
+    $append($value);
+
+    return $values;
+}
+
+/**
+ * Serialize any Dynamics multiple-value payload to its storage-safe form.
+ *
+ * @param mixed  $value
+ * @param string $delimiter
+ */
+function dynamics_multiple_value_string($value, string $delimiter = ','): string {
+    $delimiter = $delimiter !== '' ? $delimiter : ',';
+
+    return implode($delimiter, dynamics_multiple_value_list($value, $delimiter));
 }
 
 /**

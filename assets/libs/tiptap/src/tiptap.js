@@ -38,7 +38,7 @@ function buildMentionExtension(cfg, fieldId) {
     const trigger = cfg.trigger || '@';
     // Own plugin key so a user-dismissed popup can cleanly end the suggestion
     // (focus is in our search box, so the editor never sees the Escape key).
-    const pluginKey = new PluginKey('eliteMention_' + fieldId);
+    const pluginKey = new PluginKey('phpFusionMention_' + fieldId);
 
     const recordMention = (id, title) => {
         const reg = document.getElementById(fieldId + '_mentions');
@@ -147,7 +147,7 @@ window.initTiptapEditor = (textareaId, options = {}) => {
     if (!textarea) return;
 
     if (textarea.dataset.tiptapInitialized === 'true') {
-        return window.eliteEditors && window.eliteEditors[textareaId];
+        return window.PHPFusionEditors && window.PHPFusionEditors[textareaId];
     }
 
     const outputFormat = options.output === 'html' ? 'html' : 'markdown';
@@ -262,8 +262,10 @@ window.initTiptapEditor = (textareaId, options = {}) => {
         BubbleMenu.configure({
             element: menuEl,
             appendTo: () => document.body,
-            shouldShow: ({ state }) => {
-                if (state.selection.empty) {
+            shouldShow: ({ element, view, state }) => {
+                const menuHasFocus = element.contains(document.activeElement);
+
+                if (state.selection.empty || (!view.hasFocus() && !menuHasFocus)) {
                     closeLocalDropdown();
                     return false;
                 }
@@ -283,15 +285,15 @@ window.initTiptapEditor = (textareaId, options = {}) => {
     // as a fallback, a data-mention attribute on the source textarea.
     let mentionConfig = null;
     try {
-        if (window.eliteMentionConfigs && window.eliteMentionConfigs[textareaId]) {
-            mentionConfig = window.eliteMentionConfigs[textareaId];
+        if (window.PHPFusionMentionConfigs && window.PHPFusionMentionConfigs[textareaId]) {
+            mentionConfig = window.PHPFusionMentionConfigs[textareaId];
         } else if (textarea.dataset.mention) {
             mentionConfig = JSON.parse(textarea.dataset.mention);
         }
     } catch (e) { mentionConfig = null; }
     if (mentionConfig && mentionConfig.url) {
         extensions.push(buildMentionExtension(mentionConfig, textareaId));
-    } else if (textarea.dataset.mention || (window.eliteMentionConfigs && window.eliteMentionConfigs[textareaId])) {
+    } else if (textarea.dataset.mention || (window.PHPFusionMentionConfigs && window.PHPFusionMentionConfigs[textareaId])) {
         console.warn('[tiptap mention] config present but unusable for "' + textareaId + '"');
     }
 
@@ -299,6 +301,14 @@ window.initTiptapEditor = (textareaId, options = {}) => {
         element: container,
         extensions,
         content: textarea.value,
+        editorProps: {
+            attributes: {
+                role: 'textbox',
+                'aria-multiline': 'true',
+                'aria-label': textarea.labels?.[0]?.textContent.trim() || textarea.placeholder || 'Text editor',
+                'aria-required': textarea.getAttribute('aria-required') || 'false',
+            },
+        },
         onUpdate({ editor }) {
             // Sync Marks (includes sub/sup automatically)
             menuEl.querySelectorAll('.menu-btn').forEach(btn => {
@@ -347,6 +357,22 @@ window.initTiptapEditor = (textareaId, options = {}) => {
         },
     });
 
+    const hideBubbleMenuOnExternalFocus = (event) => {
+        const target = event.target;
+
+        if (editor.isDestroyed || editor.view.dom.contains(target) || menuEl.contains(target)) {
+            return;
+        }
+
+        closeLocalDropdown();
+        editor.view.dispatch(editor.state.tr.setMeta('bubbleMenu', 'hide'));
+    };
+
+    document.addEventListener('focusin', hideBubbleMenuOnExternalFocus);
+    editor.on('destroy', () => {
+        document.removeEventListener('focusin', hideBubbleMenuOnExternalFocus);
+    });
+
     // Dropdown Events
     menuEl.querySelectorAll('.dropdown-item').forEach(item => {
         item.addEventListener('click', (e) => {
@@ -381,8 +407,8 @@ window.initTiptapEditor = (textareaId, options = {}) => {
         }
     });
 
-    window.eliteEditors = window.eliteEditors || {};
-    window.eliteEditors[textareaId] = editor;
+    window.PHPFusionEditors = window.PHPFusionEditors || {};
+    window.PHPFusionEditors[textareaId] = editor;
     textarea.dataset.tiptapInitialized = 'true';
 
     return editor;

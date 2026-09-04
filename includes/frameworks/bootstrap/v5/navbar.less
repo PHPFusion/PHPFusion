@@ -1,0 +1,104 @@
+/* PHPFusion Bootstrap navbar structure. Theme styles own all colors and decoration. */
+.fusion-navbar {
+    .dropdown-menu {
+        margin: .25rem 0 0;
+        padding: .5rem;
+    }
+
+    .dropdown-menu-parent,
+    .dropdown-menu-column,
+    .dropdown-menu-list {
+        list-style: none;
+    }
+
+    .dropdown-menu-list {
+        margin: 0;
+        padding: 0;
+    }
+
+    .dropend {
+        position: relative;
+    }
+
+    .navbar-collapse .dropend > .dropdown-menu {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 100%;
+        margin: 0 0 0 .25rem;
+    }
+
+    .dropdown-menu-mega {
+        position: fixed !important;
+        top: var(--fusion-mega-top, 4rem) !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: var(--fusion-mega-left, 1rem) !important;
+        width: var(--fusion-mega-width, calc(100vw - 2rem));
+        max-width: calc(100vw - 2rem);
+        max-height: calc(100vh - var(--fusion-mega-top, 4rem) - 1rem);
+        grid-auto-flow: row;
+        gap: .75rem;
+        margin: 0;
+        padding: 1rem;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .dropdown-menu-mega.show {
+        display: grid;
+    }
+
+    .dropdown-menu-mega.mega-columns-1 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dropdown-menu-mega.mega-columns-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dropdown-menu-mega.mega-columns-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dropdown-menu-column {
+        min-width: 0;
+        padding: .25rem;
+    }
+
+    .dropdown-menu-column > .dropdown-header {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        margin: 0 0 .25rem;
+        padding: .5rem .75rem;
+    }
+
+    .dropdown-menu-column .dropdown-item {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .fusion-navbar {
+        .dropdown-menu,
+        .dropdown-menu-mega {
+            position: static !important;
+            width: 100%;
+            max-width: none;
+            max-height: none;
+            margin: .25rem 0 0;
+        }
+
+        .dropdown-menu-mega,
+        .dropdown-menu-mega.mega-columns-2,
+        .dropdown-menu-mega.mega-columns-3 {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .navbar-collapse .dropend > .dropdown-menu {
+            position: static !important;
+            inset: auto;
+            margin: .25rem 0 0 .75rem;
+        }
+    }
+}

@@ -100,6 +100,10 @@ class CoreSettings {
                     'settings_value' => ''
                 ],// fill in
                 [
+                    'settings_name'  => 'site_location',
+                    'settings_value' => ''
+                ],// fill in
+                [
                     'settings_name'  => 'siteintro',
                     'settings_value' => "<div style=\'text-align:center\'>".$locale['setup_3650']."</div>"
                 ],
@@ -121,19 +125,19 @@ class CoreSettings {
                 ],
                 [
                     'settings_name'  => 'locale',
-                    'settings_value' => $_GET['localeset'] ?? 'English'
+                    'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
                 ],
                 [
                     'settings_name'  => 'enabled_languages',
-                    'settings_value' => $_GET['localeset'] ?? 'English'
+                    'settings_value' => isset($_GET['localeset']) ? $_GET['localeset'] : 'English'
                 ],
                 [
                     'settings_name'  => 'theme',
-                    'settings_value' => 'Luna'
+                    'settings_value' => 'Magazine'
                 ],
                 [
                     'settings_name'  => 'admin_theme',
-                    'settings_value' => 'Jupiter'
+                    'settings_value' => 'AdminLTE'
                 ],
                 [
                     'settings_name'  => 'default_search',
@@ -516,6 +520,42 @@ class CoreSettings {
                     'settings_value' => time()
                 ],
                 [
+                    'settings_name'  => 'ai_enabled',
+                    'settings_value' => 0
+                ],
+                [
+                    'settings_name'  => 'ai_default_provider',
+                    'settings_value' => ''
+                ],
+                [
+                    'settings_name'  => 'ai_default_timeout',
+                    'settings_value' => 30
+                ],
+                [
+                    'settings_name'  => 'ai_default_max_tokens',
+                    'settings_value' => 1200
+                ],
+                [
+                    'settings_name'  => 'ai_log_retention_days',
+                    'settings_value' => 30
+                ],
+                [
+                    'settings_name'  => 'ai_store_content',
+                    'settings_value' => 0
+                ],
+                [
+                    'settings_name'  => 'ai_debug_enabled',
+                    'settings_value' => 0
+                ],
+                [
+                    'settings_name'  => 'ai_monthly_budget',
+                    'settings_value' => 0
+                ],
+                [
+                    'settings_name'  => 'ai_require_review',
+                    'settings_value' => 1
+                ],
+                [
                     'settings_name'  => 'number_delimiter',
                     'settings_value' => '.'
                 ],
@@ -647,10 +687,21 @@ class CoreSettings {
                 [
                     'admin_rights'   => 'I',
                     'admin_image'    => 'infusions.png',
-                    'admin_title'    => $locale['setup_3014'],
-                    'admin_link'     => 'infusions.php',
-                    'admin_page'     => 3,
+                    'admin_title'    => 'Integrations',
+                    'admin_link'     => 'settings_infusions.php',
+                    'admin_page'     => 4,
                     'admin_language' => $localeset
+                ],
+                [
+                    'admin_rights'   => 'AINT',
+                    'admin_image'    => 'settings.png',
+                    'admin_title'    => 'AI Intelligence',
+                    'admin_link'     => 'settings_intelligence.php',
+                    'admin_page'     => 4,
+                    'admin_language' => $localeset,
+                    'admin_idisplay' => 3,
+                    'admin_svg'      => 'settings',
+                    'admin_order'    => 0,
                 ],
                 [
                     'admin_rights'   => 'IP',
@@ -855,10 +906,12 @@ class CoreSettings {
             ]
         ];
         foreach ($table_settings['admin']['insert'] as &$admin_link) {
-            $is_main_settings = $admin_link['admin_rights'] === 'S1';
-            $admin_link['admin_idisplay'] = $is_main_settings ? 3 : 0;
-            $admin_link['admin_svg'] = $is_main_settings ? 'settings' : '';
-            $admin_link['admin_order'] = 0;
+            $uses_settings_icon = in_array($admin_link['admin_rights'], ['S1', 'AINT'], TRUE);
+            $admin_link += [
+                'admin_idisplay' => $uses_settings_icon ? 3 : 0,
+                'admin_svg' => $uses_settings_icon ? 'settings' : '',
+                'admin_order' => 0,
+            ];
         }
         unset($admin_link);
         $table_settings['bbcodes'] = [

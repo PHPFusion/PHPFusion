@@ -34,4 +34,15 @@ if ($route === '') {
     }
 }
 
+$profileEndpoint = str_starts_with($endpoint, 'profile-global')
+    || str_starts_with($endpoint, 'core-profile')
+    || in_array($endpoint, ['account.state.options', 'account-state-options'], TRUE);
+$profileRoute = str_starts_with('/' . ltrim($route, '/'), '/v1/profile-global/')
+    || str_starts_with('/' . ltrim($route, '/'), '/v1/core/profile/')
+    || str_starts_with('/' . ltrim($route, '/'), '/v1/profile-modules/');
+
+if (($profileEndpoint || $profileRoute) && function_exists('fusion_load_profile_modules')) {
+    fusion_load_profile_modules();
+}
+
 (new ApiKernel())->handle($request, $endpoint, $route)->send();

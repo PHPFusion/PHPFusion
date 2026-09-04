@@ -202,10 +202,11 @@ class AdminSetup extends InstallCore {
     private function setup() {
 
         self::$site_data = [
-            'sitename'     => fusion_get_settings('sitename'),
-            'siteemail'    => fusion_get_settings('siteemail'),
-            'siteusername' => fusion_get_settings('siteusername'),
-            'timeoffset'   => fusion_get_settings('timeoffset'),
+            'sitename'      => fusion_get_settings('sitename'),
+            'siteemail'     => fusion_get_settings('siteemail'),
+            'siteusername'  => fusion_get_settings('siteusername'),
+            'site_location' => fusion_get_settings('site_location'),
+            'timeoffset'    => fusion_get_settings('timeoffset'),
         ];
 
         $this->update();
@@ -230,6 +231,19 @@ class AdminSetup extends InstallCore {
                 'error_text' => self::$locale['setup_5011']
             ]
         );
+
+        $countries = [];
+        require INCLUDES.'geomap/geo.countries.php';
+        $country_options = [];
+        foreach ($countries as $country_code => $country) {
+            $country_options[$country_code] = translate_country_names($country['name']);
+        }
+        $content .= form_select('site_location', self::$locale['setup_1514'], self::$site_data['site_location'], [
+            'options'  => $country_options,
+            'required' => TRUE,
+            'inline'   => TRUE,
+            'flag'     => TRUE,
+        ]);
 
         $json_file = @file_get_contents(INCLUDES.'geomap/timezones.json', FALSE);
         $timezones_json = json_decode($json_file, TRUE);
@@ -378,6 +392,10 @@ class AdminSetup extends InstallCore {
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".$enabled_lang."' WHERE settings_name='enabled_languages'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['timeoffset']."' WHERE settings_name='timeoffset'");
                     dbquery("UPDATE ".DB_PREFIX."settings SET settings_value='".self::$site_data['siteusername']."' WHERE settings_name='siteusername'");
+                    dbquery(
+                        "UPDATE ".DB_PREFIX."settings SET settings_value=:site_location WHERE settings_name='site_location'",
+                        [':site_location' => self::$site_data['site_location']]
+                    );
 
                     if (strpos($enabled_lang, '.')) {
 
@@ -491,11 +509,21 @@ class AdminSetup extends InstallCore {
             }
         )));
 
+        $site_location = strtoupper((string)stripinput(filter_input(INPUT_POST, 'site_location')));
+        $countries = [];
+        require INCLUDES.'geomap/geo.countries.php';
+        if (!isset($countries[$site_location])) {
+            fusion_stop();
+            \Defender::setInputError('site_location');
+            $site_location = '';
+        }
+
         return [
             'sitename'          => stripinput($_POST['sitename']),
             'siteemail'         => stripinput($_POST['siteemail']),
             'enabled_languages' => $enabled_languages,
             'siteusername'      => stripinput(filter_input(INPUT_POST, 'siteusername')),
+            'site_location'     => $site_location,
             'timeoffset'        => stripinput(filter_input(INPUT_POST, 'timeoffset'))
         ];
     }

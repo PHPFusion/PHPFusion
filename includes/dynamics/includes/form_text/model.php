@@ -58,7 +58,8 @@
  *                      - class: Additional wrapper classes
  *                      - inner_class: Additional input classes
  *                      - inline: Use inline layout (default: false)
- *                      - floating: Use floating labels (default: false) - Bootstrap 5 feature
+ *                      - floating_label: Use floating labels (default: false)
+ *                      - floating: Legacy alias for floating_label
  *                      - min_length: Minimum input length
  *                      - max_length: Maximum input length
  *                      - number_min: Minimum value for number inputs
@@ -99,8 +100,20 @@
  *
  * @return string
  */
+function load_form_text_assets(): void
+{
+    static $loaded = FALSE;
+
+    if (!$loaded) {
+        fusion_load_script(DYNAMICS.'includes/form_text/component.css?v='.filemtime(__DIR__.'/component.css'), 'css');
+        fusion_load_script(DYNAMICS.'includes/form_text/component.js?v='.filemtime(__DIR__.'/component.js'));
+        $loaded = TRUE;
+    }
+}
+
 function form_text($input_name, $label = "", $input_value = "", array $options = [])
 {
+    load_form_text_assets();
     $locale = fusion_get_locale();
 
     $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
@@ -124,7 +137,8 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         'class' => '', // The input container wrapper class.
         'inner_class' => '', // The input class.
         'inline' => FALSE,
-        'floating' => FALSE, // New: Bootstrap 5 floating labels
+        'floating' => FALSE, // Legacy alias for floating_label.
+        'floating_label' => NULL,
         'min_length' => 1,
         'max_length' => 200,
         'number_min' => 0,
@@ -165,6 +179,13 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
     ];
 
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
+
+    if ($options['floating_label'] !== NULL) {
+        $options['floating'] = (bool)$options['floating_label'];
+    }
 
     $valid_types = ['text', 'int', 'number', 'price', 'password', 'email', 'url', 'color', 'date', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'week', 'ip'];
 
@@ -379,26 +400,26 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
         }
     }
 
-    $html = "<div id='" . $options['input_id'] . "-field' class='" . $form_group_class . " " . ($options['inline'] && $label && !$options['floating'] ? 'row ' : '') . (!empty($error_class) ? $error_class : '') . ($options['class'] ? ' ' . $options['class'] : '') . "'" . ($options['width'] && !$label ? " style='width: " . $options['width'] . "'" : '') . ">";
+    $html = "<div id='" . $options['input_id'] . "-field' class='dynamics-form-text " . $form_group_class . " " . ($options['inline'] && $label && !$options['floating'] ? 'row ' : '') . (!empty($error_class) ? $error_class : '') . ($options['class'] ? ' ' . $options['class'] : '') . "'" . ($options['width'] && !$label ? " style='width: " . $options['width'] . "'" : '') . ">";
 
     // For floating labels, the input comes first, then the label
     if ($options['floating']) {
         $html .= ($options['inline'] && $label) ? "<div class='" . $field_wrapper_class . "'>" : "";
 
-        $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group" . ($options['group_size'] ? ' input-group-' . $options['group_size'] : '') . "' " . ($options['width'] ? "style='width: " . $options['width'] . "'" : '') . ">" : "";
+        $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group dynamics-form-text__group" . ($options['group_size'] ? ' input-group-' . $options['group_size'] : '') . "' " . ($options['width'] ? "style='width: " . $options['width'] . "'" : '') . ">" : "";
 
         if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
             $html .= "<button id='" . $options['prepend_button_id'] . "' name='" . $options['prepend_button_name'] . "' type='" . $options['prepend_type'] . "' value='" . $options['prepend_form_value'] . "' class='btn " . $options['prepend_class'] . "'>" . $options['prepend_value'] . "</button>";
         } else if ($options['prepend_value']) {
-            $html .= "<span class='input-group-text'>" . $options['prepend_value'] . "</span>";
+            $html .= "<span class='input-group-text dynamics-form-text__addon'>" . $options['prepend_value'] . "</span>";
         }
 
-        $html .= "<input type='" . $input_type . "' data-type='" . $input_type . "' " . (!empty($options_data) ? implode(' ', $options_data) : '') . " " . $min . $max . $step . "class='form-control " . ($options['inner_class'] ? " " . $options['inner_class'] . " " : '') . "' " . ($options['inner_width'] ? "style='width:" . $options['inner_width'] . ";'" : '') . $max_length . " name='" . $input_name . "' id='" . $options['input_id'] . "' value='" . $input_value . "'" . ($options['placeholder'] ? " placeholder='" . $options['placeholder'] . "' " : '') . "" . ($options['autocomplete_off'] ? " autocomplete='off'" : '') . " " . ($options['deactivate'] ? 'readonly' : '') . ">";
+        $html .= "<input type='" . $input_type . "' data-type='" . $input_type . "' " . (!empty($options_data) ? implode(' ', $options_data) : '') . " " . $min . $max . $step . "class='form-control dynamics-form-text__input " . ($options['inner_class'] ? " " . $options['inner_class'] . " " : '') . "' " . ($options['inner_width'] ? "style='width:" . $options['inner_width'] . ";'" : '') . $max_length . " name='" . $input_name . "' id='" . $options['input_id'] . "' value='" . $input_value . "'" . ($options['placeholder'] ? " placeholder='" . $options['placeholder'] . "' " : '') . "" . ($options['autocomplete_off'] ? " autocomplete='off'" : '') . " " . ($options['deactivate'] ? 'readonly' : '') . ">";
 
         if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
             $html .= "<button id='" . $options['append_button_id'] . "' name='" . $options['append_button_name'] . "' type='" . $options['append_type'] . "' value='" . $options['append_form_value'] . "' class='btn " . $options['append_class'] . "'>" . $options['append_value'] . "</button>";
         } else if ($options['append_value']) {
-            $html .= "<span class='input-group-text'>" . $options['append_value'] . "</span>";
+            $html .= "<span class='input-group-text dynamics-form-text__addon'>" . $options['append_value'] . "</span>";
         }
 
         $html .= $options['stacked'];
@@ -407,29 +428,29 @@ function form_text($input_name, $label = "", $input_value = "", array $options =
 
         // Floating label comes after the input
         if ($label) {
-            $html .= "<label for='" . $options['input_id'] . "'>" . $options['label_icon'] . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . " " . ($options['tip'] ? "<i class='pointer fa fa-question-circle text-muted' title='" . $options['tip'] . "'></i>" : '') . "</label>";
+            $html .= "<label for='" . $options['input_id'] . "'>" . $options['label_icon'] . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . " " . dynamics_field_help($options['tip']) . "</label>";
         }
 
         $html .= ($options['inline'] && $label) ? "</div>" : "";
     } else {
         // Regular form layout (non-floating)
-        $html .= ($label) ? "<label class='" . $label_class . "' for='" . $options['input_id'] . "'>" . $options['label_icon'] . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . " " . ($options['tip'] ? "<i class='pointer fa fa-question-circle text-muted' title='" . $options['tip'] . "'></i>" : '') . "</label>" : '';
+        $html .= ($label) ? "<label class='" . $label_class . "' for='" . $options['input_id'] . "'>" . $options['label_icon'] . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . " " . dynamics_field_help($options['tip']) . "</label>" : '';
         $html .= ($options['inline'] && $label) ? "<div class='" . $field_wrapper_class . "'>" : "";
 
-        $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group" . ($options['group_size'] ? ' input-group-' . $options['group_size'] : '') . "' " . ($options['width'] ? "style='width: " . $options['width'] . "'" : '') . ">" : "";
+        $html .= ($options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? "<div class='input-group dynamics-form-text__group" . ($options['group_size'] ? ' input-group-' . $options['group_size'] : '') . "' " . ($options['width'] ? "style='width: " . $options['width'] . "'" : '') . ">" : "";
 
         if ($options['prepend_button'] && $options['prepend_type'] && $options['prepend_form_value'] && $options['prepend_class'] && $options['prepend_value']) {
             $html .= "<button id='" . $options['prepend_button_id'] . "' name='" . $options['prepend_button_name'] . "' type='" . $options['prepend_type'] . "' value='" . $options['prepend_form_value'] . "' class='btn " . $options['prepend_class'] . "'>" . $options['prepend_value'] . "</button>";
         } else if ($options['prepend_value']) {
-            $html .= "<span class='input-group-text'>" . $options['prepend_value'] . "</span>";
+            $html .= "<span class='input-group-text dynamics-form-text__addon'>" . $options['prepend_value'] . "</span>";
         }
 
-        $html .= "<input type='" . $input_type . "' data-type='" . $input_type . "' " . (!empty($options_data) ? implode(' ', $options_data) : '') . " " . $min . $max . $step . "class='form-control " . ($options['inner_class'] ? " " . $options['inner_class'] . " " : '') . "' " . ($options['inner_width'] ? "style='width:" . $options['inner_width'] . ";'" : '') . $max_length . " name='" . $input_name . "' id='" . $options['input_id'] . "' value='" . $input_value . "'" . ($options['placeholder'] ? " placeholder='" . $options['placeholder'] . "' " : '') . "" . ($options['autocomplete_off'] ? " autocomplete='off'" : '') . " " . ($options['deactivate'] ? 'readonly' : '') . ">";
+        $html .= "<input type='" . $input_type . "' data-type='" . $input_type . "' " . (!empty($options_data) ? implode(' ', $options_data) : '') . " " . $min . $max . $step . "class='form-control dynamics-form-text__input " . ($options['inner_class'] ? " " . $options['inner_class'] . " " : '') . "' " . ($options['inner_width'] ? "style='width:" . $options['inner_width'] . ";'" : '') . $max_length . " name='" . $input_name . "' id='" . $options['input_id'] . "' value='" . $input_value . "'" . ($options['placeholder'] ? " placeholder='" . $options['placeholder'] . "' " : '') . "" . ($options['autocomplete_off'] ? " autocomplete='off'" : '') . " " . ($options['deactivate'] ? 'readonly' : '') . ">";
 
         if ($options['append_button'] && $options['append_type'] && $options['append_form_value'] && $options['append_class'] && $options['append_value']) {
             $html .= "<button id='" . $options['append_button_id'] . "' name='" . $options['append_button_name'] . "' type='" . $options['append_type'] . "' value='" . $options['append_form_value'] . "' class='btn " . $options['append_class'] . "'>" . $options['append_value'] . "</button>";
         } else if ($options['append_value']) {
-            $html .= "<span class='input-group-text'>" . $options['append_value'] . "</span>";
+            $html .= "<span class='input-group-text dynamics-form-text__addon'>" . $options['append_value'] . "</span>";
         }
 
         $html .= $options['stacked'];

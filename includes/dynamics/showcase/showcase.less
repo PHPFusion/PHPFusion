@@ -1,0 +1,36 @@
+.dynamics-showcase {
+    width: 100%;
+    &__themes { display: flex; gap: .5rem; }
+    &__themes button { min-height: 44px; }
+    &__tabs { margin-top: 1rem; }
+    &__tab-content { padding: 1.5rem 0 0; }
+    &__section { padding-bottom: 2rem; }
+    &__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem; }
+    &__example { min-width: 0; }
+    &__variant { font-size: .875rem; font-weight: 400; color: var(--magazine-control-muted-foreground, var(--ui-muted-foreground)); margin-bottom: 1rem; }
+    .form-text, .help-block, .tip { display: block; margin-top: .5rem; }
+    @media (max-width: 767px) { &__grid { grid-template-columns: minmax(0, 1fr); } }
+}
+
+.dynamics-showcase__card-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(80px, .35fr);
+    gap: .75rem;
+    align-items: start;
+    > * { min-width: 0; }
+}
+
+.dynamics-showcase__email-domain .dynamics-form-text__group { overflow: visible; }
+.dynamics-showcase__domain { display: flex; align-items: stretch; position: relative; }
+.dynamics-showcase__domain-toggle.btn {
+    display: inline-flex; align-items: center; gap: .25rem;
+    height: var(--dynamics-control-min-height, 2.5rem); min-height: 0; margin: 0; padding: 0 .75rem; border: 0; border-radius: 0; background: transparent !important; box-shadow: none; color: var(--dynamics-form-text-foreground);
+    font-size: var(--dynamics-control-font-size, .875rem); text-decoration: none;
+    white-space: nowrap;
+    &:focus-visible { outline: 2px solid var(--dynamics-form-text-ring); outline-offset: -2px; }
+}
+.dynamics-showcase__domain .dropdown-menu {
+    top: 100%; right: 0; left: auto;
+    &[hidden] { display: none !important; }
+    &.show { display: block; }
+}

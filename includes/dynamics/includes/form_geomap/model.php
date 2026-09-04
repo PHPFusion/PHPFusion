@@ -27,6 +27,32 @@
  *
  * @return string
  */
+function form_geomap_combobox_attribute(array $overrides = []): string
+{
+    $options = $overrides + [
+        'ajax'                 => [],
+        'remote'               => [],
+        'placeholder'          => '',
+        'combobox_label'       => '',
+        'floating_label'       => FALSE,
+        'required'             => FALSE,
+        'multiple'             => FALSE,
+        'tags'                 => FALSE,
+        'allowclear'           => FALSE,
+        'allow_clear'          => FALSE,
+        'display_search_count' => 5,
+        'max_select'           => FALSE,
+        'delimiter'            => ',',
+        'flag'                 => FALSE,
+        'flag_path'            => '',
+        'avatar_path'          => '',
+        'initial_items'        => [],
+        'strings'              => [],
+    ];
+
+    return form_select_combobox_attribute($options);
+}
+
 function form_geo($input_name, $label = "", $input_value = "", array $options = []) {
 
     $locale = fusion_get_locale();
@@ -36,13 +62,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     $title = (isset($title) && (!empty($title))) ? $title : ucfirst(strtolower(str_replace("_", " ", $input_name)));
 
     $countries = [];
-    $states = [];
-
     include INCLUDES.'geomap/geo.countries.php';
-    include INCLUDES.'geomap/geo.states.php';
-
-    $states += ["id" => "Other", "text" => fusion_get_locale('other_states')];
-    $states_array = json_encode($states);
 
     $id = trim($input_name, "[]");
 
@@ -76,14 +96,46 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
         'error_text_4' => !empty($options['error_text_4']) ? $options['error_text_4'] : $locale['state_error'],
         'error_text_5' => !empty($options['error_text_5']) ? $options['error_text_5'] : $locale['city_error'],
         'error_text_6' => !empty($options['error_text_6']) ? $options['error_text_6'] : $locale['postcode_error'],
-        'safemode'     => false,
-        'flag'         => '',
-        'stacked'      => '',
+        'safemode'        => false,
+        'flag'            => '',
+        'stacked'         => '',
+        'default_country' => fusion_get_settings('site_location'),
     ];
 
     $options += $default_options;
 
+    $default_country = strtoupper(trim((string)$options['default_country']));
+    if (empty($input_value[2]) && isset($countries[$default_country])) {
+        $input_value[2] = $default_country;
+    }
+
     $input_id = $options['input_id'];
+    $country_placeholder = $locale['sel_country'].' '.($options['required'] == 1 ? '*' : '');
+    $state_placeholder = $locale['sel_state'].' '.($options['required'] == 1 ? '*' : '');
+    $state_endpoint = fusion_get_settings('site_path').'api/?api=geomap-states';
+    $country_combobox = form_geomap_combobox_attribute([
+        'placeholder' => $country_placeholder,
+        'combobox_label' => $locale['sel_country'],
+        'required' => $options['required'],
+        'allowclear' => !$options['required'],
+        'allow_clear' => !$options['required'],
+        'flag' => $options['flag'],
+    ]);
+    $state_combobox = form_geomap_combobox_attribute([
+        'placeholder' => $state_placeholder,
+        'combobox_label' => $locale['sel_state'],
+        'required' => $options['required'],
+        'allowclear' => TRUE,
+        'allow_clear' => TRUE,
+        'remote' => [
+            'url' => $state_endpoint,
+            'query_param' => 'q',
+            'delay' => 150,
+            'minimum_input_length' => 0,
+            'load_on_open' => TRUE,
+            'params' => ['id' => $input_value[2]],
+        ],
+    ]);
 
     $validation_key = [
         0 => 'street1',
@@ -114,7 +166,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
     $html = "<div id='$input_id-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']."' >";
 
     $html .= ($label) ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='$input_id'>".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
-    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+    ".dynamics_field_help($options['tip'])."
     </label>" : '';
 
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>" : '';
@@ -135,15 +187,18 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>";
+    // Keep the named controls in legacy serialization order while presenting
+    // the locality fields as City, State, Country.
+    $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 order-3 m-b-10'>";
 
-    $html .= "<select name='".$input_name."[]' id='".$input_id."_country' style='width:100%;'>";
+    $html .= "<select class='form-select' name='".$input_name."[]' id='".$input_id."_country' style='width:100%;' data-geomap-country data-geomap-state-target='".$input_id."_state' data-dynamics-combobox='".$country_combobox."'>";
 
     $html .= "<option value=''></option>";
 
     foreach ($countries as $arv => $country) { // outputs: key, value, class - in order
         $select = ($input_value[2] == $arv) ? "selected" : '';
-        $html .= "<option value='$arv' ".$select.">".$country['name']."</option>";
+        $flag = 'flag_'.strtolower(str_replace(' ', '_', $country['name'])).'.png';
+        $html .= "<option value='".form_select_escape_attribute($arv)."' data-flag='".form_select_escape_attribute($flag)."' ".$select.">".form_select_escape_text($country['name'])."</option>";
     }
 
     $html .= "</select>";
@@ -152,17 +207,21 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-7 col-md-7 col-lg-7 m-b-10'>";
+    $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 order-2 m-b-10'>";
 
-    $html .= "<div id='state-spinner' style='display:none;'><img src='".fusion_get_settings('siteurl')."images/loader.gif'></div>";
-
-    $html .= "<input type='hidden' name='".$input_name."[]' id='".$input_id."_state' value='".$input_value['3']."' style='width:100%;' />";
+    $html .= "<input type='hidden' id='".$input_id."_state_fallback' value='' data-geomap-state-fallback data-input-name='".form_select_escape_attribute($input_name."[]")."'".(!empty($input_value[2]) ? '' : " name='".form_select_escape_attribute($input_name."[]")."'")." />";
+    $html .= "<select class='form-select' name='".$input_name."[]' id='".$input_id."_state' style='width:100%;' data-geomap-state data-dynamics-combobox='".$state_combobox."'".(empty($input_value[2]) ? ' disabled' : '').">";
+    $html .= "<option value=''></option>";
+    if ($input_value[3] !== '') {
+        $html .= "<option value='".form_select_escape_attribute($input_value[3])."' selected>".form_select_escape_text($input_value[3])."</option>";
+    }
+    $html .= "</select>";
 
     $html .= (($options['required'] == 1 && \Defender::inputHasError($input_name.$validation_key[3])) || \Defender::inputHasError($input_name.'-'.$validation_key[3])) ? "<div id='".$options['input_id']."-state-help' class='label label-danger p-5 display-inline-block'>".$options['error_text_4']."</div>" : "";
 
     $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-5 col-md-5 col-lg-5 m-b-10'>";
+    $html .= "<div class='col-xs-12 col-sm-4 col-md-4 col-lg-4 order-1 m-b-10'>";
 
     $html .= "<input type='text' name='".$input_name."[]' id='".$input_id."_city' class='form-control textbox' value='".$input_value['4']."' placeholder='".$locale['city'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
@@ -170,7 +229,7 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 
     $html .= "</div>";
 
-    $html .= "<div class='col-xs-12 col-sm-7 col-md-4 col-lg-7 m-b-10'>";
+    $html .= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 order-4 m-b-10'>";
 
     $html .= "<input type='text' name='".$input_name."[]'  id='".$input_id."_postcode' class='form-control textbox' value='".$input_value['5']."' placeholder='".$locale['postcode'].($options['required'] ? "*" : '')."'".($options['deactivate'] ? " readonly" : '')." />";
 
@@ -201,62 +260,8 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
         'error_text_6' => $options['error_text_6']
     ]);
 
-    $flag_function = '';
-    $flag_plugin = '';
-    if ($options['flag']) {
-        $flag_function = "
-        function show_flag(item) {
-        if(!item.id) {return item.text;}
-        var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
-        return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
-        }";
-        $flag_plugin = "
-         formatResult: show_flag,
-         formatSelection: show_flag,
-         escapeMarkup: function(m) { return m; },
-        ";
-    }
-
-    add_to_jquery("
-    ".$flag_function."
-    $('#{$input_id}_country').select2({
-        $flag_plugin
-        placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
-    });
-
-    $('#{$input_id}_state').select2({
-        placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
-        allowClear: true,
-        data: $states_array
-    });
-
-    $('#{$input_id}_country').bind('change', function(){
-        var ce_id = $(this).val();
-        $.ajax({
-        url: '".fusion_get_settings('site_path')."api/?api=geomap-states',
-        type: 'GET',
-        data: { id : ce_id },
-        dataType: 'json',
-        beforeSend: function(e) {
-            //$('#state-spinner').show();
-            $('#{$input_id}_state').hide();
-        },
-        success: function(data) {
-            //$('#state-spinner').hide();
-            $('#{$input_id}_state').select2({
-                placeholder: '".$locale['sel_state']." ".($options['required'] == 1 ? '*' : '')."',
-                allowClear: true,
-                data : data
-            });
-        },
-        error : function() {
-            console.log('Geomap states file is missing!');
-        }
-        })
-    }).trigger('change');
-    ");
-
-    load_select2_script();
+    load_form_select_combobox_assets();
+    fusion_load_script(DYNAMICS.'includes/form_geomap/component.js');
 
     return dynamics_render_component_template('form_geomap', $html);
 }
@@ -264,10 +269,6 @@ function form_geo($input_name, $label = "", $input_value = "", array $options = 
 function form_location($input_name, $label = '', $input_value = false, array $options = []) {
 
     $locale = fusion_get_locale();
-
-    $title = $label ? stripinput($label) : ucfirst(strtolower(str_replace("_", " ", $input_name)));
-
-    $input_name = (isset($input_name) && (!empty($input_name))) ? stripinput($input_name) : "";
 
     $default_options = [
         'options'        => [],
@@ -299,159 +300,61 @@ function form_location($input_name, $label = '', $input_value = false, array $op
     ];
 
     $options += $default_options;
+    $input_name = !empty($input_name) ? stripinput($input_name) : '';
+    $country_options = $options['options'];
 
-    $countries = [];
-
-    // always trim id
-    $options['input_id'] = trim($options['input_id'], "[]");
-
-    $length = "minimumInputLength: 1,";
-
-    $error_class = "";
-    if (\Defender::inputHasError($input_name)) {
-        $error_class = "has-error ";
-        if (!empty($options['error_text'])) {
-            $new_error_text = \Defender::getErrorText($input_name);
-            if (!empty($new_error_text)) {
-                $options['error_text'] = $new_error_text;
-            }
-            addnotice("danger", $options['error_text']);
-        }
-    }
-
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] ? 'row ' : '').$error_class.$options['class']." ".($options['icon'] ? 'has-feedback' : '')."'  ".($options['width'] && !$label ? "style='width: ".$options['width']."'" : '').">";
-
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : 'col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-0')."' for='".$options['input_id']."'>$label ".($options['required'] == true ? "<span class='required'>*</span>" : '')."
-    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
-    </label>" : '';
-
-    $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 ".($label ? "col-sm-9 col-md-9 col-lg-9" : "col-sm-12")."'>" : "";
-
-    if ($options['multiple'] == true) {
-
-        $html .= "<input ".($options['required'] ? "class='req'" : '')." type='hidden' name='{$input_name}[]' id='".$options['input_id']."' data-placeholder='".$options['placeholder']."' style='width: ".(!empty($options['width']) ? $options['width'] : $default_options['width'])."' ".($options['deactivate'] ? 'disabled' : '')." />";
-
-        $path = !empty($options['file']) ? $options['file'] : INCLUDES.'dynamics/assets/location/location.json.php';
-
-        $encoded = json_encode([]);
-
-        if (!empty($input_value)) {
-            // json mode.
-            $encoded = !empty($options['file']) ? $options['file'] : location_search($input_value);
-        }
-
-        if (!defined('PLOCATION_MULTI')) {
-            define('PLOCATION_MULTI', true);
-            add_to_jquery("
-            function plocation_multi(item) {
-                if(!item.id) {return item.text;}
-                var flag = item.flag;
-                var region = item.region;
-                return '<table><tr><td style=\"\"><img style=\"height:16px;\" src=\"".IMAGES."small_flag/' + flag + '\"/></td><td style=\"padding-left:10px\"><div>' + item.text + '</div></div></td></tr></table>';
-            }
-            ");
-        }
-
-        $flag_plugin = '';
-        if ($options['flag']) {
-
-            $flag_plugin = "
-            formatResult: plocation_multi,
-            formatSelection: plocation_multi,
-            escapeMarkup: function(m) { return m; },
-            ";
-        }
-
-        add_to_jquery("
-        $('#".$options['input_id']."').select2({
-            $length
-            multiple: ".($options['multiple'] ? "true" : "false").",
-            maximumSelectionSize: ".$options['max_select'].",
-            ajax: {
-            url: '$path',
-            dataType: 'json',
-            data: function (term, page) {
-                    return {q: term};
-                },
-                results: function (data, page) {
-                    return {results: data};
-                }
-            },
-            ".$flag_plugin."            
-            ".$options['allowclear']."
-        })".(!empty($encoded) ? ".select2('data', $encoded );" : '')."
-        ");
-
-    } else {
-
+    if ($country_options === []) {
+        $countries = [];
         require INCLUDES.'geomap/geo.countries.php';
-
-        $html .= "<select name='".$input_name."' id='".$options['input_id']."' style='width:".(!empty($options['width']) ? $options['width'] : $default_options['width'])."' />";
-        $html .= "<option value=''></option>";
-        foreach ($countries as $country_key => $country) { // outputs: key, value, class - in order
-            $select = ($input_value == $country_key) ? "selected" : '';
-            $html .= "<option value='$country_key' ".$select.">".translate_country_names($country['name'])."</option>";
+        foreach ($countries as $country_code => $country) {
+            $country_name = translate_country_names($country['name']);
+            $country_options[$country_code] = [
+                'text' => $country_name,
+                'flag' => 'flag_'.strtolower(str_replace(' ', '_', $country['name'])).'.png',
+            ];
         }
-        $html .= "</select>";
-
-
-        $flag_plugin = '';
-        if ($options['flag']) {
-
-            if (!defined('PLOCATION')) {
-                define('PLOCATION', true);
-                add_to_jquery("
-                function plocation(item) {
-                    if(!item.id) {return item.text;}
-                    var icon = '".IMAGES."small_flag/flag_'+ item.id.replace(/-/gi,'_').toLowerCase() +'.png';
-                    return '<img style=\"float:left; margin-right:5px; margin-top:3px;\" src=\"' + icon + '\"/></i>' + item.text;
-                }");
-            }
-
-            $flag_plugin = "
-            formatResult: plocation,
-            formatSelection: plocation,
-            escapeMarkup: function(m) { return m; },
-            ";
-
-        }
-
-        add_to_jquery("        
-        $('#".$options['input_id']."').select2({
-            $flag_plugin
-            placeholder: '".$locale['sel_country']." ".($options['required'] == 1 ? '*' : '')."'
-        });
-        ");
-
     }
 
-    $html .= $options['stacked'];
-    $html .= $options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
-    if ($options['deactivate']) {
-        $html .= form_hidden($input_name, "", $input_value, ["input_id" => $options['input_id']]);
-    }
-
-    $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : '';
-
-    $html .= ($options['inline'] && $label) ? "</div>" : "";
-
-    $html .= "</div>";
-
-    \Defender::add_field_session([
-        'input_name'     => clean_input_name($input_name),
-        'type'           => 'textbox',
-        'title'          => trim($title, '[]'),
-        'id'             => $options['input_id'],
-        'regex'          => $options['regex'],
-        'callback_check' => $options['callback_check'],
+    $select_options = [
+        'options'        => $country_options,
         'required'       => $options['required'],
+        'regex'          => $options['regex'],
+        'input_id'       => trim($options['input_id'], '[]'),
+        'placeholder'    => $options['placeholder'],
+        'deactivate'     => $options['deactivate'],
         'safemode'       => $options['safemode'],
-        'error_text'     => $options['error_text']
-    ]);
+        'allowclear'     => $options['allowclear'],
+        'allow_clear'    => $options['allowclear'],
+        'flag'           => $options['flag'],
+        'multiple'       => $options['multiple'],
+        'width'          => $options['width'],
+        'inner_width'    => '100%',
+        'keyflip'        => $options['keyflip'],
+        'tags'           => $options['tags'],
+        'chainable'      => $options['chainable'],
+        'max_select'     => $options['max_select'],
+        'error_text'     => $options['error_text'],
+        'class'          => $options['class'],
+        'inline'         => $options['inline'],
+        'tip'            => $options['tip'],
+        'ext_tip'        => $options['ext_tip'],
+        'delimiter'      => $options['delimiter'],
+        'callback_check' => $options['callback_check'],
+        'stacked'        => $options['stacked'],
+    ];
 
-    load_select2_script();
+    if ($options['multiple']) {
+        $select_options['options'] = [];
+        $select_options['jsonmode'] = TRUE;
+        $select_options['remote'] = [
+            'url' => $options['file'] ?: INCLUDES.'dynamics/assets/location/location.json.php',
+            'query_param' => 'q',
+            'minimum_input_length' => 1,
+        ];
+        $select_options['initial_items'] = json_decode(location_search((string)$input_value), TRUE) ?: [];
+    }
 
-    return dynamics_render_component_template('form_geomap', $html);
+    return form_select($input_name, $label, $input_value, $select_options);
 }
 
 /* Returns json encoded response for form_location  */

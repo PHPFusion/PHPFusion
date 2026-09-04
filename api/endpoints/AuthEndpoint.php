@@ -162,12 +162,17 @@ final class AuthEndpoint
         string $message,
         string $redirect = ''
     ): ApiResponse {
+        $formId = self::ADMIN_FORM_ID;
+        $fusionToken = fusion_get_token($formId);
+
         return ApiResponse::json([
-            'success'  => $success,
-            'title'    => $title,
-            'message'  => $message,
-            'token'    => $success ? '' : fusion_get_token(self::ADMIN_FORM_ID),
-            'redirect' => $redirect,
+            'success'      => $success,
+            'title'        => $title,
+            'message'      => $message,
+            'fusion_token' => $fusionToken,
+            'form_id'      => $formId,
+            'token'        => $fusionToken,
+            'redirect'     => $redirect,
         ], $status);
     }
 
@@ -177,11 +182,16 @@ final class AuthEndpoint
         string $message,
         string $redirect = ''
     ): ApiResponse {
+        $formId = self::MEMBER_FORM_ID;
+        $fusionToken = fusion_get_token($formId);
+
         return ApiResponse::json([
-            'success'  => $success,
-            'message'  => $message,
-            'token'    => $success ? '' : fusion_get_token(self::MEMBER_FORM_ID),
-            'redirect' => $redirect,
+            'success'      => $success,
+            'message'      => $message,
+            'fusion_token' => $fusionToken,
+            'form_id'      => $formId,
+            'token'        => $fusionToken,
+            'redirect'     => $redirect,
         ], $status);
     }
 }

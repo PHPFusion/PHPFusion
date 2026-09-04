@@ -1,0 +1,129 @@
+// Original Dynamics composition, informed by shadcn.io's color-picker anatomy.
+.dynamics-colorpicker {
+    --picker-surface: var(--ui-popover, var(--member-form-control-background, var(--bs-body-bg, #fff)));
+    --picker-text: var(--ui-popover-foreground, var(--magazine-control-foreground, var(--bs-body-color, #18181b)));
+    --picker-muted: var(--ui-muted-foreground, var(--magazine-control-muted-foreground, var(--bs-secondary-color, #71717a)));
+    --picker-border: var(--ui-border, var(--member-form-control-border, var(--bs-border-color, #dedee3)));
+    --picker-ring: var(--ui-ring, var(--member-form-control-focus-border, var(--bs-primary, #71717a)));
+    --picker-danger: var(--ui-destructive, var(--bs-danger, #dc3545));
+    --picker-label: var(--form-text-label, var(--magazine-control-label, var(--dynamics-form-text-default-label, #333d42)));
+    --picker-label-active: var(--form-text-label-active, var(--magazine-control-foreground, var(--dynamics-form-text-default-label-active, #181c1f)));
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    color: var(--picker-text);
+    font-family: var(--font-sans, inherit);
+    font-size: .875rem;
+
+    &, * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    &__row { display: flex; align-items: center; gap: .75rem; min-width: 0; width: 100%; }
+    &__identity { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+    &__label { display: flex; align-items: center; gap: .25rem; }
+    &__label label { margin: 0; font-size: 14px; font-weight: 500; color: var(--picker-label); }
+    &:is(:hover, :focus-within) &__label label { color: var(--picker-label-active); }
+    &__description.form-text, &__help.form-text {
+        margin: 0; color: var(--form-text-muted-foreground, var(--magazine-control-muted-foreground, var(--dynamics-form-text-default-muted-foreground, var(--picker-muted))));
+        font-size: .875rem; line-height: 1.4;
+    }
+    &__description.form-text { margin-top: 6px; }
+    &__help { width: 100%; }
+    .required { color: var(--picker-danger); }
+    button, select, input { font: inherit; color: var(--picker-text); }
+    button, select, input[type=text], input[type=number] {
+        min-width: 0;
+        min-height: 40px;
+        border: 1px solid var(--picker-border);
+        border-radius: .5rem;
+        background: var(--picker-surface);
+        box-shadow: none;
+    }
+    button { cursor: pointer; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    button:hover:not(:disabled) { background: color-mix(in srgb, var(--picker-text) 6%, var(--picker-surface)); }
+    :is(button, input, select, [tabindex]):focus-visible {
+        outline: 2px solid var(--picker-ring);
+        outline-offset: 2px;
+    }
+    [aria-invalid=true] { border-color: var(--picker-danger); }
+    &__trigger {
+        display: inline-flex; align-items: center; gap: .5rem;
+        margin-inline-start: auto; flex: 0 1 auto;
+        min-width: 0; max-width: 100%; padding: .5rem .75rem;
+        white-space: nowrap; text-align: start;
+        [data-color-format] { font-weight: 500; }
+        [data-color-summary] { overflow: hidden; text-overflow: ellipsis; }
+        > svg { flex-shrink: 0; color: var(--picker-muted); }
+    }
+    &__swatch, &__alpha-track {
+        background: repeating-conic-gradient(#ddd 0% 25%, #fff 0% 50%) 0 0 / 10px 10px;
+    }
+    &__swatch {
+        width: 20px; height: 20px; border: 1px solid var(--picker-border); border-radius: .25rem; flex-shrink: 0; overflow: hidden;
+        > span { display: block; width: 100%; height: 100%; background: var(--picker-color, transparent); }
+    }
+    &__panel {
+        position: fixed; inset: auto; margin: 0; z-index: 1080;
+        width: 300px; max-width: calc(100vw - 16px);
+        padding: 12px; display: flex; flex-direction: column; gap: 16px;
+        overflow: auto; overscroll-behavior: contain;
+        background: var(--picker-surface); color: var(--picker-text);
+        border: 1px solid var(--picker-border); border-radius: .75rem;
+        box-shadow: 0 8px 24px rgb(0 0 0 / .16);
+    }
+    &__palette {
+        position: relative; width: 100%; height: 170px; flex-shrink: 0;
+        border-radius: .375rem; touch-action: none; cursor: crosshair;
+        background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), var(--picker-hue, #00f);
+        [data-color-cursor] {
+            position: absolute; width: 20px; height: 20px;
+            border: 2px solid #fff; border-radius: 50%;
+            transform: translate(-50%, -50%); box-shadow: 0 1px 3px rgb(0 0 0 / .5); pointer-events: none;
+        }
+    }
+    input&__slider {
+        display: block; appearance: none; -webkit-appearance: none;
+        width: 100%; height: 14px; min-height: 0; margin: 0; padding: 0;
+        border: 0; border-radius: 999px; cursor: pointer; box-shadow: none;
+        background: linear-gradient(to right, transparent, var(--picker-opaque, #71717b));
+        &::-webkit-slider-thumb {
+            appearance: none; width: 20px; height: 20px;
+            border-radius: 50%; border: 2px solid var(--picker-surface);
+            background: var(--picker-text); box-shadow: 0 0 0 1px var(--picker-border), 0 1px 3px rgb(0 0 0 / .2);
+        }
+        &::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid var(--picker-surface); background: var(--picker-text);
+            box-shadow: 0 0 0 1px var(--picker-border);
+        }
+    }
+    input&__hue { background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+    &__alpha-track { border-radius: 999px; }
+    &__controls {
+        display: flex; align-items: center; gap: 6px;
+        > button { display: inline-flex; align-items: center; justify-content: center; width: 36px; padding: 0; flex-shrink: 0; }
+        > select { width: 66px; flex-shrink: 0; padding: 0 4px; }
+        > input { flex: 1 1 0; width: 0; padding: 0 6px; }
+    }
+    &__alpha-value {
+        display: flex; align-items: center; flex: 0 0 58px; margin: 0;
+        position: relative;
+        input { width: 100%; padding: 0 20px 0 6px; appearance: textfield; }
+        input::-webkit-inner-spin-button, input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+        > span { position: absolute; right: 6px; color: var(--picker-muted); pointer-events: none; }
+    }
+    &__status { margin: 0; color: var(--picker-danger); font-size: .75rem; line-height: 1.4; }
+    &__status:empty { display: none; }
+}
+[data-bs-theme=dark] .dynamics-colorpicker {
+    --picker-label: var(--form-text-label, var(--magazine-control-label, var(--dynamics-form-text-default-label, rgb(219 228 233))));
+    --picker-label-active: var(--form-text-label-active, var(--magazine-control-foreground, var(--dynamics-form-text-default-label-active, #fff)));
+}
+@media (max-width: 575px) {
+    .dynamics-colorpicker { gap: .375rem; }
+    .dynamics-colorpicker__controls { gap: 6px; }
+    .dynamics-colorpicker__panel input[type=text] { font-size: 16px; }
+}

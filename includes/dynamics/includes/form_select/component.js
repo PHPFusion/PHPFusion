@@ -8,6 +8,7 @@
     const defaultStrings = {
         search: 'Search options...',
         resetSearch: 'Reset search',
+        resetAll: 'Reset all',
         clear: 'Clear',
         selected: 'selected',
         empty: 'No options found.',
@@ -84,8 +85,27 @@
             flag: raw.flag == null ? '' : String(raw.flag),
             avatar: raw.avatar == null ? '' : String(raw.avatar),
             level: raw.level == null ? '' : decodeText(raw.level),
+            status: normalizeStatus(raw.status == null ? raw.statusVariant : raw.status),
             raw: raw
         };
+    }
+
+    function normalizeStatus(value) {
+        const aliases = {
+            gray: 'secondary',
+            grey: 'secondary',
+            neutral: 'secondary',
+            blue: 'info',
+            green: 'success',
+            yellow: 'warning',
+            orange: 'warning',
+            red: 'danger'
+        };
+        const status = String(value == null ? '' : value).trim().toLowerCase();
+        const normalized = aliases[status] || status;
+        return ['secondary', 'info', 'success', 'warning', 'danger'].includes(normalized)
+            ? normalized
+            : '';
     }
 
     function normalizeCollection(data, group) {
@@ -116,6 +136,10 @@
         parsed.strings = Object.assign({}, defaultStrings, parsed.strings || {});
         parsed.searchThreshold = Math.max(0, Number(parsed.searchThreshold == null ? 5 : parsed.searchThreshold));
         parsed.maxSelect = Math.max(0, Number(parsed.maxSelect || 0));
+        parsed.minSelect = Math.max(0, Number(parsed.minSelect || 0));
+        if (parsed.maxSelect) {
+            parsed.minSelect = Math.min(parsed.minSelect, parsed.maxSelect);
+        }
         parsed.delimiter = String(parsed.delimiter || ',');
         parsed.multiple = source instanceof HTMLSelectElement ? source.multiple : Boolean(parsed.multiple);
         parsed.tags = Boolean(parsed.tags);
@@ -248,18 +272,18 @@
             this.root.className = 'dynamics-combobox';
             this.root.dataset.multiple = this.config.multiple ? 'true' : 'false';
             this.root.classList.toggle('dynamics-combobox--floating', this.config.floatingLabel);
+            this.root.classList.toggle('dynamics-combobox--tags', this.config.tags);
+
+            if (this.config.floatingLabel) {
+                this.root.appendChild(this.makeFloatingMeta());
+            }
 
             if (this.config.multiple) {
                 this.control = document.createElement('div');
                 this.control.className = 'dynamics-combobox__control dynamics-combobox__control--multiple';
 
-                if (this.config.floatingLabel) {
-                    this.control.appendChild(this.makeFloatingLabel());
-                }
-
                 this.chips = document.createElement('div');
                 this.chips.className = 'dynamics-combobox__chips';
-                this.control.appendChild(this.chips);
 
                 this.inlineSearch = document.createElement('input');
                 this.inlineSearch.type = 'search';
@@ -277,12 +301,17 @@
                 this.inlineReset = this.makeResetButton();
                 this.inlineReset.classList.add('dynamics-combobox__inline-reset');
                 this.control.appendChild(this.inlineReset);
-                if (this.config.allowClear) {
-                    this.selectionClearButton = this.makeSelectionClearButton('dynamics-combobox__selection-clear--multiple');
-                    this.selectionClearButton.setAttribute('data-fusion-no-framework-aliases', '');
-                    this.control.appendChild(this.selectionClearButton);
-                }
                 this.root.appendChild(this.control);
+                this.root.appendChild(this.chips);
+
+                this.tagActions = document.createElement('div');
+                this.tagActions.className = 'dynamics-combobox__tag-actions';
+                this.resetAllButton = document.createElement('button');
+                this.resetAllButton.type = 'button';
+                this.resetAllButton.className = 'dynamics-combobox__reset-all';
+                this.resetAllButton.textContent = this.config.strings.resetAll;
+                this.tagActions.appendChild(this.resetAllButton);
+                this.root.appendChild(this.tagActions);
                 this.focusTarget = this.inlineSearch;
                 this.ariaControl = this.inlineSearch;
             } else {
@@ -296,9 +325,6 @@
 
                 this.valueStack = document.createElement('span');
                 this.valueStack.className = 'dynamics-combobox__value-stack';
-                if (this.config.floatingLabel) {
-                    this.valueStack.appendChild(this.makeFloatingLabel());
-                }
 
                 this.value = document.createElement('span');
                 this.value.className = 'dynamics-combobox__value';
@@ -398,6 +424,22 @@
             return label;
         }
 
+        makeFloatingMeta() {
+            const meta = document.createElement('span');
+            meta.className = 'dynamics-combobox__floating-meta';
+            meta.appendChild(this.makeFloatingLabel());
+
+            const parent = this.source.parentElement;
+            const help = parent ? parent.querySelector(':scope > .dynamics-field-help__trigger') : null;
+            if (help) {
+                this.floatingHelp = help;
+                help.classList.add('dynamics-combobox__floating-help');
+                meta.appendChild(help);
+            }
+
+            return meta;
+        }
+
         makeSelectionClearButton(modifier) {
             const button = document.createElement('button');
             button.type = 'button';
@@ -462,6 +504,12 @@
                     this.resetSearch();
                     this.inlineSearch.focus();
                 });
+                if (this.resetAllButton) {
+                    this.resetAllButton.addEventListener('click', () => {
+                        this.clearSelection();
+                        this.inlineSearch.focus();
+                    });
+                }
             } else {
                 this.searchInput.addEventListener('input', () => this.setQuery(this.searchInput.value));
                 this.searchInput.addEventListener('keydown', (event) => this.handleKeydown(event));
@@ -552,7 +600,8 @@
         }
 
         positionPanel() {
-            const rect = this.control.getBoundingClientRect();
+            const anchor = this.config.multiple ? this.root : this.control;
+            const rect = anchor.getBoundingClientRect();
             const gutter = 8;
             const viewportWidth = document.documentElement.clientWidth;
             const width = Math.min(Math.max(rect.width, 216), Math.min(360, viewportWidth - gutter * 2));
@@ -702,12 +751,19 @@
             this.renderList();
             const count = this.selected.size;
             this.selectionCount.textContent = count + ' ' + this.config.strings.selected;
-            this.clearButton.hidden = count === 0 || (!this.config.multiple && !this.config.allowClear);
+            this.clearButton.hidden = this.config.minSelect > 0 || count === 0 || (!this.config.multiple && !this.config.allowClear);
             this.footer.hidden = !this.config.multiple && !this.config.allowClear;
             if (this.selectionClearButton) {
                 const showImmediateClear = count > 0 && this.config.allowClear;
                 this.selectionClearButton.hidden = !showImmediateClear;
                 this.root.dataset.hasClear = showImmediateClear ? 'true' : 'false';
+            }
+            if (this.config.multiple) {
+                this.chips.hidden = count === 0;
+                this.tagActions.hidden = count === 0;
+                if (this.resetAllButton) {
+                    this.resetAllButton.hidden = this.config.minSelect > 0;
+                }
             }
             if (!this.config.multiple && this.searchWrap) {
                 this.searchWrap.hidden = !this.searchEnabled();
@@ -718,7 +774,16 @@
         renderValue() {
             if (!this.config.multiple) {
                 const item = this.selected.values().next().value;
-                this.value.textContent = item ? item.text : this.config.placeholder;
+                this.value.replaceChildren();
+                if (item) {
+                    const statusDot = this.renderStatusDot(item);
+                    if (statusDot) {
+                        this.value.appendChild(statusDot);
+                    }
+                    this.value.appendChild(document.createTextNode(item.text));
+                } else {
+                    this.value.textContent = this.config.placeholder;
+                }
                 this.value.classList.toggle('dynamics-combobox__placeholder', !item);
                 return;
             }
@@ -728,20 +793,23 @@
                 const chip = document.createElement('span');
                 chip.className = 'dynamics-combobox__chip';
                 chip.appendChild(document.createTextNode(item.text));
-                const remove = document.createElement('button');
-                remove.type = 'button';
-                remove.className = 'dynamics-combobox__chip-remove';
-                remove.setAttribute('aria-label', this.config.strings.remove + ' ' + item.text);
-                remove.appendChild(icon('x'));
-                remove.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    this.toggle(item.id, false);
-                    this.inlineSearch.focus();
-                });
-                chip.appendChild(remove);
+                const removable = !item.disabled && this.selected.size > this.config.minSelect;
+                if (removable) {
+                    const remove = document.createElement('button');
+                    remove.type = 'button';
+                    remove.className = 'dynamics-combobox__chip-remove';
+                    remove.setAttribute('aria-label', this.config.strings.remove + ' ' + item.text);
+                    remove.appendChild(icon('x'));
+                    remove.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        this.toggle(item.id, false);
+                        this.inlineSearch.focus();
+                    });
+                    chip.appendChild(remove);
+                }
                 this.chips.appendChild(chip);
             });
-            this.inlineSearch.placeholder = this.selected.size ? '' : this.config.placeholder;
+            this.inlineSearch.placeholder = this.config.placeholder;
         }
 
         renderList() {
@@ -780,6 +848,12 @@
                 return;
             }
 
+            if (query && (this.activeIndex < 0 || !this.visibleItems[this.activeIndex] || this.visibleItems[this.activeIndex].disabled)) {
+                this.activeIndex = this.visibleItems.findIndex(function (item) {
+                    return !item.disabled;
+                });
+            }
+
             this.status.textContent = '';
 
             let currentGroup = null;
@@ -795,6 +869,9 @@
                 const option = this.renderOption(item, index);
                 this.list.appendChild(option);
             });
+            if (this.opened && this.activeIndex >= 0) {
+                this.updateActiveOption();
+            }
         }
 
         renderMessage(message, state) {
@@ -810,12 +887,13 @@
 
         renderOption(item, index) {
             const option = document.createElement('div');
+            const minimumLocked = this.selected.has(item.id) && this.selected.size <= this.config.minSelect;
             option.className = 'dynamics-combobox__option';
             option.id = this.panelId + '-option-' + index;
             option.setAttribute('role', 'option');
             option.setAttribute('aria-selected', this.selected.has(item.id) ? 'true' : 'false');
             option.dataset.index = String(index);
-            if (item.disabled) {
+            if (item.disabled || minimumLocked) {
                 option.setAttribute('aria-disabled', 'true');
             }
             if (index === this.activeIndex) {
@@ -828,6 +906,10 @@
                 const media = this.renderMedia(item);
                 if (media) {
                     option.appendChild(media);
+                }
+                const statusDot = this.renderStatusDot(item);
+                if (statusDot) {
+                    option.appendChild(statusDot);
                 }
             }
 
@@ -858,11 +940,22 @@
                 this.updateActiveOption();
             });
             option.addEventListener('click', () => {
-                if (!item.disabled) {
+                if (!item.disabled && !minimumLocked) {
                     this.toggle(item.id, !this.selected.has(item.id), item);
                 }
             });
             return option;
+        }
+
+        renderStatusDot(item) {
+            if (!item.status) {
+                return null;
+            }
+            const dot = document.createElement('span');
+            dot.className = 'dynamics-combobox__status-dot';
+            dot.dataset.status = item.status;
+            dot.setAttribute('aria-hidden', 'true');
+            return dot;
         }
 
         renderMedia(item) {
@@ -982,6 +1075,10 @@
                 }
                 this.selected.set(item.id, item);
             } else {
+                if (this.selected.has(String(id)) && this.selected.size <= this.config.minSelect) {
+                    this.status.textContent = 'At least ' + this.config.minSelect + ' selection is required.';
+                    return;
+                }
                 this.selected.delete(String(id));
             }
 
@@ -995,7 +1092,15 @@
         }
 
         clearSelection() {
+            if (this.config.minSelect > 0 && this.selected.size <= this.config.minSelect) {
+                this.status.textContent = 'At least ' + this.config.minSelect + ' selection is required.';
+                return;
+            }
+            const retained = this.config.minSelect > 0
+                ? Array.from(this.selected.entries()).slice(0, this.config.minSelect)
+                : [];
             this.selected.clear();
+            retained.forEach(([id, item]) => this.selected.set(id, item));
             this.syncSource(true);
             this.resetSearch();
             this.render();
@@ -1065,7 +1170,7 @@
 
         getValue() {
             const values = Array.from(this.selected.keys());
-            return this.config.multiple ? values : (values[0] || '');
+            return this.config.multiple ? values.join(this.config.delimiter) : (values[0] || '');
         }
 
         getData() {
@@ -1076,7 +1181,16 @@
         }
 
         setValue(value) {
-            const values = Array.isArray(value) ? value : (value == null || value === '' ? [] : [value]);
+            let values;
+            if (Array.isArray(value)) {
+                values = value;
+            } else if (value == null || value === '') {
+                values = [];
+            } else if (this.config.multiple) {
+                values = String(value).split(this.config.delimiter).filter(Boolean);
+            } else {
+                values = [value];
+            }
             const previousSelection = new Map(this.selected);
             this.selected.clear();
             values.forEach((id) => {
@@ -1115,6 +1229,10 @@
             }
             if (this.label) {
                 this.label.classList.remove('dynamics-combobox__source-label--floating');
+            }
+            if (this.floatingHelp) {
+                this.floatingHelp.classList.remove('dynamics-combobox__floating-help');
+                this.source.insertAdjacentElement('afterend', this.floatingHelp);
             }
             this.root.remove();
             this.panel.remove();

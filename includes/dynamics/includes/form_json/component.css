@@ -1,0 +1,52 @@
+.dynamics-json {
+  --dynamics-json-border: var(--ui-border, var(--tblr-border-color, #d8dee8));
+  --dynamics-json-surface: var(--ui-muted, var(--tblr-bg-surface-secondary, #f6f8fb));
+  --dynamics-json-foreground: var(--ui-foreground, var(--tblr-body-color, #182433));
+  --dynamics-json-muted: var(--ui-muted-foreground, var(--tblr-secondary-color, #667085));
+  --dynamics-json-ring: var(--ui-ring, var(--tblr-primary, #206bc4));
+}
+
+.dynamics-json__summary {
+  min-height: 64px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--dynamics-json-border);
+}
+
+.dynamics-json__preview {
+  min-height: 180px;
+  max-height: 360px;
+  margin: 0;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--dynamics-json-border);
+  border-radius: 8px;
+  background: var(--dynamics-json-surface);
+  color: var(--dynamics-json-foreground);
+  font: 13px/1.6 "Geist Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  overflow-wrap: anywhere;
+  tab-size: 2;
+  white-space: pre-wrap;
+}
+
+.dynamics-json__preview:focus-visible {
+  border-color: var(--dynamics-json-ring);
+  outline: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dynamics-json-ring) 22%, transparent);
+}
+
+@media (max-width: 767.98px) {
+  .dynamics-json__summary {
+    min-height: 72px;
+  }
+
+  .dynamics-json__summary > button {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dynamics-json,
+  .dynamics-json * {
+    scroll-behavior: auto !important;
+  }
+}

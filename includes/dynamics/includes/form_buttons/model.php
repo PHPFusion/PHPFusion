@@ -67,16 +67,8 @@ function form_button($input_name, $title, $input_value, array $options = []) {
 		'block'       => FALSE,
 		'alt'         => $title,
 		'data'        => [],
-		'ai_trigger'  => FALSE,
 	];
 	$options += $default_options;
-	
-	// --- AUTO-APPEND CLASS LOGIC FOR GENIE ENGINE ---
-	if ( $options['ai_trigger'] ) {
-		// Enforces structural alignment and core cosmic style bindings automatically
-		$ai_classes = 'btn-ai btn-sm ms-auto btn-alakazam d-inline-flex align-items-center gap-2 pe-3';
-		$options['class'] = trim($options['class'] . " " . $ai_classes);
-	}
 	
 	if ( $options['block'] ) {
 		$options['class'] = $options['class'] . " w-100";
@@ -120,35 +112,11 @@ function form_button($input_name, $title, $input_value, array $options = []) {
 		$icon = $icon . ' ';
 	}
 	
-	// 2. Build the Inner Button Structure if AI is triggered
-	if ( $options['ai_trigger'] ) {
-		$title = "
-        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='icon genie-magic-star' style='overflow: visible;'>
-            <path d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'
-                  style='stroke: url(#genie-cosmic-flow); stroke-width: 2.5;' />
-            <defs>
-                <linearGradient id='genie-cosmic-flow' x1='0%' y1='0%' x2='100%' y2='100%' gradientTransform='rotate(45)'>
-                    <stop offset='0%' stop-color='#4e54c8' />
-                    <stop offset='25%' stop-color='#00ffcc' />
-                    <stop offset='50%' stop-color='#fffc00' />
-                    <stop offset='75%' stop-color='#ff007f' />
-                    <stop offset='100%' stop-color='#4e54c8' />
-                </linearGradient>
-            </defs>
-        </svg>                
-        <div class='genie-spinner'></div>
-        <span class='genie-btn-text'>{$title}</span>";
-	}
-	
 	// Common button attributes
 	$common_attrs = "id='" . $options['input_id'] . "' title='" . $options['alt'] . "' " .
 		"class='btn " . $options['class'] . " " . ( $options['deactivate'] ? 'disabled' : '' ) . "' " .
 		( ! empty($options_data) ? implode(' ', $options_data) : '' ) .
 		( $options['deactivate'] ? " aria-disabled='true'" : "" );
-	
-	if ( $options['ai_trigger'] ) {
-		$common_attrs .= " style='pointer-events: auto;'";
-	}
 	
 	// Render Markup variants
 	if ( $options['type'] == 'link' ) {
@@ -163,15 +131,6 @@ function form_button($input_name, $title, $input_value, array $options = []) {
 	else {
 		$html .= "<button " . $common_attrs . " name='" . $input_name . "' value='" . $input_value . "' type='submit' " .
 			( $options['deactivate'] ? " disabled" : "" ) . ">" . $icon . $title . "</button>";
-	}
-	
-	// 3. Render the Split Cosmetic Flex Deck Bottom Layer
-	if ( $options['ai_trigger'] ) {
-		$html = '
-        <div class="position-absolute bottom-0 start-0 end-0 d-flex align-items-center justify-content-between px-3 pb-3" style="pointer-events: none;">
-            <div class="genie-status-text text-truncate pe-2" style="font-style: italic; opacity: 0.8; font-weight: 500;"></div>
-            ' . $html . '
-        </div>';
 	}
 	
 	return dynamics_render_component_template('form_buttons', $html);
@@ -345,7 +304,7 @@ function form_btngroup_backup($input_name, $label, $input_value, array $options 
 
     // Footers/Defender registration...
     if ( $options['ext_tip'] ) {
-        $html .= "<div class='form-text mt-2'><i>{$options['ext_tip']}</i></div>";
+        $html .= "<div class='form-text mt-2'>".dynamics_field_help($options['ext_tip'], TRUE)."</div>";
     }
     if ( \Defender::inputHasError($input_name) ) {
         $html .= "<div class='invalid-feedback d-block'>{$options['error_text']}</div>";
@@ -545,7 +504,7 @@ function form_btngroup($input_name, $label, $input_value, array $options = []) {
                                  ]);
 
     if ( $options['ext_tip'] ) {
-        $html .= "<div class='form-text mt-2'><i>{$options['ext_tip']}</i></div>";
+        $html .= "<div class='form-text mt-2'>".dynamics_field_help($options['ext_tip'], TRUE)."</div>";
     }
     if ( $options['inline'] && $label ) {
         $html .= "</div>";

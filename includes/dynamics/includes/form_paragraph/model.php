@@ -17,12 +17,12 @@
 +--------------------------------------------------------*/
 function form_para($title, $id = 'auto', $class = 'underline', array $options = []) {
     $options += [
-        'tip' => !empty($options['tip']) ? "title='".$options['tip']."'" : '',
+        'tip' => '',
     ];
     if ($id == 'auto') {
         $id = random_string(20);
     }
-    $html = "<h4 id='$id' class='m-b-20 $class'>$title ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</h4>\n";
+    $html = "<h4 id='$id' class='m-b-20 $class'>$title ".dynamics_field_help($options['tip'])."</h4>\n";
 
     return dynamics_render_component_template('form_paragraph', $html);
 }

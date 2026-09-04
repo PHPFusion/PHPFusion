@@ -8,31 +8,36 @@
     position: relative;
     min-height: 200px;
     overflow: hidden;
-    border: 1px solid var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color))));
-    border-radius: 8px;
+    border: var(--tiptap-border-width, 1px) solid var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color))));
+    border-radius: var(--tiptap-radius, 8px);
     background: var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg))));
     color: var(--tiptap-foreground, var(--ui-card-foreground, var(--tblr-body-color, var(--bs-body-color))));
     transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
 }
 
 .tiptap-editor-wrapper:hover {
+    border-color: var(--tiptap-hover-border, var(--tiptap-border, var(--ui-input, var(--tblr-border-color, var(--bs-border-color)))));
     background: var(--tiptap-hover-surface, var(--ui-accent, var(--tblr-active-bg, var(--bs-tertiary-bg))));
 }
 
 .tiptap-editor-wrapper:focus-within {
     border-color: var(--tiptap-ring, var(--ui-ring, var(--tblr-primary, var(--bs-primary))));
-    background: var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg))));
-    box-shadow: 0 0 0 3px var(--tiptap-focus-ring, color-mix(in srgb, var(--ui-ring, var(--tblr-primary, var(--bs-primary))) 16%, transparent));
+    background: var(--tiptap-focus-surface, var(--tiptap-surface, var(--ui-card, var(--tblr-bg-surface, var(--bs-body-bg)))));
+    box-shadow: var(--tiptap-focus-shadow, 0 0 0 3px var(--tiptap-focus-ring, color-mix(in srgb, var(--ui-ring, var(--tblr-primary, var(--bs-primary))) 16%, transparent)));
 }
 
 .tiptap-editor-wrapper .tiptap {
     min-height: 200px;
     padding: 14px 14px 44px;
     outline: 0;
+    color: var(--tiptap-foreground, var(--ui-card-foreground, var(--tblr-body-color, var(--bs-body-color))));
+    font-family: var(--tiptap-font-family, "Geist", ui-sans-serif, system-ui, sans-serif);
+    font-size: var(--tiptap-font-size, 13px);
+    line-height: var(--tiptap-line-height, 1.65);
+}
+
+.tiptap-editor-wrapper .tiptap :is(p, li) {
     color: inherit;
-    font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
-    font-size: 13px;
-    line-height: 1.65;
 }
 
 .tiptap-editor-wrapper .tiptap > :first-child {

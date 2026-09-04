@@ -30,19 +30,20 @@ function bootstrap_header(string $context = 'site') {
     if (bootstrap_framework_variant() === 'tabler') {
         echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler.min.css">';
         echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/icons-webfont/tabler-icons.min.css">';
-        echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler-adapter.css">';
-        return;
-    }
-
-    echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v5/css/bootstrap.min.css">';
+    } else {
+        echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v5/css/bootstrap.min.css">';
 //    if (file_exists( $custom_file )) {
 //        echo '<link rel="stylesheet" href="' . $custom_file . '">';
 //    } else {
 //        echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v3/css/bootstrap-submenu.min.css" defer>';
 //    }
-    if (fusion_get_locale( 'text-direction' ) === 'rtl') {
-        echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v5/css/bootstrap.rtl.min.css">';
+        if (fusion_get_locale( 'text-direction' ) === 'rtl') {
+            echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v5/css/bootstrap.rtl.min.css">';
+        }
     }
+
+    echo '<link rel="stylesheet" href="' . INCLUDES . 'frameworks/bootstrap/v5/navbar.css?v=' .
+        filemtime(__DIR__ . '/navbar.css') . '">';
 }
 
 /**
@@ -54,10 +55,12 @@ function bootstrap_footer(string $context = 'site') {
     if (bootstrap_framework_variant() === 'tabler') {
         echo '<script src="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler.min.js" defer></script>';
         echo '<script src="' . INCLUDES . 'frameworks/bootstrap/tabler/tabler-adapter.js" defer></script>';
-        return;
+    } else {
+        echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/popper.min.js" defer></script>';
+        echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/bootstrap.bundle.min.js" defer></script>';
     }
 
-    echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/popper.min.js" defer></script>';
-    echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/bootstrap.bundle.min.js" defer></script>';
+    echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/navbar.min.js?v=' .
+        filemtime(__DIR__ . '/js/navbar.min.js') . '" defer></script>';
 //    echo '<script src="' . INCLUDES . 'frameworks/bootstrap/v5/js/bootstrap-submenu.min.js" defer></script>';
 }

@@ -1,0 +1,76 @@
+.genie-ui {
+  --genie-surface: var(--ui-card, var(--tblr-bg-surface, #fff));
+  --genie-foreground: var(--ui-card-foreground, var(--tblr-body-color, #182433));
+  --genie-muted: var(--ui-muted-foreground, var(--tblr-secondary-color, #667382));
+  --genie-border: var(--ui-border, var(--tblr-border-color, rgba(0, 0, 0, .12)));
+  --genie-ring: var(--ui-ring, var(--tblr-primary, #206bc4));
+
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.genie-ui-response {
+  color: var(--genie-foreground);
+  background: var(--genie-surface);
+  border-color: var(--genie-border);
+  overflow: hidden;
+}
+
+.genie-ui-response[hidden] { display: none !important; }
+
+.genie-ui-response-header { border-bottom: 1px solid var(--genie-border); }
+.genie-ui-response-title { font-size: .875rem; }
+.genie-ui-icon { flex: 0 0 auto; }
+
+.genie-ui-choices {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  max-height: 22rem;
+  padding: .5rem;
+  overflow: auto;
+}
+
+.genie-ui-choice {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: flex-start;
+  gap: .625rem;
+  padding: .625rem;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: .5rem;
+  box-shadow: none;
+  white-space: normal;
+}
+
+.genie-ui-choice:hover { background: var(--ui-accent, rgba(127, 127, 127, .1)); }
+.genie-ui-choice:focus-visible { outline: 2px solid var(--genie-ring); outline-offset: 2px; }
+.genie-ui-choice-icon { color: var(--genie-ring); font-size: 1.25rem; line-height: 1.25rem; }
+.genie-ui-choice-copy { min-width: 0; line-height: 1.5; }
+.genie-ui-choice-copy > :last-child { margin-bottom: 0; }
+
+.genie-ui-actions { min-height: 2.5rem; }
+.genie-ui-status { min-width: 0; color: var(--genie-muted); font-size: .8125rem; font-style: italic; }
+.genie-ui-trigger { display: inline-flex; align-items: center; gap: .5rem; }
+
+.genie-ui-spinner {
+  display: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+
+.genie-ui-trigger.is-loading .genie-ui-icon { display: none; }
+.genie-ui-trigger.is-loading .genie-ui-spinner { display: block; animation: genie-ui-spin .8s linear infinite; }
+
+@keyframes genie-ui-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .genie-ui-trigger.is-loading .genie-ui-spinner { animation-duration: 1.6s; }
+}

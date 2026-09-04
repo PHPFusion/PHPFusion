@@ -3,6 +3,7 @@
 defined('IN_FUSION') || exit;
 
 use PHPFusion\Api\AuthEndpoint;
+use PHPFusion\Api\FileUploadCheckEndpoint;
 
 $legacy = static function (
     string $file,
@@ -21,19 +22,24 @@ $legacy = static function (
 };
 
 $endpoints = [
+    'core.file-upload-check' => [
+        'handler'   => [FileUploadCheckEndpoint::class, 'check'],
+        'bootstrap' => [dirname(__DIR__) . '/endpoints/FileUploadCheckEndpoint.php'],
+        'route'     => '/v1/files/preflight',
+        'methods'   => ['POST'],
+        'aliases'   => ['file-upload-check'],
+        'channels'  => ['http'],
+    ],
     'core.username-check' => $legacy('username_validation.php', 'users/username-check', ['GET', 'POST'], ['username-check']),
     'core.userpass-check' => $legacy('userpass_validation.php', 'users/password-check', ['POST'], ['userpass-check']),
     'core.calling-codes' => $legacy('calling_codes.php', 'geo/calling-codes', ['GET'], ['calling-codes']),
     'core.geomap-states' => $legacy('states.php', 'geo/states', ['GET'], ['geomap-states']),
     'core.analytics' => $legacy('analytics.php', 'analytics', ['POST'], ['analytics']),
     'core.textarea-sessions' => $legacy('textarea_sessions.php', 'textarea/sessions', ['POST'], ['textarea-sessions']),
-    'core.cohere' => $legacy('ai/cohere_include.php', 'ai/cohere', ['POST'], ['cohere']),
-    'core.student-about' => $legacy('ai/cohere_about.php', 'ai/student-about', ['POST'], ['student-about']),
     'core.social' => $legacy('social.php', 'social', ['GET', 'POST'], ['social']),
     'core.set-language' => $legacy('set_language.php', 'locale', ['GET', 'POST'], ['set-language']),
     'core.userhideemail-update' => $legacy('userhideemail_update.php', 'users/hide-email', ['POST'], ['userhideemail-u']),
     'core.userprofiledisplay-update' => $legacy('userprofiledisplay_update.php', 'users/profile-display', ['POST'], ['userprofiledisplay-u']),
-
     'auth.admin-login' => [
         'handler'  => [AuthEndpoint::class, 'adminLogin'],
         'route'    => '/v1/auth/admin-login',

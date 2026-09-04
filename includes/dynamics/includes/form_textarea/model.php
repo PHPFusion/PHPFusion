@@ -42,6 +42,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 		'input_id'     => $input_name,
 		'required'     => FALSE,
 		'placeholder'  => '',
+		'floating_label' => FALSE,
+        'tip'           => '',
+        'ext_tip'       => '',
 		'width'        => '100%',
 		'inner_width'  => '100%',
 		'height'       => '200px',
@@ -63,6 +66,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	];
 
 	$options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
 	$options['tiptap_format'] = $options['tiptap_format'] === 'html' ? 'html' : 'markdown';
 
 	// --- RESTORED DEFENDER REGISTRATION ---
@@ -110,19 +116,20 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 	}
 
 	$safe_js_id = str_replace("-", "_", $options['input_id']);
+	$floating_label = (bool)$options['floating_label'] && !$options['inline'];
 
 	// --- HTML OUTPUT ---
-	$html = "<div id='{$safe_js_id}_field' class='form-group " . ($options['inline'] && $label ? 'row' : '') . $error_class . $options['class'] . "'" . ($options['width'] ? " style='width: " . $options['width'] . " !important;'" : '') . ">";
+	$html = "<div id='{$safe_js_id}_field' class='form-group " . ($floating_label ? 'form-floating ' : '') . ($options['inline'] && $label ? 'row' : '') . $error_class . $options['class'] . "'" . ($options['width'] ? " style='width: " . $options['width'] . " !important;'" : '') . ">";
 
-	if ($label) {
-		$html .= "<label class='form-label " . ($options['inline'] ? "col-xs-12 col-sm-3" : '') . "' for='" . $options['input_id'] . "'>" . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . "</label>";
+	if ($label && !$floating_label) {
+		$html .= "<label class='form-label " . ($options['inline'] ? "col-xs-12 col-sm-3" : '') . "' for='" . $safe_js_id . "'>" . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . dynamics_field_help($options['tip']) . "</label>";
 	}
 
 	if ($options['inline']) {
 		$html .= "<div class='col-xs-12 col-sm-9'>";
 	}
-	if (!empty($options['tip'])) {
-		$html .= "<div class='mb-2'><small class='text-muted'>{$options['tip']}</small></div>";
+	if (!$label && !empty($options['tip'])) {
+		$html .= "<div class='dynamics-textarea-help'>" . dynamics_field_help($options['tip']) . "</div>";
 	}
 
 
@@ -139,9 +146,9 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
 		// 3. Initialize via jQuery (Targeting ONLY this specific ID)
 		add_to_jquery("
-		(function() {
+		;(function() {
 			// By wrapping this in a function, 'currentTimer' is unique to this specific textarea
-			let currentTimer = setInterval(function() {
+			var currentTimer = setInterval(function() {
 				if (typeof window.initTiptapEditor === 'function') {
 					window.initTiptapEditor('{$safe_js_id}', {$tiptap_config});
 					clearInterval(currentTimer);
@@ -312,7 +319,7 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 			// HTML output sanitisers that could drop data-* attributes) and a
 			// data-mention attribute fallback. The plain-textarea SDK (initMentionField)
 			// must NOT also bind to this field.
-			add_to_jquery("window.eliteMentionConfigs = window.eliteMentionConfigs || {}; window.eliteMentionConfigs['{$safe_js_id}'] = {$m_config};");
+			add_to_jquery("window.PHPFusionMentionConfigs = window.PHPFusionMentionConfigs || {}; window.PHPFusionMentionConfigs['{$safe_js_id}'] = {$m_config};");
 			$mention_data_attr = " data-mention='" . htmlspecialchars($m_config, ENT_QUOTES) . "'";
 		} else {
 			// Plain textarea: wait for the SDK to load (mirrors the tiptap bootstrap), then bind.
@@ -334,11 +341,16 @@ function form_textarea($input_name, $label = '', $input_value = '', array $optio
 
 	// Standard Textarea (CKEditor will hide this and use it as data source)
 	$placeholder_attr = $options['placeholder'] ? " placeholder='" . str_replace("'", "&#39;", $options['placeholder']) . "'" : '';
-	$html .= "<textarea name='$input_name'
+	$html .= "<textarea name='$input_name'" . ($options['required'] ? " aria-required='true'" : '') . "
               style='width:100%; height:{$options['height']};" . ($options['no_resize'] ? ' resize:none;' : '') . "'
               rows='{$options['rows']}'
               class='form-control'" . $placeholder_attr . $mention_data_attr . "
-              id='{$safe_js_id}'>$input_value</textarea>" . $mention_registry;
+              id='{$safe_js_id}'>$input_value</textarea>";
+	if ($floating_label && $label) {
+		$html .= "<label for='{$safe_js_id}'>" . $label . ($options['required'] ? "<span class='required'>&nbsp;*</span>" : '') . dynamics_field_help($options['tip']) . '</label>';
+	}
+	$html .= $mention_registry;
+    $html .= $options['ext_tip'] ? "<div class='form-text'>{$options['ext_tip']}</div>" : '';
 
 	if ($options['inline']) {
 		$html .= "</div>";

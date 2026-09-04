@@ -150,12 +150,14 @@
                 }
             };
             this.onInputPaste = (event) => this.handleInputPaste(event);
+            this.onInput = () => this.handleInput();
             this.onInputBlur = () => this.resetSegmentBuffer();
             this.interactionInput.addEventListener('pointerdown', this.onInputPointer);
             this.interactionInput.addEventListener('click', this.onInputClick);
             this.interactionInput.addEventListener('keydown', this.onInputKeydown, true);
             this.interactionInput.addEventListener('beforeinput', this.onInputBeforeInput);
             this.interactionInput.addEventListener('paste', this.onInputPaste);
+            this.interactionInput.addEventListener('input', this.onInput);
             this.interactionInput.addEventListener('blur', this.onInputBlur);
         }
 
@@ -235,6 +237,74 @@
                 segments.push({start: match.index, end: match.index + match[0].length});
             }
             return segments;
+        }
+
+        dateFormatSegments() {
+            const format = this.config.displayFormat || 'd / m / Y';
+            const matches = Array.from(format.matchAll(/[Yymndj]/g));
+            const today = new Date();
+
+            return matches.map((match, index) => ({
+                index: match.index,
+                token: match[0],
+                width: this.segmentLimit(match[0], today).length,
+                separator: index < matches.length - 1
+                    ? format.slice(match.index + match[0].length, matches[index + 1].index)
+                    : ''
+            }));
+        }
+
+        formatPartialDate(digits, segments) {
+            let offset = 0;
+            let value = '';
+
+            segments.forEach((segment) => {
+                if (offset >= digits.length) {
+                    return;
+                }
+                const part = digits.slice(offset, offset + segment.width);
+                value += part;
+                offset += part.length;
+                if (part.length === segment.width) {
+                    value += segment.separator;
+                }
+            });
+
+            return value;
+        }
+
+        handleInput() {
+            if (this.config.type !== 'date' || this.config.range || this.config.allowInput === false) {
+                return;
+            }
+
+            const value = this.interactionInput.value;
+            if (value === '') {
+                this.source.value = '';
+                return;
+            }
+            if (!/^[\d\s./-]+$/.test(value)) {
+                return;
+            }
+
+            const segments = this.dateFormatSegments();
+            const maximumLength = segments.reduce((length, segment) => length + segment.width, 0);
+            const digits = value.replace(/\D/g, '').slice(0, maximumLength);
+            const formatted = this.formatPartialDate(digits, segments);
+
+            if (formatted !== value) {
+                this.interactionInput.value = formatted;
+                this.interactionInput.setSelectionRange(formatted.length, formatted.length);
+            }
+
+            if (digits.length !== maximumLength) {
+                return;
+            }
+
+            const date = this.picker.parseDate(formatted, this.config.displayFormat || 'd / m / Y');
+            if (date instanceof Date && !Number.isNaN(date.getTime()) && this.picker.isEnabled(date)) {
+                this.picker.setDate(date, true);
+            }
         }
 
         selectedSegment(segments) {
@@ -749,6 +819,7 @@
             this.interactionInput.removeEventListener('keydown', this.onInputKeydown, true);
             this.interactionInput.removeEventListener('beforeinput', this.onInputBeforeInput);
             this.interactionInput.removeEventListener('paste', this.onInputPaste);
+            this.interactionInput.removeEventListener('input', this.onInput);
             this.interactionInput.removeEventListener('blur', this.onInputBlur);
             registry.delete(this.source.id);
             instances.delete(this.source);

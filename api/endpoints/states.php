@@ -27,6 +27,7 @@ function _get_states() {
     $states = [];
     require_once INCLUDES.'geomap/geo.states.php';
     $id = get('id');
+    $query = trim((string)get('q'));
 
     $states_array = [];
     $states += ['id' => 'Other', 'text' => fusion_get_locale('other_states')];
@@ -35,6 +36,9 @@ function _get_states() {
         if ($id == $key) {
             if (!empty($value)) {
                 foreach ($value as $region) {
+                    if ($query !== '' && stripos($region, $query) === FALSE) {
+                        continue;
+                    }
                     $states_array[] = ['id' => $region, 'text' => $region];
                 }
             }

@@ -55,7 +55,7 @@ function form_name($input_name, $label = "", $input_value = FALSE, array $option
 
     if ($label) {
         $html .= "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-3 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'> ".$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')."
-	    ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."
+	    ".dynamics_field_help($options['tip'])."
 	    </label>\n";
     }
 

@@ -26,6 +26,11 @@ const IMAGES_GRP = IMAGES . "groups/";
 const IMAGES_GRP_T = IMAGES . "groups/thumbs/";
 const AUDIO = BASEDIR.'assets/audio/';
 const VIDEOS = BASEDIR.'assets/videos/';
+const FONTS = BASEDIR.'assets/fonts/';
+const LIBS = BASEDIR.'assets/libs/';
+
+const JS = BASEDIR.'assets/js/';
+
 const INCLUDES = BASEDIR.'includes/';
 const HELPERS = BASEDIR."includes/helpers/";
 const LOCALE = BASEDIR.'locale/';
@@ -50,5 +55,8 @@ define('FUSION_ROOT_DIR', dirname(__DIR__).'/');
 // Define user levels
 const USER_LEVEL_SUPER_ADMIN = '-103';
 const USER_LEVEL_ADMIN = '-102';
+const USER_LEVEL_TEACHER = '-101';
+const USER_LEVEL_PARENT = '-101';
+const USER_LEVEL_STUDENT = '-101';
 const USER_LEVEL_MEMBER = '-101';
 const USER_LEVEL_PUBLIC = '0';

@@ -7,7 +7,13 @@
  * so callers can migrate from ImageRepo without knowing Iconify's exact names.
  */
 if (!function_exists('iconify')) {
-    function iconify(string $icon, string $set = 'heroicons-outline', string $class = ''): string
+    function iconify(
+        string $icon,
+        string $set = 'heroicons-outline',
+        string $class = '',
+        ?int $size = NULL,
+        ?float $strokeWidth = NULL
+    ): string
     {
         $aliases = [
             'cancel' => 'circle-x',
@@ -21,9 +27,17 @@ if (!function_exists('iconify')) {
             $icon = $aliases[$icon] ?? $icon;
         }
         $iconName = str_contains($icon, ':') ? $icon : $set.':'.$icon;
+        $styles = [];
+        if ($size !== NULL) {
+            $styles[] = 'font-size:'.max(1, $size).'px';
+        }
+        if ($strokeWidth !== NULL) {
+            $styles[] = '--svg-stroke-width--2px:'.max(0.5, $strokeWidth).'px';
+        }
 
         return '<iconify-icon icon="'.htmlspecialchars($iconName, ENT_QUOTES).'"'.
             ($class !== '' ? ' class="'.htmlspecialchars($class, ENT_QUOTES).'"' : '').
+            ($styles ? ' style="'.implode(';', $styles).'"' : '').
             ' aria-hidden="true"></iconify-icon>';
     }
 }
@@ -31,7 +45,7 @@ if (!function_exists('iconify')) {
 if (!function_exists('load_iconify')) {
     function load_iconify(): void
     {
-        fusion_load_script('https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js', 'js');
+        fusion_load_script('https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js', 'js');
     }
 }
 

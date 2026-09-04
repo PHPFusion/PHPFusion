@@ -2,13 +2,53 @@
     position: relative;
     width: 100%;
     min-width: 0;
+    border-radius: var(--dynamics-control-radius, .5rem);
+    font-family: var(--datepicker-font-family, inherit);
 }
 
 .dynamics-datepicker__input {
-    min-height: 2.75rem;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--dynamics-control-min-height, 2.5rem);
     min-width: 0;
-    padding-right: 3.25rem !important;
+    height: var(--dynamics-control-min-height, 2.5rem);
+    padding: 0 3.25rem 0 .75rem !important;
+    border: var(--dynamics-control-border-width, 1px) solid var(--datepicker-input);
+    border-radius: var(--dynamics-control-radius, .5rem) !important;
+    background: var(--datepicker-background);
+    color: var(--datepicker-foreground);
+    font-size: var(--dynamics-control-font-size, .875rem);
+    line-height: var(--dynamics-control-line-height, 1.25rem);
+    box-shadow: 0 1px 2px transparent;
     cursor: text;
+    transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+
+    &::placeholder {
+        color: var(--datepicker-muted-foreground);
+        opacity: 1;
+    }
+}
+
+// Keep the input below its label and toggle when the framework raises focused controls.
+.input-group.dynamics-datepicker > .dynamics-datepicker__input {
+    position: relative;
+    z-index: 1;
+}
+
+.dynamics-datepicker__input:disabled,
+.dynamics-datepicker__input[aria-disabled="true"] {
+    background: var(--datepicker-muted);
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+.dynamics-datepicker:not(:has(> .dynamics-datepicker__toggle)) > .dynamics-datepicker__input {
+    border-radius: var(--dynamics-control-radius, .5rem);
+}
+
+.dynamics-datepicker:hover .dynamics-datepicker__input:not(:disabled) {
+    background: var(--datepicker-control-hover-background, var(--datepicker-background));
+    border-color: var(--datepicker-control-hover-border, var(--datepicker-input));
 }
 
 .dynamics-datepicker > button[type="button"].dynamics-datepicker__toggle {
@@ -17,13 +57,16 @@
     right: 1px;
     bottom: 1px;
     z-index: 2;
-    width: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
     min-height: 0 !important;
     padding: 0 !important;
     border: 0 !important;
-    border-radius: 0 .5rem .5rem 0 !important;
+    border-radius: var(--dynamics-control-radius, .5rem) !important;
     background: transparent !important;
-    color: var(--datepicker-muted-foreground, var(--ui-muted-foreground, #6b7280)) !important;
+    color: var(--datepicker-toggle-foreground, var(--datepicker-muted-foreground)) !important;
     cursor: pointer;
     transform: none !important;
 
@@ -33,24 +76,43 @@
     }
 
     &:hover {
-        color: var(--datepicker-foreground, var(--ui-foreground, #111827)) !important;
-        background: var(--datepicker-accent, var(--ui-accent, #f3f4f6)) !important;
+        color: var(--datepicker-foreground) !important;
+        background: var(--datepicker-toggle-hover-background, var(--datepicker-accent)) !important;
     }
 
     &:focus-visible {
-        outline: 2px solid var(--datepicker-ring, var(--ui-ring, #2563eb));
+        outline: 2px solid var(--datepicker-ring);
         outline-offset: -3px;
     }
 }
 
 .dynamics-datepicker:focus-within .dynamics-datepicker__input {
-    border-color: var(--datepicker-ring, var(--ui-ring, #2563eb));
+    border-color: var(--datepicker-ring);
+    outline: 2px solid var(--datepicker-focus-outline, transparent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--datepicker-focus-shadow);
+}
+
+.dynamics-datepicker:has(.dynamics-datepicker__toggle[aria-expanded="true"]) .dynamics-datepicker__input:not(:disabled),
+.dynamics-datepicker__input.active:not(:disabled) {
+    background: var(--datepicker-background);
+    border-color: var(--datepicker-ring);
+    outline: 2px solid var(--datepicker-focus-outline, transparent);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--datepicker-focus-shadow);
+}
+
+.has-error .dynamics-datepicker,
+.dynamics-datepicker:has(.dynamics-datepicker__input:is(.is-invalid, [aria-invalid="true"])) {
+    --datepicker-input: var(--datepicker-destructive);
+    --datepicker-ring: var(--datepicker-destructive);
+    --datepicker-focus-outline: color-mix(in srgb, var(--datepicker-destructive) 50%, transparent);
 }
 
 .dynamics-datepicker--floating .dynamics-datepicker__input {
-    min-height: 3.5rem;
-    padding-top: 1.5rem;
-    padding-bottom: .5rem;
+    height: var(--dynamics-floating-control-height, 3.25rem);
+    min-height: var(--dynamics-floating-control-height, 3.25rem);
+    padding: 1.375rem 3.25rem .25rem .75rem !important;
 }
 
 .dynamics-datepicker__floating-label {
@@ -60,7 +122,7 @@
     left: .75rem;
     z-index: 3;
     overflow: hidden;
-    color: var(--datepicker-muted-foreground, var(--ui-muted-foreground, #6b7280));
+    color: var(--datepicker-label, var(--datepicker-muted-foreground));
     font-size: .75rem;
     font-weight: 550;
     line-height: 1rem;
@@ -70,27 +132,18 @@
 }
 
 .dynamics-datepicker__calendar {
-    --datepicker-background: var(--ui-card, #fff);
-    --datepicker-foreground: var(--ui-foreground, #111827);
-    --datepicker-muted: var(--ui-muted, #f3f4f6);
-    --datepicker-muted-foreground: var(--ui-muted-foreground, #6b7280);
-    --datepicker-border: var(--ui-border, #e5e7eb);
-    --datepicker-input: var(--ui-input, #d1d5db);
-    --datepicker-ring: var(--ui-ring, #2563eb);
-    --datepicker-primary: var(--ui-primary, #2563eb);
-    --datepicker-primary-foreground: var(--ui-primary-foreground, #fff);
-    --datepicker-accent: var(--ui-accent, #eef2ff);
     box-sizing: border-box;
     width: 19rem;
     padding: .375rem;
     overflow: hidden;
-    color: var(--datepicker-foreground);
-    border: 1px solid var(--datepicker-input);
+    color: var(--datepicker-panel-foreground, var(--datepicker-foreground));
+    border: 1px solid var(--datepicker-panel-border, var(--datepicker-input));
     border-radius: .625rem;
-    background: var(--datepicker-background);
-    box-shadow: 0 16px 44px rgba(0, 0, 0, .22);
-    font-family: "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-size: .875rem;
+    background: var(--datepicker-panel-background, var(--datepicker-background));
+    box-shadow: 0 16px 44px var(--datepicker-panel-shadow, var(--datepicker-menu-shadow));
+    font-family: var(--datepicker-font-family, "Geist", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+    font-size: var(--dynamics-control-font-size, .875rem);
+    line-height: var(--dynamics-control-line-height, 1.25rem);
 }
 
 .dynamics-datepicker__calendar::before,
@@ -432,11 +485,6 @@
 }
 
 @media (max-width: 479px) {
-    .dynamics-datepicker__input,
-    .dynamics-datepicker__toggle {
-        min-height: 2.75rem;
-    }
-
     .dynamics-datepicker__calendar {
         width: min(21rem, calc(100vw - 1rem));
     }
@@ -453,6 +501,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .dynamics-datepicker__input,
     .dynamics-datepicker__calendar,
     .dynamics-datepicker__calendar .flatpickr-months,
     .dynamics-datepicker__calendar .flatpickr-innerContainer,

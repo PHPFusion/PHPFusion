@@ -50,7 +50,7 @@ class InstallCore extends Infusions {
     const STEP_TRANSFER = 9;
     const BUILD_VERSION = '10.00.00';
     const INSTALLER_ALGO = 'sha256';
-    const USER_RIGHTS_SA = 'AD.APWR.B.BB.C.CP.DB.ERRO.FM.I.IM.IP.LANG.M.MAIL.MI.P.PI.PL.ROB.S1.S2.S4.S6.S7.S9.S12.SB.SL.SM.SOC.TS.U.UF.UG.UL';
+    const USER_RIGHTS_SA = 'AD.AINT.APWR.B.BB.C.CP.DB.ERRO.FM.I.IM.IP.LANG.M.MAIL.MI.P.PI.PL.ROB.S1.S2.S4.S6.S7.S9.S12.SB.SL.SM.SOC.TS.U.UF.UG.UL';
     protected static $locale = [];
     protected static $localeset = 'English';
     protected static $allow_delete = FALSE;
@@ -82,7 +82,8 @@ class InstallCore extends Infusions {
         'sitename'          => '',
         'siteemail'         => '',
         'enabled_languages' => '',
-        'siteusername'      => ''
+        'siteusername'      => '',
+        'site_location'     => ''
     ];
 
     protected static $user_data = [

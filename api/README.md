@@ -21,6 +21,15 @@ GET  /api/v1/school/admin/calendar
 
 Both URL forms resolve through `ApiRegistry` and execute through `ApiKernel`.
 
+## AJAX POST token renewal
+
+Every AJAX POST rendered with `openform()` must send its current hidden
+`fusion_token` and `form_id`. Every JSON response, including an error response,
+must return a replacement token generated with that same form ID. The client
+must update both hidden fields before it handles success or failure so the next
+POST does not reuse the consumed token. See `documentation/phpfusion/api.md`
+for the implementation contract and example.
+
 ## Direct website access
 
 Server-side PHP can avoid an HTTP round trip:

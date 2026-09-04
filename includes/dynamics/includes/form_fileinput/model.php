@@ -164,7 +164,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
             $html .= '<span class="required" aria-hidden="true"> *</span>';
         }
         if ($options['tip']) {
-            $html .= '<span class="fusion-fileinput__tip" title="'.fusion_fileinput_escape((string)$options['tip']).'" aria-label="'.fusion_fileinput_escape((string)$options['tip']).'">?</span>';
+            $html .= dynamics_field_help($options['tip']);
         }
         $html .= '</label>';
     }
@@ -230,6 +230,7 @@ function form_fileinput($input_name, $label = '', $input_value = FALSE, array $o
     ]);
 
     fusion_load_script(DYNAMICS.'includes/form_fileinput/component.css', 'css');
+    fusion_load_script(DYNAMICS.'assets/fileinput/ajax-upload-preview.js');
     fusion_load_script(DYNAMICS.'includes/form_fileinput/component.js');
 
     return dynamics_render_component_template('form_fileinput', $html);

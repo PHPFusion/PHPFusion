@@ -172,6 +172,7 @@
         dropdown: 'tw-dropdown',
         'dropdown-toggle': 'tw-dropdown-toggle',
         'dropdown-menu': 'tw-dropdown-menu',
+        'dropdown-menu-end': 'tw-end-0',
         'dropdown-pane': 'tw-dropdown-menu',
         'dropdown-item': 'tw-dropdown-item',
         'dropdown-header': 'tw-dropdown-header',
@@ -476,12 +477,32 @@
         },
     };
 
+    const columnWidths = {
+        1: '1/12', 2: '1/6', 3: '1/4', 4: '1/3', 5: '5/12', 6: '1/2',
+        7: '7/12', 8: '2/3', 9: '3/4', 10: '5/6', 11: '11/12', 12: 'full',
+    };
+
     const addResponsiveColumn = (aliases, breakpoint, span) => {
         const prefix = responsivePrefix(breakpoint);
-        const numericSpan = Number(span);
-        if (prefix === undefined || numericSpan < 1 || numericSpan > 12) return;
-        aliases.add('tw-col-span-12');
-        aliases.add(`${prefix}tw-col-span-${numericSpan}`);
+        if (prefix === undefined) return;
+
+        const width = span === 'auto' ? 'auto' : columnWidths[Number(span)];
+        if (!width) return;
+
+        if (prefix) aliases.add('tw-w-full');
+        aliases.add(`${prefix}tw-w-${width}`);
+    };
+
+    const addResponsiveFluidColumn = (aliases, breakpoint) => {
+        const prefix = responsivePrefix(breakpoint);
+        if (prefix === undefined) return;
+        if (!prefix) {
+            aliases.add('tw-col');
+            return;
+        }
+        aliases.add('tw-w-full');
+        aliases.add(`${prefix}tw-w-auto`);
+        aliases.add(`${prefix}tw-flex-1`);
     };
 
     const resolveContextualAliases = (element, tokens, aliases) => {
@@ -489,8 +510,11 @@
         const tag = element.tagName?.toLowerCase() || '';
 
         tokens.forEach((token) => {
-            let match = token.match(/^col(?:-(xs|sm|md|lg|xl|xxl))?-(\d{1,2})$/);
+            let match = token.match(/^col(?:-(xs|sm|md|lg|xl|xxl))?-(auto|\d{1,2})$/);
             if (match) addResponsiveColumn(aliases, match[1] || 'xs', match[2]);
+
+            match = token.match(/^col-(xs|sm|md|lg|xl|xxl)$/);
+            if (match) addResponsiveFluidColumn(aliases, match[1]);
 
             if (has('cell')) {
                 match = token.match(/^(small|medium|large)-(\d{1,2})$/);
@@ -729,14 +753,46 @@
         },
     });
 
+    const setTailwindMenuOpen = (menu, trigger, open) => {
+        if (!menu) return;
+        toggleOpenState(menu, open);
+        menu.hidden = !open;
+        if (trigger) setExpanded(trigger, open);
+        menu.closest('.tw-tabs-list-viewport')?.classList.toggle('tw-tabs-menu-open', open);
+    };
+
     const closeMenus = (except) => {
         document.querySelectorAll('[data-tailwind-menu]:not([hidden])').forEach((menu) => {
-            if (menu !== except) {
-                menu.hidden = true;
-                const trigger = document.querySelector('[aria-controls="' + menu.id + '"]');
-                if (trigger) setExpanded(trigger, false);
+            if (menu !== except && (!except || !menu.contains(except))) {
+                const trigger = document.querySelector('[data-tailwind-menu-target="' + menu.id + '"]')
+                    || document.querySelector('[aria-controls="' + menu.id + '"]');
+                setTailwindMenuOpen(menu, trigger, false);
             }
         });
+    };
+
+    const tailwindMegaMenuQuery = window.matchMedia('(max-width: 991px)');
+    const positionTailwindMegaMenu = (menu) => {
+        if (!menu?.matches('[data-tailwind-mega-menu]')) return;
+        if (tailwindMegaMenuQuery.matches) {
+            menu.style.removeProperty('--fusion-mega-top');
+            menu.style.removeProperty('--fusion-mega-left');
+            menu.style.removeProperty('--fusion-mega-width');
+            return;
+        }
+        const navbar = menu.closest('.tw-fusion-navbar');
+        if (!navbar) return;
+        const navbarRect = navbar.getBoundingClientRect();
+        const gutter = 16;
+        const width = Math.min(1120, Math.max(0, window.innerWidth - (gutter * 2)));
+        const left = Math.max(gutter, (window.innerWidth - width) / 2);
+        menu.style.setProperty('--fusion-mega-top', Math.max(0, navbarRect.bottom) + 'px');
+        menu.style.setProperty('--fusion-mega-left', left + 'px');
+        menu.style.setProperty('--fusion-mega-width', width + 'px');
+    };
+
+    const positionOpenTailwindMegaMenus = () => {
+        document.querySelectorAll('[data-tailwind-mega-menu]:not([hidden])').forEach(positionTailwindMegaMenu);
     };
 
     const closeCommunityDropdowns = (except) => {
@@ -945,18 +1001,52 @@
         }
     }
 
+    const replaceTabGroupLabel = (label, source) => {
+        if (!label || !source) return;
+        const nodes = source instanceof HTMLTemplateElement ? source.content.childNodes : source.childNodes;
+        const fragment = document.createDocumentFragment();
+        Array.from(nodes).forEach((node) => fragment.appendChild(node.cloneNode(true)));
+        label.replaceChildren(fragment);
+    };
+
+    const syncGroupedTabLabels = (tablist, activeProxy = null, sourceTab = null, preserveProxy = null) => {
+        tablist?.querySelectorAll('[data-fusion-tab-group-label]').forEach((label) => {
+            const groupTrigger = label.closest('[data-fusion-tab-child]');
+            if (!groupTrigger || groupTrigger === preserveProxy) return;
+            const selectedTitle = groupTrigger === activeProxy
+                ? sourceTab?.querySelector('[data-fusion-tab-title]')
+                : null;
+            const defaultTitle = groupTrigger.parentElement?.querySelector('[data-fusion-tab-group-default]');
+            replaceTabGroupLabel(label, selectedTitle || defaultTitle);
+        });
+    };
+
     const activateTailwindTab = (tab, options = {}) => {
         const {focus = true, persist = true} = options;
-        const tablist = tab?.closest('[role="tablist"]');
-        const panel = document.getElementById(tab?.getAttribute('aria-controls') || '');
+        const sourceTab = tab?.dataset.fusionTabChild
+            ? document.getElementById(tab.dataset.fusionTabChild) || tab
+            : tab;
+        const proxy = sourceTab?.dataset.fusionTabProxy
+            ? document.getElementById(sourceTab.dataset.fusionTabProxy)
+            : sourceTab;
+        const tablist = proxy?.closest('[role="tablist"]');
+        const panel = document.getElementById(sourceTab?.getAttribute('aria-controls') || '');
         if (!tablist || !panel) return;
 
         tablist.querySelectorAll('[role="tab"]').forEach((item) => {
-            const selected = item === tab;
+            const selected = item === proxy;
             item.setAttribute('aria-selected', selected ? 'true' : 'false');
             item.setAttribute('data-state', selected ? 'active' : 'inactive');
             item.tabIndex = selected ? 0 : -1;
         });
+        tablist.querySelectorAll('[data-fusion-tab]').forEach((item) => {
+            item.setAttribute('data-state', item === sourceTab ? 'active' : 'inactive');
+        });
+        if (proxy !== sourceTab) {
+            proxy.setAttribute('aria-controls', panel.id);
+            proxy.dataset.fusionTabChild = sourceTab.id;
+        }
+        syncGroupedTabLabels(tablist, proxy !== sourceTab ? proxy : null, sourceTab);
 
         document.querySelectorAll('[role="tabpanel"][data-fusion-tab-panel]').forEach((item) => {
             if (item.dataset.fusionTabGroup === panel.dataset.fusionTabGroup) {
@@ -972,8 +1062,8 @@
             }
         }
 
-        if (focus) tab.focus();
-        tab.dispatchEvent(new CustomEvent('shown.bs.tab', {bubbles: true}));
+        if (focus) proxy.focus();
+        sourceTab.dispatchEvent(new CustomEvent('shown.bs.tab', {bubbles: true}));
     };
 
     const restoreTailwindTabs = () => {
@@ -985,7 +1075,7 @@
                 return;
             }
             if (saved === '') return;
-            const tab = Array.from(tablist.querySelectorAll('[role="tab"]')).find(
+            const tab = Array.from(tablist.querySelectorAll('[data-fusion-tab]')).find(
                 (item) => item.getAttribute('aria-controls') === saved
             );
             if (tab) activateTailwindTab(tab, {focus: false, persist: false});
@@ -1007,6 +1097,7 @@
         }
         show() {
             closeCommunityDropdowns(this.menu());
+            positionTailwindMegaMenu(this.menu());
             toggleOpenState(this.menu(), true);
             this.element.closest('.tw-dropdown, .dropdown')?.classList.add('tw-active');
             setExpanded(this.element, true);
@@ -1208,7 +1299,7 @@
     window.addEventListener('load', installJQueryOffcanvasAdapter, {once: true});
 
     const syncResponsiveMenus = () => {
-        const desktop = window.matchMedia('(min-width: 1024px)').matches;
+        const desktop = window.matchMedia('(min-width: 992px)').matches;
         document.querySelectorAll('[data-tailwind-responsive-menu]').forEach((menu) => {
             if (desktop) {
                 menu.hidden = false;
@@ -1323,12 +1414,15 @@
         const menuTrigger = event.target.closest('[data-tailwind-menu-trigger]');
         if (menuTrigger) {
             event.preventDefault();
-            const menu = document.getElementById(menuTrigger.getAttribute('aria-controls'));
+            syncGroupedTabLabels(menuTrigger.closest('[role="tablist"]'), null, null, menuTrigger);
+            const menu = document.getElementById(
+                menuTrigger.dataset.tailwindMenuTarget || menuTrigger.getAttribute('aria-controls')
+            );
             if (!menu) return;
             const open = menu.hidden;
             closeMenus(menu);
-            menu.hidden = !open;
-            setExpanded(menuTrigger, open);
+            if (open) positionTailwindMegaMenu(menu);
+            setTailwindMenuOpen(menu, menuTrigger, open);
             return;
         }
 
@@ -1371,6 +1465,7 @@
         if (tab) {
             event.preventDefault();
             activateTailwindTab(tab);
+            if (tab.closest('[data-tailwind-menu]')) closeMenus();
             return;
         }
 
@@ -1409,6 +1504,26 @@
     });
 
     document.addEventListener('keydown', (event) => {
+        const tailwindMenuTrigger = event.target.closest?.('[data-tailwind-menu-trigger]');
+        if (tailwindMenuTrigger && ['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' '].includes(event.key)) {
+            event.preventDefault();
+            const menu = document.getElementById(
+                tailwindMenuTrigger.dataset.tailwindMenuTarget || tailwindMenuTrigger.getAttribute('aria-controls')
+            );
+            if (!menu) return;
+            const toggle = event.key === 'Enter' || event.key === ' ';
+            const open = toggle ? menu.hidden : true;
+            closeMenus(menu);
+            setTailwindMenuOpen(menu, tailwindMenuTrigger, open);
+            if (!open) return;
+            const items = Array.from(menu.querySelectorAll(
+                '.tw-dropdown-item:not(.tw-disabled), a:not([aria-disabled="true"]), button:not([disabled])'
+            ));
+            const last = event.key === 'ArrowUp' || event.key === 'End';
+            items[last ? items.length - 1 : 0]?.focus();
+            return;
+        }
+
         const dropdownTrigger = event.target.closest?.('[data-bs-toggle="dropdown"], [data-toggle="dropdown"], [data-dropdown]');
         if (dropdownTrigger && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
             event.preventDefault();
@@ -1432,7 +1547,11 @@
             const wrapper = menu.closest('.tw-dropdown, .dropdown') || menu.parentElement;
             const trigger = wrapper?.querySelector('[data-bs-toggle="dropdown"], [data-toggle="dropdown"], [data-dropdown], [aria-haspopup="true"]');
             if (event.key === 'Escape') {
-                closeCommunityDropdowns();
+                if (menu.matches('[data-tailwind-menu]')) {
+                    closeMenus();
+                } else {
+                    closeCommunityDropdowns();
+                }
                 trigger?.focus();
                 return;
             }
@@ -1446,7 +1565,7 @@
             return;
         }
 
-        const currentTab = event.target.closest?.('[data-fusion-tab][role="tab"]');
+        const currentTab = event.target.closest?.('[role="tab"]');
         if (currentTab && ['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
             const tabs = Array.from(
                 currentTab.closest('[role="tablist"]')?.querySelectorAll('[role="tab"]:not([disabled])') || []
@@ -1511,7 +1630,11 @@
         }
     };
 
-    window.addEventListener('resize', syncResponsiveMenus);
+    window.addEventListener('resize', () => {
+        syncResponsiveMenus();
+        positionOpenTailwindMegaMenus();
+    });
+    window.addEventListener('scroll', positionOpenTailwindMegaMenus, {passive: true});
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeCompatibility, {once: true});
     } else {

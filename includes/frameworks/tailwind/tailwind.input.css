@@ -904,21 +904,6 @@
     margin-inline-start: 91.66666667%;
   }
 }
-/** The browser bridge adds .tw-row and responsive tw-col-span-* aliases to
- * untouched Bootstrap rows. Once adapted, the canonical grid must own the
- * layout; otherwise the legacy flex widths combine with .tw-row's gap and
- * force two half-width columns onto separate lines.*/
-.row.tw-row {
-  display: grid;
-  margin: 0;
-}
-.row.tw-row > * {
-  width: auto;
-  max-width: none;
-  margin-top: 0;
-  padding-right: 0;
-  padding-left: 0;
-}
 /** Legacy modal structure. Tailwind's interaction adapter already handles the
  * data-bs attributes; these rules provide the missing hidden/overlay layout.*/
 .modal {
@@ -1124,16 +1109,35 @@ html.tw-overflow-hidden {
     }
   }
   .tw-row {
-    @apply tw-grid tw-min-w-0 tw-grid-cols-12 tw-gap-6;
+    --tw-grid-gutter-x: 1.5rem;
+    --tw-grid-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 0;
+    margin-top: calc(-1 * var(--tw-grid-gutter-y));
+    margin-right: calc(-0.5 * var(--tw-grid-gutter-x));
+    margin-left: calc(-0.5 * var(--tw-grid-gutter-x));
+  }
+  .tw-row > * {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-top: var(--tw-grid-gutter-y);
+    padding-right: calc(0.5 * var(--tw-grid-gutter-x));
+    padding-left: calc(0.5 * var(--tw-grid-gutter-x));
   }
   .tw-row-gap-x {
-    column-gap: 1.5rem;
+    --tw-grid-gutter-x: 1.5rem;
   }
   .tw-row-gap-y {
-    row-gap: 1.5rem;
+    --tw-grid-gutter-y: 1.5rem;
   }
   .tw-col {
-    @apply tw-col-span-12 tw-min-w-0;
+    flex: 1 0 0%;
+    width: auto;
+    @apply tw-min-w-0;
   }
   .tw-card,
   .tw-panel {
@@ -1198,10 +1202,16 @@ html.tw-overflow-hidden {
     @apply tw-bg-ui-accent;
   }
   .tw-status {
-    @apply tw-inline-flex tw-items-center tw-gap-2 tw-text-sm tw-font-medium tw-text-ui-foreground;
+    @apply tw-inline-flex tw-items-center tw-rounded-full tw-whitespace-nowrap tw-text-xs tw-font-semibold;
+    gap: 0.375rem;
+    min-height: 1.25rem;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--ui-border) 70%, transparent);
+    background-color: var(--ui-muted);
+    color: var(--ui-muted-foreground);
   }
   .tw-status-dot {
-    @apply tw-inline-block tw-size-2.5 tw-shrink-0 tw-rounded-full tw-bg-ui-muted-foreground;
+    @apply tw-inline-block tw-size-2 tw-shrink-0 tw-rounded-full tw-bg-ui-muted-foreground;
   }
   :is(.tw-status-green,
     .tw-status-success) .tw-status-dot,
@@ -1258,6 +1268,8 @@ html.tw-overflow-hidden {
   }
   .tw-dropdown-menu {
     @apply tw-absolute tw-z-50 tw-mt-1 tw-hidden tw-min-w-48 tw-overflow-hidden tw-rounded-xl tw-border tw-border-ui-border tw-bg-ui-card tw-p-1 tw-text-ui-card-foreground tw-shadow-menu;
+    inset-block-start: 100%;
+    inset-block-end: auto;
   }
   .tw-dropdown-menu:is(.tw-show,
     .is-active,
@@ -1271,8 +1283,78 @@ html.tw-overflow-hidden {
   .tw-dropdown-item {
     @apply tw-flex tw-min-h-9 tw-w-full tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-text-ui-foreground tw-no-underline tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-bg-ui-accent focus-visible:tw-outline-none motion-reduce:tw-transition-none;
   }
+  .tw-dropdown-item[data-state="active"] {
+    @apply tw-bg-ui-accent tw-font-medium;
+  }
   .tw-dropdown-divider {
     @apply tw-my-1 tw-border-t tw-border-ui-border;
+  }
+  /* PHPFusion navbar structure. Active themes own all colors and decoration. */
+  .tw-nav-dropdown-menu {
+    position: absolute;
+    z-index: 50;
+    min-width: 12rem;
+    margin: 0.25rem 0 0;
+    padding: 0.25rem;
+    list-style: none;
+  }
+  .tw-nav-menu-parent,
+  .tw-nav-menu-column,
+  .tw-nav-menu-list {
+    list-style: none;
+  }
+  .tw-nav-menu-list {
+    margin: 0;
+    padding: 0;
+  }
+  .tw-nav-dropend {
+    position: relative;
+  }
+  .tw-nav-dropend > .tw-nav-dropdown-menu {
+    inset-block-start: 0;
+    inset-inline-start: 100%;
+    margin: 0 0 0 0.25rem;
+  }
+  .tw-nav-mega-menu {
+    position: fixed;
+    inset-block-start: var(--fusion-mega-top, 4rem);
+    inset-inline-start: var(--fusion-mega-left, 1rem);
+    width: var(--fusion-mega-width, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - var(--fusion-mega-top, 4rem) - 1rem);
+    display: grid;
+    grid-template-columns: repeat(var(--fusion-mega-columns, 1), minmax(0, 1fr));
+    grid-auto-flow: row;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .tw-nav-menu-column {
+    min-width: 0;
+    padding: 0.25rem;
+  }
+  .tw-nav-menu-heading {
+    margin: 0 0 0.25rem;
+    padding: 0.5rem 0.75rem;
+  }
+  @media (max-width: 991px) {
+    .tw-nav-dropdown-menu,
+    .tw-nav-mega-menu {
+      position: static;
+      width: 100%;
+      max-width: none;
+      max-height: none;
+      margin: 0.25rem 0 0;
+    }
+    .tw-nav-mega-menu {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .tw-nav-dropend > .tw-nav-dropdown-menu {
+      inset: auto;
+      margin: 0.25rem 0 0 0.75rem;
+    }
   }
   .tw-modal {
     @apply tw-fixed tw-inset-0 tw-z-50 tw-hidden tw-overflow-x-hidden tw-overflow-y-auto tw-p-4;
@@ -1839,6 +1921,9 @@ html.tw-overflow-hidden {
   .tw-tabs-list-viewport {
     @apply tw-min-w-0 tw-flex-1 tw-overflow-x-auto;
     scrollbar-width: thin;
+  }
+  .tw-tabs-list-viewport.tw-tabs-menu-open {
+    overflow: visible;
   }
   .tw-tabs-list {
     @apply tw-inline-flex tw-min-w-max tw-items-center tw-gap-1 tw-rounded-xl tw-bg-ui-muted tw-p-1;

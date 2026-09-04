@@ -1,0 +1,261 @@
+:root,
+[data-bs-theme="light"] {
+    --dynamics-form-text-default-background: #fff;
+    --dynamics-form-text-default-foreground: #181c1f;
+    --dynamics-form-text-default-border: rgb(0 0 0 / .15);
+    --dynamics-form-text-default-muted: #f6f8f9;
+    --dynamics-form-text-default-muted-foreground: #5c6c74;
+    --dynamics-form-text-default-label: #333d42;
+    --dynamics-form-text-default-label-active: #181c1f;
+    --dynamics-form-text-default-ring: oklch(.556 0 0);
+    --dynamics-form-text-default-focus-outline: oklch(.556 0 0 / .5);
+    --dynamics-form-text-default-destructive: #d92d20;
+}
+
+[data-bs-theme="dark"] {
+    --dynamics-form-text-default-background: #151515;
+    --dynamics-form-text-default-foreground: #fff;
+    --dynamics-form-text-default-border: oklch(1 0 0 / .15);
+    --dynamics-form-text-default-muted: #2a3236;
+    --dynamics-form-text-default-muted-foreground: #eef1f3;
+    --dynamics-form-text-default-label: rgb(219 228 233);
+    --dynamics-form-text-default-label-active: #fff;
+    --dynamics-form-text-default-ring: oklch(.556 0 0);
+    --dynamics-form-text-default-focus-outline: oklch(.556 0 0 / .5);
+    --dynamics-form-text-default-destructive: #ff6b81;
+}
+
+.dynamics-form-text {
+    --dynamics-form-text-background: var(--form-text-background, var(--dynamics-form-text-default-background));
+    --dynamics-form-text-foreground: var(--form-text-foreground, var(--dynamics-form-text-default-foreground));
+    --dynamics-form-text-border: var(--form-text-border, var(--dynamics-form-text-default-border));
+    --dynamics-form-text-muted: var(--form-text-muted, var(--dynamics-form-text-default-muted));
+    --dynamics-form-text-muted-foreground: var(--form-text-muted-foreground, var(--dynamics-form-text-default-muted-foreground));
+    --dynamics-form-text-placeholder: var(--form-text-placeholder, var(--dynamics-form-text-default-muted-foreground));
+    --dynamics-form-text-label: var(--form-text-label, var(--dynamics-form-text-default-label));
+    --dynamics-form-text-label-active: var(--form-text-label-active, var(--dynamics-form-text-default-label-active));
+    --dynamics-form-text-ring: var(--form-text-ring, var(--dynamics-form-text-default-ring));
+    --dynamics-form-text-focus-outline: var(--form-text-focus-outline, var(--dynamics-form-text-default-focus-outline));
+    --dynamics-form-text-destructive: var(--form-text-destructive, var(--dynamics-form-text-default-destructive));
+    display: grid;
+    min-width: 0;
+    gap: 6px;
+
+    &:not(.form-floating) > :is(.form-label, .control-label) {
+        color: var(--dynamics-form-text-label);
+        font-size: 14px;
+    }
+
+    &:not(.form-floating):is(:hover, :focus-within) > :is(.form-label, .control-label) {
+        color: var(--dynamics-form-text-label-active);
+    }
+
+    > .form-text {
+        margin-top: 0;
+        color: var(--dynamics-form-text-muted-foreground);
+    }
+
+    .required {
+        color: var(--dynamics-form-text-destructive);
+    }
+}
+
+.dynamics-form-text__input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: var(--dynamics-control-min-height, 2.5rem);
+    padding: 0 var(--dynamics-control-padding-x, .75rem);
+    border: var(--dynamics-control-border-width, 1px) solid var(--dynamics-form-text-border);
+    border-radius: var(--dynamics-control-radius, .5rem);
+    background: var(--dynamics-form-text-background);
+    color: var(--dynamics-form-text-foreground);
+    font-family: var(--font-sans, inherit);
+    font-size: var(--dynamics-control-font-size, .875rem);
+    line-height: var(--dynamics-control-line-height, 1.25rem);
+    outline: 0;
+    box-shadow: none;
+    transition: color .15s cubic-bezier(.4, 0, .2, 1), background-color .15s cubic-bezier(.4, 0, .2, 1), border-color .15s cubic-bezier(.4, 0, .2, 1), outline-color .15s cubic-bezier(.4, 0, .2, 1);
+
+    &::placeholder {
+        color: var(--dynamics-form-text-placeholder);
+        font: inherit;
+        opacity: 1;
+    }
+
+    &:hover:not(:focus):not(:focus-visible):not(:disabled):not([readonly]) {
+        background: var(--dynamics-form-text-background);
+        border-color: var(--dynamics-form-text-border);
+        color: var(--dynamics-form-text-foreground);
+    }
+
+    &:is(:focus, :focus-visible) {
+        background: var(--dynamics-form-text-background);
+        border-color: var(--dynamics-form-text-ring);
+        color: var(--dynamics-form-text-foreground);
+        outline: 2px solid var(--dynamics-form-text-focus-outline);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &[readonly] {
+        background: var(--dynamics-form-text-muted);
+        cursor: not-allowed;
+        opacity: .6;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    &:is(.is-invalid, [aria-invalid="true"]) {
+        border-color: var(--dynamics-form-text-destructive);
+
+        &:is(:focus, :focus-visible) {
+            outline-color: color-mix(in srgb, var(--dynamics-form-text-destructive) 50%, transparent);
+        }
+    }
+}
+
+.dynamics-form-text__group {
+    overflow: hidden;
+    border: var(--dynamics-control-border-width, 1px) solid var(--dynamics-form-text-border);
+    border-radius: var(--dynamics-control-radius, .5rem);
+    background: var(--dynamics-form-text-background);
+    color: var(--dynamics-form-text-foreground);
+    outline: 0 solid transparent;
+    box-shadow: none;
+    transition: color .15s cubic-bezier(.4, 0, .2, 1), background-color .15s cubic-bezier(.4, 0, .2, 1), border-color .15s cubic-bezier(.4, 0, .2, 1), outline-color .15s cubic-bezier(.4, 0, .2, 1);
+
+    &:focus-within {
+        border-color: var(--dynamics-form-text-ring);
+        outline: 2px solid var(--dynamics-form-text-focus-outline);
+        outline-offset: 2px;
+    }
+
+    > .dynamics-form-text__input {
+        width: 1%;
+        min-width: 0;
+        flex: 1 1 auto;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        outline: 0 !important;
+        box-shadow: none !important;
+    }
+
+    > .dynamics-form-text__input:hover:not(:focus):not(:focus-visible):not(:disabled):not([readonly]) {
+        border: 0;
+        background: transparent;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    &:has(.dynamics-form-text__input:is(.is-invalid, [aria-invalid="true"])) {
+        border-color: var(--dynamics-form-text-destructive);
+
+        &:focus-within {
+            outline-color: color-mix(in srgb, var(--dynamics-form-text-destructive) 50%, transparent);
+        }
+    }
+
+    &:has(.dynamics-form-text__input:disabled),
+    &:has(.dynamics-form-text__input[readonly]) {
+        background: var(--dynamics-form-text-muted);
+        border-color: var(--dynamics-form-text-border);
+        outline: 0;
+        box-shadow: none;
+    }
+}
+
+.dynamics-form-text__addon {
+    min-height: var(--dynamics-control-min-height, 2.5rem);
+    padding: .5rem var(--dynamics-control-padding-x, .75rem);
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--dynamics-form-text-muted-foreground);
+    font-family: var(--font-sans, inherit);
+    font-size: var(--dynamics-control-font-size, .875rem);
+    line-height: var(--dynamics-control-line-height, 1.25rem);
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+.dynamics-form-text.form-floating {
+    position: relative;
+
+    > .dynamics-form-text__input,
+    > .dynamics-form-text__group {
+        height: var(--dynamics-floating-control-height, 3.25rem);
+        min-height: var(--dynamics-floating-control-height, 3.25rem);
+        margin-top: 0 !important;
+    }
+
+    > .dynamics-form-text__input,
+    > .dynamics-form-text__group > .dynamics-form-text__input {
+        padding: .5rem var(--dynamics-control-padding-x, .875rem);
+
+        &::placeholder {
+            color: transparent;
+            opacity: 0;
+        }
+
+        &:focus,
+        &:not(:placeholder-shown) {
+            padding-top: 1.375rem;
+            padding-bottom: .25rem;
+        }
+    }
+
+    > label {
+        top: 0;
+        left: 0;
+        z-index: 2;
+        display: flex;
+        box-sizing: border-box;
+        width: 100%;
+        height: var(--dynamics-floating-control-height, 3.25rem);
+        align-items: center;
+        padding: 0 var(--dynamics-control-padding-x, .875rem);
+        color: var(--dynamics-form-text-label);
+        font-size: 14px;
+    }
+
+    > .dynamics-form-text__input:focus ~ label,
+    > .dynamics-form-text__input:not(:placeholder-shown) ~ label,
+    > .dynamics-form-text__group:focus-within ~ label,
+    > .dynamics-form-text__group:has(.dynamics-form-text__input:not(:placeholder-shown)) ~ label {
+        align-items: flex-start;
+        height: auto;
+        padding: .375rem var(--dynamics-control-padding-x, .875rem) 0;
+        color: var(--dynamics-form-text-label-active);
+        font-size: 12px;
+        transform: none;
+        line-height: 1;
+        opacity: .8;
+    }
+
+    > label::after {
+        background: transparent !important;
+    }
+
+    > label:has(.dynamics-field-help__trigger) {
+        pointer-events: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dynamics-form-text__input,
+    .dynamics-form-text__group {
+        transition: none;
+    }
+}
+
+// Match the label to the actual input text inset, including variable-width addons.
+.dynamics-form-text.form-floating > .dynamics-form-text__group ~ label {
+    padding-inline-start: var(--dynamics-form-text-label-inset, var(--dynamics-control-padding-x, .875rem)) !important;
+}
+// Icon addons need only one gap before the input text, not two padded edges.
+.dynamics-form-text .dynamics-form-text__group > .dynamics-form-text__addon:has(> iconify-icon, > svg):first-child {
+    padding-inline-end: 0;
+    + .dynamics-form-text__input { padding-inline-start: .5rem; }
+}

@@ -24,7 +24,18 @@
  *
  * @return string
  */
+function load_form_range_assets(): void {
+    static $loaded = FALSE;
+
+    if (!$loaded) {
+        fusion_load_script(DYNAMICS.'includes/form_range/component.css', 'css');
+        $loaded = TRUE;
+    }
+}
+
 function form_range($input_name, $label = "", $input_value = "", array $options = []) {
+
+    load_form_range_assets();
 
     $locale = fusion_get_locale();
 
@@ -48,6 +59,7 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'class'           => '', // outer container class
         'inner_class'     => '', // inner element class
         'inline'          => FALSE, // whether element is inline or not
+        'floating_label'  => FALSE,
         'min'             => 1, // minimum slider value
         'max'             => 100, // maximum slider value
         'step'            => 1, // per slider step, set to 0 for fluid
@@ -58,13 +70,18 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
         'data'            => [], // adds data attributes to the element
         'append_html'     => '', // adds html
         'display_percent' => FALSE, // element is displayed as % or unit value
+        'value_unit'      => '%', // unit displayed after the current value
         'range_buttons'   => FALSE, // display 4 quick buttons to set the slider value
     ];
 
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
 
     $options['type'] = 'number';
 
+    $options_data = [];
     if (!empty($options['data'])) {
         array_walk($options['data'], function ($a, $b) use (&$options_data) {
             $options_data[] = "data-$b='$a'";
@@ -93,20 +110,25 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
 
     $step = $options['step'] ? "step='".$options['step']."' " : '';
 
-    $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').$error_class.($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
+    $html = "<div id='".$options['input_id']."-field' class='form-group dynamics-range-field".$error_class.($options['class'] ? ' '.$options['class'] : '')."'".($options['width'] ? " style='width: ".$options['width']."'" : '').">";
 
-    $html .= ($label) ? "<label class='control-label ".($options['inline'] ? "col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer far fa-question-circle' data-toggle='tooltip' title='".$options['tip']."'></i>" : '')."</label>" : '';
+    $floating_label = $options['floating_label'] && !$options['inline'];
+    $range_class = 'dynamics-range'.($floating_label ? ' dynamics-range--floating' : '').($options['inline'] ? ' dynamics-range--inline' : '');
+    $minimum = is_numeric($options['min']) ? (float)$options['min'] : 0.0;
+    $maximum = is_numeric($options['max']) ? (float)$options['max'] : 100.0;
+    $numeric_value = is_numeric($input_value) ? (float)$input_value : $minimum;
+    $progress = $maximum > $minimum ? (($numeric_value - $minimum) / ($maximum - $minimum)) * 100 : 0;
+    $progress = max(0, min(100, $progress));
+    $display_value = $options['display_percent'] ? (string)round($progress) : (string)$input_value;
+    $value_unit = stripinput((string)$options['value_unit']);
 
-    $html .= ($options['inline'] && $label ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "");
-
-    $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range ".($options['inner_class'] ? " ".$options['inner_class']." " : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." ".($options['deactivate'] ? 'readonly' : '').">";
-
-    $text = isset($input_value) ? $input_value : $options['min'];
-    if ($options['display_percent']) {
-        $text = floor((isset($input_value) ? $input_value : $options['min'] / $options['max']) * 100).'%';
-    }
-
-    $html .= "<div class='form-range-pct'><div id='".$options['input_id']."_pct' class='range-text'>$text</div></div>";
+    $html .= "<div class='{$range_class}' style='--dynamics-range-progress: ".round($progress, 4)."%;'>";
+    $html .= "<div class='dynamics-range__header'>";
+    $html .= ($label) ? "<label class='dynamics-range__label control-label' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".dynamics_field_help($options['tip'])."</label>" : '<span></span>';
+    $html .= "<div class='dynamics-range__reading'><output class='dynamics-range__value' for='".$options['input_id']."'><span id='".$options['input_id']."_pct'>".$display_value."</span></output>";
+    $html .= $value_unit !== '' ? "<span class='dynamics-range__unit'>{$value_unit}</span>" : '';
+    $html .= "</div></div>";
+    $html .= "<input type='range' ".(!empty($options_data) ? implode(' ', $options_data) : '')." ".$min.$max.$step."class='form-range dynamics-range__input".($options['inner_class'] ? " ".$options['inner_class'] : '')."' ".($options['inner_width'] ? "style='width:".$options['inner_width'].";'" : '')." name='".$input_name."' id='".$options['input_id']."' value='".$input_value."'".($options['placeholder'] ? " placeholder='".$options['placeholder']."' " : '')." ".($options['deactivate'] ? 'disabled' : '').">";
 
     if ($options['max'] - $options['min'] && $options['range_buttons']) {
 
@@ -117,47 +139,49 @@ function form_range($input_name, $label = "", $input_value = "", array $options 
             ($options['max'] * 100 / 100),
         ];
 
-        $html .= '<div class="flex flex-row">
+        $html .= '<div class="dynamics-range__presets d-flex flex-row gap-2">
         <button type="button" data-value="'.$range[0].'" class="btn btn-xs btn-range btn-default">25%</button>
         <button type="button" data-value="'.$range[1].'" class="btn btn-xs btn-range btn-default">50%</button>
         <button type="button" data-value="'.$range[2].'" class="btn btn-xs btn-range btn-default">75%</button>
         <button type="button" data-value="'.$range[3].'" class="btn btn-xs btn-range btn-default">Max</button>
         </div>';
 
-        add_to_jquery("
-        let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
-        pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
-
-        $('.btn-range').on('click', function(e) {
-            let percent = $(this).data('value');
-            slider_".$options['input_id'].".value = percent;
-            pct_".$options['input_id'].".textContent = percent;
-        });
-        ");
-
     }
 
     add_to_jquery("
-    let slider_".$options['input_id']." = document.querySelector('#".$options['input_id']."'),
-    pct_".$options['input_id']." = document.querySelector('#".$options['input_id']."_pct');
-    slider_".$options['input_id'].".oninput = () => {
-        let val = slider_".$options['input_id'].".value,
-        percent = Math.round( val / ".$options['max']." * 100),
-        text_content = ".($options['display_percent'] ? 'percent +"%"' : 'val')."
-        pct_".$options['input_id'].".textContent = text_content;
-    };
+    (function () {
+        const slider = document.getElementById('".$options['input_id']."');
+        const output = document.getElementById('".$options['input_id']."_pct');
+        const wrapper = slider ? slider.closest('.dynamics-range') : null;
+        if (!slider || !output || !wrapper) return;
+        const syncRange = function () {
+            const min = Number(slider.min || 0);
+            const max = Number(slider.max || 100);
+            const value = Number(slider.value);
+            const percent = max > min ? Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) : 0;
+            wrapper.style.setProperty('--dynamics-range-progress', percent + '%');
+            output.textContent = ".($options['display_percent'] ? 'Math.round(percent)' : 'slider.value').";
+        };
+        slider.addEventListener('input', syncRange);
+        wrapper.querySelectorAll('.btn-range').forEach(function (button) {
+            button.addEventListener('click', function () {
+                slider.value = button.dataset.value;
+                slider.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        });
+        syncRange();
+    }());
     ");
 
 
     $html .= $options['stacked'];
+    $html .= '</div>';
 
     $html .= $options['ext_tip'] ? "<br/>\n<span class='tip'><i>".$options['ext_tip']."</i></span>" : "";
 
     $html .= (\Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['prepend_button'] || $options['append_value'] || $options['prepend_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "");
 
     $html .= $options['append_html'];
-
-    $html .= (($options['inline'] && $label) ? "</div>" : '');
 
     $html .= "</div>";
 

@@ -164,7 +164,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html = "<div id='".$options['input_id']."-field' class='form-group ".($options['inline'] && $label ? 'row ' : '').(!empty($error_class) ? $error_class : '').($options['class'] ? ' '.$options['class'] : '').($options['icon'] ? ' has-feedback' : '')."'".($options['width'] && !$label ? " style='width: ".$options['width']."'" : '').">";
 
-    $html .= ($label ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".($options['tip'] ? "<i class='pointer fa fa-question-circle' title='".$options['tip']."'></i>" : '')."</label>" : "");
+    $html .= ($label ? "<label class='control-label".($options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '')."' for='".$options['input_id']."'>".$options['label_icon'].$label.($options['required'] ? "<span class='required'>&nbsp;*</span>" : '')." ".dynamics_field_help($options['tip'])."</label>" : "");
 
     $html .= ($options['inline'] && $label) ? "<div class='col-xs-12 col-sm-12 col-md-9 col-lg-9'>" : "";
 
@@ -217,7 +217,7 @@ function form_contact($input_name, $label, $input_value = "", $options = []) {
 
     $html .= "</div>";
 
-    $html .= ($options['ext_tip'] ? "<br/><span class='tip'><i>".$options['ext_tip']."</i></span>" : "");
+    $html .= ($options['ext_tip'] ? "<br/><span class='tip'>".dynamics_field_help($options['ext_tip'], TRUE)."</span>" : "");
 
     $html .= \Defender::inputHasError($input_name) ? "<div class='input-error".((!$options['inline'] || $options['append_button'] || $options['append_value']) ? " display-block" : "")."'><div id='".$options['input_id']."-help' class='label label-danger p-5 display-inline-block'>".$options['error_text']."</div></div>" : "";
 

@@ -14,7 +14,77 @@ function tailwind_class(string $base, mixed $additional = ''): string
     return trim($base.' '.(function_exists('framework_css') ? framework_css($additional) : $additional));
 }
 
-function tailwind_render_nav_items(int $parent, array $items, string $menu_id): string
+function tailwind_nav_has_destination(array $item): bool
+{
+    if (array_key_exists('link_has_destination', $item)) {
+        return !empty($item['link_has_destination']);
+    }
+
+    $url = trim((string)($item['link_url'] ?? ''));
+    return $url !== '' && $url !== '#';
+}
+
+function tailwind_nav_content(array $item, bool $show_description = false): string
+{
+    $html = ($item['link_icon'] ?? '').'<span>'.($item['link_name'] ?? '').'</span>';
+    if ($show_description && !empty($item['link_description'])) {
+        $html .= '<span class="tw-text-xs tw-font-normal tw-leading-5 tw-text-ui-muted-foreground">'.
+            tailwind_escape($item['link_description']).'</span>';
+    }
+
+    return $html;
+}
+
+function tailwind_nav_attributes(array $item, string $key = 'link_attr'): string
+{
+    $href = (string)($item['link_url'] ?? '#');
+    $attributes = trim((string)($item[$key] ?? ''));
+    if ($attributes === '' || !preg_match('/\bhref\s*=/', $attributes)) {
+        $attributes = 'href="'.tailwind_escape($href).'" '.$attributes;
+    }
+
+    return trim((string)preg_replace('/\s*data-bs-toggle="dropdown"/', '', $attributes));
+}
+
+function tailwind_nav_link(array $item, string $extra_class = '', bool $show_description = false): string
+{
+    $base = 'tw-flex tw-min-h-11 tw-w-full tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-font-medium tw-text-ui-card-foreground tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring motion-reduce:tw-transition-none';
+    if ($show_description) {
+        $base .= ' tw-flex-col tw-items-start';
+    }
+
+    return '<a class="'.tailwind_class(trim($base.' '.$extra_class), $item['link_child_class'] ?? 'dropdown-item').'" '.
+        tailwind_nav_attributes($item, 'link_child_attr').'>'.tailwind_nav_content($item, $show_description).'</a>';
+}
+
+function tailwind_render_mega_menu(array $parent, array $items, string $menu_id): string
+{
+    $children = array_values(array_filter(
+        (array)($items[(int)$parent['link_id']] ?? []),
+        static fn($row): bool => is_array($row) && empty($row['separator'])
+    ));
+    $column_count = min(3, max(1, count($children)));
+    $control_id = $menu_id.'-'.(int)$parent['link_id'];
+    $html = '<ul id="'.tailwind_escape($control_id).'" class="tw-nav-dropdown-menu tw-nav-mega-menu tw-rounded-xl tw-border tw-border-ui-border tw-bg-ui-card tw-text-ui-card-foreground tw-shadow-menu" data-tailwind-menu data-tailwind-mega-menu style="--fusion-mega-columns:'.$column_count.'" hidden>';
+
+    foreach ($children as $child) {
+        $html .= '<li class="tw-nav-menu-column" role="none">';
+        $html .= '<div class="tw-nav-menu-heading tw-flex tw-items-center tw-gap-2 tw-text-xs tw-font-semibold tw-text-ui-muted-foreground">'.
+            tailwind_nav_content($child).'</div>';
+        if (tailwind_nav_has_destination($child)) {
+            $html .= tailwind_nav_link($child, 'tw-nav-menu-parent-link', true);
+        }
+        if (!empty($child['link_child'])) {
+            $html .= '<ul class="tw-nav-menu-list">'.
+                tailwind_render_nav_items((int)$child['link_id'], $items, $menu_id, 1).'</ul>';
+        }
+        $html .= '</li>';
+    }
+
+    return $html.'</ul>';
+}
+
+function tailwind_render_nav_items(int $parent, array $items, string $menu_id, int $depth = 0): string
 {
     $html = '';
 
@@ -25,27 +95,33 @@ function tailwind_render_nav_items(int $parent, array $items, string $menu_id): 
         }
 
         $id = (string)($item['link_id'] ?? uniqid('nav-', FALSE));
-        $children = !empty($item['link_child']);
-        $name = ($item['link_icon'] ?? '').($item['link_name'] ?? '');
+        $children = !empty($item['link_child']) || !empty($items[(int)$id]);
+        $name = tailwind_nav_content($item);
         $href = (string)($item['link_url'] ?? '#');
-        $attributes = trim((string)($item['link_attr'] ?? ''));
-        if ($attributes === '' || !preg_match('/\bhref\s*=/', $attributes)) {
-            $attributes = 'href="'.tailwind_escape($href).'" '.$attributes;
-        }
+        $attributes = tailwind_nav_attributes($item);
 
-        $html .= '<li class="'.tailwind_class('tw-relative', $item['li_class'] ?? '').'">';
+        $structural_class = 'tw-relative'.($children && $depth > 0 ? ' tw-nav-dropend' : '');
+        $html .= '<li class="'.tailwind_class($structural_class, $item['li_class'] ?? '').'">';
         if (!empty($item['link_content'])) {
             $html .= $item['link_content'];
         } elseif ($children) {
             $control_id = $menu_id.'-'.$id;
-            $html .= '<button type="button" class="tw-flex tw-min-h-11 tw-w-full tw-cursor-pointer tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-left tw-text-sm tw-font-medium tw-text-ui-card-foreground tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring motion-reduce:tw-transition-none" data-tailwind-menu-trigger aria-controls="'.tailwind_escape($control_id).'" aria-expanded="false">'.$name.($item['link_caret'] ?? '').'</button>';
-            $html .= '<ul id="'.tailwind_escape($control_id).'" class="tw-absolute tw-left-0 tw-z-50 tw-mt-1 tw-min-w-56 tw-rounded-xl tw-border tw-border-ui-border tw-bg-ui-card tw-p-1 tw-shadow-menu" data-tailwind-menu hidden>';
-            if ($href !== '' && $href !== '#') {
-                $html .= '<li><a class="tw-flex tw-min-h-11 tw-items-center tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-text-ui-card-foreground hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring" href="'.tailwind_escape($href).'">'.$name.'</a></li>';
+            $drop_style = strtolower(trim((string)($item['link_drop_style'] ?? 'default')));
+            $is_mega = $drop_style === 'mega';
+            $html .= '<a class="tw-flex tw-min-h-11 tw-w-full tw-cursor-pointer tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-left tw-text-sm tw-font-medium tw-text-ui-card-foreground tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring motion-reduce:tw-transition-none" '.$attributes.' data-tailwind-menu-trigger aria-controls="'.tailwind_escape($control_id).'">'.$name.($item['link_caret'] ?? '').'</a>';
+            if ($is_mega) {
+                $html .= tailwind_render_mega_menu($item, $items, $menu_id);
+            } else {
+                $html .= '<ul id="'.tailwind_escape($control_id).'" class="tw-nav-dropdown-menu tw-min-w-56 tw-rounded-xl tw-border tw-border-ui-border tw-bg-ui-card tw-text-ui-card-foreground tw-shadow-menu" data-tailwind-menu hidden>';
+                if (tailwind_nav_has_destination($item)) {
+                    $html .= '<li class="tw-nav-menu-parent" role="none">'.tailwind_nav_link($item).'</li>';
+                }
+                $html .= tailwind_render_nav_items((int)$item['link_id'], $items, $menu_id, $depth + 1).'</ul>';
             }
-            $html .= tailwind_render_nav_items((int)$item['link_id'], $items, $menu_id).'</ul>';
+        } elseif ($href !== '') {
+            $html .= '<a class="'.tailwind_class('tw-flex tw-min-h-11 tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-font-medium tw-text-ui-card-foreground tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring motion-reduce:tw-transition-none', $item['link_class'] ?? '').'" '.$attributes.'>'.$name.($item['link_caret'] ?? '').'</a>';
         } else {
-            $html .= '<a class="tw-flex tw-min-h-11 tw-items-center tw-gap-2 tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-font-medium tw-text-ui-card-foreground tw-transition-colors hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring motion-reduce:tw-transition-none" '.$attributes.'>'.$name.($item['link_caret'] ?? '').'</a>';
+            $html .= '<span class="tw-flex tw-min-h-11 tw-items-center tw-gap-2 tw-px-3 tw-py-2 tw-text-sm tw-font-medium tw-text-ui-muted-foreground">'.$name.'</span>';
         }
         $html .= '</li>';
     }
@@ -57,19 +133,24 @@ function tailwind_render_navbar(array $info): string
 {
     $id = tailwind_escape($info['id'] ?? 'tailwind-navbar');
     $container = !empty($info['container']) ? 'tw-mx-auto tw-w-full tw-max-w-7xl tw-px-4' : 'tw-w-full tw-px-4';
-    $brand = (string)($info['custom_header'] ?? $info['navbar_header'] ?? '');
+    $brand = (string)($info['navbar_header'] ?? '');
     if ($brand === '' && !empty($info['show_header'])) {
         $brand_content = !empty($info['show_banner']) ? ($info['banner'] ?? '') : tailwind_escape(fusion_get_settings('sitename'));
-        $brand = '<a class="tw-inline-flex tw-min-h-11 tw-items-center tw-font-semibold tw-text-ui-foreground focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring" href="'.BASEDIR.fusion_get_settings('opening_page').'">'.$brand_content.'</a>';
+        $brand_href = (string)($info['navbar_link'] ?? BASEDIR.fusion_get_settings('opening_page'));
+        $brand = '<a class="tw-inline-flex tw-min-h-11 tw-items-center tw-font-semibold tw-text-ui-foreground focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring" href="'.tailwind_escape($brand_href).'">'.$brand_content.'</a>';
     }
     $primary = (array)($info['primary_callback_nav'] ?? []);
     $secondary = (array)($info['secondary_callback_nav'] ?? []);
 
-    $html = '<nav id="'.$id.'" class="'.tailwind_class('tw-relative tw-z-40 tw-w-full tw-border-b tw-border-ui-border tw-bg-ui-card tw-text-ui-card-foreground', $info['navbar_class'] ?? '').'" aria-label="'.tailwind_escape($info['aria_label'] ?? 'Primary navigation').'">';
+    $html = '<nav id="'.$id.'" class="'.tailwind_class('tw-fusion-navbar tw-relative tw-z-40 tw-w-full tw-border-b tw-border-ui-border tw-bg-ui-card tw-text-ui-card-foreground', $info['navbar_class'] ?? '').'" aria-label="'.tailwind_escape($info['aria_label'] ?? 'Primary navigation').'">';
     $html .= '<div class="'.$container.'"><div class="tw-flex tw-min-h-16 tw-items-center tw-justify-between tw-gap-3">';
-    $html .= $brand;
-    $html .= '<button type="button" class="tw-inline-flex tw-min-h-11 tw-min-w-11 tw-cursor-pointer tw-items-center tw-justify-center tw-rounded-lg tw-border tw-border-ui-border tw-bg-ui-card tw-text-ui-foreground hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring lg:tw-hidden" data-tailwind-collapse-trigger aria-controls="'.$id.'-menu" aria-expanded="false" aria-label="Toggle navigation"><span aria-hidden="true">☰</span></button>';
-    $html .= '<div id="'.$id.'-menu" class="tw-absolute tw-inset-x-0 tw-top-full tw-border-b tw-border-ui-border tw-bg-ui-card tw-p-3 lg:tw-static lg:tw-flex lg:tw-flex-1 lg:tw-items-center lg:tw-border-0 lg:tw-bg-transparent lg:tw-p-0" data-tailwind-responsive-menu hidden>';
+    $html .= $brand.($info['custom_header'] ?? '');
+    if (!empty($info['responsive'])) {
+        $html .= '<button type="button" class="tw-inline-flex tw-min-h-11 tw-min-w-11 tw-cursor-pointer tw-items-center tw-justify-center tw-rounded-lg tw-border tw-border-ui-border tw-bg-ui-card tw-text-ui-foreground hover:tw-bg-ui-accent focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ui-ring lg:tw-hidden" data-tailwind-collapse-trigger aria-controls="'.$id.'-menu" aria-expanded="false" aria-label="Toggle navigation"><span aria-hidden="true">☰</span></button>';
+        $html .= '<div id="'.$id.'-menu" class="tw-absolute tw-inset-x-0 tw-top-full tw-border-b tw-border-ui-border tw-bg-ui-card tw-p-3 lg:tw-static lg:tw-flex lg:tw-flex-1 lg:tw-items-center lg:tw-border-0 lg:tw-bg-transparent lg:tw-p-0" data-tailwind-responsive-menu hidden>';
+    } else {
+        $html .= '<div id="'.$id.'-menu" class="tw-static tw-flex tw-flex-1 tw-items-center">';
+    }
     $html .= ($info['html_pre_content'] ?? '');
     $html .= '<ul class="'.tailwind_class('tw-flex tw-flex-col tw-gap-1 lg:tw-flex-row lg:tw-items-center', $info['nav_class'] ?? '').'">'.tailwind_render_nav_items(0, $primary, $id.'-primary').'</ul>';
     $html .= ($info['html_content'] ?? '');
@@ -434,7 +515,97 @@ function tailwind_render_tabs(array $options): string
             'role="tablist" aria-label="'.tailwind_escape($options['aria_label'] ?? 'Sections').'"'.
             ($remember ? ' data-fusion-tabs-remember="tab_js-'.$id.'" data-tailwind-tabs-remember="tab_js-'.$id.'"' : '').'>';
 
+        $tab_groups = (array)($config['group'] ?? []);
+        $group_titles = (array)($config['group_title'] ?? []);
+        $rendered_groups = [];
+
         foreach ((array)($config['title'] ?? []) as $key => $title) {
+            $group_key = trim((string)($tab_groups[$key] ?? ''));
+            if ($group_key !== '') {
+                if (isset($rendered_groups[$group_key])) {
+                    continue;
+                }
+
+                $rendered_groups[$group_key] = TRUE;
+                $child_keys = [];
+                foreach ($titles as $child_key => $_child_title) {
+                    if (trim((string)($tab_groups[$child_key] ?? '')) === $group_key) {
+                        $child_keys[] = $child_key;
+                    }
+                }
+                if ($child_keys === []) {
+                    continue;
+                }
+
+                $selected_key = NULL;
+                foreach ($child_keys as $child_key) {
+                    if ((string)($tab_ids[$child_key] ?? '') === $active_id) {
+                        $selected_key = $child_key;
+                        break;
+                    }
+                }
+                $control_key = $selected_key ?? $child_keys[0];
+                $control_tab_id = tailwind_escape($tab_ids[$control_key] ?? 'tab-'.$control_key);
+                $group_active = $selected_key !== NULL;
+                $group_slug = trim((string)preg_replace('/[^a-z0-9_-]+/i', '-', strtolower($group_key)), '-');
+                if ($group_slug === '') {
+                    $group_slug = 'group-'.$key;
+                }
+                $proxy_id = 'tab-'.$id.'-group-'.$group_slug;
+                $menu_id = $id.'-group-'.$group_slug.'-menu';
+                $group_title = $group_titles[$group_key] ?? $group_key;
+                $trigger_title = $group_active ? ($titles[$control_key] ?? $group_title) : $group_title;
+
+                $html .= '<div class="tw-relative" role="presentation">';
+                $html .= '<a id="'.$proxy_id.'" class="dropdown-toggle tw-tabs-trigger" href="#'.$control_tab_id.'" role="tab" '.
+                    'data-state="'.($group_active ? 'active' : 'inactive').'" aria-selected="'.($group_active ? 'true' : 'false').'" '.
+                    'tabindex="'.($group_active ? '0' : '-1').'" data-fusion-tab-child="tab-'.$control_tab_id.'" '.
+                    'data-tailwind-menu-trigger data-tailwind-menu-target="'.$menu_id.'" '.
+                    'aria-haspopup="menu" aria-controls="'.$control_tab_id.'" aria-expanded="false">'.
+                    '<span data-fusion-tab-group-label>'.$trigger_title.'</span></a>';
+                $html .= '<template data-fusion-tab-group-default>'.$group_title.'</template>';
+                $html .= '<div id="'.$menu_id.'" class="tw-dropdown-menu tw-min-w-56 tw-p-1" data-tailwind-menu role="menu" hidden>';
+
+                foreach ($child_keys as $child_key) {
+                    $child_id = tailwind_escape($tab_ids[$child_key] ?? 'tab-'.$child_key);
+                    $child_selected = $child_id === $active_id;
+                    $child_class = tailwind_class(
+                        'dropdown-item tw-dropdown-item tw-w-full tw-text-left',
+                        $config['class'][$child_key] ?? ''
+                    );
+                    $child_title = $titles[$child_key];
+
+                    if ($link_mode) {
+                        $getname = (string)($options['getname'] ?? 'section');
+                        $cleanup_get = (array)($options['cleanup_get'] ?? []);
+                        $get_array = array_values(array_unique(array_merge([$getname], $cleanup_get)));
+                        $link_url = (string)$link;
+                        if ($link === TRUE && function_exists('clean_request')) {
+                            $keep_filtered = in_array('*', $cleanup_get, TRUE);
+                            if ($keep_filtered) $get_array = [];
+                            $link_url = clean_request(
+                                $getname.'='.$child_id.(function_exists('check_get') && check_get('aid') ? '&aid='.get('aid') : ''),
+                                $get_array,
+                                $keep_filtered
+                            );
+                        } elseif ($link_url !== '') {
+                            $link_url .= (str_contains($link_url, '?') ? '&' : '?').$getname.'='.$child_id;
+                        }
+                        $html .= '<a id="tab-'.$child_id.'" class="'.$child_class.'" href="'.tailwind_escape($link_url).'" role="menuitem" '.
+                            ($child_selected ? 'aria-current="page" data-state="active"' : 'data-state="inactive"').'>' .
+                            '<span data-fusion-tab-title>'.$child_title.'</span></a>';
+                    } else {
+                        $html .= '<a id="tab-'.$child_id.'" class="'.$child_class.'" href="#'.$child_id.'" role="menuitem" '.
+                            'data-fusion-tab data-tailwind-tab data-fusion-tab-proxy="'.$proxy_id.'" '.
+                            'data-state="'.($child_selected ? 'active' : 'inactive').'" aria-controls="'.$child_id.'">'.
+                            '<span data-fusion-tab-title>'.$child_title.'</span></a>';
+                    }
+                }
+
+                $html .= '</div></div>';
+                continue;
+            }
+
             $tab_id = tailwind_escape($tab_ids[$key] ?? 'tab-'.$key);
             $selected = $tab_id === $active_id;
             $item_class = tailwind_class('tw-tabs-trigger', $config['class'][$key] ?? '');

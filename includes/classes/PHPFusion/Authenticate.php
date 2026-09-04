@@ -33,7 +33,10 @@ if ( ! empty($settings['domain_server']) ) {
 else {
     $fusion_domain = ( strstr($settings['site_host'], "www.") ? substr($settings['site_host'], 3) : $settings['site_host'] );
     define("COOKIE_DOMAIN", $settings['site_host'] != 'localhost' ? $fusion_domain : FALSE);
-    define("COOKIE_PATH", "/");
+    if (!defined('COOKIE_PATH')) {
+        define("COOKIE_PATH", $settings['site_path']);
+    }
+
 }
 
 define("COOKIE_USER", COOKIE_PREFIX . "user");
@@ -508,7 +511,7 @@ class Authenticate {
                     $sql = "SELECT u.* FROM ".DB_USERS." u WHERE user_id=:uid
                     AND user_status='0' AND user_actiontime='0' LIMIT 1
                     ";
-                   
+
                     $result = dbquery($sql, $param);
 
                     if ( dbrows($result) == 1 ) {

@@ -191,7 +191,7 @@ $tailwind_css = [
     'container-fluid' => 'tw-container tw-container-fluid',
     'container-xl' => 'tw-container tw-container-xl',
     'row' => 'tw-row',
-    'col' => 'tw-col-span-12',
+    'col' => 'tw-col',
     'card' => 'tw-card',
     'card-header' => 'tw-card-header',
     'card-body' => 'tw-card-body',
@@ -222,6 +222,13 @@ $tailwind_css = [
     'btn-group-sm' => 'tw-btn-group tw-btn-group-sm',
     'btn-group-lg' => 'tw-btn-group tw-btn-group-lg',
     'btn-check' => 'tw-btn-check',
+    'dropdown' => 'tw-dropdown',
+    'dropdown-toggle' => 'tw-dropdown-toggle',
+    'dropdown-menu' => 'tw-dropdown-menu',
+    'dropdown-menu-end' => 'tw-end-0',
+    'dropdown-item' => 'tw-dropdown-item',
+    'dropdown-header' => 'tw-dropdown-header',
+    'dropdown-divider' => 'tw-dropdown-divider',
     'form-group' => 'tw-form-group',
     'form-floating' => 'tw-form-floating',
     'form-label' => 'tw-form-label',
@@ -331,16 +338,22 @@ $grid_breakpoints = [
     'xl' => 'xl:',
     'xxl' => '2xl:',
 ];
+$column_widths = [
+    1 => '1/12', 2 => '1/6', 3 => '1/4', 4 => '1/3', 5 => '5/12', 6 => '1/2',
+    7 => '7/12', 8 => '2/3', 9 => '3/4', 10 => '5/6', 11 => '11/12', 12 => 'full',
+];
 foreach ($grid_breakpoints as $source_breakpoint => $tailwind_breakpoint) {
     $source_prefix = $source_breakpoint === '' ? 'col' : 'col-'.$source_breakpoint;
-    $mobile_default = $tailwind_breakpoint === '' ? '' : 'tw-col-span-12 ';
+    $mobile_default = $tailwind_breakpoint === '' ? '' : 'tw-w-full ';
     if ($source_breakpoint !== '') {
-        $tailwind_css[$source_prefix] = $mobile_default.$tailwind_breakpoint.'tw-col-auto';
+        $tailwind_css[$source_prefix] = $tailwind_breakpoint === ''
+            ? 'tw-col'
+            : $mobile_default.$tailwind_breakpoint.'tw-w-auto '.$tailwind_breakpoint.'tw-flex-1';
     }
-    $tailwind_css[$source_prefix.'-auto'] = $mobile_default.$tailwind_breakpoint.'tw-col-auto';
-    for ($column = 1; $column <= 12; $column++) {
+    $tailwind_css[$source_prefix.'-auto'] = $mobile_default.$tailwind_breakpoint.'tw-w-auto';
+    foreach ($column_widths as $column => $width) {
         $tailwind_css[$source_prefix.'-'.$column] =
-            $mobile_default.$tailwind_breakpoint.'tw-col-span-'.$column;
+            $mobile_default.$tailwind_breakpoint.'tw-w-'.$width;
     }
 }
 
@@ -350,8 +363,9 @@ foreach ($grid_breakpoints as $source_breakpoint => $tailwind_breakpoint) {
     }
     $source_prefix = $source_breakpoint === '' ? 'offset' : 'offset-'.$source_breakpoint;
     for ($offset = 0; $offset <= 11; $offset++) {
-        $tailwind_css[$source_prefix.'-'.$offset] = $tailwind_breakpoint.
-            ($offset === 0 ? 'tw-col-start-auto' : 'tw-col-start-'.($offset + 1));
+        $source_class = $source_prefix.'-'.$offset;
+        // The bundled Bootstrap-compatible flex fallback owns percentage offsets.
+        $tailwind_css[$source_class] = $source_class;
     }
 }
 

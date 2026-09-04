@@ -130,7 +130,7 @@ function load_form_datepicker_assets(string $locale): void
 
     if (!$loaded) {
         fusion_load_script(DYNAMICS.'assets/flatpickr/flatpickr.min.css', 'css');
-        fusion_load_script(DYNAMICS.'includes/form_datepicker/component.css', 'css');
+        fusion_load_script(DYNAMICS.'includes/form_datepicker/component.css?v='.filemtime(__DIR__.'/component.css'), 'css');
         fusion_load_script(DYNAMICS.'assets/flatpickr/flatpickr.min.js');
         $loaded = TRUE;
     }
@@ -216,6 +216,9 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         'js_check' => FALSE,
     ];
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
 
     if (!in_array($options['type'], ['date', 'time', 'timestamp', 'datetime'], TRUE)) {
         $options['type'] = 'date';
@@ -302,7 +305,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
         $described_by[] = $field_id.'-help';
     }
     $described_by_attribute = $described_by ? " aria-describedby='".implode(' ', $described_by)."'" : '';
-    $wrapper_class = framework_css(trim(($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']));
+    $wrapper_class = framework_css(trim('form-group '.($options['inline'] && $label ? 'row ' : '').$error_class.$options['class']));
     $control_class = framework_css('input-group date dynamics-datepicker'.($options['floating_label'] ? ' dynamics-datepicker--floating' : ''));
     $label_class = framework_css('form-label '.$options['label_class'].($options['inline'] ? ' col-form-label col-sm-3 col-md-3 col-lg-3' : ''));
     $inline_control_class = framework_css('col-sm-9 col-md-9 col-lg-9');
@@ -316,7 +319,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     if ($label && !$options['floating_label']) {
         $html .= "<label class='".form_datepicker_escape_attribute($label_class)."' for='{$field_id}'>".$label;
         $html .= $options['required'] ? "<span class='required'>&nbsp;*</span>" : '';
-        $html .= $options['tip'] ? " <i class='pointer fa fa-question-circle' title='".form_datepicker_escape_attribute($options['tip'])."'></i>" : '';
+        $html .= dynamics_field_help($options['tip']);
         $html .= '</label>';
     }
     $html .= $options['inline'] && $label ? "<div class='".form_datepicker_escape_attribute($inline_control_class)."'>" : '';
@@ -329,6 +332,7 @@ function form_datepicker($input_name, $label = '', $input_value = '', array $opt
     if ($label && $options['floating_label']) {
         $html .= "<label class='".form_datepicker_escape_attribute($floating_label_class)."' for='{$field_id}'>".$label;
         $html .= $options['required'] ? "<span class='required'>&nbsp;*</span>" : '';
+        $html .= dynamics_field_help($options['tip']);
         $html .= '</label>';
     }
     if (!$options['fieldicon_off']) {

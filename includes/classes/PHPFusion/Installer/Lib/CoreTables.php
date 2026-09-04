@@ -62,6 +62,8 @@ class CoreTables {
                 'length'  => 100,
                 'default' => '',
             ],
+            // SVG is the canonical vector icon source. The legacy
+            // admin_glyph column is intentionally not part of the core schema.
             'admin_title'    => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
@@ -535,6 +537,11 @@ class CoreTables {
                 'length'  => 1,
                 'default' => '0'
             ], //error_status tinyint(1) NOT NULL default '0',
+            'recurred_date'      => [
+                'type'    => 'DATETIME',
+                'null'    => TRUE,
+                'default' => 'NULL',
+            ], // Latest recurrence, formatted YYYY-MM-DD HH:MM:SS; NULL means not recurred.
             'error_timestamp'    => [
                 'type'     => 'INT',
                 'length'   => 10,
@@ -1780,11 +1787,29 @@ class CoreTables {
                 'length'  => 100,
                 'default' => 'Default'
             ], //user_admin_theme VARCHAR(100) NOT NULL DEFAULT 'Default',
+            'user_realname'        => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //user_realname VARCHAR(100) NOT NULL DEFAULT '',
+            'user_bio'             => [
+                'type' => 'TEXT'
+            ], //user_bio TEXT NOT NULL,
             'user_location'        => [
                 'type'    => 'VARCHAR',
                 'length'  => 50,
                 'default' => ''
             ], //user_location VARCHAR(50) NOT NULL DEFAULT '',
+            'user_state'           => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //user_state VARCHAR(100) NOT NULL DEFAULT '',
+            'user_city'            => [
+                'type'    => 'VARCHAR',
+                'length'  => 100,
+                'default' => ''
+            ], //user_city VARCHAR(100) NOT NULL DEFAULT '',
             'user_birthdate'       => [
                 'type'    => 'DATE',
                 'default' => '1900-01-01'
@@ -2053,7 +2078,372 @@ class CoreTables {
         ];
 
 
-        return $table_package;
+        return array_merge($table_package, self::get_ai_tables());
+    }
+
+    /**
+     * Canonical provider-neutral AI Intelligence tables.
+     *
+     * These definitions live with the rest of the PHPFusion core schema so the
+     * regular installer and schema comparison process remain authoritative.
+     *
+     * @return array<string, array<string, array<string, mixed>>>
+     */
+    public static function get_ai_tables(): array {
+        return [
+            'ai_providers' => [
+                'provider_id' => self::aiId(),
+                'provider_key' => self::aiString(64),
+                'provider_name' => self::aiString(100),
+                'driver' => self::aiString(191),
+                'base_url' => self::aiString(255),
+                'endpoint_path' => self::aiString(255),
+                'default_model' => self::aiString(120),
+                'config_json' => self::aiJson(),
+                'priority' => self::aiInteger('SMALLINT', 5, 100),
+                'timeout_seconds' => self::aiInteger('SMALLINT', 5, 30),
+                'monthly_budget' => ['type' => 'DECIMAL', 'length' => '12,4', 'default' => '0.0000', 'unsigned' => TRUE],
+                'status' => self::aiString(20, 'disabled'),
+                'last_test_status' => self::aiString(20, 'untested'),
+                'last_test_message' => ['type' => 'TEXT', 'null' => TRUE, 'default' => 'NULL'],
+                'last_tested_at' => self::aiDateTime(),
+                'created_by' => self::aiUserId(),
+                'updated_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_provider_key' => ['columns' => ['provider_key'], 'unique' => TRUE],
+                    'idx_ai_provider_status' => ['columns' => ['status', 'priority']],
+                ],
+            ],
+            'ai_credentials' => [
+                'credential_id' => self::aiId(),
+                'provider_id' => self::aiForeignId(),
+                'credential_name' => self::aiString(100, 'Primary'),
+                'cipher' => self::aiString(32),
+                'ciphertext' => ['type' => 'MEDIUMTEXT'],
+                'nonce' => ['type' => 'TEXT'],
+                'fingerprint' => self::aiString(16),
+                'key_version' => self::aiInteger('SMALLINT', 5, 1),
+                'status' => self::aiString(20, 'active'),
+                'rotated_at' => self::aiDateTime(),
+                'created_by' => self::aiUserId(),
+                'updated_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_provider_credential_name' => ['columns' => ['provider_id', 'credential_name'], 'unique' => TRUE],
+                    'idx_ai_credential_status' => ['columns' => ['provider_id', 'status']],
+                ],
+            ],
+            'ai_tasks' => [
+                'task_id' => self::aiId(),
+                'task_namespace' => self::aiString(80),
+                'task_key' => self::aiString(120),
+                'task_title' => self::aiString(160),
+                'task_description' => ['type' => 'TEXT'],
+                'owner' => self::aiString(120, 'core'),
+                'input_schema_json' => self::aiJson(),
+                'output_schema_json' => self::aiJson(),
+                'default_provider_id' => self::aiNullableForeignId(),
+                'default_persona_id' => self::aiNullableForeignId(),
+                'published_revision_id' => self::aiNullableForeignId(),
+                'execution_mode' => self::aiString(20, 'single'),
+                'context_source_key' => self::aiString(191),
+                'chain_max_attempts' => self::aiInteger('SMALLINT', 5, 2),
+                'chain_timeout_seconds' => self::aiInteger('SMALLINT', 5, 120),
+                'final_step_key' => self::aiString(80),
+                'developer_version' => self::aiString(40, '1.0.0'),
+                'lock_version' => self::aiInteger('INT', 10, 1),
+                'status' => self::aiString(20, 'draft'),
+                'created_by' => self::aiUserId(),
+                'updated_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_task_key' => ['columns' => ['task_namespace', 'task_key'], 'unique' => TRUE],
+                    'idx_ai_task_owner_status' => ['columns' => ['owner', 'status']],
+                    'idx_ai_task_execution' => ['columns' => ['execution_mode', 'status']],
+                ],
+            ],
+            'ai_prompt_revisions' => [
+                'revision_id' => self::aiId(),
+                'task_id' => self::aiForeignId(),
+                'revision_number' => self::aiInteger('INT', 10, 1),
+                'system_template' => ['type' => 'MEDIUMTEXT'],
+                'user_template' => ['type' => 'MEDIUMTEXT'],
+                'model_options_json' => self::aiJson(),
+                'change_summary' => self::aiString(255),
+                'content_checksum' => self::aiString(64),
+                'state' => self::aiString(20, 'draft'),
+                'created_by' => self::aiUserId(),
+                'reviewed_by' => self::aiUserId(),
+                'published_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'reviewed_at' => self::aiDateTime(),
+                'published_at' => self::aiDateTime(),
+                '__indexes' => [
+                    'uq_ai_prompt_revision' => ['columns' => ['task_id', 'revision_number'], 'unique' => TRUE],
+                    'idx_ai_prompt_state' => ['columns' => ['task_id', 'state', 'created_at']],
+                ],
+            ],
+            'ai_personas' => [
+                'persona_id' => self::aiId(),
+                'persona_key' => self::aiString(120),
+                'persona_name' => self::aiString(160),
+                'persona_role' => self::aiString(160),
+                'description' => ['type' => 'TEXT'],
+                'system_prompt' => ['type' => 'MEDIUMTEXT'],
+                'traits_json' => self::aiJson(),
+                'knowledge_boundaries_json' => self::aiJson(),
+                'example_dialogue_json' => self::aiJson(),
+                'owner' => self::aiString(120, 'core'),
+                'version' => self::aiString(40, '1.0.0'),
+                'status' => self::aiString(20, 'draft'),
+                'created_by' => self::aiUserId(),
+                'updated_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_persona_key' => ['columns' => ['persona_key'], 'unique' => TRUE],
+                    'idx_ai_persona_owner_status' => ['columns' => ['owner', 'status']],
+                ],
+            ],
+            'ai_context_sources' => [
+                'source_id' => self::aiId(),
+                'source_key' => self::aiString(191),
+                'source_title' => self::aiString(160),
+                'description' => ['type' => 'TEXT'],
+                'owner' => self::aiString(120, 'core'),
+                'input_schema_json' => self::aiJson(),
+                'output_schema_json' => self::aiJson(),
+                'developer_version' => self::aiString(40, '1.0.0'),
+                'status' => self::aiString(20, 'disabled'),
+                'created_by' => self::aiUserId(),
+                'updated_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_context_source_key' => ['columns' => ['source_key'], 'unique' => TRUE],
+                    'idx_ai_context_source_owner_status' => ['columns' => ['owner', 'status']],
+                ],
+            ],
+            'ai_task_steps' => [
+                'step_id' => self::aiId(),
+                'task_id' => self::aiForeignId(),
+                'step_key' => self::aiString(80),
+                'step_title' => self::aiString(160),
+                'step_type' => self::aiString(20, 'agent'),
+                'persona_id' => self::aiNullableForeignId(),
+                'provider_id' => self::aiNullableForeignId(),
+                'step_order' => self::aiInteger('SMALLINT', 5, 10),
+                'depends_on_step_key' => self::aiString(80),
+                'system_template' => ['type' => 'MEDIUMTEXT'],
+                'user_template' => ['type' => 'MEDIUMTEXT'],
+                'input_binding_json' => self::aiJson(),
+                'output_binding_json' => self::aiJson(),
+                'output_schema_json' => self::aiJson(),
+                'model_options_json' => self::aiJson(),
+                'condition_json' => self::aiJson(),
+                'failure_policy' => self::aiString(20, 'stop'),
+                'repair_step_key' => self::aiString(80),
+                'max_attempts' => self::aiInteger('SMALLINT', 5, 1),
+                'timeout_seconds' => self::aiInteger('SMALLINT', 5, 30),
+                'result_path' => self::aiString(191),
+                'is_final' => self::aiInteger('TINYINT', 1, 0),
+                'status' => self::aiString(20, 'active'),
+                'created_at' => self::aiTimestamp(),
+                'updated_at' => self::aiTimestamp(TRUE),
+                '__indexes' => [
+                    'uq_ai_task_step_key' => ['columns' => ['task_id', 'step_key'], 'unique' => TRUE],
+                    'idx_ai_task_step_order' => ['columns' => ['task_id', 'step_order', 'status']],
+                    'idx_ai_task_step_type' => ['columns' => ['task_id', 'step_type', 'status']],
+                ],
+            ],
+            'ai_runs' => [
+                'run_id' => self::aiId(),
+                'task_id' => self::aiForeignId(),
+                'revision_id' => self::aiNullableForeignId(),
+                'provider_id' => self::aiNullableForeignId(),
+                'persona_id' => self::aiNullableForeignId(),
+                'actor_id' => self::aiUserId(),
+                'provider_request_id' => self::aiString(191),
+                'model' => self::aiString(120),
+                'status' => self::aiString(20, 'pending'),
+                'input_tokens' => self::aiInteger('INT', 10, 0),
+                'output_tokens' => self::aiInteger('INT', 10, 0),
+                'latency_ms' => self::aiInteger('INT', 10, 0),
+                'estimated_cost' => ['type' => 'DECIMAL', 'length' => '12,6', 'default' => '0.000000', 'unsigned' => TRUE],
+                'error_code' => self::aiString(80),
+                'error_message' => ['type' => 'TEXT', 'null' => TRUE, 'default' => 'NULL'],
+                'request_checksum' => self::aiString(64),
+                'started_at' => self::aiTimestamp(),
+                'completed_at' => self::aiDateTime(),
+                '__indexes' => [
+                    'idx_ai_runs_task_status' => ['columns' => ['task_id', 'status', 'started_at']],
+                    'idx_ai_runs_provider' => ['columns' => ['provider_id', 'started_at']],
+                    'idx_ai_runs_actor' => ['columns' => ['actor_id', 'started_at']],
+                ],
+            ],
+            'ai_step_runs' => [
+                'step_run_id' => self::aiId(),
+                'run_id' => self::aiForeignId(),
+                'step_id' => self::aiForeignId(),
+                'attempt_number' => self::aiInteger('SMALLINT', 5, 1),
+                'provider_id' => self::aiNullableForeignId(),
+                'persona_id' => self::aiNullableForeignId(),
+                'provider_request_id' => self::aiString(191),
+                'model' => self::aiString(120),
+                'status' => self::aiString(20, 'pending'),
+                'input_tokens' => self::aiInteger('INT', 10, 0),
+                'output_tokens' => self::aiInteger('INT', 10, 0),
+                'latency_ms' => self::aiInteger('INT', 10, 0),
+                'estimated_cost' => ['type' => 'DECIMAL', 'length' => '12,6', 'default' => '0.000000', 'unsigned' => TRUE],
+                'error_code' => self::aiString(80),
+                'error_message' => ['type' => 'TEXT', 'null' => TRUE, 'default' => 'NULL'],
+                'request_checksum' => self::aiString(64),
+                'started_at' => self::aiTimestamp(),
+                'completed_at' => self::aiDateTime(),
+                '__indexes' => [
+                    'uq_ai_step_run_attempt' => ['columns' => ['run_id', 'step_id', 'attempt_number'], 'unique' => TRUE],
+                    'idx_ai_step_runs_status' => ['columns' => ['status', 'started_at']],
+                    'idx_ai_step_runs_provider' => ['columns' => ['provider_id', 'started_at']],
+                ],
+            ],
+            'ai_audit_log' => [
+                'audit_id' => self::aiId(),
+                'entity_type' => self::aiString(40),
+                'entity_id' => self::aiForeignId(),
+                'action' => self::aiString(60),
+                'actor_id' => self::aiUserId(),
+                'before_checksum' => self::aiString(64),
+                'after_checksum' => self::aiString(64),
+                'metadata_json' => self::aiJson(),
+                'created_at' => self::aiTimestamp(),
+                '__indexes' => [
+                    'idx_ai_audit_entity' => ['columns' => ['entity_type', 'entity_id', 'created_at']],
+                    'idx_ai_audit_actor' => ['columns' => ['actor_id', 'created_at']],
+                ],
+            ],
+            'ai_comments' => [
+                'comment_id' => self::aiId(),
+                'entity_type' => self::aiString(40),
+                'entity_id' => self::aiForeignId(),
+                'revision_id' => self::aiNullableForeignId(),
+                'comment_text' => ['type' => 'TEXT'],
+                'status' => self::aiString(20, 'open'),
+                'created_by' => self::aiUserId(),
+                'resolved_by' => self::aiUserId(),
+                'created_at' => self::aiTimestamp(),
+                'resolved_at' => self::aiDateTime(),
+                '__indexes' => [
+                    'idx_ai_comments_entity' => ['columns' => ['entity_type', 'entity_id', 'status', 'created_at']],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Convert the embedded AI metadata into the legacy upgrade newtable format.
+     *
+     * @return array<string, string>
+     */
+    public static function get_ai_upgrade_table_definitions(string $prefix): array {
+        $definitions = [];
+        foreach (self::get_ai_tables() as $table => $columns) {
+            $lines = [];
+            $primaryKeys = [];
+            foreach ($columns as $name => $attributes) {
+                if (str_starts_with((string)$name, '__')) {
+                    continue;
+                }
+                $lines[] = self::aiColumnSql((string)$name, $attributes);
+                if ((int)($attributes['key'] ?? 0) === 1) {
+                    $primaryKeys[] = (string)$name;
+                }
+            }
+            if ($primaryKeys) {
+                $lines[] = 'PRIMARY KEY (`'.implode('`, `', $primaryKeys).'`)';
+            }
+            foreach (($columns['__indexes'] ?? []) as $name => $index) {
+                $indexColumns = '`'.implode('`, `', (array)($index['columns'] ?? [])).'`';
+                $lines[] = (!empty($index['unique']) ? 'UNIQUE KEY' : 'KEY')
+                    .' `'.$name.'` ('.$indexColumns.')';
+            }
+            $qualified = $prefix.$table;
+            $definitions[$qualified] = $qualified.' ('.implode(', ', $lines).') '
+                .'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
+        }
+        return $definitions;
+    }
+
+    /** @param array<string, mixed> $attributes */
+    private static function aiColumnSql(string $name, array $attributes): string {
+        $sql = '`'.$name.'` '.strtoupper((string)$attributes['type']);
+        if (isset($attributes['length'])) {
+            $sql .= '('.$attributes['length'].')';
+        }
+        if (!empty($attributes['unsigned'])) {
+            $sql .= ' UNSIGNED';
+        }
+        $sql .= !empty($attributes['null']) ? ' NULL' : ' NOT NULL';
+        if (array_key_exists('default', $attributes)) {
+            $default = $attributes['default'];
+            if ($default === NULL || $default === 'NULL') {
+                $sql .= ' DEFAULT NULL';
+            } elseif ($default === 'CURRENT_TIMESTAMP') {
+                $sql .= ' DEFAULT CURRENT_TIMESTAMP';
+            } else {
+                $sql .= " DEFAULT '".addslashes((string)$default)."'";
+            }
+        }
+        if (!empty($attributes['auto_increment'])) {
+            $sql .= ' AUTO_INCREMENT';
+        }
+        if (!empty($attributes['on_update'])) {
+            $sql .= ' ON UPDATE '.$attributes['on_update'];
+        }
+        return $sql;
+    }
+
+    private static function aiId(): array {
+        return ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'auto_increment' => TRUE, 'key' => 1];
+    }
+
+    private static function aiForeignId(): array {
+        return ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => 0];
+    }
+
+    private static function aiNullableForeignId(): array {
+        return ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'null' => TRUE, 'default' => 'NULL'];
+    }
+
+    private static function aiUserId(): array {
+        return ['type' => 'BIGINT', 'length' => 20, 'unsigned' => TRUE, 'default' => 0];
+    }
+
+    private static function aiInteger(string $type, int $length, int $default): array {
+        return ['type' => $type, 'length' => $length, 'unsigned' => TRUE, 'default' => $default];
+    }
+
+    private static function aiString(int $length, string $default = ''): array {
+        return ['type' => 'VARCHAR', 'length' => $length, 'default' => $default];
+    }
+
+    private static function aiJson(): array {
+        return ['type' => 'JSON', 'null' => TRUE, 'default' => 'NULL'];
+    }
+
+    private static function aiDateTime(): array {
+        return ['type' => 'DATETIME', 'null' => TRUE, 'default' => 'NULL'];
+    }
+
+    private static function aiTimestamp(bool $update = FALSE): array {
+        $column = ['type' => 'TIMESTAMP', 'default' => 'CURRENT_TIMESTAMP'];
+        if ($update) {
+            $column['on_update'] = 'CURRENT_TIMESTAMP';
+        }
+        return $column;
     }
 
 }

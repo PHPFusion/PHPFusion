@@ -39,13 +39,22 @@ class Dynamics {
 
     private function __load_dynamic_components() {
         foreach (dynamics_component_manifest() as $component) {
-            $model = DYNAMICS.'includes/'.$component.'/model.php';
+            $model = dynamics_component_model($component);
 
             if (is_file($model)) {
                 require_once $model;
             }
         }
     }
+}
+
+/** Resolve core Dynamics models and library-owned decorators. */
+function dynamics_component_model(string $component): string {
+    if ($component === 'genie_ui') {
+        return LIBS.'genie/genie.php';
+    }
+
+    return DYNAMICS.'includes/'.$component.'/model.php';
 }
 
 /**
@@ -64,10 +73,10 @@ function dynamics_component_manifest(): array {
         'form_contact',
         'form_datepicker',
         'form_document',
-        'form_elite_textarea',
         'form_fileinput',
         'form_geomap',
         'form_hidden',
+        'form_json',
         'form_modal',
         'form_name',
         'form_ordering',
@@ -76,6 +85,7 @@ function dynamics_component_manifest(): array {
         'form_select',
         'form_text',
         'form_textarea',
+        'genie_ui',
         'form_textarea_backup',
     ];
 }

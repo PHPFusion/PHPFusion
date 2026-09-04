@@ -141,6 +141,7 @@ function form_select_combobox_config(array $options): array {
     $strings = array_merge([
         'search'      => 'Search options...',
         'resetSearch' => 'Reset search',
+        'resetAll'    => 'Reset all',
         'clear'       => 'Clear',
         'selected'    => 'selected',
         'empty'       => 'No options found.',
@@ -154,13 +155,14 @@ function form_select_combobox_config(array $options): array {
     return [
         'placeholder'     => html_entity_decode((string)$options['placeholder'], ENT_QUOTES | ENT_HTML5, 'UTF-8'),
         'label'           => html_entity_decode((string)($options['combobox_label'] ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-        'floatingLabel'   => (bool)$options['floating_label'],
-        'required'        => (bool)$options['required'],
+        'floatingLabel'   => (bool)($options['floating_label'] ?? FALSE),
+        'required'        => (bool)($options['required'] ?? FALSE),
         'multiple'        => (bool)$options['multiple'],
         'tags'            => (bool)$options['tags'],
         'allowClear'      => (bool)($options['allowclear'] || $options['allow_clear']),
         'searchThreshold' => max(0, (int)$options['display_search_count']),
         'maxSelect'       => $options['max_select'] === FALSE ? 0 : max(0, (int)$options['max_select']),
+        'minSelect'       => max(0, (int)($options['min_select'] ?? 0)),
         'delimiter'       => (string)$options['delimiter'],
         'remote'          => $remote_config,
         'flagBaseUrl'     => !empty($options['flag']) ? (string)($options['flag_path'] ?: IMAGES.'small_flag/') : '',
@@ -225,6 +227,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
         'option_pattern'       => "&#8212;",
         'display_search_count' => "5",
         'max_select'           => FALSE,
+        'min_select'           => 0,
         'error_text'           => $locale['error_input_default'],
         'class'                => '',
         'label_class'          => '',
@@ -256,6 +259,11 @@ function form_select($input_name, $label, $input_value, $options = []) {
         'strings'              => [],
     ];
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
+
+    $options['delimiter'] = (string)$options['delimiter'] !== '' ? (string)$options['delimiter'] : ',';
 
     $input_value = clean_input_value($input_value);
     
@@ -264,9 +272,9 @@ function form_select($input_name, $label, $input_value, $options = []) {
         // Handles post and need to override
         $input_name_var = str_replace([ '[', ']' ], [], $input_name);
         if (check_post([$input_name_var])) {
-            $input_value = implode($options['delimiter'], post([ $input_name_var ]));
+            $input_value = dynamics_multiple_value_string(post([ $input_name_var ]), $options['delimiter']);
         } elseif (is_array($input_value)) {
-            $input_value = implode($options['delimiter'], $input_value);
+            $input_value = dynamics_multiple_value_string($input_value, $options['delimiter']);
         }
     } else {
         if (check_post($input_name)) {
@@ -530,12 +538,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
     }
 
     if ( $options['multiple'] ) {
-        if ( $input_value !== NULL ) {
-            $input_value = explode($options['delimiter'], $input_value);
-        }
-        else {
-            $input_value = [];
-        }
+        $input_value = dynamics_multiple_value_list($input_value, $options['delimiter']);
     }
 
     // always trim id
@@ -558,7 +561,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
 
     $html = "<div id='" . $options['input_id'] . "-field' class='form-group " . ( $options['inline'] && $label ? 'row' : '' ) . $error_class . ' ' . $options['class'] . "' " . ( $options['width'] ? "style='width: " . $options['width'] . "'" : '' ) . ">";
     $html .= ( $label ) ? "<label class='form-label {$options['label_class']}" . ( $options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '' ) . "' for='" . $options['input_id'] . "'>" . $label . ( $options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '' ) . "
-    " . ( $options['tip'] ? "<i class='pointer fa fa-question-circle' title='" . $options['tip'] . "'></i>" : '' ) . "
+    " . (empty($options['floating_label']) ? dynamics_field_help($options['tip']) : '') . "
     </label>" : '';
 
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>" : "";
@@ -583,7 +586,8 @@ function form_select($input_name, $label, $input_value, $options = []) {
         $multiple = $options['multiple'] || $options['tags'] ? " multiple" : '';
 
 
-        $html .= "<select class='".form_select_escape_attribute($inner_class)."' name='".form_select_escape_attribute($input_name)."' id='" . form_select_escape_attribute($options['input_id']) . "' style='width: " . form_select_escape_attribute(!empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width']) . "'" . ( $options['deactivate'] ? " disabled" : "" ) . ( $options['onchange'] ? ' onchange="' . form_select_escape_attribute($options['onchange']) . '"' : '' ) . $combobox_attribute . " {$multiple}>";
+        $html_input_name = $options['multiple'] && !str_ends_with($input_name, '[]') ? $input_name.'[]' : $input_name;
+        $html .= "<select class='".form_select_escape_attribute($inner_class)."' name='".form_select_escape_attribute($html_input_name)."' id='" . form_select_escape_attribute($options['input_id']) . "' style='width: " . form_select_escape_attribute(!empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width']) . "'" . ( $options['deactivate'] ? " disabled" : "" ) . ( $options['onchange'] ? ' onchange="' . form_select_escape_attribute($options['onchange']) . '"' : '' ) . $combobox_attribute . " {$multiple}>";
 
         if ( $options['combobox_disabled'] ) {
             $html .= ( $options['allowclear'] ) ? "<option value='' disabled selected hidden>" . form_select_escape_text($options['placeholder']) . "</option>" : '';
@@ -669,6 +673,7 @@ function form_select($input_name, $label, $input_value, $options = []) {
     }
 
     $html .= $options['stacked'];
+    $html .= !empty($options['floating_label']) ? dynamics_field_help($options['tip']) : '';
     $html .= $options['ext_tip'] ? "<div class='help-block'>" . $options['ext_tip'] . "</div>" : "";
     $html .= Defender::inputHasError($input_name) && ! $options['inline'] ? "<br/>" : "";
     $html .= Defender::inputHasError($input_name) ? "<div id='" . $options['input_id'] . "-help' class='label label-danger p-5 display-inline-block'>" . $options['error_text'] . "</div>" : "";
@@ -750,6 +755,9 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     ];
 
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
 
     $options['input_id'] = trim($options['input_id'], "[]");
 
@@ -807,7 +815,7 @@ function form_user_select($input_name, $label = "", $input_value = FALSE, array 
     $html = "<div id='" . $options['input_id'] . "-field' class='form-group " . ( $options['inline'] && $label ? 'row ' : '' ) . $error_class . $options['class'] . "' style='width:" . $options['width'] . "'>";
 
     $html .= ( $label ) ? "<label class='form-label {$options['label_class']}" . ( $options['inline'] ? " col-xs-12 col-sm-12 col-md-3 col-lg-3" : '' ) . "' for='" . $options['input_id'] . "'>" . $label . ( $options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '' ) . "
-    " . ( $options['tip'] ? "<i class='pointer fa fa-question-circle' title='" . $options['tip'] . "'></i>" : '' ) . "
+    " . (empty($options['floating_label']) ? dynamics_field_help($options['tip']) : '') . "
     </label>" : '';
 
     $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>" : "";
@@ -941,15 +949,15 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         'strings'           => [],
     ];
     $options += $default_options;
+    if (!empty($options['ext_tip'])) {
+        $options['ext_tip'] = dynamics_field_help($options['ext_tip'], TRUE);
+    }
+
+    $options['delimiter'] = (string)$options['delimiter'] !== '' ? (string)$options['delimiter'] : ',';
 
     $options['input_id'] = trim($options['input_id'], "[]");
     if ( $options['multiple'] ) {
-        if ( $input_value ) {
-            $input_value = explode('|', $input_value);
-        }
-        else {
-            $input_value = [];
-        }
+        $input_value = dynamics_multiple_value_list($input_value, $options['delimiter']);
     }
     if ( ! $options['width'] ) {
         $options['width'] = $default_options['width'];
@@ -980,14 +988,15 @@ function form_select_tree($input_name, $label, $input_value, array $options, $db
         }
 
         $html = "<div id='" . $options['input_id'] . "-field' class='form-group " . ( $options['inline'] && $label ? 'row ' : '' ) . $error_class . $options['class'] . "' " . ( $options['inline'] && $options['width'] && ! $label ? "style='width: " . $options['width'] . "'" : '' ) . ">";
-        $html .= ( $label ) ? "<label class='control-label " . ( $options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '' ) . "' for='" . $options['input_id'] . "'>" . $label . ( $options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '' ) . " " . ( $options['tip'] ? "<i class='pointer fa fa-question-circle' title=" . $options['tip'] . "></i>" : '' ) . "</label>" : '';
+        $html .= ( $label ) ? "<label class='control-label " . ( $options['inline'] ? 'col-xs-12 col-sm-12 col-md-3 col-lg-3' : '' ) . "' for='" . $options['input_id'] . "'>" . $label . ( $options['required'] == TRUE ? "<span class='required'>&nbsp;*</span>" : '' ) . " " . (empty($options['floating_label']) ? dynamics_field_help($options['tip']) : '') . "</label>" : '';
         $html .= $options['inline'] && $label ? "<div class='col-xs-12 col-sm-9 col-md-9 col-lg-9'>" : "";
     }
     if ( $level == 0 ) {
         $options['combobox_label'] = trim(strip_tags((string)$label));
         $combobox_enabled = $options['combobox_disabled'] === FALSE;
         $combobox_attribute = $combobox_enabled ? " data-dynamics-combobox='".form_select_combobox_attribute($options)."'" : '';
-        $html .= "<select class='form-select' name='$input_name' id='" . $options['input_id'] . "' style='width: " . ( ! empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width'] ) . "'" . ( $options['deactivate'] ? " disabled" : "" ) . ( $options['multiple'] ? " multiple" : "" ) . $combobox_attribute . ">";
+        $html_input_name = $options['multiple'] && !str_ends_with($input_name, '[]') ? $input_name.'[]' : $input_name;
+        $html .= "<select class='form-select' name='".form_select_escape_attribute($html_input_name)."' id='" . $options['input_id'] . "' style='width: " . ( ! empty($options['inner_width']) ? $options['inner_width'] : $default_options['inner_width'] ) . "'" . ( $options['deactivate'] ? " disabled" : "" ) . ( $options['multiple'] ? " multiple" : "" ) . $combobox_attribute . ">";
         $html .= $options['allowclear'] ? "<option value=''></option>" : '';
         if ( $options['no_root'] == FALSE ) { // api options to remove root from selector. used in items creation.
             $this_select = '';

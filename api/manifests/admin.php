@@ -13,7 +13,11 @@ require_once dirname(__DIR__) . '/endpoints/AdminDashboardEndpoint.php';
  */
 $manifests = [
     dirname(__DIR__, 2).'/administration/settings/main/endpoints.php',
+    dirname(__DIR__, 2).'/administration/settings/members/endpoints.php',
+    dirname(__DIR__, 2).'/administration/settings/integrations/endpoints.php',
+    dirname(__DIR__, 2).'/administration/settings/intelligence/endpoints.php',
     dirname(__DIR__, 2).'/administration/dashboard/endpoints.php',
+    dirname(__DIR__, 2).'/administration/errors/endpoints.php',
 ];
 
 $endpoints = [];

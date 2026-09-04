@@ -3,6 +3,7 @@ const breakpoints = ['sm', 'md', 'lg', 'xl', '2xl'];
 const marginUtilities = ['m', 'mt', 'mb', 'ms', 'me', 'mx', 'my'];
 const paddingUtilities = ['p', 'pt', 'pb', 'ps', 'pe', 'px', 'py'];
 const gapUtilities = ['gap', 'gap-x', 'gap-y'];
+const columnWidths = ['auto', 'full', '1/12', '1/6', '1/4', '1/3', '5/12', '1/2', '7/12', '2/3', '3/4', '5/6', '11/12'];
 const responsiveUtilities = [
     'hidden', 'inline', 'block', 'inline-block', 'grid', 'inline-grid', 'flex', 'inline-flex',
     'flex-row', 'flex-row-reverse', 'flex-col', 'flex-col-reverse', 'flex-1',
@@ -32,6 +33,7 @@ module.exports = {
             [...marginUtilities, ...paddingUtilities, ...gapUtilities].map((utility) => `tw-${utility}-${space}`)
         ),
         ...spacing.flatMap((space) => [`tw-w-${space}`, `tw-h-${space}`]),
+        ...columnWidths.map((width) => `tw-w-${width}`),
         'tw-divide-x',
         'tw-divide-y',
         'tw-divide-ui-border',
@@ -48,6 +50,7 @@ module.exports = {
                 marginUtilities.map((utility) => `${breakpoint}:-tw-${utility}-${space}`)
             ),
             ...responsiveUtilities.map((utility) => `${breakpoint}:tw-${utility}`),
+            ...columnWidths.map((width) => `${breakpoint}:tw-w-${width}`),
         ]),
         ...Array.from({length: 12}, (_, index) => `tw-col-span-${index + 1}`),
         ...breakpoints.flatMap((breakpoint) =>

@@ -10,14 +10,14 @@ use PHPFusion\Jupiter\Classes\AdminHelper;
 
 class AdminPanel
 {
-	
+
 	/* Helper object */
 	private $helper;
-	
+
 	/* Constructs */
 	public function __construct()
 	{
-		
+
 		add_to_footer("<script src='" . ADMIN_THEMES . "Jupiter/pfjupiter.min.js?v=".
 			filemtime(__DIR__.'/../../pfjupiter.min.js')."'></script>");
 		echo "<noscript>";
@@ -28,37 +28,37 @@ class AdminPanel
         </style>";
 		echo "</noscript>";
 		$this->helper = new AdminHelper();
-		
+
 	}
-	
+
 	private static $instance;
-	
+
 	public static function getInstance()
 	: AdminPanel
 	{
-		
+
 		if (empty(self::$instance)) {
 			self::$instance = new AdminPanel();
 		}
-		
+
 		return self::$instance;
 	}
-	
-	
+
+
 	/* Admin panel theme */
 	public function viewTheme()
 	{
 		require_once ADMIN_THEMES . 'Jupiter/templates/theme.tpl.php';
-		
+
 		$userdata = fusion_get_userdata();
 		$settings = fusion_get_settings();
-		
+
 		$sitebanner = '';
 		if ($sitebanner_path = $this->getSiteBannerPath()) {
 			$sitebanner = '<img src="'.htmlspecialchars($sitebanner_path, ENT_QUOTES).'" alt="'.
 				htmlspecialchars($settings['sitename'], ENT_QUOTES).'">';
 		}
-		
+
 		$info = [
 			'admin_pages'          => $this->helper->viewThemeAdminPages(),
 			'admin_sections'       => $this->helper->viewThemeAdminSections(),
@@ -88,13 +88,13 @@ class AdminPanel
 
 		admin_theme_tpl($info);
 	}
-	
+
 	/* Admin login */
 	public function viewLogin()
 	{
 
 		$userdata = fusion_get_userdata();
-		
+
 		add_to_jquery('$("#admin_password").focus();');
 		add_to_head("
 			<style>
@@ -134,7 +134,6 @@ class AdminPanel
 						'required' => TRUE,
 						'floating' => TRUE,
 						'class'    => framework_css('mb-3'),
-						'ext_tip' => 'Your computer will explode after 3 attempts'
 					]);
 					?>
 					<div id="admin-login-notice" class="tw-alert tw-alert-danger <?= framework_css('d-none text-start') ?>" role="alert"
@@ -157,11 +156,11 @@ class AdminPanel
 					<a href="#">Terms of use</a>
 					<a href="#">Privacy and cookies</a>
 				</div>
-				<small>Sage Academy Sdn Bhd &copy; <?= date('Y') ?><br>Please make sure you are <strong>NOT</strong> using a public
+				<small>PHPFusion &copy; <?= date('Y') ?><br>Please make sure you are <strong>NOT</strong> using a public
 					computer from this point onwards. Only log in from your trusted device only.</small>
 			</div>
 		</div>
-		
+
 		<?php
 		$locale = fusion_get_locale();
 		$endpoint = BASEDIR . 'api/index.php?api=admin-login';
@@ -259,5 +258,5 @@ class AdminPanel
 
 		return $sitebanner;
 	}
-	
+
 }
