@@ -751,6 +751,27 @@ class CoreTables {
                 'default' => $localeset
             ] //template_language VARCHAR(50) NOT NULL,
         ];
+        $table_package['policies'] = [
+            'policy_name'     => [
+                'type'   => 'VARCHAR',
+                'length' => 200,
+                'key'    => 2,
+            ],
+            'policy_content'  => [
+                'type' => 'TEXT',
+            ],
+            'policy_date'     => [
+                'type'     => 'INT',
+                'length'   => 10,
+                'unsigned' => TRUE,
+                'key'      => 2,
+            ],
+            'policy_language' => [
+                'type'    => 'VARCHAR',
+                'length'  => 30,
+                'default' => $localeset
+            ]
+        ];
         $table_package['ratings'] = [
             'rating_id'        => [
                 'type'           => 'BIGINT',

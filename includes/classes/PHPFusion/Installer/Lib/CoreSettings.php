@@ -28,6 +28,7 @@ class CoreSettings {
         $locale = fusion_get_locale();
 
         include BASEDIR."locale/".$localeset."/setup.php";
+        include BASEDIR . 'locale/' . $localeset . '/policies.php';
         $social_locale_file = BASEDIR."locale/".$localeset."/social.php";
         include is_file($social_locale_file)
             ? $social_locale_file
@@ -1373,6 +1374,40 @@ class CoreSettings {
                     'template_sender_name'  => '',
                     'template_sender_email' => '',
                     'template_language'     => $localeset
+                ]
+            ]
+        ];
+        $table_settings['policies'] = [
+            'insert' => [
+                [
+                    'policy_name'     => $locale['pol_200'],
+                    'policy_content'  => $locale['pol_202'],
+                    'policy_date'     => time(),
+                    'policy_language' => $localeset
+                ],
+                [
+                    'policy_name'     => $locale['pol_300'],
+                    'policy_content'  => $locale['pol_302'],
+                    'policy_date'     => time(),
+                    'policy_language' => $localeset
+                ],
+                [
+                    'policy_name'     => $locale['pol_400'],
+                    'policy_content'  => $locale['pol_402'],
+                    'policy_date'     => time(),
+                    'policy_language' => $localeset
+                ],
+                [
+                    'policy_name'     => $locale['pol_500'],
+                    'policy_content'  => $locale['pol_502'],
+                    'policy_date'     => time(),
+                    'policy_language' => $localeset
+                ],
+                [
+                    'policy_name'     => $locale['pol_600'],
+                    'policy_content'  => $locale['pol_602'],
+                    'policy_date'     => time(),
+                    'policy_language' => $localeset
                 ]
             ]
         ];
