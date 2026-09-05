@@ -136,7 +136,7 @@ if (check_post('cancel')) {
 
 if (check_post('savesettings')) {
     foreach ($settings_seo as $key => $value) {
-        $settings_seo[$key] = sanitizer($key, 0, $key);
+        $settings_seo[$key] = post( $key ) ? 1 : 0;
         if (fusion_safe()) {
             dbquery("UPDATE ".DB_SETTINGS." SET settings_value=:value WHERE settings_name=:name", [':value' => $settings_seo[$key], ':name' => $key]);
         }
