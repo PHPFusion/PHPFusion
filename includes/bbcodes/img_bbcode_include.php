@@ -22,7 +22,7 @@ if (!function_exists("img_bbcode_callback")) {
         if (substr($m[5], -1, 1) != "/") {
             $url = $m[3].str_replace(["?", "&amp;", "&", "="], "", $m[5]).$m[6];
             $html = '<div class="forum-img-wrapper">';
-            $html .= '<img src="'.$url.'" alt="'.$m[5].$m[6].'" class="img-responsive forum-img" referrerpolicy="no-referrer">';
+            $html .= '<img src="'.$url.'" alt="'.$m[5].$m[6].'" class="img-responsive forum-img" referrerpolicy="strict-origin-when-cross-origin">';
             $html .= !empty($m['title']) ? '<span class="image-description">'.$m['title'].'</span>' : '';
             $html .= '</div>';
 
