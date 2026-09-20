@@ -26,12 +26,12 @@ if ($profile_method == "input") {
         foreach ($theme_files as $theme) {
             $theme_opts[$theme] = $theme;
         }
-        $options += [
+        $options = [
             'options'        => $theme_opts,
             'inline'         => TRUE,
             'callback_check' => 'theme_exists',
             'error_text'     => $locale['uf_theme_error']
-        ];
+        ] + $options;
         $user_fields = form_select('user_theme', $locale['uf_theme'], $field_value, $options);
     }
     // Display in profile
