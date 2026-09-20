@@ -21,11 +21,11 @@ $icon = "<img src='".IMAGES."user_fields/social/facebook.svg' title='Facebook' a
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_facebook', $locale['uf_facebook'], $field_value, [
-            'inline'      => TRUE,
-            'placeholder' => $locale['uf_facebook_placeholder'],
-            'error_text'  => $locale['uf_facebook_error'],
-            'label_icon'  => $icon,
-        ] + $options);
+        'inline'      => TRUE,
+        'placeholder' => $locale['uf_facebook_placeholder'],
+        'error_text'  => $locale['uf_facebook_error'],
+        'label_icon'  => $icon
+    ] + $options);
     // Display in profile
 } else if ($profile_method == "display") {
     $link = '';

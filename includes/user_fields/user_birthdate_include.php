@@ -19,14 +19,14 @@ defined('IN_FUSION') || exit;
 
 // Display user field input
 if ($profile_method == "input") {
-    $options += [
+    $options = [
         'inline'          => TRUE,
         'type'            => 'date',
         'width'           => '250px',
         'showTime'        => FALSE,
         'date_format_js'  => 'YYYY-M-DD',
         'date_format_php' => 'Y-m-d',
-    ];
+    ] + $options;
     $user_fields = form_datepicker('user_birthdate', $locale['uf_birthdate'], $field_value, $options);
 
     // Display in profile

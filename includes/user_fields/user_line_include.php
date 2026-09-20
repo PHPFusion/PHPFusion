@@ -21,14 +21,14 @@ $icon = "<img src='".IMAGES."user_fields/social/line.svg' title='Line' alt='Line
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'max_length'       => 16,
-            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-            'error_text'       => $locale['uf_line_error'],
-            'regex_error_text' => $locale['uf_line_error_1'],
-            'placeholder'      => $locale['uf_line'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'max_length'       => 16,
+        'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+        'error_text'       => $locale['uf_line_error'],
+        'regex_error_text' => $locale['uf_line_error_1'],
+        'placeholder'      => $locale['uf_line'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_line', $locale['uf_line'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

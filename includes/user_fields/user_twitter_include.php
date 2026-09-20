@@ -21,14 +21,14 @@ $icon = "<img src='".IMAGES."user_fields/social/twitter.svg' title='Twitter' alt
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'max_length'       => 16,
-            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-            'regex_error_text' => $locale['uf_twitter_error_1'],
-            'error_text'       => $locale['uf_twitter_error'],
-            'placeholder'      => $locale['uf_twitter_id'],
-            'label_icon'       => $icon,
-        ] + $options;
+        'inline'           => TRUE,
+        'max_length'       => 16,
+        'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+        'regex_error_text' => $locale['uf_twitter_error_1'],
+        'error_text'       => $locale['uf_twitter_error'],
+        'placeholder'      => $locale['uf_twitter_id'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_twitter', $locale['uf_twitter'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

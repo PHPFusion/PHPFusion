@@ -19,7 +19,7 @@ defined('IN_FUSION') || exit;
 
 // Display user field input
 if ($profile_method == "input") {
-    $options += ['inline' => TRUE];
+    $options = ['inline' => TRUE] + $options;
     $user_fields = form_geo('user_geo', $locale['uf_geo'], $field_value, $options);
 } else if ($profile_method == "display") {
     if ($field_value) {

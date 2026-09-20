@@ -18,7 +18,11 @@
 defined('IN_FUSION') || exit;
 
 if ($profile_method == "input") {
-    $options += ["inline" => TRUE, "number" => TRUE, 'max_length' => 20];
+    $options = [
+        'inline'     => TRUE,
+        'number'     => TRUE,
+        'max_length' => 20
+    ] + $options;
     $user_fields = form_text('user_phone_mobile', $locale['uf_phone_mobile'], $field_value, $options);
 } else if ($profile_method == "display") {
     $user_fields = [

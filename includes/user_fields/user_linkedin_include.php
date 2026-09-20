@@ -21,14 +21,14 @@ $icon = "<img src='".IMAGES."user_fields/social/linkedin.svg' title='LinkedIn' a
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'max_length'       => 16,
-            'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
-            'error_text'       => $locale['uf_linkedin_error'],
-            'regex_error_text' => $locale['uf_linkedin_error_1'],
-            'placeholder'      => $locale['uf_linkedin'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'max_length'       => 16,
+        'regex'            => '[a-z](?=[\w.]{3,31}$)\w*\.?\w*',
+        'error_text'       => $locale['uf_linkedin_error'],
+        'regex_error_text' => $locale['uf_linkedin_error_1'],
+        'placeholder'      => $locale['uf_linkedin'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_linkedin', $locale['uf_linkedin'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

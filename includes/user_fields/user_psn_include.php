@@ -22,12 +22,12 @@ $icon = "<img src='".IMAGES."user_fields/social/psn.svg' title='PSN' alt='PSN'/>
 if ($profile_method == "input") {
 
     $options = [
-            'inline'           => TRUE,
-            'error_text'       => $locale['uf_psn_error'],
-            'regex_error_text' => $locale['uf_psn_error_1'],
-            'placeholder'      => $locale['uf_psn_desc'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'error_text'       => $locale['uf_psn_error'],
+        'regex_error_text' => $locale['uf_psn_error_1'],
+        'placeholder'      => $locale['uf_psn_desc'],
+        'label_icon'       => $icon
+    ] + $options;
 
     $user_fields = form_text('user_psn', $locale['uf_psn'], $field_value, [
         'inline'      => TRUE,

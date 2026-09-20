@@ -22,12 +22,12 @@ $icon = "<img src='".IMAGES."user_fields/social/steam.svg' title='Steam' alt='St
 if ($profile_method == "input") {
 
     $options = [
-            'inline'           => TRUE,
-            'error_text'       => $locale['uf_steam_error'],
-            'regex_error_text' => $locale['uf_steam_error_1'],
-            'placeholder'      => $locale['uf_steam_desc'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'error_text'       => $locale['uf_steam_error'],
+        'regex_error_text' => $locale['uf_steam_error_1'],
+        'placeholder'      => $locale['uf_steam_desc'],
+        'label_icon'       => $icon
+    ] + $options;
 
     $user_fields = form_text('user_steam', $locale['uf_steam'], $field_value, [
         'inline'      => TRUE,

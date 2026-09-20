@@ -21,12 +21,12 @@ $icon = "<img src='".IMAGES."user_fields/social/vimeo.svg' title='Vimeo' alt='Vi
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'error_text'       => $locale['uf_vimeo_error'],
-            'regex_error_text' => $locale['uf_vimeo_error_1'],
-            'placeholder'      => $locale['uf_vimeo'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'error_text'       => $locale['uf_vimeo_error'],
+        'regex_error_text' => $locale['uf_vimeo_error_1'],
+        'placeholder'      => $locale['uf_vimeo'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_vimeo', $locale['uf_vimeo'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

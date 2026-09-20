@@ -21,12 +21,12 @@ $icon = "<img src='".IMAGES."user_fields/social/youtube.svg' title='YouTube' alt
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'      => TRUE,
-            'max_length'  => 100,
-            'error_text'  => $locale['uf_youtube_error'],
-            'placeholder' => $locale['uf_youtube_id'],
-            'label_icon'  => $icon,
-        ] + $options;
+        'inline'      => TRUE,
+        'max_length'  => 100,
+        'error_text'  => $locale['uf_youtube_error'],
+        'placeholder' => $locale['uf_youtube_id'],
+        'label_icon'  => $icon
+    ] + $options;
     $user_fields = form_text('user_youtube', $locale['uf_youtube'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

@@ -21,12 +21,12 @@ $icon = "<img src='".IMAGES."user_fields/social/discord.svg' title='Discord' alt
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'           => TRUE,
-            'error_text'       => $locale['uf_discord_error'],
-            'regex_error_text' => $locale['uf_discord_error_1'],
-            'placeholder'      => $locale['uf_discord'],
-            'label_icon'       => $icon
-        ] + $options;
+        'inline'           => TRUE,
+        'error_text'       => $locale['uf_discord_error'],
+        'regex_error_text' => $locale['uf_discord_error_1'],
+        'placeholder'      => $locale['uf_discord'],
+        'label_icon'       => $icon
+    ] + $options;
     $user_fields = form_text('user_discord', $locale['uf_discord'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

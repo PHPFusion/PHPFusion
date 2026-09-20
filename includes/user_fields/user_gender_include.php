@@ -70,12 +70,12 @@ if ($profile_method == "input") {
     }
 
     $options = [
-            'type'       => 'radio',
-            'inline'     => TRUE,
-            'error_text' => $locale['uf_gender_error'],
-            'options'    => $gen_opts,
-            'ext_tip'    => defined('ADMIN_PANEL') ? $locale['uf_gender_04'] : '',
-        ] + $options;
+        'type'       => 'radio',
+        'inline'     => TRUE,
+        'error_text' => $locale['uf_gender_error'],
+        'options'    => $gen_opts,
+        'ext_tip'    => defined('ADMIN_PANEL') ? $locale['uf_gender_04'] : '',
+    ] + $options;
 
     $user_fields = $input_type('user_gender', $locale['uf_gender'], $field_value, $options);
 } else if ($profile_method == "display") {

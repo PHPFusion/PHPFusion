@@ -21,11 +21,11 @@ $icon = "<img src='".IMAGES."user_fields/social/instagram.svg' title='Instagram'
 // Display user field input
 if ($profile_method == "input") {
     $user_fields = form_text('user_instagram', $locale['uf_instagram'], $field_value, [
-            'inline'      => TRUE,
-            'placeholder' => $locale['uf_instagram_placeholder'],
-            'error_text'  => $locale['uf_instagram_error'],
-            'label_icon'  => $icon,
-        ] + $options);
+        'inline'      => TRUE,
+        'placeholder' => $locale['uf_instagram_placeholder'],
+        'error_text'  => $locale['uf_instagram_error'],
+        'label_icon'  => $icon
+    ] + $options);
     // Display in profile
 } else if ($profile_method == "display") {
     $link = '';

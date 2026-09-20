@@ -21,12 +21,12 @@ $icon = "<img src='".IMAGES."user_fields/social/behance.svg' title='Behance' alt
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'      => TRUE,
-            'max_length'  => 20,
-            'error_text'  => $locale['uf_behance_error'],
-            'placeholder' => $locale['uf_behance_id'],
-            'label_icon'  => $icon,
-        ] + $options;
+        'inline'      => TRUE,
+        'max_length'  => 20,
+        'error_text'  => $locale['uf_behance_error'],
+        'placeholder' => $locale['uf_behance_id'],
+        'label_icon'  => $icon
+    ] + $options;
     $user_fields = form_text('user_behance', $locale['uf_behance'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

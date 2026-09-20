@@ -21,13 +21,13 @@ $icon = "<img src='".IMAGES."user_fields/social/whatsapp.svg' title='Whatsapp' a
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'      => TRUE,
-            'max_length'  => 16,
-            'error_text'  => $locale['uf_whatsapp_error'],
-            'placeholder' => $locale['uf_whatsapp'],
-            'label_icon'  => $icon,
-            'type'        => 'number'
-        ] + $options;
+        'inline'      => TRUE,
+        'max_length'  => 16,
+        'error_text'  => $locale['uf_whatsapp_error'],
+        'placeholder' => $locale['uf_whatsapp'],
+        'label_icon'  => $icon,
+        'type'        => 'number'
+    ] + $options;
     $user_fields = form_text('user_whatsapp', $locale['uf_whatsapp'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {

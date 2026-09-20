@@ -20,14 +20,14 @@ defined('IN_FUSION') || exit;
 $icon = "<img src='".IMAGES."user_fields/social/web.svg' title='Website' alt='Website'/>";
 // Display user field input
 if ($profile_method == "input") {
-    $options += [
+    $options = [
         'type'   => 'url',
         // We only accept websites that start with http(s)
         'regex'  => 'http(s)?\:\/\/(.*?)',
         'inline' => TRUE,
         'label_icon'  => $icon
         // TODO: Change the error text in case a value was entered but is not valid
-    ];
+    ] + $options;
     $user_fields = form_text('user_web', $locale['uf_web'], $field_value, $options);
 
     // Display in profile

@@ -21,12 +21,12 @@ $icon = "<img src='".IMAGES."phpfusion-icon.png' title='PHPFusion' alt='PHPFusio
 // Display user field input
 if ($profile_method == "input") {
     $options = [
-            'inline'      => TRUE,
-            'max_length'  => 20,
-            'error_text'  => $locale['uf_phpfusion_error'],
-            'placeholder' => $locale['uf_phpfusion_id'],
-            'label_icon'  => $icon,
-        ] + $options;
+        'inline'      => TRUE,
+        'max_length'  => 20,
+        'error_text'  => $locale['uf_phpfusion_error'],
+        'placeholder' => $locale['uf_phpfusion_id'],
+        'label_icon'  => $icon
+    ] + $options;
     $user_fields = form_text('user_phpfusion', $locale['uf_phpfusion'], $field_value, $options);
     // Display in profile
 } else if ($profile_method == "display") {
