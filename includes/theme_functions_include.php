@@ -721,6 +721,7 @@ if (!function_exists('display_avatar')) {
             'user_status' => ''
         ];
 
+        $link = !empty( $link ) ? $link : BASEDIR . 'profile.php?lookup=' . $userdata['user_id'];
         $link = fusion_get_settings('hide_userprofiles') == TRUE ? (iMEMBER ? $link : FALSE) : $link;
         $link = $userdata['user_id'] !== 0 ? $link : FALSE;
         $class = ($class) ? "class='$class'" : '';
@@ -751,7 +752,7 @@ if (!function_exists('display_avatar')) {
             }
         }
 
-        return $link ? sprintf('<a '.$class.' title="'.$userdata['user_name'].'" href="'.BASEDIR.'profile.php?lookup='.$userdata['user_id'].'">%s</a>', $img) : $img;
+        return $link ? sprintf('<a '.$class.' title="'.$userdata['user_name'].'" href="' . $link . '">%s</a>', $img) : $img;
     }
 }
 
